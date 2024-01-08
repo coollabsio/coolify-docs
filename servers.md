@@ -103,7 +103,7 @@ All it does is to add the right ProxyCommand (`ProxyCommand <ip / hostname> acce
 You can set a threshold in % for your / filesystem. If this percentage is reached, Coolify tries to cleanup a lot of unnecessary files from your server.
 
 - Unused Docker Images (`docker image prune -af'`)
-- Unsused Docker Build Images (`docker builder prune -af`)
+- Unused Docker Build Images (`docker builder prune -af`)
 - Stopped Docker Containers deployed by Coolify (`docker container prune -f --filter "label=coolify.managed=true"`)
 
 ### Wildcard Domain

@@ -61,7 +61,7 @@ You have two options.
 
 ### Wildcard domain
 
-You need to add a wildcard domain to yourr Tunnels settings, like `*.coolify.io`, pointing to the local ip address of your server (could be local ip or public ip, depending on your setup), on `http`. Port should be empty or 80.
+You need to add a wildcard domain to your Tunnels settings, like `*.coolify.io`, pointing to the local ip address of your server (could be local ip or public ip, depending on your setup), on `http`. Port should be empty or 80.
 
 This will allow to forward all requests to the Coolify proxy running.
 

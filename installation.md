@@ -50,7 +50,7 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 
 You can find the source code [here](https://github.com/coollabsio/coolify/blob/main/scripts/install.sh).
 
-The script will do the followings on your operating system:
+The script will do the following on your operating system:
 - Install basic commands: `curl wget git jq jc`
 - Docker Engine (24+)
 - Configures proper logging for Docker Engine.
@@ -124,7 +124,7 @@ docker volume rm coolify-db coolify-redis
 
 :::warning
 
-The following command will delete EVERYTING related to your configurations, backups, etc.
+The following command will delete EVERYTHING related to your configurations, backups, etc.
 
 :::
 

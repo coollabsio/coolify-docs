@@ -53,7 +53,7 @@ If you would like to set environment variables for the build process, you can do
 
 ## Developer / Normal View
 
-You can see your enviroment variables in a developer view (like `.env`) and in a normal view. 
+You can see your environment variables in a developer view (like `.env`) and in a normal view. 
 
 :::tip
 Developer view are useful to quickly overwrite or copy all your variables.

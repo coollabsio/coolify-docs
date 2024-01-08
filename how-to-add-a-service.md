@@ -52,7 +52,7 @@ To be able to predefine values, like usernames, passwords, fqdns, predefined val
 
 --- 
 
-In the [enviroment](https://docs.docker.com/compose/compose-file/compose-file-v3/#environment) option, you can do the following. 
+In the [environment](https://docs.docker.com/compose/compose-file/compose-file-v3/#environment) option, you can do the following. 
 
 Let's use `APPWRITE` as an example with a generate UUID of `vgsco4o` and with a [wildcard](/servers.md#wildcard-domain) domain of `http://example.com`.
 

@@ -48,7 +48,7 @@ Django is a high-level Python Web framework that encourages rapid development an
 Example repository [here](https://github.com/coollabsio/coolify-examples/tree/django).
 
 ## Requirements
-1. Set the base directory where your `reqirements.txt` and `manage.py` files are located.
+1. Set the base directory where your `requirements.txt` and `manage.py` files are located.
 
 > In the example repository, it is `/coolify`.
 

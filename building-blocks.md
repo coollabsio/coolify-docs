@@ -49,7 +49,7 @@ Servers are where all your resources are deployed to.
 ### Types
 
 - **Localhost:** the server where Coolify is installed.
-- **Remote Server:** could be any server, rechable through SSH.
+- **Remote Server:** could be any server, reachable through SSH.
 
 [More details.](/servers.md)
 

@@ -55,7 +55,7 @@ First things first, let's define what is a `CoolifyTask`. It's a command (or mul
       - (optional 1) Any `Model` to be the `Activity->performedOn`
       - (optional 2) Type: 'Deployment' and value forTypeUuid
 
-- `instantRemoteProcess`: Immediately run command under `Process::run` and return the ouput.
+- `instantRemoteProcess`: Immediately run command under `Process::run` and return the output.
   - Arguments:
       - "ArrayOfCommands"  `string[]`
       - A `Server`: Target where the commands will be run

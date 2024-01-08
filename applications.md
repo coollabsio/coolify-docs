@@ -121,7 +121,7 @@ If you would like to map a port to the host system (server), you can do it here 
 This will map the port 8080 on the host system to the port 80 inside the container.
 
 :::tip
-If you would like to get perfomance boost and you do not need any domain (websocket server with VERY high traffic), you can map its port to the host, so the request will not go through the proxy.
+If you would like to get performance boost and you do not need any domain (websocket server with VERY high traffic), you can map its port to the host, so the request will not go through the proxy.
 :::
 
 ## Advanced
