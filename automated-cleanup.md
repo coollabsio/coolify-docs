@@ -42,7 +42,7 @@ head:
 ---
 # Automated Cleanup
 
-Coolify automatically cleans up your server to prevent it from running out of disk space. It will remove all the unused Docker images, containers, and volumes.
+Coolify automatically cleans up your servers to prevent them from running out of disk space. It will remove all the unused Docker images, containers, and volumes.
 
 ## How it works
 - Coolify will run the cleanup script every 10 minutes.
