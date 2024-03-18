@@ -57,7 +57,7 @@ You can enable Traefik's dashboard by adding the following dynamic configuration
 http:
   routers:
     dashboard:
-      rule: Host(`<DOMAIN_FOR_TRAEFIK>`) && PathPrefix(`/dashboard`)
+      rule: Host(`<DOMAIN_FOR_TRAEFIK>`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       service: api@internal
       middlewares:
         - auth
