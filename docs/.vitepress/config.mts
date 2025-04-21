@@ -151,18 +151,52 @@ export default defineConfig({
         collapsed: true,
         items: [
           { text: 'Introduction', link: '/deployments/introduction' },
-          // {
-          //   text: 'Build Packs',
-          //   collapsed: true,
-          //   items: [
-          //     { text: 'Overview', link: '/builds/packs/overview' },
-          //     { text: 'Static', link: '/builds/packs/static' },
-          //     { text: 'Nixpacks', link: '/builds/packs/nixpacks' },
-          //     { text: 'Dockerfile', link: '/builds/packs/dockerfile' },
-          //     { text: 'Docker Compose', link: '/builds/packs/docker-compose' },
-          //   ]
-          // },
-          // { text: 'Build Servers', link: '/builds/servers' },
+          { text: 'Automatic Deployments', link: '/deployments/introduction' },
+          { text: 'Preview Deployments', link: '/deployments/introduction' },
+          { text: 'Git-based Deployments', link: '/deployments/introduction' },
+          { text: 'Docker-based Deployments', link: '/deployments/introduction' },
+          { text: 'Multi-Server Deployments', link: '/deployments/introduction' },
+          {
+            text: 'One Click Deployments',
+            collapsed: true,
+            items: [
+              {
+                text: 'Databases',
+                collapsed: true,
+                items: [
+                  { text: 'PostgreSQL', link: '/builds/packs/overview' },
+                  { text: 'MySQL', link: '/builds/packs/static' },
+                  { text: 'Redis', link: '/builds/packs/nixpacks' },
+                  { text: 'Dragonfly', link: '/builds/packs/dockerfile' },
+                  { text: 'Clickhouse', link: '/builds/packs/docker-compose' },
+                ]
+              },
+              {
+                text: 'Services',
+                collapsed: true,
+                items: [
+                  { text: 'A', link: '/builds/packs/overview' },
+                  { text: 'B', link: '/builds/packs/static' },
+                  { text: 'C', link: '/builds/packs/nixpacks' },
+                  { text: 'D', link: '/builds/packs/dockerfile' },
+                  { text: 'E', link: '/builds/packs/docker-compose' },
+                ]
+              },
+            ]
+          },
+          { text: 'Rollbacks', link: '/deployments/introduction' },
+          { text: 'Presistent Storages', link: '/deployments/introduction' },
+          { text: 'Custom Domains', link: '/deployments/introduction' },
+          {
+            text: 'SSL Certificates',
+            collapsed: true,
+            items: [
+              { text: 'Lets Encrypt', link: '/builds/packs/overview' },
+              { text: 'Cloudflare', link: '/builds/packs/static' },
+              { text: 'Hetzner', link: '/builds/packs/nixpacks' },
+            ]
+          },
+          { text: 'DNS Configuration', link: '/deployments/introduction' },
         ],
       },
       {
