@@ -147,6 +147,25 @@ export default defineConfig({
         ],
       },
       {
+        text: 'Deployments',
+        collapsed: true,
+        items: [
+          { text: 'Introduction', link: '/deployments/introduction' },
+          // {
+          //   text: 'Build Packs',
+          //   collapsed: true,
+          //   items: [
+          //     { text: 'Overview', link: '/builds/packs/overview' },
+          //     { text: 'Static', link: '/builds/packs/static' },
+          //     { text: 'Nixpacks', link: '/builds/packs/nixpacks' },
+          //     { text: 'Dockerfile', link: '/builds/packs/dockerfile' },
+          //     { text: 'Docker Compose', link: '/builds/packs/docker-compose' },
+          //   ]
+          // },
+          // { text: 'Build Servers', link: '/builds/servers' },
+        ],
+      },
+      {
         text: 'Applications',
         collapsed: true,
         items: [
