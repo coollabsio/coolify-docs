@@ -36,12 +36,12 @@ These settings need to be configured manually before running the Coolify install
 
 SystemD:
   ```bash
-  systemctl restart sshd
+  systemctl restart ssh
   ```
 
 OpenRC:
   ```bash
-  rc-service sshd restart
+  rc-service ssh restart
   ```
 
 
