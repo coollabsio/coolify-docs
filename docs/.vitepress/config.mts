@@ -3,7 +3,7 @@ import yaml from 'vite-plugin-yaml'
 import llmstxt from 'vitepress-plugin-llms'
 import { defineConfig } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
-import spec from '../public/openapi.json' with { type: 'json' }
+import spec from './theme/openapi.json' with { type: 'json' }
 import container from 'markdown-it-container'
 import { bundledLanguages } from 'shiki'
 import { join, dirname } from 'node:path'
@@ -50,7 +50,7 @@ export default defineConfig({
     ['meta', { property: 'twitter:url', content: 'https://coolify.io/docs/' }],
     ['meta', { property: 'twitter:image', content: 'https://coolcdn.b-cdn.net/assets/coolify/og-image-docs.png' }],
     ['link', { rel: 'icon', href: '/docs/coolify-logo-transparent.png' }],
-    ['link', { rel: 'icon', type: 'image/x-icon', href: '/docs/public/favicon.ico' }],
+    ['link', { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     ['script', { defer: 'true', src: 'https://analytics.coollabs.io/js/script.tagged-events.js', 'data-domain': env.VITE_ANALYTICS_DOMAIN ?? 'coolify.io/docs' }],
     ['script', { async: 'true', src: '/docs/trieve-user-script.js' }],
   ],
@@ -84,7 +84,7 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/coollabsio/coolify' },
-      { icon: 'discord', link: 'https://discord.gg/coolify' },
+      { icon: 'discord', link: 'https://coollabs.io/discord' },
       { icon: 'x', link: 'https://x.com/coolifyio' }
     ],
 
@@ -550,6 +550,7 @@ export default defineConfig({
             items: [
               { text: 'Inaccessible ', link: '/troubleshoot/dashboard/dashboard-inaccessible' },
               { text: 'Very Slow ', link: '/troubleshoot/dashboard/dashboard-slow-performance' },
+              { text: 'Disable 2FA Manually', link: '/troubleshoot/dashboard/disable-2fa-manually' },
             ]
           },
           {

@@ -278,7 +278,7 @@ const sponsors = [
   },
   {
     avatar: '../images/team/coollabs-logo-smaller.webp',
-    name: 'You Company?',
+    name: 'Your Company?',
     title: 'Will Your Company Be Next?'
   }
 ]

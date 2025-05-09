@@ -23,7 +23,7 @@ import 'virtual:group-icons.css'
 import { enhanceAppWithTabs } from "vitepress-plugin-tabs/client";
 
 // @ts-ignore
-import spec from "../../public/openapi.json" assert { type: "json" };
+import spec from "./openapi.json" assert { type: "json" };
 
 // Import components
 import Card from "./components/Card.vue";

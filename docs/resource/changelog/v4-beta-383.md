@@ -41,4 +41,4 @@ We've improved the deployment logs to provide more detailed information, making 
 ---
 
 
-If you encounter any bugs, feel free to [report them](https://github.com/coollabsio/coolify/issues), and we’ll work on fixing them in the next update. Join our [Discord community](https://discord.gg/coolify) to share your thoughts and feedback on this release!
+If you encounter any bugs, feel free to [report them](https://github.com/coollabsio/coolify/issues), and we’ll work on fixing them in the next update. Join our [Discord community](https://coollabs.io/discord) to share your thoughts and feedback on this release!

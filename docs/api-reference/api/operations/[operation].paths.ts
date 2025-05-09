@@ -1,4 +1,4 @@
-import spec from '../../../public/openapi.json' with { type: 'json' }
+import spec from '../../../.vitepress/theme/openapi.json' with { type: 'json' }
 
 export default {
   async paths() {

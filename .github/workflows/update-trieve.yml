@@ -7,7 +7,7 @@ concurrency:
 on:
   push:
     branches:
-      - main
+      - v4.x
 
 jobs:
   run:
@@ -16,8 +16,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - name: Install Trieve Vitepress Adapter
-        run: npm install -g trieve-vitepress-adapter
+        run: bun install -g trieve-vitepress-adapter
 
       - name: Update Trieve Chunks
         env:

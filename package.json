@@ -36,7 +36,7 @@
   "dependencies": {
     "@vueuse/core": "12.5.0",
     "globe.gl": "2.39.7",
-    "vitepress-openapi": "0.0.3-alpha.75"
+    "vitepress-openapi": "0.0.3-alpha.78"
   },
   "packageManager": "pnpm@10.6.3+sha512.bb45e34d50a9a76e858a95837301bfb6bd6d35aea2c5d52094fa497a467c43f5c440103ce2511e9e0a2f89c3d6071baac3358fc68ac6fb75e2ceb3d2736065e6"
 }

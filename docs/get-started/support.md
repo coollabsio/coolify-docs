@@ -9,7 +9,7 @@ title: Support
 ## Community Support  
 Join our [Discord community ↗](https://coollabs.io/discord) with over **13K members**, where you can create a post in the **support forum channel** for assistance. 
 
-While the community does provide some help, the [Coolify Core team ↗](/resource/team) is actively involved in the forum to ensure questions are addressed.  
+While the community does provide some help, the [Core team ↗](/get-started/team) is actively involved in the forum to ensure questions are addressed.  
 
 ## Direct Support from Core Developers
 If you are a **Coolify Cloud user**, you can reach out via email at **hi@coollabs.io** for direct support from [Andras (Coolify’s founder)](https://x.com/heyandras). Since he personally handles emails, response times may be delayed. 

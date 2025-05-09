@@ -9,4 +9,4 @@ toc: false
 
 ## Need help?
 
-If you need help with the API please get in touch with us on [Discord](https://discord.gg/coolify).
+If you need help with the API please get in touch with us on [Discord](https://coollabs.io/discord).

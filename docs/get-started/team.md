@@ -76,7 +76,7 @@ const coreMembers = [
 <VPTeamPage>
   <VPTeamPageTitle>
     <template #title>
-      CoolLabs Team
+      coolLabs Team
     </template>
     <template #lead>
       The development of Coolify is guided by an international team, some of whom have chosen to be featured below.

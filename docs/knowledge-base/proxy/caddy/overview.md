@@ -23,7 +23,7 @@ While [Traefik ↗](https://traefik.io/) is the default reverse proxy used in Co
 ## A Note from the Coolify Team  
 While Caddy is a fantastic tool for certain use cases, **we highly recommend** using **Traefik** over Caddy for most Coolify setups. 
 
-The [Core team](/resource/team) primarily uses Traefik, and it is the default reverse proxy configured within Coolify.  
+The [Core team](/get-started/team) primarily uses Traefik, and it is the default reverse proxy configured within Coolify.  
 
 Only consider using Caddy if you're familiar with it or need specific features that Traefik cannot provide.  
 

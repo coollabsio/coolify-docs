@@ -85,5 +85,5 @@ You have two ways to use Coolify:
 
 
 ## Join Our Community
-Got questions or need support? Our [discord community](https://discord.gg/coolify) is here to help. 
+Got questions or need support? Our [discord community](https://coollabs.io/discord) is here to help. 
 Connect with other Coolify users on our community server to get assistance and share your experiences.
