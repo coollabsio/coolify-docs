@@ -65,7 +65,7 @@ This configuration ensures that Traefik is only accessible from the local machin
 
 Since version 4.0.0-beta.336, you need to allow TCP port `6002` for terminal access on your firewall.
 
-## Coolify IP Addresses
+## Coolify IP Addresses (Cloud Version)
 
 If you need the public facing IPs to allow inbound connections to your servers, here is an up-to-date list of IPs that you can use to whitelist:
 
