@@ -22,6 +22,28 @@ For self-hosting Coolify, you need to allow some ports on your firewall.
   internet after installation.
 :::
 
+### How to block ports 8000, 6000, 6001
+
+As long as you have access outside of http port 8000, uou can add the following `/data/coolify/source/docker-compose.custom.yml`:
+
+```
+services:
+  coolify: # blocks external 8000
+    ports: !reset []
+  soketi:   # blocks external external 6001 and 6002
+    ports: !reset []
+```
+
+Then run [installation](https://coolify.io/docs/get-started/installation) again. You can check these ports with nmap from your local machine to be sure they're closed.
+
+```
+nmap -Pn -p 8000,6001,6002 <your coolify IP>
+```
+
+### Other options
+You can use your vendor firewall (ex. Digital Ocean etc) as another layer of protection, because Docker apps sometimes break through. UFW unbeknownst to you. If you don't want to use vendor firewall, you can also try [ufw-docker](https://github.com/chaifeng/ufw-docker).
+
+
 ### GitHub integration
 - [Detailed Guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-githubs-ip-addresses).
 
