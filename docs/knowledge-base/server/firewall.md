@@ -30,7 +30,7 @@ As long as you have access outside of http port 8000, uou can add the following 
 services:
   coolify: # blocks external 8000
     ports: !reset []
-  soketi:   # blocks external external 6001 and 6002
+  soketi:   # blocks external 6001, 6002
     ports: !reset []
 ```
 
@@ -68,4 +68,3 @@ Since 4.0.0-beta.336, you need to allow TCP port `6002` for terminal access on `
 If you need the public facing IPs to allow inbound connections to your servers, here is an up-to-date list of IPs that you can use to whitelist:
 
 - https://coolify.io/ipv4.txt
-- https://coolify.io/ipv6.txt
