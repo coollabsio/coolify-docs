@@ -68,3 +68,4 @@ Since 4.0.0-beta.336, you need to allow TCP port `6002` for terminal access on `
 If you need the public facing IPs to allow inbound connections to your servers, here is an up-to-date list of IPs that you can use to whitelist:
 
 - https://coolify.io/ipv4.txt
+- https://coolify.io/ipv6.txt
