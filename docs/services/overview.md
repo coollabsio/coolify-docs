@@ -34,6 +34,7 @@ You can host ANY service with Coolify that could be containerized.
 - [Appwrite](/services/appwrite) - A backend-as-a-service platform that simplifies the web & mobile app development.
 - [Argilla](/services/argilla) - An open-source platform for building, training, and evaluating conversational AI models.
 - [Audiobookshelf](/services/audiobookshelf) - Self-hosted audiobook and podcast server.
+- [Authelia](/services/authelia) - A fast, lightweight authentication and authorization server and portal.
 - [Authentik](/services/authentik) - An open-source Identity Provider, focused on flexibility and versatility.
 - [Baby Buddy](/services/babybuddy) - It helps parents track their baby's daily activities, growth, and health with ease.
 - [Beszel](/services/beszel) - Lightweight server monitoring hub with historical data, docker stats, and alerts.

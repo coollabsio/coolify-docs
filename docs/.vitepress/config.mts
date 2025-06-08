@@ -209,6 +209,7 @@ export default defineConfig({
               { text: 'Appwrite', link: '/services/appwrite' },
               { text: 'Argilla', link: '/services/argilla' },
               { text: 'Audiobookshelf', link: '/services/audiobookshelf' },
+              { text: 'Authelia', link: '/services/authelia' },
               { text: 'Authentik', link: '/services/authentik' },
               { text: 'Baby Buddy', link: '/services/babybuddy' },
               { text: 'Beszel', link: '/services/beszel' },
