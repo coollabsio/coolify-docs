@@ -8,7 +8,7 @@ description: "Documentation for installing and hosting Authelia with Coolify."
 <ZoomableImage src="/docs/images/services/authelia.svg" height="100px" />
 
 ## What is Authelia?
-Authelia is an open-source authentication and authorization server and portal fulfilling the identity and access management (IAM) role of information security in providing multi-factor authentication and single sign-on (SSO) for your applications via a web portal.
+Authelia is an open-source authentication and authorization server fulfilling the identity and access management (IAM) role of information security in providing multi-factor authentication and single sign-on (SSO) for your applications via a web portal.
 
 Authelia can help you protect your Coolify applications and services in a variety of ways, including via two-factor authentication (2FA) as well as OpenID Connect (OIDC).
 
@@ -35,19 +35,23 @@ have already setup a [wildcard domain](https://coolify.io/docs/knowledge-base/se
     - For authentication via **proxy & forwarded headers**, add the Authelia middleware to each app or service you want to protect, as described below. Make sure to also consult the app's documentation for setting up header / proxy auth.
         - For **applications**: Scroll down to **Container Labels**, and uncheck *Readonly labels* at the bottom. Then, find the **https** middlewares and append `,authelia@docker`:
           ```yaml
-          traefik.http.routers.https-0-<abcdef>.middlewares=gzip # [!code --]
-          traefik.http.routers.https-0-<abcdef>.middlewares=gzip,authelia@docker # [!code ++]
+          traefik.http.routers.https-0-<abcdef>.middlewares=gzip                  # [!code --]
+          traefik.http.routers.https-0-<abcdef>.middlewares=gzip,authelia@docker  # [!code ++]
           ```
-        - For **services**: open the Docker Compose file and add the following label to the service(s) that should be protected:
+        - For **services**: Open the Docker Compose file, and add the following label to the service(s) that should be protected: `traefik.http.middlewares.authelia@docker`
           ```yaml
-          labels:
-            - traefik.http.middlewares.authelia@docker # [!code ++]
+          services:
+            ...
+            protected-service:
+              ...
+              labels:                                       # [!code ++]
+                - traefik.http.middlewares.authelia@docker  # [!code ++]
           ```
     - For authentication via **OIDC/OAuth**, you'll need further configuration - consult the [Authelia OIDC docs](https://www.authelia.com/configuration/identity-providers/openid-connect/provider/).
 
 ## Important Notes
-- Adjust the [Access Control](https://www.authelia.com/configuration/security/access-control/) in the configuration file to your specific needs. For example, you may want to change the **default_policy** to `two_factor` to require 2FA for all protected apps, and/or add rules for specific apps and routes.
-- In production systems, it is recommended to switch the notification provider to [SMTP](https://www.authelia.com/configuration/notifications/smtp/) in the configuration file.
+- Adjust the [Access Control](https://www.authelia.com/overview/authorization/access-control/) in the configuration file to your specific needs. For example, you may want to change the **default_policy** to `two_factor` to require 2FA for all protected apps, and/or add rules for specific apps and routes.
+- In production systems, it is recommended to switch the [notification provider](https://www.authelia.com/configuration/notifications/introduction/) to SMTP in the configuration file.
 - In order for Authelia to receive the correct `X-Forwarded-*` headers, you may need to adjust the [Trusted IPs](https://doc.traefik.io/traefik/routing/entrypoints/#forwarded-headers) in your Coolify proxy configuration.
 
 ## Links
