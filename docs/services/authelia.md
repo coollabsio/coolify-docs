@@ -25,14 +25,15 @@ have already setup a [wildcard domain](https://coolify.io/docs/knowledge-base/se
     <ZoomableImage src="/docs/images/services/authelia_doc_1.webp" />
 1. Back in the service page, go to **Environment Variables**. Update the `BASE_DOMAIN` variable to the root/wildcard domain that you've set up with Coolify. Click **Update**.
     <ZoomableImage src="/docs/images/services/authelia_doc_2.webp" />
-1. Go to **Persistent Storages**. Here you can quickly edit the Authelia configuration file, the user database file, and view notifications from Authelia in the notification file.
+1. Go to **Persistent Storages**. Here you can quickly edit the Authelia configuration and user database file, and view notifications from Authelia in the notification file.
     - Scroll down to the **user database file**, and adjust the default user. Make sure to update the password field with a [hashed password](https://www.authelia.com/reference/guides/passwords/#passwords). Click **Save**.
     <ZoomableImage src="/docs/images/services/authelia_doc_3.webp" />
 1. Click **Deploy** in the top right. Wait for all the containers to start up.
-1. Under **Links** at the top, click on the Authelia URL and test that you can log in.
-1. Under **Links** again, click on the whoami URL (`https://whoami...`). You should see the forwarded headers corresponding to your user (`Remote-User`, `Remote-Email`, etc.). If so, this means that Authelia is setup correctly 🎉!
+1. Test your Authelia setup:
+    - Under **Links** at the top, click on the Authelia URL and ensure that you can log in.
+    - Under **Links** again, click on the whoami URL (`https://whoami...`). You should see the forwarded headers corresponding to your user (`Remote-User`, `Remote-Email`, etc.).
 1. You can now start protecting your Coolify apps and services with Authelia:
-    - For authentication via **proxy & forwarded headers**, add the Authelia middleware to each app or service you want to protect, as described below. Make sure to also consult the app's documentation for setting up header / proxy auth.
+    - For authentication via **proxy & forwarded headers**, add the Authelia middleware to each app or service you want to protect, as described below.
         - For **applications**: Scroll down to **Container Labels**, and uncheck *Readonly labels* at the bottom. Then, find the **https** middlewares and append `,authelia@docker`:
           ```yaml
           traefik.http.routers.https-0-<abcdef>.middlewares=gzip                  # [!code --]
@@ -47,12 +48,12 @@ have already setup a [wildcard domain](https://coolify.io/docs/knowledge-base/se
               labels:                                       # [!code ++]
                 - traefik.http.middlewares.authelia@docker  # [!code ++]
           ```
-    - For authentication via **OIDC/OAuth**, you'll need further configuration - consult the [Authelia OIDC docs](https://www.authelia.com/configuration/identity-providers/openid-connect/provider/).
+    - For authentication via **OIDC/OAuth**, further configuration is needed - consult the [Authelia OIDC docs](https://www.authelia.com/configuration/identity-providers/openid-connect/provider/).
 
 ## Important Notes
-- Adjust the [Access Control](https://www.authelia.com/overview/authorization/access-control/) in the configuration file to your specific needs. For example, you may want to change the **default_policy** to `two_factor` to require 2FA for all protected apps, and/or add rules for specific apps and routes.
-- In production systems, it is recommended to switch the [notification provider](https://www.authelia.com/configuration/notifications/introduction/) to SMTP in the configuration file.
-- In order for Authelia to receive the correct `X-Forwarded-*` headers, you may need to adjust the [Trusted IPs](https://doc.traefik.io/traefik/routing/entrypoints/#forwarded-headers) in your Coolify proxy configuration.
+- Authelia recommends using [file secrets](https://www.authelia.com/configuration/methods/secrets/) rather than environment variables. The local folder `./authelia/secrets` is already mounted in the Authelia container, so you can add secrets to that directory and access them as `/config/secrets/<filename>`.
+- Make sure to adjust the [Access Control](https://www.authelia.com/overview/authorization/access-control/) in the configuration file to your specific needs. For example, you can change the **default_policy** to `two_factor` to require 2FA for all protected apps, and/or add rules for specific apps and routes.
+- In order for Authelia to receive the correct `X-Forwarded-*` headers, you may need to add [Trusted IPs](https://doc.traefik.io/traefik/routing/entrypoints/#forwarded-headers) in your Coolify proxy configuration.
 
 ## Links
 - [Official website ›](https://www.authelia.com/?utm_source=coolify.io)
