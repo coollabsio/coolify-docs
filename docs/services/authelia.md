@@ -22,45 +22,33 @@ have already setup a [wildcard domain](https://coolify.io/docs/knowledge-base/se
     - Under **Domains**, you can change the Authelia URL as desired (make sure to keep the port number). For example, `https://auth.mydomain.com:9091`
     - Under **Image**, pin the image version by replacing *latest* with a [recent minor version](https://github.com/authelia/authelia/releases) of Authelia (e.g. `authelia/authelia:4.39`).
     - Click **Save**
-1. Back in the service page, go to **Persistent Storages** to edit the [configuration files](https://www.authelia.com/configuration/prologue/introduction/). At a minimum, you'll need to make the following changes:
-    - In the **configuration file**, under `session.cookies`, change the **domain** to the root/wildcard domain you've setup in Coolify (e.g. `mydomain.com`). Click **Save**.
-    - In the **user database file**, change the default user, password, and other info. The password(s) [should be hashed](https://www.authelia.com/reference/guides/passwords/). Click **Save**.
-1. In the Coolify UI, head over to **Servers** - `<your server>` - **Proxy** - **Dynamic Configurations**, and add the following file to set up the Authelia middleware:
-    ::: code-group
-    ```yaml [authelia.yaml]
-    http:
-      middlewares:
-        authelia:
-          forwardAuth:
-            address: 'http://authelia:9091/api/authz/forward-auth'
-            trustForwardHeader: true
-            authResponseHeaders:
-              - Remote-User
-              - Remote-Groups
-              - Remote-Name
-              - Remote-Email
-    ```
-    :::
-1. Go back to the service page and and click **Deploy** in the top right.
+    <ZoomableImage src="/docs/images/services/authelia_doc_1.webp" />
+1. Back in the service page, go to **Environment Variables**. Update the `BASE_DOMAIN` variable to the root/wildcard domain that you've set up with Coolify. Click **Update**.
+    <ZoomableImage src="/docs/images/services/authelia_doc_2.webp" />
+1. Go to **Persistent Storages**. Here you can quickly edit the Authelia configuration file, the user database file, and view notifications from Authelia in the notification file.
+    - Scroll down to the **user database file**, and adjust the default user. Make sure to update the password field with a [hashed password](https://www.authelia.com/reference/guides/passwords/#passwords). Click **Save**.
+    <ZoomableImage src="/docs/images/services/authelia_doc_3.webp" />
+1. Click **Deploy** in the top right. Wait for all the containers to start up.
 1. Under **Links** at the top, click on the Authelia URL and test that you can log in.
-1. Under **Links** again, click on the test app URL (`https://authtest...`). You should see the forwarded headers corresponding to your user (`Remote-User`, `Remote-Email`, etc.). If so, this means that Authelia is setup correctly 🎉!
+1. Under **Links** again, click on the whoami URL (`https://whoami...`). You should see the forwarded headers corresponding to your user (`Remote-User`, `Remote-Email`, etc.). If so, this means that Authelia is setup correctly 🎉!
 1. You can now start protecting your Coolify apps and services with Authelia:
     - For authentication via **proxy & forwarded headers**, add the Authelia middleware to each app or service you want to protect, as described below. Make sure to also consult the app's documentation for setting up header / proxy auth.
-        - For **applications**: Scroll down to **Container Labels**, and uncheck *Readonly labels* at the bottom. Then, find the **https** middlewares and append `,authelia@file`:
+        - For **applications**: Scroll down to **Container Labels**, and uncheck *Readonly labels* at the bottom. Then, find the **https** middlewares and append `,authelia@docker`:
           ```yaml
           traefik.http.routers.https-0-<abcdef>.middlewares=gzip # [!code --]
-          traefik.http.routers.https-0-<abcdef>.middlewares=gzip,authelia@file # [!code ++]
+          traefik.http.routers.https-0-<abcdef>.middlewares=gzip,authelia@docker # [!code ++]
           ```
         - For **services**: open the Docker Compose file and add the following label to the service(s) that should be protected:
           ```yaml
           labels:
-            - traefik.http.middlewares.authelia@file # [!code ++]
+            - traefik.http.middlewares.authelia@docker # [!code ++]
           ```
-    - For authentication via **OIDC/OAuth**, you'll need further configuration - consult the [Authelia docs](https://www.authelia.com/configuration/identity-providers/openid-connect/provider/).
+    - For authentication via **OIDC/OAuth**, you'll need further configuration - consult the [Authelia OIDC docs](https://www.authelia.com/configuration/identity-providers/openid-connect/provider/).
 
 ## Important Notes
-- In order for Authelia to receive the correct `X-Forwarded-*` headers, it is important to setup [Trusted Proxies](https://www.authelia.com/integration/proxies/traefik/#trusted-proxies) in your Traefik configuration.
-- Make sure to adjust the [Access Control](https://www.authelia.com/configuration/security/access-control/) in the configuration file to your specific needs. For example, you may want to change the **default_policy** to `two_factor` to require 2FA for all protected apps, and/or add rules to allow certain routes in an app to bypass authentication.
+- Adjust the [Access Control](https://www.authelia.com/configuration/security/access-control/) in the configuration file to your specific needs. For example, you may want to change the **default_policy** to `two_factor` to require 2FA for all protected apps, and/or add rules for specific apps and routes.
+- In production systems, it is recommended to switch the notification provider to [SMTP](https://www.authelia.com/configuration/notifications/smtp/) in the configuration file.
+- In order for Authelia to receive the correct `X-Forwarded-*` headers, you may need to adjust the [Trusted IPs](https://doc.traefik.io/traefik/routing/entrypoints/#forwarded-headers) in your Coolify proxy configuration.
 
 ## Links
 - [Official website ›](https://www.authelia.com/?utm_source=coolify.io)
