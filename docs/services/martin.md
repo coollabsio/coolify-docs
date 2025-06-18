@@ -13,4 +13,4 @@ Martin is a tile server able to generate and serve vector tiles on the fly from 
 
 ## Links
 
-- [Official Documentation](https://maplibre.org/martin/introduction.html/?utm_source=coolify.io)
+- [Official Documentation](https://maplibre.org/martin/introduction.html?utm_source=coolify.io)
