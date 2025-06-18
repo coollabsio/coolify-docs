@@ -1,13 +1,13 @@
 ---
-title: "Wordpress"
-description: "Here you can find the documentation for hosting Wordpress with Coolify."
+title: "WordPress"
+description: "Here you can find the documentation for hosting WordPress with Coolify."
 ---
 
-![Wordpress](https://raw.githubusercontent.com/logo/wordpress/caefc9aa315eafcf8687804564a11a9c5a77a561/images/logo.svg)
+![WordPress](https://raw.githubusercontent.com/logo/wordpress/caefc9aa315eafcf8687804564a11a9c5a77a561/images/logo.svg)
 
-## What is Wordpress?
+## What is WordPress?
 
-Wordpress is a free and open-source content management system written in PHP and paired with a MySQL/MariaDB database.
+WordPress is a free and open-source content management system written in PHP and paired with a MySQL/MariaDB database.
 It is used for creating websites, blogs, and applications.
 
 

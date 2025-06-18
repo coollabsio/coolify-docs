@@ -65,6 +65,15 @@ const coreMembers = [
     ]
   },
   {
+    avatar: '../images/team/oren.webp',
+    name: 'Oren Aksakal',
+    title: 'Developer',
+    links: [
+      { icon: 'github', link: 'https://github.com/orenaksakal' },
+      { icon: 'x', link: 'https://x.com/orenaksakal' }
+    ]
+  },
+  {
     avatar: '../images/team/coollabs.webp',
     name: 'You?',
     title: 'Will You Be Next?'

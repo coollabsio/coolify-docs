@@ -26,7 +26,7 @@ For self-hosting Coolify, you need to allow some ports on your firewall.
 - [Detailed Guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-githubs-ip-addresses).
 
 #### Webhooks
-You need to allow TCP port `80` or `443` for GitHub webhooks.
+You need to allow TCP port `80` and `443` for GitHub webhooks.
 
 To specify the IP addresses (optional), you can use the following API endpoint to get them:
 

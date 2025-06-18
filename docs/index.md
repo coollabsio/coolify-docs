@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "Coolify"
   text: "Open Source PaaS"
-  tagline: Self-host your own databases, services (like Wordpress, Plausible Analytics, Ghost) and applications (like Next.js, Nuxt.js, Remix, SvelteKit) with ease.
+  tagline: Self-host your own databases, services (like WordPress, Plausible Analytics, Ghost) and applications (like Next.js, Nuxt.js, Remix, SvelteKit) with ease.
   actions:
     - theme: brand
       text: Get Started
@@ -73,7 +73,7 @@ features:
 # landing:
 #   title: "Coolify"
 #   text: "Open source PaaS for self-hosting appss"
-#   tagline: Self-host your own databases, services (like Wordpress, Plausible Analytics, Ghost) and applications (like Next.js, Nuxt.js, Remix, SvelteKit) with ease.
+#   tagline: Self-host your own databases, services (like WordPress, Plausible Analytics, Ghost) and applications (like Next.js, Nuxt.js, Remix, SvelteKit) with ease.
 #   features:
 #     - title: Any Language
 #       details: Compatible with a wide range of programming languages and frameworks.

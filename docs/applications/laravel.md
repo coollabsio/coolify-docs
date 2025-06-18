@@ -361,13 +361,17 @@ EXPOSE 8000
 CMD ["unitd", "--no-daemon"]
 ```
 
-3. Create a `unit.json` file (lowercase) at the root of your project with the following content:
+3. Create a `unit.json` file (lowercase) at the root of your project with the following content.
 
 ```json
 {
     "listeners": {
         "*:8000": {
-            "pass": "routes"
+            "pass": "routes",
+            "forwarded": {
+                "protocol": "X-Forwarded-Proto",
+                "source": ["<Load balancer IP, Subnet etc.>"]
+            }
         }
     },
 
@@ -394,6 +398,20 @@ CMD ["unitd", "--no-daemon"]
     }
 }
 ```
+> [!NOTE]
+> When using docker-compose for deployment, then there might be an issue with `Mixed content error` when some of the assets are requested via `http://` instead of `https://`. To avoid that, find your load blaancer/proxy subnet or IP address and add it to the unit.config to explicitly tell unit to forward the correct headers to Laravel. Laravel also has to be configured trust proxies. More on that [here](https://laravel.com/docs/12.x/requests#configuring-trusted-proxies).
+> ```json
+> "listeners": {
+>        "*:8000": {
+>            "pass": "routes",
+>            "forwarded": {
+>                "protocol": "X-Forwarded-Proto",
+>                "source": ["<Load balancer IP, Subnet etc.>"]
+>            }
+>        }
+>    },
+>```
+
 4. Set Post-deployment to: 
 
 ```sh

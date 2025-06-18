@@ -1,13 +1,13 @@
 ---
-title: "Superset"
-description: "Here you can find the documentation for hosting Superset with Coolify."
+title: "Apache Superset"
+description: "Here you can find the documentation for hosting Apache Superset with Coolify."
 ---
 
 [![Superset](https://camo.githubusercontent.com/f6f25227203811335bbfc181e6dded66b57cbdbeafe346c0f4e5773bae157aeb/68747470733a2f2f73757065727365742e6170616368652e6f72672f696d672f73757065727365742d6c6f676f2d686f72697a2d6170616368652e737667)](https://superset.apache.org)
 
-## What is Superset?
+## What is Apache Superset?
 
-Superset is a modern data exploration and data visualization platform. Superset can replace or augment proprietary business intelligence tools for many teams. Superset integrates well with a variety of data sources.
+Apache Superset is a modern data exploration and data visualization platform. Superset can replace or augment proprietary business intelligence tools for many teams. Superset integrates well with a variety of data sources.
 
 ## Unofficial Docker Image
 

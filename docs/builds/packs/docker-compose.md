@@ -62,9 +62,13 @@ services:
 
 <ZoomableImage src="/docs/images/builds/packs/compose/6.webp" />
 
-### Coolify's Magic Environment Variables
 
+### Coolify's Magic Environment Variables
 Coolify can generate dynamic environment variables for you using the following syntax: `SERVICE_<TYPE>_<IDENTIFIER>`. 
+
+::: warning HEADS UP!
+Support for Magic Environment Variables in Compose files based on Git sources has been added in Coolify v4.0.0-beta.411
+:::
 
 The types include:
 - **FQDN:** Generates a fully qualified domain name for the service.

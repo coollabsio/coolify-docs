@@ -56,7 +56,7 @@ Coolify delivers unbeatable advantages for developers who want to self-host. Her
 | **Quick Setup**             | Start hosting in minutes with minimal maintenance required.                                                    |
 | **User-Friendly Interface** | Manage your infrastructure through a clean, simple dashboard designed for developers.                          |
 | **100% Open Source**        | Review the code, contribute to development, and help shape the platform’s future.                              |
-| **Active Community**        | Join over 14,000 people on Discord and 161,000+ servers running Coolify worldwide.                             |
+| **Active Community**        | Join over 16,000 people on Discord and 204,000+ servers running Coolify worldwide.                             |
 
 
 ## Getting Started with Coolify

@@ -117,6 +117,7 @@ watchPostEffect(() => {
 .container {
   display: flex;
   justify-content: space-between;
+  background: var(--vp-nav-bg-color);
   margin: 0 auto;
   max-width: calc(var(--vp-layout-max-width) - 64px);
   height: var(--vp-nav-height);

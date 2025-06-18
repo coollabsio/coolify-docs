@@ -52,6 +52,12 @@ Coolify supports several Linux distributions:
 - Alpine Linux
 - Raspberry Pi OS 64-bit (Raspbian)
 
+::: info Note
+For some distros (like AlmaLinux), Docker must be pre-installed. If the install script fails, manually install Docker and re-run the script. 
+
+Other Linux distributions may work with Coolify, but have not been officially tested.
+:::
+
 ### 3. Supported Architectures
 Coolify runs on 64-bit systems:
 - AMD64

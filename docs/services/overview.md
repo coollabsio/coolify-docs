@@ -35,6 +35,7 @@ You can host ANY service with Coolify that could be containerized.
 - [Argilla](/services/argilla) - An open-source platform for building, training, and evaluating conversational AI models.
 - [Audiobookshelf](/services/audiobookshelf) - Self-hosted audiobook and podcast server.
 - [Authentik](/services/authentik) - An open-source Identity Provider, focused on flexibility and versatility.
+- [Apache Superset](/services/apache-superset) - An open-source data exploration and data visualization platform.
 - [Baby Buddy](/services/babybuddy) - It helps parents track their baby's daily activities, growth, and health with ease.
 - [Beszel](/services/beszel) - Lightweight server monitoring hub with historical data, docker stats, and alerts.
 - [Bitcoin Core](/services/bitcoin-core) - Bitcoin Core full node software.
@@ -50,6 +51,7 @@ You can host ANY service with Coolify that could be containerized.
 - [Chaskiq](/services/chaskiq) - Open source customer engagement platform.
 - [Chatwoot](/services/chatwoot) - Open-source customer engagement suite.
 - [Checkmate](/services/checkmate) - Website monitoring and uptime service.
+- [CodiMD](/services/codimd) - Open source real-time collaboration with markdown platform.
 - [ClassicPress](/services/classicpress) - A business-focused CMS with a strong community.
 - [CloudBeaver](/services/cloudbeaver) - Universal database tool with web interface.
 - [Cloudflared](/services/cloudflared) - Cloudflare Tunnel client.
@@ -61,6 +63,7 @@ You can host ANY service with Coolify that could be containerized.
 - [CyberChef](/services/cyberchef) - Data analysis and manipulation tool for cybersecurity.
 - [Dashboard](/services/dashboard) - A simple dashboard for your server.
 - [Dashy](/services/dashy) - Customizable homepage dashboard for self-hosted services.
+- [Diun](/services/diun) - Open source Docker Image Update Notifier
 - [Deno KV](/services/denokv) - Deno's built-in key-value database service.
 - [Directus](/services/directus) - An open-source headless CMS and API for custom databases.
 - [Docker Registry](/services/docker-registry) - A Docker registry to store and manage your Docker images.
@@ -92,6 +95,7 @@ You can host ANY service with Coolify that could be containerized.
 - [Ghost](/services/ghost) - A professional publishing platform.
 - [Gitea](/services/gitea) - A painless self-hosted Git service.
 - [GitLab](/services/gitlab) - DevOps lifecycle tool.
+- [Grist](/services/grist) - Open source relational spreadsheet database
 - [Glance](/services/glance) - All-in-one Home Server Dashboard.
 - [Glances](/services/glances) - Cross-platform system monitoring tool.
 - [GlitchTip](/services/glitchtip) - An open-source error tracking tool.
@@ -121,12 +125,16 @@ You can host ANY service with Coolify that could be containerized.
 - [LibreOffice](/services/libreoffice) - Free and open-source office suite.
 - [LibreTranslate](/services/libretranslate) - Free and open-source machine translation API.
 - [Listmonk](/services/listmonk) - Self-hosted newsletter and mailing list manager.
+- [Leantime](/services/leantime) - Open source project management system for non-project managers.
 - [Litellm](/services/litellm) - Open source LLM Gateway to manage authentication, loadbalancing, and spend tracking across 100+ LLMs. All in the OpenAI format.
 - [LiteQueen](/services/litequeen) - Lightweight service management platform.
+- [LimeSurvey](/services/limesurvey) - Open-source survey platform. 
 - [Logto](/services/logto) - Logto is an Auth0 alternative designed for modern apps and SaaS products.
 - [Lowcoder](/services/lowcoder) - Open-source low-code platform for building internal tools.
 - [Mailpit](/services/mailpit) - Self-hosted email and SMTP testing tool.
+- [Marimo](/services/marimo) - Open-source reactive notebook for Python
 - [Martin](/services/martin) - PostGIS vector tile server.
+- [Memos](/services/memos) - Open-source, lightweight note-taking solution
 - [Mattermost](/services/mattermost) - Open-source messaging platform for teams.
 - [Mautic](/services/mautic5) - Open-source marketing automation platform.
 - [Maybe](/services/maybe) - Personal finance and wealth management application.
@@ -142,7 +150,9 @@ You can host ANY service with Coolify that could be containerized.
 - [Moodle](/services/moodle) - Open-source learning platform.
 - [Mosquitto](/services/mosquitto) - Open-source MQTT broker.
 - [N8N](/services/n8n) - Workflow automation tool.
+- [Navidrome](/services/navidrome) - Open source web-based music collection server and streamer
 - [Neon WS Proxy](/services/neon-ws-proxy) - WebSocket proxy for Neon database.
+- [Netbird Client](/services/netbird-client) - Open source secure WireGuard®-based overlay network with SSO, MFA and granular access controls.
 - [Next Image Transformation](/services/next-image-transformation) - Image transformation service for Next.js.
 - [Nextcloud](/services/nextcloud) - A safe home for all your data.
 - [Nexus](/services/nexus) - A repository manager that allows you to store, manage, and distribute your software artifacts.
@@ -158,8 +168,13 @@ You can host ANY service with Coolify that could be containerized.
 - [Organizr](/services/organizr) - Homepage organizer for your server services.
 - [osTicket](/services/osticket) - Open-source help desk ticketing system.
 - [Outline](/services/outline) - Open-source collaboration tool.
+- [OrangeHRM](/services/orangehrm) - Open-source Human Resource Management (HRM) System
+- [Observium](/services/observium) - Open-source network monitoring platform
+- [Onetime Secret](/services/onetime-secret) - Open-source secret link that can be viewed only once.
 - [Overseerr](/services/overseerr) - A request management and media discovery tool built to work with your existing Plex ecosystem.
 - [ownCloud](/services/owncloud) - File synchronization and sharing platform.
+- [Passbolt](/services/passbolt) - An open source credential platform for modern teams.
+- [PG Back Web](/services/pgbackweb) - Open source PostgreSQL backup manager with a user-friendly web interface
 - [Pairdrop](/services/pairdrop) - Local file sharing in your browser.
 - [Paperless](/services/paperless) - Document management system that transforms physical documents into searchable online archives.
 - [Paymenter](/services/paymenter) - Open-Source Billing, Built for Hosting Providers.
@@ -180,6 +195,7 @@ You can host ANY service with Coolify that could be containerized.
 - [Qdrant](/services/qdrant) - Open source, AI-native vector database.
 - [RabbitMQ](/services/rabbitmq) - Open source message broker.
 - [Radarr](/services/radarr) - A Media server software.
+- [Ryot](/services/ryot) - Open source platform for tracking various facets of your life - media, fitness etc.
 - [Rallly](/services/rallly) - Open-source meeting scheduling tool.
 - [Reactive Resume](/services/reactive-resume) - A free and open source resume builder.
 - [Readeck](/services/readeck) - Web article reader and bookmark manager.
@@ -190,11 +206,13 @@ You can host ANY service with Coolify that could be containerized.
 - [Slash](/services/slash) - Open-source, self-hosted links and notes manager.
 - [Snapdrop](/services/snapdrop) - Local file sharing in your browser.
 - [Soketi](/services/soketi) - Open-source WebSocket server.
+- [Soketi App Manager](/services/soketi-app-manager) - Open-source user-friendly interface for managing Soketi websocket applications.
 - [Sonarr](/services/sonarr) - A internet PVR for Usenet and Torrents.
 - [Statusnook](/services/statusnook) - A status page system for your website.
 - [Stirling PDF](/services/stirling-pdf) - Powerful PDF manipulation tool.
 - [Strapi](/services/strapi) - Open-source headless CMS.
 - [Supabase](/services/supabase) - Open source Firebase alternative.
+- [Seafile](/services/seafile) - Open source cloud storage system for file sync, share and document collaboration. 
 - [Superset](/services/superset) - Open-source data visualization and exploration platform.
 - [SuperTokens](/services/supertokens) - Open-source authentication solution.
 - [Syncthing](/services/syncthing) - Open Source Continuous File Synchronization.
@@ -203,6 +221,7 @@ You can host ANY service with Coolify that could be containerized.
 - [Traccar](/services/traccar) - Open-source GPS tracking platform.
 - [Transmission](/services/transmission) - Fast, easy, and free BitTorrent client.
 - [Trigger](/services/trigger) - Open-source workflow automation tool.
+- [Typesense](/services/typesense) - An open source alternative to Algolia
 - [Umami](/services/umami) - Simple, fast, privacy-focused alternative to Google Analytics.
 - [Unleash](/services/unleash) - Open-source feature management platform.
 - [Unsend](/services/unsend) - Open-source email recall service.
@@ -210,6 +229,7 @@ You can host ANY service with Coolify that could be containerized.
 - [Uptime Kuma](/services/uptime-kuma) - A fancy self-hosted monitoring tool.
 - [Vaultwarden](/services/vaultwarden) - Unofficial Bitwarden compatible server.
 - [Vikunja](/services/vikunja) - The open-source to-do app.
+- [Vert](/services/vert) - Open source file conversion utility that uses WebAssembly to convert files on your device.
 - [VvvebJs](/services/vvveb) - Powerful website builder with drag and drop functionality.
 - [Wakapi](/services/wakapi) - Open-source coding activity tracker.
 - [Weaviate](/services/weaviate) - Open source, AI-native vector database.
@@ -220,4 +240,5 @@ You can host ANY service with Coolify that could be containerized.
 - [Windmill](/services/windmill) - Open-source developer platform.
 - [WireGuard Easy](/services/wireguard-easy) - Easy-to-use WireGuard VPN server.
 - [WordPress](/services/wordpress) - Website and blogging platform.
+- [Yamtrack](/services/yamtrack) - Open source media tracker for movies, tv shows, anime, manga, video games and books.
 - [Zipline](/services/zipline) - Next generation ShareX / File upload server
