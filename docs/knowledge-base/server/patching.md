@@ -40,6 +40,7 @@ Coolify checks for updates weekly and sends notifications if any are available.
 ## Supported Package Managers
 As of **v4.0.0-beta.419**, server patching is supported for the following package managers:
 
+* **APK** (added in version **v4.0.0-beta.4xx**) <!-- TODO : raplace with exact version number when know -->
 * **APT**
 * **DNF**
 * **Zypper**
