@@ -3,88 +3,80 @@ title: Catalog
 description: Here you can find all the services available as One click services on Coolify
 ---
 
-import { ImageCard } from "@/components/image-card";
-import { ImageCardGroup } from "@/components/image-card-group";
-
+import ServiceCatalog from '@/components/service-catalog';
 
 ## One Click Services Catalog
+
 Here you can find all the services available as One click services on Coolify
 
-
 <br />
-### Analytics
-<ImageCardGroup>
-  <ImageCard
-    title="Umami"
-    description="A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies."
-    href="service"
-    imageSrc="/images/0.png"
-    data_plausible_event_name=""
-  />
-  <ImageCard
-    title="Plausible"
-    description="A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies."
-    href="#"
-    imageSrc="/images/2.png"
-    data_plausible_event_name=""
-  />
-  <ImageCard
-    title="AnythingLLM"
-    description="A easiest to use, all-in-one AI application that can do RAG, AI Agents, and much more."
-    href="#"
-    imageSrc="/images/1.png"
-    data_plausible_event_name=""
-  />
-</ImageCardGroup>
 
+export const services = [
+  {
+    title: "Umami",
+    description: "A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies.",
+    href: "service",
+    imageSrc: "/images/0.png",
+    category: "Analytics"
+  },
+  {
+    title: "Plausible",
+    description: "A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies.",
+    href: "#",
+    imageSrc: "/images/2.png",
+    category: "Analytics"
+  },
+  {
+    title: "AnythingLLM",
+    description: "A easiest to use, all-in-one AI application that can do RAG, AI Agents, and much more.",
+    href: "#",
+    imageSrc: "/images/1.png",
+    category: "Analytics"
+  },
+  {
+    title: "AnythingLLM",
+    description: "A easiest to use, all-in-one AI application that can do RAG, AI Agents, and much more.",
+    href: "/package-managers/javascript/npm",
+    imageSrc: "/images/1.png",
+    category: "AI & Machine Learning"
+  },
+  {
+    title: "Plausible",
+    description: "A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies.",
+    href: "/package-managers/javascript/pnpm",
+    imageSrc: "/images/2.png",
+    category: "AI & Machine Learning"
+  },
+  {
+    title: "Nitropage",
+    description: "An extensible, drag and drop website builder based on SolidStart, completely free and open source.",
+    href: "/images/deployment-tools/coolify/aws-s3-backup/header.webp",
+    imageSrc: "/images/3.png",
+    category: "AI & Machine Learning"
+  },
+  {
+    title: "AnythingLLM",
+    description: "A easiest to use, all-in-one AI application that can do RAG, AI Agents, and much more.",
+    imageSrc: "/images/1.png",
+    href: "#",
+    category: "Media & Entertainment"
+  },
+  {
+    title: "Plausible",
+    description: "A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies.",
+    imageSrc: "/images/2.png",
+    href: "#",
+    category: "Media & Entertainment"
+  },
+  {
+    title: "Nitropage",
+    description: "An extensible, drag and drop website builder based on SolidStart, completely free and open source.",
+    imageSrc: "/images/3.png",
+    href: "#",
+    category: "Media & Entertainment"
+  }
+];
 
----
+export const categories = Array.from(new Set(services.map(service => service.category)));
 
-### AI & Machine Learning
-<ImageCardGroup>
-  <ImageCard
-    title="AnythingLLM"
-    description="A easiest to use, all-in-one AI application that can do RAG, AI Agents, and much more."
-    href="/package-managers/javascript/npm"
-    imageSrc="/images/1.png"
-    data_plausible_event_name=""
-  />
-  <ImageCard
-    title="Plausible"
-    description="A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies."
-    href="/package-managers/javascript/pnpm"
-    imageSrc="/images/2.png"
-    data_plausible_event_name=""
-  />
-  <ImageCard
-    title="Nitropage"
-    description="An extensible, drag and drop website builder based on SolidStart, completely free and open source."
-    href="/images/deployment-tools/coolify/aws-s3-backup/header.webp"
-    imageSrc="/images/3.png"
-    data_plausible_event_name=""
-  />
-</ImageCardGroup>
-
----
-
-### Media & Entertainment
-<ImageCardGroup>
-  <ImageCard
-    title="AnythingLLM"
-    description="A easiest to use, all-in-one AI application that can do RAG, AI Agents, and much more."
-    imageSrc="/images/1.png"
-    data_plausible_event_name=""
-  />
-  <ImageCard
-    title="Plausible"
-    description="A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies."
-    imageSrc="/images/2.png"
-    data_plausible_event_name=""
-  />
-  <ImageCard
-    title="Nitropage"
-    description="An extensible, drag and drop website builder based on SolidStart, completely free and open source."
-    imageSrc="/images/3.png"
-    data_plausible_event_name=""
-  />
-</ImageCardGroup>
+<ServiceCatalog services={services} categories={categories} />

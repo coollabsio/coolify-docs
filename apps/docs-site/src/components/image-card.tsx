@@ -5,8 +5,8 @@ import Image from "next/image";
 import React from "react";
 
 interface ImageCardProps {
-  title: string;
-  description: string;
+  title: React.ReactNode;
+  description: React.ReactNode;
   href: string;
   imageSrc: string;
   imageAlt?: string;
