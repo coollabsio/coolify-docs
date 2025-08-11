@@ -1,10 +1,7 @@
 ---
 title: Overview
-layout: doc
+layout: page
+aside: false
 ---
 
-# Services
-
-This list only includes services that are available as one-click services in Coolify.
-
-<ServicesList />
+<ServicesList title="Services" description="This list only includes services that are available as one-click services in Coolify." />
