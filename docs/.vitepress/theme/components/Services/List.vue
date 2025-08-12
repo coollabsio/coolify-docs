@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { withBase } from 'vitepress'
 import { services } from '../../../../_data/services.js'
-import { Motion } from 'motion-v'
 import ServicesModal from './Modal.vue'
-import ApiConfigModal from './ApiConfigModal.vue'
+import DeployModal from './DeployModal.vue'
+import CoolIcon from '../CoolIcon.vue'
 
 defineProps<{
     title: string
@@ -11,17 +12,24 @@ defineProps<{
 }>()
 
 const showModal = ref(false)
-const selectedService = ref<any>(null)
+const selectedService = ref<string | undefined>(undefined)
 
 const rightClick = (serviceName: string) => {
     selectedService.value = serviceName
     showModal.value = true
 }
 
+const handleModalClose = () => {
+    showModal.value = false
+    selectedService.value = undefined
+}
+
 const search = ref('')
 const selectedCategories = ref(['All'])
 const isOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
+const itemsPerPage = ref(20)
+const currentPage = ref(1)
 
 const categories = computed(() => {
     const uniqueCategories = new Set(services.map((s: any) => s.category))
@@ -68,12 +76,12 @@ const toggleCategory = (category: string) => {
         selectedCategories.value = ['All']
         return
     }
-    
+
     // Remove 'All' if it's currently selected and we're selecting a specific category
     if (selectedCategories.value.includes('All')) {
         selectedCategories.value = selectedCategories.value.filter(c => c !== 'All')
     }
-    
+
     const index = selectedCategories.value.indexOf(category)
     if (index === -1) {
         // Category not found, add it
@@ -95,63 +103,39 @@ const navigateTo = (path: string, external: boolean = false) => {
         window.location.href = `/docs/${path}`
     }
 }
-
-// Fallback image composable
-const useImageFallback = () => {
-    const imageErrors = ref(new Set<string>())
-    
-    const handleImageError = (serviceName: string) => {
-        imageErrors.value.add(serviceName)
-    }
-    
-    const hasImageError = (serviceName: string) => {
-        return imageErrors.value.has(serviceName)
-    }
-    
-    const getFallbackImage = () => {
-        return "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNTAwIiB6b29tQW5kUGFuPSJtYWduaWZ5IiB2aWV3Qm94PSIwIDAgMzc1IDM3NC45OTk5OTEiIGhlaWdodD0iNTAwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWVNpZCBtZWV0IiB2ZXJzaW9uPSIxLjAiPjxkZWZzPjxnLz48L2RlZnM+PGcgZmlsbD0iIzhjNTJmZiIgZmlsbC1vcGFjaXR5PSIwLjMwMiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoODQuNjYzNzkzLCAzMTAuMDE2NDg0KSI+PGc+PHBhdGggZD0iTSA2MyAtMTY4IEwgMjEgLTE2OCBMIDIxIC00MiBMIDYzIC00MiBaIE0gNjMgMCBMIDIzMSAwIEwgMjMxIC00MiBMIDYzIC00MiBaIE0gNjMgLTE2OCBMIDIzMSAtMTY4IEwgMjMxIC0yMTAgTCA2MyAtMjEwIFogTSA2MyAtMTY4ICIvPjwvZz48L2c+PC9nPjxnIGZpbGw9IiM4YzUyZmYiIGZpbGwtb3BhY2l0eT0iMC41MDIiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDcxLjQwNTUzNywgMjk2Ljc1ODIzMykiPjxnPjxwYXRoIGQ9Ik0gNjMgLTE2OCBMIDIxIC0xNjggTCAyMSAtNDIgTCA2MyAtNDIgWiBNIDYzIDAgTCAyMzEgMCBMIDIzMSAtNDIgTCA2MyAtNDIgWiBNIDYzIC0xNjggTCAyMzEgLTE2OCBMIDIzMSAtMjEwIEwgNjMgLTIxMCBaIE0gNjMgLTE2OCAiLz48L2c+PC9nPjwvZz48ZyBmaWxsPSIjOGM1MmZmIiBmaWxsLW9wYWNpdHk9IjEiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDU4LjE0NzI4NywgMjgzLjQ5OTk4MSkiPjxnPjxwYXRoIGQ9Ik0gNjMgLTE2OCBMIDIxIC0xNjggTCAyMSAtNDIgTCA2MyAtNDIgWiBNIDYzIDAgTCAyMzEgMCBMIDIzMSAtNDIgTCA2MyAtNDIgWiBNIDYzIC0xNjggTCAyMzEgLTE2OCBMIDIzMSAtMjEwIEwgNjMgLTIxMCBaIE0gNjMgLTE2OCAiLz48L2c+PC9nPjwvZz48L3N2Zz4="
-    }
-    
-    return {
-        imageErrors,
-        handleImageError,
-        hasImageError,
-        getFallbackImage
-    }
-}
-
-const { handleImageError, hasImageError, getFallbackImage } = useImageFallback()
 </script>
 
 <template>
-    <div class="flex flex-col max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto px-4 mt-8">
+    <div class="flex flex-col max-w-3xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl 3xl:max-w-7xl mx-auto px-4 mt-8">
         <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">{{ title }}</h2>
         <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">{{ description }}</p>
         <div class="input-container w-full flex flex-col justify-between gap-2 mb-2">
             <input v-model="search" type="text" placeholder="Search"
-                class="search w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg py-3 sm:py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-800" style="background-color: rgba(101, 117, 133, 0.16);" />
+                class="search w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg py-3 sm:py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-800" />
             <div class="button-group relative flex flex-col gap-2" ref="dropdownRef">
-                <button @click.stop="isOpen = !isOpen" 
-                    class="select flex items-center justify-between w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 sm:px-3 sm:py-2 bg-purple-700 dark:bg-purple-600 text-gray-900 dark:text-white focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-800" style="background-color: rgba(101, 117, 133, 0.16);">
-                    <span class="text-sm sm:text-base">{{ selectedCategories.length === 1 ? selectedCategories[0] : `${selectedCategories.length} categories` }}</span>
-                    <svg class="w-4 h-4 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
+                <button @click.stop="isOpen = !isOpen"
+                    class="select flex items-center justify-between w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 sm:px-3 sm:py-2 bg-purple-700 dark:bg-purple-600 text-gray-900 dark:text-white focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-800">
+                    <span class="text-sm sm:text-base">{{ selectedCategories.length === 1 ? selectedCategories[0] :
+                        `${selectedCategories.length} categories` }}
+                    </span>
+                    <CoolIcon class="w-4 h-4 ml-2 flex-shrink-0" name="mdi:chevron-down" color="white" />
                 </button>
-                <div v-if="isOpen" 
+                <div v-if="isOpen"
                     class="dropdown-content absolute z-10 top-full left-0 right-0 rounded-lg shadow-lg bg-white dark:!bg-[#23272f] border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto">
                     <div class="p-2">
-                        <label class="flex items-center space-x-2 p-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer">
-                            <input type="checkbox" 
-                                :checked="selectedCategories.includes('All')"
+                        <label
+                            class="flex items-center space-x-2 p-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer">
+                            <input type="checkbox" :checked="selectedCategories.includes('All')"
                                 @change="toggleCategory('All')"
                                 class="rounded border-gray-300 dark:border-gray-600 text-purple-600 dark:text-purple-500 focus:ring-purple-600 dark:focus:ring-purple-500 bg-white dark:bg-gray-800">
-                            <span class="text-gray-900 dark:text-white">All Categories</span>
+                            <span class="text-gray-900 dark:text-white">
+                                All Categories
+                            </span>
                         </label>
                         <div v-for="category in categories" :key="category" class="mt-1">
-                            <label class="flex items-center space-x-2 p-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer">
-                                <input type="checkbox" 
-                                    :checked="selectedCategories.includes(category)"
+                            <label
+                                class="flex items-center space-x-2 p-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer">
+                                <input type="checkbox" :checked="selectedCategories.includes(category)"
                                     @change="toggleCategory(category)"
                                     class="rounded border-gray-300 dark:border-gray-600 text-purple-600 dark:text-purple-500 focus:ring-purple-600 dark:focus:ring-purple-500 bg-white dark:bg-gray-800">
                                 <span class="text-gray-900 dark:text-white">{{ category }}</span>
@@ -159,7 +143,8 @@ const { handleImageError, hasImageError, getFallbackImage } = useImageFallback()
                         </div>
                     </div>
                 </div>
-                <button @click="navigateTo('https://github.com/coollabsio/coolify/blob/v4.x/CONTRIBUTING.md', true)" class="add-service-btn text-gray-900 dark:text-white px-6 py-3 sm:px-4 sm:py-2 rounded-lg transition-colors text-sm sm:text-base w-full" style="background-color: rgba(101, 117, 133, 0.16);" onmouseover="this.style.backgroundColor='rgba(75, 85, 99, 0.25)'" onmouseout="this.style.backgroundColor='rgba(101, 117, 133, 0.16)'">
+                <button @click="navigateTo('https://github.com/coollabsio/coolify/blob/v4.x/CONTRIBUTING.md', true)"
+                    class="add-service-btn text-gray-900 dark:text-white px-6 py-3 sm:px-4 sm:py-2 rounded-lg transition-colors text-sm sm:text-base w-full">
                     Add Service
                 </button>
             </div>
@@ -167,89 +152,79 @@ const { handleImageError, hasImageError, getFallbackImage } = useImageFallback()
         <div class="grid-container">
             <template v-if="selectedCategories.includes('All')">
                 <div v-if="filteredCategories.length === 0">
-                    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">No results found</h2>
+                    <h2 class="text-2xl font-bold my-6 text-gray-900 dark:text-gray-100">
+                        No results found
+                    </h2>
                     <div class="services-grid not-found-grid grid grid-cols-1 gap-6">
-                        <div class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-colors hover:cursor-pointer flex flex-col">
+                        <div
+                            class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-colors hover:cursor-pointer flex flex-col">
                             <div class="w-full flex flex-col dark:default-soft rounded-b-xl p-3">
-                                <div class="font-bold text-md mb-1 text-gray-900 dark:text-gray-100">Service not found</div>
-                                <div class="text-gray-500 dark:text-gray-400 text-xs">Try adjusting your search or category filter.</div>
+                                <div class="font-bold text-md mb-1 text-gray-900 dark:text-gray-100">
+                                    Service not found
+                                </div>
+                                <div class="text-gray-500 dark:text-gray-400 text-xs">
+                                    Try adjusting your search or category filter.
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div v-else v-for="category in filteredCategories" :key="category" >
-                        <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">{{ category }}</h2>
-                        <div class="services-grid grid grid-cols-1 gap-6 rounded-lg">
-                            <!-- <Motion
-                                :initial="{
-                                    scale: 1.1,
-                                    opacity: 0,
-                                    filter: 'blur(0px)'
-                                }"
-                                :animate="{
-                                    scale: 1,
-                                    opacity: 1,
-                                    filter: 'blur(0px)'
-                                }"
-                                :transition="{
-                                    duration: 0.6,
-                                    delay: 0.1 * index
-                                }"
-                            > -->
-                                <div
-                                    v-for="(service, index) in filteredServicesByCategory(category)" :key="service.name"
+                <div v-else v-for="category in filteredCategories" :key="category">
+                    <h2 class="text-2xl font-bold my-6 text-gray-900 dark:text-gray-100">{{ category }}</h2>
+                    <div class="services-grid grid grid-cols-1 gap-6 rounded-lg">
+                        <div v-for="(service, index) in filteredServicesByCategory(category)" :key="service.name"
+                            @click="navigateTo(`services/${service.name.toLowerCase()}`)"
+                            @click.right.prevent="rightClick(service.name)"
+                            class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-200 hover:cursor-pointer flex flex-col">
 
-                                    @click="navigateTo(`services/${service.name.toLowerCase()}`)"
-                                    @click.right.prevent="rightClick(service.name)"
-                                    class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-colors hover:cursor-pointer flex flex-col">
-
-                                    <div class="w-full h-full flex flex-col dark:default-soft rounded-t-xl p-3">
-                                        <div class="font-bold text-md text-gray-900 mb-1 dark:text-gray-100">{{ service.name }}</div>
-                                        <div class="text-gray-500 dark:text-gray-400 text-xs">{{ service.description }}</div>
-                                    </div>
-                                    <div class="p-4">
-                                        <div class="bg-white dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center" style="background-color: rgba(101, 117, 133, 0.16);">
-                                            <img 
-                                                :src="hasImageError(service.name) ? getFallbackImage() : `https://raw.githubusercontent.com/coollabsio/coolify-docs/db61a7c5175b48b638cbc445980370af68374921/docs/public/images/services/${service.name.toLowerCase()}.svg`"
-                                                :alt="service.name" 
-                                                @error="handleImageError(service.name)"
-                                                class="w-auto h-8 px-2 rounded-lg" 
-                                            />
-                                        </div>
-                                    </div>
+                            <div class="w-full h-full flex flex-col dark:default-soft rounded-t-xl p-3">
+                                <div class="font-bold text-md text-gray-900 mb-1 dark:text-gray-100">{{ service.name }}
                                 </div>
-                            <!-- </Motion> -->
+                                <div class="text-gray-500 dark:text-gray-400 text-xs">{{ service.description }}</div>
+                            </div>
+                            <div class="p-4">
+                                <div
+                                    class="bg-white dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center">
+                                    <img :src="withBase(service.icon)" alt="Coolify" class="w-auto h-8 px-2 rounded-lg" loading="lazy" />
+                                </div>
+                            </div>
                         </div>
+                    </div>
                 </div>
             </template>
             <template v-else>
                 <div>
                     <div v-for="category in selectedCategories" :key="category">
-                        <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">{{ category }}</h2>
+                        <h2 class="text-2xl font-bold my-6 text-gray-900 dark:text-gray-100">{{ category }}</h2>
                         <div class="services-grid not-found-grid grid grid-cols-1 gap-6 mb-8">
                             <template v-if="filteredServicesByCategory(category).length === 0">
-                                <div class="dark:default-soft h-auto rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-colors hover:cursor-pointer flex flex-col">
+                                <div
+                                    class="dark:default-soft h-auto rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-colors hover:cursor-pointer flex flex-col">
                                     <div class="w-full flex flex-col dark:default-soft rounded-b-xl p-3">
-                                        <div class="font-bold text-md mb-1 text-gray-900 dark:text-gray-100">No services found</div>
-                                        <div class="text-gray-500 dark:text-gray-400 text-sm">Try adjusting your search or category filter.</div>
+                                        <div class="font-bold text-md mb-1 text-gray-900 dark:text-gray-100">No services
+                                            found</div>
+                                        <div class="text-gray-500 dark:text-gray-400 text-sm">Try adjusting your search
+                                            or category filter.</div>
                                     </div>
                                 </div>
                             </template>
                             <template v-else>
-                                <div v-for="service in filteredServicesByCategory(category)" :key="service.name" @click="navigateTo(`services/${service.name.toLowerCase()}`)"
-                                    class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-colors hover:cursor-pointer flex flex-col">
+                                <div v-for="service in filteredServicesByCategory(category)" :key="service.name"
+                                    @click="navigateTo(`services/${service.name.toLowerCase()}`)"
+                                    @click.right.prevent="rightClick(service.name)"
+                                    class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-200 hover:cursor-pointer flex flex-col">
                                     <div class="w-full h-full flex flex-col dark:default-soft rounded-b-xl p-3">
-                                        <div class="font-bold text-md text-gray-900 mb-1 dark:text-gray-100">{{ service.name }}</div>
-                                        <div class="text-gray-500 dark:text-gray-400 text-xs">{{ service.description }}</div>
+                                        <div class="font-bold text-md text-gray-900 mb-1 dark:text-gray-100">{{
+                                            service.name }}
+                                        </div>
+                                        <div class="text-gray-500 dark:text-gray-400 text-xs">
+                                            {{ service.description }}
+                                        </div>
                                     </div>
                                     <div class="p-4">
-                                        <div class="bg-white dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center" style="background-color: rgba(101, 117, 133, 0.16);">
-                                            <img 
-                                                :src="hasImageError(service.name) ? getFallbackImage() : `https://raw.githubusercontent.com/coollabsio/coolify-docs/db61a7c5175b48b638cbc445980370af68374921/docs/public/images/services/${service.name.toLowerCase()}.svg`"
-                                                :alt="service.name" 
-                                                @error="handleImageError(service.name)"
-                                                class="w-auto h-8 px-2 rounded-lg" 
-                                            />
+                                        <div
+                                            class="bg-white dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center">
+                                            <img :src="withBase(service.icon)" alt="Coolify" class="w-auto h-8 px-2 rounded-lg" loading="lazy" />
                                         </div>
                                     </div>
                                 </div>
@@ -259,23 +234,25 @@ const { handleImageError, hasImageError, getFallbackImage } = useImageFallback()
                 </div>
             </template>
         </div>
-        <ApiConfigModal :show="showModal" :selected-service="selectedService" />
+        <DeployModal :show="showModal" :selected-service="selectedService" @close="handleModalClose" />
     </div>
 </template>
 
 <style scoped>
-.default-soft{
+.default-soft {
     background: rgba(101, 117, 133, 0.16);
     border-color: #3c3f44;
 }
 
 /* Purple checkboxes */
 input[type="checkbox"] {
-    accent-color: #9333ea; /* purple-600 */
+    accent-color: #9333ea;
+    /* purple-600 */
 }
 
 .dark input[type="checkbox"] {
-    accent-color: #8b5cf6; /* purple-500 */
+    accent-color: #8b5cf6;
+    /* purple-500 */
 }
 
 .search {
@@ -298,7 +275,8 @@ input[type="checkbox"] {
 @media (max-width: 640px) {
     .search {
         padding: 10px 12px;
-        font-size: 16px; /* Prevents zoom on iOS */
+        font-size: 16px;
+        /* Prevents zoom on iOS */
     }
 }
 
@@ -348,23 +326,28 @@ input[type="checkbox"] {
         flex-direction: row;
         gap: 1rem;
     }
-    
+
     .input-container .search {
         max-width: 20rem;
     }
-    
+
     .input-container .button-group {
         flex-direction: row;
     }
-    
+
     .input-container .select {
         width: 12rem;
     }
-    
+
     .input-container .add-service-btn {
         width: auto;
+        background-color: rgba(101, 117, 133, 0.16);
     }
-    
+
+    .add-service-btn:hover {
+        background-color: rgba(75, 85, 99, 0.25);
+    }
+
     .dropdown-content {
         left: 0;
         width: 12rem;
@@ -377,7 +360,7 @@ input[type="checkbox"] {
         font-size: 14px;
         padding: 8px;
     }
-    
+
     .dropdown-content label {
         padding: 10px 8px;
     }
@@ -388,7 +371,7 @@ input[type="checkbox"] {
         font-size: 16px;
         padding: 12px;
     }
-    
+
     .dropdown-content label {
         padding: 12px 10px;
     }
@@ -463,13 +446,13 @@ input[type="checkbox"] {
     }
 }
 
-@media (min-width: 712px) {
+@media (min-width: 832px) {
     .services-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
     .services-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
@@ -496,5 +479,19 @@ input[type="checkbox"] {
     grid-template-rows: auto;
     min-height: 100vh;
     align-content: start;
+    contain: layout style paint;
+}
+
+/* Optimize image rendering */
+img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    will-change: transform;
+}
+
+/* Optimize animations */
+.services-grid>div {
+    will-change: transform;
+    backface-visibility: hidden;
 }
 </style>

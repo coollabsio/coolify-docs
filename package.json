@@ -2,6 +2,7 @@
   "name": "documentation-coolify",
   "version": "0.0.1",
   "devDependencies": {
+    "@iconify/vue": "^5.0.0",
     "@types/js-yaml": "4.0.9",
     "@types/node": "22.13.1",
     "autoprefixer": "10.4.20",

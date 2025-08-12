@@ -23,11 +23,78 @@ const emit = defineEmits<{
 const modalRef = ref<HTMLDivElement>()
 const isVisible = ref(false)
 const isAnimating = ref(false)
+const previouslyFocusedElement = ref<HTMLElement | null>(null)
+
+// Focus trap management
+const focusableElements = ref<HTMLElement[]>([])
+const firstFocusableElement = ref<HTMLElement | null>(null)
+const lastFocusableElement = ref<HTMLElement | null>(null)
+
+// Get all focusable elements within the modal
+const getFocusableElements = () => {
+  if (!modalRef.value) return []
+  
+  const focusableSelectors = [
+    'button:not([disabled])',
+    'input:not([disabled])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    'a[href]',
+    '[tabindex]:not([tabindex="-1"])',
+    '[contenteditable="true"]'
+  ]
+  
+  const allElements = Array.from(modalRef.value.querySelectorAll(focusableSelectors.join(', '))) as HTMLElement[]
+  
+  // Prioritize form inputs over close button
+  const sortedElements = allElements.sort((a, b) => {
+    // If one is a close button (has aria-label="Close modal"), put it last
+    const aIsCloseButton = a.getAttribute('aria-label') === 'Close modal'
+    const bIsCloseButton = b.getAttribute('aria-label') === 'Close modal'
+    
+    if (aIsCloseButton && !bIsCloseButton) return 1
+    if (!aIsCloseButton && bIsCloseButton) return -1
+    
+    return 0
+  })
+  
+  return sortedElements
+}
+
+// Handle tab key for focus trapping
+const handleTabKey = (event: KeyboardEvent) => {
+  if (!modalRef.value || focusableElements.value.length === 0) return
+  
+  const { shiftKey } = event
+  
+  if (shiftKey) {
+    // Shift + Tab: move backwards
+    if (document.activeElement === firstFocusableElement.value) {
+      event.preventDefault()
+      lastFocusableElement.value?.focus()
+    }
+  } else {
+    // Tab: move forwards
+    if (document.activeElement === lastFocusableElement.value) {
+      event.preventDefault()
+      firstFocusableElement.value?.focus()
+    }
+  }
+}
 
 // Handle escape key
 const handleEscape = (event: KeyboardEvent) => {
   if (event.key === 'Escape' && props.closeOnEscape) {
     closeModal('escape')
+  }
+}
+
+// Handle all keyboard events
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Tab') {
+    handleTabKey(event)
+  } else if (event.key === 'Escape') {
+    handleEscape(event)
   }
 }
 
@@ -37,15 +104,38 @@ const closeModal = (reason: 'overlay' | 'escape' | 'button' | 'programmatic' = '
   isAnimating.value = true
   isVisible.value = false
   
+  // Restore focus to previously focused element
+  if (previouslyFocusedElement.value) {
+    previouslyFocusedElement.value.focus()
+  }
+  
   setTimeout(() => {
     emit('close', reason)
     isAnimating.value = false
   }, 200)
 }
 
-// Expose close method for parent components
+// Update focus trap method
+const updateFocusTrap = async (autoFocus: boolean = true) => {
+  await nextTick()
+  focusableElements.value = getFocusableElements()
+  firstFocusableElement.value = focusableElements.value[0] || null
+  lastFocusableElement.value = focusableElements.value[focusableElements.value.length - 1] || null
+  
+  // Only auto-focus if requested and nothing is currently focused within the modal
+  if (autoFocus && !modalRef.value?.contains(document.activeElement)) {
+    if (firstFocusableElement.value) {
+      firstFocusableElement.value.focus()
+    } else if (modalRef.value) {
+      modalRef.value.focus()
+    }
+  }
+}
+
+// Expose methods for parent components
 defineExpose({
-  close: closeModal
+  close: closeModal,
+  updateFocusTrap
 })
 
 // Handle overlay click
@@ -60,19 +150,44 @@ watch(() => props.show, async (newValue) => {
   if (newValue) {
     isVisible.value = true
     await nextTick()
-    // Focus trap - focus the modal
-    // modalRef.value?.focus()
-    // Add escape key listener
-    document.addEventListener('keydown', handleEscape)
+    
+    // Store currently focused element
+    previouslyFocusedElement.value = document.activeElement as HTMLElement
+    
+    // Get focusable elements and set up focus trap
+    focusableElements.value = getFocusableElements()
+    firstFocusableElement.value = focusableElements.value[0] || null
+    lastFocusableElement.value = focusableElements.value[focusableElements.value.length - 1] || null
+    
+    // Focus the first focusable element or the modal itself
+    if (firstFocusableElement.value) {
+      firstFocusableElement.value.focus()
+    } else if (modalRef.value) {
+      modalRef.value.focus()
+    }
+    
+    // Add keyboard event listeners
+    document.addEventListener('keydown', handleKeydown)
   } else {
-    // Remove escape key listener
-    document.removeEventListener('keydown', handleEscape)
+    // Remove keyboard event listeners
+    document.removeEventListener('keydown', handleKeydown)
   }
 }, { immediate: true })
 
 // Cleanup on unmount
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleEscape)
+  document.removeEventListener('keydown', handleKeydown)
+})
+
+// Watch for content changes to update focusable elements
+watch(() => isVisible.value, async (newValue) => {
+  if (newValue) {
+    await nextTick()
+    // Update focusable elements when content changes
+    focusableElements.value = getFocusableElements()
+    firstFocusableElement.value = focusableElements.value[0] || null
+    lastFocusableElement.value = focusableElements.value[focusableElements.value.length - 1] || null
+  }
 })
 
 // Size classes
@@ -116,7 +231,7 @@ const sizeClasses = {
             v-show="show && isVisible"
             ref="modalRef"
             :class="[
-              'relative w-full bg-white dark:bg-black rounded-lg shadow-xl border border-purple-500/20 overflow-hidden',
+              'relative w-full bg-white dark:bg-black rounded-lg shadow-xl border border-purple-500/20 overflow-hidden outline-none',
               sizeClasses[size]
             ]"
             tabindex="-1"
@@ -128,12 +243,12 @@ const sizeClasses = {
             <div class="relative z-10">
                 <!-- Header -->
                 <div v-if="title" class="flex items-center justify-between p-6 dark:bg-black">
-                <h2 id="modal-title" class="text-lg font-semibold text-white">
+                <h2 id="modal-title" class="text-lg font-semibold text-gray-900 dark:text-white">
                     {{ title }}
                 </h2>
                 <button
                     type="button"
-                    class="text-gray-400 hover:text-purple-300 focus:text-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-colors duration-200"
+                    class="p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200"
                     @click="() => closeModal('button')"
                     aria-label="Close modal"
                 >
@@ -144,7 +259,7 @@ const sizeClasses = {
                 </div>
                 
                 <!-- Content -->
-                <div class="flex p-6 text-white">
+                <div class="flex p-6 text-gray-900 dark:text-white">
                     <slot />
                 </div>
             
