@@ -349,7 +349,7 @@ watch(() => props.show, (newValue) => {
                   class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   :class="{ 'border-red-500 dark:border-red-400': errors.apiKey }" @input="errors.apiKey = ''" />
                 <button type="button"
-                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors duration-200"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none transition-colors duration-200"
                   @click="togglePasswordVisibility" @keydown.enter="togglePasswordVisibility"
                   @keydown.space.prevent="togglePasswordVisibility"
                   :aria-label="isPasswordVisible ? 'Hide password' : 'Show password'">
