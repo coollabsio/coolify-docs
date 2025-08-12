@@ -444,6 +444,7 @@ watch(() => props.show, (newValue) => {
               :transition="{ duration: 0.5 }" delay={0.5}>
               <div class="flex flex-col items-center gap-2">
                 <p class="text-gray-900 dark:text-white">Your service is being deployed at:</p>
+                <span class="text-gray-500 dark:text-gray-400 text-sm">Note: The deployment may take a few minutes to complete.</span>
                 <a :href="serviceUrl" target="_blank" rel="noopener noreferrer"
                   class="text-blue-500 hover:text-blue-600 underline focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded"
                   :aria-label="`Open ${serviceUrl} in new tab`">
