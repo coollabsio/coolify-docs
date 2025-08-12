@@ -108,10 +108,25 @@ const navigateTo = (path: string, external: boolean = false) => {
 <template>
     <div class="flex flex-col max-w-3xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl 3xl:max-w-7xl mx-auto px-4 mt-8">
         <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">{{ title }}</h2>
-        <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">{{ description }}</p>
+        <div class="flex justify-between">
+            <p class="text-gray-500 dark:text-gray-400 text-sm mb-8">{{ description }}</p>
+            <div class="invisible md:visible flex flex-col">
+                <div class="flex items-center gap-2">
+                    <CoolIcon name="hugeicons:mouse-left-click-06" color="gray" class="size-5 my-auto" />
+                    <p class="text-gray-500 dark:text-gray-400 text-xs"><span class="font-bold my-auto">Left click:</span> Explore the Service Preset.</p>
+                </div>
+
+                <div class="flex items-center gap-2 mb-8">
+                    <CoolIcon name="hugeicons:mouse-right-click-06" color="gray" class="size-5 my-auto" />
+                    <p class="text-gray-500 dark:text-gray-400 text-xs"><span class="font-bold my-auto">Right click:</span> Deploy the Service Preset.</p>
+                </div>
+            </div>
+        </div>
+
         <div class="input-container w-full flex flex-col justify-between gap-2 mb-2">
             <input v-model="search" type="text" placeholder="Search"
                 class="search w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg py-3 sm:py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-800" />
+
             <div class="button-group relative flex flex-col gap-2" ref="dropdownRef">
                 <button @click.stop="isOpen = !isOpen"
                     class="select flex items-center justify-between w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 sm:px-3 sm:py-2 bg-purple-700 dark:bg-purple-600 text-gray-900 dark:text-white focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-800">
@@ -149,6 +164,7 @@ const navigateTo = (path: string, external: boolean = false) => {
                 </button>
             </div>
         </div>
+
         <div class="grid-container">
             <template v-if="selectedCategories.includes('All')">
                 <div v-if="filteredCategories.length === 0">
@@ -185,7 +201,8 @@ const navigateTo = (path: string, external: boolean = false) => {
                             <div class="p-4">
                                 <div
                                     class="bg-white dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center">
-                                    <img :src="withBase(service.icon)" alt="Coolify" class="w-auto h-8 px-2 rounded-lg" loading="lazy" />
+                                    <img :src="withBase(service.icon)" alt="Coolify" class="w-auto h-8 px-2 rounded-lg"
+                                        loading="lazy" />
                                 </div>
                             </div>
                         </div>
@@ -224,7 +241,8 @@ const navigateTo = (path: string, external: boolean = false) => {
                                     <div class="p-4">
                                         <div
                                             class="bg-white dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center">
-                                            <img :src="withBase(service.icon)" alt="Coolify" class="w-auto h-8 px-2 rounded-lg" loading="lazy" />
+                                            <img :src="withBase(service.icon)" alt="Coolify"
+                                                class="w-auto h-8 px-2 rounded-lg" loading="lazy" />
                                         </div>
                                     </div>
                                 </div>
