@@ -57,6 +57,7 @@ const formData = ref({
 // Form validation
 const errors = ref<Record<string, string>>({});
 const isSubmitting = ref(false);
+const hasInteracted = ref(false);
 
 // Computed properties
 const isCloudDeployment = computed(
@@ -76,7 +77,7 @@ const validateForm = () => {
     errors.value.apiKey = "API Key is required";
   }
 
-  if (!formData.value.serverId.trim()) {
+  if (hasInteracted.value && !formData.value.serverId.trim()) {
     errors.value.serverId = "Server selection is required";
   }
 
@@ -241,6 +242,7 @@ const handleClose = () => {
   };
   errors.value = {};
   isSubmitting.value = false;
+  hasInteracted.value = false;
 };
 
 const goBack = () => {
@@ -248,6 +250,7 @@ const goBack = () => {
   connected.value = false;
   serverOptions.value = [];
   formData.value.serverId = "";
+  hasInteracted.value = false;
 };
 
 const togglePasswordVisibility = () => {
@@ -283,6 +286,7 @@ watch(() => props.show, (newValue) => {
     };
     errors.value = {};
     isSubmitting.value = false;
+    hasInteracted.value = false;
   }
 })
 </script>
@@ -384,7 +388,8 @@ watch(() => props.show, (newValue) => {
             </label>
             <select id="serverId" v-model="formData.serverId" placeholder="Select a server"
               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-              :class="{ 'border-red-500 dark:border-red-400': errors.serverId }">
+              :class="{ 'border-red-500 dark:border-red-400': errors.serverId }"
+              @change="hasInteracted = true">
               <option value="" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                 Select a server
               </option>
