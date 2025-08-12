@@ -261,8 +261,8 @@ watch(currentStep, async (newStep, oldStep) => {
   await nextTick()
   if (modalRef.value?.updateFocusTrap) {
     // Don't auto-focus when going back to step 0 (deployment type selection)
-    // This preserves the user's visual selection without forcing focus
-    const autoFocus = !(oldStep > 0 && newStep === 0)
+    // Don't auto-focus on step 4 (final success step) to avoid focusing the URL link
+    const autoFocus = !(oldStep > 0 && newStep === 0) && newStep !== 4
     modalRef.value.updateFocusTrap(autoFocus)
   }
 })
