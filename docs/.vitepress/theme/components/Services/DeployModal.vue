@@ -367,9 +367,11 @@ watch(() => props.show, (newValue) => {
                 </button>
               </div>
             </div>
-            <p v-if="errors.apiKey" class="mt-1 text-sm text-red-600 dark:text-red-400">
+            <p v-if="errors.apiKey" class="my-2 text-sm text-red-600 dark:text-red-400">
               {{ errors.apiKey }}
             </p>
+            
+            <p class="text-gray-500 dark:text-gray-400 text-xs mt-2">Note: Make sure you have the read and write permissions for the API Token.</p>
           </div>
         </Motion>
 
