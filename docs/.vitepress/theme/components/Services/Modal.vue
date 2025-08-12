@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, nextTick, onUnmounted } from 'vue'
+import { ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
 
 interface Props {
   show: boolean
@@ -172,7 +172,7 @@ watch(() => props.show, async (newValue) => {
     // Remove keyboard event listeners
     document.removeEventListener('keydown', handleKeydown)
   }
-}, { immediate: true })
+})
 
 // Cleanup on unmount
 onUnmounted(() => {
