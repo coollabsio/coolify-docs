@@ -35,6 +35,7 @@ const currentStep = ref(0);
 const apiKeyInput = ref<HTMLInputElement>();
 const serviceUrl = ref('');
 const isPasswordVisible = ref(false);
+const disclaimerAccepted = ref(false);
 
 const {
   connect,
@@ -318,6 +319,14 @@ watch(() => props.show, (newValue) => {
         </label>
       </div>
 
+      <p v-if="currentStep === 0" class="text-gray-500 dark:text-gray-400 text-xs mt-8 mb-2">
+        Disclaimer: Use the Right click to Deploy feature at your own risk. Always be carefull when handling sensitive API Tokens. CoolLabs is not responsible for any damage caused by using this feature. <a href="/docs/api-reference/authorization" target="_blank" rel="noopener noreferrer" class="text-purple-500 hover:text-purple-600 underline">Learn more</a>
+      </p>
+      <div v-if="currentStep === 0" class="flex items-center gap-2 mt-4">
+        <input type="checkbox" id="disclaimer" v-model="disclaimerAccepted" />
+        <label for="disclaimer">I understand the risks and I agree to the above disclaimer.</label>
+      </div>
+
       <form v-if="currentStep > 0" @submit.prevent="handleSubmit" class="space-y-6 text-sm">
         <!-- Server URL (Self-hosted only) -->
         <Motion :initial="{ opacity: 0, y: 10 }" :animate="{ opacity: 1, y: 0 }" :exit="{ opacity: 0, y: 10 }"
@@ -444,12 +453,12 @@ watch(() => props.show, (newValue) => {
               :transition="{ duration: 0.5 }" delay={0.5}>
               <div class="flex flex-col items-center gap-2">
                 <p class="text-gray-900 dark:text-white">Your service is being deployed at:</p>
-                <span class="text-gray-500 dark:text-gray-400 text-sm">Note: The deployment may take a few minutes to complete.</span>
                 <a :href="serviceUrl" target="_blank" rel="noopener noreferrer"
                   class="text-blue-500 hover:text-blue-600 underline focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded"
                   :aria-label="`Open ${serviceUrl} in new tab`">
                   {{ serviceUrl }}
                 </a>
+                <span class="text-gray-500 dark:text-gray-400 text-sm">Note: The deployment may take a few minutes to complete.</span>
               </div>
             </Motion>
           </div>
@@ -469,6 +478,7 @@ watch(() => props.show, (newValue) => {
         </button>
         <button v-if="currentStep === 0" @click="currentStep++" @keydown.enter="currentStep++"
           @keydown.space.prevent="currentStep++"
+          :disabled="!disclaimerAccepted"
           class="px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
           Next
         </button>
