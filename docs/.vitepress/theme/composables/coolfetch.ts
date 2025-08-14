@@ -144,7 +144,7 @@ export const useCoolFetch = () => {
         }
     }
 
-    const createService = async (server_uuid: string, project_uuid: string, template_name: string) => {
+    const createService = async (server_uuid: string, project_uuid: string, template_name: string, environment_name?: string) => {
         serviceStatus.value = 'pending'
         try {
             const templateConfig = await getServiceTemplate(template_name)
@@ -156,9 +156,9 @@ export const useCoolFetch = () => {
                     "name": template_name,
                     "description": slogan,
                     "project_uuid": project_uuid,
-                    "environment_name": "production",
+                    "environment_name": environment_name || "production",
                     "server_uuid": server_uuid,
-                    "environment_uuid": "production",
+                    "environment_uuid": environment_name || "production",
                     "destination_uuid": "production",
                     "instant_deploy": true,
                     "docker_compose_raw": compose
@@ -194,7 +194,85 @@ export const useCoolFetch = () => {
         }
     }
 
-    const deploy = async (server_uuid: string, template_name: string) => {
+    const fetchProjects = async () => {
+        try {
+            const response = await coolfetch('/api/v1/projects', {
+                method: 'GET'
+            })
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    return new Error('401 Unauthorized - Invalid API key')
+                } else if (response.status === 403) {
+                    return new Error('403 Forbidden - Insufficient permissions')
+                } else {
+                    return new Error(`HTTP ${response.status} - ${response.statusText}`)
+                }
+            }
+            
+            const data = await response.json()
+            return data
+        } catch (error) {
+            if (error instanceof Error) {
+                return error
+            }
+            return new Error('Failed to fetch projects')
+        }
+    }
+
+    const fetchProjectDetails = async (projectUuid: string) => {
+        try {
+            const response = await coolfetch(`/api/v1/projects/${projectUuid}`, {
+                method: 'GET'
+            })
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    return new Error('401 Unauthorized - Invalid API key')
+                } else if (response.status === 403) {
+                    return new Error('403 Forbidden - Insufficient permissions')
+                } else {
+                    return new Error(`HTTP ${response.status} - ${response.statusText}`)
+                }
+            }
+            
+            const data = await response.json()
+            return data
+        } catch (error) {
+            if (error instanceof Error) {
+                return error
+            }
+            return new Error('Failed to fetch project details')
+        }
+    }
+
+    const fetchVersion = async () => {
+        try {
+            const response = await coolfetch('/api/v1/version', {
+                method: 'GET'
+            })
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    return new Error('401 Unauthorized - Invalid API key')
+                } else if (response.status === 403) {
+                    return new Error('403 Forbidden - Insufficient permissions')
+                } else {
+                    return new Error(`HTTP ${response.status} - ${response.statusText}`)
+                }
+            }
+            
+            const version = await response.text()
+            return version
+        } catch (error) {
+            if (error instanceof Error) {
+                return error
+            }
+            return new Error('Failed to fetch version')
+        }
+    }
+
+    const deploy = async (server_uuid: string, template_name: string, project_uuid?: string, environment_name?: string) => {
         const templateConfig = await getServiceTemplate(template_name.toLowerCase())
         
         if (!templateConfig) {
@@ -206,13 +284,17 @@ export const useCoolFetch = () => {
             return new Error('Template name and description are required')
         }
 
-        const project_uuid = await createProject(template_name, slogan)
-        
-        if (!project_uuid) {
-            return new Error('Failed to create project')
+        // Use provided project or create new one
+        let finalProjectUuid = project_uuid
+        if (!finalProjectUuid) {
+            finalProjectUuid = await createProject(template_name, slogan)
+            
+            if (!finalProjectUuid) {
+                return new Error('Failed to create project')
+            }
         }
 
-        const service = await createService(server_uuid, project_uuid, template_name)
+        const service = await createService(server_uuid, finalProjectUuid, template_name, environment_name)
         const domain = service.domains.filter(domain => domain !== null)[0]
 
         apiToken.value = ''
@@ -225,7 +307,11 @@ export const useCoolFetch = () => {
         deployStatus.value = ''
 
         return {
-            url: domain
+            url: domain,
+            serviceUuid: service.uuid,
+            projectUuid: finalProjectUuid,
+            environmentName: environment_name || 'production',
+            environmentUuid: service.environment_uuid || environment_name || 'production'
         }
     }
 
@@ -238,6 +324,9 @@ export const useCoolFetch = () => {
         deployStatus,
         createProject,
         createService,
+        fetchProjects,
+        fetchProjectDetails,
+        fetchVersion,
         deploy
     }
 }

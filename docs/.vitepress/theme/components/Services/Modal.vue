@@ -33,7 +33,7 @@ const lastFocusableElement = ref<HTMLElement | null>(null)
 // Get all focusable elements within the modal
 const getFocusableElements = () => {
   if (!modalRef.value) return []
-  
+
   const focusableSelectors = [
     'button:not([disabled])',
     'input:not([disabled])',
@@ -43,30 +43,30 @@ const getFocusableElements = () => {
     '[tabindex]:not([tabindex="-1"])',
     '[contenteditable="true"]'
   ]
-  
+
   const allElements = Array.from(modalRef.value.querySelectorAll(focusableSelectors.join(', '))) as HTMLElement[]
-  
+
   // Prioritize form inputs over close button
   const sortedElements = allElements.sort((a, b) => {
     // If one is a close button (has aria-label="Close modal"), put it last
     const aIsCloseButton = a.getAttribute('aria-label') === 'Close modal'
     const bIsCloseButton = b.getAttribute('aria-label') === 'Close modal'
-    
+
     if (aIsCloseButton && !bIsCloseButton) return 1
     if (!aIsCloseButton && bIsCloseButton) return -1
-    
+
     return 0
   })
-  
+
   return sortedElements
 }
 
 // Handle tab key for focus trapping
 const handleTabKey = (event: KeyboardEvent) => {
   if (!modalRef.value || focusableElements.value.length === 0) return
-  
+
   const { shiftKey } = event
-  
+
   if (shiftKey) {
     // Shift + Tab: move backwards
     if (document.activeElement === firstFocusableElement.value) {
@@ -103,12 +103,12 @@ const closeModal = (reason: 'overlay' | 'escape' | 'button' | 'programmatic' = '
   if (isAnimating.value) return
   isAnimating.value = true
   isVisible.value = false
-  
+
   // Restore focus to previously focused element
   if (previouslyFocusedElement.value) {
     previouslyFocusedElement.value.focus()
   }
-  
+
   setTimeout(() => {
     emit('close', reason)
     isAnimating.value = false
@@ -121,7 +121,7 @@ const updateFocusTrap = async (autoFocus: boolean = true) => {
   focusableElements.value = getFocusableElements()
   firstFocusableElement.value = focusableElements.value[0] || null
   lastFocusableElement.value = focusableElements.value[focusableElements.value.length - 1] || null
-  
+
   // Only auto-focus if requested and nothing is currently focused within the modal
   if (autoFocus && !modalRef.value?.contains(document.activeElement)) {
     if (firstFocusableElement.value) {
@@ -150,22 +150,22 @@ watch(() => props.show, async (newValue) => {
   if (newValue) {
     isVisible.value = true
     await nextTick()
-    
+
     // Store currently focused element
     previouslyFocusedElement.value = document.activeElement as HTMLElement
-    
+
     // Get focusable elements and set up focus trap
     focusableElements.value = getFocusableElements()
     firstFocusableElement.value = focusableElements.value[0] || null
     lastFocusableElement.value = focusableElements.value[focusableElements.value.length - 1] || null
-    
+
     // Focus the first focusable element or the modal itself
     if (firstFocusableElement.value) {
       firstFocusableElement.value.focus()
     } else if (modalRef.value) {
       modalRef.value.focus()
     }
-    
+
     // Add keyboard event listeners
     document.addEventListener('keydown', handleKeydown)
   } else {
@@ -202,67 +202,44 @@ const sizeClasses = {
 
 <template>
   <Teleport to="body">
-    <Transition
-      enter-active-class="transition duration-200 ease-out"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition duration-200 ease-in"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div
-        v-show="show && isVisible"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4x"
-        @click="handleOverlayClick"
-      >
+    <Transition enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0"
+      enter-to-class="opacity-100" leave-active-class="transition duration-200 ease-in" leave-from-class="opacity-100"
+      leave-to-class="opacity-0">
+      <div v-show="show && isVisible" class="fixed inset-0 z-50 flex items-center justify-center p-4x"
+        @click="handleOverlayClick">
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-        
+
         <!-- Modal -->
-        <Transition
-          enter-active-class="transition duration-200 ease-out"
-          enter-from-class="opacity-0 scale-95 translate-y-4"
-          enter-to-class="opacity-100 scale-100 translate-y-0"
-          leave-active-class="transition duration-200 ease-in"
-          leave-from-class="opacity-100 scale-100 translate-y-0"
-          leave-to-class="opacity-0 scale-95 translate-y-4"
-        >
-          <div
-            v-show="show && isVisible"
-            ref="modalRef"
-            :class="[
-              'relative w-full bg-white dark:bg-black rounded-lg shadow-xl border border-purple-500/20 overflow-hidden outline-none',
-              sizeClasses[size]
-            ]"
-            tabindex="-1"
-            role="dialog"
-            aria-modal="true"
-            :aria-labelledby="title ? 'modal-title' : undefined"
-          >
+        <Transition enter-active-class="transition duration-200 ease-out"
+          enter-from-class="opacity-0 scale-95 translate-y-4" enter-to-class="opacity-100 scale-100 translate-y-0"
+          leave-active-class="transition duration-200 ease-in" leave-from-class="opacity-100 scale-100 translate-y-0"
+          leave-to-class="opacity-0 scale-95 translate-y-4">
+          <div v-show="show && isVisible" ref="modalRef" :class="[
+            'relative w-full bg-white dark:bg-black rounded-lg shadow-xl border border-purple-500/20 overflow-hidden outline-none',
+            sizeClasses[size]
+          ]" tabindex="-1" role="dialog" aria-modal="true" :aria-labelledby="title ? 'modal-title' : undefined">
             <!-- Content Container -->
             <div class="relative z-10">
-                <!-- Header -->
-                <div v-if="title" class="flex items-center justify-between p-6 dark:bg-black">
+              <!-- Header -->
+              <div v-if="title" class="flex items-center justify-between p-6 dark:bg-black">
                 <h2 id="modal-title" class="text-lg font-semibold text-gray-900 dark:text-white">
-                    {{ title }}
+                  {{ title }}
                 </h2>
-                <button
-                    type="button"
-                    class="p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200"
-                    @click="() => closeModal('button')"
-                    aria-label="Close modal"
-                >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button type="button"
+                  class="p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-coollabs-100 dark:hover:text-coollabs-100 hover:bg-purple-50 dark:hover:bg-purple-900/20 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200"
+                  @click="() => closeModal('button')" aria-label="Close modal">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                  </svg>
                 </button>
-                </div>
-                
-                <!-- Content -->
-                <div class="flex p-6 text-gray-900 dark:text-white">
-                    <slot />
-                </div>
-            
+              </div>
+
+              <!-- Content -->
+              <div class="flex p-6 text-gray-900 dark:text-white">
+                <slot />
+              </div>
+
             </div>
           </div>
         </Transition>

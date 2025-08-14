@@ -109,37 +109,27 @@ const navigateTo = (path: string, external: boolean = false) => {
     <div class="flex flex-col max-w-3xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl 3xl:max-w-7xl mx-auto px-4 mt-8">
         <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">{{ title }}</h2>
         <div class="flex justify-between">
-            <p class="text-gray-500 dark:text-gray-400 text-sm mb-8">{{ description }}</p>
-            <div class="invisible md:visible flex flex-col">
-                <div class="flex items-center gap-2">
-                    <CoolIcon name="hugeicons:mouse-left-click-06" color="gray" class="size-5 my-auto" />
-                    <p class="text-gray-500 dark:text-gray-400 text-xs"><span class="font-bold my-auto">Left click:</span> Explore the Service Preset.</p>
-                </div>
-
-                <div class="flex items-center gap-2 mb-8">
-                    <CoolIcon name="hugeicons:mouse-right-click-06" color="gray" class="size-5 my-auto" />
-                    <p class="text-gray-500 dark:text-gray-400 text-xs"><span class="font-bold my-auto">Right click:</span> Deploy the Service Preset.</p>
-                </div>
-            </div>
+            <p class="text-gray-500 dark:text-gray-400 text-sm mb-8">{{ description }} You can add or suggest a
+                new service <a href="https://github.com/coollabsio/coolify/blob/v4.x/CONTRIBUTING.md" target="_blank"
+                    class="underline dark:hover:text-white dark:text-white ">here</a>.</p>
         </div>
 
         <div class="input-container w-full flex flex-col justify-between gap-2 mb-2">
-            <input v-model="search" type="text" placeholder="Search"
-                class="search w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg py-3 sm:py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-800" />
+            <input v-model="search" type="text" placeholder="Search" class="input" />
 
             <div class="button-group relative flex flex-col gap-2" ref="dropdownRef">
                 <button @click.stop="isOpen = !isOpen"
-                    class="select flex items-center justify-between w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 sm:px-3 sm:py-2 bg-purple-700 dark:bg-purple-600 text-gray-900 dark:text-white focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-800">
+                    class="flex items-center justify-between w-64 sm:w-48 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 sm:px-3 sm:py-2 bg-gray-100 dark:bg-coolgray-100 text-gray-900 dark:text-white text-sm hover:border-coollabs focus:border-coollabs  focus:outline-none focus:ring-2 focus:ring-coollabs transition-colors duration-300 min-w-[120px]">
                     <span class="text-sm sm:text-base">{{ selectedCategories.length === 1 ? selectedCategories[0] :
                         `${selectedCategories.length} categories` }}
                     </span>
                     <CoolIcon class="w-4 h-4 ml-2 flex-shrink-0" name="mdi:chevron-down" color="white" />
                 </button>
                 <div v-if="isOpen"
-                    class="dropdown-content absolute z-10 top-full left-0 right-0 rounded-lg shadow-lg bg-white dark:!bg-[#23272f] border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto">
+                    class="dropdown-content absolute z-10 top-full left-0 right-0 rounded-lg shadow-lg bg-white dark:bg-coolgray-200 border border-gray-200 dark:border-coolgray-300 max-h-60 overflow-y-auto">
                     <div class="p-2">
                         <label
-                            class="flex items-center space-x-2 p-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer">
+                            class="flex items-center space-x-2 p-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-coolgray-100 rounded cursor-pointer">
                             <input type="checkbox" :checked="selectedCategories.includes('All')"
                                 @change="toggleCategory('All')"
                                 class="rounded border-gray-300 dark:border-gray-600 text-purple-600 dark:text-purple-500 focus:ring-purple-600 dark:focus:ring-purple-500 bg-white dark:bg-gray-800">
@@ -149,7 +139,7 @@ const navigateTo = (path: string, external: boolean = false) => {
                         </label>
                         <div v-for="category in categories" :key="category" class="mt-1">
                             <label
-                                class="flex items-center space-x-2 p-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer">
+                                class="flex items-center space-x-2 p-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-coolgray-100 rounded cursor-pointer">
                                 <input type="checkbox" :checked="selectedCategories.includes(category)"
                                     @change="toggleCategory(category)"
                                     class="rounded border-gray-300 dark:border-gray-600 text-purple-600 dark:text-purple-500 focus:ring-purple-600 dark:focus:ring-purple-500 bg-white dark:bg-gray-800">
@@ -158,53 +148,54 @@ const navigateTo = (path: string, external: boolean = false) => {
                         </div>
                     </div>
                 </div>
-                <button @click="navigateTo('https://github.com/coollabsio/coolify/blob/v4.x/CONTRIBUTING.md', true)"
-                    class="add-service-btn text-gray-900 dark:text-white px-6 py-3 sm:px-4 sm:py-2 rounded-lg transition-colors text-sm sm:text-base w-full">
-                    Add Service
-                </button>
             </div>
         </div>
 
         <div class="grid-container">
+            <div class="invisible md:visible flex flex-col">
+                <div class="flex items-center gap-2">
+                    <CoolIcon name="hugeicons:mouse-left-click-06" color="gray" class="size-5 my-auto" />
+                    <p class="text-gray-500 dark:text-gray-400 text-xs"><span class="font-bold my-auto">Left
+                            click:</span> Explore the Service Preset.</p>
+                </div>
+
+                <div class="flex items-center gap-2 mb-8">
+                    <CoolIcon name="hugeicons:mouse-right-click-06" color="gray" class="size-5 my-auto" />
+                    <p class="text-gray-500 dark:text-gray-400 text-xs"><span class="font-bold my-auto">Right
+                            click:</span> Deploy the Service Preset.</p>
+                </div>
+            </div>
             <template v-if="selectedCategories.includes('All')">
                 <div v-if="filteredCategories.length === 0">
-                    <h2 class="text-2xl font-bold my-6 text-gray-900 dark:text-gray-100">
+                    <h2 class="text-xs font-bold my-6 text-gray-900 dark:text-gray-100">
                         No results found
                     </h2>
-                    <div class="services-grid not-found-grid grid grid-cols-1 gap-6">
-                        <div
-                            class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-colors hover:cursor-pointer flex flex-col">
-                            <div class="w-full flex flex-col dark:default-soft rounded-b-xl p-3">
-                                <div class="font-bold text-md mb-1 text-gray-900 dark:text-gray-100">
-                                    Service not found
-                                </div>
-                                <div class="text-gray-500 dark:text-gray-400 text-xs">
-                                    Try adjusting your search or category filter.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div v-else v-for="category in filteredCategories" :key="category">
                     <h2 class="text-2xl font-bold my-6 text-gray-900 dark:text-gray-100">{{ category }}</h2>
-                    <div class="services-grid grid grid-cols-1 gap-6 rounded-lg">
+                    <div class="services-grid grid grid-cols-1 gap-6 rounded">
                         <div v-for="(service, index) in filteredServicesByCategory(category)" :key="service.name"
                             @click="navigateTo(`services/${service.name.toLowerCase()}`)"
                             @click.right.prevent="rightClick(service.name)"
-                            class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-200 hover:cursor-pointer flex flex-col">
+                            class="dark:default-soft rounded shadow border border-gray-300 hover:border-coollabs transition-all duration-200 hover:cursor-pointer flex flex-col">
 
                             <div class="w-full h-full flex flex-col dark:default-soft rounded-t-xl p-3">
                                 <div class="font-bold text-md text-gray-900 mb-1 dark:text-gray-100">{{ service.name }}
                                 </div>
-                                <div class="text-gray-500 dark:text-gray-400 text-xs">{{ service.description }}</div>
+                                <div class="text-gray-500 dark:text-gray-400 text-xs flex-grow">{{ service.description
+                                    }}</div>
                             </div>
                             <div class="p-4">
                                 <div
-                                    class="bg-white dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center">
+                                    class="dark:bg-coolgray-200 bg-white dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center mb-3">
                                     <img :src="withBase(service.icon)" alt="Coolify" class="w-auto h-8 px-2 rounded-lg"
                                         loading="lazy" />
                                 </div>
                             </div>
+                            <button @click.stop="rightClick(service.name)"
+                                class="w-full px-3 py-2 mb-6 text-sm font-medium border border-coollabs/20 hover:bg-coollabs-100 hover:text-white transition-colors duration-200">
+                                Deploy Now
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -215,15 +206,9 @@ const navigateTo = (path: string, external: boolean = false) => {
                         <h2 class="text-2xl font-bold my-6 text-gray-900 dark:text-gray-100">{{ category }}</h2>
                         <div class="services-grid not-found-grid grid grid-cols-1 gap-6 mb-8">
                             <template v-if="filteredServicesByCategory(category).length === 0">
-                                <div
-                                    class="dark:default-soft h-auto rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-colors hover:cursor-pointer flex flex-col">
-                                    <div class="w-full flex flex-col dark:default-soft rounded-b-xl p-3">
-                                        <div class="font-bold text-md mb-1 text-gray-900 dark:text-gray-100">No services
-                                            found</div>
-                                        <div class="text-gray-500 dark:text-gray-400 text-sm">Try adjusting your search
-                                            or category filter.</div>
-                                    </div>
-                                </div>
+                                <h2 class="text-xs font-bold my-6 text-gray-900 dark:text-gray-100">
+                                    No results found in this category
+                                </h2>
                             </template>
                             <template v-else>
                                 <div v-for="service in filteredServicesByCategory(category)" :key="service.name"
@@ -240,11 +225,15 @@ const navigateTo = (path: string, external: boolean = false) => {
                                     </div>
                                     <div class="p-4">
                                         <div
-                                            class="bg-white dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center">
+                                            class="dark:bg-coolgray-200 bg-white dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center mb-3">
                                             <img :src="withBase(service.icon)" alt="Coolify"
                                                 class="w-auto h-8 px-2 rounded-lg" loading="lazy" />
                                         </div>
                                     </div>
+                                    <button @click.stop="rightClick(service.name)"
+                                        class="w-full px-3 py-2 mb-6 text-sm font-medium border border-coollabs/20 hover:bg-coollabs-100 transition-colors duration-200">
+                                        Deploy Now
+                                    </button>
                                 </div>
                             </template>
                         </div>
@@ -273,71 +262,6 @@ input[type="checkbox"] {
     /* purple-500 */
 }
 
-.search {
-    width: 100%;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 8px 12px;
-    background-color: #fff;
-    transition: border-color 0.3s ease;
-    font-size: 14px;
-}
-
-.dark .search {
-    border-color: #374151;
-    background-color: #1f2937;
-    color: #f9fafb;
-}
-
-/* Responsive search input */
-@media (max-width: 640px) {
-    .search {
-        padding: 10px 12px;
-        font-size: 16px;
-        /* Prevents zoom on iOS */
-    }
-}
-
-@media (max-width: 480px) {
-    .search {
-        padding: 12px 16px;
-        font-size: 16px;
-    }
-}
-
-.select {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 8px 12px;
-    background-color: #fff;
-    transition: border-color 0.3s ease;
-    font-size: 14px;
-    min-width: 120px;
-}
-
-.dark .select {
-    border-color: #374151;
-    background-color: #1f2937;
-    color: #f9fafb;
-}
-
-/* Responsive select dropdown */
-@media (max-width: 640px) {
-    .select {
-        padding: 10px 12px;
-        font-size: 16px;
-        min-width: 100px;
-    }
-}
-
-@media (max-width: 480px) {
-    .select {
-        padding: 12px 16px;
-        font-size: 16px;
-        min-width: 80px;
-    }
-}
-
 /* Responsive container layout */
 @media (min-width: 640px) {
     .input-container {
@@ -345,25 +269,8 @@ input[type="checkbox"] {
         gap: 1rem;
     }
 
-    .input-container .search {
-        max-width: 20rem;
-    }
-
     .input-container .button-group {
         flex-direction: row;
-    }
-
-    .input-container .select {
-        width: 12rem;
-    }
-
-    .input-container .add-service-btn {
-        width: auto;
-        background-color: rgba(101, 117, 133, 0.16);
-    }
-
-    .add-service-btn:hover {
-        background-color: rgba(75, 85, 99, 0.25);
     }
 
     .dropdown-content {
@@ -393,33 +300,6 @@ input[type="checkbox"] {
     .dropdown-content label {
         padding: 12px 10px;
     }
-}
-
-.select:hover {
-    border-color: #8b5cf6;
-}
-
-.dark .select:hover {
-    border-color: #a78bfa;
-}
-
-.select:focus {
-    border-color: #8b5cf6;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
-}
-
-.dark .select:focus {
-    border-color: #a78bfa;
-    box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.2);
-}
-
-.bg-white {
-    background-color: #fff;
-}
-
-.dark .bg-white {
-    background-color: #374151;
 }
 
 .category {

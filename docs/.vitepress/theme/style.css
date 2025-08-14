@@ -138,7 +138,7 @@
   --vp-custom-block-success-text: #4ade80;
 
   /* Custom Block Colors - Light Mode */
-  
+
   /* Primary/Brand - Purple */
   --vp-custom-block-tip-border: #7937f3;
   --vp-custom-block-tip-text: #7937f3;
@@ -197,11 +197,9 @@
 
 :root {
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(
-    120deg,
-    #9A54FC 0%,
-    #9A54FC
-  );
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg,
+      #9A54FC 0%,
+      #9A54FC);
 }
 
 @media (min-width: 640px) {
@@ -247,10 +245,11 @@
   --vp-c-text-1: #F2F2F2;
   --vp-c-text-2: #9A989D;
   --vp-c-text-3: #9A989D;
-  
+
   /* Lighter code background in dark mode */
-  --vp-code-bg: #161b22 !important;  /* Darker background in dark mode */
-  
+  --vp-code-bg: #161b22 !important;
+  /* Darker background in dark mode */
+
   --vp-custom-block-tip-border: #0C4C69;
   --vp-custom-block-tip-text: #A7D2E8;
   --vp-custom-block-tip-bg: #0B2029;
@@ -267,13 +266,13 @@
 
   --vp-badge-success-text: #86efac;
   --vp-badge-success-bg: rgba(54, 211, 153, 0.16);
-  
+
   --vp-badge-info-text: #7dd3fc;
   --vp-badge-info-bg: rgba(66, 184, 231, 0.16);
-  
+
   --vp-custom-block-success-text: var(--vp-badge-success-text);
   --vp-custom-block-success-bg: var(--vp-badge-success-bg);
-  
+
   --vp-custom-block-info-text: var(--vp-badge-info-text);
   --vp-custom-block-info-bg: var(--vp-badge-info-bg);
 
@@ -284,7 +283,7 @@
   --vp-c-brand-soft: rgba(179, 146, 240, 0.16);
 
   /* Custom Block Colors - Dark Mode */
-  
+
   /* Primary/Brand - Purple */
   --vp-custom-block-tip-border: #9664f3;
   --vp-custom-block-tip-text: #9664f3;
@@ -312,7 +311,8 @@
 
   /* Enhanced code highlighting, especially for Safari */
   --vp-code-color: #F2F2F2;
-  --vp-code-bg: #161b22 !important;  /* Darker background in dark mode */
+  --vp-code-bg: #161b22 !important;
+  /* Darker background in dark mode */
 }
 
 /* Container padding override - updated for reasonable width layout */
@@ -374,6 +374,7 @@
   width: var(--vp-sidebar-width) !important;
   height: var(--vp-nav-height) !important;
   background-color: transparent !important;
+  border-bottom: 0px !important;
 }
 
 @media (min-width: 1440px) {
@@ -390,7 +391,7 @@
   align-items: center !important;
 }
 
-.VPSidebar .search > * {
+.VPSidebar .search>* {
   flex: 1 !important;
 }
 
@@ -402,7 +403,7 @@
   align-items: center !important;
 }
 
-.VPSidebar .search :deep(*) > * {
+.VPSidebar .search :deep(*)>* {
   flex: 1 !important;
 }
 
@@ -442,15 +443,16 @@
       height: 0.6em !important;
       background-color: transparent !important;
     }
-  
+
     & ::-webkit-scrollbar-track {
       background-color: var(--vp-c-bg-soft) !important;
     }
-  
+
     & ::-webkit-scrollbar-thumb {
       border-radius: 0.6em !important;
       background-color: var(--vp-c-divider) !important;
     }
+
     & ::-webkit-scrollbar-thumb:hover {
       background-color: var(--vp-c-text-3) !important;
     }
@@ -460,13 +462,13 @@
 /* Search component styling */
 .VPLocalSearchBox {
   width: 100% !important;
-  
+
   & .search-box {
     width: 100% !important;
     display: flex !important;
   }
 
-  & .search-box > .DocSearch-Button {
+  & .search-box>.DocSearch-Button {
     width: 100% !important;
     justify-content: space-between !important;
   }
@@ -505,7 +507,7 @@
   align-items: center !important;
 }
 
-.VPSidebar .VPNavBarSearch > * {
+.VPSidebar .VPNavBarSearch>* {
   width: 100% !important;
   display: flex !important;
   justify-content: space-between !important;
@@ -540,15 +542,18 @@
 /* Ensure proper layout on XL and larger screens */
 @media (min-width: 1280px) {
   .VPDoc.has-sidebar:not(.has-aside) .content-container {
-    max-width: calc(100% - 272px) !important; /* Account for left sidebar only */
+    max-width: calc(100% - 272px) !important;
+    /* Account for left sidebar only */
   }
-  
+
   .VPDoc:not(.has-sidebar).has-aside .content-container {
-    max-width: calc(100% - 256px) !important; /* Account for right sidebar only */
+    max-width: calc(100% - 256px) !important;
+    /* Account for right sidebar only */
   }
-  
+
   .VPDoc:not(.has-sidebar):not(.has-aside) .content-container {
-    max-width: 1100px !important; /* Wider max width for no sidebars */
+    max-width: 1100px !important;
+    /* Wider max width for no sidebars */
   }
 }
 
@@ -562,11 +567,25 @@
 }
 
 /* Custom styling for links inside custom blocks/callouts */
-.custom-block.tip a { border-bottom-color: var(--vp-custom-block-tip-text); }
-.custom-block.info a { border-bottom-color: var(--vp-custom-block-info-text); }
-.custom-block.warning a { border-bottom-color: var(--vp-custom-block-warning-text); }
-.custom-block.danger a { border-bottom-color: var(--vp-custom-block-danger-text); }
-.custom-block.success a { border-bottom-color: var(--vp-custom-block-success-text); }
+.custom-block.tip a {
+  border-bottom-color: var(--vp-custom-block-tip-text);
+}
+
+.custom-block.info a {
+  border-bottom-color: var(--vp-custom-block-info-text);
+}
+
+.custom-block.warning a {
+  border-bottom-color: var(--vp-custom-block-warning-text);
+}
+
+.custom-block.danger a {
+  border-bottom-color: var(--vp-custom-block-danger-text);
+}
+
+.custom-block.success a {
+  border-bottom-color: var(--vp-custom-block-success-text);
+}
 
 /* Exception for navigation and sidebar links if needed */
 .vp-doc .nav-link a,
@@ -629,10 +648,10 @@ code:hover {
 }
 
 /* Copy button styling - both for main and nested code blocks */
-.vp-doc div[class*='language-'] > button.copy,
-.vp-doc div[class*='language-'] > button.copy-code,
-.vp-doc :deep(div[class*='language-']) > button.copy,
-.vp-doc :deep(div[class*='language-']) > button.copy-code {
+.vp-doc div[class*='language-']>button.copy,
+.vp-doc div[class*='language-']>button.copy-code,
+.vp-doc :deep(div[class*='language-'])>button.copy,
+.vp-doc :deep(div[class*='language-'])>button.copy-code {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -650,48 +669,51 @@ code:hover {
 }
 
 /* Show button on hover or when copied - for both main and nested */
-.vp-doc div[class*='language-']:hover > button.copy,
-.vp-doc div[class*='language-']:hover > button.copy-code,
-.vp-doc div[class*='language-'] > button.copy.copied,
-.vp-doc div[class*='language-'] > button.copy-code.copied,
-.vp-doc :deep(div[class*='language-']:hover) > button.copy,
-.vp-doc :deep(div[class*='language-']:hover) > button.copy-code,
-.vp-doc :deep(div[class*='language-']) > button.copy.copied,
-.vp-doc :deep(div[class*='language-']) > button.copy-code.copied {
+.vp-doc div[class*='language-']:hover>button.copy,
+.vp-doc div[class*='language-']:hover>button.copy-code,
+.vp-doc div[class*='language-']>button.copy.copied,
+.vp-doc div[class*='language-']>button.copy-code.copied,
+.vp-doc :deep(div[class*='language-']:hover)>button.copy,
+.vp-doc :deep(div[class*='language-']:hover)>button.copy-code,
+.vp-doc :deep(div[class*='language-'])>button.copy.copied,
+.vp-doc :deep(div[class*='language-'])>button.copy-code.copied {
   opacity: 1;
 }
 
-.vp-doc div[class*='language-'] > button.copy:hover,
-.vp-doc div[class*='language-'] > button.copy-code:hover,
-.vp-doc :deep(div[class*='language-']) > button.copy:hover,
-.vp-doc :deep(div[class*='language-']) > button.copy-code:hover {
+.vp-doc div[class*='language-']>button.copy:hover,
+.vp-doc div[class*='language-']>button.copy-code:hover,
+.vp-doc :deep(div[class*='language-'])>button.copy:hover,
+.vp-doc :deep(div[class*='language-'])>button.copy-code:hover {
   background-color: var(--vp-c-bg-soft);
 }
 
 /* Success state styling */
-.vp-doc div[class*='language-'] > button.copy.copied,
-.vp-doc div[class*='language-'] > button.copy-code.copied,
-.vp-doc :deep(div[class*='language-']) > button.copy.copied,
-.vp-doc :deep(div[class*='language-']) > button.copy-code.copied {
-  background-color: rgba(34, 197, 94, 0.1); /* Light green background */
-  color: rgb(34, 197, 94); /* Green text */
+.vp-doc div[class*='language-']>button.copy.copied,
+.vp-doc div[class*='language-']>button.copy-code.copied,
+.vp-doc :deep(div[class*='language-'])>button.copy.copied,
+.vp-doc :deep(div[class*='language-'])>button.copy-code.copied {
+  background-color: rgba(34, 197, 94, 0.1);
+  /* Light green background */
+  color: rgb(34, 197, 94);
+  /* Green text */
 }
 
 /* Hide the original icon when copied */
-.vp-doc [class*='language-'] > button.copy.copied > span,
-.vp-doc [class*='language-'] > button.copy-code.copied > span,
-.vp-doc :deep([class*='language-']) > button.copy.copied > span,
-.vp-doc :deep([class*='language-']) > button.copy-code.copied > span {
+.vp-doc [class*='language-']>button.copy.copied>span,
+.vp-doc [class*='language-']>button.copy-code.copied>span,
+.vp-doc :deep([class*='language-'])>button.copy.copied>span,
+.vp-doc :deep([class*='language-'])>button.copy-code.copied>span {
   display: none;
 }
 
 /* Show checkmark icon when copied */
-.vp-doc [class*='language-'] > button.copy.copied::after,
-.vp-doc [class*='language-'] > button.copy-code.copied::after,
-.vp-doc :deep([class*='language-']) > button.copy.copied::after,
-.vp-doc :deep([class*='language-']) > button.copy-code.copied::after {
+.vp-doc [class*='language-']>button.copy.copied::after,
+.vp-doc [class*='language-']>button.copy-code.copied::after,
+.vp-doc :deep([class*='language-'])>button.copy.copied::after,
+.vp-doc :deep([class*='language-'])>button.copy-code.copied::after {
   content: '✓';
-  color: rgb(34, 197, 94); /* Green checkmark */
+  color: rgb(34, 197, 94);
+  /* Green checkmark */
   font-size: 1.2em;
 }
 
@@ -705,7 +727,8 @@ code:hover {
   top: -32px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgb(20 184 166); /* Teal color */
+  background: rgb(20 184 166);
+  /* Teal color */
   color: white;
   padding: 4px 12px;
   border-radius: 9999px;
@@ -718,11 +741,15 @@ code:hover {
 }
 
 @keyframes copyLabel {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0;
     transform: translateX(-50%) translateY(5px);
   }
-  20%, 80% {
+
+  20%,
+  80% {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
@@ -741,9 +768,10 @@ code:hover {
 }
 
 /* Adjust copy button position when language indicator is present */
-.vp-doc div[class*='language-'] > button.copy,
-.vp-doc div[class*='language-'] > button.copy-code {
-  right: 40px;  /* Give space for language indicator */
+.vp-doc div[class*='language-']>button.copy,
+.vp-doc div[class*='language-']>button.copy-code {
+  right: 40px;
+  /* Give space for language indicator */
 }
 
 /* Custom Block Colors - Light Mode */
@@ -806,7 +834,7 @@ code:hover {
 
 /* Reset webkit styles for code blocks */
 .vp-doc [class*='language-'] code {
-  
+
   -webkit-text-fill-color: initial !important;
 }
 
@@ -899,8 +927,10 @@ code:hover {
   .token.prolog,
   .token.doctype,
   .token.cdata {
-    font-weight: 400 !important;  /* Normal weight for entire comment */
-    opacity: 0.7;  /* Slightly dim the comments */
+    font-weight: 400 !important;
+    /* Normal weight for entire comment */
+    opacity: 0.7;
+    /* Slightly dim the comments */
   }
 
   /* Make specific tokens slightly bolder */
@@ -915,17 +945,17 @@ code:hover {
 }
 
 /* Markdown Labels like NODE_ENV */
-:not(pre) > code {
+:not(pre)>code {
   background-color: rgba(40, 44, 52, 0) !important;
-  color: rgba(185, 185, 185, 0.795)  !important;
+  color: rgba(185, 185, 185, 0.795) !important;
   -webkit-text-fill-color: rgba(95, 95, 95, 0.795) !important;
   font-weight: 600 !important;
   padding: 4px 4px !important;
   border-radius: 6px !important;
   font-size: 0.7em !important;
   border: 1px solid rgba(185, 185, 185, 0.795) !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 
-              0 0 1px rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1),
+    0 0 1px rgba(255, 255, 255, 0.05) !important;
   margin: 0 3px !important;
   /* text-transform: uppercase !important; */
   letter-spacing: 0.02em !important;
@@ -933,23 +963,24 @@ code:hover {
 }
 
 /* Dark mode adjustments */
-.dark :not(pre) > code {
+.dark :not(pre)>code {
   background-color: rgb(50, 50, 60) !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   border-color: rgba(255, 255, 255, 0.2) !important;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3),
-              0 0 3px rgba(255, 255, 255, 0.1) !important;
+    0 0 3px rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Safari-specific enhancements for inline code */
 @supports (-webkit-hyphens:none) {
-  :not(pre) > code {
+  :not(pre)>code {
     transform: translateZ(0);
     backface-visibility: hidden;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    backdrop-filter: blur(8px);  /* Subtle blur effect behind code */
+    backdrop-filter: blur(8px);
+    /* Subtle blur effect behind code */
   }
 }
 
@@ -974,8 +1005,11 @@ pre[class*='language-'] *:hover {
 /* Remove all the other hover prevention blocks since they're now consolidated above */
 
 @media (prefers-color-scheme: dark) {
-  p code:hover, li code:hover,
-  .custom-block p code:hover, .custom-block li p code:hover {
+
+  p code:hover,
+  li code:hover,
+  .custom-block p code:hover,
+  .custom-block li p code:hover {
     background-color: var(--vp-c-brand-1) !important;
     color: white !important;
     -webkit-text-fill-color: white !important;
@@ -991,11 +1025,23 @@ pre[class*='language-'] *:hover {
 
 /* Override Shiki theme colors for light mode */
 .shiki.github-light {
-  --shiki-light-keyword: #cf222e !important;     /* red */
-  --shiki-light-string: #0a3069 !important;      /* dark blue for strings */
-  --shiki-light-function: #8250df !important;    /* purple */
-  --shiki-light-number: #0550ae !important;      /* blue */
-  --shiki-light-boolean: #0550ae !important;     /* blue */
-  --shiki-light-comment: #6e7781 !important;     /* gray */
-  --shiki-light-property: #953800 !important;    /* brown */
+  --shiki-light-keyword: #cf222e !important;
+  /* red */
+  --shiki-light-string: #0a3069 !important;
+  /* dark blue for strings */
+  --shiki-light-function: #8250df !important;
+  /* purple */
+  --shiki-light-number: #0550ae !important;
+  /* blue */
+  --shiki-light-boolean: #0550ae !important;
+  /* blue */
+  --shiki-light-comment: #6e7781 !important;
+  /* gray */
+  --shiki-light-property: #953800 !important;
+  /* brown */
+}
+
+
+.input {
+  @apply w-full text-sm p-2 border-2 rounded dark:bg-coolgray-100 bg-gray-100 focus:border-coollabs focus:outline-none focus:ring-2 focus:ring-coollabs
 }
