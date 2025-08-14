@@ -241,7 +241,6 @@ const handleSubmit = async () => {
     };
     errors.value = {};
   } catch (error) {
-    // console.error("Failed to submit configuration:", error);
     if (error instanceof Error) {
       if (error.message.includes('401') || error.message.includes('403') ||
         error.message.includes('Unauthorized') || error.message.includes('Forbidden')) {
@@ -275,40 +274,65 @@ const checkVersion = async () => {
 };
 
 const handleConnect = async () => {
-  console.log('DEBUG: Starting connection phase with:', { deploymentType: formData.value.deploymentType, domain: formData.value.domain });
   isLoadingServers.value = true;
   try {
     validateForm();
     const data = await connect(formData.value.domain, formData.value.apiKey);
     if (data instanceof Error) {
-      // Check if it's an authentication/authorization error
+      // Handle different types of errors with user-friendly messages
       if (data.message.includes('401') || data.message.includes('403') ||
         data.message.includes('Unauthorized') || data.message.includes('Forbidden')) {
         errors.value.apiKey = 'Invalid API key or insufficient permissions';
-        isLoadingServers.value = false;
-        return; // Block progression
+      } else if (data.message.includes('404') || data.message.includes('Not Found')) {
+        errors.value.domain = 'Invalid Coolify URL - API endpoints not found. Please verify this is a Coolify instance.';
+      } else if (data.message.includes('NetworkError') || data.message.includes('Failed to fetch') || 
+                 data.message.includes('ERR_NETWORK') || data.message.includes('CONNECTION_REFUSED')) {
+        errors.value.domain = 'Cannot connect to the URL. Please check the URL and ensure the server is accessible.';
+      } else if (data.message.includes('CORS') || data.message.includes('Cross-Origin')) {
+        errors.value.domain = 'CORS error - the Coolify instance may not be configured to allow requests from this domain.';
+      } else if (data.message.includes('500') || data.message.includes('Internal Server Error')) {
+        errors.value.domain = 'Server error - the Coolify instance is experiencing issues. Please try again later.';
+      } else if (data.message.includes('Unexpected token') || data.message.includes('JSON')) {
+        errors.value.domain = 'Invalid response from server - this may not be a Coolify instance or the API is not available.';
+      } else {
+        // Generic error handling
+        errors.value.domain = `Connection failed: ${data.message}`;
       }
-      throw data;
+      isLoadingServers.value = false;
+      return; // Block progression
     }
 
     serverOptions.value = data;
     connected.value = true;
-    console.log('DEBUG: Connection successful, available servers:', data);
 
     // Check version after successful connection
     await checkVersion();
-    console.log('DEBUG: Version check completed, supports environment creation:', supportsEnvironmentCreation.value);
 
     currentStep.value++;
   } catch (error) {
-    // console.error('Connection failed:', error);
     if (error instanceof Error) {
+      // Handle different types of errors with user-friendly messages
       if (error.message.includes('401') || error.message.includes('403') ||
         error.message.includes('Unauthorized') || error.message.includes('Forbidden')) {
         errors.value.apiKey = 'Invalid API key or insufficient permissions';
-        isLoadingServers.value = false;
-        return; // Block progression
+      } else if (error.message.includes('404') || error.message.includes('Not Found')) {
+        errors.value.domain = 'Invalid Coolify URL - API endpoints not found. Please verify this is a Coolify instance.';
+      } else if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch') || 
+                 error.message.includes('ERR_NETWORK') || error.message.includes('CONNECTION_REFUSED')) {
+        errors.value.domain = 'Cannot connect to the URL. Please check the URL and ensure the server is accessible.';
+      } else if (error.message.includes('CORS') || error.message.includes('Cross-Origin')) {
+        errors.value.domain = 'CORS error - the Coolify instance may not be configured to allow requests from this domain.';
+      } else if (error.message.includes('500') || error.message.includes('Internal Server Error')) {
+        errors.value.domain = 'Server error - the Coolify instance is experiencing issues. Please try again later.';
+      } else if (error.message.includes('Unexpected token') || error.message.includes('JSON')) {
+        errors.value.domain = 'Invalid response from server - this may not be a Coolify instance or the API is not available.';
+      } else {
+        // Generic error handling
+        errors.value.domain = `Connection failed: ${error.message}`;
       }
+    } else {
+      // Handle non-Error objects
+      errors.value.domain = 'An unexpected error occurred while connecting to the Coolify instance.';
     }
   } finally {
     isLoadingServers.value = false;
@@ -341,7 +365,6 @@ const loadEnvironments = async (projectUuid: string) => {
       return;
     }
     environmentOptions.value = data.environments || [];
-    console.log('DEBUG: Raw environment data from API:', data.environments);
   } catch (error) {
     errors.value.environments = 'Failed to load environments';
   } finally {
@@ -350,39 +373,32 @@ const loadEnvironments = async (projectUuid: string) => {
 };
 
 const handleProjectSelect = async (projectId: string) => {
-  console.log('DEBUG: Project selection started for:', projectId);
   const project = projectOptions.value.find(p => p.uuid === projectId);
   selectedProject.value = project || null;
   formData.value.projectId = projectId;
 
   if (projectId && projectId !== 'create-new') {
-    console.log('DEBUG: Loading environments for project:', project?.name);
     await loadEnvironments(projectId);
-    console.log('DEBUG: Environments loaded:', environmentOptions.value);
   } else {
     environmentOptions.value = [];
     selectedEnvironment.value = null;
     selectedEnvironmentUuid.value = '';
     formData.value.environmentId = '';
-    console.log('DEBUG: Project selection cleared or create-new selected');
   }
 };
 
 const handleEnvironmentSelect = (environmentIdOrUuid: string) => {
-  console.log('DEBUG: Environment selection started for:', environmentIdOrUuid);
   if (environmentIdOrUuid === 'create-new') {
     if (!supportsEnvironmentCreation.value) {
       // Fallback for older versions - just use 'production' environment name
       formData.value.environmentId = 'production';
       selectedEnvironment.value = null;
       selectedEnvironmentUuid.value = '';
-      console.log('DEBUG: Environment creation not supported, using production fallback');
       return;
     }
     selectedEnvironment.value = null;
     selectedEnvironmentUuid.value = 'create-new';
     formData.value.environmentId = environmentIdOrUuid;
-    console.log('DEBUG: Create new environment selected');
     return;
   }
 
@@ -402,8 +418,6 @@ const handleEnvironmentSelect = (environmentIdOrUuid: string) => {
     selectedEnvironmentUuid.value = environmentIdOrUuid;
   }
 
-  console.log('DEBUG: Environment selected by UUID/ID:', environment);
-  console.log('DEBUG: Environment name for deployment:', formData.value.environmentId);
 };
 
 const handleCreateEnvironment = () => {
@@ -470,22 +484,13 @@ const handleServerSelect = async () => {
     errors.value.serverId = 'Please select a server';
     return;
   }
-  console.log('DEBUG: Server selected, loading projects for server:', formData.value.serverId);
-
   // Load projects when server is selected
   await loadProjects();
-  console.log('DEBUG: Projects loaded:', projectOptions.value);
   currentStep.value++;
   hasInteracted.value = false;
 };
 
 const deployFunc = async () => {
-  console.log('DEBUG: Starting deployment with configuration:', {
-    serverId: formData.value.serverId,
-    selectedService: props.selectedService,
-    projectId: formData.value.projectId,
-    environmentId: formData.value.environmentId
-  });
   try {
     if (!formData.value.serverId) {
       throw new Error('No server selected');
@@ -510,7 +515,6 @@ const deployFunc = async () => {
       formData.value.projectId,
       formData.value.environmentId
     );
-    console.log('DEBUG: Deployment response received:', data);
 
     if (data instanceof Error) {
       // Check if it's an authentication/authorization error
@@ -548,29 +552,22 @@ const deployFunc = async () => {
       if (data.environmentUuid && isValidUuid(data.environmentUuid)) {
         // Store the environment UUID for dashboard URL (only if it's a valid UUID)
         environmentUuid.value = data.environmentUuid;
-        console.log('DEBUG: Using valid environmentUuid from API response:', data.environmentUuid);
       } else if (selectedEnvironment.value?.uuid) {
         // Fallback: use the selected environment's UUID if available
         environmentUuid.value = selectedEnvironment.value.uuid;
-        console.log('DEBUG: Using selected environment UUID as fallback:', selectedEnvironment.value.uuid);
       } else if (selectedEnvironment.value?.id) {
         // Secondary fallback: use the selected environment's ID if no UUID
         environmentUuid.value = selectedEnvironment.value.id.toString();
-        console.log('DEBUG: Using selected environment ID as secondary fallback:', selectedEnvironment.value.id);
       } else {
         // Last fallback: use the environment name (current behavior)
         environmentUuid.value = formData.value.environmentId;
-        console.log('DEBUG: Using environment name as last fallback:', formData.value.environmentId);
-        console.warn('DEBUG: API returned invalid environmentUuid:', data.environmentUuid);
       }
-      console.log('DEBUG: Final environmentUuid set to:', environmentUuid.value);
 
       currentStep.value++;
     } else {
       throw new Error('Failed to get deployment URL');
     }
   } catch (error) {
-    // console.error('Deployment failed:', error);
     if (error instanceof Error) {
       if (error.message.includes('401') || error.message.includes('403') ||
         error.message.includes('Unauthorized') || error.message.includes('Forbidden')) {
@@ -710,9 +707,9 @@ watch(() => props.show, (newValue) => {
             'border-gray-300 dark:border-gray-600 hover:border-coollabs dark:hover:border-coollabs ':
               formData.deploymentType !== type,
           }" tabindex="0" role="radio" :aria-checked="formData.deploymentType === type"
-          @click="console.log('DEBUG: Selected deployment type:', type); formData.deploymentType = type as 'cloud' | 'self-host'"
-          @keydown.enter="console.log('DEBUG: Selected deployment type:', type); formData.deploymentType = type as 'cloud' | 'self-host'"
-          @keydown.space.prevent="console.log('DEBUG: Selected deployment type:', type); formData.deploymentType = type as 'cloud' | 'self-host'">
+          @click="formData.deploymentType = type as 'cloud' | 'self-host'"
+          @keydown.enter="formData.deploymentType = type as 'cloud' | 'self-host'"
+          @keydown.space.prevent="formData.deploymentType = type as 'cloud' | 'self-host'">
           <input type="radio" name="deploymentType" :value="type" v-model="formData.deploymentType" class="sr-only" />
           <div class="flex flex-1 items-center justify-between">
             <div class="flex items-center">
@@ -832,7 +829,7 @@ watch(() => props.show, (newValue) => {
             <select v-else-if="connected && !isLoadingServers" id="serverId" v-model="formData.serverId"
               placeholder="Select a server" class="input"
               :class="{ 'border-red-500 dark:border-red-400': errors.serverId }"
-              @change="console.log('DEBUG: Selected server:', $event.target.value, serverOptions.value?.find(s => s.uuid === $event.target.value)); hasInteracted = true">
+              @change="hasInteracted = true">
               <option value="" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                 Select a server
               </option>
@@ -862,7 +859,7 @@ watch(() => props.show, (newValue) => {
 
             <div v-else class="space-y-2">
               <select id="projectId" v-model="formData.projectId"
-                @change="console.log('DEBUG: Selected project:', $event.target.value, projectOptions.value?.find(p => p.uuid === $event.target.value)); handleProjectSelect($event.target.value)"
+                @change="handleProjectSelect($event.target.value)"
                 class="input" :class="{ 'border-red-500 dark:border-red-400': errors.projectId }">
                 <option value="" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                   Select a project
@@ -939,7 +936,7 @@ watch(() => props.show, (newValue) => {
 
             <div v-else class="space-y-2">
               <select id="environmentId" v-model="selectedEnvironmentUuid"
-                @change="console.log('DEBUG: Selected environment:', $event.target.value, environmentOptions.value?.find(e => (e.uuid || e.id.toString()) === $event.target.value)); handleEnvironmentSelect($event.target.value)"
+                @change="handleEnvironmentSelect($event.target.value)"
                 class="input" :class="{ 'border-red-500 dark:border-red-400': errors.environmentId }">
                 <option value="" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                   Select an environment
