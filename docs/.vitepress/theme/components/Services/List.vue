@@ -119,14 +119,14 @@ const navigateTo = (path: string, external: boolean = false) => {
 
             <div class="button-group relative flex flex-col gap-2" ref="dropdownRef">
                 <button @click.stop="isOpen = !isOpen"
-                    class="flex items-center justify-between w-64 sm:w-48 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 sm:px-3 sm:py-2 bg-gray-100 dark:bg-coolgray-100 text-gray-900 dark:text-white text-sm hover:border-coollabs focus:border-coollabs  focus:outline-none focus:ring-2 focus:ring-coollabs transition-colors duration-300 min-w-[120px]">
+                    class="flex items-center justify-between w-64 sm:w-48 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 sm:px-3 sm:py-2 bg-gray-100 dark:bg-coolgray-100 text-gray-900 dark:text-white text-sm hover:border-coollabs focus:border-coollabs focus:outline-none focus:ring-2 focus:ring-coollabs transition-colors duration-300 min-w-[120px]">
                     <span class="text-sm sm:text-base">{{ selectedCategories.length === 1 ? selectedCategories[0] :
                         `${selectedCategories.length} categories` }}
                     </span>
                     <CoolIcon class="w-4 h-4 ml-2 flex-shrink-0" name="mdi:chevron-down" color="white" />
                 </button>
                 <div v-if="isOpen"
-                    class="dropdown-content absolute z-10 top-full left-0 right-0 rounded-lg shadow-lg bg-white dark:bg-coolgray-200 border border-gray-200 dark:border-coolgray-300 max-h-60 overflow-y-auto">
+                    class="dropdown-content absolute z-10 top-full left-0 right-0 rounded-lg shadow-lg bg-neutral-100 dark:bg-coolgray-200 border border-gray-200 dark:border-coolgray-300 max-h-60 overflow-y-auto">
                     <div class="p-2">
                         <label
                             class="flex items-center space-x-2 p-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-coolgray-100 rounded cursor-pointer">
@@ -183,11 +183,11 @@ const navigateTo = (path: string, external: boolean = false) => {
                                 <div class="font-bold text-md text-gray-900 mb-1 dark:text-gray-100">{{ service.name }}
                                 </div>
                                 <div class="text-gray-500 dark:text-gray-400 text-xs flex-grow">{{ service.description
-                                    }}</div>
+                                }}</div>
                             </div>
                             <div class="p-4">
                                 <div
-                                    class="dark:bg-coolgray-200 bg-white dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center mb-3">
+                                    class="dark:bg-coolgray-200 bg-neutral-200 dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center mb-3">
                                     <img :src="withBase(service.icon)" alt="Coolify" class="w-auto h-8 px-2 rounded-lg"
                                         loading="lazy" />
                                 </div>

@@ -19,6 +19,7 @@ interface Server {
 
 interface Environment {
   id: number;
+  uuid?: string; // Add optional UUID field
   name: string;
   project_id: number;
   created_at: string;
@@ -57,7 +58,7 @@ const currentStep = ref(0);
 const apiKeyInput = ref<HTMLInputElement>();
 const serviceUrl = ref('');
 const isPasswordVisible = ref(false);
-const disclaimerAccepted = ref(false);
+const isLoadingServers = ref(false);
 const isLoadingProjects = ref(false);
 const isLoadingEnvironments = ref(false);
 const newProjectName = ref('');
@@ -66,6 +67,7 @@ const newEnvironmentName = ref('');
 const newEnvironmentDescription = ref('');
 const serviceUuid = ref('');
 const environmentUuid = ref('');
+const selectedEnvironmentUuid = ref(''); // For v-model binding
 const coolifyVersion = ref('');
 const supportsEnvironmentCreation = ref(false);
 
@@ -273,6 +275,8 @@ const checkVersion = async () => {
 };
 
 const handleConnect = async () => {
+  console.log('DEBUG: Starting connection phase with:', { deploymentType: formData.value.deploymentType, domain: formData.value.domain });
+  isLoadingServers.value = true;
   try {
     validateForm();
     const data = await connect(formData.value.domain, formData.value.apiKey);
@@ -281,6 +285,7 @@ const handleConnect = async () => {
       if (data.message.includes('401') || data.message.includes('403') ||
         data.message.includes('Unauthorized') || data.message.includes('Forbidden')) {
         errors.value.apiKey = 'Invalid API key or insufficient permissions';
+        isLoadingServers.value = false;
         return; // Block progression
       }
       throw data;
@@ -288,9 +293,11 @@ const handleConnect = async () => {
 
     serverOptions.value = data;
     connected.value = true;
+    console.log('DEBUG: Connection successful, available servers:', data);
 
     // Check version after successful connection
     await checkVersion();
+    console.log('DEBUG: Version check completed, supports environment creation:', supportsEnvironmentCreation.value);
 
     currentStep.value++;
   } catch (error) {
@@ -299,9 +306,12 @@ const handleConnect = async () => {
       if (error.message.includes('401') || error.message.includes('403') ||
         error.message.includes('Unauthorized') || error.message.includes('Forbidden')) {
         errors.value.apiKey = 'Invalid API key or insufficient permissions';
+        isLoadingServers.value = false;
         return; // Block progression
       }
     }
+  } finally {
+    isLoadingServers.value = false;
   }
 };
 
@@ -331,6 +341,7 @@ const loadEnvironments = async (projectUuid: string) => {
       return;
     }
     environmentOptions.value = data.environments || [];
+    console.log('DEBUG: Raw environment data from API:', data.environments);
   } catch (error) {
     errors.value.environments = 'Failed to load environments';
   } finally {
@@ -339,35 +350,60 @@ const loadEnvironments = async (projectUuid: string) => {
 };
 
 const handleProjectSelect = async (projectId: string) => {
+  console.log('DEBUG: Project selection started for:', projectId);
   const project = projectOptions.value.find(p => p.uuid === projectId);
   selectedProject.value = project || null;
   formData.value.projectId = projectId;
 
   if (projectId && projectId !== 'create-new') {
+    console.log('DEBUG: Loading environments for project:', project?.name);
     await loadEnvironments(projectId);
+    console.log('DEBUG: Environments loaded:', environmentOptions.value);
   } else {
     environmentOptions.value = [];
     selectedEnvironment.value = null;
+    selectedEnvironmentUuid.value = '';
     formData.value.environmentId = '';
+    console.log('DEBUG: Project selection cleared or create-new selected');
   }
 };
 
-const handleEnvironmentSelect = (environmentName: string) => {
-  if (environmentName === 'create-new') {
+const handleEnvironmentSelect = (environmentIdOrUuid: string) => {
+  console.log('DEBUG: Environment selection started for:', environmentIdOrUuid);
+  if (environmentIdOrUuid === 'create-new') {
     if (!supportsEnvironmentCreation.value) {
       // Fallback for older versions - just use 'production' environment name
       formData.value.environmentId = 'production';
       selectedEnvironment.value = null;
+      selectedEnvironmentUuid.value = '';
+      console.log('DEBUG: Environment creation not supported, using production fallback');
       return;
     }
     selectedEnvironment.value = null;
-    formData.value.environmentId = environmentName;
+    selectedEnvironmentUuid.value = 'create-new';
+    formData.value.environmentId = environmentIdOrUuid;
+    console.log('DEBUG: Create new environment selected');
     return;
   }
 
-  const environment = environmentOptions.value.find(e => e.name === environmentName);
+  // Find environment by UUID first, then by ID as fallback
+  const environment = environmentOptions.value.find(e =>
+    (e.uuid && e.uuid === environmentIdOrUuid) ||
+    e.id.toString() === environmentIdOrUuid
+  );
   selectedEnvironment.value = environment || null;
-  formData.value.environmentId = environmentName;
+
+  // Store the environment name for deployment (API expects name, not UUID)
+  if (environment) {
+    formData.value.environmentId = environment.name;
+    selectedEnvironmentUuid.value = environment.uuid || environment.id.toString();
+  } else {
+    formData.value.environmentId = environmentIdOrUuid; // fallback
+    selectedEnvironmentUuid.value = environmentIdOrUuid;
+  }
+
+  console.log('DEBUG: Environment selected by UUID/ID:', environment);
+  console.log('DEBUG: Environment name for deployment:', formData.value.environmentId);
 };
 
 const handleCreateEnvironment = () => {
@@ -434,14 +470,22 @@ const handleServerSelect = async () => {
     errors.value.serverId = 'Please select a server';
     return;
   }
+  console.log('DEBUG: Server selected, loading projects for server:', formData.value.serverId);
 
   // Load projects when server is selected
   await loadProjects();
+  console.log('DEBUG: Projects loaded:', projectOptions.value);
   currentStep.value++;
   hasInteracted.value = false;
 };
 
 const deployFunc = async () => {
+  console.log('DEBUG: Starting deployment with configuration:', {
+    serverId: formData.value.serverId,
+    selectedService: props.selectedService,
+    projectId: formData.value.projectId,
+    environmentId: formData.value.environmentId
+  });
   try {
     if (!formData.value.serverId) {
       throw new Error('No server selected');
@@ -466,6 +510,7 @@ const deployFunc = async () => {
       formData.value.projectId,
       formData.value.environmentId
     );
+    console.log('DEBUG: Deployment response received:', data);
 
     if (data instanceof Error) {
       // Check if it's an authentication/authorization error
@@ -493,10 +538,32 @@ const deployFunc = async () => {
         // Store the environment name used in deployment
         formData.value.environmentId = data.environmentName;
       }
-      if (data.environmentUuid) {
-        // Store the environment UUID for dashboard URL
+      // Check if API response has a valid UUID format (not just environment name)
+      const isValidUuid = (uuid) => {
+        const uuidRegex = /^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i;
+        const coolifyUuidRegex = /^[a-z0-9]{24,32}$/i; // Coolify's custom UUID format
+        return uuidRegex.test(uuid) || coolifyUuidRegex.test(uuid);
+      };
+
+      if (data.environmentUuid && isValidUuid(data.environmentUuid)) {
+        // Store the environment UUID for dashboard URL (only if it's a valid UUID)
         environmentUuid.value = data.environmentUuid;
+        console.log('DEBUG: Using valid environmentUuid from API response:', data.environmentUuid);
+      } else if (selectedEnvironment.value?.uuid) {
+        // Fallback: use the selected environment's UUID if available
+        environmentUuid.value = selectedEnvironment.value.uuid;
+        console.log('DEBUG: Using selected environment UUID as fallback:', selectedEnvironment.value.uuid);
+      } else if (selectedEnvironment.value?.id) {
+        // Secondary fallback: use the selected environment's ID if no UUID
+        environmentUuid.value = selectedEnvironment.value.id.toString();
+        console.log('DEBUG: Using selected environment ID as secondary fallback:', selectedEnvironment.value.id);
+      } else {
+        // Last fallback: use the environment name (current behavior)
+        environmentUuid.value = formData.value.environmentId;
+        console.log('DEBUG: Using environment name as last fallback:', formData.value.environmentId);
+        console.warn('DEBUG: API returned invalid environmentUuid:', data.environmentUuid);
       }
+      console.log('DEBUG: Final environmentUuid set to:', environmentUuid.value);
 
       currentStep.value++;
     } else {
@@ -525,6 +592,7 @@ const handleClose = () => {
   environmentOptions.value = [];
   selectedProject.value = null;
   selectedEnvironment.value = null;
+  selectedEnvironmentUuid.value = '';
   showCreateProject.value = false;
   newProjectName.value = '';
   newProjectDescription.value = '';
@@ -554,6 +622,7 @@ const goBack = () => {
     environmentOptions.value = [];
     selectedProject.value = null;
     selectedEnvironment.value = null;
+    selectedEnvironmentUuid.value = '';
     formData.value.projectId = "";
     formData.value.environmentId = "";
     showCreateProject.value = false;
@@ -561,6 +630,7 @@ const goBack = () => {
     // Going back from environment selection to project selection  
     environmentOptions.value = [];
     selectedEnvironment.value = null;
+    selectedEnvironmentUuid.value = '';
     formData.value.environmentId = "";
   } else if (currentStep.value === 2) {
     // Going back from server selection to API key
@@ -602,6 +672,7 @@ watch(() => props.show, (newValue) => {
     environmentOptions.value = [];
     selectedProject.value = null;
     selectedEnvironment.value = null;
+    selectedEnvironmentUuid.value = '';
     showCreateProject.value = false;
     newProjectName.value = '';
     newProjectDescription.value = '';
@@ -634,14 +705,14 @@ watch(() => props.show, (newValue) => {
         <label v-for="type in ['cloud', 'self-host']" :key="type"
           class="relative w-full flex cursor-pointer rounded-lg border bg-white dark:bg-black p-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-coollabs focus:border-coollabs transition-all duration-200"
           :class="{
-            'ring-2 ring-coollabs border-coollabs bg-coollabs':
+            'ring-2 ring-coollabs border-coollabs ':
               formData.deploymentType === type,
-            'border-gray-300 dark:border-gray-600 hover:border-coollabs dark:hover:border-coollabs hover:bg-coollabs dark:hover:bg-coollabs':
+            'border-gray-300 dark:border-gray-600 hover:border-coollabs dark:hover:border-coollabs ':
               formData.deploymentType !== type,
           }" tabindex="0" role="radio" :aria-checked="formData.deploymentType === type"
-          @click="formData.deploymentType = type as 'cloud' | 'self-host'"
-          @keydown.enter="formData.deploymentType = type as 'cloud' | 'self-host'"
-          @keydown.space.prevent="formData.deploymentType = type as 'cloud' | 'self-host'">
+          @click="console.log('DEBUG: Selected deployment type:', type); formData.deploymentType = type as 'cloud' | 'self-host'"
+          @keydown.enter="console.log('DEBUG: Selected deployment type:', type); formData.deploymentType = type as 'cloud' | 'self-host'"
+          @keydown.space.prevent="console.log('DEBUG: Selected deployment type:', type); formData.deploymentType = type as 'cloud' | 'self-host'">
           <input type="radio" name="deploymentType" :value="type" v-model="formData.deploymentType" class="sr-only" />
           <div class="flex flex-1 items-center justify-between">
             <div class="flex items-center">
@@ -653,16 +724,33 @@ watch(() => props.show, (newValue) => {
         </label>
       </div>
 
-      <p v-if="currentStep === 0" class="text-gray-500 dark:text-gray-400 text-xs mt-8 mb-2">
-        Disclaimer: Always be careful when handling sensitive API Tokens.<br /> <a
-          href="/docs/api-reference/authorization" target="_blank" rel="noopener noreferrer"
-          class="text-purple-500 hover:text-purple-600 underline">Learn
-          more</a>
-      </p>
-      <div v-if="currentStep === 0" class="flex items-center gap-2 mt-4">
-        <input type="checkbox" id="disclaimer" v-model="disclaimerAccepted" />
-        <label for="disclaimer" class="text-gray-500 dark:text-gray-400 text-xs ">I understand the risks and I agree to
-          the above disclaimer.</label>
+
+      <!-- Selection Summary -->
+      <div v-if="currentStep > 0" class="mb-6 p-4 bg-gray-50 dark:bg-coolgray-100 rounded-lg">
+
+        <div class="space-y-2">
+          <div v-if="formData.deploymentType" class="flex items-center gap-2">
+            <span class="text-xs text-gray-500 dark:text-gray-400 w-20">Type:</span>
+            <span class="text-sm text-gray-900 dark:text-white font-medium">{{ formData.deploymentType === 'cloud' ?
+              'Cloud' : 'Self-hosted' }}</span>
+          </div>
+          <div v-if="formData.domain && !isCloudDeployment" class="flex items-center gap-2">
+            <span class="text-xs text-gray-500 dark:text-gray-400 w-20">URL:</span>
+            <span class="text-sm text-gray-900 dark:text-white">{{ formData.domain }}</span>
+          </div>
+          <div v-if="selectedServer && currentStep >= 3" class="flex items-center gap-2">
+            <span class="text-xs text-gray-500 dark:text-gray-400 w-20">Server:</span>
+            <span class="text-sm text-gray-900 dark:text-white font-medium">{{ selectedServer.name }}</span>
+          </div>
+          <div v-if="selectedProject && currentStep >= 4" class="flex items-center gap-2">
+            <span class="text-xs text-gray-500 dark:text-gray-400 w-20">Project:</span>
+            <span class="text-sm text-gray-900 dark:text-white font-medium">{{ selectedProject.name }}</span>
+          </div>
+          <div v-if="selectedEnvironment && currentStep >= 5" class="flex items-center gap-2">
+            <span class="text-xs text-gray-500 dark:text-gray-400 w-20">Environment:</span>
+            <span class="text-sm text-gray-900 dark:text-white font-medium">{{ selectedEnvironment.name }}</span>
+          </div>
+        </div>
       </div>
 
       <form v-if="currentStep > 0" @submit.prevent="handleSubmit" class="space-y-6 text-sm">
@@ -695,7 +783,7 @@ watch(() => props.show, (newValue) => {
                   :type="isPasswordVisible ? 'text' : 'password'" placeholder="Enter your API key" class="input"
                   :class="{ 'border-red-500 dark:border-red-400': errors.apiKey }" @input="errors.apiKey = ''" />
                 <button type="button"
-                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none transition-colors duration-200"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500 hover:text-coollabs dark:hover:text-coollabs focus:outline-none transition-colors duration-200"
                   @click="togglePasswordVisibility" @keydown.enter="togglePasswordVisibility"
                   @keydown.space.prevent="togglePasswordVisibility"
                   :aria-label="isPasswordVisible ? 'Hide password' : 'Show password'">
@@ -711,6 +799,9 @@ watch(() => props.show, (newValue) => {
             <div class="mt-2 space-y-1">
               <p class="text-gray-500 dark:text-gray-400 text-xs">
                 Note: Make sure you have the read and write permissions for the API Token.
+              </p>
+              <p class="text-gray-500 dark:text-gray-400 text-xs">We do not store your token,
+                everything is handled in your browser.
               </p>
               <p v-if="isCloudDeployment || (!isCloudDeployment && formData.domain.trim() && isValidUrl(formData.domain))"
                 class="text-xs">
@@ -728,12 +819,20 @@ watch(() => props.show, (newValue) => {
         <!-- Server Selection -->
         <Motion :initial="{ opacity: 0, y: 10 }" :animate="{ opacity: 1, y: 0 }" :exit="{ opacity: 0, y: 10 }"
           :transition="{ duration: 0.5 }">
-          <div v-if="connected && currentStep === 2" class="space-y-2">
+          <div v-if="(connected && currentStep === 2) || (isLoadingServers && currentStep === 1)" class="space-y-2">
             <label for="serverId" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Available Servers
             </label>
-            <select id="serverId" v-model="formData.serverId" placeholder="Select a server" class="input"
-              :class="{ 'border-red-500 dark:border-red-400': errors.serverId }" @change="hasInteracted = true">
+
+            <div v-if="isLoadingServers" class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+              <CoolIcon class="w-4 h-4" name="line-md:loading-twotone-loop" color="gray" />
+              <span>Loading servers...</span>
+            </div>
+
+            <select v-else-if="connected && !isLoadingServers" id="serverId" v-model="formData.serverId"
+              placeholder="Select a server" class="input"
+              :class="{ 'border-red-500 dark:border-red-400': errors.serverId }"
+              @change="console.log('DEBUG: Selected server:', $event.target.value, serverOptions.value?.find(s => s.uuid === $event.target.value)); hasInteracted = true">
               <option value="" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                 Select a server
               </option>
@@ -753,7 +852,7 @@ watch(() => props.show, (newValue) => {
           :transition="{ duration: 0.5 }">
           <div v-if="currentStep === 3" class="space-y-4">
             <label for="projectId" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Select Project
+              Available Projects
             </label>
 
             <div v-if="isLoadingProjects" class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
@@ -762,7 +861,8 @@ watch(() => props.show, (newValue) => {
             </div>
 
             <div v-else class="space-y-2">
-              <select id="projectId" v-model="formData.projectId" @change="handleProjectSelect($event.target.value)"
+              <select id="projectId" v-model="formData.projectId"
+                @change="console.log('DEBUG: Selected project:', $event.target.value, projectOptions.value?.find(p => p.uuid === $event.target.value)); handleProjectSelect($event.target.value)"
                 class="input" :class="{ 'border-red-500 dark:border-red-400': errors.projectId }">
                 <option value="" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                   Select a project
@@ -829,30 +929,23 @@ watch(() => props.show, (newValue) => {
         <Motion :initial="{ opacity: 0, y: 10 }" :animate="{ opacity: 1, y: 0 }" :exit="{ opacity: 0, y: 10 }"
           :transition="{ duration: 0.5 }">
           <div v-if="currentStep === 4" class="space-y-2">
-
-            <div v-if="selectedProject" class="mb-2">
-              <p class="text-sm text-black dark:text-white font-bold">
-                Project: <span class="font-medium">{{ selectedProject.name }}</span>
-              </p>
-            </div>
-
             <label for="environmentId" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Select Environment
+              Available Environments
             </label>
-
             <div v-if="isLoadingEnvironments" class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
               <CoolIcon class="w-4 h-4" name="line-md:loading-twotone-loop" color="gray" />
               <span>Loading environments...</span>
             </div>
 
             <div v-else class="space-y-2">
-              <select id="environmentId" v-model="formData.environmentId"
-                @change="handleEnvironmentSelect($event.target.value)" class="input"
-                :class="{ 'border-red-500 dark:border-red-400': errors.environmentId }">
+              <select id="environmentId" v-model="selectedEnvironmentUuid"
+                @change="console.log('DEBUG: Selected environment:', $event.target.value, environmentOptions.value?.find(e => (e.uuid || e.id.toString()) === $event.target.value)); handleEnvironmentSelect($event.target.value)"
+                class="input" :class="{ 'border-red-500 dark:border-red-400': errors.environmentId }">
                 <option value="" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                   Select an environment
                 </option>
-                <option v-for="environment in environmentOptions" :key="environment.name" :value="environment.name"
+                <option v-for="environment in environmentOptions" :key="environment.uuid || environment.id"
+                  :value="environment.uuid || environment.id.toString()"
                   class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                   {{ environment.name }}
                 </option>
@@ -964,10 +1057,6 @@ watch(() => props.show, (newValue) => {
           <div class="flex flex-col gap-2">
             <Motion :initial="{ opacity: 0, y: 10 }" :animate="{ opacity: 1, y: 0 }" :exit="{ opacity: 0, y: -10 }"
               :transition="{ duration: 0.5 }" delay={0.5}>
-              <CoolIcon class="w-10 h-10 mx-auto" name="meteor-icons:circle-check" color="green" />
-            </Motion>
-            <Motion :initial="{ opacity: 0, y: 10 }" :animate="{ opacity: 1, y: 0 }" :exit="{ opacity: 0, y: -10 }"
-              :transition="{ duration: 0.5 }" delay={0.5}>
               <div class="flex flex-col items-center gap-4">
                 <div class="text-center">
                   <p class="text-gray-900 dark:text-white mb-2">Your service is being deployed at:</p>
@@ -976,18 +1065,18 @@ watch(() => props.show, (newValue) => {
                     :aria-label="`Open ${serviceUrl} in new tab`">
                     {{ serviceUrl }}
                   </a>
-                  <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Note: The deployment may take a few minutes
+                  <p class="text-neutral-600 text-sm mt-2">Note: The deployment may take a few minutes
                     to
                     complete.</p>
                 </div>
 
                 <div class="text-center">
-                  <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Manage your deployment:</p>
+
                   <a :href="`${isCloudDeployment ? 'https://app.coolify.io' : formData.domain}/project/${formData.projectId}/environment/${environmentUuid}/service/${serviceUuid}`"
                     target="_blank" rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-coollabs border border-transparent rounded-md hover:bg-coollabs-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors duration-200">
+                    class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-black dark:text-white hover:text-white border border-coollabs rounded-md hover:bg-coollabs-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors duration-200">
                     <CoolIcon class="w-4 h-4" name="mdi:external-link" color="currentColor" />
-                    Open Coolify Dashboard
+                    Open in Coolify
                   </a>
                 </div>
               </div>
@@ -1008,7 +1097,7 @@ watch(() => props.show, (newValue) => {
           Finish
         </button>
         <button v-if="currentStep === 0" @click="currentStep++" @keydown.enter="currentStep++"
-          @keydown.space.prevent="currentStep++" :disabled="!disclaimerAccepted"
+          @keydown.space.prevent="currentStep++"
           class="px-4 py-2 text-sm font-medium text-white bg-coollabs border border-transparent rounded-md hover:bg-coollabs-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
           Next
         </button>
