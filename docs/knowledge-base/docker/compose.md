@@ -97,16 +97,18 @@ services:
     image: filebrowser/filebrowser:latest
     environment:
       - POSTGRES_PASSWORD=password
-    volumes:
-      - type: bind
-        source: ./srv/99-roles.sql
+    configs:
+      - source: roles
         target: /docker-entrypoint-initdb.d/init-scripts/99-roles.sql
-        content: |
-          -- NOTE: change to your own passwords for production environments
-           \set pgpass `echo "$POSTGRES_PASSWORD"`
 
-           ALTER USER authenticator WITH PASSWORD :'pgpass';
-           ALTER USER pgbouncer WITH PASSWORD :'pgpass';
+configs:
+  roles:
+    content: |
+      -- NOTE: change to your own passwords for production environments
+        \set pgpass `echo "$POSTGRES_PASSWORD"`
+
+        ALTER USER authenticator WITH PASSWORD :'pgpass';
+        ALTER USER pgbouncer WITH PASSWORD :'pgpass';
 ```
 
 ## Exclude from healthchecks
