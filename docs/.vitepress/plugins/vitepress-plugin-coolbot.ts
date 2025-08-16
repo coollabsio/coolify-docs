@@ -44,7 +44,7 @@ export default function coolbotPlugin(options: coolbotPluginOptions = {}): Plugi
   };
 
   return {
-    name: 'vitepress-plugin-CoolBot',
+    name: 'vitepress-plugin-coolbot',
     
     async closeBundle() {
       try {
@@ -87,7 +87,6 @@ export default function coolbotPlugin(options: coolbotPluginOptions = {}): Plugi
           }
         }
         
-
         // Write the file map
         const mapPath = resolve(convertedDir, 'llms-text.json');
         writeFileSync(mapPath, JSON.stringify(fileMap, null, 2), 'utf-8');

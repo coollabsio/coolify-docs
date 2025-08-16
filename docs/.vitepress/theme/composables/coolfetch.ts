@@ -315,6 +315,44 @@ export const useCoolFetch = () => {
         }
     }
 
+    const checkServiceHealth = async (serviceUrl: string): Promise<boolean> => {
+        try {
+            const controller = new AbortController()
+            const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+            
+            // Path overrides for common endpoints
+            const endpointsToTry = [
+                '/' // Root path
+            ]
+            
+            for (const endpoint of endpointsToTry) {
+                try {
+                    const url = `${serviceUrl}${endpoint}`
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        signal: controller.signal
+                    })
+                    
+                    // Check if the response is successful (2xx status codes)
+                    // Also accept 3xx redirects as healthy (service is responding)
+                    if (response.ok || (response.status >= 300 && response.status < 400)) {
+                        clearTimeout(timeoutId)
+                        return true
+                    }
+                } catch (endpointError) {
+                    // Continue to next endpoint if this one fails
+                    continue
+                }
+            }
+            
+            clearTimeout(timeoutId)
+            return false
+        } catch (error) {
+            // If the request fails (network error, timeout, etc.), the service is not healthy
+            return false
+        }
+    }
+
     return {
         connect,
         connected,
@@ -327,6 +365,7 @@ export const useCoolFetch = () => {
         fetchProjects,
         fetchProjectDetails,
         fetchVersion,
-        deploy
+        deploy,
+        checkServiceHealth
     }
 }

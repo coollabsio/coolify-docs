@@ -71,6 +71,12 @@ const selectedEnvironmentUuid = ref(''); // For v-model binding
 const coolifyVersion = ref('');
 const supportsEnvironmentCreation = ref(false);
 
+const isServiceHealthy = ref(false);
+const isHealthChecking = ref(false);
+const healthCheckInterval = ref<number | null>(null);
+const healthCheckAttempts = ref(0);
+const maxHealthCheckAttempts = 30; // 5 minutes with 10-second intervals
+
 const {
   connect,
   status,
@@ -82,6 +88,7 @@ const {
   fetchProjectDetails,
   fetchVersion,
   createProject,
+  checkServiceHealth,
 } = useCoolFetch();
 
 // Form data
@@ -234,10 +241,12 @@ const handleSubmit = async () => {
     }
     isSubmitting.value = false;
     formData.value = {
-      deploymentType: "cloud",
+      deploymentType: "cloud" as "cloud" | "self-host",
       domain: "",
       serverId: "",
       apiKey: "",
+      projectId: "",
+      environmentId: "",
     };
     errors.value = {};
   } catch (error) {
@@ -563,6 +572,9 @@ const deployFunc = async () => {
         environmentUuid.value = formData.value.environmentId;
       }
 
+      // Start health check polling
+      startHealthCheckPolling();
+
       currentStep.value++;
     } else {
       throw new Error('Failed to get deployment URL');
@@ -599,6 +611,11 @@ const handleClose = () => {
   environmentUuid.value = '';
   coolifyVersion.value = '';
   supportsEnvironmentCreation.value = false;
+  
+  // Stop health check polling and reset health check variables
+  stopHealthCheckPolling();
+  isServiceHealthy.value = false;
+  healthCheckAttempts.value = 0;
   formData.value = {
     deploymentType: "cloud" as "cloud" | "self-host",
     domain: "",
@@ -647,6 +664,50 @@ const togglePasswordVisibility = () => {
   }
 };
 
+// Health check polling functions
+const startHealthCheckPolling = () => {
+  if (!serviceUrl.value) return;
+  
+  isHealthChecking.value = true;
+  healthCheckAttempts.value = 0;
+  
+  const performHealthCheck = async () => {
+    if (healthCheckAttempts.value >= maxHealthCheckAttempts) {
+      stopHealthCheckPolling();
+      return;
+    }
+    
+    try {
+      const isHealthy = await checkServiceHealth(serviceUrl.value);
+      if (isHealthy) {
+        isServiceHealthy.value = true;
+        stopHealthCheckPolling();
+      } else {
+        healthCheckAttempts.value++;
+      }
+    } catch (error) {
+      healthCheckAttempts.value++;
+    }
+  };
+  
+  // Wait 30 seconds before starting health checks to give the service time to start
+  setTimeout(() => {
+    // Perform initial health check
+    performHealthCheck();
+    
+    // Set up polling interval (every 10 seconds)
+    healthCheckInterval.value = window.setInterval(performHealthCheck, 10000);
+  }, 30000);
+};
+
+const stopHealthCheckPolling = () => {
+  isHealthChecking.value = false;
+  if (healthCheckInterval.value) {
+    clearInterval(healthCheckInterval.value);
+    healthCheckInterval.value = null;
+  }
+};
+
 // Watch for step changes to update focus trap
 watch(currentStep, async (newStep, oldStep) => {
   await nextTick()
@@ -679,6 +740,12 @@ watch(() => props.show, (newValue) => {
     environmentUuid.value = '';
     coolifyVersion.value = '';
     supportsEnvironmentCreation.value = false;
+    
+    // Stop health check polling and reset health check variables
+    stopHealthCheckPolling();
+    isServiceHealthy.value = false;
+    healthCheckAttempts.value = 0;
+    
     formData.value = {
       deploymentType: "cloud" as "cloud" | "self-host",
       domain: "",
@@ -746,6 +813,13 @@ watch(() => props.show, (newValue) => {
           <div v-if="selectedEnvironment && currentStep >= 5" class="flex items-center gap-2">
             <span class="text-xs text-gray-500 dark:text-gray-400 w-20">Environment:</span>
             <span class="text-sm text-gray-900 dark:text-white font-medium">{{ selectedEnvironment.name }}</span>
+          </div>
+          <div v-if="serviceUrl && currentStep >= 5" class="flex items-center gap-2">
+            <span class="text-xs text-gray-500 dark:text-gray-400 w-20">URL:</span>
+            <a :href="serviceUrl" target="_blank" rel="noopener noreferrer"
+              class="text-sm text-gray-900 dark:text-white font-medium hover:text-coollabs hover:underline hover:cursor-pointer">
+              <CoolIcon class="w-4 h-4" name="mdi:external-link" color="currentColor" />
+            </a>
           </div>
         </div>
       </div>
@@ -888,10 +962,10 @@ watch(() => props.show, (newValue) => {
                 <label for="projectName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Project Name *
                 </label>
-                <input id="projectName" v-model="newProjectName" type="text" placeholder="Enter project name"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                  :class="{ 'border-red-500 dark:border-red-400': errors.projectName }"
-                  @input="errors.projectName = ''" />
+                                 <input id="projectName" v-model="newProjectName" type="text" placeholder="Enter project name"
+                   class="input"
+                   :class="{ 'border-red-500 dark:border-red-400': errors.projectName }"
+                   @input="errors.projectName = ''" />
                 <p v-if="errors.projectName" class="mt-1 text-sm text-red-600 dark:text-red-400">
                   {{ errors.projectName }}
                 </p>
@@ -901,10 +975,10 @@ watch(() => props.show, (newValue) => {
                 <label for="projectDescription" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Description
                 </label>
-                <textarea id="projectDescription" v-model="newProjectDescription" rows="2"
-                  placeholder="Enter project description (optional)"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none">
-                </textarea>
+                                 <textarea id="projectDescription" v-model="newProjectDescription" rows="2"
+                   placeholder="Enter project description (optional)"
+                   class="input resize-none">
+                 </textarea>
               </div>
 
               <div class="flex gap-2">
@@ -973,11 +1047,11 @@ watch(() => props.show, (newValue) => {
                 <label for="environmentName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Environment Name *
                 </label>
-                <input id="environmentName" v-model="newEnvironmentName" type="text"
-                  placeholder="Enter environment name (e.g., staging, development)"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                  :class="{ 'border-red-500 dark:border-red-400': errors.environmentName }"
-                  @input="errors.environmentName = ''" />
+                                 <input id="environmentName" v-model="newEnvironmentName" type="text"
+                   placeholder="Enter environment name (e.g., staging, development)"
+                   class="input"
+                   :class="{ 'border-red-500 dark:border-red-400': errors.environmentName }"
+                   @input="errors.environmentName = ''" />
                 <p v-if="errors.environmentName" class="mt-1 text-sm text-red-600 dark:text-red-400">
                   {{ errors.environmentName }}
                 </p>
@@ -988,10 +1062,10 @@ watch(() => props.show, (newValue) => {
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Description
                 </label>
-                <textarea id="environmentDescription" v-model="newEnvironmentDescription" rows="2"
-                  placeholder="Enter environment description (optional)"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none">
-                </textarea>
+                                 <textarea id="environmentDescription" v-model="newEnvironmentDescription" rows="2"
+                   placeholder="Enter environment description (optional)"
+                   class="input resize-none">
+                 </textarea>
               </div>
 
               <div class="flex gap-2">
@@ -1056,25 +1130,46 @@ watch(() => props.show, (newValue) => {
               :transition="{ duration: 0.5 }" delay={0.5}>
               <div class="flex flex-col items-center gap-4">
                 <div class="text-center">
-                  <p class="text-gray-900 dark:text-white mb-2">Your service is being deployed at:</p>
-                  <a :href="serviceUrl" target="_blank" rel="noopener noreferrer"
-                    class="text-blue-500 hover:text-blue-600 underline focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded"
-                    :aria-label="`Open ${serviceUrl} in new tab`">
-                    {{ serviceUrl }}
-                  </a>
-                  <p class="text-neutral-600 text-sm mt-2">Note: The deployment may take a few minutes
-                    to
-                    complete.</p>
+                  <p class="text-gray-900 dark:text-white mb-2"> {{ selectedService }}  
+                    <span v-if="isHealthChecking">is currently being deployed</span> 
+                    <span v-else>has been deployed on your server.</span> 
+                  </p>
+                  <p class="text-neutral-600 text-sm mt-2" v-if="isHealthChecking">
+                    Note: The deployment may take a few minutes to complete.
+                  </p>
                 </div>
 
-                <div class="text-center">
+                <div class="flex flex-col gap-4">
 
-                  <a :href="`${isCloudDeployment ? 'https://app.coolify.io' : formData.domain}/project/${formData.projectId}/environment/${environmentUuid}/service/${serviceUuid}`"
-                    target="_blank" rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-black dark:text-white hover:text-white border border-coollabs rounded-md hover:bg-coollabs-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors duration-200">
-                    <CoolIcon class="w-4 h-4" name="mdi:external-link" color="currentColor" />
-                    Open in Coolify
-                  </a>
+                  <div v-if="healthCheckAttempts >= maxHealthCheckAttempts" class="flex items-center gap-2 text-sm text-yellow-600 dark:text-yellow-400">
+                    <CoolIcon class="w-4 h-4" name="mdi:alert-circle" color="yellow" />
+                    <span>Service may still be starting up. You can try visiting it or access it in the Coolify dashboard.</span>
+                  </div>
+                  
+                  <div class="flex items-center gap-4">
+                     <a v-if="serviceUrl && isServiceHealthy"
+                       :href="serviceUrl"
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-black dark:text-white hover:text-white border border-coollabs rounded-md hover:bg-coollabs-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors duration-200">
+                       <CoolIcon class="w-4 h-4" name="mdi:external-link" color="currentColor" />
+                       Visit Service
+                     </a>
+                     
+                     <button v-else-if="serviceUrl"
+                       :disabled="true"
+                       class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-black dark:text-gray-400 border border-coollabs rounded-md opacity-50 cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors duration-200"
+                       :aria-label="`Open ${serviceUrl} in new tab`">
+                       <CoolIcon class="w-4 h-4" :name="isHealthChecking ? 'line-md:loading-twotone-loop' : 'mdi:external-link'" :color="isHealthChecking ? 'gray' : 'currentColor'" />
+                       {{ isHealthChecking ? `Checking... (${healthCheckAttempts}/${maxHealthCheckAttempts})` : 'Visit Service' }}
+                     </button>
+
+                    <a :href="`${isCloudDeployment ? 'https://app.coolify.io' : formData.domain}/project/${formData.projectId}/environment/${environmentUuid}/service/${serviceUuid}`"
+                      target="_blank" rel="noopener noreferrer"
+                      class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-black dark:text-white hover:text-white border border-coollabs rounded-md hover:bg-coollabs-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors duration-200">
+                      <CoolIcon class="w-4 h-4" name="mdi:external-link" color="currentColor" />
+                      Open in Coolify
+                    </a>
+                  </div>
                 </div>
               </div>
             </Motion>
