@@ -933,7 +933,7 @@ watch(() => props.show, (newValue) => {
 
             <div v-else class="space-y-2">
               <select id="projectId" v-model="formData.projectId"
-                @change="handleProjectSelect($event.target.value)"
+                @change="(event: Event) => handleProjectSelect((event.target as HTMLSelectElement).value)"
                 class="input" :class="{ 'border-red-500 dark:border-red-400': errors.projectId }">
                 <option value="" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                   Select a project
@@ -962,7 +962,7 @@ watch(() => props.show, (newValue) => {
                 <label for="projectName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Project Name *
                 </label>
-                                 <input id="projectName" v-model="newProjectName" type="text" placeholder="Enter project name"
+                <input id="projectName" v-model="newProjectName" type="text" placeholder="Enter project name"
                    class="input"
                    :class="{ 'border-red-500 dark:border-red-400': errors.projectName }"
                    @input="errors.projectName = ''" />
@@ -975,7 +975,7 @@ watch(() => props.show, (newValue) => {
                 <label for="projectDescription" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Description
                 </label>
-                                 <textarea id="projectDescription" v-model="newProjectDescription" rows="2"
+                <textarea id="projectDescription" v-model="newProjectDescription" rows="2"
                    placeholder="Enter project description (optional)"
                    class="input resize-none">
                  </textarea>
@@ -1010,7 +1010,7 @@ watch(() => props.show, (newValue) => {
 
             <div v-else class="space-y-2">
               <select id="environmentId" v-model="selectedEnvironmentUuid"
-                @change="handleEnvironmentSelect($event.target.value)"
+                @change="(event: Event) => handleEnvironmentSelect((event.target as HTMLSelectElement).value)"
                 class="input" :class="{ 'border-red-500 dark:border-red-400': errors.environmentId }">
                 <option value="" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                   Select an environment
@@ -1047,7 +1047,7 @@ watch(() => props.show, (newValue) => {
                 <label for="environmentName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Environment Name *
                 </label>
-                                 <input id="environmentName" v-model="newEnvironmentName" type="text"
+                <input id="environmentName" v-model="newEnvironmentName" type="text"
                    placeholder="Enter environment name (e.g., staging, development)"
                    class="input"
                    :class="{ 'border-red-500 dark:border-red-400': errors.environmentName }"
@@ -1062,7 +1062,7 @@ watch(() => props.show, (newValue) => {
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Description
                 </label>
-                                 <textarea id="environmentDescription" v-model="newEnvironmentDescription" rows="2"
+                <textarea id="environmentDescription" v-model="newEnvironmentDescription" rows="2"
                    placeholder="Enter environment description (optional)"
                    class="input resize-none">
                  </textarea>
@@ -1221,10 +1221,3 @@ watch(() => props.show, (newValue) => {
     </div>
   </Modal>
 </template>
-
-<style scoped>
-/* Custom radio button styling */
-input[type="radio"]:checked+span {
-  @apply border-blue-500;
-}
-</style>
