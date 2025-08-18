@@ -37,6 +37,7 @@ interface Project {
 
 interface Props {
   show: boolean;
+  services: {}
   selectedService: string | null | undefined;
 }
 
@@ -77,6 +78,11 @@ const healthCheckInterval = ref<number | null>(null);
 const healthCheckAttempts = ref(0);
 const maxHealthCheckAttempts = 30; // 5 minutes with 10-second intervals
 
+const formatServiceName = (name: string): string => {
+  // Replace hyphens with spaces and capitalize first letter
+  return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ')
+}
+
 const {
   connect,
   status,
@@ -89,7 +95,7 @@ const {
   fetchVersion,
   createProject,
   checkServiceHealth,
-} = useCoolFetch();
+} = useCoolFetch(props.services);
 
 // Form data
 const formData = ref({
@@ -762,7 +768,7 @@ watch(() => props.show, (newValue) => {
 </script>
 
 <template>
-  <Modal ref="modalRef" :show="show" :title="`Deploy ${selectedService || 'Service'} on`" size="xl"
+  <Modal ref="modalRef" :show="show" :title="`Deploy ${selectedService ? formatServiceName(selectedService) : 'Service'} on`" size="xl"
     @close="handleClose">
     <div class="w-full">
       <div v-if="currentStep === 0" class="w-full justify-between flex gap-2">

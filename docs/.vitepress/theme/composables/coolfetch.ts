@@ -1,11 +1,10 @@
 import { ref } from "vue";
 
-export const useCoolFetch = () => {
+export const useCoolFetch = (services) => {
+    const serviceList = services
     const baseUrl = ref('')
     const apiToken = ref('')
     const coolifyCloudUrl = 'https://app.coolify.io'
-    const templateUrl = ref('https://raw.githubusercontent.com/coollabsio/coolify/v4.x/templates/service-templates.json')
-    const templates = ref({})
     const connection = ref(false)
     const connected = ref(false)
     const status = ref('')
@@ -13,7 +12,7 @@ export const useCoolFetch = () => {
     const serviceStatus = ref('')
     const deployStatus = ref('')
 
-    const getServiceTemplate = async (template_name: string) => {
+    const searchServiceTemplate = (template_name: string) => {
         try {
             if (!template_name) {
                 return undefined
@@ -22,27 +21,20 @@ export const useCoolFetch = () => {
             let override = ''
             if (template_name == 'ollama') {
                 override = 'ollama-with-open-webui'
-            }   
-            
-            const response = await fetch(templateUrl.value)
-            if (!response.ok) {
-                throw new Error(`Failed to fetch templates: ${response.status} ${response.statusText}`)
             }
-            const data = await response.json()
-            templates.value = data
             
             // Try exact match first
-            if (templates.value[override ? override : template_name.toLowerCase()]) {
-                return templates.value[override ? override : template_name.toLowerCase()]
+            if (serviceList[override ? override : template_name.toLowerCase()]) {
+                return serviceList[override ? override : template_name.toLowerCase()]
             }
             
             // Try case-insensitive match
-            const templateKey = Object.keys(override ? templates.value[override] : templates.value).find(
+            const templateKey = Object.keys(override ? serviceList[override] : serviceList).find(
                 key => key.toLowerCase() === (override ? override : template_name.toLowerCase())
             )
             
             if (templateKey) {
-                return override ? templates.value[override] : templates.value[templateKey]
+                return override ? serviceList[override] : serviceList[templateKey]
             }
             return undefined
         } catch (error) {
@@ -147,7 +139,7 @@ export const useCoolFetch = () => {
     const createService = async (server_uuid: string, project_uuid: string, template_name: string, environment_name?: string) => {
         serviceStatus.value = 'pending'
         try {
-            const templateConfig = await getServiceTemplate(template_name)
+            const templateConfig = searchServiceTemplate(template_name)
             const { slogan, compose } = templateConfig
             
             const response = await coolfetch(`/api/v1/services`, {
@@ -273,7 +265,7 @@ export const useCoolFetch = () => {
     }
 
     const deploy = async (server_uuid: string, template_name: string, project_uuid?: string, environment_name?: string) => {
-        const templateConfig = await getServiceTemplate(template_name.toLowerCase())
+        const templateConfig = searchServiceTemplate(template_name.toLowerCase())
         
         if (!templateConfig) {
             return new Error(`Template '${template_name}' not found`)

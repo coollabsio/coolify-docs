@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { withBase } from 'vitepress'
-import { services } from '../../../../_data/services.js'
-import ServicesModal from './Modal.vue'
 import DeployModal from './DeployModal.vue'
 import CoolIcon from '../CoolIcon.vue'
+
+type Service = {
+    name: string
+    category: string
+    description: string
+    logo: string
+    tags: []
+}
+
+const services = ref<Service[]>([])
 
 defineProps<{
     title: string
@@ -32,7 +40,7 @@ const itemsPerPage = ref(20)
 const currentPage = ref(1)
 
 const categories = computed(() => {
-    const uniqueCategories = new Set(services.map((s: any) => s.category))
+    const uniqueCategories = new Set(services.value.map((s: Service) => s.category))
     return Array.from(uniqueCategories).sort()
 })
 
@@ -43,8 +51,20 @@ const handleClickOutside = (event: MouseEvent) => {
     }
 }
 
-// Add and remove event listeners
-onMounted(() => {
+onMounted(async () => {
+    const serviceList = await fetch(`https://raw.githubusercontent.com/coollabsio/coolify/next/templates/service-templates.json`).then((res) => res.json())
+    
+    // Transform the object into an array format
+    const servicesArray = Object.entries(serviceList).map(([key, service]: [string, any]) => ({
+        name: key,
+        category: service.category,
+        description: service.slogan || service.description || '',
+        logo: service.logo || '',
+        tags: service.tags
+    }))
+    
+    services.value = servicesArray
+
     document.addEventListener('click', handleClickOutside)
 })
 
@@ -53,7 +73,7 @@ onUnmounted(() => {
 })
 
 const filteredServicesByCategory = (category: string) => {
-    return services.filter(s =>
+    return services.value.filter(s =>
         s.category === category &&
         (search.value === '' || s.name.toLowerCase().includes(search.value.toLowerCase()) || s.description.toLowerCase().includes(search.value.toLowerCase()))
     )
@@ -96,12 +116,27 @@ const toggleCategory = (category: string) => {
     }
 }
 
+const formatServiceName = (name: string): string => {
+    // Replace hyphens with spaces and capitalize first letter
+    return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ')
+}
+
 const navigateTo = (path: string, external: boolean = false) => {
     if (external) {
         window.location.href = path
     } else {
         window.location.href = `/docs/${path}`
     }
+}
+
+function capitalize(str: string): string {
+  if (str.length === 1) {
+    return str.toUpperCase();
+  } else if (str.length === 2) {
+    return str.toUpperCase();
+  } else {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 }
 </script>
 
@@ -143,7 +178,7 @@ const navigateTo = (path: string, external: boolean = false) => {
                                 <input type="checkbox" :checked="selectedCategories.includes(category)"
                                     @change="toggleCategory(category)"
                                     class="rounded border-gray-300 dark:border-gray-600 text-purple-600 dark:text-purple-500 focus:ring-purple-600 dark:focus:ring-purple-500 bg-white dark:bg-gray-800">
-                                <span class="text-gray-900 dark:text-white">{{ category }}</span>
+                                <span class="text-gray-900 dark:text-white">{{ capitalize(category) }}</span>
                             </label>
                         </div>
                     </div>
@@ -171,8 +206,8 @@ const navigateTo = (path: string, external: boolean = false) => {
                         No results found
                     </h2>
                 </div>
-                <div v-else v-for="category in filteredCategories" :key="category">
-                    <h2 class="text-2xl font-bold my-6 text-gray-900 dark:text-gray-100">{{ category }}</h2>
+                <div v-else v-for="category in filteredCategories" :key="category" class="mb-12">
+                    <h2 class="text-2xl font-bold my-6 text-gray-900 dark:text-gray-100">{{ capitalize(category) }}</h2>
                     <div class="services-grid grid grid-cols-1 gap-6 rounded">
                         <div v-for="(service, index) in filteredServicesByCategory(category)" :key="service.name"
                             @click="navigateTo(`services/${service.name.toLowerCase()}`)"
@@ -180,15 +215,14 @@ const navigateTo = (path: string, external: boolean = false) => {
                             class="dark:default-soft rounded shadow border border-gray-300 hover:border-coollabs transition-all duration-200 hover:cursor-pointer flex flex-col">
 
                             <div class="w-full h-full flex flex-col dark:default-soft rounded-t-xl p-3">
-                                <div class="font-bold text-md text-gray-900 mb-1 dark:text-gray-100">{{ service.name }}
+                                <div class="font-bold text-md text-gray-900 mb-1 dark:text-gray-100">{{ formatServiceName(service.name) }}
                                 </div>
-                                <div class="text-gray-500 dark:text-gray-400 text-xs flex-grow">{{ service.description
-                                }}</div>
+                                <div class="text-gray-500 dark:text-gray-400 text-xs flex-grow">{{ service.description}}</div>
                             </div>
                             <div class="p-4">
                                 <div
                                     class="dark:bg-coolgray-200 bg-neutral-200 dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center mb-3">
-                                    <img :src="withBase(service.icon)" alt="Coolify" class="w-auto h-8 px-2 rounded-lg"
+                                    <img :src="`https://raw.githubusercontent.com/coollabsio/coolify/v4.x/public/${service.logo}`" alt="Coolify" class="w-auto h-8 px-2 rounded-lg"
                                         loading="lazy" />
                                 </div>
                             </div>
@@ -201,9 +235,9 @@ const navigateTo = (path: string, external: boolean = false) => {
                 </div>
             </template>
             <template v-else>
-                <div>
+                <div class="mb-12">
                     <div v-for="category in selectedCategories" :key="category">
-                        <h2 class="text-2xl font-bold my-6 text-gray-900 dark:text-gray-100">{{ category }}</h2>
+                        <h2 class="text-2xl font-bold my-6 text-gray-900 dark:text-gray-100">{{ capitalize(category) }}</h2>
                         <div class="services-grid not-found-grid grid grid-cols-1 gap-6 mb-8">
                             <template v-if="filteredServicesByCategory(category).length === 0">
                                 <h2 class="text-xs font-bold my-6 text-gray-900 dark:text-gray-100">
@@ -217,7 +251,7 @@ const navigateTo = (path: string, external: boolean = false) => {
                                     class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-200 hover:cursor-pointer flex flex-col">
                                     <div class="w-full h-full flex flex-col dark:default-soft rounded-b-xl p-3">
                                         <div class="font-bold text-md text-gray-900 mb-1 dark:text-gray-100">{{
-                                            service.name }}
+                                            formatServiceName(service.name) }}
                                         </div>
                                         <div class="text-gray-500 dark:text-gray-400 text-xs">
                                             {{ service.description }}
@@ -226,7 +260,7 @@ const navigateTo = (path: string, external: boolean = false) => {
                                     <div class="p-4">
                                         <div
                                             class="dark:bg-coolgray-200 bg-white dark:default-soft w-full h-full min-h-[100px] rounded-lg flex items-center justify-center mb-3">
-                                            <img :src="withBase(service.icon)" alt="Coolify"
+                                            <img :src="`https://raw.githubusercontent.com/coollabsio/coolify/v4.x/public/${service.logo}`" alt="Coolify"
                                                 class="w-auto h-8 px-2 rounded-lg" loading="lazy" />
                                         </div>
                                     </div>
@@ -241,7 +275,7 @@ const navigateTo = (path: string, external: boolean = false) => {
                 </div>
             </template>
         </div>
-        <DeployModal :show="showModal" :selected-service="selectedService" @close="handleModalClose" />
+        <DeployModal :show="showModal" :services="services" :selected-service="selectedService" @close="handleModalClose" />
     </div>
 </template>
 
