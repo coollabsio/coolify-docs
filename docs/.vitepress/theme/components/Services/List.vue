@@ -371,6 +371,12 @@ const services = [
         category: 'Media'
     },
     {
+        name: 'Cap',
+        icon: '/public/images/services/cap.svg',
+        description: 'Cap is the open source alternative to Loom. Lightweight, powerful, and cross-platform. Record and share in seconds.',
+        category: 'Media'
+    },
+    {
         name: 'Castopod',
         icon: '/public/images/services/castopod.svg',
         description: 'Open-source podcast hosting platform.',
