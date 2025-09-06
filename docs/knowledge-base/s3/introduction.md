@@ -12,7 +12,7 @@ Currently supported S3 compatible storages are:
 - Cloudflare's R2
 - Backblaze B2
 - Scaleway Object Storage
-- Hetzner S3 Storage (beta)
+- Hetzner Object Storage (beta)
 - Wasabi hot cloud storage
 - Vultr
 
@@ -27,3 +27,18 @@ Coolify uses MinIO's client, called [`mc`](https://min.io/docs/minio/linux/refer
 To be able to use your S3 compatible storage, you need to verify it first. Verification done with `ListObjectsV2` request to your specified bucket.
 
 So you need to create a bucket first, and then you can verify it.
+
+## Detailed configurations
+
+### Hetzner Object Storage
+
+<img width="1771" height="338" alt="brave_rzc7S6G24B" src="https://github.com/user-attachments/assets/576b07b1-6daa-48e7-a777-452bb6413f81" />
+
+#### Endpoint
+In my example; the endpoint is: `nbg1.your-objectstorage.com`. To make it work in Coolify; I simply specified the protocol (*https://*) and the port (*:443*):
+- `**https://nbg1.your-objectstorage.com:**443`
+
+#### Region
+In my example; the region is:
+- `eu-central`  
+**NB**: no -1
