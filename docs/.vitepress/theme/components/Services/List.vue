@@ -1609,7 +1609,14 @@ const services = [
         icon: '/public/images/services/zipline.svg',
         description: 'Next generation ShareX / File upload server',
         category: 'File Management'
-    }
+    },
+    {
+        name: 'MetaMCP',
+        slug: 'metamcp',
+        icon: '/public/images/services/metamcp.png',
+        description: 'MCP Aggregator, Orchestrator, Middleware, Gateway in one application.',
+        category: 'AI'
+        }
 ]
 
 const search = ref('')
