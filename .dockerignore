@@ -1,1 +1,5 @@
+.github
 node_modules
+taskfile.yaml
+readme.md
+LICENSE

@@ -109,12 +109,49 @@ Support for Magic Environment Variables in Compose files based on Git sources ha
 
 The types include:
 
-- **FQDN:** Generates a fully qualified domain name for the service.
-- **URL:** Generates a URL based on the defined FQDN.
-- **USER:** Creates a random username.
-- **PASSWORD:** Creates a password (use `PASSWORD_64` for a 64-bit long password).
-- **BASE64:** Generates a random string (use `BASE64_64` or `BASE64_128` for longer strings).
-- **REALBASE64:** Generates a base64-encoded random string (use `REALBASE64_64` or `REALBASE64_128` for longer strings).
+| **Variables**                          | **Generated Value Type**                           |
+| -------------------------------------- | -------------------------------------------------- |
+| **PASSWORD**                           | Random Password (No Symbols)                       |
+| **PASSWORD\_64**                       | Random Password (No Symbols, 64 characters)        |
+| **PASSWORDWITHSYMBOLS**                | Random Password (With Symbols)                     |
+| **PASSWORDWITHSYMBOLS\_64**            | Random Password (With Symbols, 64 characters)      |
+| **BASE64\_64**                         | Random String (Not Base64-encoded, 64 characters)  |
+| **BASE64\_128**                        | Random String (Not Base64-encoded, 128 characters) |
+| **BASE64** or **BASE64\_32**           | Random String (Not Base64-encoded, 32 characters)  |
+| **REALBASE64\_64**                     | Random String (Base64-encoded, 64 characters)      |
+| **REALBASE64\_128**                    | Random String (Base64-encoded, 128 characters)     |
+| **REALBASE64** or **REALBASE64\_32**   | Random String (Base64-encoded, 32 characters)      |
+| **HEX\_32**                            | Random String (Hexadecimal, 32 characters)         |
+| **HEX\_64**                            | Random String (Hexadecimal, 64 characters)         |
+| **HEX\_128**                           | Random String (Hexadecimal, 128 characters)        |
+| **USER**                               | Random String (16 characters)                      |
+| **FQDN**                               | Fully Qualified Domain Name (FQDN)                 |
+| **URL**                                | URL based on the defined FQDN                      |
+
+Example:
+```yaml
+services:
+  appwrite:
+    environment:
+      - $SERVICE_PASSWORD: sjdkfhsd43f
+      - $SERVICE_PASSWORD_64: kdlfghsdiof43r3rweos93fofi39fjeowfkdj84fh3dksfjsw43r5
+      - $SERVICE_PASSWORDWITHSYMBOLS: sjdk@fhsd!43#f
+      - $SERVICE_PASSWORDWITHSYMBOLS_64: kdlfghsdiof43!@#r3rweos93fofi39fjeowfkdj84fh3dksfjsw43r5!
+      - $SERVICE_PASSWORD_BASE64_64: jkhf4r5g4dh7sd85sd85fh7sgd5fhdfgsd9g7sd
+      - $SERVICE_PASSWORD_BASE64_128: sd98fhsd7g8d98sd7f9sdg7fd87sd98f7sdg78f7d98g7d89
+      - $SERVICE_PASSWORD_BASE64: sd98fh3g2k3h2gs78d93dgh
+      - $SERVICE_PASSWORD_BASE64_32: sd98fh3g2k3h2gs78d93dgh
+      - $SERVICE_PASSWORD_REALBASE64_64: c2Q5OGZoc2Q3Z2g4Yzg1M2c5ZGM3MG5k8as==
+      - $SERVICE_PASSWORD_REALBASE64_128: c2Q5OGZoc2Q3Z2g4Yzg1M2c5ZGM3MG5k8aY9sdg==
+      - $SERVICE_PASSWORD_REALBASE64: c2Q5OGZoc2Q3Z2g4Yzg1M2c5ZGM3MG5k8a==
+      - $SERVICE_PASSWORD_REALBASE64_32: c2Q5OGZoc2Q3Z2g4Yzg1M2c5ZGM3MG5k8a==
+      - $SERVICE_PASSWORD_HEX_32: a6b9f34e43c112d79f9a3d5c7983344f
+      - $SERVICE_PASSWORD_HEX_64: db8c8a1a3b9df5a9fb8fd3f87df62f4b6a34cf4310f5cdb8c098b4f0e9af3b2
+      - $SERVICE_PASSWORD_HEX_128: 7f8c98a98db56b0c6c8768b1db6d24f5f39493433d8d8f1846598c9830202089
+      - $SERVICE_USER: jsd98fhg2j3skl8j
+      - $SERVICE_FQDN: api.example.com
+      - $SERVICE_URL: https://api.example.com
+```
 
 Every generated variable is consistent across all services in your stack and appears in Coolify's UI (except FQDN and URL, which are fixed).
 

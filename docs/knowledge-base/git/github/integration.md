@@ -30,6 +30,12 @@ You can use private repositories with the GitHub App integration. You will get f
 3. Choose your repository from the list.
 4. That's it!
 
+:::warning Note for Coolify Cloud Users
+You can make the GitHub App available to all teams on your Coolify instance by enabling the `System Wide` option. 
+
+However, this feature is only available for self-hosted instances, as Coolify Cloud users cannot use the `System Wide` option due to how Coolify Cloud is set up.
+:::
+
 ### With Deploy Keys
 
 1. Add a private key (aka `Deploy Keys`) to Coolify and to your GitHub repository in the `Settings` / `Deploy Keys` menu.
