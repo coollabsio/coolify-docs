@@ -14,3 +14,11 @@ Newt is a fully user space WireGuard tunnel client and TCP/UDP proxy, designed t
 
 - [The official website ›](https://docs.fossorial.io/Newt/overview?utm_source=coolify.io)
 - [GitHub ›](https://github.com/fosrl/newt?utm_source=coolify.io)
+
+## Env Variables
+
+Name | Description | Required | Default Value
+-|-|-|-
+NEWT ID | - | yes | 
+NEWT SECRET | - | yes | 
+PANGOLIN ENDPOINT | - | yes | domain.tld
