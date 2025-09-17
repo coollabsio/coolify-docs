@@ -144,17 +144,7 @@ The configuration method depends on your proxy type:
 
 Add custom Traefik configuration to increase the timeout. You have various options depending on your needs to achieve this:
 
-1. Navigate to your application settings in Coolify
-2. Add the following to your **Container Labels**:
-
-```yaml
-# For 5-minute timeout
-traefik.http.services.<service-name>.loadbalancer.timeout.read=300s
-traefik.http.services.<service-name>.loadbalancer.timeout.write=300s
-traefik.http.services.<service-name>.loadbalancer.timeout.idle=300s
-```
-
-Or navigate to your server's proxy settings and add global timeouts under the command section:
+Navigate to your server's proxy settings and add the new timeouts under the command section:
 
 ```yaml
 command:

@@ -47,6 +47,57 @@ Coolify defaults to using Nixpacks. Click the Nixpacks option and select **Docke
 
 Click on **Continue** button once you have set all the above settings to correct details.
 
+## Making services available to the outside world
+
+When Coolify deploys via Docker Compose, it creates a network for the services in the deployment. In addition, it adds the proxy service so that it can make services available from within the new network.
+
+That means that there are a few ways to make your services available:
+
+### Domains
+
+Once Coolify loads your compose file, it finds a list of services and allows you to assign a domain. If your services listen on port 80, assigning a domain is enough for the proxy to find and route traffic to them. If they're listening on other ports, add that port to the domain.
+
+For example, if your app is listening on (container) port 80, and you want to run it on `example.com`, enter `http://example.com` (or `https://`) for the domain.
+
+If your app is listening on (container) port 3000, however, you'll enter `http://example.com:3000` in the relevant service. The port here only tells Coolify where to send traffic within the container; the proxy will make this service available on the normal port (`http://example.com` port 80, in this case.)
+
+If you want to customize this domain-based routing further, see [Coolify's magic environment variables](#coolify-s-magic-environment-variables) below.
+
+### Service Ports
+
+If you want to do something custom, add a `ports` definition in your compose file. For example, to expose container port `3000` directly to the external network of the server:
+
+```yaml
+services:
+  backend:
+    image: your-backend:latest
+    ports:
+      - "3000:3000"
+```
+
+Be aware that if you do this, **your service will be available on your server at port 3000, outside the control of any proxy configuration.** This may not be what you want! If you use the same Docker Compose file for development and deployment, this may expose the ports of private services that you did not intend.
+
+Refer to [the Docker Compose docs on using multiple compose files](https://docs.docker.com/compose/how-tos/multiple-compose-files/) for ways around this. Essentially, you may want to create a compose file that does not expose any ports by default for use with Coolify along with a separate file for use in development.
+
+### Private or Internal Services
+
+If you don't map a service port or assign a domain, Coolify will not expose your service outside the private network. At that point, you can refer to it as normal for Docker Compose.
+
+For example, if you have two services with these names:
+
+```yaml
+services:
+  backend:
+    image: your-backend:latest
+  auth:
+    image: your-auth:latest
+```
+
+Then you can connect from `backend` to `auth` by referring to it as `http://auth:1234` (or whatever port.) Likewise, `auth` can connect to `backend` by referring to `http://backend:3000` (or whatever port.)
+
+For further details, please refer to the [Docker Networking in Compose](https://docs.docker.com/compose/how-tos/networking/) docs.
+
+
 ## Advanced Configuration
 
 ### Defining Environment Variables
@@ -109,12 +160,49 @@ Support for Magic Environment Variables in Compose files based on Git sources ha
 
 The types include:
 
-- **FQDN:** Generates a fully qualified domain name for the service.
-- **URL:** Generates a URL based on the defined FQDN.
-- **USER:** Creates a random username.
-- **PASSWORD:** Creates a password (use `PASSWORD_64` for a 64-bit long password).
-- **BASE64:** Generates a random string (use `BASE64_64` or `BASE64_128` for longer strings).
-- **REALBASE64:** Generates a base64-encoded random string (use `REALBASE64_64` or `REALBASE64_128` for longer strings).
+| **Variables**                          | **Generated Value Type**                           |
+| -------------------------------------- | -------------------------------------------------- |
+| **PASSWORD**                           | Random Password (No Symbols)                       |
+| **PASSWORD\_64**                       | Random Password (No Symbols, 64 characters)        |
+| **PASSWORDWITHSYMBOLS**                | Random Password (With Symbols)                     |
+| **PASSWORDWITHSYMBOLS\_64**            | Random Password (With Symbols, 64 characters)      |
+| **BASE64\_64**                         | Random String (Not Base64-encoded, 64 characters)  |
+| **BASE64\_128**                        | Random String (Not Base64-encoded, 128 characters) |
+| **BASE64** or **BASE64\_32**           | Random String (Not Base64-encoded, 32 characters)  |
+| **REALBASE64\_64**                     | Random String (Base64-encoded, 64 characters)      |
+| **REALBASE64\_128**                    | Random String (Base64-encoded, 128 characters)     |
+| **REALBASE64** or **REALBASE64\_32**   | Random String (Base64-encoded, 32 characters)      |
+| **HEX\_32**                            | Random String (Hexadecimal, 32 characters)         |
+| **HEX\_64**                            | Random String (Hexadecimal, 64 characters)         |
+| **HEX\_128**                           | Random String (Hexadecimal, 128 characters)        |
+| **USER**                               | Random String (16 characters)                      |
+| **FQDN**                               | Fully Qualified Domain Name (FQDN)                 |
+| **URL**                                | URL based on the defined FQDN                      |
+
+Example:
+```yaml
+services:
+  appwrite:
+    environment:
+      - $SERVICE_PASSWORD: sjdkfhsd43f
+      - $SERVICE_PASSWORD_64: kdlfghsdiof43r3rweos93fofi39fjeowfkdj84fh3dksfjsw43r5
+      - $SERVICE_PASSWORDWITHSYMBOLS: sjdk@fhsd!43#f
+      - $SERVICE_PASSWORDWITHSYMBOLS_64: kdlfghsdiof43!@#r3rweos93fofi39fjeowfkdj84fh3dksfjsw43r5!
+      - $SERVICE_PASSWORD_BASE64_64: jkhf4r5g4dh7sd85sd85fh7sgd5fhdfgsd9g7sd
+      - $SERVICE_PASSWORD_BASE64_128: sd98fhsd7g8d98sd7f9sdg7fd87sd98f7sdg78f7d98g7d89
+      - $SERVICE_PASSWORD_BASE64: sd98fh3g2k3h2gs78d93dgh
+      - $SERVICE_PASSWORD_BASE64_32: sd98fh3g2k3h2gs78d93dgh
+      - $SERVICE_PASSWORD_REALBASE64_64: c2Q5OGZoc2Q3Z2g4Yzg1M2c5ZGM3MG5k8as==
+      - $SERVICE_PASSWORD_REALBASE64_128: c2Q5OGZoc2Q3Z2g4Yzg1M2c5ZGM3MG5k8aY9sdg==
+      - $SERVICE_PASSWORD_REALBASE64: c2Q5OGZoc2Q3Z2g4Yzg1M2c5ZGM3MG5k8a==
+      - $SERVICE_PASSWORD_REALBASE64_32: c2Q5OGZoc2Q3Z2g4Yzg1M2c5ZGM3MG5k8a==
+      - $SERVICE_PASSWORD_HEX_32: a6b9f34e43c112d79f9a3d5c7983344f
+      - $SERVICE_PASSWORD_HEX_64: db8c8a1a3b9df5a9fb8fd3f87df62f4b6a34cf4310f5cdb8c098b4f0e9af3b2
+      - $SERVICE_PASSWORD_HEX_128: 7f8c98a98db56b0c6c8768b1db6d24f5f39493433d8d8f1846598c9830202089
+      - $SERVICE_USER: jsd98fhg2j3skl8j
+      - $SERVICE_FQDN: api.example.com
+      - $SERVICE_URL: https://api.example.com
+```
 
 Every generated variable is consistent across all services in your stack and appears in Coolify's UI (except FQDN and URL, which are fixed).
 
