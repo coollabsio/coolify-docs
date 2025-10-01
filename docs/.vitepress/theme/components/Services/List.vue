@@ -267,7 +267,7 @@ const services = [
     {
         name: 'Umami',
         slug: 'umami',
-        icon: '/docs/images/services/umami.svg',
+        icon: '/docs/images/services/umami-logo.svg',
         description: 'A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies.',
         category: 'Analytics'
     },
@@ -281,21 +281,21 @@ const services = [
     {
         name: 'Activepieces',
         slug: 'activepieces',
-        icon: '/docs/images/services/activepieces.svg?url',
+        icon: '/docs/images/services/activepieces-logo.svg',
         description: 'Open source no-code business automation.',
         category: 'Automation'
     },
     {
         name: 'Actual Budget',
         slug: 'actualbudget',
-        icon: '/docs/images/services/actualbudget.svg',
+        icon: '/docs/images/services/actualbudget-logo.svg',
         description: 'A local-first personal finance tool based on zero-based budgeting.',
         category: 'Finance'
     },
     {
         name: 'Affine',
         slug: 'affine',
-        icon: '/docs/images/services/affine.svg',
+        icon: '/docs/images/services/affine-logo.svg',
         description: 'Open-source knowledge base and workspace combining docs, whiteboards, and databases.',
         category: 'Productivity'
     },
@@ -309,21 +309,21 @@ const services = [
     {
         name: 'Apprise API',
         slug: 'apprise-api',
-        icon: '/docs/images/services/apprise-api.svg',
+        icon: '/docs/images/services/apprise-api-logo.svg',
         description: 'RESTful API for Apprise notification library.',
         category: 'Development'
     },
     {
         name: 'Appsmith',
         slug: 'appsmith',
-        icon: '/docs/images/services/appsmith.svg',
+        icon: '/docs/images/services/appsmith-logo.svg',
         description: 'A low-code application platform for building internal tools.',
         category: 'Development'
     },
     {
         name: 'Appwrite',
         slug: 'appwrite',
-        icon: '/docs/images/services/appwrite.svg',
+        icon: '/docs/images/services/appwrite-logo.svg',
         description: 'A backend-as-a-service platform that simplifies the web & mobile app development.',
         category: 'Development'
     },
@@ -344,14 +344,14 @@ const services = [
     {
         name: 'Authentik',
         slug: 'authentik',
-        icon: '/docs/images/services/authentik.svg',
+        icon: '/docs/images/services/authentik-logo.svg',
         description: 'An open-source Identity Provider, focused on flexibility and versatility.',
         category: 'Security'
     },
     {
         name: 'Baby Buddy',
         slug: 'babybuddy',
-        icon: '/docs/images/services/babybuddy.svg',
+        icon: '/docs/images/services/babybuddy-logo.svg',
         description: 'It helps parents track their baby\'s daily activities, growth, and health with ease.',
         category: 'Health'
     },
@@ -372,28 +372,28 @@ const services = [
     {
         name: 'Bitcoin Core',
         slug: 'bitcoin-core',
-        icon: '/docs/images/services/bitcoin-core.svg',
+        icon: '/docs/images/services/bitcoin-core-logo.svg',
         description: 'Bitcoin Core full node software.',
         category: 'Crypto'
     },
     {
         name: 'BookStack',
         slug: 'bookstack',
-        icon: '/docs/images/services/bookstack.svg',
+        icon: '/docs/images/services/bookstack-logo.svg',
         description: 'Self-hosted wiki-style documentation platform.',
         category: 'Documentation'
     },
     {
         name: 'Browserless',
         slug: 'browserless',
-        icon: '/docs/images/services/browserless.svg',
+        icon: '/docs/images/services/browserless-logo.svg',
         description: 'Headless Chrome as a service.',
         category: 'Development'
     },
     {
         name: 'BudgE',
         slug: 'budge',
-        icon: '/docs/images/services/budge.svg',
+        icon: '/docs/images/services/budge-logo.svg',
         description: 'A budgeting personal finance app.',
         category: 'Finance'
     },
@@ -407,14 +407,14 @@ const services = [
     {
         name: 'Bugsink',
         slug: 'bugsink',
-        icon: '/docs/images/services/bugsink.svg',
+        icon: '/docs/images/services/bugsink-logo.svg',
         description: 'Self-hosted Error Tracking',
         category: 'Development'
     },
     {
         name: 'Cal.com',
         slug: 'calcom',
-        icon: '/docs/images/services/calcom.svg',
+        icon: '/docs/images/services/calcom-logo.svg',
         description: 'Open-source Calendly alternative for scheduling meetings.',
         category: 'Productivity'
     },
@@ -435,7 +435,7 @@ const services = [
     {
         name: 'Changedetection',
         slug: 'changedetection',
-        icon: '/docs/images/services/changedetection.svg',
+        icon: '/docs/images/services/changedetection-logo.svg',
         description: 'Website change detection monitor and notifications.',
         category: 'Monitoring'
     },
@@ -449,63 +449,63 @@ const services = [
     {
         name: 'Chaskiq',
         slug: 'chaskiq',
-        icon: '/docs/images/services/chaskiq.svg',
+        icon: '/docs/images/services/chaskiq-logo.svg',
         description: 'Open source customer engagement platform.',
         category: 'Business'
     },
     {
         name: 'Chatwoot',
         slug: 'chatwoot',
-        icon: '/docs/images/services/chatwoot.svg',
+        icon: '/docs/images/services/chatwoot-logo.svg',
         description: 'Open-source customer engagement suite.',
         category: 'Business'
     },
     {
         name: 'Checkmate',
         slug: 'checkmate',
-        icon: '/docs/images/services/checkmate.svg',
+        icon: '/docs/images/services/checkmate-logo.svg',
         description: 'Website monitoring and uptime service.',
         category: 'Monitoring'
     },
     {
         name: 'ClassicPress',
         slug: 'classicpress',
-        icon: '/docs/images/services/classicpress.svg',
+        icon: '/docs/images/services/classicpress-logo.svg',
         description: 'A business-focused CMS with a strong community.',
         category: 'CMS'
     },
     {
         name: 'CloudBeaver',
         slug: 'cloudbeaver',
-        icon: '/docs/images/services/cloudbeaver.svg',
+        icon: '/docs/images/services/cloudbeaver-logo.svg',
         description: 'Universal database tool with web interface.',
         category: 'Development'
     },
     {
         name: 'Cloudflared',
         slug: 'cloudflared',
-        icon: '/docs/images/services/cloudflared.svg',
+        icon: '/docs/images/services/cloudflared-logo.svg',
         description: 'Cloudflare Tunnel client.',
         category: 'Networking'
     },
     {
         name: 'Cockpit',
         slug: 'cockpit',
-        icon: '/docs/images/services/cockpit.svg',
+        icon: '/docs/images/services/cockpit-logo.svg',
         description: 'Web-based server administration interface.',
         category: 'Administration'
     },
     {
         name: 'Code Server',
         slug: 'code-server',
-        icon: '/docs/images/services/code-server.svg',
+        icon: '/docs/images/services/code-server-logo.svg',
         description: 'Run VS Code on any machine anywhere and access it in the browser.',
         category: 'Development'
     },
     {
         name: 'ConvertX',
         slug: 'convertx',
-        icon: '/docs/images/services/convertx.svg',
+        icon: '/docs/images/services/convertx-logo.svg',
         description: 'File conversion service supporting multiple formats.',
         category: 'Utilities'
     },
@@ -519,91 +519,91 @@ const services = [
     {
         name: 'Cryptgeon',
         slug: 'cryptgeon',
-        icon: '/docs/images/services/cryptgeon.svg',
+        icon: '/docs/images/services/cryptgeon-logo.svg',
         description: 'Secure note sharing service with self-destructing messages.',
         category: 'Security'
     },
     {
         name: 'CyberChef',
         slug: 'cyberchef',
-        icon: '/docs/images/services/cyberchef.svg',
+        icon: '/docs/images/services/cyberchef-logo.svg',
         description: 'Data analysis and manipulation tool for cybersecurity.',
         category: 'Security'
     },
     {
         name: 'Dashboard',
         slug: 'dashboard',
-        icon: '/docs/images/services/dashboard.svg',
+        icon: '/docs/images/services/dashboard-logo.svg',
         description: 'A simple dashboard for your server.',
         category: 'Administration'
     },
     {
         name: 'Dashy',
         slug: 'dashy',
-        icon: '/docs/images/services/dashy.svg',
+        icon: '/docs/images/services/dashy-logo.svg',
         description: 'Customizable homepage dashboard for self-hosted services.',
         category: 'Administration'
     },
     {
         name: 'Deno KV',
         slug: 'denokv',
-        icon: '/docs/images/services/denokv.svg',
+        icon: '/docs/images/services/denokv-logo.svg',
         description: 'Deno\'s built-in key-value database service.',
         category: 'Development'
     },
     {
         name: 'Directus',
         slug: 'directus',
-        icon: '/docs/images/services/directus.svg',
+        icon: '/docs/images/services/directus-logo.svg',
         description: 'An open-source headless CMS and API for custom databases.',
         category: 'CMS'
     },
     {
         name: 'Docker Registry',
         slug: 'docker-registry',
-        icon: '/docs/images/services/docker-registry.svg',
+        icon: '/docs/images/services/docker-registry-logo.svg',
         description: 'A Docker registry to store and manage your Docker images.',
         category: 'Development'
     },
     {
         name: 'Docmost',
         slug: 'docmost',
-        icon: '/docs/images/services/docmost.svg',
+        icon: '/docs/images/services/docmost-logo.svg',
         description: 'Open-source document collaboration platform.',
         category: 'Documentation'
     },
     {
         name: 'Documenso',
         slug: 'documenso',
-        icon: '/docs/images/services/documenso.svg',
+        icon: '/docs/images/services/documenso-logo.svg',
         description: 'Open-source DocuSign alternative for document signing.',
         category: 'Business'
     },
     {
         name: 'Docuseal',
         slug: 'docuseal',
-        icon: '/docs/images/services/docuseal.svg',
+        icon: '/docs/images/services/docuseal-logo.webp',
         description: 'Open source DocuSign alternative.',
         category: 'Business'
     },
     {
         name: 'DokuWiki',
         slug: 'dokuwiki',
-        icon: '/docs/images/services/dokuwiki.svg',
+        icon: '/docs/images/services/dokuwiki-logo.svg',
         description: 'A simple to use and highly versatile Open Source wiki software that doesn\'t require a database.',
         category: 'Documentation'
     },
     {
         name: 'Dolibarr',
         slug: 'dolibarr',
-        icon: '/docs/images/services/dolibarr.svg',
+        icon: '/docs/images/services/dolibarr-logo.webp',
         description: 'Open-source ERP and CRM software.',
         category: 'Business'
     },
     {
         name: 'Dozzle',
         slug: 'dozzle',
-        icon: '/docs/images/services/dozzle.svg',
+        icon: '/docs/images/services/dozzle-logo.svg',
         description: 'Realtime log viewer for docker containers.',
         category: 'Development'
     },
@@ -617,14 +617,14 @@ const services = [
     {
         name: 'Duplicati',
         slug: 'duplicati',
-        icon: '/docs/images/services/duplicati.svg',
+        icon: '/docs/images/services/duplicati-logo.svg',
         description: 'A free backup client that securely stores encrypted, incremental, compressed backups on cloud storage services and remote file servers.',
         category: 'Backup'
     },
     {
         name: 'Easy Appointments',
         slug: 'easyappointments',
-        icon: '/docs/images/services/easyappointments.svg',
+        icon: '/docs/images/services/easyappointments-logo.svg',
         description: 'Open-source appointment scheduler.',
         category: 'Business'
     },
