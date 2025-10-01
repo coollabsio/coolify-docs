@@ -974,14 +974,14 @@ const services = [
     {
         name: 'Label Studio',
         slug: 'labelstudio',
-        icon: '/docs/images/services/labelstudio.svg',
+        icon: '/docs/images/services/labelstudio-logo.webp',
         description: 'Open source data labeling platform.',
         category: 'AI'
     },
     {
         name: 'Langfuse',
         slug: 'langfuse',
-        icon: '/docs/images/services/langfuse.svg',
+        icon: '/docs/images/services/langfuse-logo.webp',
         description: 'Open source LLM engineering platform.',
         category: 'AI'
     },
@@ -1016,7 +1016,7 @@ const services = [
     {
         name: 'LiteLLM',
         slug: 'litellm',
-        icon: '/docs/images/services/litellm.svg',
+        icon: '/docs/images/services/litellm-logo.webp',
         description: 'Open source LLM Gateway to manage authentication, loadbalancing, and spend tracking across 100+ LLMs. All in the OpenAI format.',
         category: 'AI'
     },
@@ -1254,7 +1254,7 @@ const services = [
     {
         name: 'Open WebUI',
         slug: 'open-webui',
-        icon: '/docs/images/services/open-webui.svg',
+        icon: '/docs/images/services/openwebui-logo.webp',
         description: 'User-friendly WebUI for LLMs, formerly Ollama WebUI.',
         category: 'AI'
     },
@@ -1646,7 +1646,7 @@ const services = [
     {
         name: 'Unstructured',
         slug: 'unstructured',
-        icon: '/docs/images/services/unstructured.svg',
+        icon: '/docs/images/services/unstructured-logo.webp',
         description: 'Open-source platform and tools to ingest and process unstructured documents for Retrieval Augmented Generation (RAG) and model fine-tuning.',
         category: 'AI'
     },
@@ -1688,7 +1688,7 @@ const services = [
     {
         name: 'Weaviate',
         slug: 'weaviate',
-        icon: '/docs/images/services/weaviate.svg',
+        icon: '/docs/images/services/weaviate-logo.webp',
         description: 'Open source, AI-native vector database.',
         category: 'AI'
     },
