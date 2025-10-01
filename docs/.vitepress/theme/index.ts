@@ -10,7 +10,7 @@ import DefaultTheme from "vitepress/theme";
 
 // Import styles
 import "./style.css";
-// import "./custom.css";
+import "./custom.css";
 import "./tailwind.postcss";
 import "vitepress-openapi/dist/style.css";
 import 'virtual:group-icons.css'

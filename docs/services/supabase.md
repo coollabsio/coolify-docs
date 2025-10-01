@@ -19,7 +19,7 @@ You can find your anonymous key in the **Environment Variables** area under **SE
 
 ## Public Port Access
 
-::: warning NOTE: 
+::: warning NOTE:
 There is a bug with making database publicly accessible. This bug will be fixed soon. In the meantime, you can use the following workaround:
 :::
 
@@ -31,11 +31,11 @@ Then
 
 Go to the **General** tab then **Edit Compose File**
 
-Then add this line 
+Then add this line
 `ports:
       - ${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}`
 
-To 
+To
 ```yaml
 supabase-db:
   image: 'supabase/postgres:15.6.1.146'
@@ -54,6 +54,20 @@ supabase-db:
 And Restart
 
 > NOTE if you are changing the port to a different port altogether to update the POSTGRES_PORT in the Environment Variables
+
+## Opening ports with ufw-docker
+
+Finally, to allow external access to the PostgreSQL port in a Docker setup, you need to open the port in the firewall using the command:
+
+```bash
+ufw route allow proto tcp from any to any port 5432
+```
+
+This rule ensures traffic can reach your PostgreSQL database through the Docker network. For more information, read the docs from [ufw-docker](https://github.com/chaifeng/ufw-docker).
+
+### Using Hetzner's firewall UI
+
+If your server is hosted on Hetzner, you may not need ufw-docker. Instead, you can open the relevant database port (e.g., 5432) directly using [Hetzner's firewall UI](https://docs.hetzner.com/cloud/firewalls/overview).
 
 ## Links
 

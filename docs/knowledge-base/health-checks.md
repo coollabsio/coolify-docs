@@ -18,6 +18,10 @@ If your resource has health checks _enabled_, Traefik will only route traffic to
 
 **It will cause the resource to return a `404 Not Found` or `No available server` error.**
 
+::: tip Troubleshooting Failed Health Checks
+If you're experiencing "No available server" errors, check our comprehensive [troubleshooting guide](/troubleshoot/applications/no-available-server) which covers the most common causes and solutions.
+:::
+
 ### Disabled
 
 If your resource has health checks _disabled_, Traefik will route traffic to it regardless of the health check status.

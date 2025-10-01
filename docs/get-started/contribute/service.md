@@ -81,7 +81,7 @@ Always specify a port, as Caddy Proxy cannot automatically determine the service
 
 4. Test your template
 
-   Use the `Docker Compose` deployment option in Coolify to test your template. This process mimics the one-click service deployment.
+   Use the `Docker Compose Empty` deployment option in Coolify to test your template. This process mimics the one-click service deployment.
 
 5. Submit a Pull Request
 
@@ -91,11 +91,68 @@ Always specify a port, as Caddy Proxy cannot automatically determine the service
    - Add your new `<service>.yaml` compose file under `/templates/compose`
    - Include the logo file in the `svgs` folder
 
-::: info
-Coolify uses a [parsed version](https://github.com/coollabsio/coolify/blob/main/templates/service-templates.json) of the templates for deployment.
-:::
+   ::: info
+   Coolify uses a [parsed version](https://github.com/coollabsio/coolify/blob/main/templates/service-templates.json) of the templates for deployment.
+   :::
 
-## Request a new service
+## Adding a new service template to the Coolify Documentation
+
+Once your service template is merged into Coolify, it will be important to also add documentation for it in the Coolify docs.
+In the [Coolify Docs Contribute section](/get-started/contribute/documentation) we explain how to contribute and run the documentation on your own PC.
+As soon as you have your local setup ready, follow these steps to add your new service:
+
+1. Add service logo under `/docs/public/images/services/`
+
+2. Create documentation file
+
+   Create `/docs/services/<service-name>.md` with frontmatter:
+
+   ```yaml
+   ---
+   title: "Service Name"
+   description: "Here you can find the documentation for hosting Service Name with Coolify."
+   ---
+   ```
+
+3. Write documentation
+
+   Start writing your documentation under the frontmatter. Use the following template as a starting point:
+
+   ```markdown
+   # [Service Name]
+
+   <ZoomableImage src="/docs/images/services/service.svg" />
+
+   ## What is [Service Name]?
+
+   Brief description and use cases.
+
+   ## Links
+
+   - [Official website ↗](https://example.com?utm_source=coolify.io)
+   - [GitHub ↗](https://github.com/example/repo?utm_source=coolify.io)
+   ```
+
+4. Add Service to the Services Overview
+
+   - Add the new service to the service list under `docs\.vitepress\theme\components\Services\List.vue` following the existing format:
+
+   ```js
+    {
+        name: 'Service Name',
+        slug: 'service-name', # Match the filename of your documentation file
+        icon: '/docs/images/services/service.svg', # Path to your logo
+        description: 'Brief description of the service.',
+        category: 'Analytics' # Choose an appropriate category
+    },
+   ```
+
+5. Submit Pull Request
+
+   - Target the `next` branch
+   - Test documentation renders correctly with `bun run dev`
+
+# Request a new service
 
 If there's a service template you'd like to see in Coolify:
 

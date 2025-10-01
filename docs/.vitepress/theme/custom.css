@@ -1,15 +1,11 @@
-:root {
-  --vp-layout-max-width: 1920px;
-}
+@media (min-width: 1440px) {
+  .VPContent.has-sidebar {
+    padding-right: 0px !important;
+    padding-left: calc(var(--vp-sidebar-width)) !important;
+  }
 
-.VPDoc:not(.has-sidebar) .container {
-  max-width: 1584px !important;
-}
-
-.VPDoc:not(.has-sidebar) .content {
-  max-width: 1264px !important;
-}
-
-.VPDoc.has-aside .content-container {
-  max-width: 1168px !important;
+  .VPNavBar.has-sidebar .content {
+    padding-right: 0px !important;
+    padding-left: calc(var(--vp-sidebar-width)) !important;
+  }
 }
