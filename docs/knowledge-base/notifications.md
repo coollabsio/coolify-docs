@@ -1,6 +1,6 @@
 ---
 title: "Notifications"
-description: "Configure multi-channel notifications in Coolify with Email, Telegram, Discord, Slack, and Pushover for deployments, backups, and server monitoring alerts."
+description: "Configure multi-channel notifications in Coolify with Email, Telegram, Discord, Slack, Matrix, and Pushover for deployments, backups, and server monitoring alerts."
 ---
 
 # Notifications
@@ -174,6 +174,63 @@ Email notifications can be configured using either SMTP or Resend.
    - Save the settings
    - Enable the Slack channel
    - Send a `Test notification`
+
+
+### Matrix
+
+::: info
+Matrix is an open standard for decentralized, secure communication. Coolify supports sending notifications to Matrix rooms via the Matrix Client-Server API.
+:::
+
+
+1. Create or use a Matrix account
+   - Create an account on any Matrix homeserver (e.g., [matrix.org](https://matrix.org), [element.io](https://element.io))
+   - It's recommended to create a dedicated bot account for Coolify notifications
+
+2. Create a Matrix room
+   - Create a new room or use an existing room for Coolify notifications
+   - Make sure your bot account is invited to the room
+
+3. Get your Room ID
+   - In your Matrix client (Element, FluffyChat, etc.), go to **Room Settings** → **Advanced**
+   - Copy the **Internal room ID** (format: `!example:homeserver.com`)
+
+4. Generate an Access Token
+   - Use the Matrix login API to get an access token
+   - Replace the values with your homeserver and bot credentials:
+
+```bash
+curl -XPOST -H "Content-Type: application/json" -d '{
+  "type": "m.login.password",
+  "identifier": {"user": "@your_bot_username:homeserver.com", "type": "m.id.user"},
+  "password": "your_bot_password"
+}' "https://homeserver.com/_matrix/client/v3/login"
+```
+
+   - Copy the `access_token` from the JSON response
+
+::: info
+Store your access token securely. Anyone with access to it can send messages as your bot. Consider using Element's Settings → Help & About → Access Token for a simpler method.
+:::
+
+5. Configure in Coolify
+   - Go to **Notifications** → **Matrix**
+   - Enter your `Homeserver URL` (e.g., `https://matrix.org`)
+   - Enter the `Room ID` (e.g., `!example:matrix.org`)
+   - Enter the `Access Token`
+   - Optionally enter a `Friendly Name` for your configuration
+   - Save the settings
+   - Enable the Matrix channel
+   - Send a `Test notification`
+
+
+::: info
+Common issues:
+- Ensure the bot account has permission to send messages in the room
+- Verify the Room ID format starts with `!` (e.g., `!roomname:homeserver.com`)
+- Check that your homeserver URL includes the protocol (`https://`)
+- Make sure the bot is not banned or restricted in the room
+:::
 
 
 ### Pushover (Push Notifications)
