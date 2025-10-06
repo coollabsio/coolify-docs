@@ -2,7 +2,7 @@
 title: Static Build Packs
 ---
 
-<ZoomableImage src="/docs/images/builds/packs/static/banner.webp" />
+<ZoomableImage src="/docs/images/builds/packs/static/banner.webp" alt="Coolify banner" />
 
 <br />
 
@@ -22,12 +22,12 @@ Next, upload these static files to a Git repository. You can use [GitHub ↗](ht
 ### 2. Create a New Resource in Coolify
 On Coolify dashboard open your project and click the **Create New Resource** button.
 
-<ZoomableImage src="/docs/images/builds/packs/static/1.webp" />
+<ZoomableImage src="/docs/images/builds/packs/static/1.webp" alt="Coolify dashboard screenshot" />
 
 
 ### 3. Choose Your Deployment Option
 
-<ZoomableImage src="/docs/images/builds/packs/static/2.webp" />
+<ZoomableImage src="/docs/images/builds/packs/static/2.webp" alt="Coolify dashboard screenshot" />
 
 **A.** If your Git repository is public, choose the **Public Repository** option.
 
@@ -37,13 +37,13 @@ On Coolify dashboard open your project and click the **Create New Resource** but
 ### 4. Select Your Git Repository
 If you are using a public repository, paste the URL of your GitHub repository when prompted. The steps are very similar for all options.
 
-<ZoomableImage src="/docs/images/builds/packs/static/3.webp" />
+<ZoomableImage src="/docs/images/builds/packs/static/3.webp" alt="Coolify dashboard screenshot" />
 
 
 ### 5. Choose the Build Pack
 Coolify will default to using Nixpacks. Click on the Nixpack option, and then select **Static** from the dropdown menu.  
 
-<ZoomableImage src="/docs/images/builds/packs/static/4.webp" />
+<ZoomableImage src="/docs/images/builds/packs/static/4.webp" alt="Coolify dashboard screenshot" />
 
 This tells Coolify to build your image with a static web server.
 
@@ -51,7 +51,7 @@ This tells Coolify to build your image with a static web server.
 ### 6. Set the Base Directory
 Enter the path where your static files are located:
 
-<ZoomableImage src="/docs/images/builds/packs/static/5.webp" />
+<ZoomableImage src="/docs/images/builds/packs/static/5.webp" alt="Coolify dashboard screenshot" />
 
 - If your files are in the root of your repository, just type `/`.
 - If they are in a subfolder, type the path to that folder (for example, `/out`).
@@ -63,13 +63,13 @@ After setting the base directory, click the **Continue** button.
 ### 7. Choose a Web Server
 As of Coolify **v4.0.0-beta.402**, the only web server option available is [Nginx ↗](https://nginx.org/en/?utm_source=coolify.io). So **Nginx** will be selected by default.
 
-<ZoomableImage src="/docs/images/builds/packs/static/6.webp" />
+<ZoomableImage src="/docs/images/builds/packs/static/6.webp" alt="Coolify dashboard screenshot" />
 
 
 ### 8. Enter Your Domain
 Type the domain name where you want your site to be available.  
 
-<ZoomableImage src="/docs/images/builds/packs/static/7.webp" />
+<ZoomableImage src="/docs/images/builds/packs/static/7.webp" alt="Coolify dashboard screenshot" />
 
 If you have multiple domains, separate them with commas.
 
@@ -77,7 +77,7 @@ If you have multiple domains, separate them with commas.
 ### 9. Deploy Your Site
 Click the **Deploy** button. The deployment process is usually quick (often less than a minute, depending on your server).
 
-<ZoomableImage src="/docs/images/builds/packs/static/8.webp" />
+<ZoomableImage src="/docs/images/builds/packs/static/8.webp" alt="Coolify dashboard screenshot" />
 
 Once the deployment is finished, visit your domain in a browser to see your live site.
 
@@ -87,7 +87,7 @@ Coolify provides a default web server configuration that works for most cases.
 
 If you want to change it then click the **Generate** button to load the default settings and make any changes you need.
 
-<ZoomableImage src="/docs/images/builds/packs/static/9.webp" />
+<ZoomableImage src="/docs/images/builds/packs/static/9.webp" alt="Coolify dashboard screenshot" />
 
 ::: warning HEADS UP!
 You have to click on the **Restart** button for the new configuration to take effect.

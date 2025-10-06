@@ -2,7 +2,7 @@
 title: Introduction to Builds
 ---
 
-<ZoomableImage src="/docs/images/builds/introduction/builds-banner.webp" />
+<ZoomableImage src="/docs/images/builds/introduction/builds-banner.webp" alt="Coolify builds banner" />
 
 <br />
 

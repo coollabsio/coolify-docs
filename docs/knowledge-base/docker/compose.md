@@ -1,6 +1,6 @@
 ---
 title: "Docker Compose"
-description: "A guide on how to use Docker Compose deployments with Coolify."
+description: "Deploy multi-container Docker Compose stacks in Coolify with magic environment variables, persistent storage, healthchecks, and predefined network connections."
 ---
 
 # Docker Compose
@@ -72,7 +72,7 @@ services:
       - SOME_DEFAULT_VARIABLE=${OTHER_NAME_IN_COOLIFY:-hello} # Creates an environment variable of value "hello" editable in Coolify's UI
 ```
 
-<ZoomableImage src="/docs/images/screenshots/Docker-compose-environment-variables-UI.webp" />
+<ZoomableImage src="/docs/images/screenshots/Docker-compose-environment-variables-UI.webp" alt="Docker Compose Environment Variables Ui configuration" />
 
 ## Required environment variables
 

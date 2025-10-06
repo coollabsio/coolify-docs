@@ -1,9 +1,9 @@
 ---
 title: "Diun"
-description: "Here you can find the documentation for hosting Diun with Coolify."
+description: "Monitor Docker images on Coolify with Diun for automatic update notifications, registry tracking, and container version management alerts."
 ---
 
-<ZoomableImage src="/docs/images/services/diun-logo.webp" />
+<ZoomableImage src="/docs/images/services/diun-logo.webp" alt="Diun Logo logo" />
 
 
 ## What is Diun?

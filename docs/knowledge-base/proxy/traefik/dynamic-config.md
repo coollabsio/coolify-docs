@@ -1,5 +1,6 @@
 ---
 title: "Dynamic Configurations"
+description: "Configure Traefik proxy on the fly without restarts using Coolify's dynamic configuration system for real-time middleware and routing updates."
 ---
 
 # Dynamic Configurations

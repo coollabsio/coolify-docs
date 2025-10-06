@@ -1,11 +1,11 @@
 ---
 title: Organizr
-description: Here you can find the documentation for hosting Organizr with Coolify.
+description: "Deploy Organizr dashboard on Coolify for unified homepage with service tabs, user management, SSO integration, and organized app access."
 ---
 
 # Organizr
 
-<ZoomableImage src="/docs/images/services/organizr.png" />
+<ZoomableImage src="/docs/images/services/organizr.png" alt="Organizr dashboard" />
 
 ## What is Organizr
 

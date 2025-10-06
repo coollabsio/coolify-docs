@@ -1,6 +1,6 @@
 ---
 title: Connection Unstable
-description: Here are some common issues for fixing connection unstable.
+description: Fix unstable Coolify server connections by removing UFW LIMIT rules, adjusting iptables, and configuring firewall settings for port 22 SSH access.
 ---
 
 # Connection Unstable

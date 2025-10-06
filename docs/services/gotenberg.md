@@ -1,6 +1,6 @@
 ---
 title: "Gotenberg"
-description: "Here you can find the documentation for hosting Gotenberg with Coolify."
+description: "Run Gotenberg on Coolify for PDF generation from HTML, Markdown, Office files via Docker-based microservice with REST API for conversions."
 ---
 
 

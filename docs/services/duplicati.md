@@ -1,6 +1,6 @@
 ---
 title: "Duplicati"
-description: "Here you can find the documentation for hosting Duplicati with Coolify."
+description: "Host Duplicati backup on Coolify with encrypted cloud backups, incremental updates, scheduling, and restore capabilities for data protection."
 ---
 
 

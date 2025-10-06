@@ -1,6 +1,6 @@
 ---
 title: "Filebrowser"
-description: "Here you can find the documentation for hosting Filebrowser with Coolify."
+description: "Run File Browser on Coolify for web-based file management with uploads, sharing, search, and access control for self-hosted cloud storage."
 ---
 
 

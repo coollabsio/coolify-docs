@@ -1,6 +1,6 @@
 ---
 title: "Docker Registry"
-description: "Here you can find the documentation for hosting Docker Registry with Coolify."
+description: "Host private Docker registry on Coolify for container image storage, distribution, versioning, and secure artifact management for DevOps teams."
 ---
 
 

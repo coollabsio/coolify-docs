@@ -1,9 +1,9 @@
 ---
 title: "Sonarr"
-description: "Here you can find the documentation for hosting Sonarr with Coolify."
+description: "Automate TV shows on Coolify with Sonarr for torrent/usenet downloads, quality profiles, episode tracking, and media automation."
 ---
 
-<ZoomableImage src="/docs/images/services/sonarr.svg" />
+<ZoomableImage src="/docs/images/services/sonarr.svg" alt="Sonarr dashboard" />
 
 ## What is Sonarr?
 
@@ -11,7 +11,7 @@ Sonarr is an internet PVR for Usenet and Torrents. Features Calendar See all you
 
 ## Screenshots
 
-<ZoomableImage src="/docs/images/services/sonarr.webp" />
+<ZoomableImage src="/docs/images/services/sonarr.webp" alt="Sonarr dashboard" />
 
 ## Links
 

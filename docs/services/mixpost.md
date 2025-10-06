@@ -1,6 +1,6 @@
 ---
 title: "Mixpost"
-description: "Here you can find the documentation for hosting Mixpost with Coolify."
+description: "Run Mixpost social media on Coolify for scheduling, analytics, content calendar, and multi-platform social media management self-hosted solution."
 ---
 
 

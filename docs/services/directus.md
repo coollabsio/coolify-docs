@@ -1,6 +1,6 @@
 ---
 title: "Directus"
-description: "Here you can find the documentation for hosting Directus with Coolify."
+description: "Deploy Directus headless CMS on Coolify with SQL database wrapper, REST/GraphQL API, no-code data studio, and custom field types for any project."
 ---
 
 

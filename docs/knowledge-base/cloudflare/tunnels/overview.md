@@ -1,5 +1,6 @@
 ---
 title: "Cloudflare Tunnels"
+description: "Connect Coolify resources securely without port forwarding using Cloudflare Tunnels for all resources, single apps, SSH access, or full HTTPS setups."
 ---
 
 # Cloudflare Tunnels

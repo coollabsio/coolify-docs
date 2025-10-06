@@ -1,6 +1,6 @@
 ---
 title: "Define Custom Docker Network with Environment Variables"
-description: "How to define a custom docker network with environment variables"
+description: "Configure custom Docker network CIDR blocks and address pools using environment variables during Coolify installation for advanced network setups"
 ---
 
 # Define Custom Docker Network with Environment Variables

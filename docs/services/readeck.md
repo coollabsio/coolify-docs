@@ -1,11 +1,11 @@
 ---
 title: Readeck
-description: Here you can find the documentation for hosting Readeck with Coolify.
+description: "Save articles on Coolify with Readeck for read-later service, bookmarking, full-text search, and distraction-free reading experience."
 ---
 
 # Readeck
 
-<ZoomableImage src="/docs/images/services/readeck.svg" />
+<ZoomableImage src="/docs/images/services/readeck.svg" alt="Readeck dashboard" />
 
 ## What is Readeck
 

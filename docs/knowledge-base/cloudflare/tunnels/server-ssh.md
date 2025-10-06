@@ -1,5 +1,6 @@
 ---
 title: "Server SSH Access via Cloudflare Tunnels"
+description: "Enable secure SSH access to Coolify servers via Cloudflare Tunnels with automated or manual cloudflared installation hiding server IP addresses."
 ---
 
 # Server SSH Access via Cloudflare Tunnels
@@ -25,7 +26,7 @@ This setup is ideal for people who:
 ## How It Works?
 A simple high-level overview diagram to give you a visual idea of how this works:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/high-level-diagram.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/high-level-diagram.webp" alt="High Level Diagram configuration" />
 
 ---
 
@@ -72,14 +73,14 @@ To use Coolify's automated setup for a Cloudflare Tunnel:
 ## 1. Create a Private SSH Key
 To create a Private SSH Key, follow these steps:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-1.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-1.webp" alt="Automated 1 configuration" />
 
 1. In your Coolify Dashboard, go to **Keys & Tokens**
 2. Click the **+ Add** button
 
 You will be prompted to choose a key type, along with providing a name and description for the key.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-2.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-2.webp" alt="Automated 2 configuration" />
 
 1. Click on Generate new **ED25519** or **RSA** button to generate a new SSH key. 
 2. Copy the public key and save it somewhere safe (you'll need it in the next step). Then, click Continue.
@@ -100,14 +101,14 @@ Once logged in, add your public key to the authorized keys file:
 ## 3. Add your Server to Coolify
 To add your server to Coolify, follow these steps:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-3.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-3.webp" alt="Automated 3 configuration" />
 
 1. In your Coolify Dashboard, go to **Servers**
 2. Click the **+ Add** button
 
 You will be prompted to enter details about your server. Make sure the information you provide is accurate, as Coolify will use these details to access your server.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-4.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-4.webp" alt="Automated 4 configuration" />
 
 1. **Name** - Choose a name to easily identify your server in the dashboard.
 2. **Description** - (Optional) Provide a description for your server.
@@ -121,19 +122,19 @@ You will be prompted to enter details about your server. Make sure the informati
 ## 4. Validate your Server on Coolify
 To validate your server, simply click the **Validate Server & Install Docker Engine** button.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-5.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-5.webp" alt="Automated 5 configuration" />
 
 During this process, Coolify will log in to your server and set up everything needed for Coolify to use the server.
 
 Once the validation is completed, your server page will look like this:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-6.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-6.webp" alt="Automated 6 configuration" />
 
 
 ## 5. Create a Cloudflare Tunnel
 To create a Cloudflare Tunnel, first log in to your Cloudflare account and go to the [Zero Trust ↗](https://one.dash.cloudflare.com/) page.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-7.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-7.webp" alt="Automated 7 configuration" />
 
 1. On the Zero Trust page, go to **Networks** in the sidebar.
 2. Click on **Tunnels**
@@ -141,25 +142,25 @@ To create a Cloudflare Tunnel, first log in to your Cloudflare account and go to
 
 You will be prompted to choose a tunnel type. Click the **Select Cloudflared** button.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-8.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-8.webp" alt="Automated 8 configuration" />
 
 You will be prompted to enter a tunnel name. Choose a name that you prefer.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-9.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-9.webp" alt="Automated 9 configuration" />
 
 Next you will see the configuration page with multiple options to install cloudflared.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-10.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-10.webp" alt="Automated 10 configuration" />
 
 Copy the install command, which contains the token for your tunnel (token starts with "eyJ"). Make sure to save only the token, removing the command part before it, and store it in a safe place, as we need it later.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-11.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-11.webp" alt="Automated 11 configuration" />
 
 Scroll down until you see the **Next** button, then click it.
 
 Then, you will be prompted to add a hostname. This is where we expose our SSH tunnel.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-12.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-12.webp" alt="Automated 12 configuration" />
 
 1. **Subdomain** - (Optional) You can make SSH accessible on any subdomain. For this guide, we are using the subdomain **ssh**.
 2. **Domain** - Choose the domain you want to use for the tunnel.
@@ -172,7 +173,7 @@ Then, you will be prompted to add a hostname. This is where we expose our SSH tu
 ## 6. Setup Cloudflare Tunnel on Coolify
 To set up the tunnel on Coolify, follow these steps:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-13.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-13.webp" alt="Automated 13 configuration" />
 
 Go to the **Servers** page and select the server you want to connect. This is the server you added in [Step 3](#_3-add-your-server-to-coolify)
 
@@ -181,7 +182,7 @@ Go to the **Servers** page and select the server you want to connect. This is th
 
 You will be prompted to enter the Tunnel Token and SSH domain.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-14.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-14.webp" alt="Automated 14 configuration" />
 
 1. Enter your **Tunnel Token** (this is the token we copied in [Step 5](#_5-create-a-cloudflare-tunnel))
 2. Enter your **SSH Domain** (this is the subdomain we set up in [Step 5](#_5-create-a-cloudflare-tunnel))
@@ -191,11 +192,11 @@ Coolify will now install **cloudflared** on the server and set everything up aut
 
 Once completed, you will see that the Cloudflare tunnel is enabled on the Cloudflare Tunnels page, like this:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-15.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-15.webp" alt="Automated 15 configuration" />
 
 At this point, your server's IP address will be automatically updated to the SSH domain by Coolify.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-16.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/automated-16.webp" alt="Automated 16 configuration" />
 
 You can now block your SSH port on the server if you wish.
 
@@ -237,14 +238,14 @@ To manually setup Cloudflare Tunnel:
 ## 1. Create a Private SSH Key
 To create a Private SSH Key, follow these steps:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-1.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-1.webp" alt="Manual 1 configuration" />
 
 1. In your Coolify Dashboard, go to **Keys & Tokens**
 2. Click the **+ Add** button
 
 You will be prompted to choose a key type, along with providing a name and description for the key.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-2.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-2.webp" alt="Manual 2 configuration" />
 
 1. Click on Generate new **ED25519** or **RSA** button to generate a new SSH key. 
 2. Copy the public key and save it somewhere safe (you'll need it in the next step). Then, click Continue.
@@ -266,7 +267,7 @@ Once logged in, add your public key to the authorized keys file:
 ## 3. Create a Cloudflare Tunnel
 To create a Cloudflare Tunnel, first log in to your Cloudflare account and go to the [Zero Trust ↗](https://one.dash.cloudflare.com/) page.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-3.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-3.webp" alt="Manual 3 configuration" />
 
 1. On the Zero Trust page, go to **Networks** in the sidebar.
 2. Click on **Tunnels**
@@ -274,25 +275,25 @@ To create a Cloudflare Tunnel, first log in to your Cloudflare account and go to
 
 You will be prompted to choose a tunnel type. Click the **Select Cloudflared** button.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-4.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-4.webp" alt="Manual 4 configuration" />
 
 You will be prompted to enter a tunnel name. Choose a name that you prefer.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-5.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-5.webp" alt="Manual 5 configuration" />
 
 Next you will see the configuration page with multiple options to install cloudflared.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-6.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-6.webp" alt="Manual 6 configuration" />
 
 Select your preferred option and follow the installation instructions provided by Cloudflare on the page.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-7.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-7.webp" alt="Manual 7 configuration" />
 
 Scroll down a bit and wait for your server (connector) to appear in the list. Once it appears, click the **Next** button.
 
 Then, you will be prompted to add a hostname. This is where we expose our SSH tunnel.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-8.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-8.webp" alt="Manual 8 configuration" />
 
 1. **Subdomain** - (Optional) You can make SSH accessible on any subdomain. For this guide, we are using the subdomain **ssh**.
 2. **Domain** - Choose the domain you want to use for the tunnel.
@@ -305,14 +306,14 @@ Then, you will be prompted to add a hostname. This is where we expose our SSH tu
 ## 4. Add your Server to Coolify
 To add your server to Coolify, follow these steps:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-9.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-9.webp" alt="Manual 9 configuration" />
 
 1. In your Coolify Dashboard, go to **Servers**
 2. Click the **+ Add** button
 
 You will be prompted to enter details about your server. Make sure the information you provide is accurate, as Coolify will use these details to access your server.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-10.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-10.webp" alt="Manual 10 configuration" />
 
 1. **Name** - Choose a name to easily identify your server in the dashboard.
 2. **Description** - (Optional) Provide a description for your server.
@@ -326,19 +327,19 @@ You will be prompted to enter details about your server. Make sure the informati
 ## 5. Validate your Server on Coolify
 To validate your server, simply click the **Validate Server & Install Docker Engine** button.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-11.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-11.webp" alt="Manual 11 configuration" />
 
 During this process, Coolify will log in to your server and set up everything needed for Coolify to use the server.
 
 Once the validation is completed, your server page will look like this:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-12.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-12.webp" alt="Manual 12 configuration" />
 
 
 ## 6. Setup Cloudflare Tunnel on Coolify
 To set up the tunnel on Coolify, follow these steps:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-13.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-13.webp" alt="Manual 13 configuration" />
 
 Go to the **Servers** page and select the server (which we added in the previous step) you want to connect.
 
@@ -347,6 +348,6 @@ Go to the **Servers** page and select the server (which we added in the previous
 
 Once completed, you will see that the Cloudflare tunnel is enabled on the Cloudflare Tunnels page, like this:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-14.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/server-ssh/manual-14.webp" alt="Manual 14 configuration" />
 
 **Congratulations**! You've successfully set up a server that can be accessed by Coolify over SSH using Cloudflare tunnels via your domain.

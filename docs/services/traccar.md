@@ -1,11 +1,11 @@
 ---
 title: Traccar
-description: Here you can find the documentation for hosting Traccar with Coolify.
+description: "Track GPS on Coolify with Traccar for vehicle tracking, geofencing, reports, notifications, and fleet management with 170+ protocols."
 ---
 
 # Traccar
 
-<ZoomableImage src="/docs/images/services/traccar.png" />
+<ZoomableImage src="/docs/images/services/traccar.png" alt="Traccar dashboard" />
 
 ## What is Traccar
 

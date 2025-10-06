@@ -2,7 +2,7 @@
 title: Support
 ---
 
-<ZoomableImage src="/docs/images/get-started/support-banner.webp" />
+<ZoomableImage src="/docs/images/get-started/support-banner.webp" alt="Coolify support banner" />
 
 <br />
 

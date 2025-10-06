@@ -1,6 +1,6 @@
 ---
 title: "Introduction"
-description: "A guide how to configure S3 compatible storage for Coolify."
+description: "Configure S3-compatible storage for Coolify backups including AWS, DigitalOcean Spaces, MinIO, Cloudflare R2, Backblaze B2, and Scaleway Object Storage."
 ---
 
 # S3 Introduction

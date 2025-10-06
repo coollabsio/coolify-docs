@@ -5,7 +5,7 @@ lastUpdated: true
 editLink: true
 ---
 
-<ZoomableImage src="/docs/images/get-started/introduction-banner.webp" />
+<ZoomableImage src="/docs/images/get-started/introduction-banner.webp" alt="Coolify introduction banner" />
 
 <br />
 

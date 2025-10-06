@@ -1,11 +1,11 @@
 ---
 title: Calibre Web
-description: Here you can find the documentation for hosting Calibre Web with Coolify.
+description: "Run Calibre Web on Coolify for ebook library management with OPDS feeds, reading interface, format conversion, and metadata editing features."
 ---
 
 # Calibre Web
 
-<ZoomableImage src="/docs/images/services/calibre-web.svg" />
+<ZoomableImage src="/docs/images/services/calibre-web.svg" alt="Calibre Web dashboard" />
 
 ## What is Calibre Web
 

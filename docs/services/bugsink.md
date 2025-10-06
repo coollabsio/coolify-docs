@@ -1,9 +1,9 @@
 ---
 title: "Bugsink"
-description: "Here you can find the documentation for hosting Bugsink with Coolify."
+description: "Deploy Bugsink error tracking on Coolify for application monitoring, exception logging, stack traces, and debugging insights for development teams."
 ---
 
-<ZoomableImage src="/docs/images/services/bugsink-logo.webp" />
+<ZoomableImage src="/docs/images/services/bugsink-logo.webp" alt="Bugsink Logo logo" />
 
 ## What is Bugsink?
 
@@ -16,7 +16,7 @@ full control through self-hosting.
 
 ## Screenshots
 
-<ZoomableImage src="/docs/images/services/bugsink.webp" />
+<ZoomableImage src="/docs/images/services/bugsink.webp" alt="Bugsink dashboard" />
 
 ## Links
 

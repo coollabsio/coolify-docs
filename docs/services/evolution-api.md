@@ -1,6 +1,6 @@
 ---
 title: "Evolution API"
-description: "Here you can find the information you need to use Evolution API with Coolify."
+description: "Deploy Evolution API on Coolify for WhatsApp Business integration, message automation, chatbot workflows, and customer communication management."
 ---
 
 

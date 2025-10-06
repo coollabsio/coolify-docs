@@ -1,6 +1,6 @@
 ---
 title: "Jellyfin"
-description: "Here you can find the documentation for hosting Jellyfin with Coolify."
+description: "Deploy Jellyfin media server on Coolify for streaming movies, TV shows, music with no licensing, transcoding, and mobile app support."
 ---
 
 

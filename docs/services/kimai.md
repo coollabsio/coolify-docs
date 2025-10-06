@@ -1,6 +1,6 @@
 ---
 title: "Kimai"
-description: "Here you can find the documentation for hosting Kimai with Coolify."
+description: "Track time on Coolify with Kimai for project time tracking, invoicing, reporting, and team productivity management with mobile support."
 ---
 
 

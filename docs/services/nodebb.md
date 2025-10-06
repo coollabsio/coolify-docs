@@ -1,11 +1,11 @@
 ---
 title: Nodebb
-description: Here you can find the documentation for hosting Nodebb with Coolify.
+description: "Run NodeBB forum on Coolify for modern community discussions, real-time chat, plugins, themes, and social networking platform features."
 ---
 
 # Nodebb
 
-<ZoomableImage src="/docs/images/services/nodebb.svg" />
+<ZoomableImage src="/docs/images/services/nodebb.svg" alt="Nodebb dashboard" />
 
 ## What is Nodebb
 

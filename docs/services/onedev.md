@@ -1,11 +1,11 @@
 ---
 title: Onedev
-description: Here you can find the documentation for hosting Onedev with Coolify.
+description: "Host OneDev on Coolify for self-hosted Git server with CI/CD pipelines, issue tracking, code review, and complete DevOps platform."
 ---
 
 # Onedev
 
-<ZoomableImage src="/docs/images/services/onedev.svg" />
+<ZoomableImage src="/docs/images/services/onedev.svg" alt="Onedev dashboard" />
 
 ## What is Onedev
 

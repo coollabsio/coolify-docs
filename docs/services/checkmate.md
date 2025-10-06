@@ -1,11 +1,11 @@
 ---
 title: Checkmate
-description: Here you can find the documentation for hosting Checkmate with Coolify.
+description: "Host Checkmate monitoring on Coolify for uptime checks, SSL certificate tracking, domain expiration alerts, and infrastructure health monitoring."
 ---
 
 # Checkmate
 
-<ZoomableImage src="/docs/images/services/checkmate.jpg" />
+<ZoomableImage src="/docs/images/services/checkmate.jpg" alt="Checkmate dashboard" />
 
 ## What is Checkmate
 

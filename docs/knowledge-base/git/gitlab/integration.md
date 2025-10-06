@@ -1,6 +1,6 @@
 ---
 title: "Integration"
-description: "A guide on how to use GitLab based repositories with Coolify."
+description: "Connect GitLab repositories to Coolify with deploy keys, automatic webhooks, and merge request deployments for CI/CD automation"
 ---
 
 # GitLab Integration

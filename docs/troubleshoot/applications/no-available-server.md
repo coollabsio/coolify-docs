@@ -34,7 +34,7 @@ Look for containers showing `(unhealthy)` status - this is your primary culprit.
 
 #### Applications
 
-<ZoomableImage src="/docs/images/knowledge-base/resources/healthcheck.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/resources/healthcheck.webp" alt="Healthcheck configuration" />
 
 Navigate to your application's configuration and check:
 
@@ -154,17 +154,17 @@ Make sure the protocol in your domain configuration matches how you want to acce
 
    The proxy needs to know which port your application is listening on. Check that the port is configured correctly.
 
-   <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/1.webp" />
+   <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/1.webp" alt="Screenshot showing No Available Server" />
 
    In [Applications](/applications/index), this is defined in the `Ports Exposes` field.
 
-      <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/4.webp" />
+      <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/4.webp" alt="Screenshot showing No Available Server" />
 
    In **Service Stacks**, this is defined by either adding the port at the end of the URL in the `Domains` field (e.g. `https://example.com:3000`) or by defining the `EXPOSE` directive in your `Dockerfile`.
 
 2. **Verify Application Listening Address:**
 
-   <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/3.webp" />
+   <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/3.webp" alt="Screenshot showing No Available Server" />
 
    Your Application / Service might be binding to only `localhost` or `127.0.0.1`, which makes it unreachable from outside the container. Ensure your app listens on all interfaces (`0.0.0.0`).
 

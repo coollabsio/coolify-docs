@@ -1,6 +1,6 @@
 ---
 title: "Plunk"
-description: "Here you can find the documentation for hosting Plunk with Coolify."
+description: "Send emails on Coolify with Plunk for transactional email API, templates, analytics, and developer-friendly email delivery service."
 ---
 
 

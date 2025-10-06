@@ -1,6 +1,6 @@
 ---
 title: "Meilisearch"
-description: "Here you can find the documentation for hosting Meilisearch with Coolify."
+description: "Deploy Meilisearch on Coolify for lightning-fast typo-tolerant search engine with instant results, filters, and developer-friendly REST API."
 ---
 
 ![Meilisearch](https://github.com/meilisearch/meilisearch/raw/main/assets/meilisearch-logo-light.svg?sanitize=true#gh-light-mode-only)

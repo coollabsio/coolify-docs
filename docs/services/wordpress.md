@@ -1,6 +1,6 @@
 ---
 title: "WordPress"
-description: "Here you can find the documentation for hosting WordPress with Coolify."
+description: "Run WordPress on Coolify for blogging, CMS, e-commerce with plugins, themes, and world's most popular website building platform."
 ---
 
 ![WordPress](https://raw.githubusercontent.com/logo/wordpress/caefc9aa315eafcf8687804564a11a9c5a77a561/images/logo.svg)

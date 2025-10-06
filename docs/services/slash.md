@@ -1,6 +1,6 @@
 ---
 title: "Slash"
-description: "Here you can find the documentation for hosting Slash with Coolify."
+description: "Manage bookmarks on Coolify with Slash for self-hosted link shortener, collections, sharing, and personal URL management with tagging."
 ---
 
 

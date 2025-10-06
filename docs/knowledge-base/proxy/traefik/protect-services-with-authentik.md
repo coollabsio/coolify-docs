@@ -1,6 +1,6 @@
 ---
 title: "Authentik Forward Authentication Middleware"
-description: "A guide to configure Authentik forward authentication with Traefik in Coolify"
+description: "Secure Coolify services with Authentik SSO forward authentication using Traefik middleware for proxy provider single sign-on protection."
 ---
 
 

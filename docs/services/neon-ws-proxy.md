@@ -1,11 +1,11 @@
 ---
 title: Neon Ws Proxy
-description: Here you can find the documentation for hosting Neon Ws Proxy with Coolify.
+description: "Deploy Neon WebSocket proxy on Coolify for serverless Postgres connections, connection pooling, and edge database access optimization."
 ---
 
 # Neon Ws Proxy
 
-<ZoomableImage src="/docs/images/services/neon.svg" />
+<ZoomableImage src="/docs/images/services/neon.svg" alt="Neon Ws Proxy dashboard" />
 
 ## What is Neon Ws Proxy
 

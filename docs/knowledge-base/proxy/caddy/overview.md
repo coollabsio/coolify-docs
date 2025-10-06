@@ -1,5 +1,6 @@
 ---
 title: "Caddy Overview"
+description: "Use Caddy reverse proxy with Coolify for automatic SSL certificates, simple configuration, and HTTP/2 support as an alternative to Traefik."
 ---
 
 # Caddy Proxy

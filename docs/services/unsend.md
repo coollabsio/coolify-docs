@@ -1,11 +1,11 @@
 ---
 title: Unsend
-description: Here you can find the documentation for hosting Unsend with Coolify.
+description: "Send emails on Coolify with Unsend for developer-focused email API, templates, testing, and transactional email delivery service."
 ---
 
 # Unsend
 
-<ZoomableImage src="/docs/images/services/unsend.svg" />
+<ZoomableImage src="/docs/images/services/unsend.svg" alt="Unsend dashboard" />
 
 ## What is Unsend
 

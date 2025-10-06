@@ -1,11 +1,11 @@
 ---
 title: Mattermost
-description: Here you can find the documentation for hosting Mattermost with Coolify.
+description: "Deploy Mattermost team chat on Coolify for secure messaging, file sharing, integrations, and Slack alternative with on-premises control."
 ---
 
 # Mattermost
 
-<ZoomableImage src="/docs/images/services/mattermost.svg" />
+<ZoomableImage src="/docs/images/services/mattermost.svg" alt="Mattermost dashboard" />
 
 ## What is Mattermost
 

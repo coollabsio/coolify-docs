@@ -1,11 +1,11 @@
 ---
 title: "TriliumNext"
-description: "Here you can find the documentation for hosting TriliumNext with Coolify."
+description: "Organize notes on Coolify with TriliumNext for hierarchical note-taking, scripting, encryption, and powerful knowledge management features."
 ---
 
 # TriliumNext
 
-<ZoomableImage src="/docs/images/services/triliumnext.svg" />
+<ZoomableImage src="/docs/images/services/triliumnext.svg" alt="Triliumnext dashboard" />
 
 ## What is TriliumNext?
 

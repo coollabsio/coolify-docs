@@ -1,11 +1,11 @@
 ---
 title: "Bluesky PDS"
-description: "Here you can find the documentation for hosting Bluesky PDS with Coolify."
+description: "Host Bluesky Personal Data Server on Coolify to run your own AT Protocol instance for decentralized social networking and identity control."
 ---
 
 # Bluesky PDS
 
-<ZoomableImage src="/docs/images/services/bluesky.svg" />
+<ZoomableImage src="/docs/images/services/bluesky.svg" alt="Bluesky Pds dashboard" />
 
 ## What is Bluesky PDS?
 

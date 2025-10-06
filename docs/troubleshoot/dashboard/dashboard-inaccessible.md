@@ -1,5 +1,6 @@
 ---
 title: Dashboard Inaccessible via Instance Domain
+description: Fix Coolify dashboard access issues by diagnosing proxy problems, checking container health, verifying firewall ports, and resolving domain configuration errors.
 ---
 
 # Coolify Dashboard Inaccessible
@@ -38,7 +39,7 @@ If the dashboard isn’t accessible via the IP address, then follow these steps:
 - **What to Look For:**  
   - Make sure the coolify containers are running and its status is healthy.
   
-    <ZoomableImage src="/docs/images/troubleshoot/dashboard/dashbord-inaccessible/1.webp" />
+    <ZoomableImage src="/docs/images/troubleshoot/dashboard/dashbord-inaccessible/1.webp" alt="Screenshot showing Dashboard Inaccessible" />
 
 ### B. Restart the Container (if necessary)
 - **Step:** If the container appears to be running but you’re still having issues, try restarting it.
@@ -57,20 +58,20 @@ If the dashboard is accessible via the server IP but not through your custom dom
 - **Step:** Go to the **Proxy** page in your Coolify dashboard.
 - **Action:** Click the **Start Proxy** button.
   
-    <ZoomableImage src="/docs/images/troubleshoot/dashboard/dashbord-inaccessible/2.webp" />
+    <ZoomableImage src="/docs/images/troubleshoot/dashboard/dashbord-inaccessible/2.webp" alt="Screenshot showing Dashboard Inaccessible" />
 - **Wait:** Give it about two minutes, then try accessing your dashboard using your custom domain.
 
 ### B. Review Recent Changes
 - **Question:** Did you change any proxy configurations before the issue started?
   - **If Yes:** Reset the proxy configuration to its default settings and restart the proxy.
   
-    <ZoomableImage src="/docs/images/troubleshoot/dashboard/dashbord-inaccessible/3.webp" />
+    <ZoomableImage src="/docs/images/troubleshoot/dashboard/dashbord-inaccessible/3.webp" alt="Screenshot showing Dashboard Inaccessible" />
   - **Wait:** Give it about two minutes, then try accessing your dashboard using your custom domain.
 
 ### C. Check Proxy Logs
 - **Step:** Look at the proxy logs for any error or warning messages.
   
-    <ZoomableImage src="/docs/images/troubleshoot/dashboard/dashbord-inaccessible/4.webp" />
+    <ZoomableImage src="/docs/images/troubleshoot/dashboard/dashbord-inaccessible/4.webp" alt="Screenshot showing Dashboard Inaccessible" />
 - **Next:** If you see errors, they may hint at what needs to be fixed (skip to next step).
 
 

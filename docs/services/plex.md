@@ -1,9 +1,9 @@
 ---
 title: "Plex"
-description: "Here you can find the documentation for hosting Plex with Coolify."
+description: "Stream media on Coolify with Plex server for movies, TV shows, music, photos with transcoding, mobile apps, and live TV DVR support."
 ---
 
-<ZoomableImage src="/docs/images/services/plex.svg" />
+<ZoomableImage src="/docs/images/services/plex.svg" alt="Plex dashboard" />
 
 ## What is Plex?
 
@@ -22,7 +22,7 @@ Available on almost any device, Plex is the first-and-only streaming platform to
 
 ## Screenshots
 
-<ZoomableImage src="/docs/images/services/plex.webp" />
+<ZoomableImage src="/docs/images/services/plex.webp" alt="Plex dashboard" />
 
 ## Links
 

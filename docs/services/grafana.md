@@ -1,6 +1,6 @@
 ---
 title: "Grafana"
-description: "Here you can find the documentation for hosting Grafana with Coolify."
+description: "Deploy Grafana on Coolify for data visualization, monitoring dashboards, alerting, and metric analysis from multiple data sources and databases."
 ---
 
 

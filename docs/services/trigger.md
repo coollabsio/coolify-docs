@@ -1,6 +1,6 @@
 ---
 title: "Trigger"
-description: "Here you can find the documentation for hosting Trigger with Coolify."
+description: "Automate workflows on Coolify with Trigger.dev for background jobs, scheduled tasks, webhooks, and event-driven workflow automation."
 ---
 
 

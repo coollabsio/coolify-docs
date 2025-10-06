@@ -2,7 +2,7 @@
 title: Coolify Concepts
 ---
 
-<ZoomableImage src="/docs/images/get-started/concepts-banner.webp" />
+<ZoomableImage src="/docs/images/get-started/concepts-banner.webp" alt="Coolify concepts banner" />
 
 <br />
 

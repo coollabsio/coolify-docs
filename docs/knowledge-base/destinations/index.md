@@ -1,3 +1,8 @@
+---
+title: "Destinations"
+description: "Manage Docker network destinations in Coolify for isolated deployment environments supporting standalone Docker and Swarm cluster configurations."
+---
+
 # Destinations
 
 Destinations in Coolify are **Docker network endpoints** where your applications, databases, and services are deployed. They represent isolated network environments on your servers that provide containerized isolation and networking for your resources.

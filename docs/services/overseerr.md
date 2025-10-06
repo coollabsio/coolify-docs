@@ -1,9 +1,9 @@
 ---
 title: "Overseerr"
-description: "Here you can find the documentation for hosting Overseerr with Coolify."
+description: "Deploy Overseerr on Coolify for Plex/Jellyfin media requests with user management, discovery, approval workflows, and integration automation."
 ---
 
-<ZoomableImage src="/docs/images/services/overseerr.svg" />
+<ZoomableImage src="/docs/images/services/overseerr.svg" alt="Overseerr dashboard" />
 
 
 ## What is Overseerr?
@@ -12,7 +12,7 @@ Overseerr is a request management and media discovery tool built to work with yo
 
 ## Screenshots
 
-<ZoomableImage src="/docs/images/services/overseerr.webp" />
+<ZoomableImage src="/docs/images/services/overseerr.webp" alt="Overseerr dashboard" />
 
 ## Links
 

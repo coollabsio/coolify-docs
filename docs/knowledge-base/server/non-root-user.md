@@ -1,6 +1,6 @@
 ---
 title: "Non-root user"
-description: "A guide on how to use a server with a non-root user"
+description: "Configure Coolify servers with non-root users using SSH keys and passwordless sudo permissions for secure resource management."
 ---
 
 

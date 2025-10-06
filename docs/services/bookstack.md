@@ -1,11 +1,11 @@
 ---
 title: Bookstack
-description: Here you can find the documentation for hosting Bookstack with Coolify.
+description: "Deploy BookStack wiki on Coolify for organized documentation with WYSIWYG editor, hierarchical structure, search, and team collaboration features."
 ---
 
 # Bookstack
 
-<ZoomableImage src="/docs/images/services/bookstack.png" />
+<ZoomableImage src="/docs/images/services/bookstack.png" alt="Bookstack dashboard" />
 
 ## What is Bookstack
 

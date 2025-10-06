@@ -1,5 +1,6 @@
 ---
 title: "GitHub Actions"
+description: "Build and deploy Docker images to Coolify using GitHub Actions workflows with registry integration, API tokens, and automated webhook triggers."
 ---
 
 # GitHub Actions

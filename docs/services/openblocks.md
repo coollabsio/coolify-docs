@@ -1,6 +1,6 @@
 ---
 title: "OpenBlocks"
-description: "Here you can find the documentation for hosting OpenBlocks with Coolify."
+description: "Build apps on Coolify with OpenBlocks low-code platform featuring drag-and-drop UI, database connectors, and rapid application development."
 ---
 
 # What is OpenBlocks?

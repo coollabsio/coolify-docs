@@ -1,5 +1,6 @@
 ---
 title: FAQ
+description: "Common Coolify questions answered including SSH permissions, custom ports, Cloudflare SSL, concurrent builds, and application port mapping troubleshooting."
 ---
 
 # Frequently Asked Questions (FAQ)

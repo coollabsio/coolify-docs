@@ -276,7 +276,8 @@ const services = [
         slug: 'plausible',
         icon: '/docs/images/services/plausible.svg',
         description: 'A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies.',
-        category: 'Analytics'
+        category: 'Analytics',
+        ignore: true
     },
     {
         name: 'Activepieces',
@@ -1396,7 +1397,8 @@ const services = [
         slug: 'posthog',
         icon: '/docs/images/services/posthog.svg',
         description: 'Open source product analytics.',
-        category: 'Analytics'
+        category: 'Analytics',
+        ignore: true
     },
     {
         name: 'Postiz',
@@ -1747,6 +1749,146 @@ const services = [
         icon: '/docs/images/services/zipline.svg',
         description: 'Next generation ShareX / File upload server',
         category: 'File Management'
+    },
+    {
+        name: 'CodiMD',
+        slug: 'codimd',
+        icon: '/docs/images/services/codimd.png',
+        description: 'Realtime collaborative markdown notes on all platforms.',
+        category: 'Productivity'
+    },
+    {
+        name: 'Diun',
+        slug: 'diun',
+        icon: '/docs/images/services/diun.svg',
+        description: 'Docker Image Update Notifier.',
+        category: 'Monitoring'
+    },
+    {
+        name: 'Drizzle Gateway',
+        slug: 'drizzle-gateway',
+        icon: '/docs/images/services/drizzle.jpeg',
+        description: 'Drizzle Studio for exploring SQL databases.',
+        category: 'Development'
+    },
+    {
+        name: 'Grist',
+        slug: 'grist',
+        icon: '/docs/images/services/grist.svg',
+        description: 'Modern relational spreadsheet combining flexibility and database robustness.',
+        category: 'Productivity'
+    },
+    {
+        name: 'Leantime',
+        slug: 'leantime',
+        icon: '/docs/images/services/leantime.svg',
+        description: 'Lean project management system for innovators.',
+        category: 'Project Management'
+    },
+    {
+        name: 'LimeSurvey',
+        slug: 'limesurvey',
+        icon: '/docs/images/services/limesurvey.svg',
+        description: 'The most popular FOSS online survey tool on the web.',
+        category: 'Business'
+    },
+    {
+        name: 'Memos',
+        slug: 'memos',
+        icon: '/docs/images/services/memos.png',
+        description: 'Open-source, self-hosted memo hub with knowledge management.',
+        category: 'Productivity'
+    },
+    {
+        name: 'Navidrome',
+        slug: 'navidrome',
+        icon: '/docs/images/services/navidrome.svg',
+        description: 'Modern music server and streamer compatible with Subsonic/Airsonic.',
+        category: 'Media'
+    },
+    {
+        name: 'NetBird Client',
+        slug: 'netbird-client',
+        icon: '/docs/images/services/netbird.png',
+        description: 'Connect your devices into a secure WireGuard-based mesh network.',
+        category: 'Networking'
+    },
+    {
+        name: 'Observium',
+        slug: 'observium',
+        icon: '/docs/images/services/observium.webp',
+        description: 'Low-maintenance auto-discovering network monitoring platform.',
+        category: 'Monitoring'
+    },
+    {
+        name: 'OrangeHRM',
+        slug: 'orangehrm',
+        icon: '/docs/images/services/orangehrm.svg',
+        description: 'Free HR management system for businesses.',
+        category: 'Business'
+    },
+    {
+        name: 'Passbolt',
+        slug: 'passbolt',
+        icon: '/docs/images/services/passbolt.svg',
+        description: 'Open source password manager for teams.',
+        category: 'Security'
+    },
+    {
+        name: 'PGBackWeb',
+        slug: 'pgbackweb',
+        icon: '/docs/images/services/pgbackweb.png',
+        description: 'Effortless PostgreSQL backups with a user-friendly web interface.',
+        category: 'Database'
+    },
+    {
+        name: 'Ryot',
+        slug: 'ryot',
+        icon: '/docs/images/services/ryot.svg',
+        description: 'Self-hosted platform for tracking various facets of your life.',
+        category: 'Productivity'
+    },
+    {
+        name: 'Seafile',
+        slug: 'seafile',
+        icon: '/docs/images/services/seafile.svg',
+        description: 'High-performance file syncing and sharing with knowledge management features.',
+        category: 'Storage'
+    },
+    {
+        name: 'Typesense',
+        slug: 'typesense',
+        icon: '/docs/images/services/typesense.png',
+        description: 'Open source alternative to Algolia and easier-to-use alternative to ElasticSearch.',
+        category: 'Search'
+    },
+    {
+        name: 'Vert',
+        slug: 'vert',
+        icon: '/docs/images/services/vert.png',
+        description: 'Self-hosted file converter.',
+        category: 'Utilities'
+    },
+    {
+        name: 'Wings',
+        slug: 'wings',
+        icon: '/docs/images/services/pterodactyl.png',
+        description: 'Pterodactyl server control plane for game servers.',
+        category: 'Gaming'
+    },
+    {
+        name: 'Yamtrack',
+        slug: 'yamtrack',
+        icon: '/docs/images/services/yamtrack.svg',
+        description: 'Self-hosted music scrobble database.',
+        category: 'Media'
+    },
+    {
+        name: 'Marimo',
+        slug: 'marimo',
+        icon: '/docs/images/services/marimo.svg',
+        description: 'Open-source reactive notebook for Python.',
+        category: 'Development'
     }
 ]
 
@@ -1780,6 +1922,7 @@ onUnmounted(() => {
 
 const filteredServicesByCategory = (category: string) => {
     return services.filter(s =>
+        !s.ignore &&
         s.category === category &&
         (search.value === '' || s.name.toLowerCase().includes(search.value.toLowerCase()) || s.description.toLowerCase().includes(search.value.toLowerCase()))
     )
@@ -1966,8 +2109,8 @@ const { preloadServices, handleImageError, hasImageError, isImageLoading, getFal
                 <div v-else v-for="category in filteredCategories" :key="category">
                     <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">{{ category }}</h2>
                     <div class="services-grid grid grid-cols-1 gap-6 rounded-lg">
-                        <div v-for="service in filteredServicesByCategory(category)" :key="service.name" @click="navigateTo(`services/${service.slug}`)"
-                            class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-colors hover:cursor-pointer flex flex-col">
+                        <a v-for="service in filteredServicesByCategory(category)" :key="service.name" :href="`/services/${service.slug}`"
+                            class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-colors hover:cursor-pointer flex flex-col no-underline">
                             <div class="w-full h-full flex flex-col dark:default-soft rounded-t-xl p-3">
                                 <div class="font-bold text-md text-gray-900 mb-1 dark:text-gray-100">{{ service.name }}</div>
                                 <div class="text-gray-500 dark:text-gray-400 text-xs">{{ service.description }}</div>
@@ -1983,7 +2126,7 @@ const { preloadServices, handleImageError, hasImageError, isImageLoading, getFal
                                     />
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </template>
@@ -2001,8 +2144,8 @@ const { preloadServices, handleImageError, hasImageError, isImageLoading, getFal
                                 </div>
                             </template>
                             <template v-else>
-                                <div v-for="service in filteredServicesByCategory(category)" :key="service.name" @click="navigateTo(`services/${service.slug}`)"
-                                    class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-colors hover:cursor-pointer flex flex-col">
+                                <a v-for="service in filteredServicesByCategory(category)" :key="service.name" :href="`/services/${service.slug}`"
+                                    class="dark:default-soft rounded-lg shadow border border-gray-300 hover:border-purple-500 dark:hover:border-purple-400 transition-colors hover:cursor-pointer flex flex-col no-underline">
                                     <div class="w-full h-full flex flex-col dark:default-soft rounded-b-xl p-3">
                                         <div class="font-bold text-md text-gray-900 mb-1 dark:text-gray-100">{{ service.name }}</div>
                                         <div class="text-gray-500 dark:text-gray-400 text-xs">{{ service.description }}</div>
@@ -2018,7 +2161,7 @@ const { preloadServices, handleImageError, hasImageError, isImageLoading, getFal
                                             />
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             </template>
                         </div>
                     </div>

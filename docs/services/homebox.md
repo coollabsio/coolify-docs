@@ -1,11 +1,11 @@
 ---
 title: "Homebox"
-description: "Here you can find the documentation for hosting Homebox with Coolify."
+description: "Manage home inventory on Coolify with Homebox for asset tracking, warranty management, location organization, and household item cataloging."
 ---
 
 # Homebox
 
-<ZoomableImage src="/docs/images/services/homebox.svg" />
+<ZoomableImage src="/docs/images/services/homebox.svg" alt="Homebox dashboard" />
 
 ## What is Homebox?
 

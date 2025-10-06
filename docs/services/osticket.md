@@ -1,11 +1,11 @@
 ---
 title: Osticket
-description: Here you can find the documentation for hosting Osticket with Coolify.
+description: "Run osTicket helpdesk on Coolify for ticket management, customer support, email integration, and IT service desk automation workflows."
 ---
 
 # Osticket
 
-<ZoomableImage src="/docs/images/services/osticket.png" />
+<ZoomableImage src="/docs/images/services/osticket.png" alt="Osticket dashboard" />
 
 ## What is Osticket
 

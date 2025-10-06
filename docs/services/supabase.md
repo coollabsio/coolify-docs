@@ -1,6 +1,6 @@
 ---
 title: "Supabase"
-description: "Here you can find the documentation for hosting Supabase with Coolify."
+description: "Deploy Supabase on Coolify as open-source Firebase alternative with Postgres database, authentication, storage, and real-time subscriptions."
 ---
 
 ![Supabase](https://user-images.githubusercontent.com/8291514/213727225-56186826-bee8-43b5-9b15-86e839d89393.png#gh-dark-mode-only)
@@ -11,7 +11,7 @@ The open source Firebase alternative.
 
 ## Screenshots
 
-<ZoomableImage src="/docs/images/services/supabase-selfhost.webp" />
+<ZoomableImage src="/docs/images/services/supabase-selfhost.webp" alt="Supabase dashboard" />
 
 ## Notes
 
@@ -25,7 +25,7 @@ There is a bug with making database publicly accessible. This bug will be fixed 
 
 Set **Supabase Db** to public
 
-<ZoomableImage src="/docs/images/services/supabase-db-fix.webp" />
+<ZoomableImage src="/docs/images/services/supabase-db-fix.webp" alt="Supabase dashboard" />
 
 Then
 

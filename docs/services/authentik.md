@@ -1,6 +1,6 @@
 ---
 title: "Authentik"
-description: "Here you can find the documentation for hosting Authentik with Coolify."
+description: "Run Authentik identity provider on Coolify with SSO, LDAP, OAuth2, SAML support for unified authentication and user management across apps."
 ---
 
 ![Authentik](https://goauthentik.io/img/icon_top_brand_colour.svg)

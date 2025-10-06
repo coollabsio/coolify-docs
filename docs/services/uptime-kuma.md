@@ -1,6 +1,6 @@
 ---
 title: "Uptime Kuma"
-description: "Here you can find the documentation for hosting Uptime Kuma with Coolify."
+description: "Monitor uptime on Coolify with Uptime Kuma for status pages, notifications, SSL checks, and beautiful server monitoring dashboard."
 ---
 
 # What is Uptime Kuma?

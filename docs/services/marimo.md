@@ -1,9 +1,9 @@
 ---
 title: "Marimo"
-description: "Here you can find the documentation for hosting Marimo with Coolify."
+description: "Deploy Marimo reactive notebooks on Coolify for Python data science with interactive notebooks, reproducible execution, and git-friendly format."
 ---
 
-<ZoomableImage src="/docs/images/services/marimo-logo.webp" />
+<ZoomableImage src="/docs/images/services/marimo-logo.webp" alt="Marimo Logo logo" />
 
 
 ## What is Marimo?

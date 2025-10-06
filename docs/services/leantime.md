@@ -1,9 +1,9 @@
 ---
 title: "Leantime"
-description: "Here you can find the documentation for hosting Leantime with Coolify."
+description: "Manage projects on Coolify with Leantime featuring tasks, gantt charts, time tracking, ideas management, and lean project management approach."
 ---
 
-<ZoomableImage src="/docs/images/services/leantime-logo.webp" />
+<ZoomableImage src="/docs/images/services/leantime-logo.webp" alt="Leantime Logo logo" />
 
 
 ## What is Leantime?
@@ -11,7 +11,7 @@ Leantime is a goals focused project management system for non-project managers. 
 
 
 ## Screenshots
-<ZoomableImage src="/docs/images/services/leantime-screenshots.webp" />
+<ZoomableImage src="/docs/images/services/leantime-screenshots.webp" alt="Leantime interface screenshot" />
 
 
 ## Links

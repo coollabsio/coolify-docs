@@ -121,7 +121,7 @@ As soon as you have your local setup ready, follow these steps to add your new s
    ```markdown
    # [Service Name]
 
-   <ZoomableImage src="/docs/images/services/service.svg" />
+   <ZoomableImage src="/docs/images/services/service.svg" alt="/ dashboard" />
 
    ## What is [Service Name]?
 

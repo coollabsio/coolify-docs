@@ -1,11 +1,11 @@
 ---
 title: Hoppscotch
-description: Here you can find the documentation for hosting Hoppscotch with Coolify.
+description: "Run Hoppscotch API testing on Coolify as open-source Postman alternative with REST, GraphQL, WebSocket testing, and API development tools."
 ---
 
 # Hoppscotch
 
-<ZoomableImage src="/docs/images/services/hoppscotch.png" />
+<ZoomableImage src="/docs/images/services/hoppscotch.png" alt="Hoppscotch dashboard" />
 
 ## What is Hoppscotch
 

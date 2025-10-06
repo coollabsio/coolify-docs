@@ -1,6 +1,6 @@
 ---
 title: "Gitea"
-description: "Here you can find the documentation for hosting Gitea with Coolify."
+description: "Host Gitea Git service on Coolify for lightweight repository hosting with pull requests, CI/CD integration, issues, and team collaboration."
 ---
 
 

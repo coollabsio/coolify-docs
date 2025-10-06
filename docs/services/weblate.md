@@ -1,6 +1,6 @@
 ---
 title: "Weblate"
-description: "Here you can find the documentation for hosting Weblate with Coolify."
+description: "Translate software on Coolify with Weblate for continuous localization, collaboration, version control, and open-source translation management."
 ---
 
 

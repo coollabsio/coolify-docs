@@ -1,6 +1,6 @@
 ---
 title: "Glances"
-description: "Here you can find the documentation for hosting Glances with Coolify."
+description: "Monitor system performance on Coolify with Glances showing CPU, memory, disk, network stats, and process monitoring via web interface."
 ---
 
 

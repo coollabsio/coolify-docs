@@ -1,6 +1,6 @@
 ---
 title: "Cloudflared"
-description: "Here you can find the documentation for hosting Cloudflared with Coolify."
+description: "Run Cloudflare Tunnel on Coolify to expose local services securely without port forwarding using cloudflared for remote access and protection."
 ---
 
 

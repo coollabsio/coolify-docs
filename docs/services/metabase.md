@@ -1,6 +1,6 @@
 ---
 title: "Metabase"
-description: "Here you can find the documentation for hosting Metabase with Coolify."
+description: "Run Metabase analytics on Coolify for business intelligence, SQL querying, dashboards, and self-service data visualization without coding."
 ---
 
 ![Metabase](https://github.com/metabase/metabase/raw/master/docs/images/metabase-product-screenshot.png)

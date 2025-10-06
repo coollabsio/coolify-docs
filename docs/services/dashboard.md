@@ -1,6 +1,6 @@
 ---
 title: "Dashboard"
-description: "Here you can find the documentation for hosting Dashboard with Coolify."
+description: "Deploy customizable dashboard on Coolify for application shortcuts, bookmarks, service monitoring, and centralized access to self-hosted tools."
 ---
 
 

@@ -1,5 +1,6 @@
 ---
 title: Domains
+description: "Add custom domains to Coolify with FQDN format, multiple domain support, port mapping, wildcard domains, and custom DNS server validation."
 ---
 
 # Domains

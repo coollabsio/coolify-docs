@@ -2,7 +2,7 @@
 title: Upgrading Coolify 
 ---
 
-<ZoomableImage src="/docs/images/get-started/upgrade/banner.webp" />
+<ZoomableImage src="/docs/images/get-started/upgrade/banner.webp" alt="Coolify banner" />
 
 <br />
 
@@ -28,7 +28,7 @@ Coolify periodically checks the [CDN ↗](https://cdn.coollabs.io/coolify/versio
 ### Customize Automatic Updates  
 If you’d rather manage updates yourself, you can disable auto-updates in your Coolify dashboard’s Settings.
 
-<ZoomableImage src="/docs/images/get-started/upgrade/disable-auto-update.webp" />
+<ZoomableImage src="/docs/images/get-started/upgrade/disable-auto-update.webp" alt="Disable Auto Update" />
 
 ::: info Tip
 Turning off automatic updates lets you test a new version on a staging setup before updating your live environment.
@@ -41,14 +41,14 @@ This option gives you a bit more control. Coolify notifies you when an update is
 ### How it works?
 Coolify periodically checks the [CDN ↗](https://cdn.coollabs.io/coolify/versions.json) for updates. When a new version is available, you will see an "**Upgrade**" button in the sidebar of your Coolify dashboard.
 
-<ZoomableImage src="/docs/images/get-started/upgrade/upgrade-button-ui.webp" />
+<ZoomableImage src="/docs/images/get-started/upgrade/upgrade-button-ui.webp" alt="Upgrade Button Ui" />
 
 Click the upgrade button to start the update process.
 
 ### Set Update Frequency
 You can also choose how often Coolify checks for updates by adjusting the settings (daily, weekly, etc.).
 
-<ZoomableImage src="/docs/images/get-started/upgrade/change-frequency.webp" />
+<ZoomableImage src="/docs/images/get-started/upgrade/change-frequency.webp" alt="Change Frequency" />
 
 ::: info Tip:
 This method is perfect if you want to review update details or test the upgrade before applying it.

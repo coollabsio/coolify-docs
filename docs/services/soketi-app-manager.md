@@ -1,9 +1,9 @@
 ---
 title: "Soketi App Manager"
-description: "Here you can find the documentation for hosting Soketi App Manager with Coolify."
+description: "Manage Soketi apps on Coolify with application configuration, authentication, and WebSocket server administration interface."
 ---
 
-<ZoomableImage src="/docs/images/services/soketi-app-manager-logo.webp" />
+<ZoomableImage src="/docs/images/services/soketi-app-manager-logo.webp" alt="Soketi App Manager Logo logo" />
 
 
 ## What is Soketi App Manager ?
@@ -13,9 +13,9 @@ You can effortlessly manage multiple websocket applications, streamlining your a
 
 
 ## Screenshots
-<ZoomableImage src="/docs/images/services/soketi-app-manager-screenshots-1.webp" />
+<ZoomableImage src="/docs/images/services/soketi-app-manager-screenshots-1.webp" alt="Soketi App Manager interface screenshot" />
 <br />
-<ZoomableImage src="/docs/images/services/soketi-app-manager-screenshots-2.webp" />
+<ZoomableImage src="/docs/images/services/soketi-app-manager-screenshots-2.webp" alt="Soketi App Manager interface screenshot" />
 
 ## Links
 

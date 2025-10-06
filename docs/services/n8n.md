@@ -1,6 +1,6 @@
 ---
 title: "N8N"
-description: "Here you can find the documentation for hosting N8N with Coolify."
+description: "Build workflows on Coolify with n8n automation platform connecting 400+ apps, APIs, databases for no-code/low-code task automation and integration."
 ---
 
 

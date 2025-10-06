@@ -1,6 +1,6 @@
 ---
 title: "Oracle Cloud"
-description: "A guide to use Oracle Cloud servers in Coolify"
+description: "Configure Oracle Cloud free ARM servers with Coolify including root user setup, SSH configuration, firewall rules, and non-root user permissions."
 ---
 
 # Oracle Cloud

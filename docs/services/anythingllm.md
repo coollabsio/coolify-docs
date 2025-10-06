@@ -1,5 +1,6 @@
 ---
 title: AnythingLLM
+description: "Run AnythingLLM on Coolify for all-in-one AI application with RAG, AI agents, document chat, and multi-model support without infrastructure hassle."
 # tabs:
 #   - title: Overview & Requirements
 #     content:
@@ -42,7 +43,7 @@ title: AnythingLLM
 #     content:
 #       items:
 #         - code: Official Website
-#           description: https://www.activepieces.com?utm_source=coolify.io
+#           description: "Run AnythingLLM on Coolify for all-in-one AI application with RAG, AI agents, document chat, and multi-model support without infrastructure hassle."
 #         - code: Official Documentation
 #           description: https://www.activepieces.com/docs?utm_source=coolify.io
 #         - code: GitHub Repository

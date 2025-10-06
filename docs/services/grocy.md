@@ -1,6 +1,6 @@
 ---
 title: "Grocy"
-description: "Here you can find the documentation for hosting Grocy with Coolify."
+description: "Manage household on Coolify with Grocy for grocery inventory, recipe management, chore tracking, and smart shopping lists for home organization."
 ---
 
 

@@ -1,11 +1,11 @@
 ---
 title: Denokv
-description: Here you can find the documentation for hosting Denokv with Coolify.
+description: "Run Deno KV database on Coolify for edge-compatible key-value store with ACID transactions, real-time sync, and serverless architecture support."
 ---
 
 # Denokv
 
-<ZoomableImage src="/docs/images/services/deno-looking-up.svg" />
+<ZoomableImage src="/docs/images/services/deno-looking-up.svg" alt="Denokv dashboard" />
 
 ## What is Denokv
 

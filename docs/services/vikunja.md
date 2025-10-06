@@ -1,6 +1,6 @@
 ---
 title: "Vikunja"
-description: "Here you can find the documentation for hosting Vikunja with Coolify."
+description: "Manage tasks on Coolify with Vikunja for to-do lists, kanban boards, gantt charts, calendars, and team project organization."
 ---
 
 ![Vikunja](https://vikunja.cloud/images/vikunja-logo.svg)

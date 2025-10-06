@@ -2,7 +2,9 @@
 FROM oven/bun:1.1.44-alpine AS builder
 
 ARG VITE_ANALYTICS_DOMAIN=coolify.io/docs
+ARG VITE_SITE_URL=https://coolify.io/docs/
 ENV VITE_ANALYTICS_DOMAIN=${VITE_ANALYTICS_DOMAIN}
+ENV VITE_SITE_URL=${VITE_SITE_URL}
 RUN apk add --no-cache nodejs npm
 
 # Set working directory and copy necessary files

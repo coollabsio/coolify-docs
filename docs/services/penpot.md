@@ -1,6 +1,6 @@
 ---
 title: "Penpot"
-description: "Here you can find the documentation for hosting Penpot with Coolify."
+description: "Design on Coolify with Penpot open-source Figma alternative for prototyping, collaboration, SVG-based design, and web-based UI/UX workflows."
 ---
 
 

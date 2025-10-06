@@ -1,6 +1,6 @@
 ---
 title: "Emby Stat"
-description: "Here you can find the documentation for hosting Emby Stat with Coolify."
+description: "Track Emby server usage on Coolify with EmbyStat featuring media statistics, playback analytics, user metrics, and library health monitoring."
 ---
 
 

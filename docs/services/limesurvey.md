@@ -1,9 +1,9 @@
 ---
 title: "LimeSurvey"
-description: "Here you can find the documentation for hosting LimeSurvey with Coolify."
+description: "Create surveys on Coolify with LimeSurvey featuring questionnaire design, data collection, analysis, and professional survey research tools."
 ---
 
-<ZoomableImage src="/docs/images/services/limesurvey-logo.webp" />
+<ZoomableImage src="/docs/images/services/limesurvey-logo.webp" alt="Limesurvey Logo logo" />
 
 
 ## What is LimeSurvey?

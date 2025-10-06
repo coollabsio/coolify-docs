@@ -1,11 +1,11 @@
 ---
 title: Teable
-description: Here you can find the documentation for hosting Teable with Coolify.
+description: "Build databases on Coolify with Teable as Airtable alternative combining spreadsheet interface with database power and automation workflows."
 ---
 
 # Teable
 
-<ZoomableImage src="/docs/images/services/teable.png" />
+<ZoomableImage src="/docs/images/services/teable.png" alt="Teable dashboard" />
 
 ## What is Teable
 

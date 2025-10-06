@@ -1,6 +1,6 @@
 ---
 title: "Glance"
-description: "Here you can find the documentation for hosting Glance with Coolify."
+description: "Host Glance dashboard on Coolify for quick server overview, system monitoring, service status, and at-a-glance infrastructure health display."
 ---
 
 # Glance

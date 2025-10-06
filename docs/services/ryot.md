@@ -1,9 +1,9 @@
 ---
 title: "Ryot"
-description: "Here you can find the documentation for hosting Ryot with Coolify."
+description: "Track media on Coolify with Ryot for movies, TV shows, books, video games, exercises with ratings, reviews, and personal media database."
 ---
 
-<ZoomableImage src="/docs/images/services/ryot-logo.webp" />
+<ZoomableImage src="/docs/images/services/ryot-logo.webp" alt="Ryot Logo logo" />
 
 
 ## What is Ryot?

@@ -1,11 +1,11 @@
 ---
 title: Joplin
-description: Here you can find the documentation for hosting Joplin with Coolify.
+description: "Deploy Joplin notes on Coolify for markdown note-taking, to-do lists, synchronization, end-to-end encryption, and cross-platform organization."
 ---
 
 # Joplin
 
-<ZoomableImage src="/docs/images/services/joplin.png" />
+<ZoomableImage src="/docs/images/services/joplin.png" alt="Joplin dashboard" />
 
 ## What is Joplin
 

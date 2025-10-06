@@ -1,6 +1,6 @@
 ---
 title: "Change Detection"
-description: "Here you can find the documentation for hosting Change Detection with Coolify."
+description: "Monitor website changes on Coolify with Change Detection featuring automatic tracking, alerts, visual diffs, and API endpoint monitoring."
 ---
 
 

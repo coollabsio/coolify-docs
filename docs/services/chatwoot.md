@@ -1,6 +1,6 @@
 ---
 title: "Chatwoot"
-description: "Here you can find the documentation for hosting Chatwoot with Coolify."
+description: "Deploy Chatwoot customer support on Coolify with omnichannel inbox, live chat widgets, automation rules, and team collaboration for helpdesk."
 ---
 
 ![Chatwoot](https://user-images.githubusercontent.com/2246121/282256632-87f6a01b-6467-4e0e-8a93-7bbf66d03a17.png#gh-dark-mode-only)

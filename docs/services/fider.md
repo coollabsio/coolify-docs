@@ -1,6 +1,6 @@
 ---
 title: "Fider"
-description: "Here you can find the documentation for hosting Fider with Coolify."
+description: "Deploy Fider feedback platform on Coolify for product ideas, feature voting, roadmap planning, and customer feedback collection for product teams."
 ---
 
 

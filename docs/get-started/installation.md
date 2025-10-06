@@ -3,7 +3,7 @@ title: Installation
 outline: 2
 ---
 
-<ZoomableImage src="/docs/images/get-started/installation-banner.webp" />
+<ZoomableImage src="/docs/images/get-started/installation-banner.webp" alt="Coolify installation banner" />
 
 <br />
 

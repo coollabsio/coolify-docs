@@ -1,11 +1,11 @@
 ---
 title: Bitcoin Core
-description: Here you can find the documentation for hosting Bitcoin Core with Coolify.
+description: "Run Bitcoin Core full node on Coolify for decentralized cryptocurrency network participation, wallet management, and blockchain validation."
 ---
 
 # Bitcoin Core
 
-<ZoomableImage src="/docs/images/services/bitcoin.svg" />
+<ZoomableImage src="/docs/images/services/bitcoin.svg" alt="Bitcoin Core dashboard" />
 
 ## What is Bitcoin Core
 

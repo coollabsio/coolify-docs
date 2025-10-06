@@ -1,11 +1,11 @@
 ---
 title: Dolibarr
-description: Here you can find the documentation for hosting Dolibarr with Coolify.
+description: "Run Dolibarr ERP/CRM on Coolify with invoicing, inventory, projects, HR management, and business process automation for small to medium enterprises."
 ---
 
 # Dolibarr
 
-<ZoomableImage src="/docs/images/services/dolibarr.png" />
+<ZoomableImage src="/docs/images/services/dolibarr.png" alt="Dolibarr dashboard" />
 
 ## What is Dolibarr
 

@@ -50,19 +50,19 @@ Skip to [Step 6 ↗](#_6-configure-your-project-on-coolify) if your server is al
 Follow these steps to prepare your Hetzner server:
 
 1. **Create a New Server:** Log into [Hetzner Cloud Dashboard ↗](https://console.hetzner.cloud/) and create a new server.
-  <ZoomableImage src="/docs/images/resources/integrations/1.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/1.webp" alt="Coolify dashboard screenshot" />
 
 1. **Choose Your Region:** Select the region that best suits your needs.
-  <ZoomableImage src="/docs/images/resources/integrations/2.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/2.webp" alt="Coolify dashboard screenshot" />
 
 1. **Select Ubuntu:** Pick an Ubuntu image (make sure it’s a Docker-supported version, check the [Docker Ubuntu requirements](https://docs.docker.com/engine/install/ubuntu/#os-requirements)).
-  <ZoomableImage src="/docs/images/resources/integrations/3.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/3.webp" alt="Coolify dashboard screenshot" />
 
 1. **Configure Resources:** A shared CPU with at least 2 GB RAM is recommended.
-  <ZoomableImage src="/docs/images/resources/integrations/4.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/4.webp" alt="Coolify dashboard screenshot" />
 
 1. **Allocate an IPv4 Address:** Make sure your server has a dedicated IPv4 address.
-  <ZoomableImage src="/docs/images/resources/integrations/5.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/5.webp" alt="Coolify dashboard screenshot" />
 
 1. **Finalize Setup:** Click **Create and Buy Now** and wait until your server is provisioned.
 
@@ -76,20 +76,20 @@ If your server is already connected to Coolify, skip to the [next step ↗](#_6-
 :::
 
 1. **Add Private Key:** Login to your Coolify account (or create one if you’re new) and Add a new private key
-  <ZoomableImage src="/docs/images/resources/integrations/6.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/6.webp" alt="Coolify dashboard screenshot" />
   <br />
-  <ZoomableImage src="/docs/images/resources/integrations/7.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/7.webp" alt="Coolify dashboard screenshot" />
 
 2. **Add a Server:** Navigate to the **Servers** tab and add a new server by entering your Hetzner server’s IPv4 address.
-  <ZoomableImage src="/docs/images/resources/integrations/8.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/8.webp" alt="Coolify dashboard screenshot" />
   <br />
-  <ZoomableImage src="/docs/images/resources/integrations/9.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/9.webp" alt="Coolify dashboard screenshot" />
 
 3. **Validate Server:** Click **Validate Server & Install Docker Engine**. Coolify will automatically install all necessary components on your server.
-  <ZoomableImage src="/docs/images/resources/integrations/10.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/10.webp" alt="Coolify dashboard screenshot" />
 
 4. **Check Status:** Once finished, you should see a green **Proxy Running** status indicating everything is set up.
-  <ZoomableImage src="/docs/images/resources/integrations/11.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/11.webp" alt="Coolify dashboard screenshot" />
 
 
 ## 6. Configure Your Project on Coolify
@@ -98,21 +98,21 @@ If your server is already connected to Coolify, skip to the [next step ↗](#_6-
 2. **Add a Resource:** Add a new resource, selecting your GitHub repository as the source.
 
 3. **Connect Your Repository:** Use the GitHub app integration to grant access to your repository.
-  <ZoomableImage src="/docs/images/resources/integrations/12.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/12.webp" alt="Coolify dashboard screenshot" />
 
 4. **Select Build Pack:** Change the Build Pack to **Dockerfile** and click on continue button.
-  <ZoomableImage src="/docs/images/resources/integrations/13.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/13.webp" alt="Coolify dashboard screenshot" />
 
 5. **Configure Domains & Deploy:** Enter your domain in the domains field and Click **Deploy** and wait as Coolify builds and deploys your project. 
-  <ZoomableImage src="/docs/images/resources/integrations/14.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/14.webp" alt="Coolify dashboard screenshot" />
 
 6. **Successful Deployment:** When deployment is complete, you’ll see a “Deployment is Finished” message.
 
 7. **Access Your Site:** Use the **links** button at the top of the project dashboard to visit your live site.
-  <ZoomableImage src="/docs/images/resources/integrations/15.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/15.webp" alt="Coolify dashboard screenshot" />
 
 8. **Optional – Third-Party Domains:** If your project loads images from external sources, add those domains as a comma-separated list under the environment variable `DOMAINS`. (make sure to restart the application after adding the variable)
-  <ZoomableImage src="/docs/images/resources/integrations/16.webp" />
+  <ZoomableImage src="/docs/images/resources/integrations/16.webp" alt="Coolify dashboard screenshot" />
 
 
 ## 7. Update Your Webstudio Site

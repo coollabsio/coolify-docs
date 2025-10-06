@@ -2,7 +2,7 @@
 title: Usage
 ---
 
-<ZoomableImage src="/docs/images/get-started/usage-banner.webp" />
+<ZoomableImage src="/docs/images/get-started/usage-banner.webp" alt="Coolify usage banner" />
 
 <br />
 

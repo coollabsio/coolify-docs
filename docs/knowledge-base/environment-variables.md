@@ -1,6 +1,6 @@
 ---
 title: "Environment Variables"
-description: "A guide how to use environment variables in Coolify."
+description: "Manage build-time and runtime environment variables in Coolify with team, project, and environment-based shared variables plus predefined system values."
 ---
 
 # Environment Variables

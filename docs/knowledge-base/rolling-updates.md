@@ -1,5 +1,6 @@
 ---
 title: Rolling updates
+description: "Deploy zero-downtime application updates with Coolify rolling updates using health checks, default container naming, and graceful container transitions."
 ---
 
 # Coolify Rolling Updates

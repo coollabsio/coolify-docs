@@ -1,6 +1,6 @@
 ---
 title: "Docuseal"
-description: "Here you can find the documentation for hosting Docuseal with Coolify."
+description: "Host DocuSeal on Coolify for PDF form filling, e-signatures, document workflows, and digital signature collection for business process automation."
 ---
 
 
@@ -10,7 +10,7 @@ Document Signing for Everyone free forever for individuals, extensible for busin
 
 ## Screenshots
 
-<ZoomableImage src="/docs/images/services/docuseal.webp" />
+<ZoomableImage src="/docs/images/services/docuseal.webp" alt="Docuseal dashboard" />
 
 
 ## Links

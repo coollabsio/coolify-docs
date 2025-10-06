@@ -1,6 +1,6 @@
 ---
 title: "Expired GitHub Personal Access Token (PAT)"
-description: "Here are some common issues for fixing expired GitHub Personal Access Token (PAT)."
+description: "Fix GitHub Container Registry authentication errors by logging out of ghcr.io or renewing expired GitHub Personal Access Tokens for Docker deployments."
 ---
 # Expired GitHub Personal Access Token (PAT)
 

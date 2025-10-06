@@ -1,11 +1,11 @@
 ---
 title: "Elasticsearch"
-description: "Here you can find the documentation for hosting Elasticsearch with Coolify."
+description: "Deploy Elasticsearch on Coolify for distributed search engine, log analytics, full-text search, and real-time data indexing at scale."
 ---
 
 # Elasticsearch
 
-<ZoomableImage src="/docs/images/services/elasticsearch.svg" />
+<ZoomableImage src="/docs/images/services/elasticsearch.svg" alt="Elasticsearch dashboard" />
 
 ## What is Elasticsearch?
 

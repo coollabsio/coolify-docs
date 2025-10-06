@@ -1,9 +1,9 @@
 ---
 title: "Radarr"
-description: "Here you can find the documentation for hosting Radarr with Coolify."
+description: "Automate movies on Coolify with Radarr for torrent/usenet downloads, quality management, metadata, and integration with download clients."
 ---
 
-<ZoomableImage src="/docs/images/services/radarr.svg" />
+<ZoomableImage src="/docs/images/services/radarr.svg" alt="Radarr dashboard" />
 
 ## What is Radarr?
 
@@ -11,7 +11,7 @@ See all your upcoming movies in one convenient location. Manual Search Find all 
 
 ## Screenshots
 
-<ZoomableImage src="/docs/images/services/radarr.webp" />
+<ZoomableImage src="/docs/images/services/radarr.webp" alt="Radarr dashboard" />
 
 ## Links
 

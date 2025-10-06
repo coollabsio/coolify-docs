@@ -1,6 +1,6 @@
 ---
 title: "Emby"
-description: "Here you can find the documentation for hosting Emby with Coolify."
+description: "Host Emby media server on Coolify for streaming movies, TV shows, music, and photos with transcoding, mobile apps, and DVR capabilities."
 ---
 
 

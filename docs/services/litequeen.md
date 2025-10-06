@@ -1,11 +1,11 @@
 ---
 title: Litequeen
-description: Here you can find the documentation for hosting Litequeen with Coolify.
+description: "Host LiteQueen lightweight CMS on Coolify for fast content management, blogging, and simple website administration with minimal resource usage."
 ---
 
 # Litequeen
 
-<ZoomableImage src="/docs/images/services/litequeen.svg" />
+<ZoomableImage src="/docs/images/services/litequeen.svg" alt="Litequeen dashboard" />
 
 ## What is Litequeen
 

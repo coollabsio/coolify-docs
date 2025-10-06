@@ -1,11 +1,11 @@
 ---
 title: "PingvinShare"
-description: "Here you can find the documentation for hosting PingvinShare with Coolify."
+description: "Share files on Coolify with PingvinShare for temporary file sharing, expiring links, password protection, and self-hosted file transfer."
 ---
 
 # PingvinShare
 
-<ZoomableImage src="/docs/images/services/pingvinshare.svg" />
+<ZoomableImage src="/docs/images/services/pingvinshare.svg" alt="Pingvinshare dashboard" />
 
 ## What is PingvinShare?
 

@@ -1,9 +1,9 @@
 ---
 title: "SearXNG"
-description: "Here you can find the documentation for hosting SearXNG with Coolify."
+description: "Search privately on Coolify with SearXNG metasearch engine aggregating results from 70+ sources without tracking or personalization."
 ---
 
-<ZoomableImage src="/docs/images/services/searxng.svg" />
+<ZoomableImage src="/docs/images/services/searxng.svg" alt="Searxng dashboard" />
 
 ## What is SearXNG?
 

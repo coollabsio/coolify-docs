@@ -1,11 +1,11 @@
 ---
 title: "Pi-hole"
-description: "Here you can find the documentation for hosting Pi-hole with Coolify."
+description: "Block ads on Coolify with Pi-hole network-wide ad blocking, DNS filtering, tracking protection, and dashboard for home network privacy."
 ---
 
 # Pi-hole
 
-<ZoomableImage src="/docs/images/services/pihole.svg" />
+<ZoomableImage src="/docs/images/services/pihole.svg" alt="Pi Hole dashboard" />
 
 ## What is Pi-hole?
 

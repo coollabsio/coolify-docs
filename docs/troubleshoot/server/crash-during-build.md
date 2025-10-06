@@ -1,5 +1,6 @@
 ---
 title: Server Crash During Build
+description: Fix server crashes during Coolify builds by offloading to external build servers, using GitHub Actions, or upgrading server resources for Docker image builds.
 ---
 
 

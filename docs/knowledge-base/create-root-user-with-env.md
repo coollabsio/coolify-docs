@@ -1,6 +1,6 @@
 ---
 title: "Create Root User with Environment Variables"
-description: "How to create a root user during installation using environment variables"
+description: "Create Coolify root user during installation with environment variables including email validation, username requirements, and strong password policies."
 ---
 
 # Create Root User with Environment Variables

@@ -1,6 +1,6 @@
 ---
 title: "Kuzzle"
-description: "Here you can find the documentation for hosting Kuzzle with Coolify."
+description: "Run Kuzzle backend on Coolify for real-time APIs, authentication, data storage, geofencing, and IoT platform with pub/sub messaging."
 ---
 
 

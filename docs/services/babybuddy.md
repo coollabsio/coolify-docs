@@ -1,6 +1,6 @@
 ---
 title: "BabyBuddy"
-description: "Here you can find the documentation for hosting BabyBuddy with Coolify."
+description: "Track baby care on Coolify with Baby Buddy featuring feeding, diaper changes, sleep schedules, growth charts, and caregiver coordination."
 ---
 
 

@@ -53,7 +53,7 @@ http://localhost:5173/docs/
 - **Usage:**  
   Use the Zoomable image component on the docs to attach your images
   ```vue
-  <ZoomableImage src="path-to-the-image.webp" />
+  <ZoomableImage src="path-to-the-image.webp" alt="Path To The Image" />
   ```
 
 

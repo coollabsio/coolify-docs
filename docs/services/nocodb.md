@@ -1,20 +1,20 @@
 ---
 title: "NocoDB"
-description: "Here you can find the documentation for hosting NocoDB with Coolify."
+description: "Deploy NoCoDB on Coolify as Airtable alternative turning databases into smart spreadsheets with REST APIs, forms, and no-code interface."
 ---
 
 # What is NocoDB?
 
-<ZoomableImage src="/docs/images/services/nocodb1.webp" />
+<ZoomableImage src="/docs/images/services/nocodb1.webp" alt="Nocodb dashboard" />
 
 NocoDB is an open source Airtable alternative. Turns any MySQL, PostgreSQL, SQL Server, SQLite & MariaDB into a smart-spreadsheet.
 
 ## Screenshots
 
-<ZoomableImage src="/docs/images/services/nocodb2.webp" />
-<ZoomableImage src="/docs/images/services/nocodb3.webp" />
-<ZoomableImage src="/docs/images/services/nocodb4.webp" />
-<ZoomableImage src="/docs/images/services/nocodb5.webp" />
+<ZoomableImage src="/docs/images/services/nocodb2.webp" alt="Nocodb dashboard" />
+<ZoomableImage src="/docs/images/services/nocodb3.webp" alt="Nocodb dashboard" />
+<ZoomableImage src="/docs/images/services/nocodb4.webp" alt="Nocodb dashboard" />
+<ZoomableImage src="/docs/images/services/nocodb5.webp" alt="Nocodb dashboard" />
 
 ## Links
 

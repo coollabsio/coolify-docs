@@ -1,6 +1,6 @@
 ---
 title: "GitLab"
-description: "Here you can find the documentation for hosting GitLab with Coolify."
+description: "Deploy GitLab on Coolify for complete DevOps platform with Git repos, CI/CD pipelines, issue tracking, and container registry integration."
 ---
 
 

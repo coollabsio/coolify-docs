@@ -1,6 +1,6 @@
 ---
 title: "Chaskiq"
-description: "Here you can find the documentation for hosting Chaskiq with Coolify."
+description: "Run Chaskiq customer engagement platform on Coolify with live chat, email campaigns, knowledge base, and conversational marketing automation."
 ---
 
 

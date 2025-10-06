@@ -1,6 +1,6 @@
 ---
 title: "Umami"
-description: "Here you can find the documentation for hosting Umami with Coolify."
+description: "Track analytics on Coolify with Umami for privacy-focused website analytics, visitor insights, and cookieless web traffic monitoring."
 ---
 
 ![Umami](https://raw.githubusercontent.com/umami-software/umami/refs/heads/master/public/mstile-150x150.png)

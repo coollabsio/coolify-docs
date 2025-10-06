@@ -1,11 +1,11 @@
 ---
 title: Mautic5
-description: Here you can find the documentation for hosting Mautic5 with Coolify.
+description: "Host Mautic marketing automation on Coolify for email campaigns, lead nurturing, contact management, and open-source marketing workflows."
 ---
 
 # Mautic5
 
-<ZoomableImage src="/docs/images/services/mautic.svg" />
+<ZoomableImage src="/docs/images/services/mautic.svg" alt="Mautic5 dashboard" />
 
 ## What is Mautic5
 

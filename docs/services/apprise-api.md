@@ -1,6 +1,6 @@
 ---
 title: "Apprise API"
-description: "Here you can find the documentation for hosting Apprise API with Coolify."
+description: "Host Apprise API on Coolify to send push notifications to 100+ services via unified REST API for alerts, monitoring, and messaging workflows."
 ---
 
 # What is Apprise API?

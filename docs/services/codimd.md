@@ -1,9 +1,9 @@
 ---
 title: "CodiMD"
-description: "Here you can find the documentation for hosting CodiMD with Coolify."
+description: "Deploy CodiMD collaborative markdown editor on Coolify with real-time collaboration, presentations, diagrams, and knowledge sharing for teams."
 ---
 
-<ZoomableImage src="/docs/images/services/codimd-logo.webp" />
+<ZoomableImage src="/docs/images/services/codimd-logo.webp" alt="Codimd Logo logo" />
 
 
 ## What is CodiMD?
@@ -11,7 +11,7 @@ CodiMD lets you collaborate in real-time with markdown. Built on HackMD source c
 
 
 ## Screenshots
-<ZoomableImage src="/docs/images/services/codimd-screenshots.webp" />
+<ZoomableImage src="/docs/images/services/codimd-screenshots.webp" alt="Codimd interface screenshot" />
 
 
 ## Links

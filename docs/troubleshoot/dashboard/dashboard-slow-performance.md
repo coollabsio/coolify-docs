@@ -1,5 +1,6 @@
 ---
 title: Slow Coolify Dashboard Performance
+description: Resolve slow Coolify dashboard loading by disabling Cloudflare Rocket Loader, checking server location, and optimizing proxy settings for faster performance.
 ---
 
 
@@ -31,7 +32,7 @@ First, ask yourself: **Are you using a domain whose DNS is managed by Cloudflare
 If the dashboard is fast via your server IP but slow through your custom domain, try this:
 - **Step:** Log into your [Cloudflare dashboard ↗](https://dash.cloudflare.com/).
  
-    <ZoomableImage src="/docs/images/troubleshoot/dashboard/dashboard-slow-performance/rocket-loader.webp" />
+    <ZoomableImage src="/docs/images/troubleshoot/dashboard/dashboard-slow-performance/rocket-loader.webp" alt="Rocket Loader error example" />
 - **Action:** 
   - Go to **Speed** on the sidebar.
   - Then navigate to **Optimization** and click on **Content Optimization**.

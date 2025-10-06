@@ -1,5 +1,6 @@
 ---
 title: "Access Single Resource via Cloudflare Tunnels"
+description: "Securely access individual Coolify applications through Cloudflare Tunnels with port mapping, domain configuration, and multi-resource tunneling support."
 ---
 
 # Access Single Resource via Cloudflare Tunnels
@@ -32,7 +33,7 @@ To follow this guide, you'll need:
 
 A simple high-level overview diagram to give you a visual idea of how this works:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/high-level-diagram.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/high-level-diagram.webp" alt="High Level Diagram configuration" />
 
 ---
 
@@ -60,7 +61,7 @@ The following data is used as an example in this guide. Please replace it with y
 
 To setup your app for tunneling, follow these steps:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/1.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/1.webp" alt="Screenshot of Single Resource" />
 
 1. Remove all domains from the **Domains** field.
 2. Set the correct port in **Ports Exposed** (the port your app uses).
@@ -71,7 +72,7 @@ To setup your app for tunneling, follow these steps:
 
 To create a Cloudflare Tunnel, first log in to your Cloudflare account and go to the [Zero Trust ↗](https://one.dash.cloudflare.com/) page.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/2.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/2.webp" alt="Screenshot of Single Resource" />
 
 1. On the Zero Trust page, go to **Networks** in the sidebar.
 2. Click on **Tunnels**
@@ -79,25 +80,25 @@ To create a Cloudflare Tunnel, first log in to your Cloudflare account and go to
 
 You will be prompted to choose a tunnel type. Click the **Select Cloudflared** button.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/3.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/3.webp" alt="Screenshot of Single Resource" />
 
 You will be prompted to enter a tunnel name. Choose a name that you prefer.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/4.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/4.webp" alt="Screenshot of Single Resource" />
 
 Next you will see the configuration page with multiple options to install cloudflared.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/5.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/5.webp" alt="Screenshot of Single Resource" />
 
 Copy the install command, which contains the token for your tunnel (token starts with "eyJ"). Make sure to save only the token, removing the command part before it, and store it in a safe place, as we need it later.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/6.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/6.webp" alt="Screenshot of Single Resource" />
 
 Scroll down until you see the **Next** button, then click it.
 
 Then, you will be prompted to add a hostname.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/7.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/7.webp" alt="Screenshot of Single Resource" />
 
 1. **Subdomain** - (Optional) You can make your app/resource accessible on any subdomain/domain. For this guide, we are not using a subdomain.
 2. **Domain** - Choose the domain you want to use for the tunnel.
@@ -110,15 +111,15 @@ Then, you will be prompted to add a hostname.
 
 To set up the tunnel on Coolify, follow these steps:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/8.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/8.webp" alt="Screenshot of Single Resource" />
 
 Go to your project on Coolify dashboard and click the **+ New** button to create a new resource.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/9.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/9.webp" alt="Screenshot of Single Resource" />
 
 You will see many options to deploy a new app. Search for Cloudflared and click on it.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/10.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/10.webp" alt="Screenshot of Single Resource" />
 
 Go to the **Environment Variables** page, enter your tunnel token, and deploy the Cloudflared app. This token was copied in [Step 2](#_2-create-a-cloudflare-tunnel)
 
@@ -141,7 +142,7 @@ Tunneling multiple single resources is straightforward, but tunneling Coolify it
 
 If you want to expose different apps individually, you can follow our [Tunnel All Resources](/knowledge-base/cloudflare/tunnels/all-resource), or take an alternate approach:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/11.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/11.webp" alt="Screenshot of Single Resource" />
 
 1. Follow [Step 1](#_1-setup-your-app-for-tunneling) for your new resource.
 2. Create a new public hostname on Cloudflare Tunnel as described in [Step 2](#_2-create-a-cloudflare-tunnel).
@@ -156,7 +157,7 @@ Tunneling Coolify itself to make it accessible over a domain requires a bit more
 
 Follow [Step 2](#_2-create-a-cloudflare-tunnel) from the main guide to create public hostnames for each service Coolify exposes. Use the following mapping:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/14.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/14.webp" alt="Screenshot of Single Resource" />
 
 - **Hostnames**:
 
@@ -221,11 +222,11 @@ However, if a DNS record for the hostname already exists, Cloudflare won’t cre
 
 In this case, your app won’t work. To fix this issue, follow the steps below:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/12.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/12.webp" alt="Screenshot of Single Resource" />
 
 First, copy your tunnel ID from the Tunnels page on the Cloudflare dashboard.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/13.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/13.webp" alt="Screenshot of Single Resource" />
 
 Create a new DNS record with the following details:
 

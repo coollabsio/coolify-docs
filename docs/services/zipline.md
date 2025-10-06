@@ -1,6 +1,6 @@
 ---
 title: "Zipline"
-description: "Here you can find the documentation for hosting Zipline with Coolify."
+description: "Share files on Coolify with Zipline for screenshot sharing, file uploads, URL shortening, and personal media hosting with embeds."
 ---
 
 
@@ -13,9 +13,9 @@ A ShareX/file upload server that is easy to use, packed with features, and with 
 
 ## Screenshots
 
-<ZoomableImage src="/docs/images/services/zipline1.webp" />
+<ZoomableImage src="/docs/images/services/zipline1.webp" alt="Zipline dashboard" />
 <br />
-<ZoomableImage src="/docs/images/services/zipline2.webp" />
+<ZoomableImage src="/docs/images/services/zipline2.webp" alt="Zipline dashboard" />
 
 ## Links
 

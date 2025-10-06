@@ -1,6 +1,6 @@
 ---
 title: "Vaultwarden"
-description: "Here you can find the documentation for hosting Vaultwarden with Coolify."
+description: "Store passwords on Coolify with Vaultwarden unofficial Bitwarden server for encrypted password vaults, 2FA, and credential management."
 ---
 
 ![Vaultwarden](https://raw.githubusercontent.com/dani-garcia/vaultwarden/040e2a7bb0f2cc5012d46ca99283cf21fa06ed1a/resources/vaultwarden-logo-white.svg)

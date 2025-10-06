@@ -1,11 +1,11 @@
 ---
 title: Wikijs
-description: Here you can find the documentation for hosting Wikijs with Coolify.
+description: "Deploy Wiki.js on Coolify for modern wiki with markdown, Git sync, powerful search, and beautiful documentation platform interface."
 ---
 
 # Wikijs
 
-<ZoomableImage src="/docs/images/services/wikijs.svg" />
+<ZoomableImage src="/docs/images/services/wikijs.svg" alt="Wikijs dashboard" />
 
 ## What is Wikijs
 

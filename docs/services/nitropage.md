@@ -1,9 +1,9 @@
 ---
 title: "Nitropage"
-description: "Here you can find the documentation for hosting Nitropage with Coolify."
+description: "Host NitroPage website builder on Coolify for drag-and-drop page creation, templates, and simple website development without coding skills."
 ---
 
-<ZoomableImage src="/docs/images/services/nitropage.svg" />
+<ZoomableImage src="/docs/images/services/nitropage.svg" alt="Nitropage dashboard" />
 
 
 ## What is Nitropage?

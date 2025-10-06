@@ -1,6 +1,6 @@
 ---
 title: "Integration"
-description: "A guide on how to use Bitbucket based repositories with Coolify."
+description: "Deploy public and private Bitbucket repositories with Coolify using deploy keys, SSH authentication, and automated webhook deployments for commits and merge requests."
 ---
 
 # Bitbucket Integration

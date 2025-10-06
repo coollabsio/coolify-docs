@@ -1,11 +1,11 @@
 ---
 title: Castopod
-description: Here you can find the documentation for hosting Castopod with Coolify.
+description: "Deploy Castopod podcast hosting on Coolify with RSS feeds, analytics, social features, and fediverse integration for independent podcasters."
 ---
 
 # Castopod
 
-<ZoomableImage src="/docs/images/services/castopod.svg" />
+<ZoomableImage src="/docs/images/services/castopod.svg" alt="Castopod dashboard" />
 
 ## What is Castopod
 

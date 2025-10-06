@@ -1,11 +1,11 @@
 ---
 title: "GoWa"
-description: "Here you can find the documentation for hosting GoWa with Coolify."
+description: "Host Gowa analytics on Coolify for website traffic tracking, visitor insights, and privacy-respecting web analytics without cookies or tracking."
 ---
 
 # GoWa
 
-<ZoomableImage src="/docs/images/services/gowa.svg" />
+<ZoomableImage src="/docs/images/services/gowa.svg" alt="Gowa dashboard" />
 
 ## What is GoWa?
 

@@ -1,11 +1,11 @@
 ---
 title: Joomla
-description: Here you can find the documentation for hosting Joomla with Coolify.
+description: "Host Joomla CMS on Coolify for flexible content management, extensions, multilingual sites, and powerful website building with PHP framework."
 ---
 
 # Joomla
 
-<ZoomableImage src="/docs/images/services/Joomla!-Logo.svg" />
+<ZoomableImage src="/docs/images/services/Joomla!-Logo.svg" alt="Joomla! Logo logo" />
 
 ## What is Joomla
 

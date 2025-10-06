@@ -1,6 +1,6 @@
 ---
 title: "PocketBase"
-description: "Here you can find the documentation for hosting PocketBase with Coolify."
+description: "Deploy PocketBase on Coolify for instant backend with database, authentication, file storage, real-time subscriptions in single executable."
 ---
 
 

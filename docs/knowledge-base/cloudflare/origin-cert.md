@@ -1,11 +1,11 @@
 ---
 title: Cloudflare Origin Certificate
-description: Coolify is a deployment tool designed to simplify the process of deploying and managing applications.
+description: "Secure Coolify deployments with 15-year Cloudflare Origin Certificates for TLS encryption without HTTP challenges or port 80 exposure requirements."
 ---
 
 # Cloudflare Origin Certificate
 <br />
-<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/header.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/header.webp" alt="Coolify header" />
 
 The Cloudflare Origin Certificate ensures secure communication between your server and Cloudflare when using Cloudflare’s Proxy, CDN, and security features. 
 
@@ -34,7 +34,7 @@ It encrypts the data exchanged between your server and Cloudflare, keeping it sa
 ## 1. Create the Origin Certificate
 To create your Cloudflare Origin Certificate, follow these steps:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/1.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/1.webp" alt="Screenshot of Origin Cert" />
 
 1. In your Cloudflare dashboard, go to **SSL/TLS**.
 2. Select **Origin Server**.
@@ -42,7 +42,7 @@ To create your Cloudflare Origin Certificate, follow these steps:
 
 You’ll be asked to choose a private key type, hostnames, and certificate validity.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/2.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/2.webp" alt="Screenshot of Origin Cert" />
 
 1. Choose **RSA (2048)** for the key type.
 2. Add the hostnames you want the certificate to cover.
@@ -62,7 +62,7 @@ You’ll be asked to choose a private key type, hostnames, and certificate valid
 
 Your certificate will now be generated.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/3.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/3.webp" alt="Screenshot of Origin Cert" />
 
 1. Choose **PEM** as the key format.
 2. Copy your **Certificate**.
@@ -133,7 +133,7 @@ Now the origin certificate is installed on your server.
 ## 3. Set Up DNS Records and TLS Encryption
 To make the origin certificate work, configure your DNS records, enable TLS, and set up HTTP to HTTPS redirects in Cloudflare:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/4.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/4.webp" alt="Screenshot of Origin Cert" />
 
 1. In Cloudflare, go to **DNS**.
 2. Select **Records**.
@@ -144,7 +144,7 @@ To make the origin certificate work, configure your DNS records, enable TLS, and
 
 Next, set up TLS encryption:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/5.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/5.webp" alt="Screenshot of Origin Cert" />
 
 1. Go to **SSL/TLS** in Cloudflare.
 2. Select **Overview**.
@@ -152,11 +152,11 @@ Next, set up TLS encryption:
 
 Choose **Full (Strict)** as the encryption mode.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/6.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/6.webp" alt="Screenshot of Origin Cert" />
 
 Finally, enable HTTP to HTTPS redirects:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/7.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/7.webp" alt="Screenshot of Origin Cert" />
 
 1. In Cloudflare, go to **SSL/TLS** 
 2. Select **Edge Certificates**.
@@ -166,7 +166,7 @@ Finally, enable HTTP to HTTPS redirects:
 ## 4. Configure Coolify to Use the Origin Certificate
 Now, in your Coolify dashboard:
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/8.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/8.webp" alt="Screenshot of Origin Cert" />
 
 1. Go to the **Server** section in the sidebar.
 2. Select **Proxy**.
@@ -175,7 +175,7 @@ Now, in your Coolify dashboard:
 
 You will now be prompted to enter the Dynamic Configuration.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/9.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/9.webp" alt="Screenshot of Origin Cert" />
 
 1. Choose a name for your configuration.
 2. Enter the following details in the configuration field:
@@ -219,7 +219,7 @@ This step is optional but recommended for cleaning up unnecessary settings while
 
 Since you’re using an Origin Certificate, you no longer need HTTP challenges or port 80 open.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/10.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/10.webp" alt="Screenshot of Origin Cert" />
 
 1. Go **Server** in the Coolify dashboard.
 2. Select **Proxy**.
@@ -279,7 +279,7 @@ services:
 
 Next, you'll need to remove a few labels from your Dockerfile-based deployments. Below is an **example** of how I set this up for my website.
 
-<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/11.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/cf-origin-cert/11.webp" alt="Screenshot of Origin Cert" />
 
 1. Go to **Projects** and select your project.
 2. Open **Configuration**

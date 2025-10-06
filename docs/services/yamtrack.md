@@ -1,9 +1,9 @@
 ---
 title: "Yamtrack"
-description: "Here you can find the documentation for hosting Yamtrack with Coolify."
+description: "Track time on Coolify with YAMTrack for project time logging, invoicing, reports, and freelancer productivity management tool."
 ---
 
-<ZoomableImage src="/docs/images/services/yamtrack-logo.webp" />
+<ZoomableImage src="/docs/images/services/yamtrack-logo.webp" alt="Yamtrack Logo logo" />
 
 
 ## What is Yamtrack?
@@ -11,9 +11,9 @@ Yamtrack is a self hosted media tracker for movies, tv shows, anime, manga, vide
 
 
 ## Screenshots
-<ZoomableImage src="/docs/images/services/yamtrack-screenshots-1.webp" />
+<ZoomableImage src="/docs/images/services/yamtrack-screenshots-1.webp" alt="Yamtrack interface screenshot" />
 <br />
-<ZoomableImage src="/docs/images/services/yamtrack-screenshots-2.webp" />
+<ZoomableImage src="/docs/images/services/yamtrack-screenshots-2.webp" alt="Yamtrack interface screenshot" />
 
 
 ## Links

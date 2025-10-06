@@ -1,11 +1,11 @@
 ---
 title: Foundryvtt
-description: Here you can find the documentation for hosting Foundryvtt with Coolify.
+description: "Host Foundry VTT on Coolify for virtual tabletop RPG gaming with dynamic lighting, fog of war, character sheets, and immersive D&D sessions."
 ---
 
 # Foundryvtt
 
-<ZoomableImage src="/docs/images/services/foundryvtt.png" />
+<ZoomableImage src="/docs/images/services/foundryvtt.png" alt="Foundryvtt dashboard" />
 
 ## What is Foundryvtt
 

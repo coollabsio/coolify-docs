@@ -1,6 +1,6 @@
 ---
 title: "Listmonk"
-description: "Here you can find the documentation for hosting Listmonk with Coolify."
+description: "Run Listmonk newsletter on Coolify for email campaigns, subscriber management, templates, analytics, and high-performance mailing lists."
 ---
 
 

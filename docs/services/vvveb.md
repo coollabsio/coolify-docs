@@ -1,11 +1,11 @@
 ---
 title: Vvveb
-description: Here you can find the documentation for hosting Vvveb with Coolify.
+description: "Build websites on Coolify with VvvebJs drag-and-drop website builder, templates, and visual web design tool without coding required."
 ---
 
 # Vvveb
 
-<ZoomableImage src="/docs/images/services/vvveb.png" />
+<ZoomableImage src="/docs/images/services/vvveb.png" alt="Vvveb dashboard" />
 
 ## What is Vvveb
 

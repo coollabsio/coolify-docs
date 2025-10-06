@@ -1,6 +1,6 @@
 ---
 title: "Formbricks"
-description: "Here you can find the documentation for hosting Formbricks with Coolify."
+description: "Run Formbricks surveys on Coolify for in-app feedback, NPS surveys, user research, and product experience analytics with no-code forms."
 ---
 
 ![Formbricks](https://github.com/formbricks/formbricks/assets/72809645/0086704f-bee7-4d38-9cc8-fa42ee59e004)

@@ -1,6 +1,6 @@
 ---
 title: "Syncthing"
-description: "Here you can find the documentation for hosting Syncthing with Coolify."
+description: "Sync files on Coolify with Syncthing for continuous file synchronization, P2P data replication, and decentralized backup across devices."
 ---
 
 

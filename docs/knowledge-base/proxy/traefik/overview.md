@@ -1,5 +1,6 @@
 ---
 title: "Traefik Overview"
+description: "Configure Traefik reverse proxy in Coolify with dynamic routing, SSL management, load balancing, and dashboard monitoring for containerized applications."
 ---
 
 # Traefik Proxy

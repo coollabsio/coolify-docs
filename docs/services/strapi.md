@@ -1,11 +1,11 @@
 ---
 title: Strapi
-description: Here you can find the documentation for hosting Strapi with Coolify.
+description: "Build APIs on Coolify with Strapi headless CMS for content management, REST/GraphQL APIs, admin panel, and customizable backend platform."
 ---
 
 # Strapi
 
-<ZoomableImage src="/docs/images/services/strapi.svg" />
+<ZoomableImage src="/docs/images/services/strapi.svg" alt="Strapi dashboard" />
 
 ## What is Strapi
 

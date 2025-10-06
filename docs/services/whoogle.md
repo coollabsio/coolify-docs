@@ -1,6 +1,6 @@
 ---
 title: "Whoogle"
-description: "Here you can find the documentation for hosting Whoogle with Coolify."
+description: "Search Google privately on Coolify with Whoogle for anonymous Google searches without tracking, ads, or AMP with self-hosted proxy."
 ---
 
 

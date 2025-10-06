@@ -1,11 +1,11 @@
 ---
 title: Documenso
-description: Here you can find the documentation for hosting Documenso with Coolify.
+description: "Run Documenso document signing on Coolify as open-source DocuSign alternative with e-signatures, PDF workflows, and digital signature management."
 ---
 
 # Documenso
 
-<ZoomableImage src="/docs/images/services/documenso.png" />
+<ZoomableImage src="/docs/images/services/documenso.png" alt="Documenso dashboard" />
 
 ## What is Documenso
 

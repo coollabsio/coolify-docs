@@ -1,11 +1,11 @@
 ---
 title: "Sequin"
-description: "Here you can find the documentation for hosting Sequin with Coolify."
+description: "Stream database changes on Coolify with Sequin for CDC, event-driven architecture, webhooks, and real-time data synchronization workflows."
 ---
 
 # Sequin
 
-<ZoomableImage src="/docs/images/services/sequin.svg" />
+<ZoomableImage src="/docs/images/services/sequin.svg" alt="Sequin dashboard" />
 
 ## What is Sequin?
 

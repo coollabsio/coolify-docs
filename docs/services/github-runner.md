@@ -1,11 +1,11 @@
 ---
 title: "GitHub Runner"
-description: "Here you can find the documentation for hosting GitHub Runner with Coolify."
+description: "Run self-hosted GitHub Actions runner on Coolify for CI/CD workflows, private infrastructure builds, and automated deployment pipelines."
 ---
 
 # GitHub Runner
 
-<ZoomableImage src="/docs/images/services/github-runner.png" />
+<ZoomableImage src="/docs/images/services/github-runner.png" alt="Github Runner dashboard" />
 
 ## What is GitHub Runner?
 

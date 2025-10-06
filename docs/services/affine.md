@@ -1,9 +1,9 @@
 ---
 title: "Affine"
-description: "Here you can find the documentation for hosting Affine with Coolify."
+description: "Deploy AFFiNE workspace on Coolify combining docs, whiteboards, and databases for seamless collaboration and creative project management."
 ---
 
-<ZoomableImage src="/docs/images/services/affine-logo.webp" />
+<ZoomableImage src="/docs/images/services/affine-logo.webp" alt="Affine Logo logo" />
 
 
 ## What is Affine?
@@ -13,7 +13,7 @@ Get more things done, your creativity isn’t monotone.
 
 
 ## Screenshots
-<ZoomableImage src="/docs/images/services/affine-screenshots.gif" />
+<ZoomableImage src="/docs/images/services/affine-screenshots.gif" alt="Affine interface screenshot" />
 
 
 ## Links

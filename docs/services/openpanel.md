@@ -1,11 +1,11 @@
 ---
 title: "OpenPanel"
-description: "Here you can find the documentation for hosting OpenPanel with Coolify."
+description: "Host OpenPanel analytics on Coolify for privacy-focused web analytics, event tracking, user insights without cookies or data collection."
 ---
 
 # OpenPanel
 
-<ZoomableImage src="/docs/images/services/openpanel.svg" />
+<ZoomableImage src="/docs/images/services/openpanel.svg" alt="Openpanel dashboard" />
 
 ## What is OpenPanel?
 

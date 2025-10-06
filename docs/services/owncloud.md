@@ -1,11 +1,11 @@
 ---
 title: Owncloud
-description: Here you can find the documentation for hosting Owncloud with Coolify.
+description: "Run ownCloud on Coolify for enterprise file sync, sharing, collaboration, encryption, and self-hosted cloud storage with desktop clients."
 ---
 
 # Owncloud
 
-<ZoomableImage src="/docs/images/services/owncloud.svg" />
+<ZoomableImage src="/docs/images/services/owncloud.svg" alt="Owncloud dashboard" />
 
 ## What is Owncloud
 

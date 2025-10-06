@@ -1,16 +1,16 @@
 ---
 title: "Observium"
-description: "Here you can find the documentation for hosting Observium with Coolify."
+description: "Monitor networks on Coolify with Observium for SNMP monitoring, device discovery, performance graphs, and infrastructure health tracking."
 ---
 
-<ZoomableImage src="/docs/images/services/observium-logo.webp" />
+<ZoomableImage src="/docs/images/services/observium-logo.webp" alt="Observium Logo logo" />
 
 
 ## What is Observium?
 Observium is a comprehensive network monitoring platform designed to deliver powerful monitoring capabilities, combined with an elegant and intuitive user interface.
 
 ## Screenshots
-<ZoomableImage src="/docs/images/services/observium-screenshots.webp" />
+<ZoomableImage src="/docs/images/services/observium-screenshots.webp" alt="Observium interface screenshot" />
 
 
 ## Links

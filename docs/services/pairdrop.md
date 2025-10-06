@@ -1,6 +1,6 @@
 ---
 title: "Pairdrop"
-description: "Here you can find the documentation for hosting Pairdrop with Coolify."
+description: "Share files on Coolify with PairDrop for local network file transfer, AirDrop alternative, and quick peer-to-peer file sharing via browser."
 ---
 
 ![Pairdrop](https://raw.githubusercontent.com/schlagmichdoch/PairDrop/refs/heads/master/public/images/android-chrome-192x192-maskable.png)

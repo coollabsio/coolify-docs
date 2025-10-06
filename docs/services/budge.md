@@ -1,6 +1,6 @@
 ---
 title: "BudgE"
-description: "Here you can find the documentation for hosting BudgE with Coolify."
+description: "Manage finances with Budge on Coolify offering budget tracking, expense categorization, financial goals, and spending insights for personal finance."
 ---
 
 

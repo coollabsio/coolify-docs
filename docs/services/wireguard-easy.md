@@ -1,11 +1,11 @@
 ---
 title: Wireguard Easy
-description: Here you can find the documentation for hosting Wireguard Easy with Coolify.
+description: "Deploy WireGuard VPN on Coolify with WireGuard Easy for simple VPN setup, client management, and secure network tunneling interface."
 ---
 
 # Wireguard Easy
 
-<ZoomableImage src="/docs/images/services/wireguard.svg" />
+<ZoomableImage src="/docs/images/services/wireguard.svg" alt="Wireguard Easy dashboard" />
 
 ## What is Wireguard Easy
 

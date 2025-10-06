@@ -1,9 +1,9 @@
 ---
 title: "Passbolt"
-description: "Here you can find the documentation for hosting Passbolt with Coolify."
+description: "Deploy Passbolt on Coolify for team password management with end-to-end encryption, sharing, access control, and collaborative credentials."
 ---
 
-<ZoomableImage src="/docs/images/services/passbolt-logo.webp" />
+<ZoomableImage src="/docs/images/services/passbolt-logo.webp" alt="Passbolt Logo logo" />
 
 
 ## What is Passbolt?
@@ -13,7 +13,7 @@ A versatile, battle-tested solution to manage and collaborate on passwords, acce
 
 
 ## Screenshots
-<ZoomableImage src="/docs/images/services/passbolt-screenshot.webp" />
+<ZoomableImage src="/docs/images/services/passbolt-screenshot.webp" alt="Passbolt interface screenshot" />
 
 
 ## Links

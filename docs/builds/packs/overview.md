@@ -2,7 +2,7 @@
 title: Build Packs
 ---
 
-<ZoomableImage src="/docs/images/builds/packs/packs-banner.webp" />
+<ZoomableImage src="/docs/images/builds/packs/packs-banner.webp" alt="Coolify packs banner" />
 
 <br />
 

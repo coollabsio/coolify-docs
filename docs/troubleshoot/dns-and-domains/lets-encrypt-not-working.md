@@ -1,5 +1,6 @@
 ---
 title: Let's Encrypt Not Generating SSL Certificates on Coolify
+description: Fix Let's Encrypt SSL certificate generation failures by opening ports 80/443, checking DNS records, verifying Cloudflare settings, and troubleshooting HTTP challenges.
 ---
 
 
@@ -54,10 +55,10 @@ If the certificates stored on your server are corrupted or outdated, you can del
   ::: details Guide: How to Restart Proxy from Dashboard?
 
   1. Select your server on the Coolify Dashboard
-  <ZoomableImage src="/docs/images/troubleshoot/dns-and-domains/lets-encrypt-not-working/1.webp" />
+  <ZoomableImage src="/docs/images/troubleshoot/dns-and-domains/lets-encrypt-not-working/1.webp" alt="Screenshot showing Lets Encrypt Not Working" />
 
   2. Click on Restart Proxy button
-  <ZoomableImage src="/docs/images/troubleshoot/dns-and-domains/lets-encrypt-not-working/2.webp" />
+  <ZoomableImage src="/docs/images/troubleshoot/dns-and-domains/lets-encrypt-not-working/2.webp" alt="Screenshot showing Lets Encrypt Not Working" />
   :::
 
 
@@ -75,10 +76,10 @@ On the Coolify proxy logs check for error messages.
   ::: details Guide: How to check Coolify proxy logs?
 
   1. Select your server on the Coolify Dashboard
-  <ZoomableImage src="/docs/images/troubleshoot/dns-and-domains/lets-encrypt-not-working/1.webp" />
+  <ZoomableImage src="/docs/images/troubleshoot/dns-and-domains/lets-encrypt-not-working/1.webp" alt="Screenshot showing Lets Encrypt Not Working" />
 
   2. Go to the proxy section and click the refresh button
-  <ZoomableImage src="/docs/images/troubleshoot/dns-and-domains/lets-encrypt-not-working/3.webp" />
+  <ZoomableImage src="/docs/images/troubleshoot/dns-and-domains/lets-encrypt-not-working/3.webp" alt="Screenshot showing Lets Encrypt Not Working" />
   :::
 
 

@@ -1,6 +1,6 @@
 ---
 title: "Server Patching"
-description: "A guide to use Coolify Server Patching feature"
+description: "Update server packages from Coolify dashboard with APT, DNF, and Zypper support including individual or batch updates and weekly notifications."
 ---
 
 
@@ -13,7 +13,7 @@ The **Server Patching** feature lets you update all packages on your server dire
 3. Click on the **Security** tab.
 4. Open the **Server Patching** section.
 
-<ZoomableImage src="/docs/images/knowledge-base/servers/patching/1.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/servers/patching/1.webp" alt="Screenshot of Patching" />
 
 On this page, you'll see a list of all available package updates.
 
@@ -34,7 +34,7 @@ Coolify checks for updates weekly and sends notifications if any are available.
   - Notifications are **enabled by default**.
   - You can manage this setting in your **Notification Settings**.
 
-<ZoomableImage src="/docs/images/knowledge-base/servers/patching/2.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/servers/patching/2.webp" alt="Screenshot of Patching" />
 
 
 ## Supported Package Managers

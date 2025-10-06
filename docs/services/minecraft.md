@@ -1,6 +1,6 @@
 ---
 title: "Minecraft"
-description: "Here you can find the documentation for hosting Minecraft with Coolify."
+description: "Run Minecraft server on Coolify for multiplayer gaming, custom worlds, mods support, and community gameplay with dedicated server hosting."
 ---
 
 

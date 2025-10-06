@@ -1,6 +1,6 @@
 ---
 title: "Glitchtip"
-description: "Here you can find the documentation for hosting Glitchtip with Coolify."
+description: "Deploy GlitchTip error tracking on Coolify as open-source Sentry alternative for exception monitoring, performance tracking, and debugging."
 ---
 
 

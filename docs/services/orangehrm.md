@@ -1,9 +1,9 @@
 ---
 title: "OrangeHRM"
-description: "Here you can find the documentation for hosting OrangeHRM with Coolify."
+description: "Manage HR on Coolify with OrangeHRM for employee records, leave management, time tracking, recruitment, and human resource administration."
 ---
 
-<ZoomableImage src="/docs/images/services/orangehrm-logo.webp" />
+<ZoomableImage src="/docs/images/services/orangehrm-logo.webp" alt="Orangehrm Logo logo" />
 
 
 ## What is OrangeHRM?

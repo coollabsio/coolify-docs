@@ -1,6 +1,6 @@
 ---
 title: "Invoice Ninja"
-description: "Here you can find the documentation for hosting Invoice Ninja with Coolify."
+description: "Run Invoice Ninja on Coolify for invoicing, expense tracking, time billing, payment processing, and client management for freelancers."
 ---
 
 # Invoice Ninja

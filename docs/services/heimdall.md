@@ -1,6 +1,6 @@
 ---
 title: "Heimdall"
-description: "Here you can find the documentation for hosting Heimdall with Coolify."
+description: "Deploy Heimdall dashboard on Coolify for application launcher, bookmark manager, and organized access point to all your self-hosted services."
 ---
 
 

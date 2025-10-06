@@ -1,6 +1,6 @@
 ---
 title: "RabbitMQ"
-description: "Here you can find the documentation for hosting RabbitMQ with Coolify."
+description: "Host RabbitMQ message broker on Coolify for reliable messaging, queuing, routing, and distributed system communication with AMQP protocol."
 ---
 
 

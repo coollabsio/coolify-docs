@@ -1,11 +1,11 @@
 ---
 title: Qbittorrent
-description: Here you can find the documentation for hosting Qbittorrent with Coolify.
+description: "Run qBittorrent on Coolify for torrent downloads, RSS automation, web UI, sequential downloading, and BitTorrent client management."
 ---
 
 # Qbittorrent
 
-<ZoomableImage src="/docs/images/services/qbittorrent.svg" />
+<ZoomableImage src="/docs/images/services/qbittorrent.svg" alt="Qbittorrent dashboard" />
 
 ## What is Qbittorrent
 

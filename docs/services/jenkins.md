@@ -1,6 +1,6 @@
 ---
 title: "Jenkins"
-description: "Here you can find the documentation for hosting Jenkins with Coolify."
+description: "Run Jenkins CI/CD on Coolify for automated builds, testing, deployment pipelines, and continuous integration workflows with extensive plugins."
 ---
 
 

@@ -1,11 +1,11 @@
 ---
 title: Cyberchef
-description: Here you can find the documentation for hosting Cyberchef with Coolify.
+description: "Run CyberChef data analysis on Coolify for encoding, decoding, encryption, compression, and data transformation with 300+ operations."
 ---
 
 # Cyberchef
 
-<ZoomableImage src="/docs/images/services/cyberchef.jpeg" />
+<ZoomableImage src="/docs/images/services/cyberchef.jpeg" alt="Cyberchef dashboard" />
 
 ## What is Cyberchef
 

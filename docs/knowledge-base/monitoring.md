@@ -1,5 +1,6 @@
 ---
 title: Monitoring
+description: "Monitor Coolify resources with built-in disk usage tracking, automatic cleanup, container status monitoring, and backup status notifications."
 ---
 
 # Monitoring

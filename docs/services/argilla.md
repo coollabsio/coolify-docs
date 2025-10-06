@@ -1,16 +1,16 @@
 ---
 title: "Argilla"
-description: "Here you can find the documentation for hosting Argilla with Coolify."
+description: "Host Argilla on Coolify for collaborative AI dataset creation, annotation, labeling, and feedback collection for machine learning projects."
 ---
 
-<ZoomableImage src="/docs/images/services/argilla.svg" />
+<ZoomableImage src="/docs/images/services/argilla.svg" alt="Argilla dashboard" />
 
 ## What is Argilla?
 Argilla is a collaboration tool for AI engineers and domain experts to build high-quality datasets.
 
 
 ## Screenshots
-<ZoomableImage src="/docs/images/services/argilla.webp" />
+<ZoomableImage src="/docs/images/services/argilla.webp" alt="Argilla dashboard" />
 
 ## Links
 

@@ -1,6 +1,6 @@
 ---
 title: "Automated Docker Cleanup"
-description: "A guide on how to configure the automated Docker cleanup feature in Coolify and what it does."
+description: "Prevent disk space issues with Coolify's automated Docker cleanup removing stopped containers, unused images, build cache, and volumes on schedule or threshold."
 ---
 
 # Automated Docker Cleanup

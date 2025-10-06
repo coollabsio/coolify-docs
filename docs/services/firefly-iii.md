@@ -1,6 +1,6 @@
 ---
 title: "Firefly III"
-description: "Here you can find the documentation for hosting Firefly III with Coolify."
+description: "Manage personal finances on Coolify with Firefly III featuring budgets, reports, recurring transactions, and multi-currency expense tracking."
 ---
 
 

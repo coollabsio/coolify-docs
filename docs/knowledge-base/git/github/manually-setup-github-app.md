@@ -1,5 +1,6 @@
 ---
 title: "Manually Setup GitHub App"
+description: "Manually configure GitHub App integration with Coolify including webhook setup, private key generation, permissions, and installation ID configuration."
 ---
 
 # Manually Setup GitHub App

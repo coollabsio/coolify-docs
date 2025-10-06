@@ -1,11 +1,11 @@
 ---
 title: Lowcoder
-description: Here you can find the documentation for hosting Lowcoder with Coolify.
+description: "Build internal tools on Coolify with Lowcoder low-code platform featuring drag-and-drop UI, database queries, and custom application development."
 ---
 
 # Lowcoder
 
-<ZoomableImage src="/docs/images/services/lowcoder.svg" />
+<ZoomableImage src="/docs/images/services/lowcoder.svg" alt="Lowcoder dashboard" />
 
 ## What is Lowcoder
 

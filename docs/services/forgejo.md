@@ -1,6 +1,6 @@
 ---
 title: "Forgejo"
-description: "Here you can find the documentation for hosting Forgejo with Coolify."
+description: "Deploy Forgejo Git hosting on Coolify as lightweight GitHub alternative with repositories, CI/CD, issues, pull requests, and collaboration tools."
 ---
 
 ![forgejo](https://forgejo.org/images/forgejo-wordmark.svg)

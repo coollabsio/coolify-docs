@@ -1,6 +1,6 @@
 ---
 title: "DokuWiki"
-description: "Here you can find the documentation for hosting DokuWiki with Coolify."
+description: "Deploy DokuWiki on Coolify for flat-file wiki without database, version control, ACL permissions, and plugin extensibility for documentation."
 ---
 
 

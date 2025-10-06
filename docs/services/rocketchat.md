@@ -1,6 +1,6 @@
 ---
 title: "Rocket.Chat"
-description: "Here you can find the documentation for hosting Rocket.Chat with Coolify."
+description: "Deploy Rocket.Chat on Coolify for team communication, video conferencing, file sharing, and open-source Slack alternative with federation."
 ---
 
 

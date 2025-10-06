@@ -1,9 +1,9 @@
 ---
 title: "Reactive Resume"
-description: "Here you can find the documentation for hosting Reactive Resume with Coolify."
+description: "Build resumes on Coolify with Reactive Resume for free resume builder, templates, PDF export, and professional CV creation tool."
 ---
 
-<ZoomableImage src="/docs/images/services/rxresume.svg" />
+<ZoomableImage src="/docs/images/services/rxresume.svg" alt="Reactive Resume dashboard" />
 
 
 

@@ -1,6 +1,6 @@
 ---
 title: "Homepage"
-description: "Here you can find the documentation for hosting Homepage with Coolify."
+description: "Deploy Homepage dashboard on Coolify for service bookmarks, status monitoring, widgets integration, and organized homepage for self-hosted tools."
 ---
 
 ![Homepage](https://gethomepage.dev/assets/banner_light@2x.webp)

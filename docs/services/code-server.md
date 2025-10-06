@@ -1,6 +1,6 @@
 ---
 title: "Code Server"
-description: "Here you can find the documentation for hosting Code Server with Coolify."
+description: "Run VS Code in browser on Coolify with code-server for remote development, extensions support, terminal access, and cloud-based coding environment."
 ---
 
 # Code Server

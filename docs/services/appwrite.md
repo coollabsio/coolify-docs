@@ -1,5 +1,6 @@
 ---
 title: Appwrite
+description: "Deploy Appwrite BaaS on Coolify for authentication, databases, storage, serverless functions, and real-time APIs for web and mobile apps."
 # compose:
 #   services:
 #     appwrite:

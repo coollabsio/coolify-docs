@@ -1,9 +1,9 @@
 ---
 title: "Prowlarr"
-description: "Here you can find the documentation for hosting Prowlarr with Coolify."
+description: "Manage indexers on Coolify with Prowlarr for centralized torrent and usenet indexer management integrated with Sonarr and Radarr."
 ---
 
-<ZoomableImage src="/docs/images/services/prowlarr.svg" />
+<ZoomableImage src="/docs/images/services/prowlarr.svg" alt="Prowlarr dashboard" />
 
 
 ## What is Prowlarr?
@@ -12,7 +12,7 @@ Prowlarr is an indexer manager/proxy built on the popular \*arr .net/reactjs bas
 
 ## Screenshots
 
-<ZoomableImage src="/docs/images/services/prowlarr.webp" />
+<ZoomableImage src="/docs/images/services/prowlarr.webp" alt="Prowlarr dashboard" />
 
 ## Links
 

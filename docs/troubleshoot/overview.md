@@ -1,5 +1,6 @@
 ---
 title: Troubleshooting Overview
+description: Comprehensive Coolify troubleshooting guides covering deployment errors, server issues, proxy problems, SSL certificates, and application configuration fixes.
 ---
 
 # 🔧 Troubleshooting

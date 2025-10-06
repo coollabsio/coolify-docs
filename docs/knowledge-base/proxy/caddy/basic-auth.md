@@ -1,5 +1,6 @@
 ---
 title: Caddy Basic Auth
+description: "Add password protection to Coolify applications with Caddy basic authentication using hash-password CLI for secure credential management."
 ---
 
 # Caddy Basic Auth

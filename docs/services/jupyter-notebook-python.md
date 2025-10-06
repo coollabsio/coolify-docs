@@ -1,11 +1,11 @@
 ---
 title: Jupyter Notebook Python
-description: Here you can find the documentation for hosting Jupyter Notebook Python with Coolify.
+description: "Run Jupyter Notebook on Coolify for interactive Python development, data science workflows, visualization, and collaborative computational notebooks."
 ---
 
 # Jupyter Notebook Python
 
-<ZoomableImage src="/docs/images/services/jupyter.svg" />
+<ZoomableImage src="/docs/images/services/jupyter.svg" alt="Jupyter Notebook Python dashboard" />
 
 ## What is Jupyter Notebook Python
 

@@ -1,11 +1,11 @@
 ---
 title: "Outline"
-description: "Here you can find the documentation for hosting Outline with Coolify."
+description: "Host Outline wiki on Coolify for team knowledge base, documentation, real-time collaboration, and beautifully organized information sharing."
 ---
 
 # What is Outline?
 
-<ZoomableImage src="/docs/images/services/outline.webp" />
+<ZoomableImage src="/docs/images/services/outline.webp" alt="Outline dashboard" />
 
 Outline is an open-source collaboration tool that allows you to create and share documents with your team.
 

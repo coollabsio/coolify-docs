@@ -2,7 +2,7 @@
 title: Uninstalling Coolify
 ---
 
-<ZoomableImage src="/docs/images/get-started/uninstallation-banner.webp" />
+<ZoomableImage src="/docs/images/get-started/uninstallation-banner.webp" alt="Coolify uninstallation banner" />
 
 <br />
 

@@ -1,11 +1,11 @@
 ---
 title: Libreoffice
-description: Here you can find the documentation for hosting Libreoffice with Coolify.
+description: "Run LibreOffice Online on Coolify for collaborative document editing, spreadsheets, presentations with web-based office suite interface."
 ---
 
 # Libreoffice
 
-<ZoomableImage src="/docs/images/services/libreoffice.svg" />
+<ZoomableImage src="/docs/images/services/libreoffice.svg" alt="Libreoffice dashboard" />
 
 ## What is Libreoffice
 

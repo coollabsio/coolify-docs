@@ -1,9 +1,9 @@
 ---
 title: "Seafile"
-description: "Here you can find the documentation for hosting Seafile with Coolify."
+description: "Sync files on Coolify with Seafile for secure cloud storage, team collaboration, file versioning, and enterprise-grade document management."
 ---
 
-<ZoomableImage src="/docs/images/services/seafile-logo.webp" />
+<ZoomableImage src="/docs/images/services/seafile-logo.webp" alt="Seafile Logo logo" />
 
 
 ## What is Seafile?

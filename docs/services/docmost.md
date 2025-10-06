@@ -1,6 +1,6 @@
 ---
 title: "Docmost"
-description: "Here you can find the documentation for hosting Docmost with Coolify."
+description: "Deploy Docmost wiki on Coolify for team documentation, knowledge management, real-time collaboration, and organized information sharing platform."
 ---
 
 

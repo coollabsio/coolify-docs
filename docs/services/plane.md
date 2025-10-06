@@ -1,6 +1,6 @@
 ---
 title: "Plane"
-description: "Here you can find the documentation for hosting Plane with Coolify."
+description: "Manage projects on Coolify with Plane for issue tracking, sprints, roadmaps, and modern project management for software development teams."
 ---
 
 

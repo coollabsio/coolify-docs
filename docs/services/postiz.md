@@ -1,11 +1,11 @@
 ---
 title: Postiz
-description: Here you can find the documentation for hosting Postiz with Coolify.
+description: "Schedule social media on Coolify with Postiz for content planning, multi-platform posting, analytics, and social media management automation."
 ---
 
 # Postiz
 
-<ZoomableImage src="/docs/images/services/postiz.png" />
+<ZoomableImage src="/docs/images/services/postiz.png" alt="Postiz dashboard" />
 
 ## What is Postiz
 

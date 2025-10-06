@@ -1,11 +1,11 @@
 ---
 title: "Excalidraw"
-description: "Here you can find the documentation for hosting Excalidraw with Coolify."
+description: "Run Excalidraw on Coolify for collaborative whiteboarding with hand-drawn diagrams, real-time collaboration, and export options for visual thinking."
 ---
 
 # Excalidraw
 
-<ZoomableImage src="/docs/images/services/excalidraw.svg" />
+<ZoomableImage src="/docs/images/services/excalidraw.svg" alt="Excalidraw dashboard" />
 
 ## What is Excalidraw?
 

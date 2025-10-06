@@ -1,9 +1,9 @@
 ---
 title: "Onetime Secret"
-description: "Here you can find the documentation for hosting Onetime Secret with Coolify."
+description: "Share secrets securely on Coolify with One-Time Secret for encrypted message sharing that self-destructs after single viewing."
 ---
 
-<ZoomableImage src="/docs/images/services/onetime-secret-logo.webp" />
+<ZoomableImage src="/docs/images/services/onetime-secret-logo.webp" alt="Onetime Secret Logo logo" />
 
 
 ## What is Onetime Secret?

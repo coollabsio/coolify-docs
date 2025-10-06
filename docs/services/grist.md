@@ -1,9 +1,9 @@
 ---
 title: "Grist"
-description: "Here you can find the documentation for hosting Grist with Coolify."
+description: "Run Grist spreadsheet on Coolify combining spreadsheets and databases with relational data, forms, automation, and collaborative data management."
 ---
 
-<ZoomableImage src="/docs/images/services/grist-logo.webp" />
+<ZoomableImage src="/docs/images/services/grist-logo.webp" alt="Grist Logo logo" />
 
 
 ## What is Grist?

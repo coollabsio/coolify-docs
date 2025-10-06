@@ -1,6 +1,6 @@
 ---
 title: "Ghost"
-description: "Here you can find the documentation for hosting Ghost with Coolify."
+description: "Deploy Ghost publishing platform on Coolify for professional blogs, newsletters, memberships, and content monetization with modern editor."
 ---
 
 ![Ghost](https://user-images.githubusercontent.com/353959/169805900-66be5b89-0859-4816-8da9-528ed7534704.png)

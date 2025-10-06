@@ -1,11 +1,11 @@
 ---
 title: Ntfy
-description: Here you can find the documentation for hosting Ntfy with Coolify.
+description: "Host ntfy notification service on Coolify for simple pub/sub push notifications via HTTP, mobile apps, and scriptable alert delivery."
 ---
 
 # Ntfy
 
-<ZoomableImage src="/docs/images/services/ntfy.svg" />
+<ZoomableImage src="/docs/images/services/ntfy.svg" alt="Ntfy dashboard" />
 
 ## What is Ntfy
 

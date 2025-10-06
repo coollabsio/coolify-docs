@@ -1,6 +1,6 @@
 ---
 title: "Appsmith"
-description: "Here you can find the documentation for hosting Appsmith with Coolify."
+description: "Build internal tools on Coolify with Appsmith's low-code platform featuring drag-and-drop UI, database connectors, and custom business logic."
 ---
 
 # Appsmith

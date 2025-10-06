@@ -1,6 +1,6 @@
 ---
 title: Migrate Applications
-description: Guide to migrate applications deployed on Coolify to another server
+description: Step-by-step guide to migrate applications, databases, and Docker volumes from one Coolify server to another with backup and restore scripts
 ---
 
 # Migrate Applications to Another Coolify Host
@@ -17,7 +17,7 @@ You have to manually deploy your app on the new server and copy over your databa
 ## 1. Understand Data Persistence
 When using Coolify, application data lives in one of two places:
 
-<ZoomableImage src="/docs/images/knowledge-base/how-tos/migrate-apps-different-host/1.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/how-tos/migrate-apps-different-host/1.webp" alt="Screenshot of Migrate Apps Different Host" />
 
 ### Bind mounts
   - When using bind mounts, a host directory or file is mapped into the container. 
@@ -37,7 +37,7 @@ When using Coolify, application data lives in one of two places:
 ## 2. Backup and Restore Overview
 The [Docker-recommended process](https://docs.docker.com/engine/storage/volumes/#back-up-restore-or-migrate-data-volumes) for volume migration looks like this:
 
-<ZoomableImage src="/docs/images/knowledge-base/how-tos/migrate-apps-different-host/2.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/how-tos/migrate-apps-different-host/2.webp" alt="Screenshot of Migrate Apps Different Host" />
 
 1. **Mount** your volume into a temporary container.
 2. **Archive** the volume’s contents into a tarball.
@@ -140,7 +140,7 @@ This series of steps ensures a consistent, safe backup and restore. Below, we’
 
    Or from Coolify’s **Persistent Storage** page (see below).
    
-   <ZoomableImage src="/docs/images/knowledge-base/how-tos/migrate-apps-different-host/3.webp" />
+   <ZoomableImage src="/docs/images/knowledge-base/how-tos/migrate-apps-different-host/3.webp" alt="Screenshot of Migrate Apps Different Host" />
 5. **Stop your application** to perform a clean backup.
 6. **Run** the script:
 
@@ -472,5 +472,5 @@ Your application should now use the migrated data. If it does not, or if logs sh
 ::: warning Note
   If the database credentials (username, database name or password) are different on the new server, update them in Coolify’s dashboard to match those from the old server.
   
-  <ZoomableImage src="/docs/images/knowledge-base/how-tos/migrate-apps-different-host/4.webp" />
+  <ZoomableImage src="/docs/images/knowledge-base/how-tos/migrate-apps-different-host/4.webp" alt="Screenshot of Migrate Apps Different Host" />
 :::

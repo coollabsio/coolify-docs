@@ -8,6 +8,8 @@ on:
 env:
   GITHUB_REGISTRY: ghcr.io
   IMAGE_NAME: coollabsio/coolify-docs
+  VITE_ANALYTICS_DOMAIN: next.coolify.io/docs
+  VITE_SITE_URL: https://next.coolify.io/docs/
 
 jobs:
   build:
@@ -50,7 +52,8 @@ jobs:
           file: Dockerfile
           platforms: linux/arm64
           build-args: |
-            VITE_ANALYTICS_DOMAIN=next.coolify.io/docs
+            VITE_ANALYTICS_DOMAIN=${{ env.VITE_ANALYTICS_DOMAIN }}
+            VITE_SITE_URL=${{ env.VITE_SITE_URL }}
           push: true
           cache-from: type=gha,scope=${{ github.workflow }}
           cache-to: type=gha,mode=max,scope=${{ github.workflow }}

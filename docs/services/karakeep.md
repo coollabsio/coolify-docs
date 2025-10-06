@@ -1,11 +1,11 @@
 ---
 title: "KaraKeep"
-description: "Here you can find the documentation for hosting KaraKeep with Coolify."
+description: "Host KaraKeep password manager on Coolify for secure credential storage, team sharing, encrypted vaults, and self-hosted password management."
 ---
 
 # KaraKeep
 
-<ZoomableImage src="/docs/images/services/karakeep.svg" />
+<ZoomableImage src="/docs/images/services/karakeep.svg" alt="Karakeep dashboard" />
 
 ## What is KaraKeep?
 

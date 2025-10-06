@@ -40,22 +40,22 @@ If your deployed application **maybe** works when you access it via your serverâ
 
 - **Update Port Settings:** Enter the correct port number in the **Port Exposes** field on the Coolify dashboard and restart your app.
 
-    <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/1.webp" />
+    <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/1.webp" alt="Screenshot showing Bad Gateway" />
 
 - **Remove Host Port Mapping:** If the port is mapped to the host system, remove the mapping so the proxy can route traffic correctly, then restart your app.
 
-    <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/2.webp" />
+    <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/2.webp" alt="Screenshot showing Bad Gateway" />
 
 - **Adjust Listening Address:** Change your application so it listens on all network interfaces (`0.0.0.0`) instead of just `localhost`.
 
-    <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/3.webp" />
+    <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/3.webp" alt="Screenshot showing Bad Gateway" />
 
 - **Correct Domain URL:** Add the correct port number at the end of your domain URL if needed, and restart your application.
 
-    <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/4.webp" />
+    <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/4.webp" alt="Screenshot showing Bad Gateway" />
 
 - **Restart Container / Check Logs:** Restart the container or check its logs to diagnose the issue.
-  <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/5.webp" />
+  <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/5.webp" alt="Screenshot showing Bad Gateway" />
 
 ## Support
 

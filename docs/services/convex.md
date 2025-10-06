@@ -1,11 +1,11 @@
 ---
 title: Convex
-description: Here you can find the documentation for hosting Convex with Coolify.
+description: "Deploy Convex backend on Coolify with reactive database, serverless functions, real-time sync, and TypeScript-first development for modern apps."
 ---
 
 # Convex
 
-<ZoomableImage src="/docs/images/services/convex.svg" />
+<ZoomableImage src="/docs/images/services/convex.svg" alt="Convex dashboard" />
 
 ## What is Convex
 

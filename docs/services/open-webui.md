@@ -1,11 +1,11 @@
 ---
 title: Open Webui
-description: Here you can find the documentation for hosting Open Webui with Coolify.
+description: "Deploy Open WebUI on Coolify for self-hosted ChatGPT interface supporting Ollama, OpenAI, and local LLMs with conversation management."
 ---
 
 # Open Webui
 
-<ZoomableImage src="/docs/images/services/openwebui.svg" />
+<ZoomableImage src="/docs/images/services/openwebui.svg" alt="Open Webui dashboard" />
 
 ## What is Open Webui
 

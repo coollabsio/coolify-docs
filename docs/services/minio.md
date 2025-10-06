@@ -1,6 +1,6 @@
 ---
 title: "MinIO"
-description: "Here you can find the documentation for hosting MinIO with Coolify."
+description: "Host MinIO object storage on Coolify as S3-compatible high-performance storage for backups, data lakes, and cloud-native application storage."
 ---
 
 

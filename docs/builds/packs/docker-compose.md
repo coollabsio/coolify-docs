@@ -2,7 +2,7 @@
 title: Docker Compose Build Packs
 ---
 
-<ZoomableImage src="/docs/images/builds/packs/compose/banner.webp" />
+<ZoomableImage src="/docs/images/builds/packs/compose/banner.webp" alt="Coolify banner" />
 <br />
 
 Docker Compose lets you deploy multiple Docker containers and configure them easily.
@@ -15,11 +15,11 @@ With the Docker Compose build pack, you can use your own Docker Compose file (i.
 
 On the Coolify dashboard, open your project and click the **Create New Resource** button.
 
-<ZoomableImage src="/docs/images/builds/packs/compose/1.webp" />
+<ZoomableImage src="/docs/images/builds/packs/compose/1.webp" alt="Coolify dashboard screenshot" />
 
 ### 2. Choose Your Deployment Option
 
-<ZoomableImage src="/docs/images/builds/packs/compose/2.webp" />
+<ZoomableImage src="/docs/images/builds/packs/compose/2.webp" alt="Coolify dashboard screenshot" />
 
 **A.** If your Git repository is public, choose the **Public Repository** option.
 
@@ -29,17 +29,17 @@ On the Coolify dashboard, open your project and click the **Create New Resource*
 
 If you are using a public repository, paste the URL of your GitHub repository when prompted. The steps are very similar for all other options.
 
-<ZoomableImage src="/docs/images/builds/packs/compose/3.webp" />
+<ZoomableImage src="/docs/images/builds/packs/compose/3.webp" alt="Coolify dashboard screenshot" />
 
 ### 4. Choose the Build Pack
 
 Coolify defaults to using Nixpacks. Click the Nixpacks option and select **Docker Compose** as your build pack from the dropdown menu.
 
-<ZoomableImage src="/docs/images/builds/packs/compose/4.webp" />
+<ZoomableImage src="/docs/images/builds/packs/compose/4.webp" alt="Coolify dashboard screenshot" />
 
 ### 5. Configure the Build Pack
 
-<ZoomableImage src="/docs/images/builds/packs/compose/5.webp" />
+<ZoomableImage src="/docs/images/builds/packs/compose/5.webp" alt="Coolify dashboard screenshot" />
 
 - **Branch:** Coolify will automatically detect the branch in your repository.
 - **Base Directory:** Enter the directory that Coolify should use as the root. Use `/` if your files are at the root or specify a subfolder (like `/backend` for a monorepo).
@@ -113,7 +113,7 @@ services:
       - SOME_DEFAULT_VARIABLE=${OTHER_NAME_IN_COOLIFY:-hello} # Sets a default value "hello" that can be edited.
 ```
 
-<ZoomableImage src="/docs/images/builds/packs/compose/6.webp" />
+<ZoomableImage src="/docs/images/builds/packs/compose/6.webp" alt="Coolify dashboard screenshot" />
 
 ### Required Environment Variables
 
@@ -292,7 +292,7 @@ By default, each compose stack is deployed to a separate network named after you
 
 If you want to connect services across different stacks (for example, linking an application to a separate database), enable the **Connect to Predefined Network** option on your Service Stack page.
 
-<ZoomableImage src="/docs/images/builds/packs/compose/7.webp" />
+<ZoomableImage src="/docs/images/builds/packs/compose/7.webp" alt="Coolify dashboard screenshot" />
 
 Note that you must use the full name (like `postgres-<uuid>`) when referencing a service in another stack.
 
@@ -300,7 +300,7 @@ Note that you must use the full name (like `postgres-<uuid>`) when referencing a
 
 For advanced users, Coolify offers a "Raw Compose Deployment" mode. This option lets you deploy your Docker Compose file directly without many of Coolify's additional configurations.
 
-<ZoomableImage src="/docs/images/builds/packs/compose/8.webp" />
+<ZoomableImage src="/docs/images/builds/packs/compose/8.webp" alt="Coolify dashboard screenshot" />
 
 ::: danger CAUTION
 This mode is intended for advanced users familiar with Docker Compose.

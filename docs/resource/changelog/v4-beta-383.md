@@ -12,14 +12,14 @@ To upgrade your Coolify instance, follow the [upgrade guide](/get-started/upgrad
 ### 1. Backup Retention
 You can now configure the number of backups to retain, helping you save storage space on your servers.
 
-<ZoomableImage src="/docs/images/changelogs/v4-beta-383/backup-retention.webp" />
+<ZoomableImage src="/docs/images/changelogs/v4-beta-383/backup-retention.webp" alt="Backup Retention" />
 
 ---
 
 ### 2. Deployment Logs
 We've improved the deployment logs to provide more detailed information, making it easier to track and troubleshoot deployments.
 
-<ZoomableImage src="/docs/images/changelogs/v4-beta-383/deployment-logs.webp" />
+<ZoomableImage src="/docs/images/changelogs/v4-beta-383/deployment-logs.webp" alt="Deployment Logs" />
 
 
 ## Breaking Changes

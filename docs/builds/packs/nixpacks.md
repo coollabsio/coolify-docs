@@ -2,7 +2,7 @@
 title: Nixpacks Build Pack
 ---
 
-<ZoomableImage src="/docs/images/builds/packs/nixpacks/banner.webp" />
+<ZoomableImage src="/docs/images/builds/packs/nixpacks/banner.webp" alt="Coolify banner" />
 
 <br />
 
@@ -18,12 +18,12 @@ On Coolify you can only use Nixpacks on git-based deployments.
 ### 1. Create a New Resource in Coolify
 On Coolify dashboard open your project and click the **Create New Resource** button.
 
-<ZoomableImage src="/docs/images/builds/packs/nixpacks/1.webp" />
+<ZoomableImage src="/docs/images/builds/packs/nixpacks/1.webp" alt="Coolify dashboard screenshot" />
 
 
 ### 2. Choose Your Deployment Option
 
-<ZoomableImage src="/docs/images/builds/packs/nixpacks/2.webp" />
+<ZoomableImage src="/docs/images/builds/packs/nixpacks/2.webp" alt="Coolify dashboard screenshot" />
 
 **A.** If your Git repository is public, choose the **Public Repository** option.
 
@@ -33,13 +33,13 @@ On Coolify dashboard open your project and click the **Create New Resource** but
 ### 3. Select Your Git Repository
 If you are using a public repository, paste the URL of your GitHub repository when prompted. The steps are very similar for all other options.
 
-<ZoomableImage src="/docs/images/builds/packs/nixpacks/3.webp" />
+<ZoomableImage src="/docs/images/builds/packs/nixpacks/3.webp" alt="Coolify dashboard screenshot" />
 
 
 ### 4. Choose the Build Pack
 Coolify will default to using Nixpacks. If it doesn’t, click to select Nixpacks as your build pack.
 
-<ZoomableImage src="/docs/images/builds/packs/nixpacks/4.webp" />
+<ZoomableImage src="/docs/images/builds/packs/nixpacks/4.webp" alt="Coolify dashboard screenshot" />
 
 ### 5. Configure Build Pack
 We have different options like Base Directory, Publish Directory, and Ports that slightly change based on the application you deploy (static websites/applications). So, below we have two sections for the deployments possible with Nixpacks.
@@ -49,7 +49,7 @@ We have different options like Base Directory, Publish Directory, and Ports that
 ## How to deploy Fully Static Website?
 First, follow the previous section in this documentation: [How to use Nixpacks](#how-to-use-nixpacks). After that, proceed with the steps below.
 
-<ZoomableImage src="/docs/images/builds/packs/nixpacks/5.webp" />
+<ZoomableImage src="/docs/images/builds/packs/nixpacks/5.webp" alt="Coolify dashboard screenshot" />
 
 1. **Branch:** Coolify will automatically detect the branch from your Repostiory.
 
@@ -66,7 +66,7 @@ First, follow the previous section in this documentation: [How to use Nixpacks](
 
 7. Choose a web server for your static website
 
-<ZoomableImage src="/docs/images/builds/packs/nixpacks/6.webp" />
+<ZoomableImage src="/docs/images/builds/packs/nixpacks/6.webp" alt="Coolify dashboard screenshot" />
 
 - As of Coolify **v4.0.0-beta.404**, the only web server option available is [Nginx ↗](https://nginx.org/en/?utm_source=coolify.io). So **Nginx** will be selected by default.
 
@@ -75,7 +75,7 @@ First, follow the previous section in this documentation: [How to use Nixpacks](
 
 9. Customize Your Web Server Configuration <Badge type="warning" text="Optional" />
 
-<ZoomableImage src="/docs/images/builds/packs/nixpacks/7.webp" />
+<ZoomableImage src="/docs/images/builds/packs/nixpacks/7.webp" alt="Coolify dashboard screenshot" />
 
 - Coolify provides a default web server configuration that works for most cases. 
 
@@ -95,7 +95,7 @@ Nixpacks will build the website using your codebase and create a Docker image wi
 ## How to deploy Non-Static Website/Applications?
 First, follow the previous section in this documentation: [How to use Nixpacks](#how-to-use-nixpacks). After that, proceed with the steps below.
 
-<ZoomableImage src="/docs/images/builds/packs/nixpacks/8.webp" />
+<ZoomableImage src="/docs/images/builds/packs/nixpacks/8.webp" alt="Coolify dashboard screenshot" />
 
 1. **Branch:** Coolify will automatically detect the branch from your Repostiory.
 
@@ -121,14 +121,14 @@ You can customize Nixpacks' behavior using environment variables. There are many
 
 To add or modify environment variables in Coolify, simply click on the **Environment Variables** tab, where you can manage them easily.
 
-<ZoomableImage src="/docs/images/builds/packs/nixpacks/9.webp" />
+<ZoomableImage src="/docs/images/builds/packs/nixpacks/9.webp" alt="Coolify dashboard screenshot" />
 
 ---
 
 ### Commands
 If needed, you can override the default install, build, and start commands. Simply scroll down to the build section on Coolify and input your custom commands.
 
-<ZoomableImage src="/docs/images/builds/packs/nixpacks/10.webp" />
+<ZoomableImage src="/docs/images/builds/packs/nixpacks/10.webp" alt="Coolify dashboard screenshot" />
 
 ::: warning Note:
 You may need to include a `nixpacks.toml` file in your repository for these changes to take effect.

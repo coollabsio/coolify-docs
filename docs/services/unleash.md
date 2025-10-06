@@ -1,9 +1,9 @@
 ---
 title: "Unleash"
-description: "Here you can find the documentation for hosting Unleash with Coolify."
+description: "Manage features on Coolify with Unleash for feature toggles, A/B testing, gradual rollouts, and enterprise feature flag management."
 ---
 
-<ZoomableImage src="/docs/images/services/unleash.svg" />
+<ZoomableImage src="/docs/images/services/unleash.svg" alt="Unleash dashboard" />
 
 
 

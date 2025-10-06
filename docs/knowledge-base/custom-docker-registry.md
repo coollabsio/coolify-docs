@@ -1,6 +1,6 @@
 ---
 title: "Custom Docker Registry"
-description: "How to define a custom docker registry"
+description: "Switch between Docker Hub and GitHub Container Registry (ghcr.io) for pulling Coolify images during installation or runtime"
 ---
 
 # Custom Docker Registry

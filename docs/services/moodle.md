@@ -1,6 +1,6 @@
 ---
 title: "Moodle"
-description: "Here you can find the documentation for hosting Moodle with Coolify."
+description: "Deploy Moodle LMS on Coolify for online learning, course management, assignments, quizzes, and educational platform with extensive plugins."
 ---
 
 
