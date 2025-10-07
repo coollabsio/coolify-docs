@@ -1,6 +1,6 @@
 ---
 title: "Notifications"
-description: "Configure multi-channel notifications in Coolify with Email, Telegram, Discord, Slack, and Pushover for deployments, backups, and server monitoring alerts."
+description: "Configure multi-channel notifications in Coolify with Email, Telegram, Discord, Slack, Pushover, and Gotify for deployments, backups, and server monitoring alerts."
 ---
 
 # Notifications
@@ -200,6 +200,34 @@ Email notifications can be configured using either SMTP or Resend.
 
 ::: info
   Pushover allows you to receive notifications on multiple devices including iOS, Android, and desktop.
+:::
+
+### Gotify
+
+
+1. Set up Gotify Server
+   - Deploy your own Gotify server or use an existing one
+   - Visit [Gotify Documentation](https://gotify.net/docs/install) for installation instructions
+   - Note your Gotify server URL (e.g., `https://gotify.example.com`)
+
+2. Create an Application
+   - Log in to your Gotify server
+   - Navigate to **Apps** in the dashboard
+   - Click **Create Application**
+   - Enter an application name (e.g., "Coolify Notifications")
+   - Copy the `Application Token` that is generated
+
+3. Configure in Coolify:
+   - Go to **Notifications** → **Gotify**
+   - Enter your Gotify server `URL` (e.g., `https://gotify.example.com`)
+   - Paste the `Application Token` from step 2
+   - Save the settings
+   - Enable the Gotify channel
+   - Send a `Test notification`
+
+
+::: info
+  Gotify is a self-hosted, open-source notification server. This gives you complete control over your notification data and infrastructure. You can receive notifications on Android devices using the official Gotify app.
 :::
 
 ## Notification Events
