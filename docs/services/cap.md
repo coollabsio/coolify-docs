@@ -16,7 +16,7 @@ There are two storage options: you can store the video data on a remote storage 
 ### Option 1: Remote S3-compatible storage (AWS S3, Cloudflare R2, etc.)
 
 Set these environment variables:
-
+****
 - `CAP_AWS_ACCESS_KEY`: Your S3/R2 access key
 - `CAP_AWS_SECRET_KEY`: Your S3/R2 secret key
 - `CAP_AWS_BUCKET`: Your S3/R2 bucket name
@@ -42,12 +42,16 @@ Deploy MinIO as a separate service in the same network and set:
 ## How to unlock limits (organization seats and recordings)
 
 <!--Method recommended from https://github.com/coollabsio/coolify/pull/6011#pullrequestreview-3337020957-->
-
-In your database, on your user row, set `inviteQuota` to a high number, and set `stripeSubscriptionId` to something like `12345`, and set the subscription status to "active".
-
-```sql
-UPDATE "User" SET "inviteQuota" = 100, "stripeSubscriptionId" = '12345', "subscriptionStatus" = 'active' WHERE id = 'your-user-id';
-```
+1. Open the terminal of the MySQL service
+2. Connect to the database: `mysql -u root -p planetscale` and use the MYSQL_ROOT_PASSWORD when prompted
+3. Run the SQL command below, replacing `your-user-id` with your actual user ID
+    ```sql
+    UPDATE users SET inviteQuota = 100, stripeSubscriptionId = '12345', subscriptionStatus = 'active' WHERE id = 'your-user-id';
+    ```
+4. You can verify the changes by running the following command:
+    ```sql
+    SELECT * FROM users WHERE id = 'your-user-id';
+    ```
 
 ## Screenshots
 
