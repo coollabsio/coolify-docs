@@ -16,7 +16,7 @@ Filebrowser provides a file managing interface within a specified directory and 
 - Deploy Filebrowser using Coolify template
 - In the Filebrowser UI login with credentials:
   - Username: `admin`
-  - Password: `admin`
+  - Password: randomly generated, viewable in the logs
 
 ## Screenshots
 
