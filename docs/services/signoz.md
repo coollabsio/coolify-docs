@@ -3,11 +3,11 @@ title: SigNoz
 description: "An observability platform native to OpenTelemetry with logs, traces and metrics."
 ---
 
-# Soketi
+# SigNoz
 
 <ZoomableImage src="/docs/images/services/signoz.svg" alt="SigNoz logo" />
 
-## What is Soketi
+## What is SigNozzf
 
 SigNoz is an open source observability platform native to OpenTelemetry with logs, traces and metrics.
 
