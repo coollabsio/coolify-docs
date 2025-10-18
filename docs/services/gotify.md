@@ -3,7 +3,7 @@ title: "Gotify"
 description: "Deploy Gotify on Coolify for self-hosted push notifications, real-time messaging, REST API integration, and Android/iOS notification delivery."
 ---
 
-<ZoomableImage src="/docs/images/services/gotify.svg" alt="Gotify" width="200" />
+<ZoomableImage src="/docs/images/services/gotify-logo.svg" alt="Gotify" width="200" />
 
 ## What is Gotify?
 

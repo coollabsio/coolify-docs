@@ -3,7 +3,7 @@ title: "Once Campfire"
 description: "Here you can find the documentation for hosting Once Campfire with Coolify."
 ---
 
-<ZoomableImage src="/docs/images/services/once-campfire.png" alt="Once Campfire dashboard" />
+<ZoomableImage src="/docs/images/services/oncecampfire-logo.png" alt="Once Campfire dashboard" />
 
 ## What is Once Campfire?
 

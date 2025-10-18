@@ -3,7 +3,7 @@ title: "Plex"
 description: "Stream media on Coolify with Plex server for movies, TV shows, music, photos with transcoding, mobile apps, and live TV DVR support."
 ---
 
-<ZoomableImage src="/docs/images/services/plex.svg" alt="Plex dashboard" />
+<ZoomableImage src="/docs/images/services/plex-logo.svg" alt="Plex dashboard" />
 
 ## What is Plex?
 

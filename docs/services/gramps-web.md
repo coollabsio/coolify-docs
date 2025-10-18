@@ -5,7 +5,7 @@ description: "Deploy Gramps Web genealogy system on Coolify for building your fa
 
 # Gramps Web
 
-![Gramps Web logo](/docs/images/services/gramps-web.svg){ width=64px }
+![Gramps Web logo](/images/services/grampsweb-logo.svg){ width=64px }
 
 ## What is Gramps Web?
 

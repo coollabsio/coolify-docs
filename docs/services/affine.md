@@ -3,7 +3,7 @@ title: "Affine"
 description: "Deploy AFFiNE workspace on Coolify combining docs, whiteboards, and databases for seamless collaboration and creative project management."
 ---
 
-<ZoomableImage src="/docs/images/services/affine-logo.webp" alt="Affine Logo logo" />
+<ZoomableImage src="/docs/images/services/affine.webp" alt="Affine Logo logo" />
 
 
 ## What is Affine?

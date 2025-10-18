@@ -3,7 +3,7 @@ title: "PG Back Web"
 description: "Backup PostgreSQL on Coolify with pgBackWeb for database backups, scheduling, restoration, and web-based backup management interface."
 ---
 
-<ZoomableImage src="/docs/images/services/pgbackweb-logo.webp" alt="Pgbackweb Logo logo" />
+<ZoomableImage src="/docs/images/services/pgbackweb.webp" alt="Pgbackweb Logo logo" />
 
 
 ## What is PG Back Web?

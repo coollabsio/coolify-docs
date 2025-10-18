@@ -5,7 +5,7 @@ description: "Send emails on Coolify with Unsend for developer-focused email API
 
 # Unsend
 
-<ZoomableImage src="/docs/images/services/unsend.svg" alt="Unsend dashboard" />
+<ZoomableImage src="/docs/images/services/unsend-logo.svg" alt="Unsend dashboard" />
 
 ## What is Unsend
 

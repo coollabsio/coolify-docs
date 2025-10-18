@@ -5,7 +5,7 @@ description: "Host Gowa analytics on Coolify for website traffic tracking, visit
 
 # GoWa
 
-<ZoomableImage src="/docs/images/services/gowa.svg" alt="Gowa dashboard" />
+<ZoomableImage src="/docs/images/services/gowa-logo.svg" alt="Gowa dashboard" />
 
 ## What is GoWa?
 

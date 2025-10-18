@@ -3,7 +3,7 @@ title: "Overseerr"
 description: "Deploy Overseerr on Coolify for Plex/Jellyfin media requests with user management, discovery, approval workflows, and integration automation."
 ---
 
-<ZoomableImage src="/docs/images/services/overseerr.svg" alt="Overseerr dashboard" />
+<ZoomableImage src="/docs/images/services/overseerr-logo.svg" alt="Overseerr dashboard" />
 
 
 ## What is Overseerr?

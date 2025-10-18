@@ -5,7 +5,7 @@ description: "Stream database changes on Coolify with Sequin for CDC, event-driv
 
 # Sequin
 
-<ZoomableImage src="/docs/images/services/sequin.svg" alt="Sequin dashboard" />
+<ZoomableImage src="/docs/images/services/sequin-logo.svg" alt="Sequin dashboard" />
 
 ## What is Sequin?
 

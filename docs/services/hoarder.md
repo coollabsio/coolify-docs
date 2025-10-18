@@ -5,7 +5,7 @@ description: "Host Hoarder bookmark manager on Coolify for saving links, organiz
 
 # Hoarder
 
-<ZoomableImage src="/docs/images/services/hoarder.png" alt="Hoarder dashboard" />
+<ZoomableImage src="/docs/images/services/hoarder-logo.png" alt="Hoarder dashboard" />
 
 ## What is Hoarder
 

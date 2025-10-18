@@ -5,7 +5,7 @@ description: "Run Excalidraw on Coolify for collaborative whiteboarding with han
 
 # Excalidraw
 
-<ZoomableImage src="/docs/images/services/excalidraw.svg" alt="Excalidraw dashboard" />
+<ZoomableImage src="/docs/images/services/excalidraw-logo.svg" alt="Excalidraw dashboard" />
 
 ## What is Excalidraw?
 

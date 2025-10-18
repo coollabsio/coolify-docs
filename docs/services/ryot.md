@@ -3,7 +3,7 @@ title: "Ryot"
 description: "Track media on Coolify with Ryot for movies, TV shows, books, video games, exercises with ratings, reviews, and personal media database."
 ---
 
-<ZoomableImage src="/docs/images/services/ryot-logo.webp" alt="Ryot Logo logo" />
+<ZoomableImage src="/docs/images/services/ryot-logo.svg" alt="Ryot Logo logo" />
 
 
 ## What is Ryot?

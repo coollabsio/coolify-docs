@@ -3,7 +3,7 @@ title: "Weaviate"
 description: "Deploy Weaviate vector database on Coolify for AI-powered search, semantic understanding, ML model integration, and knowledge graphs."
 ---
 
-<ZoomableImage src="/docs/images/services/weaviate.webp" alt="Weaviate dashboard" />
+<ZoomableImage src="/docs/images/services/weaviate-logo.webp" alt="Weaviate dashboard" />
 
 ## What is Weaviate?
 

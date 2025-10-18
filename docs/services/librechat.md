@@ -5,7 +5,7 @@ description: "Deploy LibreChat on Coolify for unified AI chat interface supporti
 
 # LibreChat
 
-<ZoomableImage src="/docs/images/services/librechat.svg" alt="Librechat dashboard" />
+<ZoomableImage src="/docs/images/services/librechat-logo.svg" alt="Librechat dashboard" />
 
 ## What is LibreChat?
 

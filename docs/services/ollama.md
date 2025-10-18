@@ -3,7 +3,7 @@ title: "Ollama"
 description: "Run Ollama on Coolify for local LLM hosting supporting Llama, Mistral, Gemma, and custom models with REST API for AI applications."
 ---
 
-<ZoomableImage src="/docs/images/services/ollama.webp" alt="Ollama dashboard" />
+<ZoomableImage src="/docs/images/services/ollama-logo.webp" alt="Ollama dashboard" />
 
 
 ## What is Ollama?

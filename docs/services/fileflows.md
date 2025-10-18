@@ -3,7 +3,7 @@ title: "FileFlows"
 description: "Host FileFlows on Coolify for automated file processing, media conversion, organization workflows, and batch operations with visual flow builder."
 ---
 
-<ZoomableImage src="/docs/images/services/fileflows.svg" alt="Fileflows dashboard" />
+<ZoomableImage src="/docs/images/services/fileflows-logo.svg" alt="Fileflows dashboard" />
 
 ## What is FileFlows?
 

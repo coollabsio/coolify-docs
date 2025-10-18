@@ -3,7 +3,7 @@ title: "Nitropage"
 description: "Host NitroPage website builder on Coolify for drag-and-drop page creation, templates, and simple website development without coding skills."
 ---
 
-<ZoomableImage src="/docs/images/services/nitropage.svg" alt="Nitropage dashboard" />
+<ZoomableImage src="/docs/images/services/nitropage-logo.svg" alt="Nitropage dashboard" />
 
 
 ## What is Nitropage?

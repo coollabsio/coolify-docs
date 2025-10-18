@@ -5,7 +5,7 @@ description: "Host KaraKeep password manager on Coolify for secure credential st
 
 # KaraKeep
 
-<ZoomableImage src="/docs/images/services/karakeep.svg" alt="Karakeep dashboard" />
+<ZoomableImage src="/docs/images/services/karakeep-logo.svg" alt="Karakeep dashboard" />
 
 ## What is KaraKeep?
 

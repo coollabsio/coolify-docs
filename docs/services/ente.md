@@ -5,7 +5,7 @@ description: "Here you can find the documentation for hosting Ente with Coolify.
 
 # Ente
 
-![Ente](/images/services/ente.webp)
+![Ente](/images/services/ente-logo.webp)
 
 ## What is Ente?
 

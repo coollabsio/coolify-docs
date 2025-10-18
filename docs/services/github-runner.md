@@ -5,7 +5,7 @@ description: "Run self-hosted GitHub Actions runner on Coolify for CI/CD workflo
 
 # GitHub Runner
 
-<ZoomableImage src="/docs/images/services/github-runner.png" alt="Github Runner dashboard" />
+<ZoomableImage src="/docs/images/services/githubrunner-logo.png" alt="Github Runner dashboard" />
 
 ## What is GitHub Runner?
 

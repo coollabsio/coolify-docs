@@ -3,7 +3,7 @@ title: "Memos"
 description: "Host Memos note-taking on Coolify for quick thoughts, lightweight journaling, tagging, and privacy-focused personal knowledge management."
 ---
 
-<ZoomableImage src="/docs/images/services/memos-logo.webp" alt="Memos Logo logo" />
+<ZoomableImage src="/docs/images/services/memos.webp" alt="Memos Logo logo" />
 
 
 ## What is Memos?

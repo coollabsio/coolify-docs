@@ -3,7 +3,7 @@ title: "Passbolt"
 description: "Deploy Passbolt on Coolify for team password management with end-to-end encryption, sharing, access control, and collaborative credentials."
 ---
 
-<ZoomableImage src="/docs/images/services/passbolt-logo.webp" alt="Passbolt Logo logo" />
+<ZoomableImage src="/docs/images/services/passbolt.webp" alt="Passbolt Logo logo" />
 
 
 ## What is Passbolt?

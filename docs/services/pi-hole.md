@@ -5,7 +5,7 @@ description: "Block ads on Coolify with Pi-hole network-wide ad blocking, DNS fi
 
 # Pi-hole
 
-<ZoomableImage src="/docs/images/services/pihole.svg" alt="Pi Hole dashboard" />
+<ZoomableImage src="/docs/images/services/pihole-logo.svg" alt="Pi Hole dashboard" />
 
 ## What is Pi-hole?
 

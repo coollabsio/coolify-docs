@@ -3,7 +3,7 @@ title: "Vert"
 description: "Deploy Vert.x on Coolify for reactive applications, microservices, event-driven architecture, and polyglot JVM framework development."
 ---
 
-<ZoomableImage src="/docs/images/services/vert-logo.webp" alt="Vert Logo logo" />
+<ZoomableImage src="/docs/images/services/vert.webp" alt="Vert Logo logo" />
 
 
 ## What is Vert?

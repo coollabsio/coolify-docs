@@ -5,7 +5,7 @@ description: "Host OpenPanel analytics on Coolify for privacy-focused web analyt
 
 # OpenPanel
 
-<ZoomableImage src="/docs/images/services/openpanel.svg" alt="Openpanel dashboard" />
+<ZoomableImage src="/docs/images/services/openpanel-logo.svg" alt="Openpanel dashboard" />
 
 ## What is OpenPanel?
 

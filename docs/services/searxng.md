@@ -3,7 +3,7 @@ title: "SearXNG"
 description: "Search privately on Coolify with SearXNG metasearch engine aggregating results from 70+ sources without tracking or personalization."
 ---
 
-<ZoomableImage src="/docs/images/services/searxng.svg" alt="Searxng dashboard" />
+<ZoomableImage src="/docs/images/services/searxng-logo.svg" alt="Searxng dashboard" />
 
 ## What is SearXNG?
 

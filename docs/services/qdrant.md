@@ -3,7 +3,7 @@ title: "Qdrant"
 description: "Deploy Qdrant vector database on Coolify for AI embeddings, semantic search, similarity matching, and high-performance vector storage."
 ---
 
-<ZoomableImage src="/docs/images/services/qdrant.svg" alt="Qdrant dashboard" />
+<ZoomableImage src="/docs/images/services/qdrant-logo.svg" alt="Qdrant dashboard" />
 
 
 ## What is Qdrant?

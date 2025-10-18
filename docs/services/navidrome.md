@@ -3,7 +3,7 @@ title: "Navidrome"
 description: "Stream music on Coolify with Navidrome personal server supporting Subsonic API, web player, mobile apps, and self-hosted music library."
 ---
 
-<ZoomableImage src="/docs/images/services/navidrome-logo.webp" alt="Navidrome Logo logo" />
+<ZoomableImage src="/docs/images/services/navidrome.webp" alt="Navidrome Logo logo" />
 
 
 ## What is Navidrome?

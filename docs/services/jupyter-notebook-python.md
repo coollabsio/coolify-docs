@@ -5,7 +5,7 @@ description: "Run Jupyter Notebook on Coolify for interactive Python development
 
 # Jupyter Notebook Python
 
-<ZoomableImage src="/docs/images/services/jupyter.svg" alt="Jupyter Notebook Python dashboard" />
+<ZoomableImage src="/docs/images/services/jupyternotebook-logo.svg" alt="Jupyter Notebook Python dashboard" />
 
 ## What is Jupyter Notebook Python
 

@@ -5,7 +5,7 @@ description: "Run Matrix Synapse server on Coolify for decentralized chat, end-t
 
 # Matrix
 
-<ZoomableImage src="/docs/images/services/matrix.svg" alt="Matrix dashboard" />
+<ZoomableImage src="/docs/images/services/matrix-logo.svg" alt="Matrix dashboard" />
 
 ## What is Matrix?
 

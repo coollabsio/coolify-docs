@@ -3,7 +3,7 @@ title: "Sonarr"
 description: "Automate TV shows on Coolify with Sonarr for torrent/usenet downloads, quality profiles, episode tracking, and media automation."
 ---
 
-<ZoomableImage src="/docs/images/services/sonarr.svg" alt="Sonarr dashboard" />
+<ZoomableImage src="/docs/images/services/sonarr-logo.svg" alt="Sonarr dashboard" />
 
 ## What is Sonarr?
 

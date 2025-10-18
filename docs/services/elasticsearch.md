@@ -3,7 +3,9 @@ title: "Elasticsearch"
 description: "Here you can find the documentation for hosting Elasticsearch with Coolify."
 ---
 
-![ElasticSearch](/docs/images/services/elasticsearch.svg)
+# Elasticsearch
+
+![ElasticSearch](/images/services/elasticsearch-logo.svg)
 
 ## What is Elasticsearch?
 

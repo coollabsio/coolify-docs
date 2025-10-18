@@ -47,8 +47,10 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [OpenPanel](/services/openpanel) - Open source alternative to Mixpanel and Plausible for product analytics
 - [PostHog](/services/posthog) - Open source product analytics
 - [Plausible](/services/plausible) - A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies
+- [Rybbit](/services/rybbit) - Next-gen, open source, lightweight, cookieless web & product analytics for everyone
 - [Sequin](/services/sequin) - The fastest Postgres change data capture
 - [Superset](/services/superset) - Open-source data visualization and exploration platform
+- [Swetrix](/services/swetrix) - Privacy-friendly and cookieless European web analytics alternative to Google Analytics
 - [Umami](/services/umami) - A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies
 
 ## Automation
@@ -164,6 +166,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Pocketbase](/services/pocketbase) - Open Source backend for your next SaaS and Mobile app
 - [Portainer](/services/portainer) - Container management platform
 - [Prefect](/services/prefect) - Open source workflow management platform
+- [Proxyscotch](/services/proxyscotch) - Tiny open-source CORS proxy made by Hoppscotch
 - [PrivateBin](/services/privatebin) - Minimalist, open-source online pastebin
 - [RabbitMQ](/services/rabbitmq) - Open source message broker
 - [Shlink](/services/shlink) - The open source URL shortener

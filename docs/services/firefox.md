@@ -5,7 +5,7 @@ description: "Run Firefox browser on Coolify in containerized environment for se
 
 # Firefox
 
-<ZoomableImage src="/docs/images/services/firefox.png" alt="Firefox dashboard" />
+<ZoomableImage src="/docs/images/services/firefox-logo.png" alt="Firefox dashboard" />
 
 ## What is Firefox
 

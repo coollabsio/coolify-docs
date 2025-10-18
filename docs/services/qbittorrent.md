@@ -5,7 +5,7 @@ description: "Run qBittorrent on Coolify for torrent downloads, RSS automation, 
 
 # Qbittorrent
 
-<ZoomableImage src="/docs/images/services/qbittorrent.svg" alt="Qbittorrent dashboard" />
+<ZoomableImage src="/docs/images/services/qbittorrent-logo.svg" alt="Qbittorrent dashboard" />
 
 ## What is Qbittorrent
 

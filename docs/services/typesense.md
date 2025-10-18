@@ -3,7 +3,7 @@ title: "Typesense"
 description: "Search instantly on Coolify with Typesense for typo-tolerant search engine, faceting, filtering, and lightning-fast full-text search API."
 ---
 
-<ZoomableImage src="/docs/images/services/typesense-logo.webp" alt="Typesense Logo logo" />
+<ZoomableImage src="/docs/images/services/typesense.webp" alt="Typesense Logo logo" />
 
 
 ## What is Typesense?

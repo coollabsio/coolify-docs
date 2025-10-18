@@ -3,7 +3,7 @@ title: "Yamtrack"
 description: "Track time on Coolify with YAMTrack for project time logging, invoicing, reports, and freelancer productivity management tool."
 ---
 
-<ZoomableImage src="/docs/images/services/yamtrack-logo.webp" alt="Yamtrack Logo logo" />
+<ZoomableImage src="/docs/images/services/yamtrack.webp" alt="Yamtrack Logo logo" />
 
 
 ## What is Yamtrack?

@@ -3,7 +3,7 @@ title: "Seafile"
 description: "Sync files on Coolify with Seafile for secure cloud storage, team collaboration, file versioning, and enterprise-grade document management."
 ---
 
-<ZoomableImage src="/docs/images/services/seafile-logo.webp" alt="Seafile Logo logo" />
+<ZoomableImage src="/docs/images/services/seafile.webp" alt="Seafile Logo logo" />
 
 
 ## What is Seafile?

@@ -3,7 +3,7 @@ title: "Paymenter"
 description: "Host Paymenter billing on Coolify for web hosting invoicing, client management, automated provisioning, and service provider administration."
 ---
 
-<ZoomableImage src="/docs/images/services/paymenter.svg" alt="Paymenter dashboard" />
+<ZoomableImage src="/docs/images/services/paymenter-logo.svg" alt="Paymenter dashboard" />
 
 ## What is Paymenter?
 

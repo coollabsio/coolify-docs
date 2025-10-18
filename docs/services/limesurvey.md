@@ -3,7 +3,7 @@ title: "LimeSurvey"
 description: "Create surveys on Coolify with LimeSurvey featuring questionnaire design, data collection, analysis, and professional survey research tools."
 ---
 
-<ZoomableImage src="/docs/images/services/limesurvey-logo.webp" alt="Limesurvey Logo logo" />
+<ZoomableImage src="/docs/images/services/limesurvey.webp" alt="Limesurvey Logo logo" />
 
 
 ## What is LimeSurvey?
