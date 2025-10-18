@@ -236,6 +236,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Home
 
 - [Grocy](/services/grocy) - A self-hosted groceries & household management solution for your home
+- [Home Assistant](/services/home-assistant) - Open‑source home automation platform focused on local control and privacy
 - [Homebox](/services/homebox) - Inventory and organization system built for the Home User
 - [Mealie](/services/mealie) - Self-hosted recipe manager and meal planner
 
