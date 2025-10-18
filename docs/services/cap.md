@@ -39,6 +39,14 @@ Deploy MinIO as a separate service in the same network and set:
 - `S3_INTERNAL_ENDPOINT`: http://minio:9000 (internal MinIO endpoint)
 - `S3_PATH_STYLE`: true
 
+## Email Login Links
+
+If the `RESEND_API_KEY` and `RESEND_FROM_DOMAIN` environment variables are not set, login links will be written to the server logs. To send login links via email, you'll need to configure [Resend](https://resend.com):
+
+1. Create an account at [Resend](https://resend.com)
+2. Connect a domain and set it as `RESEND_FROM_DOMAIN`
+3. Generate an API key and set it as `RESEND_API_KEY`
+
 ## How to unlock limits (organization seats and recordings)
 
 <!--Method recommended from https://github.com/coollabsio/coolify/pull/6011#pullrequestreview-3337020957-->
