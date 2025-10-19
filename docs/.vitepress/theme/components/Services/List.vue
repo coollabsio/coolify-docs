@@ -1823,6 +1823,13 @@ const services = [
         category: 'Monitoring'
     },
     {
+        name: 'OpnForm',
+        slug: 'opnform',
+        icon: '/docs/images/services/opnform.svg',
+        description: 'Open-source form builder that lets you create beautiful forms and share them anywhere.',
+        category: 'Development'
+    },
+    {
         name: 'OrangeHRM',
         slug: 'orangehrm',
         icon: '/docs/images/services/orangehrm.svg',

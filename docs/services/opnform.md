@@ -1,0 +1,18 @@
+---
+title: "OpnForm"
+description: "Build beautiful forms and share them anywhere with OpnForm, an open-source form builder that's super fast and requires no coding knowledge."
+---
+
+# OpnForm
+
+<ZoomableImage src="/docs/images/services/opnform.svg" alt="OpnForm dashboard" />
+
+## What is OpnForm?
+
+OpnForm is an open-source form builder designed to empower developers and users alike. Create beautiful forms and share them anywhere - it's super fast and you don't need to know how to code. Get started for free with unlimited forms, fields, and submissions.
+
+## Links
+
+- [Official Website](https://opnform.com/?utm_source=coolify.io)
+- [Documentation](https://docs.opnform.com/introduction?utm_source=coolify.io)
+- [GitHub](https://github.com/opnform/opnform?utm_source=coolify.io)
