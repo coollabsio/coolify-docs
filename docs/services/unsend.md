@@ -13,4 +13,4 @@ Unsend is an open-source alternative to Resend, Sendgrid, Mailgun and Postmark e
 
 ## Links
 
-- [Official Documentation](https://docs.unsend.dev/get-started/self-hosting?utm_source=coolify.io)
+- [Official Documentation](https://docs.usesend.com/self-hosting/overview?utm_source=coolify.io)

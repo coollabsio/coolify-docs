@@ -50,53 +50,7 @@ Click on **Continue** button once you have set all the above settings to correct
 
 ## Making services available to the outside world
 
-When Coolify deploys via Docker Compose, it creates a network for the services in the deployment. In addition, it adds the proxy service so that it can make services available from within the new network.
-
-That means that there are a few ways to make your services available:
-
-### Domains
-
-Once Coolify loads your compose file, it finds a list of services and allows you to assign a domain. If your services listen on port 80, assigning a domain is enough for the proxy to find and route traffic to them. If they're listening on other ports, add that port to the domain.
-
-For example, if your app is listening on (container) port 80, and you want to run it on `example.com`, enter `http://example.com` (or `https://`) for the domain.
-
-If your app is listening on (container) port 3000, however, you'll enter `http://example.com:3000` in the relevant service. The port here only tells Coolify where to send traffic within the container; the proxy will make this service available on the normal port (`http://example.com` port 80, in this case.)
-
-If you want to customize this domain-based routing further, see [Coolify's magic environment variables](#coolify-s-magic-environment-variables) below.
-
-### Service Ports
-
-If you want to do something custom, add a `ports` definition in your compose file. For example, to expose container port `3000` directly to the external network of the server:
-
-```yaml
-services:
-  backend:
-    image: your-backend:latest
-    ports:
-      - "3000:3000"
-```
-
-Be aware that if you do this, **your service will be available on your server at port 3000, outside the control of any proxy configuration.** This may not be what you want! If you use the same Docker Compose file for development and deployment, this may expose the ports of private services that you did not intend.
-
-Refer to [the Docker Compose docs on using multiple compose files](https://docs.docker.com/compose/how-tos/multiple-compose-files/) for ways around this. Essentially, you may want to create a compose file that does not expose any ports by default for use with Coolify along with a separate file for use in development.
-
-### Private or Internal Services
-
-If you don't map a service port or assign a domain, Coolify will not expose your service outside the private network. At that point, you can refer to it as normal for Docker Compose.
-
-For example, if you have two services with these names:
-
-```yaml
-services:
-  backend:
-    image: your-backend:latest
-  auth:
-    image: your-auth:latest
-```
-
-Then you can connect from `backend` to `auth` by referring to it as `http://auth:1234` (or whatever port.) Likewise, `auth` can connect to `backend` by referring to `http://backend:3000` (or whatever port.)
-
-For further details, please refer to the [Docker Networking in Compose](https://docs.docker.com/compose/how-tos/networking/) docs.
+Read more about [Exposing Services to the Internet](/knowledge-base/compose#exposing-services-to-the-internet) in the Knowledge Base.
 
 ## Advanced Configuration
 
