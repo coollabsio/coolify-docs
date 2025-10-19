@@ -1388,6 +1388,13 @@ const services = [
         category: 'Security'
     },
     {
+        name: 'Pocket ID',
+        slug: 'pocket-id',
+        icon: '/docs/images/services/pocketid-logo.png',
+        description: 'A simple OIDC provider for passwordless authentication with passkeys.',
+        category: 'Security'
+    },
+    {
         name: 'phpMyAdmin',
         slug: 'phpmyadmin',
         icon: '/docs/images/services/phpmyadmin-logo.svg',

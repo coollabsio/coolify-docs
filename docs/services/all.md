@@ -344,6 +344,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Logto](/services/logto) - Logto is an Auth0 alternative designed for modern apps and SaaS products
 - [Passbolt](/services/passbolt) - Open source password manager for teams
 - [Pi-hole](/services/pi-hole) - Network-wide ad blocker that acts as a DNS sinkhole
+- [Pocket ID](/services/pocket-id) - A simple OIDC provider for passwordless authentication with passkeys
 - [SuperTokens](/services/supertokens) - Open-source authentication solution
 - [Vaultwarden](/services/vaultwarden) - Unofficial Bitwarden compatible server
 - [WireGuard Easy](/services/wireguard-easy) - Easy-to-use WireGuard VPN server
