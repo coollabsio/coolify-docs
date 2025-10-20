@@ -259,6 +259,13 @@ img:hover {
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const services = [
+     {
+        name: 'Siyuan',
+        slug: 'siyuan',
+        icon: '/docs/images/services/siyuan.svg',
+        description: '"A privacy-first, self-hosted, fully open source personal knowledge management software, written in typescript and golang.',
+        category: 'Productivity'
+    },
     {
         name: 'Umami',
         slug: 'umami',
