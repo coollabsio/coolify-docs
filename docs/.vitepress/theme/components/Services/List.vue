@@ -1592,6 +1592,13 @@ const services = [
         category: 'Media'
     },
     {
+        name: 'SparkyFitness',
+        slug: 'sparkyfitness',
+        icon: '/docs/images/services/sparkyfitness.png',
+        description: 'A comprehensive fitness app that helps users track nutrition, exercise, and body metrics.',
+        category: 'Health'
+    },
+    {
         name: 'Statusnook',
         slug: 'statusnook',
         icon: '/docs/images/services/statusnook-logo.svg',
