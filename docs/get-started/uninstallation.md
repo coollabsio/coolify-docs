@@ -24,8 +24,8 @@ Stop all Coolify-related Docker containers and remove them to free up system res
 
 Run the following commands in your terminal:
 ```sh
-sudo docker stop -t 0 coolify coolify-realtime coolify-db coolify-redis coolify-proxy
-sudo docker rm coolify coolify-realtime coolify-db coolify-redis coolify-proxy
+sudo docker stop -t 0 coolify coolify-realtime coolify-db coolify-redis coolify-proxy coolify-sentinel
+sudo docker rm coolify coolify-realtime coolify-db coolify-redis coolify-proxy coolify-sentinel
 ```
 The `-t 0` flag ensures that the containers stop immediately without waiting for a timeout.
 
