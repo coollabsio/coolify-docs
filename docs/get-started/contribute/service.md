@@ -11,6 +11,14 @@ Services in Coolify are templates made from normal [docker-compose](https://docs
 See [Coolify's docker-compose specs](/knowledge-base/docker/compose#coolify-s-magic-environment-variables) to learn more about Coolify's magic and how to benefit from generated variables and storage handling. Please use this magic when submitting your PR to make the merging process smoother.
 :::
 
+## AI prompt for service templates
+
+Share the prompt below with AI coding agents when creating or updating Coolify service templates:
+
+```text
+You are contributing a one-click Coolify service template using Docker Compose. Read existing templates under templates/compose for patterns and reuse Coolify's magic environment variables (https://coolify.io/docs/knowledge-base/docker/compose#coolify-s-magic-environment-variables). Review the service contribution guidelines (https://coolify.io/docs/get-started/contribute/service) before proposing changes. Volumes are managed by Coolify—do not leave a top-level volumes: block unless absolutely required. Pin every image to a verified upstream tag by checking the vendor's release notes; never guess versions. Prefer configurations that only require setting environment variables in the Coolify UI (no manual shell steps). Highlight any required variables with Docker Compose's :? syntax. Reference the service docs metadata guidelines in this file and cross-check other Coolify docs as needed in /templates/compose directory. Deliver a clean docker-compose file ready for review.
+```
+
 1. Add metadata
 
    At the top of your `docker-compose` file, add the following metadata:
