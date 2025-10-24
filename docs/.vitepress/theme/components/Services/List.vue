@@ -1697,9 +1697,9 @@ const services = [
         category: 'Development'
     },
     {
-        name: 'Unsend',
-        slug: 'unsend',
-        icon: '/docs/images/services/unsend-logo.svg',
+        name: 'Usesend',
+        slug: 'usesend',
+        icon: '/docs/images/services/usesend-logo.png',
         description: 'Open-source email recall service.',
         category: 'Email'
     },
