@@ -153,7 +153,7 @@ Email notifications can be configured using either SMTP or Resend.
   See [Discord's Webhook Guide](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) for more detailed setup instructions.
 :::
 
-### Slack
+### Slack / Mattermost
 
 
 1. Create a Slack App
@@ -175,6 +175,15 @@ Email notifications can be configured using either SMTP or Resend.
    - Enable the Slack channel
    - Send a `Test notification`
 
+
+::: info Mattermost Compatibility
+Slack webhooks in Coolify are fully compatible with Mattermost. To use with Mattermost:
+- In Mattermost, go to **Product Menu** → **Integrations** → **Incoming Webhooks**
+- Click **Add Incoming Webhook**
+- Configure the webhook (name, channel, etc.) and save
+- Copy the generated webhook URL (format: `https://your-mattermost-server.com/hooks/xxx-generatedkey-xxx`)
+- Use this Mattermost webhook URL in Coolify's Slack notification settings
+:::
 
 ### Pushover (Push Notifications)
 
