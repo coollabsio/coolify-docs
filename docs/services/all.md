@@ -235,6 +235,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Health
 
 - [Baby Buddy](/services/babybuddy) - It helps parents track their baby's daily activities, growth, and health with ease
+- [SparkyFitness](/services/sparkyfitness) - A comprehensive fitness tracking and management application designed to help users monitor their nutrition, exercise, and body measurements
 
 ## Home
 
