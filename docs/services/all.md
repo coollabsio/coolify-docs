@@ -247,6 +247,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [Audiobookshelf](/services/audiobookshelf) - Self-hosted audiobook and podcast server
 - [Calibre-web](/services/calibre-web) - Web app for browsing, reading and downloading eBooks from a Calibre database
+- [Calibre Web Automated with Downloader](/services/calibre-web-automated-with-downloader) - Automated version of Calibre Web with a book downloader included.
 - [Castopod](/services/castopod) - Open-source podcast hosting platform
 - [Emby](/services/emby) - A media server to organize, play, and stream audio and video to a variety of devices
 - [Emby Stat](/services/emby-stat) - A simple and easy-to-use Emby statistics dashboard

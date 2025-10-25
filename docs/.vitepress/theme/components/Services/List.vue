@@ -422,6 +422,13 @@ const services = [
         category: 'Media'
     },
     {
+        name: 'Calibre Web Automated with Downloader',
+        slug: 'calibre-web-automated-with-downloader',
+        icon: '/docs/images/services/calibre-web-automated-with-downloader.png',
+        description: 'Automated version of Calibre Web with a book downloader included.',
+        category: 'Media'
+    },
+    {
         name: 'Castopod',
         slug: 'castopod',
         icon: '/docs/images/services/castopod.svg',
