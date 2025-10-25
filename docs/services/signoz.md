@@ -7,7 +7,7 @@ description: "An observability platform native to OpenTelemetry with logs, trace
 
 <ZoomableImage src="/docs/images/services/signoz.svg" alt="SigNoz logo" />
 
-## What is SigNozzf
+## What is SigNoz
 
 SigNoz is an open source observability platform native to OpenTelemetry with logs, traces and metrics.
 
@@ -17,7 +17,7 @@ The following steps will guide you through the configuration of SigNoz once you 
 
 ### URLs configuration
 
-Coolify being a whole observability platform, multiple ports need to be exposed for it to work.
+SigNoz being a whole observability platform, multiple ports need to be exposed for it to work.
 The first one is the URL of the UI. You can find it in the "Service URL" field of the Signoz service, for example: `https://signoz.example.com:8080`
 
 Then, you need to expose the Otel Collector, a service which is responsible for receiving traces, metrics and logs from your applications and services.
@@ -28,7 +28,7 @@ You have two strategies to do so:
 - Configuring a different URL for each receiver.
 - Directly exposing the ports to the host and the outside world.
 
-Which option you prefers depends on you security needs and how you architecture your domains.
+Which option you prefer depends on your security needs and how you structure your domains.
 
 #### One subdomain per receiver
 
@@ -73,7 +73,7 @@ To enable SMTP emailing (including inviting new team members), you need to set t
 - `SIGNOZ_EMAILING_SMTP_FROM` is the email address to use in the From field.
 - `SIGNOZ_EMAILING_SMTP_AUTH_USERNAME` and `SIGNOZ_EMAILING_SMTP_AUTH_PASSWORD` are used to authenticate with the SMTP server.
 
-More environment variables are [available to use](https://signoz.io/docs/manage/administrator-guide/configuration/smtp-email-invitations/) to use authenticate via Identity / Secret or use TLS instead of SmartTLS. Read [Passing environment variables not included in the template](passing-environment-variables-not-included-in-the-template) to learn how to add them.
+More environment variables are [available to use](https://signoz.io/docs/manage/administrator-guide/configuration/smtp-email-invitations/) to authenticate via Identity / Secret or use TLS instead of SmartTLS. Read [Passing environment variables not included in the template](passing-environment-variables-not-included-in-the-template) to learn how to add them.
 
 #### Alert Manager emails
 
@@ -87,7 +87,7 @@ To enable email alerts, you need to set the following variables from the Environ
 - `SIGNOZ_ALERTMANAGER_SIGNOZ_GLOBAL_SMTP__FROM` is the email address to use in the From field.
 - `SIGNOZ_ALERTMANAGER_SIGNOZ_GLOBAL_SMTP__AUTH__USERNAME` and `SIGNOZ_ALERTMANAGER_SIGNOZ_GLOBAL_SMTP__AUTH__PASSWORD` are used to authenticate with the SMTP server.
 
-More environment variables are [available to use](https://signoz.io/docs/manage/administrator-guide/configuration/alertmanager/) to use authenticate via Identity / Secret or use TLS instead of SmartTLS. Read [Passing environment variables not included in the template](passing-environment-variables-not-included-in-the-template) to learn how to add them.
+More environment variables are [available to use](https://signoz.io/docs/manage/administrator-guide/configuration/alertmanager/) to authenticate via Identity / Secret or use TLS instead of SmartTLS. Read [Passing environment variables not included in the template](passing-environment-variables-not-included-in-the-template) to learn how to add them.
 
 ## Links
 
