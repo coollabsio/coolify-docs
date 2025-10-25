@@ -300,6 +300,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Reactive Resume](/services/reactive-resume) - A free and open source resume builder
 - [Readeck](/services/readeck) - Web article reader and bookmark manager
 - [Ryot](/services/ryot) - Self-hosted platform for tracking various facets of your life
+- [SilverBullet](/services/silverbullet) - An open source personal productivity platform built on Markdown
 - [Slash](/services/slash) - Open-source, self-hosted links and notes manager
 - [TriliumNext](/services/triliumnext) - Build your personal knowledge base with TriliumNext Notes
 - [Vikunja](/services/vikunja) - The open-source to-do app
