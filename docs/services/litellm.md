@@ -20,4 +20,4 @@ LiteLLM is an open-source LLM Gateway to manage authentication, loadbalancing, a
 
 ## Links
 
-- [The official website ›](https://docs.litellm.ai?utm_source=coolify.io)
+- [The official website](https://docs.litellm.ai?utm_source=coolify.io)

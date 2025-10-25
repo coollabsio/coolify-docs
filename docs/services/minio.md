@@ -3,7 +3,6 @@ title: "MinIO"
 description: "Host MinIO object storage on Coolify as S3-compatible high-performance storage for backups, data lakes, and cloud-native application storage."
 ---
 
-
 ![MinIO](https://github.com/minio.png)
 
 ## What is MinIO?
@@ -12,7 +11,7 @@ MinIO is a high-performance, distributed object storage system. It is software-d
 
 ## Links
 
-- [The official website ›](https://min.io/)
+- [The official website](https://min.io/)
 
 ## FAQ
 

@@ -130,8 +130,8 @@ As soon as you have your local setup ready, follow these steps to add your new s
 
    ## Links
 
-   - [Official website ↗](https://example.com?utm_source=coolify.io)
-   - [GitHub ↗](https://github.com/example/repo?utm_source=coolify.io)
+   - [Official website](https://example.com?utm_source=coolify.io)
+   - [GitHub](https://github.com/example/repo?utm_source=coolify.io)
    ```
 
 4. Add Service to the Services Overview

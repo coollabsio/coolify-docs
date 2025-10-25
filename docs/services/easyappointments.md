@@ -5,7 +5,7 @@ description: "Run Easy!Appointments on Coolify for online booking system with ca
 
 # Easyappointments
 
-<ZoomableImage src="/docs/images/services/easyappointments.png" alt="Easyappointments dashboard" />
+<ZoomableImage src="/docs/images/services/easyappointments-logo.png" alt="Easyappointments dashboard" />
 
 ## What is Easyappointments
 

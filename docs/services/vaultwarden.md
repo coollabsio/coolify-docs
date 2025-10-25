@@ -8,6 +8,7 @@ description: "Store passwords on Coolify with Vaultwarden unofficial Bitwarden s
 ## What is Vaultwarden?
 
 Vaultwarden is an open source, self-hosted password manager.
+
 ## Links
 
-- [GitHub ›](https://github.com/dani-garcia/vaultwarden)
+- [GitHub](https://github.com/dani-garcia/vaultwarden)

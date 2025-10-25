@@ -11,7 +11,7 @@ ClassicPress is a community-led open source content management system for creato
 
 For more information, see:
 
-- [The official website ›](https://www.classicpress.net?utm_source=coolify.io)
-- [The ClassicPress documentation ›](https://docs.classicpress.net?utm_source=coolify.io)
-- [The ClassicPress governance ›](https://www.classicpress.net/governance?utm_source=coolify.io)
-- [Suggest features ›](https://github.com/ClassicPress/ClassicPress/issues?utm_source=coolify.io)
+- [The official website](https://www.classicpress.net?utm_source=coolify.io)
+- [The ClassicPress documentation](https://docs.classicpress.net?utm_source=coolify.io)
+- [The ClassicPress governance](https://www.classicpress.net/governance?utm_source=coolify.io)
+- [Suggest features](https://github.com/ClassicPress/ClassicPress/issues?utm_source=coolify.io)

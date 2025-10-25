@@ -5,7 +5,7 @@ description: "Deploy Neon WebSocket proxy on Coolify for serverless Postgres con
 
 # Neon Ws Proxy
 
-<ZoomableImage src="/docs/images/services/neon.svg" alt="Neon Ws Proxy dashboard" />
+<ZoomableImage src="/docs/images/services/neon-logo.svg" alt="Neon Ws Proxy dashboard" />
 
 ## What is Neon Ws Proxy
 

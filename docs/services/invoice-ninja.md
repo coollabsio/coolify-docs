@@ -13,4 +13,4 @@ A self-hosted invoicing platform for small businesses.
 
 ## Links
 
-- [The official website ›](https://www.invoiceninja.com/)
+- [The official website](https://www.invoiceninja.com/)

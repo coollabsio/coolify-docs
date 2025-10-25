@@ -19,5 +19,5 @@ Windmill is an open-source developer platform to power your entire infra and tur
 
 ## Links
 
-- [Official Website ›](https://windmill.dev)
-- [GitHub ›](https://github.com/windmill-labs/windmill)
+- [Official Website](https://windmill.dev)
+- [GitHub](https://github.com/windmill-labs/windmill)

@@ -20,10 +20,9 @@ Stop settling for less. Make game servers a first-class citizen on your platform
 <ZoomableImage src="/docs/images/services/pterodactyl-screenshot-5.webp" alt="Pterodactyl interface screenshot" />
 <ZoomableImage src="/docs/images/services/pterodactyl-screenshot-6.webp" alt="Pterodactyl interface screenshot" />
 
-
 ## Links
 
-- [The official website ›](https://pterodactyl.io)
-- [GitHub ›](https://github.com/pterodactyl/panel)
-- [Documentation ›](https://pterodactyl.io/project/introduction.html)
-- [Community Discord ›](https://discord.gg/pterodactyl)
+- [The official website](https://pterodactyl.io)
+- [GitHub](https://github.com/pterodactyl/panel)
+- [Documentation](https://pterodactyl.io/project/introduction.html)
+- [Community Discord](https://discord.gg/pterodactyl)

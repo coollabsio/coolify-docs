@@ -5,7 +5,7 @@ description: "Build databases on Coolify with Teable as Airtable alternative com
 
 # Teable
 
-<ZoomableImage src="/docs/images/services/teable.png" alt="Teable dashboard" />
+<ZoomableImage src="/docs/images/services/teable-logo.png" alt="Teable dashboard" />
 
 ## What is Teable
 

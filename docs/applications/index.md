@@ -201,6 +201,7 @@ You can always set your custom dockerfile location. By default, it is set to `/D
 ### Docker Image
 
 You can deploy any docker images from any Docker compatible repository. For example, you can deploy images from Docker Hub, GitHub Container Registry, etc.
+To pull images from a private registry, you need to login to your docker registry as explained here: https://coolify.io/docs/knowledge-base/docker/registry#docker-credentials
 
 ### Docker Compose
 

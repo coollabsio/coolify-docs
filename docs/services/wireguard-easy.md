@@ -5,7 +5,7 @@ description: "Deploy WireGuard VPN on Coolify with WireGuard Easy for simple VPN
 
 # Wireguard Easy
 
-<ZoomableImage src="/docs/images/services/wireguard.svg" alt="Wireguard Easy dashboard" />
+<ZoomableImage src="/docs/images/services/wireguard-logo.svg" alt="Wireguard Easy dashboard" />
 
 ## What is Wireguard Easy
 

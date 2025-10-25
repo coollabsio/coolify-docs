@@ -5,7 +5,7 @@ description: "Build websites on Coolify with VvvebJs drag-and-drop website build
 
 # Vvveb
 
-<ZoomableImage src="/docs/images/services/vvveb.png" alt="Vvveb dashboard" />
+<ZoomableImage src="/docs/images/services/vvveb-logo.png" alt="Vvveb dashboard" />
 
 ## What is Vvveb
 

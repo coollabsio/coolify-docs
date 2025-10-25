@@ -13,4 +13,4 @@ Homebox is an inventory and organization system built specifically for home user
 
 ## Links
 
-- [GitHub ›](https://github.com/hay-kot/homebox?utm_source=coolify.io)
+- [GitHub](https://github.com/hay-kot/homebox?utm_source=coolify.io)

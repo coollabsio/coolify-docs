@@ -5,7 +5,7 @@ description: "Track coding time on Coolify with Wakapi for WakaTime-compatible t
 
 # Wakapi
 
-<ZoomableImage src="/docs/images/services/wakapi.svg" alt="Wakapi dashboard" />
+<ZoomableImage src="/docs/images/services/wakapi-logo.svg" alt="Wakapi dashboard" />
 
 ## What is Wakapi
 

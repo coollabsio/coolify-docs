@@ -15,5 +15,5 @@ Formbricks provides a free and open source surveying platform. Gather feedback a
 
 ## Links
 
-- [The official website ›](https://formbricks.com?utm_source=coolify.io)
-- [GitHub ›](https://github.com/formbricks/formbricks?utm_source=coolify.io)
+- [The official website](https://formbricks.com?utm_source=coolify.io)
+- [GitHub](https://github.com/formbricks/formbricks?utm_source=coolify.io)

@@ -5,7 +5,7 @@ description: "Deploy Mautic open-source marketing automation platform on Coolify
 
 # Mautic
 
-<ZoomableImage src="/docs/images/services/mautic.svg" alt="Mautic dashboard" />
+<ZoomableImage src="/docs/images/services/mautic-logo.svg" alt="Mautic dashboard" />
 
 ## What is Mautic
 

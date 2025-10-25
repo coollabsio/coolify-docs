@@ -13,5 +13,5 @@ OpenBlocks is an open source low-code platform.
 
 ## Links
 
-- [The official website ›](https://www.openblocks.dev/)
-- [GitHub ›](https://github.com/openblocks-dev/openblocks)
+- [The official website](https://www.openblocks.dev/)
+- [GitHub](https://github.com/openblocks-dev/openblocks)

@@ -4,10 +4,11 @@ description: "Expose all Coolify resources securely through Cloudflare Tunnels w
 ---
 
 # Access All Resource via Cloudflare Tunnels
-Accessing All Resource deployed on Coolify using a Cloudflare Tunnel allows you to securely reach your app without exposing your server’s IP address or without having a Public IP address for the server. 
 
+Accessing All Resource deployed on Coolify using a Cloudflare Tunnel allows you to securely reach your app without exposing your server’s IP address or without having a Public IP address for the server.
 
 ## Who this is for?
+
 This setup is ideal for people who:
 
 - Don't have a public IP for their server (could be a laptop, rasberry pi etc..).
@@ -15,20 +16,20 @@ This setup is ideal for people who:
 - Want to keep their server’s IP address private and avoid exposing it to the public internet.
 - Have an resource already deployed on Coolify and need an external method to access it securely.
 
-
 ## Setup Requirements
+
 To follow this guide, you'll need:
 
-- A free [Cloudflare ↗](https://cloudflare.com) account.
+- A free [Cloudflare](https://cloudflare.com) account.
 - You need a domain that has it's **DNS managed by Cloudflare**.
 
-
 ## Before We Start
-- We assume you have Coolify running on your server.
-- If your app requires HTTPS for functionality like cookies or login, then you need to follow the [Full TLS HTTPS guide ↗](/knowledge-base/cloudflare/tunnels/full-tls) after following this guide. This is because in this guide, Cloudflare will manage HTTPS externally, while your app will run over HTTP within Coolify.
 
+- We assume you have Coolify running on your server.
+- If your app requires HTTPS for functionality like cookies or login, then you need to follow the [Full TLS HTTPS guide](/knowledge-base/cloudflare/tunnels/full-tls) after following this guide. This is because in this guide, Cloudflare will manage HTTPS externally, while your app will run over HTTP within Coolify.
 
 ## How It Works?
+
 A simple high-level overview diagram to give you a visual idea of how this works:
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/all-resource/high-level-diagram.webp" alt="High Level Diagram configuration" />
@@ -36,6 +37,7 @@ A simple high-level overview diagram to give you a visual idea of how this works
 ---
 
 ### Quick Links to Important Sections:
+
 - [Create a Cloudflare Tunnel](#_1-create-a-cloudflare-tunnel)
 - [Setup Encryption mode on Cloudflare](#_2-setup-encryption-mode-on-cloudflare)
 - [Setup Cloudflare Tunnel on Coolify](#_3-setup-cloudflare-tunnel-on-coolify)
@@ -47,16 +49,16 @@ A simple high-level overview diagram to give you a visual idea of how this works
 ---
 
 ::: warning Example Data
-  The following data is used as an example in this guide. Please replace it with your actual data when following the steps:
-  
-  - **Domain Name:** shadowarcanist.com
-:::
+The following data is used as an example in this guide. Please replace it with your actual data when following the steps:
+
+- **Domain Name:** shadowarcanist.com
+  :::
 
 ---
 
-
 ## 1. Create a Cloudflare Tunnel
-To create a Cloudflare Tunnel, first log in to your Cloudflare account and go to the [Zero Trust ↗](https://one.dash.cloudflare.com/) page.
+
+To create a Cloudflare Tunnel, first log in to your Cloudflare account and go to the [Zero Trust](https://one.dash.cloudflare.com/) page.
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/all-resource/1.webp" alt="Screenshot of All Resource" />
 
@@ -93,8 +95,8 @@ Then, you will be prompted to add a hostname.
 5. **URL** - Enter **localhost:80** (this is very important).
 6. After filling in the details, click the **Save Tunnel** button.
 
-
 ## 2. Setup Encryption mode on Cloudflare
+
 To set up encryption on Cloudflare, follow these steps:
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/all-resource/15.webp" alt="Screenshot of All Resource" />
@@ -107,8 +109,8 @@ To set up encryption on Cloudflare, follow these steps:
 
 Choose **Full** as the encryption mode.
 
-
 ## 3. Setup Cloudflare Tunnel on Coolify
+
 To set up the tunnel on Coolify, follow these steps:
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/all-resource/7.webp" alt="Screenshot of All Resource" />
@@ -123,45 +125,46 @@ You will see many options to deploy a new app. Search for Cloudflared and click 
 
 Go to the **Environment Variables** page, enter your tunnel token, and deploy the Cloudflared app. This token was copied in [Step 1](#_1-create-a-cloudflare-tunnel)
 
-
 ## 4. Start Coolify Proxy
+
 To start the Coolify proxy, follow these steps:
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/all-resource/10.webp" alt="Screenshot of All Resource" />
 
-1. In the Coolify dashboard, go to the **Servers** page from the sidebar.  
-2. Select the server where coolify is running, then Click on the **Proxy** tab.  
-3. Open the **General** tab.  
-4. Click the **Start Proxy** button.  
+1. In the Coolify dashboard, go to the **Servers** page from the sidebar.
+2. Select the server where coolify is running, then Click on the **Proxy** tab.
+3. Open the **General** tab.
+4. Click the **Start Proxy** button.
 
 ::: success Tip  
-  The Coolify proxy is used to route traffic to apps running on your server. This eliminates the need to create new hostnames on the Cloudflare tunnel every time you deploy a new app.  
+ The Coolify proxy is used to route traffic to apps running on your server. This eliminates the need to create new hostnames on the Cloudflare tunnel every time you deploy a new app.  
 :::
 
 ## 5. Configure Your Resource to Use the Tunnel Domain
+
 Enter the domain you want to use for your resource/app and deploy your resource.
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/all-resource/11.webp" alt="Screenshot of All Resource" />
 
 ::: warning HEADS UP!  
-  You should enter the domain as **HTTP** because Cloudflare handles **HTTPS** and TLS terminations. If you use **HTTPS** for your resource, you may encounter a **TOO_MANY_REDIRECTS** error.  
+ You should enter the domain as **HTTP** because Cloudflare handles **HTTPS** and TLS terminations. If you use **HTTPS** for your resource, you may encounter a **TOO_MANY_REDIRECTS** error.
 
-  If your app requires **HTTPS** for features like cookies or login, follow the [Full TLS HTTPS Guide ↗](/knowledge-base/cloudflare/tunnels/full-tls) after completing this guide.  
+If your app requires **HTTPS** for features like cookies or login, follow the [Full TLS HTTPS Guide](/knowledge-base/cloudflare/tunnels/full-tls) after completing this guide.  
 :::
 
 **Congratulations**! You've successfully set up a resource that can be accessed by anyone on the internet your domain.
 
-
 ## How to use Mutiple Different Domains?
+
 You don't need to create new tunnels for each domain, just create a new hostname with the new domain and point it to the `localhost:80`.
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/all-resource/12.webp" alt="Screenshot of All Resource" />
 
-
 ## Known issues and Solutions
-When you create a new public hostname in [Step 1](#_1-create-a-cloudflare-tunnel), Cloudflare will create a DNS record for the hostname. 
 
-However, if a DNS record for the hostname already exists, Cloudflare won’t create a new one. 
+When you create a new public hostname in [Step 1](#_1-create-a-cloudflare-tunnel), Cloudflare will create a DNS record for the hostname.
+
+However, if a DNS record for the hostname already exists, Cloudflare won’t create a new one.
 
 In this case, your app won’t work. To fix this issue, follow the steps below:
 

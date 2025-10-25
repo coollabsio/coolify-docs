@@ -5,7 +5,7 @@ description: "Deploy Joplin notes on Coolify for markdown note-taking, to-do lis
 
 # Joplin
 
-<ZoomableImage src="/docs/images/services/joplin.png" alt="Joplin dashboard" />
+<ZoomableImage src="/docs/images/services/joplin-logo.png" alt="Joplin dashboard" />
 
 ## What is Joplin
 

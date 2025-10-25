@@ -4,6 +4,7 @@ description: "Deploy Odoo ERP on Coolify for integrated business management with
 ---
 
 # What is Odoo?
+
 Odoo is an open source ERP and CRM software.
 
 ## Screenshots
@@ -14,5 +15,5 @@ Odoo is an open source ERP and CRM software.
 
 ## Links
 
-- [The official website ›](https://www.odoo.com/)
-- [GitHub ›](https://github.com/odoo/odoo)
+- [The official website](https://www.odoo.com/)
+- [GitHub](https://github.com/odoo/odoo)

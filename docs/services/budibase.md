@@ -5,7 +5,7 @@ description: "Build internal apps on Coolify with Budibase low-code platform fea
 
 # Budibase
 
-<ZoomableImage src="/docs/images/services/budibase.svg" alt="Budibase dashboard" />
+<ZoomableImage src="/docs/images/services/budibase-logo.svg" alt="Budibase dashboard" />
 
 ## What is Budibase
 

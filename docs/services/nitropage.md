@@ -3,14 +3,14 @@ title: "Nitropage"
 description: "Host NitroPage website builder on Coolify for drag-and-drop page creation, templates, and simple website development without coding skills."
 ---
 
-<ZoomableImage src="/docs/images/services/nitropage.svg" alt="Nitropage dashboard" />
-
+<ZoomableImage src="/docs/images/services/nitropage-logo.svg" alt="Nitropage dashboard" />
 
 ## What is Nitropage?
+
 Nitropage is an extensible, visual website builder based on SolidStart, offering a growing library of versatile building blocks.
 
-
 ## Features
+
 - Reusable element **Presets** and **Layouts**
 - Publishing workflow with **Revisions**
 - Starter kit with dozens of Blueprints
@@ -20,8 +20,8 @@ Nitropage is an extensible, visual website builder based on SolidStart, offering
 - Powerful developer architecture with [Vite](https://vitejs.dev/?utm_source=coolify.io)
 - Automatic sitemap.xml and Atom-feed handling
 
-
 ## Video
+
 <iframe
   width="560"
   height="315"
@@ -32,7 +32,7 @@ Nitropage is an extensible, visual website builder based on SolidStart, offering
   allowfullscreen
 ></iframe>
 
-
 ## Links
-- [The official website ›](https://nitropage.org/?utm_source=coolify.io)
-- [GitHub ›](https://codeberg.org/nitropage/nitropage?utm_source=coolify.io)
+
+- [The official website](https://nitropage.org/?utm_source=coolify.io)
+- [GitHub](https://codeberg.org/nitropage/nitropage?utm_source=coolify.io)

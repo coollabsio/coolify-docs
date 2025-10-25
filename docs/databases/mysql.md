@@ -15,5 +15,5 @@ MySQL provides a robust, ACID-compliant database solution suitable for a wide ra
 
 ## Links
 
-- [The official website ›](https://www.mysql.com/)
-- [GitHub ›](https://github.com/mysql/mysql-server)
+- [The official website](https://www.mysql.com/)
+- [GitHub](https://github.com/mysql/mysql-server)

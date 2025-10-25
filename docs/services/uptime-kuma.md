@@ -13,4 +13,4 @@ Uptime Kuma is an easy-to-use, privacy-focused uptime monitoring service.
 
 ## Links
 
-- [GitHub ›](https://github.com/louislam/uptime-kuma?tab=readme-ov-file)
+- [GitHub](https://github.com/louislam/uptime-kuma?tab=readme-ov-file)

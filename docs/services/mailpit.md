@@ -13,5 +13,5 @@ Mailpit is a self-hosted email and SMTP testing tool with a web interface.
 
 ## Links
 
-- [The official website ›](https://mailpit.axllent.org)
-- [GitHub ›](https://github.com/axllent/mailpit)
+- [The official website](https://mailpit.axllent.org)
+- [GitHub](https://github.com/axllent/mailpit)

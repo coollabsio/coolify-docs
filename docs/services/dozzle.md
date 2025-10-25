@@ -15,5 +15,5 @@ Dozzle is easy to install and configure, making it an ideal solution for develop
 
 ## Links
 
-- [The official website ›](https://dozzle.dev/guide/getting-started#running-with-docker?utm_source=coolify.io)
-- [GitHub ›](https://github.com/amir20/dozzle?utm_source=coolify.io)
+- [The official website](https://dozzle.dev/guide/getting-started#running-with-docker?utm_source=coolify.io)
+- [GitHub](https://github.com/amir20/dozzle?utm_source=coolify.io)

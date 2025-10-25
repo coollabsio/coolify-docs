@@ -62,6 +62,7 @@ export default defineConfig({
   ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    externalLinkIcon: true,
     carbonAds: {
       code: 'CW7IPKJJ',
       placement: 'coolifyio'
@@ -410,6 +411,7 @@ export default defineConfig({
                   },
                 ]
               },
+              { text: 'FAQ', link: '/knowledge-base/faq' },
             ]
           }
         ],

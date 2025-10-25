@@ -5,7 +5,7 @@ description: "Host ntfy notification service on Coolify for simple pub/sub push 
 
 # Ntfy
 
-<ZoomableImage src="/docs/images/services/ntfy.svg" alt="Ntfy dashboard" />
+<ZoomableImage src="/docs/images/services/ntfy-logo.svg" alt="Ntfy dashboard" />
 
 ## What is Ntfy
 

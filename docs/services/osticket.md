@@ -5,7 +5,7 @@ description: "Run osTicket helpdesk on Coolify for ticket management, customer s
 
 # Osticket
 
-<ZoomableImage src="/docs/images/services/osticket.png" alt="Osticket dashboard" />
+<ZoomableImage src="/docs/images/services/osticket-logo.png" alt="Osticket dashboard" />
 
 ## What is Osticket
 

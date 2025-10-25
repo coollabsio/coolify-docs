@@ -13,5 +13,5 @@ Outline is an open-source collaboration tool that allows you to create and share
 
 ## Links
 
-- [The official website ›](https://getoutline.com/?utm_source=coolify.io)
-- [GitHub ›](https://github.com/outline/outline?utm_source=coolify.io)
+- [The official website](https://getoutline.com/?utm_source=coolify.io)
+- [GitHub](https://github.com/outline/outline?utm_source=coolify.io)

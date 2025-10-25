@@ -5,7 +5,7 @@ description: "Deploy Keycloak on Coolify for identity and access management with
 
 # Keycloak
 
-<ZoomableImage src="/docs/images/services/keycloak.svg" alt="Keycloak dashboard" />
+<ZoomableImage src="/docs/images/services/keycloak-logo.svg" alt="Keycloak dashboard" />
 
 ## What is Keycloak
 

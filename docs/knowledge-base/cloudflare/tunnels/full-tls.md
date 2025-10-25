@@ -4,35 +4,36 @@ description: "Configure end-to-end HTTPS for Coolify resources through Cloudflar
 ---
 
 # Full HTTPS/TLS Setup for All Resources
-When tunneling resources with Coolify through Cloudflare, Cloudflare typically handles HTTPS and TLS termination, while Coolify runs your resources over HTTP. 
 
-This setup works for most users, but some may face issues with URL mismatches, especially for apps that require HTTPS on Coolify to issue JWT tokens or handle callback URLs. 
+When tunneling resources with Coolify through Cloudflare, Cloudflare typically handles HTTPS and TLS termination, while Coolify runs your resources over HTTP.
+
+This setup works for most users, but some may face issues with URL mismatches, especially for apps that require HTTPS on Coolify to issue JWT tokens or handle callback URLs.
 
 This guide solves that issue by configuring your resources to run fully on HTTPS, bypassing Cloudflare's HTTPS handling and ensuring your app functions correctly with secure connections.
 
-
 ## Who this is for?
+
 This guide is ideal for users who:
 
 - Have followed our [Tunnel All Resources Using Cloudflare Tunnel](/knowledge-base/cloudflare/tunnels/all-resource) or [Tunnel Specific Resources Using Cloudflare Tunnel](/knowledge-base/cloudflare/tunnels/single-resource) guide.
 - Need their resources deployed with Coolify to run on HTTPS for applications requiring HTTPS for JWT issuance, callback functions, or similar features.
 
-
 ## Setup Requirements
+
 To follow this guide, you'll need:
 
 - A working Cloudflare tunnel setup as described in the previous guides.
 - A domain configured in Cloudflare to handle HTTP traffic and redirect to HTTPS.
 
-
 ## Before We Start
-- If your Coolify instance is on the same tunnel as the domain you want to configure, make sure you can access the Coolify Dashboard using the server IP and port (e.g., **203.0.113.1:8000**) before starting these steps. 
-- The default port is **8000**, but if you’ve changed or disabled it, ensure you can access the Coolify Dashboard through the new port or that port **8000** is re-enabled on the server.
 
+- If your Coolify instance is on the same tunnel as the domain you want to configure, make sure you can access the Coolify Dashboard using the server IP and port (e.g., **203.0.113.1:8000**) before starting these steps.
+- The default port is **8000**, but if you’ve changed or disabled it, ensure you can access the Coolify Dashboard through the new port or that port **8000** is re-enabled on the server.
 
 ---
 
 ### Quick Links to Important Sections:
+
 - [Create a Cloudflare Origin Certificate](#_1-create-a-cloudflare-origin-certificate)
 - [Add Origin Certificate to Your Server](#_2-add-origin-certificate-to-your-server)
 - [Configure Coolify to Use the Origin Certificate](#_3-configure-coolify-to-use-the-origin-certificate)
@@ -44,15 +45,15 @@ To follow this guide, you'll need:
 ---
 
 ::: warning Example Data
-  The following data is used as an example in this guide. Please replace it with your actual data when following the steps:
-  
-  - **IPv4 Address of Origin Server:** 203.0.113.1
-  - **Domain Name:** shadowarcanist.com
-  - **Username:** shadowarcanist
-:::
+The following data is used as an example in this guide. Please replace it with your actual data when following the steps:
 
+- **IPv4 Address of Origin Server:** 203.0.113.1
+- **Domain Name:** shadowarcanist.com
+- **Username:** shadowarcanist
+  :::
 
 ## 1. Create a Cloudflare Origin Certificate
+
 To create your Cloudflare Origin Certificate, follow these steps:
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/full-tls/1.webp" alt="Screenshot of Full Tls" />
@@ -69,14 +70,15 @@ You’ll be asked to choose a private key type, hostnames, and certificate valid
 2. Add the hostnames you want the certificate to cover.
 
 ::: warning HEADS UP!
-  - **`shadowarcanist.com`** will cover only the main domain.
-  - **`*.shadowarcanist.com`** will cover all subdomains.
-  
-  On Cloudflare’s free plan, wildcard certificates cover just one level of subdomains
-  
-  For example, it works for **`coolify.shadowarcanist.com`** but not **`www.coolify.shadowarcanist.com`**. 
-  
-  To cover multiple levels, you'll need to purchase the [Advanced Certificate Manager ↗](https://www.cloudflare.com/application-services/products/advanced-certificate-manager/)
+
+- **`shadowarcanist.com`** will cover only the main domain.
+- **`*.shadowarcanist.com`** will cover all subdomains.
+
+On Cloudflare’s free plan, wildcard certificates cover just one level of subdomains
+
+For example, it works for **`coolify.shadowarcanist.com`** but not **`www.coolify.shadowarcanist.com`**.
+
+To cover multiple levels, you'll need to purchase the [Advanced Certificate Manager](https://www.cloudflare.com/application-services/products/advanced-certificate-manager/)
 :::
 
 3. Set the certificate validity to **15 years**.
@@ -91,66 +93,79 @@ Your certificate will now be generated.
 
 Next, you'll add these to your server running Coolify and configure Coolify to use this certificate.
 
-
 ## 2. Add Origin Certificate to Your Server
+
 SSH into your server or use Coolify's terminal feature. For this guide, I’m using SSH:
+
 ```sh
 ssh shadowarcanist@203.0.113.1
 ```
 
 Once logged in, navigate to the Coolify proxy directory:
+
 ```sh
 cd /data/coolify/proxy
 ```
 
 Check if you have a **certs** folder:
+
 ```sh
 ls
 > acme.json  docker-compose.yml  dynamic
 ```
 
 If there’s no **certs** folder, create it:
+
 ```sh
 mkdir certs
 ```
 
 Verify it was created:
+
 ```sh
 ls
 > acme.json  certs docker-compose.yml  dynamic
 ```
 
 Now, navigate into the **certs** directory:
+
 ```sh
 cd certs
 ```
 
 Create two new files for the certificate and private key:
+
 ```sh
 touch shadowarcanist.cert shadowarcanist.key
 ```
 
 Verify the files were created:
+
 ```sh
 ls
 > shadowarcanist.cert shadowarcanist.key
 ```
 
 Open the **shadowarcanist.cert** file and paste the certificate from the Cloudflare dashboard:
+
 ```sh
-nano shadowarcanist.cert 
+nano shadowarcanist.cert
 ```
+
 Save and exit after pasting the certificate.
 
 Do the same for the **shadowarcanist.key** file and paste the private key:
+
 ```sh
-nano shadowarcanist.key 
+nano shadowarcanist.key
 ```
+
 Save and exit.
 
 Now the origin certificate is installed on your server.
 
 ## 3. Configure Coolify to Use the Origin Certificate
+
 Now, in your Coolify dashboard:
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/full-tls/12.webp" alt="Screenshot of Full Tls" />
@@ -166,37 +181,35 @@ You will now be prompted to enter the Dynamic Configuration.
 
 1. Choose a name for your configuration.
 2. Enter the following details in the configuration field:
+
 ```yaml
 tls:
   certificates:
-    -
-      certFile: /traefik/certs/shadowarcanist.cert
+    - certFile: /traefik/certs/shadowarcanist.cert
       keyFile: /traefik/certs/shadowarcanist.key
 ```
 
 ::: details Adding Multiple Certificates (click to view)
- 
+
 ```yaml
 tls:
   certificates:
-    -
-      certFile: /traefik/certs/shadowarcanist.cert
+    - certFile: /traefik/certs/shadowarcanist.cert
       keyFile: /traefik/certs/shadowarcanist.key
-    -
-      certFile: /traefik/certs/name2.cert
+    - certFile: /traefik/certs/name2.cert
       keyFile: /traefik/certs/name2.key
-    -
-      certFile: /traefik/certs/name3.cert
+    - certFile: /traefik/certs/name3.cert
       keyFile: /traefik/certs/name3.key
 ```
+
 :::
 
 3. Save the configuration
 
 From now on, Coolify will use the origin certificate for requests matching the hostname.
 
-
 ## 4. Setup Encryption mode on Cloudflare
+
 To set up encryption on Cloudflare, follow these steps:
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/full-tls/4.webp" alt="Screenshot of Full Tls" />
@@ -209,8 +222,8 @@ To set up encryption on Cloudflare, follow these steps:
 
 Choose **Full (Strict)** as the encryption mode.
 
-
 ## 5. Configure Tunnel to Use HTTPS
+
 To configure the tunnel for HTTPS, follow these steps:
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/full-tls/6.webp" alt="Screenshot of Full Tls" />
@@ -232,7 +245,6 @@ Next, update the hostnames as follows:
 5. Enter your root domain in the **Origin Server Name** field.
 6. Scroll down and click the **Save Hostname** button.
 
-
 ## 6. Configure Cloudflare to Always Use HTTPS
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/full-tls/9.webp" alt="Screenshot of Full Tls" />
@@ -241,8 +253,8 @@ Next, update the hostnames as follows:
 2. Select **Edge Certificates**.
 3. Enable **Always Use HTTPS**.
 
-
 ## 7. Update URLs from HTTP to HTTPS
+
 Now, update all URLs from **HTTP** to **HTTPS** in Coolify, including resources and the instance domain on the settings page.
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/full-tls/10.webp" alt="Screenshot of Full Tls" />

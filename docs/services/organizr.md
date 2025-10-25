@@ -5,7 +5,7 @@ description: "Deploy Organizr dashboard on Coolify for unified homepage with ser
 
 # Organizr
 
-<ZoomableImage src="/docs/images/services/organizr.png" alt="Organizr dashboard" />
+<ZoomableImage src="/docs/images/services/organizr-logo.png" alt="Organizr dashboard" />
 
 ## What is Organizr
 
