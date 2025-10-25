@@ -1594,7 +1594,7 @@ const services = [
     {
         name: 'SparkyFitness',
         slug: 'sparkyfitness',
-        icon: '/docs/images/services/sparkyfitness.png',
+        icon: '/docs/images/services/sparkyfitness.webp',
         description: 'A comprehensive fitness app that helps users track nutrition, exercise, and body metrics.',
         category: 'Health'
     },
