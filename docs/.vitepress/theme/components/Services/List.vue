@@ -1410,6 +1410,13 @@ const services = [
         category: 'Social Media'
     },
     {
+     name: 'Pterodactly With Wings',
+     slug: 'pterodactly-with-wings', 
+     icon: '/docs/images/services/pterodactyl.png', 
+     description: 'Pterodactyl server control plane for game servers with wings.',
+     category: 'Gaming'
+    },
+    {
         name: 'Prefect',
         slug: 'prefect',
         icon: '/docs/images/services/prefect.svg',
