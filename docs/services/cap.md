@@ -5,7 +5,7 @@ description: "Here you can find the documentation for hosting Cap with Coolify."
 
 <ZoomableImage src="/docs/images/services/cap.svg" />
 
-## What is Cap
+## What is Cap?
 
 Cap is the open source alternative to Loom. Lightweight, powerful, and cross-platform. Record and share in seconds.
 
@@ -16,7 +16,7 @@ There are two storage options: you can store the video data on a remote storage 
 ### Option 1: Remote S3-compatible storage (AWS S3, Cloudflare R2, etc.)
 
 Set these environment variables:
-****
+
 - `CAP_AWS_ACCESS_KEY`: Your S3/R2 access key
 - `CAP_AWS_SECRET_KEY`: Your S3/R2 secret key
 - `CAP_AWS_BUCKET`: Your S3/R2 bucket name
@@ -51,7 +51,7 @@ If the `RESEND_API_KEY` and `RESEND_FROM_DOMAIN` environment variables are not s
 
 <!--Method recommended from https://github.com/coollabsio/coolify/pull/6011#pullrequestreview-3337020957-->
 1. Open the terminal of the MySQL service
-2. Connect to the database: `mysql -u root -p planetscale` and use the MYSQL_ROOT_PASSWORD when prompted
+2. Connect to the database: `mysql -u root -p planetscale` and use the `MYSQL_ROOT_PASSWORD` when prompted
 3. Run the SQL command below, replacing `your-user-id` with your actual user ID
     ```sql
     UPDATE users SET inviteQuota = 100, stripeSubscriptionId = '12345', subscriptionStatus = 'active' WHERE id = 'your-user-id';
