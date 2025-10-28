@@ -284,6 +284,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Observium](/services/observium) - Low-maintenance auto-discovering network monitoring platform
 - [Statusnook](/services/statusnook) - A status page system for your website
 - [Uptime Kuma](/services/uptime-kuma) - A fancy self-hosted monitoring tool
+- [SigNoz](/services/signoz) - An open-source observability platform to collect, store, and analyse distributed application traces, metrics, and logs using the OpenTelemetry standard
 
 ## Networking
 

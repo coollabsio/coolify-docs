@@ -1563,6 +1563,13 @@ const services = [
         description: 'The open source URL shortener.',
         category: 'Development'
     },
+        {
+        name: 'SigNoz',
+        slug: 'signoz',
+        icon: '/docs/images/services/signoz.png',
+        description: 'An open-source observability platform to collect, store, and analyse distributed application traces, metrics, and logs using the OpenTelemetry standard.',
+        category: 'Monitoring'
+    },
     {
         name: 'Slash',
         slug: 'slash',
