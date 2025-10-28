@@ -1563,7 +1563,7 @@ const services = [
         description: 'The open source URL shortener.',
         category: 'Development'
     },
-        {
+    {
         name: 'SigNoz',
         slug: 'signoz',
         icon: '/docs/images/services/signoz.png',
