@@ -1,11 +1,11 @@
 ---
 title: "Pi-hole"
-description: "Here you can find the documentation for hosting Pi-hole with Coolify."
+description: "Block ads on Coolify with Pi-hole network-wide ad blocking, DNS filtering, tracking protection, and dashboard for home network privacy."
 ---
 
 # Pi-hole
 
-<ZoomableImage src="/docs/images/services/pihole.svg" />
+<ZoomableImage src="/docs/images/services/pihole-logo.svg" alt="Pi Hole dashboard" />
 
 ## What is Pi-hole?
 
@@ -13,5 +13,5 @@ Pi-hole is a network-wide ad blocker that acts as a DNS sinkhole, protecting you
 
 ## Links
 
-- [The official website ›](https://pi-hole.net?utm_source=coolify.io)
-- [GitHub ›](https://github.com/pi-hole/pi-hole?utm_source=coolify.io)
+- [The official website](https://pi-hole.net?utm_source=coolify.io)
+- [GitHub](https://github.com/pi-hole/pi-hole?utm_source=coolify.io)

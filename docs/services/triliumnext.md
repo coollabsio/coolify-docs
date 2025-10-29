@@ -1,11 +1,11 @@
 ---
 title: "TriliumNext"
-description: "Here you can find the documentation for hosting TriliumNext with Coolify."
+description: "Organize notes on Coolify with TriliumNext for hierarchical note-taking, scripting, encryption, and powerful knowledge management features."
 ---
 
 # TriliumNext
 
-<ZoomableImage src="/docs/images/services/triliumnext.svg" />
+<ZoomableImage src="/docs/images/services/triliumnext-logo.svg" alt="Triliumnext dashboard" />
 
 ## What is TriliumNext?
 
@@ -13,4 +13,4 @@ TriliumNext is a hierarchical note taking application that helps you build your 
 
 ## Links
 
-- [GitHub ›](https://github.com/TriliumNext/Trilium?utm_source=coolify.io)
+- [GitHub](https://github.com/TriliumNext/Trilium?utm_source=coolify.io)

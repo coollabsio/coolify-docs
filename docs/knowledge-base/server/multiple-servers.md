@@ -1,6 +1,6 @@
 ---
 title: "Multiple Servers"
-description: "A guide on how to deploy a resource to multiple servers with Coolify"
+description: "Deploy applications across multiple servers with Coolify for high availability using Docker Registry, load balancers, and synchronized deployments."
 ---
 
 # Multiple Servers

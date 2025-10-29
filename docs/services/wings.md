@@ -1,9 +1,9 @@
 ---
 title: "Pterodactyl Wings"
-description: "Wings is the server-side daemon for the Pterodactyl Panel, responsible for managing game server instances."
+description: "Host Pterodactyl Wings on Coolify for game server daemon, Docker container management, and distributed server node functionality."
 ---
 
-<ZoomableImage src="/docs/images/services/pterodactyl_logo_transparent.png" />
+<ZoomableImage src="/docs/images/services/pterodactyl_logo_transparent.png" alt="Pterodactyl_Logo_Transparent logo" />
 
 ## What is Wings?
 
@@ -55,6 +55,6 @@ The **Pterodactyl Panel** should still be configured to use port `443` externall
 
 _(Wings itself runs in the background and doesn't have a UI, so these are typically viewed via the Panel.)_
 
-<ZoomableImage src="/docs/images/services/pterodactyl-screenshot-7.webp" />
-<ZoomableImage src="/docs/images/services/pterodactyl-screenshot-8.webp" />
-<ZoomableImage src="/docs/images/services/pterodactyl-screenshot-9.webp" />
+<ZoomableImage src="/docs/images/services/pterodactyl-screenshot-7.webp" alt="Wings interface screenshot" />
+<ZoomableImage src="/docs/images/services/pterodactyl-screenshot-8.webp" alt="Wings interface screenshot" />
+<ZoomableImage src="/docs/images/services/pterodactyl-screenshot-9.webp" alt="Wings interface screenshot" />

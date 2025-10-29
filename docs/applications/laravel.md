@@ -1,5 +1,6 @@
 ---
 title: Laravel
+description: Deploy Laravel PHP applications on Coolify with Nixpacks, queue workers, scheduler, supervisor, database, and Redis integration.
 ---
 
 # Laravel

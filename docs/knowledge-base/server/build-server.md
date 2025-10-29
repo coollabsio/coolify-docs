@@ -1,6 +1,6 @@
 ---
 title: "Build Server"
-description: "A guide on how to use a build server with Coolify"
+description: "Offload Docker image builds to dedicated build servers with Coolify to separate build loads from production deployments and improve performance."
 ---
 
 # Build Server

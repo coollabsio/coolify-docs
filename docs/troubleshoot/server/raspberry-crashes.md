@@ -1,6 +1,6 @@
 ---
 title: Raspberry Pi Crashes
-description: Here are some common issues for fixing Raspberry Pi crashes.
+description: Fix Raspberry Pi crashes on Coolify by upgrading to 4GB+ RAM or limiting Docker memory usage on 2GB models with slow SD card configurations.
 ---
 
 # Raspberry Pi Crashes

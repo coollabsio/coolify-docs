@@ -1,11 +1,11 @@
 ---
 title: "Miniflux"
-description: "Here you can find the documentation for hosting Miniflux with Coolify."
+description: "Deploy Miniflux RSS reader on Coolify for minimalist feed aggregation, reading, filtering, and distraction-free news consumption with speed."
 ---
 
 # Miniflux
 
-<ZoomableImage src="/docs/images/services/miniflux.svg" />
+<ZoomableImage src="/docs/images/services/miniflux.svg" alt="Miniflux dashboard" />
 
 ## What is Miniflux?
 
@@ -13,5 +13,5 @@ Miniflux is a minimalist and opinionated feed reader that focuses on simplicity 
 
 ## Links
 
-- [The official website ›](https://miniflux.app?utm_source=coolify.io)
-- [GitHub ›](https://github.com/miniflux/v2?utm_source=coolify.io)
+- [The official website](https://miniflux.app?utm_source=coolify.io)
+- [GitHub](https://github.com/miniflux/v2?utm_source=coolify.io)

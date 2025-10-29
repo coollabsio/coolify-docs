@@ -1,6 +1,6 @@
 ---
 title: "Notifications"
-description: "A comprehensive guide on setting up and using notifications in Coolify"
+description: "Configure multi-channel notifications in Coolify with Email, Telegram, Discord, Slack, and Pushover for deployments, backups, and server monitoring alerts."
 ---
 
 # Notifications

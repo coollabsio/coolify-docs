@@ -227,6 +227,8 @@
 
 .DocSearch {
   --docsearch-primary-color: var(--vp-c-brand-1) !important;
+  border-color: var(--vp-c-brand-1) !important;
+  @apply border !important ;
 }
 
 /**
@@ -422,7 +424,7 @@
   & ::-webkit-scrollbar-thumb {
     border: 2px solid transparent !important;
     border-radius: 8px !important;
-    background-color: var(--vp-c-divider) !important;
+    background-color: var(--vp-c-brand-1) !important;
     background-clip: padding-box !important;
   }
 
@@ -449,7 +451,7 @@
   
     & ::-webkit-scrollbar-thumb {
       border-radius: 0.6em !important;
-      background-color: var(--vp-c-divider) !important;
+      background-color: var(--vp-c-brand-1) !important;
     }
     & ::-webkit-scrollbar-thumb:hover {
       background-color: var(--vp-c-text-3) !important;
@@ -998,4 +1000,8 @@ pre[class*='language-'] *:hover {
   --shiki-light-boolean: #0550ae !important;     /* blue */
   --shiki-light-comment: #6e7781 !important;     /* gray */
   --shiki-light-property: #953800 !important;    /* brown */
+}
+
+.title {
+  @apply border-0 !important;
 }

@@ -1,6 +1,6 @@
 ---
 title: "OpenBlocks"
-description: "Here you can find the documentation for hosting OpenBlocks with Coolify."
+description: "Build apps on Coolify with OpenBlocks low-code platform featuring drag-and-drop UI, database connectors, and rapid application development."
 ---
 
 # What is OpenBlocks?
@@ -13,5 +13,5 @@ OpenBlocks is an open source low-code platform.
 
 ## Links
 
-- [The official website ›](https://www.openblocks.dev/)
-- [GitHub ›](https://github.com/openblocks-dev/openblocks)
+- [The official website](https://www.openblocks.dev/)
+- [GitHub](https://github.com/openblocks-dev/openblocks)

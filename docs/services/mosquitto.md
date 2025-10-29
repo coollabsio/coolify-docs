@@ -1,6 +1,6 @@
 ---
 title: "Mosquitto"
-description: "Here you can find the documentation for hosting Mosquitto with Coolify."
+description: "Host Eclipse Mosquitto on Coolify for MQTT message broker supporting IoT device communication, pub/sub messaging, and lightweight protocols."
 ---
 
 ![Mosquitto](https://raw.githubusercontent.com/eclipse-mosquitto/mosquitto/refs/heads/master/logo/mosquitto-text-below.svg)
@@ -11,5 +11,5 @@ Mosquitto is an open-source MQTT (Message Queuing Telemetry Transport) broker th
 
 ## Links
 
-- [The official website ›](https://mosquitto.org/)
-- [GitHub ›](https://github.com/eclipse/mosquitto)
+- [The official website](https://mosquitto.org/)
+- [GitHub](https://github.com/eclipse/mosquitto)

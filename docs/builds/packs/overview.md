@@ -1,8 +1,9 @@
 ---
 title: Build Packs
+description: Choose from Nixpacks, Static, Dockerfile, or Docker Compose build packs to create optimized Docker images for your application deployments.
 ---
 
-<ZoomableImage src="/docs/images/builds/packs/packs-banner.webp" />
+<ZoomableImage src="/docs/images/builds/packs/packs-banner.webp" alt="Coolify packs banner" />
 
 <br />
 

@@ -33,6 +33,7 @@ import TabBlock from "./components/TabBlock.vue";
 import ZoomableImage from "./components/ZoomableImage.vue";
 import Globe from "./components/Landing/Globe.vue";
 import Browser from "./components/Landing/Browser.vue";
+import KorrektlySearch from "./components/KorrektlySearch.vue";
 
 // Import Vdoc overrides
 import VPDoc from "./components/VPDoc.vue";
@@ -80,6 +81,7 @@ export default {
     app.component("ZoomableImage", ZoomableImage);
     app.component("Globe", Globe);
     app.component("Browser", Browser);
+    app.component("KorrektlySearch", KorrektlySearch);
 
     // Register Vdoc overrides
     app.component("VPDoc", VPDoc);

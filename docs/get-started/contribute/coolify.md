@@ -1,5 +1,6 @@
 ---
 title: Contributing to Core Coolify
+description: Contribute to Coolify open-source development with step-by-step setup guide, Docker environment, Spin commands, and pull request workflow.
 ---
 
 # Contributing to Coolify

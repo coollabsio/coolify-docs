@@ -1,5 +1,6 @@
 ---
 title: Nuxt
+description: Deploy Nuxt applications on Coolify with server builds, static generation, and Nitro support using Nixpacks build configurations.
 ---
 
 # Nuxt

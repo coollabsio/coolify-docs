@@ -1,6 +1,6 @@
 ---
 title: "Firewall"
-description: "Learn which network ports need to be open for Coolify to work properly in self-hosted or cloud environments, including firewall setup tips and GitHub integration requirements."
+description: "Configure firewall ports for Coolify including SSH, HTTP/HTTPS, dashboard access, and terminal with ufw-docker setup for self-hosted and cloud instances."
 ---
 
 # Firewall

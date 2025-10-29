@@ -1,6 +1,6 @@
 ---
 title: "Unstructured"
-description: "Here you can find the documentation for hosting Unstructured with Coolify."
+description: "Extract data on Coolify with Unstructured.io for document parsing, PDFs, images, HTML, and ML-ready data preprocessing pipelines."
 ---
 
 # What is Unstructured?
@@ -21,4 +21,4 @@ Unstructured provides a platform and tools to ingest and process unstructured do
 
 ## Links
 
-- [GitHub ›](https://github.com/Unstructured-IO/unstructured-api?utm_source=coolify.io)
+- [GitHub](https://github.com/Unstructured-IO/unstructured-api?utm_source=coolify.io)

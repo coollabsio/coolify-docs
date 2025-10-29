@@ -1,5 +1,6 @@
 ---
 title: "Certificate Resolver Not Found on Coolify Proxy"
+description: Fix Traefik 'letsencrypt cert resolver not found' errors by setting correct acme.json file permissions using chmod 600 for non-root Coolify users.
 ---
 
 

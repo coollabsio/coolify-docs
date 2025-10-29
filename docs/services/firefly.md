@@ -1,6 +1,6 @@
 ---
 title: Firefly
-description: Here you can find the documentation for hosting Firefly with Coolify.
+description: "Deploy Firefly finance manager on Coolify for budget tracking, expense categorization, financial reports, and personal money management insights."
 ---
 
 # Firefly

@@ -1,3 +1,7 @@
+---
+description: Deploy 200+ pre-configured open-source applications instantly with Coolify's one-click services, from development tools to databases.
+---
+
 # What are One-Click Services?
 
 Coolify's One-Click Services are a curated collection of popular open-source applications and tools that you can deploy instantly with just a few clicks. These services eliminate the complexity of manual setup and configuration, making self-hosting accessible to everyone.

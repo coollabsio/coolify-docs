@@ -1,6 +1,6 @@
 ---
 title: 2FA Stopped Working
-description: Here are some common issues for fixing 2FA stopped working.
+description: Fix two-factor authentication failures in Coolify by synchronizing server time with NTP, checking systemd-timesyncd, and configuring firewall port 123 access.
 ---
 
 # 2FA Stopped Working

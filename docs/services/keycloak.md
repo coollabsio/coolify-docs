@@ -1,11 +1,11 @@
 ---
 title: Keycloak
-description: Here you can find the documentation for hosting Keycloak with Coolify.
+description: "Deploy Keycloak on Coolify for identity and access management with SSO, OAuth2, SAML, user federation, and centralized authentication."
 ---
 
 # Keycloak
 
-<ZoomableImage src="/docs/images/services/keycloak.svg" />
+<ZoomableImage src="/docs/images/services/keycloak-logo.svg" alt="Keycloak dashboard" />
 
 ## What is Keycloak
 

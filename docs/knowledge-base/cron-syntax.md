@@ -1,6 +1,6 @@
 ---
 title: "Supported Cron Syntax"
-description: "An overview of the supported cron syntax for Coolify."
+description: "Complete cron syntax reference for Coolify scheduled tasks including standard format and predefined schedules like hourly, daily, and weekly."
 ---
 
 # Supported Cron Syntax

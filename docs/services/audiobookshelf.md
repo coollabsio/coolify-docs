@@ -1,11 +1,11 @@
 ---
 title: Audiobookshelf
-description: Here you can find the documentation for hosting Audiobookshelf with Coolify.
+description: "Deploy Audiobookshelf on Coolify for self-hosted audiobook and podcast server with mobile apps, progress tracking, and streaming support."
 ---
 
 # Audiobookshelf
 
-<ZoomableImage src="/docs/images/services/audiobookshelf.svg" />
+<ZoomableImage src="/docs/images/services/audiobookshelf.svg" alt="Audiobookshelf dashboard" />
 
 ## What is Audiobookshelf
 

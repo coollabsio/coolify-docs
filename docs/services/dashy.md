@@ -1,11 +1,11 @@
 ---
 title: Dashy
-description: Here you can find the documentation for hosting Dashy with Coolify.
+description: "Host Dashy dashboard on Coolify with customizable widgets, service health checks, themes, icons, and organized homepage for self-hosted services."
 ---
 
 # Dashy
 
-<ZoomableImage src="/docs/images/services/dashy.png" />
+<ZoomableImage src="/docs/images/services/dashy.png" alt="Dashy dashboard" />
 
 ## What is Dashy
 

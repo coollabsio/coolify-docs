@@ -1,6 +1,6 @@
 ---
 title: "Shlink"
-description: "Here you can find the documentation for hosting Shlink with Coolify."
+description: "Shorten URLs on Coolify with Shlink for branded short links, QR codes, analytics, and self-hosted URL shortener with REST API."
 ---
 
 ![Shlink](https://raw.githubusercontent.com/shlinkio/shlink.io/main/public/images/shlink-hero.png)
@@ -11,5 +11,5 @@ Shlink is an open-source URL shortener that allows you to create a short URL for
 
 ## Links
 
-- [The official website ›](https://shlink.io)
-- [GitHub ›](https://github.com/shlinkio/shlink)
+- [The official website](https://shlink.io)
+- [GitHub](https://github.com/shlinkio/shlink)

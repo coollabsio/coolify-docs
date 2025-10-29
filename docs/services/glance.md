@@ -1,9 +1,10 @@
 ---
 title: "Glance"
-description: "Here you can find the documentation for hosting Glance with Coolify."
+description: "Host Glance dashboard on Coolify for quick server overview, system monitoring, service status, and at-a-glance infrastructure health display."
 ---
 
 # Glance
+
 A self-hosted dashboard that puts all your feeds in one place.
 
 ## Screenshots
@@ -12,4 +13,4 @@ A self-hosted dashboard that puts all your feeds in one place.
 
 ## Links
 
-- [The official website ›](https://github.com/glanceapp/glance)
+- [The official website](https://github.com/glanceapp/glance)

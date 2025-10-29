@@ -1,6 +1,6 @@
 ---
 title: "Apache Superset"
-description: "Here you can find the documentation for hosting Apache Superset with Coolify."
+description: "Deploy Apache Superset on Coolify for modern data exploration, interactive dashboards, SQL editor, and business intelligence visualization."
 ---
 
 [![Superset](https://camo.githubusercontent.com/f6f25227203811335bbfc181e6dded66b57cbdbeafe346c0f4e5773bae157aeb/68747470733a2f2f73757065727365742e6170616368652e6f72672f696d672f73757065727365742d6c6f676f2d686f72697a2d6170616368652e737667)](https://superset.apache.org)
@@ -23,16 +23,15 @@ After deploying the template, you will need to initialise the database and creat
 
 2. Run one of the commands below, noting the `-` symbol:
 
-    ```bash
-    # Basic initialisation
-    superset-init
+   ```bash
+   # Basic initialisation
+   superset-init
 
-    # Alternatively, to also load demo data, use
-    superset-demo
-    ```
+   # Alternatively, to also load demo data, use
+   superset-demo
+   ```
 
-    the source code for these scripts are available [here](https://github.com/amancevice/docker-superset/tree/main/bin).
-
+   the source code for these scripts are available [here](https://github.com/amancevice/docker-superset/tree/main/bin).
 
 3. Answer all questions in the prompts
 
@@ -50,6 +49,6 @@ This python config file can be edited using Coolify's UI by navigating to your s
 
 ## Links
 
-- [Official Website ›](https://superset.apache.org)
-- [GitHub ›](https://github.com/apache/superset)
-- [Github Unofficial Docker Image >](https://github.com/amancevice/docker-superset)
+- [Official Website](https://superset.apache.org)
+- [GitHub](https://github.com/apache/superset)
+- [Github Unofficial Docker Image](https://github.com/amancevice/docker-superset)

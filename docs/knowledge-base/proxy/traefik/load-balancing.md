@@ -1,5 +1,6 @@
 ---
 title: "Load-balancing"
+description: "Configure Traefik load balancing in Coolify across multiple servers or containers with dynamic configuration, HTTPS support, and health monitoring."
 ---
 
 # Load-balancing

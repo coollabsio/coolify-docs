@@ -1,5 +1,6 @@
 ---
 title: MongoDB
+description: Deploy MongoDB NoSQL databases on Coolify with flexible document storage, horizontal scalability, and automated backup solutions.
 ---
 
 # MongoDB
@@ -14,5 +15,5 @@ MongoDB is known for its horizontal scalability, powerful query language, and ab
 
 ## Links
 
-- [The official website ›](https://www.mongodb.com/)
-- [GitHub ›](https://github.com/mongodb/mongo)
+- [The official website](https://www.mongodb.com/)
+- [GitHub](https://github.com/mongodb/mongo)

@@ -1,5 +1,7 @@
 ---
 layout: page
+title: Coolify Sponsors
+description: Meet the companies and organizations sponsoring Coolify development including Hetzner, Logto, Tolgee, and other technology partners.
 ---
 
 <script setup>

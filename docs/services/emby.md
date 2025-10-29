@@ -1,8 +1,7 @@
 ---
 title: "Emby"
-description: "Here you can find the documentation for hosting Emby with Coolify."
+description: "Host Emby media server on Coolify for streaming movies, TV shows, music, and photos with transcoding, mobile apps, and DVR capabilities."
 ---
-
 
 ![Emby](https://emby.media/support/images/logo.png)
 
@@ -34,5 +33,5 @@ Windows, Mac, Linux, or FreeBSD computer
 
 ## Community
 
-- [The official website ›](https://emby.media?utm_source=coolify.io)
-- [The Emby community ›](https://emby.media/community?utm_source=coolify.io)
+- [The official website](https://emby.media?utm_source=coolify.io)
+- [The Emby community](https://emby.media/community?utm_source=coolify.io)

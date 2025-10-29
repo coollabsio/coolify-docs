@@ -2,6 +2,7 @@
 aside: false
 outline: false
 title: API
+description: Detailed API operation reference with request parameters, response schemas, authentication, and interactive code examples in multiple languages.
 toc: false
 ---
 

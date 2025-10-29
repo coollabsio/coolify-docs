@@ -1,6 +1,6 @@
 ---
 title: "Integration"
-description: "A guide on how to use Gitea based repositories with Coolify."
+description: "Deploy Gitea repositories with Coolify using deploy keys, SSH authentication, and automated webhooks for commits and pull requests."
 ---
 
 # Gitea Integration

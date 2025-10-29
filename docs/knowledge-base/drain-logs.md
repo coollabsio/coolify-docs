@@ -1,5 +1,6 @@
 ---
 title: Drain Logs
+description: "Stream Coolify application logs to Axiom, New Relic, or custom FluentBit destinations for centralized monitoring and log analysis."
 ---
 
 # Drain Logs

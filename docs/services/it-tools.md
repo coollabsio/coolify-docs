@@ -1,11 +1,11 @@
 ---
 title: It Tools
-description: Here you can find the documentation for hosting It Tools with Coolify.
+description: "Host IT Tools collection on Coolify with 80+ developer utilities for encoding, hashing, formatting, and text transformation in web interface."
 ---
 
 # It Tools
 
-<ZoomableImage src="/docs/images/services/it-tools.svg" />
+<ZoomableImage src="/docs/images/services/ittools-logo.svg" alt="It Tools dashboard" />
 
 ## What is It Tools
 

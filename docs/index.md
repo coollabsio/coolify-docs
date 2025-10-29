@@ -1,6 +1,7 @@
 ---
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
+description: Coolify is an open-source Platform as a Service (PaaS) for self-hosting databases, services, and applications with free SSL, backups, and Git integration.
 
 hero:
   name: "Coolify"
@@ -18,7 +19,7 @@ referral:
   title: "Get €20 Free Credit"
   url: "https://coolify.io/hetzner"
   text: "Don't have a server yet? Get started with Hetzner Cloud."
-  description: "Use our referral link to get €20 in free credits at Hetzner!"
+  description: "Deploy your applications on Hetzner Cloud and get €20 in free credits with our referral link for your hosting needs."
 
 # Icons used below on features are from https://lucide.dev/icons/ feel free to change them or change their colors if needed
 features:

@@ -1,3 +1,8 @@
+---
+title: "Creating Destinations"
+description: "Create Docker network destinations in Coolify for standalone or Swarm deployments with automatic proxy configuration and network scanning."
+---
+
 # Creating Destinations
 
 This guide shows you how to create new destinations in Coolify for deploying your applications and databases.
@@ -14,7 +19,7 @@ Before creating a destination, ensure you have:
 
 ### Method 1: From Destinations Page
 
-<ZoomableImage src="/docs/images/destinations/create-destination.webp" />
+<ZoomableImage src="/docs/images/destinations/create-destination.webp" alt="Create Destination configuration" />
 
 1. Navigate to **Destinations** in the main navigation
 2. Click on **+ Add**
@@ -22,7 +27,7 @@ Before creating a destination, ensure you have:
 
 ### Method 2: From Server Management
 
-<ZoomableImage src="/docs/images/destinations/server-create-destination.webp" />
+<ZoomableImage src="/docs/images/destinations/server-create-destination.webp" alt="Server Create Destination configuration" />
 
 1. Go to **Servers** and select your server
 2. Navigate to the **Destinations** tab
@@ -31,7 +36,7 @@ Before creating a destination, ensure you have:
 
 ## Configuration Options
 
-<ZoomableImage src="/docs/images/destinations/create-destination-modal.webp" />
+<ZoomableImage src="/docs/images/destinations/create-destination-modal.webp" alt="Create Destination Modal configuration" />
 
 ### Destination Name
 
@@ -88,7 +93,7 @@ When you create a destination, Coolify automatically:
 
 You can also scan existing Docker networks on a server and add them as destinations:
 
-<ZoomableImage src="/docs/images/destinations/scan-networks.webp" />
+<ZoomableImage src="/docs/images/destinations/scan-networks.webp" alt="Scan Networks configuration" />
 
 1. Go to **Server** and select your server
 2. Navigate to **Destinations**

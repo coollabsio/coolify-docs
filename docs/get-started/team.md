@@ -1,5 +1,7 @@
 ---
 layout: page
+title: coolLabs Team
+description: Meet the international team developing Coolify including founder Andras Bacsai, core developers, community leads, and documentation maintainers.
 ---
 
 <script setup>

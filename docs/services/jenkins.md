@@ -1,8 +1,7 @@
 ---
 title: "Jenkins"
-description: "Here you can find the documentation for hosting Jenkins with Coolify."
+description: "Run Jenkins CI/CD on Coolify for automated builds, testing, deployment pipelines, and continuous integration workflows with extensive plugins."
 ---
-
 
 ![Jenkins](https://www.jenkins.io/images/jenkins-logo-title-dark.svg)
 
@@ -12,5 +11,5 @@ Jenkins is a popular open-source automation server used for continuous integrati
 
 ## Links
 
-- [The official website ›](https://www.jenkins.io/)
-- [GitHub ›](https://github.com/jenkinsci/jenkins)
+- [The official website](https://www.jenkins.io/)
+- [GitHub](https://github.com/jenkinsci/jenkins)

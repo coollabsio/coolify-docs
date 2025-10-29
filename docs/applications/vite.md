@@ -1,5 +1,6 @@
 ---
 title: Vite
+description: Deploy Vite applications on Coolify with TypeScript or JavaScript, Nixpacks build process, and static site generation.
 ---
 
 # Vite

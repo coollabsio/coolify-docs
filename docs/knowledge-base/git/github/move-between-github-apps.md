@@ -1,5 +1,6 @@
 ---
 title: "Move Between GitHub Apps"
+description: "Migrate Coolify repositories between GitHub Apps when moving to new organizations with Git source updates and repository reconfiguration."
 ---
 
 # Move Between GitHub Apps

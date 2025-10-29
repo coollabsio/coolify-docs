@@ -1,7 +1,7 @@
 ---
 title: Authorization
 layout: doc
-description: "Learn how to authorize your API requests."
+description: "Learn how to authorize API requests in Coolify with Bearer tokens, scoped permissions, and secure access control."
 ---
 
 # Authorization

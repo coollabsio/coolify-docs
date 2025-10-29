@@ -1,11 +1,11 @@
 ---
 title: Flipt
-description: Here you can find the documentation for hosting Flipt with Coolify.
+description: "Host Flipt feature flags on Coolify for feature toggles, A/B testing, gradual rollouts, and environment-specific configuration management."
 ---
 
 # Flipt
 
-<ZoomableImage src="/docs/images/services/flipt.svg" />
+<ZoomableImage src="/docs/images/services/flipt.svg" alt="Flipt dashboard" />
 
 ## What is Flipt
 

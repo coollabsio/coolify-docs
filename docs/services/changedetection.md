@@ -1,8 +1,7 @@
 ---
 title: "Change Detection"
-description: "Here you can find the documentation for hosting Change Detection with Coolify."
+description: "Monitor website changes on Coolify with Change Detection featuring automatic tracking, alerts, visual diffs, and API endpoint monitoring."
 ---
-
 
 ![Change Detection](https://raw.githubusercontent.com/dgtlmoon/changedetection.io/master/docs/screenshot.png)
 
@@ -55,5 +54,5 @@ Live your data-life pro-actively.
 
 ## Links
 
-- [The official website ›](https://changedetection.io?utm_source=coolify.io)
-- [GitHub ›](https://github.com/dgtlmoon/changedetection.io?utm_source=coolify.io)
+- [The official website](https://changedetection.io?utm_source=coolify.io)
+- [GitHub](https://github.com/dgtlmoon/changedetection.io?utm_source=coolify.io)

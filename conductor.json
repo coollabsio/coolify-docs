@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "run": "bun install && bun run dev"
+  },
+  "runScriptMode": "nonconcurrent"
+}

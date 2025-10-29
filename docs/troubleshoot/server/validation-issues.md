@@ -1,6 +1,6 @@
 ---
 title: Server Validation Issues
-description: Here are some common issues for fixing server validation issues.
+description: Resolve Coolify server validation errors by verifying SSH private key format includes BEGIN and END OPENSSH PRIVATE KEY headers to fix libcrypto errors.
 ---
 
 # Server Validation Issues

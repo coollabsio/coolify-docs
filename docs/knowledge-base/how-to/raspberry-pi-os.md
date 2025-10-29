@@ -1,6 +1,6 @@
 ---
 title: "Raspberry Pi OS Setup Guide"
-description: "A guide to install the 64-bit Raspberry Pi OS version to set up Coolify on a Raspberry Pi."
+description: "Install Coolify on Raspberry Pi with 64-bit OS setup guide covering Pi Zero 2 W, Pi 3, 4, and 5 models with SSH configuration."
 ---
 
 # Raspberry Pi OS Setup Guide

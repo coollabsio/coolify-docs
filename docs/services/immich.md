@@ -1,11 +1,11 @@
 ---
 title: Immich
-description: Here you can find the documentation for hosting Immich with Coolify.
+description: "Host Immich photo management on Coolify for Google Photos alternative with mobile backup, ML-powered search, face recognition, and sharing."
 ---
 
 # Immich
 
-<ZoomableImage src="/docs/images/services/immich.webp" />
+<ZoomableImage src="/docs/images/services/immich.webp" alt="Immich dashboard" />
 
 ## What is Immich
 

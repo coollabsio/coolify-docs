@@ -1,11 +1,11 @@
 ---
 title: "OpenPanel"
-description: "Here you can find the documentation for hosting OpenPanel with Coolify."
+description: "Host OpenPanel analytics on Coolify for privacy-focused web analytics, event tracking, user insights without cookies or data collection."
 ---
 
 # OpenPanel
 
-<ZoomableImage src="/docs/images/services/openpanel.svg" />
+<ZoomableImage src="/docs/images/services/openpanel-logo.svg" alt="Openpanel dashboard" />
 
 ## What is OpenPanel?
 
@@ -13,5 +13,5 @@ OpenPanel is an open-source alternative to Mixpanel and Plausible for product an
 
 ## Links
 
-- [The official website ›](https://openpanel.dev?utm_source=coolify.io)
-- [GitHub ›](https://github.com/Openpanel-dev/openpanel?utm_source=coolify.io)
+- [The official website](https://openpanel.dev?utm_source=coolify.io)
+- [GitHub](https://github.com/Openpanel-dev/openpanel?utm_source=coolify.io)

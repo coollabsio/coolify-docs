@@ -1,6 +1,6 @@
 ---
 title: "Load Balancing on Hetzner"
-description: "Here you can find the documentation for deploying a loadbalanced application with Coolify on Hetzner."
+description: "Deploy scalable load-balanced applications on Hetzner Cloud with Coolify including TLS termination, health checks, database setup, and firewall configuration."
 ---
 
 # Load Balancing on Hetzner

@@ -1,5 +1,6 @@
 ---
 title: Coolify Tutorial videos
+description: Watch community video tutorials on Coolify self-hosted PaaS including installation, deployment, and complete walkthroughs for beginners.
 ---
 
 

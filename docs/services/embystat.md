@@ -1,6 +1,6 @@
 ---
 title: Embystat
-description: Here you can find the documentation for hosting Embystat with Coolify.
+description: "Run EmbyStat analytics on Coolify for Emby server statistics, viewing trends, media library insights, and user activity tracking dashboards."
 ---
 
 # Embystat

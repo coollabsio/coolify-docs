@@ -1,9 +1,9 @@
 ---
 title: "Weaviate"
-description: "Here you can find the documentation for hosting Weaviate with Coolify."
+description: "Deploy Weaviate vector database on Coolify for AI-powered search, semantic understanding, ML model integration, and knowledge graphs."
 ---
 
-<ZoomableImage src="/docs/images/services/weaviate.webp" />
+<ZoomableImage src="/docs/images/services/weaviate-logo.webp" alt="Weaviate dashboard" />
 
 ## What is Weaviate?
 
@@ -11,5 +11,5 @@ Weaviate (we-vee-eight) is an open source, AI-native vector database. Use this d
 
 ## Links
 
-- [The official website ›](https://weaviate.io/?utm_source=coolify.io)
-- [GitHub ›](https://github.com/weaviate/weaviate?utm_source=coolify.io)
+- [The official website](https://weaviate.io/?utm_source=coolify.io)
+- [GitHub](https://github.com/weaviate/weaviate?utm_source=coolify.io)

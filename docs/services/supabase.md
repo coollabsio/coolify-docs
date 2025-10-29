@@ -1,6 +1,6 @@
 ---
 title: "Supabase"
-description: "Here you can find the documentation for hosting Supabase with Coolify."
+description: "Deploy Supabase on Coolify as open-source Firebase alternative with Postgres database, authentication, storage, and real-time subscriptions."
 ---
 
 ![Supabase](https://user-images.githubusercontent.com/8291514/213727225-56186826-bee8-43b5-9b15-86e839d89393.png#gh-dark-mode-only)
@@ -11,7 +11,7 @@ The open source Firebase alternative.
 
 ## Screenshots
 
-<ZoomableImage src="/docs/images/services/supabase-selfhost.webp" />
+<ZoomableImage src="/docs/images/services/supabase-selfhost.webp" alt="Supabase dashboard" />
 
 ## Notes
 
@@ -25,7 +25,7 @@ There is a bug with making database publicly accessible. This bug will be fixed 
 
 Set **Supabase Db** to public
 
-<ZoomableImage src="/docs/images/services/supabase-db-fix.webp" />
+<ZoomableImage src="/docs/images/services/supabase-db-fix.webp" alt="Supabase dashboard" />
 
 Then
 
@@ -36,11 +36,12 @@ Then add this line
       - ${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}`
 
 To
+
 ```yaml
 supabase-db:
-  image: 'supabase/postgres:15.6.1.146'
+  image: "supabase/postgres:15.6.1.146"
   healthcheck:
-    test: 'pg_isready -U postgres -h 127.0.0.1'
+    test: "pg_isready -U postgres -h 127.0.0.1"
     interval: 5s
     timeout: 5s
     retries: 10
@@ -71,5 +72,5 @@ If your server is hosted on Hetzner, you may not need ufw-docker. Instead, you c
 
 ## Links
 
-- [Official Website ›](https://supabase.io)
-- [GitHub ›](https://github.com/supabase/supabase)
+- [Official Website](https://supabase.io)
+- [GitHub](https://github.com/supabase/supabase)

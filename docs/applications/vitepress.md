@@ -1,5 +1,6 @@
 ---
 title: VitePress
+description: Deploy VitePress documentation sites on Coolify with Vite, Vue, Nixpacks, and static site generation from Markdown files.
 ---
 
 # VitePress

@@ -1,11 +1,11 @@
 ---
 title: "Chroma"
-description: "Here you can find the documentation for hosting Chroma with Coolify."
+description: "Deploy Chroma vector database on Coolify for AI embeddings storage, semantic search, and retrieval-augmented generation in machine learning apps."
 ---
 
 # Chroma
 
-<ZoomableImage src="/docs/images/services/chroma.svg" />
+<ZoomableImage src="/docs/images/services/chroma.svg" alt="Chroma dashboard" />
 
 ## What is Chroma?
 
@@ -13,5 +13,5 @@ Chroma is an open-source, AI-native vector database designed for building applic
 
 ## Links
 
-- [The official website ›](https://www.trychroma.com?utm_source=coolify.io)
-- [GitHub ›](https://github.com/chroma-core/chroma?utm_source=coolify.io)
+- [The official website](https://www.trychroma.com?utm_source=coolify.io)
+- [GitHub](https://github.com/chroma-core/chroma?utm_source=coolify.io)

@@ -34,6 +34,7 @@
     "transform-openapi": "tsx scripts/convert-openapi.ts"
   },
   "dependencies": {
+    "@korrektly/sdk": "^0.1.1",
     "@vueuse/core": "12.5.0",
     "globe.gl": "2.39.7",
     "vitepress-openapi": "0.0.3-alpha.78"

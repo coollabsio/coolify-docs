@@ -1,11 +1,11 @@
 ---
 title: Flowise
-description: Here you can find the documentation for hosting Flowise with Coolify.
+description: "Build AI workflows on Coolify with Flowise drag-and-drop LLM interface for chatbots, agents, RAG applications, and custom AI tool integration."
 ---
 
 # Flowise
 
-<ZoomableImage src="/docs/images/services/flowise.jpg" />
+<ZoomableImage src="/docs/images/services/flowise.jpg" alt="Flowise dashboard" />
 
 ## What is Flowise
 

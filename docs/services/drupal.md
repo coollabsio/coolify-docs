@@ -1,11 +1,11 @@
 ---
 title: Drupal
-description: Here you can find the documentation for hosting Drupal with Coolify.
+description: "Deploy Drupal CMS on Coolify for enterprise content management with powerful APIs, content types, workflows, and extensive module ecosystem."
 ---
 
 # Drupal
 
-<ZoomableImage src="/docs/images/services/drupal.svg" />
+<ZoomableImage src="/docs/images/services/drupal-logo.svg" alt="Drupal dashboard" />
 
 ## What is Drupal
 

@@ -1,6 +1,6 @@
 ---
 title: "NextCloud"
-description: "Here you can find the documentation for hosting NextCloud with Coolify."
+description: "Deploy Nextcloud on Coolify for self-hosted cloud storage, file sync, calendar, contacts, office collaboration, and Google Drive alternative."
 ---
 
 ![NextCloud](https://nextcloud.com/c/uploads/2022/11/logo_nextcloud_white.svg)
@@ -15,5 +15,5 @@ NextCloud is an open-source productivity platform that provides a secure and pri
 
 ## Links
 
-- [The official website ›](https://nextcloud.com/)
-- [GitHub ›](https://github.com/nextcloud/server)
+- [The official website](https://nextcloud.com/)
+- [GitHub](https://github.com/nextcloud/server)

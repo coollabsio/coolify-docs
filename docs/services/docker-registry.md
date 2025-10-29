@@ -1,8 +1,7 @@
 ---
 title: "Docker Registry"
-description: "Here you can find the documentation for hosting Docker Registry with Coolify."
+description: "Host private Docker registry on Coolify for container image storage, distribution, versioning, and secure artifact management for DevOps teams."
 ---
-
 
 ![Docker Registry](https://raw.githubusercontent.com/distribution/distribution/main/distribution-logo.svg)
 
@@ -12,5 +11,5 @@ Docker Registry is a stateless, highly-available server side application that st
 
 ## Links
 
-- [The official website ›](https://hub.docker.com?utm_source=coolify.io)
-- [GitHub ›](https://github.com/docker/distribution?utm_source=coolify.io)
+- [The official website](https://hub.docker.com?utm_source=coolify.io)
+- [GitHub](https://github.com/docker/distribution?utm_source=coolify.io)

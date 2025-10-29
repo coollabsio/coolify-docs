@@ -1,8 +1,7 @@
 ---
 title: "Grocy"
-description: "Here you can find the documentation for hosting Grocy with Coolify."
+description: "Manage household on Coolify with Grocy for grocery inventory, recipe management, chore tracking, and smart shopping lists for home organization."
 ---
-
 
 ![Grocy](https://raw.githubusercontent.com/grocy/grocy/master/public/img/logo.svg?sanitize=true)
 
@@ -12,5 +11,5 @@ Grocy is a web-based self-hosted groceries & household management solution for y
 
 ## Links
 
-- [The official website ›](https://grocy.info)
-- [GitHub ›](https://github.com/grocy/grocy)
+- [The official website](https://grocy.info)
+- [GitHub](https://github.com/grocy/grocy)

@@ -1,6 +1,6 @@
 ---
 title: "Metube"
-description: "Here you can find the documentation for hosting Metube with Coolify."
+description: "Deploy MeTube on Coolify for YouTube video downloading with web interface supporting playlists, quality selection, and multiple video platforms."
 ---
 
 ![Metube](https://github.com/alexta69/metube/raw/master/screenshot.gif)
@@ -11,4 +11,4 @@ Web GUI for youtube-dl (using the yt-dlp fork) with playlist support. Allows you
 
 ## Links
 
-- [GitHub ›](https://github.com/alexta69/metube)
+- [GitHub](https://github.com/alexta69/metube)

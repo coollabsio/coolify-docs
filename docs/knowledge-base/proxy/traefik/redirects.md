@@ -1,5 +1,6 @@
 ---
 title: "Redirects"
+description: "Configure Traefik URL redirects in Coolify including www to non-www, domain forwarding, and HTTPS redirections for applications and services."
 ---
 
 # Redirects with Traefik

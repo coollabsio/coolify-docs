@@ -1,5 +1,6 @@
 ---
 title: MariaDB
+description: Deploy MariaDB databases on Coolify with MySQL compatibility, enhanced performance, additional storage engines, and automated backups.
 ---
 
 # MariaDB
@@ -15,5 +16,5 @@ Started by core members of MySQL, MariaDB provides a robust and scalable databas
 
 ## Links
 
-- [The official website ›](https://mariadb.org/)
-- [GitHub ›](https://github.com/MariaDB/server)
+- [The official website](https://mariadb.org/)
+- [GitHub](https://github.com/MariaDB/server)

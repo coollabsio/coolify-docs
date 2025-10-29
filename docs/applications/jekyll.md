@@ -1,5 +1,6 @@
 ---
 title: Jekyll
+description: Deploy Jekyll static sites on Coolify using Nixpacks or Dockerfile with Ruby, Nginx, and automated build processes.
 ---
 
 # Jekyll

@@ -1,11 +1,11 @@
 ---
 title: Paperless
-description: Here you can find the documentation for hosting Paperless with Coolify.
+description: "Manage documents on Coolify with Paperless-ngx for scanning, OCR, tagging, full-text search, and digital document management system."
 ---
 
 # Paperless
 
-<ZoomableImage src="/docs/images/services/paperless.png" />
+<ZoomableImage src="/docs/images/services/paperless-logo.png" alt="Paperless dashboard" />
 
 ## What is Paperless
 

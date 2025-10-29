@@ -1,9 +1,9 @@
 ---
 title: "FileFlows"
-description: "Here you can find the documentation for hosting FileFlows with Coolify."
+description: "Host FileFlows on Coolify for automated file processing, media conversion, organization workflows, and batch operations with visual flow builder."
 ---
 
-<ZoomableImage src="/docs/images/services/fileflows.svg" />
+<ZoomableImage src="/docs/images/services/fileflows-logo.svg" alt="Fileflows dashboard" />
 
 ## What is FileFlows?
 
@@ -23,9 +23,9 @@ FileFlows lets you monitor and process any file type with custom flows. Videos, 
 
 ## Screenshots
 
-<ZoomableImage src="/docs/images/services/fileflows.webp" />
+<ZoomableImage src="/docs/images/services/fileflows.webp" alt="Fileflows dashboard" />
 
 ## Links
 
-- [The official website ›](https://fileflows.com/)
-- [Doc ›](https://fileflows.com/docs)
+- [The official website](https://fileflows.com/)
+- [Doc](https://fileflows.com/docs)

@@ -1,5 +1,6 @@
 ---
 title: Backup and Restore Coolify
+description: "Backup and restore your Coolify instance with S3 or manual methods including database migration, SSH key transfer, and APP_KEY configuration."
 ---
 
 
@@ -26,15 +27,15 @@ For details, refer to the [Application Migration Guide](https://coolify.io/docs/
 ## 1. Create a Manual Backup
 1. **Go to Backup Page on Dashboard:**  
    In your Coolify dashboard, click on **Settings** and select the **Backup** tab to view your database and backup settings.
-   <ZoomableImage src="/docs/images/knowledge-base/how-tos/backup-restore-coolify/1.webp" />
+   <ZoomableImage src="/docs/images/knowledge-base/how-tos/backup-restore-coolify/1.webp" alt="Screenshot of Backup Restore Coolify" />
 
 2. **Trigger a Backup:**  
    Click on the **Backup Now** button. This will start the backup process in the background.
-   <ZoomableImage src="/docs/images/knowledge-base/how-tos/backup-restore-coolify/2.webp" />
+   <ZoomableImage src="/docs/images/knowledge-base/how-tos/backup-restore-coolify/2.webp" alt="Screenshot of Backup Restore Coolify" />
 
 3. **Download or Copy Backup Location:**  
    Once the backup is complete, you will see a **Download** button and a location path in the UI.  
-   <ZoomableImage src="/docs/images/knowledge-base/how-tos/backup-restore-coolify/3.webp" />
+   <ZoomableImage src="/docs/images/knowledge-base/how-tos/backup-restore-coolify/3.webp" alt="Screenshot of Backup Restore Coolify" />
    - **Download:** Saves the backup file to your local computer.
    - **Copy Path:** You can use this path with a tool like SCP to transfer the backup file directly to your new server.
 

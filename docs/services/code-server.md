@@ -1,9 +1,10 @@
 ---
 title: "Code Server"
-description: "Here you can find the documentation for hosting Code Server with Coolify."
+description: "Run VS Code in browser on Coolify with code-server for remote development, extensions support, terminal access, and cloud-based coding environment."
 ---
 
 # Code Server
+
 ![Code Server1](https://github.com/coder/code-server/raw/main/docs/assets/screenshot-1.png)
 ![Code Server2](https://github.com/coder/code-server/raw/main/docs/assets/screenshot-2.png)
 
@@ -29,5 +30,5 @@ See answers to [frequently asked questions](https://coder.com/docs/code-server/l
 
 ## Links
 
-- [The official website ›](https://coder.com/docs/code-server/?utm_source=coolify.io)
-- [GitHub ›](https://github.com/coder/code-server?utm_source=coolify.io)
+- [The official website](https://coder.com/docs/code-server/?utm_source=coolify.io)
+- [GitHub](https://github.com/coder/code-server?utm_source=coolify.io)

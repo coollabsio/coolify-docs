@@ -1,11 +1,11 @@
 ---
 title: Libretranslate
-description: Here you can find the documentation for hosting Libretranslate with Coolify.
+description: "Host LibreTranslate on Coolify for self-hosted translation API supporting 40+ languages with privacy-focused machine translation service."
 ---
 
 # Libretranslate
 
-<ZoomableImage src="/docs/images/services/libretranslate.svg" />
+<ZoomableImage src="/docs/images/services/libretranslate-logo.svg" alt="Libretranslate dashboard" />
 
 ## What is Libretranslate
 

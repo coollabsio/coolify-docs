@@ -1,8 +1,7 @@
 ---
 title: "Gitea"
-description: "Here you can find the documentation for hosting Gitea with Coolify."
+description: "Host Gitea Git service on Coolify for lightweight repository hosting with pull requests, CI/CD integration, issues, and team collaboration."
 ---
-
 
 ![Gitea](https://about.gitea.com/gitea-text.svg)
 
@@ -12,9 +11,9 @@ Git with a cup of tea! Painless self-hosted all-in-one software development serv
 
 ## Demo
 
-- [Demo ›](https://try.gitea.io/)
+- [Demo](https://try.gitea.io/)
 
 ## Links
 
-- [The official website ›](https://gitea.com)
-- [GitHub ›](https://github.com/go-gitea/gitea)
+- [The official website](https://gitea.com)
+- [GitHub](https://github.com/go-gitea/gitea)

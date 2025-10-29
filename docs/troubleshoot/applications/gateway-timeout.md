@@ -1,6 +1,6 @@
 ---
 title: Gateway Timeout Errors
-description: Troubleshooting Gateway Timeout (504) errors in Coolify applications and services.
+description: Resolve Gateway Timeout (504) errors in Coolify by fixing network isolation, adjusting proxy timeouts for Traefik, Caddy, and Nginx.
 tags:
   [
     "Gateway Timeout",
@@ -15,7 +15,7 @@ tags:
 
 # Gateway Timeout (504) Errors
 
-Gateway timeout errors occur when the Coolify proxy cannot get a response from your application within the configured timeout period. This is different from [Bad Gateway (502)](troubleshoot/applications/bad-gateway) errors, which indicate the proxy cannot connect to your application at all.
+Gateway timeout errors occur when the Coolify proxy cannot get a response from your application within the configured timeout period. This is different from [Bad Gateway (502)](/troubleshoot/applications/bad-gateway#bad-gateway-502-error) errors, which indicate the proxy cannot connect to your application at all.
 
 ## Common Causes
 
@@ -153,7 +153,7 @@ command:
   - "--entrypoints.https.transport.respondingTimeouts.idleTimeout=5m"
 ```
 
-Read more about Traefik timeouts in the [official documentation ↗](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#timeout).
+Read more about Traefik timeouts in the [official documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#timeout).
 
 ##### For Caddy
 
@@ -169,7 +169,7 @@ caddy.servers.timeouts.write=300s
 caddy.servers.timeouts.idle=5m
 ```
 
-Read more about Caddy timeouts in the [official documentation ↗](https://caddyserver.com/docs/caddyfile/options#timeouts).
+Read more about Caddy timeouts in the [official documentation](https://caddyserver.com/docs/caddyfile/options#timeouts).
 
 ##### For Nginx (One-Click Databases)
 
@@ -246,5 +246,5 @@ If these solutions don't resolve your gateway timeout issues:
    docker logs <your-container-name> --tail 200 > app-logs.txt
    ```
 
-2. Join our [Discord Community ↗](https://coolify.io/discord)
+2. Join our [Discord Community](https://coolify.io/discord)
 3. Share your configuration, logs, and the specific steps you've tried

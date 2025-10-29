@@ -1,6 +1,6 @@
 ---
 title: Docker Installation Failed
-description: Here are some common solution for fixing Docker installation issues during Coolify installation
+description: Fix Docker installation failures during Coolify setup by using Ubuntu LTS versions or manually installing Docker 24+ on non-LTS operating systems.
 ---
 
 # Docker Installation Failed

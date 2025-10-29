@@ -1,6 +1,6 @@
 ---
 title: "Integration"
-description: "A guide on how to use GitHub based repositories with Coolify."
+description: "Deploy public and private GitHub repositories with Coolify using GitHub App integration, deploy keys, or automated webhooks for commits and pull requests."
 ---
 
 # Github Integration
@@ -70,18 +70,18 @@ Not required if you use GitHub App integration.
 :::
 
 In your resource, there is a `Webhooks` menu. In the `Manual Git Webhooks` section, you can find the URL what you need to set in your GitHub repository.
-<ZoomableImage src="/docs/images/knowledge-base/git/github/manual-git-webhooks.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/git/github/manual-git-webhooks.webp" alt="Manual Git Webhooks configuration" />
 
 
 1. Set a secret key in the `GitHub Webhook Secret` input field.
-<ZoomableImage src="/docs/images/knowledge-base/git/github/github-webhook-secret.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/git/github/github-webhook-secret.webp" alt="Github Webhook Secret configuration" />
 
 2. Go to your repository on GitHub and open the `Settings` / `Webhooks` menu.
-<ZoomableImage src="/docs/images/knowledge-base/git/github/github-settings-webhook.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/git/github/github-settings-webhook.webp" alt="Github Settings Webhook configuration" />
 
 3. Add the URL from Coolify to the `URL` input field and the secret token.
 4. Select the `Push events` option.
-<ZoomableImage src="/docs/images/knowledge-base/git/github/event-push.webp" />
+<ZoomableImage src="/docs/images/knowledge-base/git/github/event-push.webp" alt="Event Push configuration" />
 
 5. That's it! Now when you push to your repository, GitHub will send a webhook request to Coolify and it will trigger a new deployment.
 

@@ -1,11 +1,11 @@
 ---
 title: Convertx
-description: Here you can find the documentation for hosting Convertx with Coolify.
+description: "Host ConvertX file conversion on Coolify for format transformation, document processing, image optimization, and media file conversion services."
 ---
 
 # Convertx
 
-<ZoomableImage src="/docs/images/services/convertx.png" />
+<ZoomableImage src="/docs/images/services/convertx.png" alt="Convertx dashboard" />
 
 ## What is Convertx
 

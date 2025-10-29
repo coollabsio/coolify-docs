@@ -1,6 +1,6 @@
 ---
 title: "Custom Commands"
-description: "A guide on how to use custom commands for your Docker deployments with Coolify."
+description: "Add custom Docker run options to Coolify deployments including GPU support, security options, system controls, devices, and resource limits."
 ---
 
 # Custom Commands

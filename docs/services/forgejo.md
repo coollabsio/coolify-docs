@@ -1,6 +1,6 @@
 ---
 title: "Forgejo"
-description: "Here you can find the documentation for hosting Forgejo with Coolify."
+description: "Deploy Forgejo Git hosting on Coolify as lightweight GitHub alternative with repositories, CI/CD, issues, pull requests, and collaboration tools."
 ---
 
 ![forgejo](https://forgejo.org/images/forgejo-wordmark.svg)
@@ -24,9 +24,9 @@ Forejo is also compatible with third-party CI apps and platforms. Forgejo is a G
 
 ## Demo
 
-- [Demo ›](https://next.forgejo.org/)
+- [Demo](https://next.forgejo.org/)
 
 ## Links
 
-- [The official website ›](https://forgejo.org/)
-- [Codeberg ›](https://codeberg.org/forgejo/forgejo)
+- [The official website](https://forgejo.org/)
+- [Codeberg](https://codeberg.org/forgejo/forgejo)

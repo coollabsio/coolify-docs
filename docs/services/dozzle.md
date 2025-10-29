@@ -1,6 +1,6 @@
 ---
 title: "Dozzle"
-description: "Here you can find the documentation for hosting Dozzle with Coolify."
+description: "Monitor Docker logs on Coolify with Dozzle real-time log viewer featuring search, filtering, multi-container support, and lightweight web interface."
 ---
 
 ![Dozzle](https://dozzle.dev/logo.svg)
@@ -15,5 +15,5 @@ Dozzle is easy to install and configure, making it an ideal solution for develop
 
 ## Links
 
-- [The official website ›](https://dozzle.dev/guide/getting-started#running-with-docker?utm_source=coolify.io)
-- [GitHub ›](https://github.com/amir20/dozzle?utm_source=coolify.io)
+- [The official website](https://dozzle.dev/guide/getting-started#running-with-docker?utm_source=coolify.io)
+- [GitHub](https://github.com/amir20/dozzle?utm_source=coolify.io)

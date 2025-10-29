@@ -1,11 +1,11 @@
 ---
 title: Freescout
-description: Here you can find the documentation for hosting Freescout with Coolify.
+description: "Deploy FreeScout helpdesk on Coolify as self-hosted HelpScout alternative with shared inbox, ticketing, and customer support email management."
 ---
 
 # Freescout
 
-<ZoomableImage src="/docs/images/services/freescout.png" />
+<ZoomableImage src="/docs/images/services/freescout-logo.png" alt="Freescout dashboard" />
 
 ## What is Freescout
 

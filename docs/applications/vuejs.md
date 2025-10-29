@@ -1,5 +1,6 @@
 ---
 title: Vue
+description: Deploy Vue.js applications on Coolify with server builds using Node/Express or static SPA builds with routing support.
 ---
 
 # Vue

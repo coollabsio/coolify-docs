@@ -1,6 +1,6 @@
 ---
 title: "Mediawiki"
-description: "Here you can find the documentation for hosting Mediawiki with Coolify."
+description: "Run MediaWiki on Coolify for Wikipedia-style documentation, knowledge bases, collaborative editing, and structured wiki content management."
 ---
 
 ![Mediawiki](https://www.mediawiki.org/static/images/icons/mediawikiwiki.svg)
@@ -23,5 +23,5 @@ Free and open source collaborative space for managing and sharing knowledge.
 
 ## Links
 
-- [The official website ›](https://www.mediawiki.org/wiki/MediaWiki)
-- [GitHub ›](https://github.com/wikimedia/mediawiki)
+- [The official website](https://www.mediawiki.org/wiki/MediaWiki)
+- [GitHub](https://github.com/wikimedia/mediawiki)

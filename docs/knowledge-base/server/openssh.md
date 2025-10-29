@@ -1,6 +1,6 @@
 ---
 title: "OpenSSH"
-description: "A guide to configure OpenSSH for Coolify."
+description: "Configure OpenSSH server for Coolify with key-based authentication, proper permissions, and automated SSH setup across Ubuntu, Debian, CentOS, and Alpine Linux."
 ---
 
 # OpenSSH

@@ -1,11 +1,11 @@
 ---
 title: "Sequin"
-description: "Here you can find the documentation for hosting Sequin with Coolify."
+description: "Stream database changes on Coolify with Sequin for CDC, event-driven architecture, webhooks, and real-time data synchronization workflows."
 ---
 
 # Sequin
 
-<ZoomableImage src="/docs/images/services/sequin.svg" />
+<ZoomableImage src="/docs/images/services/sequin-logo.svg" alt="Sequin dashboard" />
 
 ## What is Sequin?
 
@@ -13,5 +13,5 @@ Sequin is the fastest Postgres change data capture (CDC) solution that helps you
 
 ## Links
 
-- [The official website ›](https://sequinstream.com?utm_source=coolify.io)
-- [GitHub ›](https://github.com/sequinstream/sequin?utm_source=coolify.io)
+- [The official website](https://sequinstream.com?utm_source=coolify.io)
+- [GitHub](https://github.com/sequinstream/sequin?utm_source=coolify.io)

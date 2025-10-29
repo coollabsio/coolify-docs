@@ -1,5 +1,6 @@
 ---
 title: "Contributing to Coolify Documentation"
+description: Contribute to Coolify docs with this guide covering repository setup, local development with Bun, image guidelines, and pull request workflow.
 ---
 
 # Coolify Docs Contribution Guide
@@ -53,7 +54,7 @@ http://localhost:5173/docs/
 - **Usage:**  
   Use the Zoomable image component on the docs to attach your images
   ```vue
-  <ZoomableImage src="path-to-the-image.webp" />
+  <ZoomableImage src="path-to-the-image.webp" alt="Path To The Image" />
   ```
 
 

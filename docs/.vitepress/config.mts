@@ -32,29 +32,36 @@ export default defineConfig({
   lastUpdated: true,
   ignoreDeadLinks: true,
   sitemap: {
-    hostname: 'https://coolify.io/docs/'
+    hostname: env.VITE_SITE_URL ?? 'https://coolify.io/docs/'
+  },
+
+  transformHead: ({ pageData }) => {
+    const canonicalUrl = `${env.VITE_SITE_URL ?? 'https://coolify.io/docs'}${pageData.relativePath.replace(/((^|\/)index)?\.md$/, '$2')}`
+    return [
+      ['link', { rel: 'canonical', href: canonicalUrl }]
+    ]
   },
 
   head: [
     ['meta', { name: 'theme-color', content: '#000000' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: 'Coolify Docs' }],
-    ['meta', { property: 'og:url', content: 'https://coolify.io/docs/' }],
+    ['meta', { property: 'og:url', content: env.VITE_SITE_URL ?? 'https://coolify.io/docs/' }],
     ['meta', { property: 'og:description', content: 'Self hosting with superpowers: An open-source & self-hostable Heroku / Netlify / Vercel alternative.' }],
     ['meta', { property: 'og:image', content: 'https://coolcdn.b-cdn.net/assets/coolify/og-image-docs.png' }],
     ['meta', { property: 'twitter:site', content: '@coolifyio' }],
     ['meta', { property: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { property: 'twitter:title', content: 'Coolify Docs' }],
     ['meta', { property: 'twitter:description', content: 'Self hosting with superpowers: An open-source & self-hostable Heroku / Netlify / Vercel alternative.' }],
-    ['meta', { property: 'twitter:url', content: 'https://coolify.io/docs/' }],
+    ['meta', { property: 'twitter:url', content: env.VITE_SITE_URL ?? 'https://coolify.io/docs/' }],
     ['meta', { property: 'twitter:image', content: 'https://coolcdn.b-cdn.net/assets/coolify/og-image-docs.png' }],
-    ['link', { rel: 'icon', href: '/docs/coolify-logo-transparent.png' }],
+    ['link', { rel: 'icon', href: '/docs/coolify-logo-transparent.png', alt: "Coolify's Logo" }],
     ['link', { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     ['script', { defer: 'true', src: 'https://analytics.coollabs.io/js/script.tagged-events.js', 'data-domain': env.VITE_ANALYTICS_DOMAIN ?? 'coolify.io/docs' }],
-    ['script', { async: 'true', src: '/docs/trieve-user-script.js' }],
   ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    externalLinkIcon: true,
     carbonAds: {
       code: 'CW7IPKJJ',
       placement: 'coolifyio'
@@ -177,7 +184,8 @@ export default defineConfig({
         collapsed: true,
         items: [
           { text: 'Introduction', link: '/services/introduction' },
-          { text: 'All Services', link: '/services/overview' }
+          { text: 'All Services', link: '/services/overview' },
+          { text: 'Services Directory', link: '/services/all' }
         ]
       },
       {
@@ -402,6 +410,7 @@ export default defineConfig({
                   },
                 ]
               },
+              { text: 'FAQ', link: '/knowledge-base/faq' },
             ]
           }
         ],
@@ -557,6 +566,11 @@ export default defineConfig({
       }),
     ],
     assetsInclude: ['**/*.yml'],
+    define: {
+      'import.meta.env.VITE_KORREKTLY_BASE_URL': JSON.stringify(env.KORREKTLY_BASE_URL || env.VITE_KORREKTLY_BASE_URL || ''),
+      'import.meta.env.VITE_KORREKTLY_API_TOKEN': JSON.stringify(env.KORREKTLY_API_TOKEN || env.VITE_KORREKTLY_API_TOKEN || ''),
+      'import.meta.env.VITE_KORREKTLY_DATASET_ID': JSON.stringify(env.KORREKTLY_DATASET_ID || env.VITE_KORREKTLY_DATASET_ID || ''),
+    },
     build: {
       chunkSizeWarningLimit: 5000
     },

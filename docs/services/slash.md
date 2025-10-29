@@ -1,8 +1,7 @@
 ---
 title: "Slash"
-description: "Here you can find the documentation for hosting Slash with Coolify."
+description: "Manage bookmarks on Coolify with Slash for self-hosted link shortener, collections, sharing, and personal URL management with tagging."
 ---
-
 
 ## What is Slash?
 
@@ -14,4 +13,4 @@ An open source, self-hosted platform for sharing and managing your most frequent
 
 ## Links
 
-- [GitHub ›](https://github.com/yourselfhosted/slash)
+- [GitHub](https://github.com/yourselfhosted/slash)

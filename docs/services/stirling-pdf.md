@@ -1,8 +1,7 @@
 ---
 title: "Stirling PDF"
-description: "Here you can find the documentation for hosting Stirling PDF with Coolify."
+description: "Process PDFs on Coolify with Stirling-PDF for merging, splitting, compression, conversion, OCR, and 50+ PDF manipulation operations."
 ---
-
 
 ![Stirling PDF](https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/main/docs/stirling.png)
 
@@ -12,5 +11,5 @@ A self-hosted PDF editor for secure and convenient file transfers, whether on a 
 
 ## Links
 
-- [Official Website ›](https://stirlingpdf.com)
-- [GitHub ›](https://github.com/Stirling-Tools/Stirling-PDF)
+- [Official Website](https://stirlingpdf.com)
+- [GitHub](https://github.com/Stirling-Tools/Stirling-PDF)

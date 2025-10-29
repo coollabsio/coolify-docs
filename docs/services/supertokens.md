@@ -1,11 +1,11 @@
 ---
 title: Supertokens
-description: Here you can find the documentation for hosting Supertokens with Coolify.
+description: "Add authentication on Coolify with SuperTokens for login, session management, user administration, and Auth0 alternative SDKs."
 ---
 
 # Supertokens
 
-<ZoomableImage src="/docs/images/services/supertokens.png" />
+<ZoomableImage src="/docs/images/services/supertokens.png" alt="Supertokens dashboard" />
 
 ## What is Supertokens
 

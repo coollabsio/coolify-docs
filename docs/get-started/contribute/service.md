@@ -1,5 +1,6 @@
 ---
 title: "Add a new service template to Coolify"
+description: Add new service templates to Coolify using Docker Compose with magic environment variables, storage handling, and one-click deployment features.
 ---
 
 # Adding a new service template to Coolify
@@ -121,7 +122,7 @@ As soon as you have your local setup ready, follow these steps to add your new s
    ```markdown
    # [Service Name]
 
-   <ZoomableImage src="/docs/images/services/service.svg" />
+   <ZoomableImage src="/docs/images/services/service.svg" alt="/ dashboard" />
 
    ## What is [Service Name]?
 
@@ -129,8 +130,8 @@ As soon as you have your local setup ready, follow these steps to add your new s
 
    ## Links
 
-   - [Official website ↗](https://example.com?utm_source=coolify.io)
-   - [GitHub ↗](https://github.com/example/repo?utm_source=coolify.io)
+   - [Official website](https://example.com?utm_source=coolify.io)
+   - [GitHub](https://github.com/example/repo?utm_source=coolify.io)
    ```
 
 4. Add Service to the Services Overview

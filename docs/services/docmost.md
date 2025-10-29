@@ -1,10 +1,10 @@
 ---
 title: "Docmost"
-description: "Here you can find the documentation for hosting Docmost with Coolify."
+description: "Deploy Docmost wiki on Coolify for team documentation, knowledge management, real-time collaboration, and organized information sharing platform."
 ---
 
-
 # What is Docmost?
+
 Docmost is an open-source collaborative wiki and documentation software.
 
 ## Screenshots
@@ -17,5 +17,5 @@ Docmost is an open-source collaborative wiki and documentation software.
 
 ## Links
 
-- [The official website ›](https://www.docmost.com?utm_source=coolify.io)
-- [GitHub ›](https://github.com/docmost/docmost?utm_source=coolify.io)
+- [The official website](https://www.docmost.com?utm_source=coolify.io)
+- [GitHub](https://github.com/docmost/docmost?utm_source=coolify.io)
