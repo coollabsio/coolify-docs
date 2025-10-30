@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import { useData } from 'vitepress'
+import { ref, watch, onMounted } from 'vue'
 import { onKeyStroke } from '@vueuse/core'
-
-const { isDark } = useData()
 
 interface SearchResult {
   id: string
@@ -57,12 +54,27 @@ defineExpose({
   openSearch
 })
 
-const closeSearch = () => {
-  isOpen.value = false
+const clearSearch = () => {
+  // Cancel any ongoing search operations
+  if (searchTimeout) {
+    clearTimeout(searchTimeout)
+    searchTimeout = null
+  }
+  if (abortController) {
+    abortController.abort()
+    abortController = null
+  }
+
   searchQuery.value = ''
   searchResults.value = []
   selectedIndex.value = 0
   searchError.value = null
+  isLoading.value = false
+}
+
+const closeSearch = () => {
+  clearSearch()
+  isOpen.value = false
 }
 
 // Keyboard shortcuts (only for modal interactions)
@@ -94,15 +106,23 @@ onKeyStroke('Enter', () => {
 
 // Debounced search
 let searchTimeout: NodeJS.Timeout | null = null
+let abortController: AbortController | null = null
 
 watch(searchQuery, async (newQuery) => {
+  // Cancel previous timeout and abort any ongoing request
   if (searchTimeout) {
     clearTimeout(searchTimeout)
+    searchTimeout = null
+  }
+  if (abortController) {
+    abortController.abort()
+    abortController = null
   }
 
   if (!newQuery.trim()) {
     searchResults.value = []
     searchError.value = null
+    isLoading.value = false
     return
   }
 
@@ -118,6 +138,16 @@ const performSearch = async (query: string) => {
     return
   }
 
+  if (!korrektlyConfig.datasetId || !korrektlyConfig.apiToken) {
+    console.error('Korrektly dataset ID not configured')
+    searchError.value = 'Search is not properly configured. Please check the environment variables.'
+    return
+  }
+
+  // Create new abort controller for this search
+  abortController = new AbortController()
+  const currentAbortController = abortController
+
   isLoading.value = true
   searchError.value = null
   try {
@@ -126,6 +156,11 @@ const performSearch = async (query: string) => {
       limit: 10,
       search_type: 'hybrid',
     })
+
+    // Check if this request was aborted
+    if (currentAbortController.signal.aborted) {
+      return
+    }
 
     // Check if response contains an error
     if (response?.error || response?.message) {
@@ -148,7 +183,10 @@ const performSearch = async (query: string) => {
 
       const title = getMetadata('title') || getMetadata('heading') || extractTitle(chunk.content_html) || 'Untitled'
       const description = getMetadata('description') || ''
-      const hierarchy = getMetadata('hierarchy') || ''
+
+      // Handle hierarchy as array
+      const hierarchyMeta = chunk.metadata?.find((m: any) => m.key === 'hierarchy')
+      const hierarchy = hierarchyMeta?.value || []
 
       // Build URL from source_url or group tracking_id
       let url = chunk.source_url || ''
@@ -161,17 +199,15 @@ const performSearch = async (query: string) => {
         url = url.replace('.md', '')
       }
 
-      // Create breadcrumb from hierarchy or URL (excluding 'docs' prefix)
+      // Create breadcrumb from hierarchy array or URL (excluding 'docs' prefix)
       let breadcrumb = ''
-      if (hierarchy) {
-        // Convert "home > aditya > workspace > coollabs > coolify-docs > docs > services > n8n"
-        // to "services / n8n"
-        const parts = hierarchy.split(' > ')
-        const docsIndex = parts.indexOf('docs')
-        if (docsIndex !== -1 && docsIndex < parts.length - 1) {
-          breadcrumb = parts.slice(docsIndex + 1).join(' / ')
+      if (Array.isArray(hierarchy) && hierarchy.length > 0) {
+        // Find 'docs' in the hierarchy array and take everything after it
+        const docsIndex = hierarchy.indexOf('docs')
+        if (docsIndex !== -1 && docsIndex < hierarchy.length - 1) {
+          breadcrumb = hierarchy.slice(docsIndex + 1).join(' / ')
         } else {
-          breadcrumb = hierarchy.replace(/ > /g, ' / ')
+          breadcrumb = hierarchy.join(' / ')
         }
       } else if (url) {
         // Extract from URL: /docs/services/n8n -> services / n8n
@@ -191,6 +227,11 @@ const performSearch = async (query: string) => {
 
     selectedIndex.value = 0
   } catch (error: any) {
+    // Don't show error if the request was aborted
+    if (currentAbortController.signal.aborted) {
+      return
+    }
+
     console.error('Search error:', error)
 
     // Try to extract error message from the error object
@@ -207,7 +248,10 @@ const performSearch = async (query: string) => {
     searchError.value = errorMessage
     searchResults.value = []
   } finally {
-    isLoading.value = false
+    // Only reset loading if not aborted
+    if (!currentAbortController.signal.aborted) {
+      isLoading.value = false
+    }
   }
 }
 
@@ -283,7 +327,8 @@ const truncate = (text: string, length: number) => {
                 <button
                   v-if="searchQuery"
                   class="absolute right-3 w-6 h-6 flex items-center justify-center rounded bg-[var(--vp-c-bg-soft)] text-[var(--vp-c-text-2)] hover:bg-[var(--vp-c-bg-elv)] hover:text-[var(--vp-c-text-1)] transition-all text-xl leading-none"
-                  @click="searchQuery = ''"
+                  @click="clearSearch"
+                  title="Clear search"
                 >
                   ×
                 </button>
@@ -353,7 +398,6 @@ const truncate = (text: string, length: number) => {
 
               <!-- Initial State -->
               <div v-else class="py-12 px-6 text-center text-[var(--vp-c-text-2)]">
-                <p class="text-sm mb-6">Start typing to search...</p>
                 <div class="mt-6">
                   <p class="text-xs font-semibold text-[var(--vp-c-text-2)] mb-3 uppercase tracking-wide">Popular searches:</p>
                   <div class="flex flex-wrap gap-2 justify-center">
