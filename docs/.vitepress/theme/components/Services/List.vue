@@ -310,6 +310,13 @@ const services = [
         category: 'Productivity'
     },
     {
+        name: 'AppFlowy',
+        slug: 'appflowy',
+        icon: '/docs/images/services/appflowy.svg',
+        description: 'Open-source alternative to Notion with workspaces for docs, wikis, and project management.',
+        category: 'Productivity'
+    },
+    {
         name: 'AnythingLLM',
         slug: 'anythingllm',
         icon: '/docs/images/services/anythingllm-logo.svg',

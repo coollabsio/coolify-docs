@@ -302,6 +302,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Productivity
 
 - [Affine](/services/affine) - Open-source knowledge base and workspace combining docs, whiteboards, and databases
+- [AppFlowy](/services/appflowy) - Open-source alternative to Notion with workspaces for docs, wikis, and project management
 - [Cal.com](/services/calcom) - Open-source Calendly alternative for scheduling meetings
 - [CodiMD](/services/codimd) - Realtime collaborative markdown notes on all platforms
 - [Excalidraw](/services/excalidraw) - Virtual whiteboard for sketching hand-drawn like diagrams
