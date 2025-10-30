@@ -55,16 +55,7 @@ defineExpose({
 })
 
 const clearSearch = () => {
-  // Cancel any ongoing search operations
-  if (searchTimeout) {
-    clearTimeout(searchTimeout)
-    searchTimeout = null
-  }
-  if (abortController) {
-    abortController.abort()
-    abortController = null
-  }
-
+  cancelOngoingSearch()
   searchQuery.value = ''
   searchResults.value = []
   selectedIndex.value = 0
@@ -108,8 +99,7 @@ onKeyStroke('Enter', () => {
 let searchTimeout: NodeJS.Timeout | null = null
 let abortController: AbortController | null = null
 
-watch(searchQuery, async (newQuery) => {
-  // Cancel previous timeout and abort any ongoing request
+const cancelOngoingSearch = () => {
   if (searchTimeout) {
     clearTimeout(searchTimeout)
     searchTimeout = null
@@ -118,6 +108,10 @@ watch(searchQuery, async (newQuery) => {
     abortController.abort()
     abortController = null
   }
+}
+
+watch(searchQuery, async (newQuery) => {
+  cancelOngoingSearch()
 
   if (!newQuery.trim()) {
     searchResults.value = []
@@ -126,9 +120,7 @@ watch(searchQuery, async (newQuery) => {
     return
   }
 
-  searchTimeout = setTimeout(async () => {
-    await performSearch(newQuery)
-  }, 300)
+  searchTimeout = setTimeout(() => performSearch(newQuery), 300)
 })
 
 const performSearch = async (query: string) => {
@@ -157,15 +149,10 @@ const performSearch = async (query: string) => {
       search_type: 'hybrid',
     })
 
-    // Check if this request was aborted
-    if (currentAbortController.signal.aborted) {
-      return
-    }
+    if (currentAbortController.signal.aborted) return
 
-    // Check if response contains an error
     if (response?.error || response?.message) {
-      const errorMessage = response.message || response.error || 'An unknown error occurred'
-      searchError.value = errorMessage
+      searchError.value = response.message || response.error || 'An unknown error occurred'
       searchResults.value = []
       console.error('Search API error:', response)
       return
@@ -174,85 +161,63 @@ const performSearch = async (query: string) => {
     // The API returns { success, data: { results: [...] } }
     const results = response?.data?.results || response?.results || response?.chunks || []
 
-    searchResults.value = results.map((chunk: any) => {
-      // Extract metadata from array format
-      const getMetadata = (key: string) => {
-        const meta = chunk.metadata?.find((m: any) => m.key === key)
-        return meta?.value || ''
-      }
-
-      const title = getMetadata('title') || getMetadata('heading') || extractTitle(chunk.content_html) || 'Untitled'
-      const description = getMetadata('description') || ''
-
-      // Handle hierarchy as array
-      const hierarchyMeta = chunk.metadata?.find((m: any) => m.key === 'hierarchy')
-      const hierarchy = hierarchyMeta?.value || []
-
-      // Build URL from source_url or group tracking_id
-      let url = chunk.source_url || ''
-      if (url.includes('/home/aditya/workspace/coollabs/coolify-docs/docs')) {
-        // Convert file path to URL path
-        url = url.replace('/home/aditya/workspace/coollabs/coolify-docs/docs', '/docs')
-        url = url.replace('.md', '')
-      } else if (chunk.group?.tracking_id) {
-        url = chunk.group.tracking_id.replace('/home/aditya/workspace/coollabs/coolify-docs/docs', '/docs')
-        url = url.replace('.md', '')
-      }
-
-      // Create breadcrumb from hierarchy array or URL (excluding 'docs' prefix)
-      let breadcrumb = ''
-      if (Array.isArray(hierarchy) && hierarchy.length > 0) {
-        // Find 'docs' in the hierarchy array and take everything after it
-        const docsIndex = hierarchy.indexOf('docs')
-        if (docsIndex !== -1 && docsIndex < hierarchy.length - 1) {
-          breadcrumb = hierarchy.slice(docsIndex + 1).join(' / ')
-        } else {
-          breadcrumb = hierarchy.join(' / ')
-        }
-      } else if (url) {
-        // Extract from URL: /docs/services/n8n -> services / n8n
-        breadcrumb = url.replace(/^\/docs\//, '').replace(/\//g, ' / ')
-      }
-
-      return {
-        id: chunk.id,
-        title,
-        content: description || chunk.content_html || chunk.content || '',
-        url,
-        highlight: chunk.content_html,
-        hierarchy,
-        breadcrumb,
-      }
-    })
+    searchResults.value = results.map((chunk: any) => transformSearchResult(chunk))
 
     selectedIndex.value = 0
   } catch (error: any) {
-    // Don't show error if the request was aborted
-    if (currentAbortController.signal.aborted) {
-      return
-    }
+    if (currentAbortController.signal.aborted) return
 
     console.error('Search error:', error)
-
-    // Try to extract error message from the error object
-    let errorMessage = 'An unexpected error occurred while searching.'
-
-    if (error?.response?.data?.message) {
-      errorMessage = error.response.data.message
-    } else if (error?.message) {
-      errorMessage = error.message
-    } else if (typeof error === 'string') {
-      errorMessage = error
-    }
-
-    searchError.value = errorMessage
+    searchError.value = extractErrorMessage(error)
     searchResults.value = []
   } finally {
-    // Only reset loading if not aborted
     if (!currentAbortController.signal.aborted) {
       isLoading.value = false
     }
   }
+}
+
+const getMetadata = (chunk: any, key: string): any => {
+  const meta = chunk.metadata?.find((m: any) => m.key === key)
+  return meta?.value || ''
+}
+
+const transformSearchResult = (chunk: any): SearchResult => {
+  const title = getMetadata(chunk, 'title') || getMetadata(chunk, 'heading') || extractTitle(chunk.content_html) || 'Untitled'
+  const description = getMetadata(chunk, 'description') || ''
+  const hierarchy = getMetadata(chunk, 'hierarchy') || []
+  const url = normalizeUrl(chunk.source_url || chunk.group?.tracking_id || '')
+  const breadcrumb = createBreadcrumb(hierarchy, url)
+
+  return {
+    id: chunk.id,
+    title,
+    content: description || chunk.content_html || chunk.content || '',
+    url,
+    highlight: chunk.content_html,
+    hierarchy,
+    breadcrumb,
+  }
+}
+
+const normalizeUrl = (path: string): string => {
+  if (!path) return ''
+
+  // Find 'docs' in the path and extract everything from that point
+  const docsIndex = path.indexOf('/docs')
+  if (docsIndex !== -1) {
+    path = path.substring(docsIndex)
+  }
+
+  // Remove .md extension
+  return path.replace(/\.md$/, '')
+}
+
+const extractErrorMessage = (error: any): string => {
+  if (error?.response?.data?.message) return error.response.data.message
+  if (error?.message) return error.message
+  if (typeof error === 'string') return error
+  return 'An unexpected error occurred while searching.'
 }
 
 const extractTitle = (html: string): string => {
@@ -261,6 +226,26 @@ const extractTitle = (html: string): string => {
   temp.innerHTML = html
   const heading = temp.querySelector('h1, h2, h3, h4, h5, h6')
   return heading?.textContent?.trim() || ''
+}
+
+const createBreadcrumb = (hierarchy: string[], url: string): string => {
+  // Try hierarchy first
+  if (Array.isArray(hierarchy) && hierarchy.length > 0) {
+    const docsIndex = hierarchy.findIndex(item => item === 'docs')
+    return docsIndex !== -1
+      ? hierarchy.slice(docsIndex).join(' / ')
+      : hierarchy.join(' / ')
+  }
+
+  // Fall back to URL
+  if (!url) return ''
+
+  const urlParts = url.replace(/^\/+/, '').split('/')
+  const docsIndex = urlParts.indexOf('docs')
+
+  return docsIndex !== -1
+    ? urlParts.slice(docsIndex).join(' / ')
+    : urlParts.join(' / ')
 }
 
 const navigateToResult = (result: SearchResult) => {
