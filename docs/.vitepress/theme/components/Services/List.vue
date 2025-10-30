@@ -1857,6 +1857,12 @@ const services = [
         category: 'File Management'
     },
     {
+        name: 'MetaMCP',
+        slug: 'metamcp',
+        icon: '/public/images/services/metamcp.png',
+        description: 'MCP Aggregator, Orchestrator, Middleware, Gateway in one application.',
+        category: 'AI'
+        }
         name: 'CodiMD',
         slug: 'codimd',
         icon: '/docs/images/services/codimd-logo.png',
