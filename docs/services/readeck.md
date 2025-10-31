@@ -5,7 +5,7 @@ description: "Save articles on Coolify with Readeck for read-later service, book
 
 # Readeck
 
-<ZoomableImage src="/docs/images/services/readeck.svg" alt="Readeck dashboard" />
+<ZoomableImage src="/docs/images/services/readeck-logo.svg" alt="Readeck dashboard" />
 
 ## What is Readeck
 

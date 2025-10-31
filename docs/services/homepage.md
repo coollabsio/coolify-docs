@@ -15,4 +15,4 @@ A modern, fully static, fast, secure fully proxied, highly customizable applicat
 
 ## Links
 
-- [The official website ›](https://gethomepage.dev/latest/)
+- [The official website](https://gethomepage.dev/latest/)

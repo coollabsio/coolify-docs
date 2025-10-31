@@ -5,7 +5,7 @@ description: "Organize notes on Coolify with TriliumNext for hierarchical note-t
 
 # TriliumNext
 
-<ZoomableImage src="/docs/images/services/triliumnext.svg" alt="Triliumnext dashboard" />
+<ZoomableImage src="/docs/images/services/triliumnext-logo.svg" alt="Triliumnext dashboard" />
 
 ## What is TriliumNext?
 
@@ -13,4 +13,4 @@ TriliumNext is a hierarchical note taking application that helps you build your 
 
 ## Links
 
-- [GitHub ›](https://github.com/TriliumNext/Trilium?utm_source=coolify.io)
+- [GitHub](https://github.com/TriliumNext/Trilium?utm_source=coolify.io)

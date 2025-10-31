@@ -10,13 +10,13 @@ description: "Run WordPress on Coolify for blogging, CMS, e-commerce with plugin
 WordPress is a free and open-source content management system written in PHP and paired with a MySQL/MariaDB database.
 It is used for creating websites, blogs, and applications.
 
-
 ## Links
 
-- [The official website ›](https://wordpress.org)
-- [GitHub ›](https://github.com/WordPress/WordPress)
+- [The official website](https://wordpress.org)
+- [GitHub](https://github.com/WordPress/WordPress)
 
 ## FAQ
+
 ### How to increase the upload size limit?
 
 You can increase the upload size limit by following these steps:
@@ -37,7 +37,6 @@ php_value max_input_time 300
 4. Reload the website in your browser. The changes should be applied automatically.
 
 ### How to Fix a Redirection Loop in WordPress?
-
 
 If your WordPress site is stuck in a redirection loop, follow these steps to resolve the issue:
 

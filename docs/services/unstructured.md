@@ -21,4 +21,4 @@ Unstructured provides a platform and tools to ingest and process unstructured do
 
 ## Links
 
-- [GitHub ›](https://github.com/Unstructured-IO/unstructured-api?utm_source=coolify.io)
+- [GitHub](https://github.com/Unstructured-IO/unstructured-api?utm_source=coolify.io)

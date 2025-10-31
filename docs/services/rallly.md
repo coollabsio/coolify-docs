@@ -5,7 +5,7 @@ description: "Schedule meetings on Coolify with Rallly for group polls, availabi
 
 # Rallly
 
-<ZoomableImage src="/docs/images/services/rallly.svg" alt="Rallly dashboard" />
+<ZoomableImage src="/docs/images/services/rallly-logo.svg" alt="Rallly dashboard" />
 
 ## What is Rallly
 

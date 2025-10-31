@@ -3,7 +3,6 @@ title: "Gotenberg"
 description: "Run Gotenberg on Coolify for PDF generation from HTML, Markdown, Office files via Docker-based microservice with REST API for conversions."
 ---
 
-
 ![Gotenberg](https://user-images.githubusercontent.com/8983173/130322857-185831e2-f041-46eb-a17f-0a69d066c4e5.png)
 
 ## What is Gotenberg?
@@ -15,5 +14,5 @@ Gotenberg **has no UI**. Head to the [documentation](https://gotenberg.dev/docs/
 
 ## Links
 
-- [Official Website ›](https://gotenberg.dev)
-- [GitHub ›](https://github.com/gotenberg/gotenberg)
+- [Official Website](https://gotenberg.dev)
+- [GitHub](https://github.com/gotenberg/gotenberg)

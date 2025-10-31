@@ -5,7 +5,7 @@ description: "Run NodeBB forum on Coolify for modern community discussions, real
 
 # Nodebb
 
-<ZoomableImage src="/docs/images/services/nodebb.svg" alt="Nodebb dashboard" />
+<ZoomableImage src="/docs/images/services/nodebb-logo.svg" alt="Nodebb dashboard" />
 
 ## What is Nodebb
 

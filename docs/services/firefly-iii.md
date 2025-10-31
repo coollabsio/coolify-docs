@@ -3,7 +3,6 @@ title: "Firefly III"
 description: "Manage personal finances on Coolify with Firefly III featuring budgets, reports, recurring transactions, and multi-currency expense tracking."
 ---
 
-
 ![Firefly III](https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/logo-small.png)
 
 ## What is Firefly III?
@@ -20,5 +19,5 @@ But you get the idea: this is your money. These are your expenses. Stop them fro
 
 ## Links
 
-- [The official website ›](https://firefly-iii.org?utm_source=coolify.io)
-- [GitHub ›](https://github.com/firefly-iii/firefly-iii?utm_source=coolify.io)
+- [The official website](https://firefly-iii.org?utm_source=coolify.io)
+- [GitHub](https://github.com/firefly-iii/firefly-iii?utm_source=coolify.io)

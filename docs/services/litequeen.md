@@ -5,7 +5,7 @@ description: "Host LiteQueen lightweight CMS on Coolify for fast content managem
 
 # Litequeen
 
-<ZoomableImage src="/docs/images/services/litequeen.svg" alt="Litequeen dashboard" />
+<ZoomableImage src="/docs/images/services/litequeen-logo.svg" alt="Litequeen dashboard" />
 
 ## What is Litequeen
 

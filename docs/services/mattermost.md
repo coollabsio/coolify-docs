@@ -5,7 +5,7 @@ description: "Deploy Mattermost team chat on Coolify for secure messaging, file 
 
 # Mattermost
 
-<ZoomableImage src="/docs/images/services/mattermost.svg" alt="Mattermost dashboard" />
+<ZoomableImage src="/docs/images/services/mattermost-logo.svg" alt="Mattermost dashboard" />
 
 ## What is Mattermost
 

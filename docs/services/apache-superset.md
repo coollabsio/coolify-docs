@@ -23,16 +23,15 @@ After deploying the template, you will need to initialise the database and creat
 
 2. Run one of the commands below, noting the `-` symbol:
 
-    ```bash
-    # Basic initialisation
-    superset-init
+   ```bash
+   # Basic initialisation
+   superset-init
 
-    # Alternatively, to also load demo data, use
-    superset-demo
-    ```
+   # Alternatively, to also load demo data, use
+   superset-demo
+   ```
 
-    the source code for these scripts are available [here](https://github.com/amancevice/docker-superset/tree/main/bin).
-
+   the source code for these scripts are available [here](https://github.com/amancevice/docker-superset/tree/main/bin).
 
 3. Answer all questions in the prompts
 
@@ -50,6 +49,6 @@ This python config file can be edited using Coolify's UI by navigating to your s
 
 ## Links
 
-- [Official Website ›](https://superset.apache.org)
-- [GitHub ›](https://github.com/apache/superset)
-- [Github Unofficial Docker Image >](https://github.com/amancevice/docker-superset)
+- [Official Website](https://superset.apache.org)
+- [GitHub](https://github.com/apache/superset)
+- [Github Unofficial Docker Image](https://github.com/amancevice/docker-superset)

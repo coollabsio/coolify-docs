@@ -5,7 +5,7 @@ description: "Deploy Wiki.js on Coolify for modern wiki with markdown, Git sync,
 
 # Wikijs
 
-<ZoomableImage src="/docs/images/services/wikijs.svg" alt="Wikijs dashboard" />
+<ZoomableImage src="/docs/images/services/wikijs-logo.svg" alt="Wikijs dashboard" />
 
 ## What is Wikijs
 

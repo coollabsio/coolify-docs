@@ -3,7 +3,6 @@ title: "N8N"
 description: "Build workflows on Coolify with n8n automation platform connecting 400+ apps, APIs, databases for no-code/low-code task automation and integration."
 ---
 
-
 ![N8N](https://user-images.githubusercontent.com/65276001/173571060-9f2f6d7b-bac0-43b6-bdb2-001da9694058.png)
 
 ## What is N8N?
@@ -53,5 +52,5 @@ USER node
 
 ## Links
 
-- [The official website ›](https://n8n.io/)
-- [GitHub ›](https://github.com/n8n-io/n8n)
+- [The official website](https://n8n.io/)
+- [GitHub](https://github.com/n8n-io/n8n)

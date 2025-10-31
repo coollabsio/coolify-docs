@@ -5,7 +5,7 @@ description: "Host Mautic marketing automation on Coolify for email campaigns, l
 
 # Mautic5
 
-<ZoomableImage src="/docs/images/services/mautic.svg" alt="Mautic5 dashboard" />
+<ZoomableImage src="/docs/images/services/mautic-logo.svg" alt="Mautic5 dashboard" />
 
 ## What is Mautic5
 

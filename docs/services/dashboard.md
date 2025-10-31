@@ -3,7 +3,6 @@ title: "Dashboard"
 description: "Deploy customizable dashboard on Coolify for application shortcuts, bookmarks, service monitoring, and centralized access to self-hosted tools."
 ---
 
-
 ![dashboard](https://i.imgur.com/tOnPDYQ.png)
 
 ## What is Dashboard?
@@ -21,4 +20,4 @@ So what makes this project different from (or even better than) SUI?
 
 ## Links
 
-- [GitHub ›](https://github.com/phntxx/dashboard?utm_source=coolify.io)
+- [GitHub](https://github.com/phntxx/dashboard?utm_source=coolify.io)

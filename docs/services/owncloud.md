@@ -5,7 +5,7 @@ description: "Run ownCloud on Coolify for enterprise file sync, sharing, collabo
 
 # Owncloud
 
-<ZoomableImage src="/docs/images/services/owncloud.svg" alt="Owncloud dashboard" />
+<ZoomableImage src="/docs/images/services/owncloud-logo.svg" alt="Owncloud dashboard" />
 
 ## What is Owncloud
 

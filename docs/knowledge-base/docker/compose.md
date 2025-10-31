@@ -8,10 +8,11 @@ description: "Deploy multi-container Docker Compose stacks in Coolify with magic
 If you are using `Docker Compose` based deployments, you need to understand how Docker Compose works with Coolify.
 
 In all cases the Docker Compose (`docker-compose.y[a]ml`) file is the single source of truth.
+This means various settings you would normally configure in the Coolify UI (like environment variables, storage, etc.) need to be defined in the compose file itself.
 
 ## Making services available to the outside world
 
-When Coolify deploys via Docker Compose, it creates a network for the services in the deployment. In addition, it adds the proxy service so that it can make services available from within the new network.
+When Coolify deploys a Docker Compose, it creates a network for the services in the deployment. In addition, it adds the proxy service so that it can make services available from within the new network.
 
 That means that there are a few ways to make your services available:
 
@@ -25,9 +26,9 @@ If your app is listening on (container) port 3000, however, you'll enter `http:/
 
 If you want to customize this domain-based routing further, see [Coolify's magic environment variables](#coolify-s-magic-environment-variables) below.
 
-### Service Ports
+### Service Port Mapping
 
-If you want to do something custom, add a `ports` definition in your compose file. For example, to expose container port `3000` directly to the external network of the server:
+If you want to make your service accessible via it's port on the host, add the [ports attribute](https://docs.docker.com/reference/compose-file/services/#ports) in your compose file. For example, to map container port `3000` directly to the host machine:
 
 ```yaml
 services:
@@ -39,7 +40,17 @@ services:
 
 Be aware that if you do this, **your service will be available on your server at port 3000, outside the control of any proxy configuration.** This may not be what you want! If you use the same Docker Compose file for development and deployment, this may expose the ports of private services that you did not intend.
 
-Refer to [the Docker Compose docs on using multiple compose files](https://docs.docker.com/compose/how-tos/multiple-compose-files/) for ways around this. Essentially, you may want to create a compose file that does not expose any ports by default for use with Coolify along with a separate file for use in development.
+Optionally, you can pass an IP address to bind the port to a specific interface on the host machine:
+
+```yaml
+services:
+  backend:
+    image: your-backend:latest
+    ports:
+      - "127.0.0.1:3000:3000"
+```
+
+This will make your service only available on `localhost:3000` of your server.
 
 ### Private or Internal Services
 
@@ -59,9 +70,9 @@ Then you can connect from `backend` to `auth` by referring to it as `http://auth
 
 For further details, please refer to the [Docker Networking in Compose](https://docs.docker.com/compose/how-tos/networking/) docs.
 
-## Defining environment variables
+## Defining Environment Variables
 
-Coolify will notice the environment variables you mention in your compose file and will display it in its UI.
+Coolify automatically detects environment variables mentioned in your compose file and displays them in the UI. For example:
 
 ```yaml
 services:
@@ -72,28 +83,28 @@ services:
       - SOME_DEFAULT_VARIABLE=${OTHER_NAME_IN_COOLIFY:-hello} # Creates an environment variable of value "hello" editable in Coolify's UI
 ```
 
-<ZoomableImage src="/docs/images/screenshots/Docker-compose-environment-variables-UI.webp" alt="Docker Compose Environment Variables Ui configuration" />
+<ZoomableImage src="/docs/images/knowledge-base/compose/1.webp" />
 
-## Required environment variables
+### Required Environment Variables
 
 Coolify supports marking environment variables as required using Docker Compose's built-in syntax. This feature improves the deployment experience by validating critical configuration before starting services.
-
-### Syntax
-
-Use the `:?` syntax to mark variables as required:
+You can mark environment variables as required using the `:?` syntax. Required variables must be set before deployment and will be highlighted in Coolify's UI with a red border if empty.
 
 ```yaml
 services:
-  webapp:
+  myapp:
     environment:
-      # Required variable - must be set, no default
+      # Required variables - deployment will fail if not set
       - DATABASE_URL=${DATABASE_URL:?}
+      - API_KEY=${API_KEY:?}
 
-      # Required variable with default value - prefilled but editable
+      # Required variables with default values - prefilled in UI but can be changed
       - PORT=${PORT:?3000}
+      - LOG_LEVEL=${LOG_LEVEL:?info}
 
-      # Optional variable with default - standard Docker Compose behavior
+      # Optional variables - standard behavior
       - DEBUG=${DEBUG:-false}
+      - CACHE_TTL=${CACHE_TTL:-3600}
 ```
 
 **Key behaviors:**
@@ -110,18 +121,62 @@ If a required variable is not set during deployment:
 
 This validation happens before container creation, preventing partial deployments and runtime failures.
 
-## Coolify's magic environment variables
+### Shared Environment Variables
 
-Additionally, Coolify can generate some dynamic environment variables for you.
-The syntax is `SERVICE_<TYPE>_<IDENTIFIER>`.
-Type may be one of:
+Coolify doesn't directly detect **shared** environment variables in the compose file, but are able to be referenced using with an additional step.
 
-- **FQDN**: This will [generate](/knowledge-base/server/introduction#wildcard-domain) an FQDN for the service. The example below shows how you can add paths and ports.
-- **URL**: Generates an URL based on the FQDN you have defined.
+1. Create your shared variable following the [shared variables documentation](/knowledge-base/environment-variables#shared-variables).
+
+2. Define your variables in your Docker Compose file, for example;
+
+```yaml
+services:
+  myservice:
+    environment:
+      - HARD_CODED=dev # Passed to the container, but not visible in Coolify's UI.
+      - SOME_OPTIONAL_VARIABLE=${SOME_VARIABLE_IN_COOLIFY_UI} # Creates an editable, uninitialized variable in the UI.
+    volumes:
+      - data-persist:/var/data
+  volumes:
+    data-persist:
+      device: /mnt/serverstorage/${SOME_VARIABLE_IN_COOLIFY_UI} # Re-uses the variable
+```
+
+3. Define the variable explicitly in the applications Environment Variables referencing your shared variable created in step 1;
+
+::: v-pre
+
+If in developer view, you can enter it like so;
+
+```
+SOME_VARIABLE_IN_COOLIFY_UI={{environment.SOME_SHARED_VARIABLE}}
+```
+
+Or in the normal view, the Name is what's referenced in the Docker Compose file `SOME_VARIABLE_IN_COOLIFY_UI` with the Value being the referenced environment variable `{{environment.SOME_SHARED_VARIABLE}}` as seen below. Once saved if correct, you'll see there's a third text box, if you reveal this, you should be able to see the true value, in this case `SOME_VALUE`.
+
+:::
+
+<ZoomableImage src="/docs/images/knowledge-base/compose/2.webp" />
+
+### Coolify's Magic Environment Variables
+
+Coolify can generate dynamic environment variables for you using the following syntax: `SERVICE_<TYPE>_<IDENTIFIER>`. The type may be one of:
+
+- **URL**: This will [generate](/knowledge-base/server/introduction#wildcard-domain) an URL for the service. The example below shows how you can add paths and ports.
+- **FQDN**: Generates FQDN for the service based on the URL you have defined. The example below shows how you can add paths and ports.
 - **USER**: Generates a random string using `Str::random(16)`. You might want to use it as a username in your service.
 - **PASSWORD**: Generates a password using `Str::password(symbols: false)`. Use `PASSWORD_64` to generate a 64 bit long password with `Str::password(length: 64, symbols: false)`.
 - **BASE64**: Generates a random string using `Str::random(32)`. For longer strings, use `BASE64_64` or `BASE64_128`.
-- **REALBASE64**: Encodes a randomly generated string using `base64_encode(Str::random(32))`. For longer strings, use `REALBASE64_64` or `REALBASE64_128`.
+
+::: info Identifier Naming
+Identifier with underscores (`_`) cannot use ports in environment variables. Use hyphens (`-`) instead to avoid this limitation.
+
+```
+SERVICE_URL_APPWRITE_SERVICE_3000 ❌
+SERVICE_URL_APPWRITE-SERVICE_3000 ✅
+```
+
+:::
 
 Every generated variable can be reused and will always have the same value for every service.
 All generated variables are displayed in Coolify's UI for environment variables and can be edited there (except FQDN and URl).
@@ -129,31 +184,39 @@ All generated variables are displayed in Coolify's UI for environment variables 
 As an example, imagine an application with UUID `vgsco4o` (generated by Coolify on creation).
 It uses a compose file deploying Appwrite on the [wildcard](/knowledge-base/server/introduction#wildcard-domain) domain `http://example.com` .
 
+This will do the following:
+
 ```yaml
 services:
   appwrite:
     environment:
+      # http://appwrite-vgsco4o.example.com
+      - SERVICE_URL_APPWRITE
       # http://appwrite-vgsco4o.example.com/v1/realtime
-      - SERVICE_FQDN_APPWRITE=/v1/realtime
-      # _APP_URL will have the FQDN because SERVICE_FQDN_APPWRITE is just a simple environment variable
-      - _APP_URL=$SERVICE_FQDN_APPWRITE
+      - SERVICE_URL_APPWRITE=/v1/realtime
+      # _APP_URL will have the FQDN because SERVICE_URL_APPWRITE is just a simple environment variable
+      - _APP_URL=$SERVICE_URL_APPWRITE
       # http://appwrite-vgsco4o.example.com/ will be proxied to port 3000
-      - SERVICE_FQDN_APPWRITE_3000
+      - SERVICE_URL_APPWRITE_3000
+      # DOMAIN_URL will have the FQDN (appwrite-vgsco4o.example.com) because SERVICE_FQDN_APPWRITE generates the full FQDN. No need to add 3000 at the end of the variable
+      - DOMAIN_NAME=${SERVICE_FQDN_APPWRITE}
       # http://api-vgsco4o.example.com/api will be proxied to port 2000
-      - SERVICE_FQDN_API_2000=/api
+      - SERVICE_URL_API_2000=/api
       # Coolify generates password and injects it as SERVICE_SPECIFIC_PASSWORD into the container
       - SERVICE_SPECIFIC_PASSWORD=${SERVICE_PASSWORD_APPWRITE}
   not-appwrite:
     environment:
-      # Same value as in Appwrite service
+      # Reuses the password from the Appwrite service.
       - APPWRITE_PASSWORD=${SERVICE_PASSWORD_APPWRITE}
-      # As SERVICE_FQDN_API is not the same as SERVICE_FQDN_APPWRITE
-      # Coolify will generate a new FQDN
+      # As SERVICE_URL_API is not the same as SERVICE_URL_APPWRITE
+      # Coolify will generate a new URL
       # http://not-appwrite-vgsco4o.example.com/api
-      - SERVICE_FQDN_API=/api
+      - SERVICE_URL_API=/api
 ```
 
----
+::: warning
+Support for Magic Environment Variables in Compose files based on Git sources requires Coolify v4.0.0-beta.411 and above.
+:::
 
 ## Storage
 
@@ -180,7 +243,7 @@ Here you can see how to add a file with content and a dynamic value that is comi
 ```yaml
 services:
   filebrowser:
-    image: filebrowser/filebrowser:latest
+    image: filebrowser/firebrowser:latest
     environment:
       - POSTGRES_PASSWORD=password
     volumes:

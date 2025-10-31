@@ -13,4 +13,4 @@ PingvinShare is a self-hosted file sharing platform that combines lightness and 
 
 ## Links
 
-- [GitHub ›](https://github.com/stonith404/pingvin-share?utm_source=coolify.io)
+- [GitHub](https://github.com/stonith404/pingvin-share?utm_source=coolify.io)

@@ -11,5 +11,5 @@ Pairdrop is a self-hosted file sharing and collaboration platform, offering secu
 
 ## Links
 
-- [The official website ›](https://pairdrop.net/)
-- [GitHub ›](https://github.com/schlagmichdoch/pairdrop)
+- [The official website](https://pairdrop.net/)
+- [GitHub](https://github.com/schlagmichdoch/pairdrop)

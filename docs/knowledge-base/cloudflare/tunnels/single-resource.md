@@ -20,14 +20,14 @@ This setup is ideal for people who:
 
 To follow this guide, you'll need:
 
-- A free [Cloudflare ↗](https://cloudflare.com) account.
+- A free [Cloudflare](https://cloudflare.com) account.
 - You need a domain that has it's **DNS managed by Cloudflare**.
 - Your Resource has to be deployed and managed with Coolify.
 
 ## Before We Start
 
 - We assume you have Coolify running and an app already deployed.
-- If your app requires HTTPS for functionality like cookies or login, then you need to follow the [Full TLS HTTPS guide ↗](/knowledge-base/cloudflare/tunnels/full-tls) after following this guide. This is because in this guide, Cloudflare will manage HTTPS externally, while your app will run over HTTP within Coolify.
+- If your app requires HTTPS for functionality like cookies or login, then you need to follow the [Full TLS HTTPS guide](/knowledge-base/cloudflare/tunnels/full-tls) after following this guide. This is because in this guide, Cloudflare will manage HTTPS externally, while your app will run over HTTP within Coolify.
 
 ## How It Works?
 
@@ -70,7 +70,7 @@ To setup your app for tunneling, follow these steps:
 
 ## 2. Create a Cloudflare Tunnel
 
-To create a Cloudflare Tunnel, first log in to your Cloudflare account and go to the [Zero Trust ↗](https://one.dash.cloudflare.com/) page.
+To create a Cloudflare Tunnel, first log in to your Cloudflare account and go to the [Zero Trust](https://one.dash.cloudflare.com/) page.
 
 <ZoomableImage src="/docs/images/knowledge-base/cf-tunnel/single-resource/2.webp" alt="Screenshot of Single Resource" />
 

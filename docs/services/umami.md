@@ -19,5 +19,5 @@ Umami is an open source, privacy-focused alternative to Google Analytics.
 
 ## Links
 
-- [Official Website ›](https://umami.is)
-- [GitHub ›](https://github.com/umami-software/umami)
+- [Official Website](https://umami.is)
+- [GitHub](https://github.com/umami-software/umami)

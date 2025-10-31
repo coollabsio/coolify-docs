@@ -24,9 +24,9 @@ Forejo is also compatible with third-party CI apps and platforms. Forgejo is a G
 
 ## Demo
 
-- [Demo ›](https://next.forgejo.org/)
+- [Demo](https://next.forgejo.org/)
 
 ## Links
 
-- [The official website ›](https://forgejo.org/)
-- [Codeberg ›](https://codeberg.org/forgejo/forgejo)
+- [The official website](https://forgejo.org/)
+- [Codeberg](https://codeberg.org/forgejo/forgejo)

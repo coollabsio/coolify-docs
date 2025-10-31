@@ -5,7 +5,7 @@ description: "Run Excalidraw on Coolify for collaborative whiteboarding with han
 
 # Excalidraw
 
-<ZoomableImage src="/docs/images/services/excalidraw.svg" alt="Excalidraw dashboard" />
+<ZoomableImage src="/docs/images/services/excalidraw-logo.svg" alt="Excalidraw dashboard" />
 
 ## What is Excalidraw?
 
@@ -13,5 +13,5 @@ Excalidraw is a virtual whiteboard for sketching hand-drawn like diagrams. It's 
 
 ## Links
 
-- [The official website ›](https://excalidraw.com?utm_source=coolify.io)
-- [GitHub ›](https://github.com/excalidraw/excalidraw?utm_source=coolify.io)
+- [The official website](https://excalidraw.com?utm_source=coolify.io)
+- [GitHub](https://github.com/excalidraw/excalidraw?utm_source=coolify.io)

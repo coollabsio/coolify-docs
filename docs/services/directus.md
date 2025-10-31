@@ -3,7 +3,6 @@ title: "Directus"
 description: "Deploy Directus headless CMS on Coolify with SQL database wrapper, REST/GraphQL API, no-code data studio, and custom field types for any project."
 ---
 
-
 ![directus](https://user-images.githubusercontent.com/522079/158864859-0fbeae62-9d7a-4619-b35e-f8fa5f68e0c8.png)
 
 ## What is Directus?
@@ -31,5 +30,5 @@ Directus is a real-time API and App dashboard for managing SQL database content.
 
 ## Links
 
-- [The official website ›](https://directus.io?utm_source=coolify.io)
-- [GitHub ›](https://github.com/directus/directus?utm_source=coolify.io)
+- [The official website](https://directus.io?utm_source=coolify.io)
+- [GitHub](https://github.com/directus/directus?utm_source=coolify.io)

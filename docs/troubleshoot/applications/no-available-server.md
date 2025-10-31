@@ -231,7 +231,7 @@ curl -f http://localhost:3000/health
 
 ## When to Seek Help
 
-If none of these solutions work, join our [Discord community ↗](https://coolify.io/discord) and provide:
+If none of these solutions work, join our [Discord community](https://coolify.io/discord) and provide:
 
 - Application logs
 - Coolify proxy logs

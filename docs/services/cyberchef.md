@@ -5,7 +5,7 @@ description: "Run CyberChef data analysis on Coolify for encoding, decoding, enc
 
 # Cyberchef
 
-<ZoomableImage src="/docs/images/services/cyberchef.jpeg" alt="Cyberchef dashboard" />
+<ZoomableImage src="/docs/images/services/cyberchef-logo.jpeg" alt="Cyberchef dashboard" />
 
 ## What is Cyberchef
 

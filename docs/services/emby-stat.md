@@ -3,7 +3,6 @@ title: "Emby Stat"
 description: "Track Emby server usage on Coolify with EmbyStat featuring media statistics, playback analytics, user metrics, and library health monitoring."
 ---
 
-
 ![Emby Stat](https://raw.githubusercontent.com/mregni/EmbyStat/develop/branding/logo-color.png)
 
 ## What is Emby Stat?
@@ -12,4 +11,4 @@ EmbyStat is a personal web server that can calculate all kinds of statistics fro
 
 ## Links
 
-- [The official website ›](https://github.com/mregni/EmbyStat?utm_source=coolify.io)
+- [The official website](https://github.com/mregni/EmbyStat?utm_source=coolify.io)

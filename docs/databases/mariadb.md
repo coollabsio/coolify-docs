@@ -16,5 +16,5 @@ Started by core members of MySQL, MariaDB provides a robust and scalable databas
 
 ## Links
 
-- [The official website ›](https://mariadb.org/)
-- [GitHub ›](https://github.com/MariaDB/server)
+- [The official website](https://mariadb.org/)
+- [GitHub](https://github.com/MariaDB/server)

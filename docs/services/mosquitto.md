@@ -11,5 +11,5 @@ Mosquitto is an open-source MQTT (Message Queuing Telemetry Transport) broker th
 
 ## Links
 
-- [The official website ›](https://mosquitto.org/)
-- [GitHub ›](https://github.com/eclipse/mosquitto)
+- [The official website](https://mosquitto.org/)
+- [GitHub](https://github.com/eclipse/mosquitto)

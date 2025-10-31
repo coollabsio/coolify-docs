@@ -5,7 +5,7 @@ description: "Manage finances with Maybe on Coolify for net worth tracking, inve
 
 # Maybe
 
-<ZoomableImage src="/docs/images/services/maybe.svg" alt="Maybe dashboard" />
+<ZoomableImage src="/docs/images/services/maybe-logo.svg" alt="Maybe dashboard" />
 
 ## What is Maybe
 

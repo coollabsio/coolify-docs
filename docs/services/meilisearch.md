@@ -32,5 +32,5 @@ Meilisearch helps you shape a delightful search experience in a snap, offering f
 
 ## Links
 
-- [The official website ›](https://www.meilisearch.com)
-- [GitHub ›](https://github.com/meilisearch/meilisearch)
+- [The official website](https://www.meilisearch.com)
+- [GitHub](https://github.com/meilisearch/meilisearch)

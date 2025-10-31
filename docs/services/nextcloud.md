@@ -15,5 +15,5 @@ NextCloud is an open-source productivity platform that provides a secure and pri
 
 ## Links
 
-- [The official website ›](https://nextcloud.com/)
-- [GitHub ›](https://github.com/nextcloud/server)
+- [The official website](https://nextcloud.com/)
+- [GitHub](https://github.com/nextcloud/server)

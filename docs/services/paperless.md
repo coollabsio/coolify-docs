@@ -5,7 +5,7 @@ description: "Manage documents on Coolify with Paperless-ngx for scanning, OCR, 
 
 # Paperless
 
-<ZoomableImage src="/docs/images/services/paperless.png" alt="Paperless dashboard" />
+<ZoomableImage src="/docs/images/services/paperless-logo.png" alt="Paperless dashboard" />
 
 ## What is Paperless
 

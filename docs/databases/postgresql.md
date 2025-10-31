@@ -15,8 +15,8 @@ PostgreSQL, often simply "Postgres", uses and extends the SQL language combined 
 
 ## Links
 
-- [The official website ›](https://www.postgresql.org/)
-- [GitHub ›](https://github.com/postgres/postgres)
+- [The official website](https://www.postgresql.org/)
+- [GitHub](https://github.com/postgres/postgres)
 
 ## Import Backups
 
@@ -40,10 +40,10 @@ docker exec pg-db pg_dump -U postgres -d postgres -Fc >example-database.sql.gz
 
 ### Note on upgrading PostgreSQL
 
-The __custom__ dump format is sensitive to version differences between the dump and
+The **custom** dump format is sensitive to version differences between the dump and
 restore commands.
 
-Use the plain (default) or __tar__ dump formats to migrate from an older version
+Use the plain (default) or **tar** dump formats to migrate from an older version
 of PostgreSQL to a newer version. When using plain format dumps, use `psql` as
 the custom import command instead of `pg_restore`.
 

@@ -14,19 +14,20 @@ DragonFly is a modern in-memory datastore, designed as a Redis alternative with 
 With its multi-threaded architecture and advanced data structures, DragonFly aims to provide enhanced scalability and performance for applications that require Redis-like functionality on modern hardware.
 
 ## Data Persistence
-By default, Dragonfly DB does not save data to disk. To enable persistence, set up snapshots manually. 
+
+By default, Dragonfly DB does not save data to disk. To enable persistence, set up snapshots manually.
 
 For example, configure the service with:
 
- ```yaml
+```yaml
 services:
   dragonfly:
     command: 'dragonfly --requirepass XXXXXXXX --dir /data --dbfilename dragonfly-snapshot-{timestamp} --snapshot_cron "*/5 * * * *"'
- ```
+```
 
 You can also trigger manual saves using the SDK's `SAVE` command.
 
 ## Links
 
-- [The official website ›](https://dragonflydb.io/?utm_source=coolify.io)
-- [GitHub ›](https://github.com/dragonflydb/dragonfly?utm_source=coolify.io)
+- [The official website](https://dragonflydb.io/?utm_source=coolify.io)
+- [GitHub](https://github.com/dragonflydb/dragonfly?utm_source=coolify.io)

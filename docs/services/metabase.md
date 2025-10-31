@@ -23,6 +23,5 @@ Metabase is the easy, open-source way for everyone in your company to ask questi
 
 ## Links
 
-- [The official website ›](https://www.metabase.com/)
-- [Github ›](https://github.com/metabase/metabase)
-
+- [The official website](https://www.metabase.com/)
+- [Github](https://github.com/metabase/metabase)

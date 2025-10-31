@@ -6,8 +6,8 @@ description: "Deploy Beszel lightweight server monitoring on Coolify with real-t
 <ZoomableImage src="/docs/images/services/beszel.svg" alt="Beszel dashboard" />
 
 ## What is Beszel?
-Lightweight server monitoring hub with historical data, docker stats, and alerts.
 
+Lightweight server monitoring hub with historical data, docker stats, and alerts.
 
 ## Setup
 
@@ -21,4 +21,4 @@ Lightweight server monitoring hub with historical data, docker stats, and alerts
 
 ## Links
 
-- [GitHub ›](https://github.com/henrygd/beszel)
+- [GitHub](https://github.com/henrygd/beszel)
