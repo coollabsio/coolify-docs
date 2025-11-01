@@ -1940,6 +1940,13 @@ const services = [
         description: 'Effortless PostgreSQL backups with a user-friendly web interface.',
         category: 'Database'
     },
+     {
+        name: 'Postgresus',
+        slug: 'postgresus',
+        icon: '/docs/images/services/postgresus-logo.webp',
+        description: 'A free, open source and self-hosted tool to backup PostgreSQL. Make backups with different storages and notifications about progress.',
+        category: 'Backup'
+    },
     {
         name: 'Ryot',
         slug: 'ryot',

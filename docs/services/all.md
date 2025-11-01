@@ -63,6 +63,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Backup
 
 - [Duplicati](/services/duplicati) - A free backup client that securely stores encrypted, incremental, compressed backups on cloud storage services and remote file servers
+- [Postgresus](/services/postgresus) - A free, open source and self-hosted tool to backup PostgreSQL. Make backups with different storages and notifications about progress.
 
 ## Bookmarks
 
