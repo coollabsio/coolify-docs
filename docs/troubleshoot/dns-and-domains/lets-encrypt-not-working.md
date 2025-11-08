@@ -81,6 +81,8 @@ On the Coolify proxy logs check for error messages.
      <ZoomableImage src="/docs/images/troubleshoot/dns-and-domains/lets-encrypt-not-working/3.webp" alt="Screenshot showing Lets Encrypt Not Working" />
      :::
 
+- If you see an error message with `Timeout during connect` and your server is in China, it's most likely due to the [GFW](https://en.wikipedia.org/wiki/Great_Firewall). Restarting proxy like the above for multiple times may help.
+
 ## 9. Verify DNS Records
 
 Let's Encrypt performs a DNS lookup to resolve the IP address of your server. If you have both **IPv4 (A record)** and **IPv6 (AAAA record)** configured to point to your server, Let's Encrypt will verify both records during the domain ownership challenge.
