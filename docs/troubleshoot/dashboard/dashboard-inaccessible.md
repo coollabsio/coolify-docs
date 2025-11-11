@@ -55,6 +55,25 @@ If the dashboard isn’t accessible via the IP address, then follow these steps:
   _(Replace `NAME` with your actual container name)_
 - **Test:** After restarting, try accessing `http://203.0.113.1:8000` _(Replace `203.0.113.1` with your actual server IP address)_ again. If this doesn't work, skip to [step 5](#_5-getting-further-assistance)
 
+### C. Conflict Coolify-Related Containers Port
+
+Sometimes, the issue occurs if a non-Coolify container is using the same port (e.g., port 8000) as Coolify's dashboard, causing a conflict.
+
+- **Steps:**
+
+1. SSH into your server.
+2. Stop all Docker containers gracefully:
+   ```bash
+   docker stop $(docker ps -q)
+   ```
+3. Start only the containers related to Coolify:
+   ```bash
+   docker start $(docker ps -a -q --filter "name=coolify")
+   ```
+4. Try accessing your Coolify dashboard again. The dashboard should now be accessible since conflicts on port 8000 are cleared.
+
+- **Next:** Check your containers for the same port as your Coolify instance through the Coolify dashboard and change the port accordingly (don't forget to verify firewall rules) 
+
 ## 4. Addressing Proxy-Related Issues
 
 If the dashboard is accessible via the server IP but not through your custom domain, then follow these steps:

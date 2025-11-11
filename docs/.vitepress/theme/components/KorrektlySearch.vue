@@ -19,6 +19,7 @@ const isLoading = ref(false)
 const selectedIndex = ref(0)
 const searchInputRef = ref<HTMLInputElement | null>(null)
 const searchError = ref<string | null>(null)
+const searchQueryId = ref<string | null>(null)
 
 // Korrektly SDK configuration
 const korrektlyConfig = {
@@ -60,6 +61,7 @@ const clearSearch = () => {
   searchResults.value = []
   selectedIndex.value = 0
   searchError.value = null
+  searchQueryId.value = null
   isLoading.value = false
 }
 
@@ -161,6 +163,9 @@ const performSearch = async (query: string) => {
     // The API returns { success, data: { results: [...] } }
     const results = response?.data?.results || response?.results || response?.chunks || []
 
+    // Capture search_query_id for click tracking
+    searchQueryId.value = response?.data?.search_query_id || null
+
     searchResults.value = results.map((chunk: any) => transformSearchResult(chunk))
 
     selectedIndex.value = 0
@@ -248,7 +253,27 @@ const createBreadcrumb = (hierarchy: string[], url: string): string => {
     : urlParts.join(' / ')
 }
 
+const trackClick = async (chunkId: string, position: number) => {
+  if (!korrektlySDK || !searchQueryId.value || !korrektlyConfig.datasetId) {
+    return
+  }
+
+  try {
+    await korrektlySDK.trackClick(korrektlyConfig.datasetId, {
+      search_query_id: searchQueryId.value,
+      chunk_id: chunkId,
+      position,
+    })
+  } catch (error) {
+    // Log error but don't block navigation
+    console.error('Failed to track click:', error)
+  }
+}
+
 const navigateToResult = (result: SearchResult) => {
+  // Track click in fire-and-forget manner
+  trackClick(result.id, selectedIndex.value)
+
   window.location.href = result.url
   closeSearch()
 }

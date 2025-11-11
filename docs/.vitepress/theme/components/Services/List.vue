@@ -1479,6 +1479,13 @@ const services = [
         category: 'Social Media'
     },
     {
+        name: 'Pterodactyl',
+        slug: 'pterodactyl',
+        icon: '/docs/images/services/pterodactyl_logo_transparent.png',
+        description: 'Game server management panel with Wings daemon for hosting Minecraft, CS:GO, ARK and more.',
+        category: 'Gaming'
+    },
+    {
         name: 'Prefect',
         slug: 'prefect',
         icon: '/docs/images/services/prefect-logo.png',
@@ -1850,6 +1857,13 @@ const services = [
         category: 'File Management'
     },
     {
+        name: 'MetaMCP',
+        slug: 'metamcp',
+        icon: '/public/images/services/metamcp.png',
+        description: 'MCP Aggregator, Orchestrator, Middleware, Gateway in one application.',
+        category: 'AI'
+    },
+    {
         name: 'CodiMD',
         slug: 'codimd',
         icon: '/docs/images/services/codimd-logo.png',
@@ -1974,13 +1988,6 @@ const services = [
         icon: '/docs/images/services/vert-logo.png',
         description: 'Self-hosted file converter.',
         category: 'Utilities'
-    },
-    {
-        name: 'Wings',
-        slug: 'wings',
-        icon: '/docs/images/services/pterodactyl-logo.png',
-        description: 'Pterodactyl server control plane for game servers.',
-        category: 'Gaming'
     },
     {
         name: 'Yamtrack',
@@ -2269,3 +2276,4 @@ const { preloadServices, handleImageError, hasImageError, isImageLoading, getFal
         </div>
     </div>
 </template>
+

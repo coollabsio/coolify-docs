@@ -29,11 +29,25 @@ You need to have a `Dataset` and an `API key` from Axiom.
 
 More information [here](https://axiom.co/docs).
 
-## New Relic
+### New Relic
 
 You need to have an `License key` from New Relic. 
 
 More information [here](https://docs.newrelic.com/docs/apis/intro-apis/new-relic-api-keys/#ingest-license-key).
+
+#### Identify logs by application (per-service names)
+
+If you run multiple services (e.g. web, worker, db) and want to split logs by service in New Relic, add a stable app name to every log event.
+
+##### How to enable
+
+1.	Go to your **resource -> Configuration -> Environment Variables** and add
+`COOLIFY_APP_NAME=web`
+(use any short identifier like web, worker, db, etc.).  ￼
+
+2.	**Restart** the resource for the change to take effect. (Log drains & env changes apply on restart.)
+
+When COOLIFY_APP_NAME is present, New Relic will receive a coolify.app_name attribute which you can use to filter logs by service in New Relic.
 
 ## Custom FluentBit configuration
 

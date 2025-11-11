@@ -232,7 +232,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [FoundryVTT](/services/foundryvtt) - Virtual tabletop for tabletop role-playing games
 - [Minecraft](/services/minecraft) - Minecraft game server
-- [Wings](/services/wings) - Pterodactyl server control plane for game servers
+- [Pterodactyl](/services/pterodactyl) - Game server management panel with Wings daemon for hosting Minecraft, CS:GO, ARK and more
 
 ## Health
 
