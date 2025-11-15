@@ -5,7 +5,9 @@ description: A comprehensive Palworld dedicated server hosted with Coolify, prov
 tags: ["game", "palworld", "server", "multiplayer", "dedicated"]
 ---
 
-# Palworld Server<ZoomableImage src="/docs/public/images/services/palworld.svg" alt="Palworld Server" />
+# Palworld Server
+
+<ZoomableImage src="/docs/public/images/services/palworld.svg" alt="Palworld Server" />
 
 ## What is Palworld Server?
 
