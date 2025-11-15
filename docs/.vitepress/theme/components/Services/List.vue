@@ -1380,6 +1380,13 @@ const services = [
         category: 'File Sharing'
     },
     {
+        name: 'Palworld',
+        slug: 'palworld',
+        icon: '/docs/public/images/services/palworld.svg',
+        description: 'Host your own Palworld Server',
+        category: 'Games'
+    },
+    {
         name: 'Paperless',
         slug: 'paperless',
         icon: '/docs/images/services/paperless-logo.png',
