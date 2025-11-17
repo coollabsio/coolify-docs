@@ -20,7 +20,7 @@ If you need fine-grained token, like with [Cloudflare](https://go-acme.github.io
 ## Configuration
 
 1. Setup your wildcard subdomain DNS records, `*.coolify.io`.
-2. Go to your Proxy settings (Servers / Proxy menu) and add the following configuration based on your [providers](https://doc.traefik.io/traefik/https/acme/#providers). The example will use `Hetzner` as a provider.
+2. Go to your Proxy settings (Servers / Proxy menu) and add the following configuration based on your [providers](https://go-acme.github.io/lego/dns/). The example will use `Hetzner` as a provider.
 
 ```bash
 version: '3.8'
