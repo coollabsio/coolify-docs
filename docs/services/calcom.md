@@ -11,10 +11,6 @@ description: "Host Cal.com scheduling platform on Coolify with calendar integrat
 
 Scheduling infrastructure for everyone.
 
-## Links
-
-- [Official Documentation](https://cal.com/docs/developing/introduction?utm_source=coolify.io)
-
 ## Deploying on x86 (amd64)
 
 You need to change default docker compose to the following to make cal.com work on x86 (amd64):
@@ -38,3 +34,7 @@ services:
     platform: linux/amd64
     (... same ...)
 ```
+
+## Links
+
+- [Official Documentation](https://cal.com/docs/developing/introduction?utm_source=coolify.io)
