@@ -81,7 +81,7 @@ On the Coolify proxy logs check for error messages.
      <ZoomableImage src="/docs/images/troubleshoot/dns-and-domains/lets-encrypt-not-working/3.webp" alt="Screenshot showing Lets Encrypt Not Working" />
      :::
 
-- If you see an error message with `Timeout during connect` and your server is in China, it's most likely due to the [GFW](https://en.wikipedia.org/wiki/Great_Firewall). Restarting proxy like the above for multiple times may help.
+- If you see an error message with `Timeout during connect` and your server is behind a strict firewall, you may need to checkout the firewall logs. Things like [GFW](https://en.wikipedia.org/wiki/Great_Firewall) also affect where Restarting proxy like the above for multiple times may help.
 
 ## 9. Verify DNS Records
 
