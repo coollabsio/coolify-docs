@@ -339,6 +339,7 @@ export default defineConfig({
                   { text: 'Rolling Updates', link: '/knowledge-base/rolling-updates' },
                   { text: 'Health Checks', link: '/knowledge-base/health-checks' },
                   { text: 'Cron Syntax', link: '/knowledge-base/cron-syntax' },
+                  { text: 'Service API Management', link: '/knowledge-base/services-api' },
                 ]
               },
               {

@@ -37,9 +37,11 @@ The token will only be able to access resources that are owned by the team that 
 Some API data won't get returned if the API token doesn't have correct permissions
 :::
 
-Currently there are three types of permissions:
+Currently there are several types of permissions:
 
 - read-only `(default)`
+- read
+- write
 - read:sensitive
 - view:sensitive
 - `*` (all permissions)
@@ -47,6 +49,14 @@ Currently there are three types of permissions:
 ### `read-only`
 
 With this permission, you can only read data from the API, but you can't create, update, or delete any resources. Also you can't see sensitive data.
+
+### `read`
+
+With this permission, you can read data from the API including non-sensitive resource information. You cannot create, update, or delete any resources.
+
+### `write`
+
+With this permission, you can create, update, and delete resources via the API. This includes modifying service applications, updating configurations, and managing deployments.
 
 ### `read:sensitive`
 

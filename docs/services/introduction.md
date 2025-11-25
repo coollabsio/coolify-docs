@@ -63,6 +63,12 @@ You can help by:
 
 Learn how to contribute new services in our [contribution guide](/get-started/contribute/service).
 
+## Managing Services via API
+
+Service applications can be managed programmatically through Coolify's REST API. You can list applications within a service and update their configuration including domains, proxy settings, and more.
+
+Learn more in the [Service API Management guide](/knowledge-base/services-api).
+
 ---
 
 Ready to explore what's available? Check out [all services](/services/overview) in our library.
