@@ -4892,6 +4892,10 @@ paths:
                   type: boolean
                   example: false
                   description: "Instant validate."
+                start_proxy:
+                  type: boolean
+                  example: true
+                  description: "Start proxy after server creation. Defaults to the value of instant_validate. Set to false to disable automatic proxy start. Ignored if is_build_server is true."
                 proxy_type:
                   type: string
                   enum: [traefik, caddy, none]
@@ -5028,6 +5032,9 @@ paths:
                 instant_validate:
                   type: boolean
                   description: "Instant validate."
+                start_proxy:
+                  type: boolean
+                  description: "Start proxy after server update. Defaults to the value of instant_validate. Set to false to disable automatic proxy start. Ignored if is_build_server is true."
                 proxy_type:
                   type: string
                   enum: [traefik, caddy, none]
