@@ -35,6 +35,9 @@ COPY tailwind.config.js .
 COPY env.d.ts .
 COPY tsconfig*.json ./
 
+# Copy git history for lastUpdated timestamps
+COPY .git/ ./.git/
+
 # Build with cache
 RUN --mount=type=cache,target=/root/.bun \
     --mount=type=cache,target=/root/.cache/bun \
