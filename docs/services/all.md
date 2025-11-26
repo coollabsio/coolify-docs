@@ -160,7 +160,8 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Neon WS Proxy](/services/neon-ws-proxy) - WebSocket proxy for Neon database
 - [Nexus](/services/nexus) - A repository manager that allows you to store, manage, and distribute your software artifacts
 - [Next Image Transformation](/services/next-image-transformation) - Image transformation service for Next.js
-- [Nitropage](/services/nitropage) - Nitropage is an extensible, drag-and-drop website builder based on SolidStart, completely free and open source
+- Nitropage](/services/nitropage) - Nitropage is an extensible, drag-and-drop website builder based on SolidStart, completely free and open source
+- [NocoBase](/services/nocobase) - The most extensible AI-powered no-code platform
 - [OneDev](/services/onedev) - Self-hosted Git server with integrated CI/CD and kanban
 - [Openblocks](/services/openblocks) - Open-source low code platform
 - [pgAdmin](/services/pgadmin) - Web-based database management tool for PostgreSQL
