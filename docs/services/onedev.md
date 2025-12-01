@@ -5,7 +5,7 @@ description: "Host OneDev on Coolify for self-hosted Git server with CI/CD pipel
 
 # Onedev
 
-<ZoomableImage src="/docs/images/services/onedev.svg" alt="Onedev dashboard" />
+<ZoomableImage src="/docs/images/services/onedev-logo.svg" alt="Onedev dashboard" />
 
 ## What is Onedev
 

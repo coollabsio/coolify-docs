@@ -5,7 +5,7 @@ description: "Browse Reddit on Coolify with Redlib alternative frontend for priv
 
 # Redlib
 
-<ZoomableImage src="/docs/images/services/redlib.svg" alt="Redlib dashboard" />
+<ZoomableImage src="/docs/images/services/redlib-logo.svg" alt="Redlib dashboard" />
 
 ## What is Redlib
 

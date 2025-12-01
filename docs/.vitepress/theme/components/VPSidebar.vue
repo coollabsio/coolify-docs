@@ -4,7 +4,7 @@ import { inBrowser } from 'vitepress'
 import { ref, watch } from 'vue'
 import { useSidebar } from 'vitepress/theme'
 import VPSidebarGroup from 'vitepress/dist/client/theme-default/components/VPSidebarGroup.vue'
-import VPNavBarSearch from 'vitepress/dist/client/theme-default/components/VPNavBarSearch.vue'
+import VPNavBarSearch from './VPNavBarSearch.vue'
 import VPNavBarAppearance from 'vitepress/dist/client/theme-default/components/VPNavBarAppearance.vue'
 import VPButton from 'vitepress/dist/client/theme-default/components/VPButton.vue'
 
@@ -48,7 +48,7 @@ watch(
 
         
         <nav class="nav" id="VPSidebarNav" aria-labelledby="sidebar-aria-label" tabindex="-1">
-            <VPNavBarSearch class="sm:block search w-full my-auto px-0 " /> 
+            <VPNavBarSearch class="sidebar-search" /> 
 
             <span class="visually-hidden" id="sidebar-aria-label">
                 Sidebar Navigation
@@ -133,5 +133,23 @@ watch(
 
 .nav {
     outline: 0;
+}
+
+.sidebar-search {
+    padding-left: 0 !important;
+    margin-bottom: 16px;
+}
+
+.sidebar-search :deep(.DocSearch-Button) {
+    justify-content: space-between !important;
+}
+
+.sidebar-search :deep(.DocSearch-Button-Placeholder) {
+    display: inline-block !important;
+}
+
+.sidebar-search :deep(.DocSearch-Button-Keys) {
+    display: flex !important;
+    margin-left: auto;
 }
 </style>

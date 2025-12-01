@@ -36,11 +36,12 @@ Then add this line
       - ${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}`
 
 To
+
 ```yaml
 supabase-db:
-  image: 'supabase/postgres:15.6.1.146'
+  image: "supabase/postgres:15.6.1.146"
   healthcheck:
-    test: 'pg_isready -U postgres -h 127.0.0.1'
+    test: "pg_isready -U postgres -h 127.0.0.1"
     interval: 5s
     timeout: 5s
     retries: 10
@@ -71,5 +72,5 @@ If your server is hosted on Hetzner, you may not need ufw-docker. Instead, you c
 
 ## Links
 
-- [Official Website ›](https://supabase.io)
-- [GitHub ›](https://github.com/supabase/supabase)
+- [Official Website](https://supabase.io)
+- [GitHub](https://github.com/supabase/supabase)

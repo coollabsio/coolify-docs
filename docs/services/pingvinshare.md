@@ -1,7 +1,12 @@
 ---
 title: "PingvinShare"
 description: "Share files on Coolify with PingvinShare for temporary file sharing, expiring links, password protection, and self-hosted file transfer."
+disabled: true
 ---
+
+::: warning SERVICE NOT AVAILABLE
+This service is currently not available in Coolify's service catalog.
+:::
 
 # PingvinShare
 
@@ -13,4 +18,4 @@ PingvinShare is a self-hosted file sharing platform that combines lightness and 
 
 ## Links
 
-- [GitHub ›](https://github.com/stonith404/pingvin-share?utm_source=coolify.io)
+- [GitHub](https://github.com/stonith404/pingvin-share?utm_source=coolify.io)

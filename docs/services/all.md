@@ -30,8 +30,10 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Langfuse](/services/langfuse) - Open source LLM engineering platform
 - [LibreChat](/services/librechat) - Self-hosted, powerful, and privacy-focused chat UI for multiple AI models
 - [LibreTranslate](/services/libretranslate) - Free and open-source machine translation API
+- [LobeChat](/services/lobe-chat) - Open-source, modern AI chat framework with multi-provider support and knowledge base management
 - [LiteLLM](/services/litellm) - Open source LLM Gateway to manage authentication, loadbalancing, and spend tracking across 100+ LLMs
 - [MindsDB](/services/mindsdb) - Machine learning platform that brings AI to databases
+- [NewAPI](/services/newapi) - The next-generation LLM gateway and AI asset management system supports multiple languages.
 - [Ollama](/services/ollama) - A lightweight and efficient server for running large language models (LLMs) on your local machine or in the cloud
 - [Open WebUI](/services/open-webui) - User-friendly WebUI for LLMs, formerly Ollama WebUI
 - [Qdrant](/services/qdrant) - Open source, AI-native vector database
@@ -45,8 +47,10 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [OpenPanel](/services/openpanel) - Open source alternative to Mixpanel and Plausible for product analytics
 - [PostHog](/services/posthog) - Open source product analytics
 - [Plausible](/services/plausible) - A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies
+- [Rybbit](/services/rybbit) - Next-gen, open source, lightweight, cookieless web & product analytics for everyone
 - [Sequin](/services/sequin) - The fastest Postgres change data capture
 - [Superset](/services/superset) - Open-source data visualization and exploration platform
+- [Swetrix](/services/swetrix) - Privacy-friendly and cookieless European web analytics alternative to Google Analytics
 - [Umami](/services/umami) - A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies
 
 ## Automation
@@ -59,6 +63,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Backup
 
 - [Duplicati](/services/duplicati) - A free backup client that securely stores encrypted, incremental, compressed backups on cloud storage services and remote file servers
+- [Postgresus](/services/postgresus) - A free, open source and self-hosted tool to backup PostgreSQL. Make backups with different storages and notifications about progress.
 
 ## Bookmarks
 
@@ -101,6 +106,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [GoWa](/services/gowa) - Golang WhatsApp - Built with Go for efficient memory use
 - [Matrix](/services/matrix) - Chat securely with your family, friends, community
 - [Mattermost](/services/mattermost) - Open-source messaging platform for teams
+- [Once Campfire](/services/once-campfire) - Web-based chat application with rooms, direct messages, and file attachments
 - [Rocket.Chat](/services/rocketchat) - Open source team chat software
 
 ## Crypto
@@ -158,12 +164,16 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [OneDev](/services/onedev) - Self-hosted Git server with integrated CI/CD and kanban
 - [Openblocks](/services/openblocks) - Open-source low code platform
 - [OpnForm](/services/opnform) - Open-source form builder for creating beautiful forms without coding
+- [pgAdmin](/services/pgadmin) - Web-based database management tool for PostgreSQL
 - [phpMyAdmin](/services/phpmyadmin) - MySQL database management tool
 - [Pocketbase](/services/pocketbase) - Open Source backend for your next SaaS and Mobile app
 - [Portainer](/services/portainer) - Container management platform
 - [Prefect](/services/prefect) - Open source workflow management platform
+- [Proxyscotch](/services/proxyscotch) - Tiny open-source CORS proxy made by Hoppscotch
 - [PrivateBin](/services/privatebin) - Minimalist, open-source online pastebin
 - [RabbitMQ](/services/rabbitmq) - Open source message broker
+- [Redis Insight](/services/redis-insight) - Official Redis GUI for database interaction
+- [Rivet Engine](/services/rivet-engine) - Backend engine for building and scaling stateful workloads with long-lived processes and durable state
 - [Shlink](/services/shlink) - The open source URL shortener
 - [Soketi](/services/soketi) - Open-source WebSocket server
 - [Supabase](/services/supabase) - Open source Firebase alternative
@@ -193,6 +203,10 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [Unsend](/services/unsend) - An open source bulk email manager
 
+## Family
+
+- [Gramps Web](/services/gramps-web) - The free, open-source genealogy system
+
 ## File Management
 
 - [Filebrowser](/services/filebrowser) - A file manager for the web
@@ -221,15 +235,17 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [FoundryVTT](/services/foundryvtt) - Virtual tabletop for tabletop role-playing games
 - [Minecraft](/services/minecraft) - Minecraft game server
-- [Wings](/services/wings) - Pterodactyl server control plane for game servers
+- [Pterodactyl](/services/pterodactyl) - Game server management panel with Wings daemon for hosting Minecraft, CS:GO, ARK and more
 
 ## Health
 
 - [Baby Buddy](/services/babybuddy) - It helps parents track their baby's daily activities, growth, and health with ease
+- [SparkyFitness](/services/sparkyfitness) - A comprehensive fitness tracking and management application designed to help users monitor their nutrition, exercise, and body measurements
 
 ## Home
 
 - [Grocy](/services/grocy) - A self-hosted groceries & household management solution for your home
+- [Home Assistant](/services/home-assistant) - Open‑source home automation platform focused on local control and privacy
 - [Homebox](/services/homebox) - Inventory and organization system built for the Home User
 - [Mealie](/services/mealie) - Self-hosted recipe manager and meal planner
 
@@ -248,6 +264,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [Audiobookshelf](/services/audiobookshelf) - Self-hosted audiobook and podcast server
 - [Calibre-web](/services/calibre-web) - Web app for browsing, reading and downloading eBooks from a Calibre database
+- [Cap](/services/cap) - Open source alternative to Loom for screen recording and sharing
 - [Castopod](/services/castopod) - Open-source podcast hosting platform
 - [Emby](/services/emby) - A media server to organize, play, and stream audio and video to a variety of devices
 - [Emby Stat](/services/emby-stat) - A simple and easy-to-use Emby statistics dashboard
@@ -284,6 +301,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Notifications
 
 - [Ntfy](/services/ntfy) - Simple HTTP-based pub-sub notification service
+- [Gotify](/services/gotify) - Open-source push notifications for web and mobile apps
 
 ## Productivity
 
@@ -301,6 +319,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Reactive Resume](/services/reactive-resume) - A free and open source resume builder
 - [Readeck](/services/readeck) - Web article reader and bookmark manager
 - [Ryot](/services/ryot) - Self-hosted platform for tracking various facets of your life
+- [Siyuan](/services/siyuan) - A privacy-first, self-hosted, fully open source personal knowledge management software.
 - [Slash](/services/slash) - Open-source, self-hosted links and notes manager
 - [TriliumNext](/services/triliumnext) - Build your personal knowledge base with TriliumNext Notes
 - [Vikunja](/services/vikunja) - The open-source to-do app
@@ -334,6 +353,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Logto](/services/logto) - Logto is an Auth0 alternative designed for modern apps and SaaS products
 - [Passbolt](/services/passbolt) - Open source password manager for teams
 - [Pi-hole](/services/pi-hole) - Network-wide ad blocker that acts as a DNS sinkhole
+- [Pocket ID](/services/pocket-id) - A simple OIDC provider for passwordless authentication with passkeys
 - [SuperTokens](/services/supertokens) - Open-source authentication solution
 - [Vaultwarden](/services/vaultwarden) - Unofficial Bitwarden compatible server
 - [WireGuard Easy](/services/wireguard-easy) - Easy-to-use WireGuard VPN server

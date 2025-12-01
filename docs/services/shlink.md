@@ -11,5 +11,5 @@ Shlink is an open-source URL shortener that allows you to create a short URL for
 
 ## Links
 
-- [The official website ›](https://shlink.io)
-- [GitHub ›](https://github.com/shlinkio/shlink)
+- [The official website](https://shlink.io)
+- [GitHub](https://github.com/shlinkio/shlink)

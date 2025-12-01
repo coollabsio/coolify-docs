@@ -5,7 +5,7 @@ description: "Build APIs on Coolify with Strapi headless CMS for content managem
 
 # Strapi
 
-<ZoomableImage src="/docs/images/services/strapi.svg" alt="Strapi dashboard" />
+<ZoomableImage src="/docs/images/services/strapi-logo.svg" alt="Strapi dashboard" />
 
 ## What is Strapi
 

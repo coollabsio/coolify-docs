@@ -179,6 +179,56 @@ Make sure the protocol in your domain configuration matches how you want to acce
 
 Ensure that `Rolling Updates` are correctly configured. See [Rolling Updates documentation](/knowledge-base/rolling-updates)
 
+
+### Solution 5: Update Traefik to Fix Docker API Version Issue
+
+**Symptoms:**
+- "No Available Server" error appears
+- Coolify proxy logs shows the following error message:
+    ```py
+    Error response from daemon: client version 1.24 is too old. Minimum supported API version is 1.44, please upgrade your client to a newer version
+    ```
+- Application container is running healthy but visiting the domain shows "No Available Server"
+
+
+**Root Cause:**
+The problem happened because Traefik was hard-coding Docker API versions. 
+
+::: info
+The Traefik team has released a fix in **v2.11.31** and **v3.6.1**. Starting from v2.11.31 and v3.6.1, Traefik will now auto-negotiate the Docker API version, so this issue shouldn't happen again.
+:::
+
+**Solution:**
+
+Coolify won't automatically update Traefik for existing servers. 
+
+::: warning Why Coolify don't auto-update for existing servers
+Some users have custom configurations (like DNS challenges) that could break when updating to a newer Traefik version. Please check the [Traefik changelog](https://github.com/traefik/traefik/releases) before updating.
+
+- If you're using the default Coolify Traefik configurations, you're safe to update to v3.6.1 without any issues.
+- If you're currently on Traefik v2 and don't want to upgrade to v3, you can update to the patched v2.11.31 instead.
+  :::
+
+If you're already using Coolify, you'll need to update Traefik manually by follow these steps:
+
+1. **Navigate to Proxy Configuration:**
+   - Go to your Coolify dashboard (https://app.coolify.io/ for cloud users) → Servers → [Your Server] → Proxy → Configuration
+
+2. **Change Traefik Version:**
+   - Change the version to: `v3.6.1` (or `v2.11.31` if staying on v2)
+
+3. **Restart Proxy:**
+   - Click `Restart Proxy`
+
+<ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/no-available-server/update-traefik-version.webp" alt="coolify proxy traefik version update" />
+
+
+**Notes:**
+- You need to do this on every server connected to your Coolify instance
+- This applies to both self-hosted and Coolify Cloud users
+    - (Cloud users: Traefik runs on **your own server** not Coolify’s so you’ll need to update it yourself by following the guide above)
+- If you have changed Docker daemon configs to set Minimum supported API version, then we recommend to revert it as it could potentially cause problems in the future.
+
 ## Advanced Debugging
 
 ### Check Traefik Configuration
@@ -231,7 +281,7 @@ curl -f http://localhost:3000/health
 
 ## When to Seek Help
 
-If none of these solutions work, join our [Discord community ↗](https://coolify.io/discord) and provide:
+If none of these solutions work, join our [Discord community](https://coolify.io/discord) and provide:
 
 - Application logs
 - Coolify proxy logs

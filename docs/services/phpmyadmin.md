@@ -11,5 +11,5 @@ phpMyAdmin is a free and open-source administration tool for MySQL and MariaDB.
 
 ## Links
 
-- [The official website ›](https://www.phpmyadmin.net/)
-- [GitHub ›](https://github.com/phpmyadmin/phpmyadmin)
+- [The official website](https://www.phpmyadmin.net/)
+- [GitHub](https://github.com/phpmyadmin/phpmyadmin)

@@ -5,7 +5,7 @@ description: "Run Hoppscotch API testing on Coolify as open-source Postman alter
 
 # Hoppscotch
 
-<ZoomableImage src="/docs/images/services/hoppscotch.png" alt="Hoppscotch dashboard" />
+<ZoomableImage src="/docs/images/services/hoppscotch-logo.png" alt="Hoppscotch dashboard" />
 
 ## What is Hoppscotch
 

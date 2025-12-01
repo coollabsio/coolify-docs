@@ -1,9 +1,10 @@
 ---
 title: "Plausible Analytics"
 description: "Deploy Plausible Analytics on Coolify for lightweight, cookieless, GDPR-compliant web analytics with privacy-first visitor insights."
+disabled: true
 ---
 
-<ZoomableImage src="/docs/images/services/plausible.svg" alt="Plausible dashboard" />
+<ZoomableImage src="/docs/images/services/plausible-logo.svg" alt="Plausible dashboard" />
 
 ::: danger SERVICE TEMPORARILY DISABLED
 This service is currently disabled in Coolify due to known bugs. The installation is not available until these issues are resolved. Please check the [GitHub repository](https://github.com/coollabsio/coolify) for updates on when this service will be re-enabled.
@@ -29,5 +30,5 @@ Due to trademark issues, we can't provide a fully automated one-click Service in
 
 ## Links
 
-- [The official website ›](https://plausible.io/)
-- [GitHub ›](https://github.com/plausible/analytics)
+- [The official website](https://plausible.io/)
+- [GitHub](https://github.com/plausible/analytics)

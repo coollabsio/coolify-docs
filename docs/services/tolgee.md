@@ -13,5 +13,5 @@ Tolgee is an open-source translation management platform that allows you to mana
 
 ## Links
 
-- [Official Website ›](https://tolgee.io)
-- [GitHub ›](https://github.com/tolgee/tolgee-platform)
+- [Official Website](https://tolgee.io)
+- [GitHub](https://github.com/tolgee/tolgee-platform)

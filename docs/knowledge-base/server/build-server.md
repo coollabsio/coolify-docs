@@ -1,32 +1,67 @@
 ---
-title: "Build Server"
-description: "Offload Docker image builds to dedicated build servers with Coolify to separate build loads from production deployments and improve performance."
+title: Build Server
+description: Set up a build server in Coolify to separate your build process from deployment, reduce load, and improve performance.
 ---
 
-# Build Server
-You could have a build server to build your projects on instead of building them on the server where you host your resources.
+<ZoomableImage src="/docs/images/builds/servers/banner.webp" alt="Coolify banner" />
 
-This keeps the load separated, so it does not affect your application's performance.
+<br />
+
+A build server allows you to compile your projects separately from the server that hosts your live application.
+
+This helps to keep the load on your hosting server low and ensures that your application's performance remains unaffected by the build process.
+
 
 ## Requirements
+Before you set up a build server, make sure that:
 
-- The built images needs to be pushed to a container registry.
-- The server needs to be authenticated to the container registry. See [this](/knowledge-base/docker/registry) for more information.
-- The server needs to have access to the source code.
-- The server needs Docker Engine installed.
-- The server should be the same architecture as the deployment servers.
+- The final images are pushed to a container registry.
+- The build server is authenticated with the container registry. See [this guide](/knowledge-base/docker/registry) for more details.
+- The build server has access to your source code.
+- Docker Engine is installed on the build server.
+- The build server's architecture matches that of your deployment servers.
 
-If you have more than one build server, the used server will be chosen randomly.
+::: success Tip:
+If you have multiple build servers, Coolify will select one at random.
+:::
 
-## How to use
 
-1. Add a new server to Coolify.
-2. Enable the `Build Server` feature while creating a new resource.
+## How to Use a Build Server
+To start using a build server with Coolify, follow these steps:
 
-After this, Coolify will use this server to build your resources, in case you enabled the `Build Server` feature for them.
+1. **Add a New Server to Coolify:**
+   In your Coolify dashboard, go to the servers page and click the **+ Add** button.
 
-## How to set a build server for a resource
+   <ZoomableImage src="/docs/images/builds/servers/1.webp" alt="Coolify dashboard screenshot" />
 
-1. Create or go to a resource that you want to use a build server for.
-2. Enable the `Build Server` feature on the `General` tab, `Build` section.
-3. Make sure you set up a container registry for the resource.
+   - If you have already connected a server to Coolify, you can skip this step and go to the next one.
+
+2. **Enable the Build Server Feature:**
+   In the popup modal, enable the **Build Server** feature.
+   <ZoomableImage src="/docs/images/builds/servers/2.webp" alt="Coolify dashboard screenshot" />
+
+   - If you have already connected your server, enable the Build Server feature as shown in the image below.
+   <ZoomableImage src="/docs/images/builds/servers/3.webp" alt="Coolify dashboard screenshot" />
+
+::: warning HEADS UP!
+As of **Coolify v4.0.0-beta.408** you cannot deploy any application to a server that is marked as a build server.
+
+If you want to deploy apps, uncheck the build server option on your server from the servers page in the Coolify dashboard.
+
+   <ZoomableImage src="/docs/images/builds/servers/3.webp" alt="Coolify dashboard screenshot" />
+:::
+
+
+## Configuring a Resource to Use a Build Server
+To assign a build server to an existing resource, follow these steps:
+
+1. **Go to Your Resource:**
+   In your Coolify dashboard, navigate to the general settings of the application you want to use the build server for.
+
+2. **Activate the Build Server Option:**
+   Under the **Build** section, enable the `Use a Build Server ?` option.
+
+   <ZoomableImage src="/docs/images/builds/servers/4.webp" alt="Coolify dashboard screenshot" />
+
+3. **Set Up Your Container Registry:**
+   Make sure that your build server is authenticated with the container registry. See [this guide](/knowledge-base/docker/registry) for more details.

@@ -1,14 +1,14 @@
 ---
-title: Embystat
-description: "Run EmbyStat analytics on Coolify for Emby server statistics, viewing trends, media library insights, and user activity tracking dashboards."
+title: "Emby Stat"
+description: "Track Emby server usage on Coolify with EmbyStat featuring media statistics, playback analytics, user metrics, and library health monitoring."
 ---
 
-# Embystat
+![Emby Stat](https://raw.githubusercontent.com/mregni/EmbyStat/develop/branding/logo-color.png)
 
-## What is Embystat
+## What is Emby Stat?
 
-EmbyStat is a web analytics tool, designed to provide insight into website traffic and user behavior.
+EmbyStat is a personal web server that can calculate all kinds of statistics from your (local) Emby or Jellyfin server. Just install this on your server and let him calculate all kinds of fun stuff.
 
 ## Links
 
-- [Official Documentation](https://github.com/mregni/EmbyStat?utm_source=coolify.io)
+- [The official website](https://github.com/mregni/EmbyStat?utm_source=coolify.io)
