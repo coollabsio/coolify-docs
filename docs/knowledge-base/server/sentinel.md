@@ -1,6 +1,6 @@
 ---
 title: "Sentinel and Metrics"
-description: "Learn how to set up and use Sentinel as a Linux API and metrics collection tool for server and container metrics in Coolify"
+description: "Monitor server and container CPU and RAM usage with Coolify's lightweight Sentinel container providing Linux API and resource metrics collection."
 ---
 
 # Sentinel and Metrics
@@ -18,7 +18,7 @@ description: "Learn how to set up and use Sentinel as a Linux API and metrics co
 
 ## Screenshot
 
-<ZoomableImage src="/docs/images/screenshots/sentinel.webp" />
+<ZoomableImage src="/docs/images/screenshots/sentinel.webp" alt="Sentinel configuration" />
 
 ## Configuration
 

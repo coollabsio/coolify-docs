@@ -227,6 +227,8 @@
 
 .DocSearch {
   --docsearch-primary-color: var(--vp-c-brand-1) !important;
+  border-color: var(--vp-c-brand-1) !important;
+  @apply border !important ;
 }
 
 /**
@@ -315,10 +317,241 @@
   --vp-code-bg: #161b22 !important;  /* Darker background in dark mode */
 }
 
-/* Container padding override */
+/* Container padding override - updated for reasonable width layout */
 .container {
   padding-left: 1rem !important;
   padding-right: 1rem !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1400px !important;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1600px !important;
+  }
+}
+
+/* Reasonable width layout overrides */
+.VPDoc {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Fixed sidebar padding - never changes */
+.VPSidebar {
+  padding: 32px 32px 96px !important;
+  max-width: var(--vp-sidebar-width) !important;
+  width: var(--vp-sidebar-width) !important;
+}
+
+@media (min-width: 960px) {
+  .VPSidebar {
+    padding: 32px 32px 96px !important;
+    max-width: var(--vp-sidebar-width) !important;
+    width: var(--vp-sidebar-width) !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .VPSidebar {
+    padding: 32px 32px 96px !important;
+    max-width: var(--vp-sidebar-width) !important;
+    width: var(--vp-sidebar-width) !important;
+  }
+}
+
+/* Fixed navbar logo positioning - never moves */
+.VPNavBar.has-sidebar .title {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 2 !important;
+  padding: 0 32px !important;
+  width: var(--vp-sidebar-width) !important;
+  height: var(--vp-nav-height) !important;
+  background-color: transparent !important;
+}
+
+@media (min-width: 1440px) {
+  .VPNavBar.has-sidebar .title {
+    padding-left: 32px !important;
+  }
+}
+
+/* Full width search with justified children */
+.VPSidebar .search {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.VPSidebar .search > * {
+  flex: 1 !important;
+}
+
+/* Full width search content */
+.VPSidebar .search :deep(*) {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.VPSidebar .search :deep(*) > * {
+  flex: 1 !important;
+}
+
+/* Scrollbar styling */
+* {
+  & ::-webkit-scrollbar {
+    width: 8px !important;
+    height: 8px !important;
+    background-color: transparent !important;
+  }
+
+  & ::-webkit-scrollbar-track {
+    background-color: transparent !important;
+    border-radius: 8px !important;
+  }
+
+  & ::-webkit-scrollbar-thumb {
+    border: 2px solid transparent !important;
+    border-radius: 8px !important;
+    background-color: var(--vp-c-brand-1) !important;
+    background-clip: padding-box !important;
+  }
+
+  & ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--vp-c-text-3) !important;
+  }
+
+  & ::-webkit-scrollbar-corner {
+    background-color: transparent !important;
+  }
+}
+
+@supports (-ms-ime-align:auto) {
+  * {
+    & ::-webkit-scrollbar {
+      width: 0.6em !important;
+      height: 0.6em !important;
+      background-color: transparent !important;
+    }
+  
+    & ::-webkit-scrollbar-track {
+      background-color: var(--vp-c-bg-soft) !important;
+    }
+  
+    & ::-webkit-scrollbar-thumb {
+      border-radius: 0.6em !important;
+      background-color: var(--vp-c-brand-1) !important;
+    }
+    & ::-webkit-scrollbar-thumb:hover {
+      background-color: var(--vp-c-text-3) !important;
+    }
+  }
+}
+
+/* Search component styling */
+.VPLocalSearchBox {
+  width: 100% !important;
+  
+  & .search-box {
+    width: 100% !important;
+    display: flex !important;
+  }
+
+  & .search-box > .DocSearch-Button {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  & .DocSearch-Button-Keys {
+    margin-left: auto !important;
+  }
+}
+
+.VPNavBarSearch {
+  width: 100% !important;
+
+  & #local-search {
+    width: 100% !important;
+  }
+
+  & .DocSearch-Button {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  & .DocSearch-Button-Container {
+    flex: 1 !important;
+  }
+
+  & .DocSearch-Button-Keys {
+    margin-left: auto !important;
+  }
+}
+
+/* Sidebar search specific styling */
+.VPSidebar .VPNavBarSearch {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.VPSidebar .VPNavBarSearch > * {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.VPSidebar .VPNavBarSearch #local-search {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.VPSidebar .VPNavBarSearch .DocSearch-Button {
+  width: 100% !important;
+  justify-content: space-between !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.VPSidebar .VPNavBarSearch .DocSearch-Button-Container {
+  flex: 1 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.VPSidebar .VPNavBarSearch .DocSearch-Button-Keys {
+  margin-left: auto !important;
+}
+
+/* Ensure proper layout on XL and larger screens */
+@media (min-width: 1280px) {
+  .VPDoc.has-sidebar:not(.has-aside) .content-container {
+    max-width: calc(100% - 272px) !important; /* Account for left sidebar only */
+  }
+  
+  .VPDoc:not(.has-sidebar).has-aside .content-container {
+    max-width: calc(100% - 256px) !important; /* Account for right sidebar only */
+  }
+  
+  .VPDoc:not(.has-sidebar):not(.has-aside) .content-container {
+    max-width: 1100px !important; /* Wider max width for no sidebars */
+  }
 }
 
 
@@ -767,4 +1000,8 @@ pre[class*='language-'] *:hover {
   --shiki-light-boolean: #0550ae !important;     /* blue */
   --shiki-light-comment: #6e7781 !important;     /* gray */
   --shiki-light-property: #953800 !important;    /* brown */
+}
+
+.title {
+  @apply border-0 !important;
 }

@@ -1,5 +1,6 @@
 ---
 title: "Enable Dashboard"
+description: "Enable and secure Traefik dashboard in Coolify with basic authentication, dynamic configuration, Let's Encrypt SSL, and custom domain access."
 ---
 
 # Traefik Dashboard

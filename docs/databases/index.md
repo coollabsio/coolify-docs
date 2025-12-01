@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Deploy databases on Coolify with one-click setup for PostgreSQL, MySQL, MariaDB, MongoDB, Redis, KeyDB, DragonFly, and ClickHouse.
 ---
 
 # Databases you can host with Coolify

@@ -1,11 +1,11 @@
 ---
 title: Privatebin
-description: Here you can find the documentation for hosting Privatebin with Coolify.
+description: "Share text securely on Coolify with PrivateBin for encrypted pastebin, self-destructing messages, and zero-knowledge data sharing."
 ---
 
 # Privatebin
 
-<ZoomableImage src="/docs/images/services/privatebin.svg" />
+<ZoomableImage src="/docs/images/services/privatebin-logo.svg" alt="Privatebin dashboard" />
 
 ## What is Privatebin
 

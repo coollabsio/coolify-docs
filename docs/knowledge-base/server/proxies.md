@@ -1,6 +1,6 @@
 ---
 title: "Supported Proxy"
-description: "A guide for Coolify supported proxies."
+description: "Learn about Traefik and Caddy reverse proxy support in Coolify for routing traffic, SSL certificates, and load balancing with switching guide"
 ---
 
 # Supported Proxy

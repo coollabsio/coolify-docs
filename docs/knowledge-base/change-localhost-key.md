@@ -1,6 +1,6 @@
 ---
 title: "Change Localhost Key"
-description: "How to replace the localhost key for Coolify."
+description: "Replace and regenerate Coolify's localhost SSH private key with safe database backup procedures and Docker container key installation."
 ---
 
 # Change Localhost Key

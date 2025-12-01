@@ -1,5 +1,6 @@
 ---
 title: "Persistent Storage"
+description: "Configure persistent Docker volumes and bind mounts for Coolify resources to preserve data between deployments with proper path mapping and sharing options."
 ---
 
 # Persistent Storage

@@ -1,11 +1,11 @@
 ---
 title: Mindsdb
-description: Here you can find the documentation for hosting Mindsdb with Coolify.
+description: "Host MindsDB on Coolify for AI-powered database with ML predictions, AutoML, model deployment, and SQL-based machine learning integration."
 ---
 
 # Mindsdb
 
-<ZoomableImage src="/docs/images/services/mindsdb.svg" />
+<ZoomableImage src="/docs/images/services/mindsdb.svg" alt="Mindsdb dashboard" />
 
 ## What is Mindsdb
 

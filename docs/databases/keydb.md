@@ -1,8 +1,10 @@
 ---
 title: KeyDB
+description: Deploy KeyDB on Coolify with high-performance multithreading, Redis compatibility, active replication, and FLASH storage support.
 ---
 
 # KeyDB
+
 <!-- Commentented out the image because it is taking up the whole screen, will be fixed later -->
 <!-- ![KeyDB](/images/database-logos/keydb.webp) -->
 
@@ -14,5 +16,5 @@ Designed to be a drop-in replacement for Redis, KeyDB aims to provide better res
 
 ## Links
 
-- [The official website ›](https://keydb.dev/)
-- [GitHub ›](https://github.com/EQ-Alpha/KeyDB)
+- [The official website](https://keydb.dev/)
+- [GitHub](https://github.com/EQ-Alpha/KeyDB)

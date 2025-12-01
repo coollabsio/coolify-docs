@@ -1,6 +1,6 @@
 ---
 title: Failed To Get Access Token During Deployment
-description: Here are some common issues for fixing failed to get access token during deployment.
+description: Fix GitHub access token errors in Coolify deployments caused by NTP time synchronization issues affecting JWT 'iat' claim validation during authentication.
 ---
 
 # Failed To Get Access Token

@@ -1,5 +1,6 @@
 ---
 title: Applications
+description: Deploy web applications on Coolify with Nixpacks, Docker, static sites, build packs, environment variables, and automated deployments.
 ---
 
 # Applications
@@ -7,6 +8,24 @@ title: Applications
 Application could be any type of web application. It could be a static site, a NodeJS application, a PHP application, etc.
 
 For complex applications, you can use Docker Compose based deployments or the one-click services.
+
+## How Deployments Work
+
+Coolify deploys all applications as Docker containers. This means your app runs inside an isolated container on your server.
+
+**Key Concepts:**
+- **Docker Image:** A packaged version of your application with all dependencies included
+- **Container:** A running instance of your Docker image
+- **Build Process:** Transforms your source code into a Docker image ready for deployment
+
+You have two options for deploying applications:
+
+1. **Build on Coolify:** Use [build packs](/applications/build-packs/overview) to automatically create Docker images from your source code
+2. **Use Pre-built Images:** Deploy existing images from registries like [Docker Hub](https://hub.docker.com/?utm_source=coolify.io) or [GitHub Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry?utm_source=coolify.io)
+
+::: tip Resource Management
+Building Docker images can be resource-intensive. You can use a dedicated [build server](/knowledge-base/server/build-server) to handle builds separately from your production server.
+:::
 
 ## Examples
 ::: info
@@ -154,7 +173,7 @@ You can rollback to a previous version of your resource. At the moment, only loc
 
 ### Resource Limits
 
-By default, the container won't have any resource limits. You can set the limits here. For more details, read the [Docker documentation](https://docs.docker.com/compose/compose-file/compose-file-v2/#cpu_count-cpu_percent-cpu_shares-cpu_period-cpu_quota-cpus-cpuset-domainname-hostname-ipc-mac_address-mem_limit-memswap_limit-mem_swappiness-mem_reservation-oom_kill_disable-oom_score_adj-privileged-read_only-shm_size-stdin_open-tty-user-working_dir).
+By default, the container won't have any resource limits. You can set the limits here. For more details, read the [Docker documentation](https://docs.docker.com/reference/compose-file/services).
 
 ## Deployment Types
 
@@ -169,41 +188,16 @@ There are several types of application deployments available.
 
 ## Build Packs
 
-These are the supported build packs:
+Build packs help transform your source code into Docker images. Coolify supports several build pack options to match different deployment needs:
 
-- Nixpacks
-- Dockerfile
-- Docker Image
-- Docker Compose
+- **[Nixpacks](/applications/build-packs/nixpacks)** - Automatic detection and building (recommended for most applications)
+- **[Static](/applications/build-packs/static)** - For static sites and SPAs
+- **[Dockerfile](/applications/build-packs/dockerfile)** - Use your own custom Dockerfile
+- **[Docker Compose](/applications/build-packs/docker-compose)** - For multi-service applications
+- **Docker Image** - Deploy pre-built images from registries
 
-### Nixpacks
+For detailed guides on each build pack, see the [Build Packs section](/applications/build-packs/overview).
 
-Coolify uses [Nixpacks](https://nixpacks.com) as build pack by default. Nixpacks detect what kind of application are you trying to deploy and builds it accordingly.
-
-But if needed, you can customize it by adding a `nixpacks.toml` file to your repository or setting the right environment variables.
-
-For example, if you are using a NodeJS application, you can set the `NIXPACKS_NODE_VERSION` to control the NodeJS version.
-
-:::success TIP
-  Worth reading their [documentation](https://nixpacks.com/docs) to understand
-  how it works.
+:::tip Quick Start
+Coolify uses [Nixpacks](https://nixpacks.com) by default, which automatically detects your application type and builds it accordingly. For most applications, you won't need to configure anything.
 :::
-
-### Dockerfile
-
-Dockerfile based build packs are useful if you have a custom dockerfile inside your Git repository.
-
-#### Custom Dockerfile Location
-
-You can always set your custom dockerfile location. By default, it is set to `/Dockerfile`.
-
-### Docker Image
-
-You can deploy any docker images from any Docker compatible repository. For example, you can deploy images from Docker Hub, GitHub Container Registry, etc.
-
-### Docker Compose
-
-Docker Compose based deployments are useful for complex applications. You can define multiple services in a single `docker-compose.yml` file and deploy them together.
-
-- [Languages/Frameworks](/applications/)
-- [Services](/services/overview)

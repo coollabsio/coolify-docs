@@ -1,8 +1,7 @@
 ---
 title: "Kuzzle"
-description: "Here you can find the documentation for hosting Kuzzle with Coolify."
+description: "Run Kuzzle backend on Coolify for real-time APIs, authentication, data storage, geofencing, and IoT platform with pub/sub messaging."
 ---
-
 
 ![Kuzzle](https://user-images.githubusercontent.com/7868838/103797784-32337580-5049-11eb-8917-3fcf4487644c.png)
 
@@ -25,5 +24,5 @@ Kuzzle enables you to build modern web applications and complex IoT networks in 
 
 ## Links
 
-- [The official website ›](https://kuzzle.io/)
-- [GitHub ›](https://github.com/kuzzleio/kuzzle)
+- [The official website](https://kuzzle.io/)
+- [GitHub](https://github.com/kuzzleio/kuzzle)

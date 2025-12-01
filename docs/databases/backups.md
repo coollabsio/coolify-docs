@@ -1,5 +1,6 @@
 ---
 title: "Backups"
+description: Configure scheduled database backups for PostgreSQL, MySQL, MariaDB, and MongoDB with cron expressions and S3 storage integration.
 ---
 
 # Backups

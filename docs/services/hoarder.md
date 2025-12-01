@@ -1,11 +1,16 @@
 ---
 title: Hoarder
-description: Here you can find the documentation for hosting Hoarder with Coolify.
+description: "Host Hoarder bookmark manager on Coolify for saving links, organizing collections, tagging, and personal knowledge management with search."
+disabled: true
 ---
+
+::: warning SERVICE NOT AVAILABLE
+This service is currently not available in Coolify's service catalog.
+:::
 
 # Hoarder
 
-<ZoomableImage src="/docs/images/services/hoarder.png" />
+<ZoomableImage src="/docs/images/services/hoarder-logo.png" alt="Hoarder dashboard" />
 
 ## What is Hoarder
 

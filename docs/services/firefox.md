@@ -1,11 +1,11 @@
 ---
 title: Firefox
-description: Here you can find the documentation for hosting Firefox with Coolify.
+description: "Run Firefox browser on Coolify in containerized environment for secure web browsing, testing, and isolated internet access via web interface."
 ---
 
 # Firefox
 
-<ZoomableImage src="/docs/images/services/firefox.png" />
+<ZoomableImage src="/docs/images/services/firefox-logo.png" alt="Firefox dashboard" />
 
 ## What is Firefox
 

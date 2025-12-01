@@ -1,5 +1,6 @@
 ---
 title: SvelteKit
+description: Deploy SvelteKit applications on Coolify with static builds using adapter-static or Node server builds with adapter-node.
 ---
 
 # SvelteKit

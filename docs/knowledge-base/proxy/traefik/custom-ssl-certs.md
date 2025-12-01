@@ -1,5 +1,6 @@
 ---
 title: "Custom SSL Certificates"
+description: "Use custom SSL certificates with Traefik proxy in Coolify including self-signed certificates, Let's Encrypt, and public CA certificates configuration."
 ---
 
 # Custom SSL Certificates

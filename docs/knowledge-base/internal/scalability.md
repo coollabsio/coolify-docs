@@ -1,5 +1,6 @@
 ---
 title: "Scalability"
+description: "Scale Coolify applications with traditional horizontal scaling across multiple servers using load balancers or Docker Swarm for high availability deployments."
 ---
 
 # Scalability

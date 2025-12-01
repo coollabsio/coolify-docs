@@ -1,5 +1,6 @@
 ---
 title: NextJS
+description: Deploy Next.js applications on Coolify with server-side rendering, static builds, Nixpacks, or custom Dockerfile configurations.
 ---
 
 # NextJS

@@ -1,8 +1,7 @@
 ---
 title: "N8N"
-description: "Here you can find the documentation for hosting N8N with Coolify."
+description: "Build workflows on Coolify with n8n automation platform connecting 400+ apps, APIs, databases for no-code/low-code task automation and integration."
 ---
-
 
 ![N8N](https://user-images.githubusercontent.com/65276001/173571060-9f2f6d7b-bac0-43b6-bdb2-001da9694058.png)
 
@@ -10,11 +9,75 @@ description: "Here you can find the documentation for hosting N8N with Coolify."
 
 N8N is an open-source workflow automation tool that allows you to connect different applications and services together. It is an open-source alternative to tools like Zapier or Make.
 
+## Deployment Variants
+
+N8N is available in three deployment configurations in Coolify:
+
+### n8n (Default)
+- **Database:** SQLite (embedded)
+- **Use case:** Simple deployments, testing, or low-volume workflows
+- **Components:** Single n8n container with built-in SQLite database
+
+### n8n with PostgreSQL
+- **Database:** PostgreSQL (external)
+- **Use case:** Production deployments requiring better performance, scalability, and data persistence
+- **Components:**
+  - n8n container
+  - PostgreSQL 16 container
+  - Automatic database configuration and health checks
+
+### n8n with PostgreSQL and Worker
+- **Database:** PostgreSQL + Redis
+- **Use case:** High-volume production deployments with queue-based execution and parallel workflow processing
+- **Components:**
+  - n8n main container
+  - n8n-worker container for distributed execution
+  - PostgreSQL 16 container
+  - Redis container for queue management
+  - Automatic database configuration and health checks
+
 ## Screenshots
 
 ![N8N Preview](https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-screenshot.png)
 
+### Extending n8n with custom dependencies
+
+To extend n8n with custom dependencies, you can add them following the example below to your Dockerfile:
+
+```dockerfile
+...
+RUN apk add --no-cache ffmpeg
+...
+```
+
+### Example Dockerfile
+
+```dockerfile
+FROM n8nio/n8n:latest
+
+# Switch to root user to install packages and modify system directories
+USER root
+
+# Install necessary system packages using apk
+# build-base, python3-dev, geoip-dev are needed for potential native dependencies
+# wget for downloading, git for source control (might be needed by Go), bash (useful shell)
+RUN apk update && \
+    apk add --no-cache \
+        wget \
+        ffmpeg
+
+
+ENV N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}
+ENV N8N_PORT=5678
+ENV N8N_PROTOCOL=https
+ENV NODE_ENV=production
+ENV WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/
+
+# Switch back to the non-root user that n8n runs as (typically 'node')
+USER node
+```
+
 ## Links
 
-- [The official website ›](https://n8n.io/)
-- [GitHub ›](https://github.com/n8n-io/n8n)
+- [The official website](https://n8n.io/)
+- [GitHub](https://github.com/n8n-io/n8n)

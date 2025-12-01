@@ -1,6 +1,6 @@
 ---
 title: "Using WordPress Multisite with Coolify"
-description: "Here you can find the documentation for configuring WordPress Multisite with Coolify."
+description: "Configure WordPress Multisite in Coolify with subdomain or subdirectory setup, persistent storage, and network configuration"
 ---
 
 

@@ -1,6 +1,6 @@
 ---
 title: "Docker Registry"
-description: "A guide on how to configure a Docker Registry with Coolify."
+description: "Push built Docker images to any registry with Coolify including custom tags, authentication setup, Swarm mode support, and self-hosted registry configuration."
 ---
 
 

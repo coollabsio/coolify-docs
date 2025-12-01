@@ -12,7 +12,7 @@ import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs'
 import { groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 import { loadEnv } from 'vitepress'
 const env = loadEnv('', process.cwd())
-const sidebar = useSidebar({ spec, collapsible: true })
+const sidebar = useSidebar({ spec })
 
 // Add SSH to bundled languages
 bundledLanguages['ssh'] = {
@@ -32,29 +32,67 @@ export default defineConfig({
   lastUpdated: true,
   ignoreDeadLinks: true,
   sitemap: {
-    hostname: 'https://coolify.io/docs/'
+    hostname: env.VITE_SITE_URL ?? 'https://coolify.io/docs/'
+  },
+
+  transformHead: ({ pageData }) => {
+    const canonicalUrl = `${env.VITE_SITE_URL ?? 'https://coolify.io/docs'}${pageData.relativePath.replace(/((^|\/)index)?\.md$/, '$2')}`
+    return [
+      ['link', { rel: 'canonical', href: canonicalUrl }]
+    ]
+  },
+
+  transformPageData(pageData) {
+    const baseUrl = env.VITE_SITE_URL ?? 'https://coolify.io/docs/'
+    const defaultImage = 'https://coolcdn.b-cdn.net/assets/coolify/og-image-docs.png'
+    const defaultDescription = 'Self hosting with superpowers: An open-source & self-hostable Heroku / Netlify / Vercel alternative.'
+
+    // Build canonical URL for this page
+    const pageUrl = `${baseUrl}${pageData.relativePath.replace(/((^|\/)index)?\.md$/, '$2')}`
+
+    // Extract values with fallback chain
+    const baseTitle = pageData.frontmatter.title || pageData.title || 'Coolify Docs'
+    const title = baseTitle === 'Coolify Docs' ? baseTitle : `${baseTitle} | Coolify`
+    const description = pageData.frontmatter.description || defaultDescription
+
+    // Handle image with relative to absolute URL conversion
+    const relativeImage = pageData.frontmatter.image
+    const image = relativeImage
+      ? `${baseUrl.replace(/\/$/, '')}${relativeImage.startsWith('/') ? relativeImage : '/' + relativeImage}`.replace(/\/docs\/docs\//, '/docs/')
+      : defaultImage
+
+    // Initialize head array if it doesn't exist
+    pageData.frontmatter.head ??= []
+
+    // Add Open Graph tags
+    pageData.frontmatter.head.push(
+      ['meta', { property: 'og:title', content: title }],
+      ['meta', { property: 'og:description', content: description }],
+      ['meta', { property: 'og:url', content: pageUrl }],
+      ['meta', { property: 'og:image', content: image }]
+    )
+
+    // Add Twitter Card tags
+    pageData.frontmatter.head.push(
+      ['meta', { property: 'twitter:title', content: title }],
+      ['meta', { property: 'twitter:description', content: description }],
+      ['meta', { property: 'twitter:url', content: pageUrl }],
+      ['meta', { property: 'twitter:image', content: image }]
+    )
   },
 
   head: [
     ['meta', { name: 'theme-color', content: '#000000' }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:title', content: 'Coolify Docs' }],
-    ['meta', { property: 'og:url', content: 'https://coolify.io/docs/' }],
-    ['meta', { property: 'og:description', content: 'Self hosting with superpowers: An open-source & self-hostable Heroku / Netlify / Vercel alternative.' }],
-    ['meta', { property: 'og:image', content: 'https://coolcdn.b-cdn.net/assets/coolify/og-image-docs.png' }],
     ['meta', { property: 'twitter:site', content: '@coolifyio' }],
     ['meta', { property: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { property: 'twitter:title', content: 'Coolify Docs' }],
-    ['meta', { property: 'twitter:description', content: 'Self hosting with superpowers: An open-source & self-hostable Heroku / Netlify / Vercel alternative.' }],
-    ['meta', { property: 'twitter:url', content: 'https://coolify.io/docs/' }],
-    ['meta', { property: 'twitter:image', content: 'https://coolcdn.b-cdn.net/assets/coolify/og-image-docs.png' }],
-    ['link', { rel: 'icon', href: '/docs/coolify-logo-transparent.png' }],
+    ['link', { rel: 'icon', href: '/docs/coolify-logo-transparent.png', alt: "Coolify's Logo" }],
     ['link', { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     ['script', { defer: 'true', src: 'https://analytics.coollabs.io/js/script.tagged-events.js', 'data-domain': env.VITE_ANALYTICS_DOMAIN ?? 'coolify.io/docs' }],
-    ['script', { async: 'true', src: '/docs/trieve-user-script.js' }],
   ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    externalLinkIcon: true,
     carbonAds: {
       code: 'CW7IPKJJ',
       placement: 'coolifyio'
@@ -75,6 +113,8 @@ export default defineConfig({
     search: {
       provider: 'local'
     },
+
+    outline: [2, 4],
 
     editLink: {
       pattern: 'https://github.com/coollabsio/documentation-coolify/tree/main/docs/:path',
@@ -129,31 +169,15 @@ export default defineConfig({
         ],
       },
       {
-        text: 'Builds',
-        collapsed: true,
-        items: [
-          { text: 'Introduction', link: '/builds/introduction' },
-          {
-            text: 'Build Packs',
-            collapsed: true,
-            items: [
-              { text: 'Overview', link: '/builds/packs/overview' },
-              { text: 'Static', link: '/builds/packs/static' },
-              { text: 'Nixpacks', link: '/builds/packs/nixpacks' },
-              { text: 'Dockerfile', link: '/builds/packs/dockerfile' },
-              { text: 'Docker Compose', link: '/builds/packs/docker-compose' },
-            ]
-          },
-          { text: 'Build Servers', link: '/builds/servers' },
-        ],
-      },
-      {
         text: 'Applications',
         collapsed: true,
         items: [
           {
             text: 'Overview',
             link: '/applications/index',
+          },
+          {
+            text: 'Frameworks',
             items: [
               { text: 'Django', link: '/applications/django' },
               { text: 'Jekyll', link: '/applications/jekyll' },
@@ -167,8 +191,59 @@ export default defineConfig({
               { text: 'Nuxt', link: '/applications/nuxt' },
               { text: 'SvelteKit', link: '/applications/svelte-kit' },
             ]
-          }
+          },
+          {
+            text: 'Build Packs',
+            link: '/applications/build-packs/overview',
+            collapsed: true,
+            items: [
+              { text: 'Static', link: '/applications/build-packs/static' },
+              { text: 'Nixpacks', link: '/applications/build-packs/nixpacks' },
+              { text: 'Dockerfile', link: '/applications/build-packs/dockerfile' },
+              { text: 'Docker Compose', link: '/applications/build-packs/docker-compose' },
+            ]
+          },
+          {
+            text: 'CI/CD',
+            link: '/applications/ci-cd/introduction',
+            collapsed: true,
+            items: [
+              {
+                text: 'Github', collapsed: true, items: [
+                  { text: 'Integrations', link: '/applications/ci-cd/github/integration' },
+                  { text: 'Manually Setup GitHub App', link: '/applications/ci-cd/github/manually-setup-github-app' },
+                  { text: 'Move Between GitHub Apps', link: '/applications/ci-cd/github/move-between-github-apps' },
+                  { text: 'Github Actions', link: '/applications/ci-cd/github/github-actions' },
+                ]
+              },
+              {
+                text: 'Gitlab',
+                link: '/applications/ci-cd/gitlab/integration',
+              },
+              {
+                text: 'Bitbucket',
+                link: '/applications/ci-cd/bitbucket/integration',
+              },
+              {
+                text: 'Gitea',
+                link: '/applications/ci-cd/gitea/integration',
+              },
+              {
+                text: 'Other Providers',
+                link: '/applications/ci-cd/other-providers',
+              },
+            ]
+          },
         ],
+      },
+      {
+        text: 'Services',
+        collapsed: true,
+        items: [
+          { text: 'Introduction', link: '/services/introduction' },
+          { text: 'All One-Click Services', link: '/services/overview' },
+          { text: 'Services Directory', link: '/services/all' }
+        ]
       },
       {
         text: 'Databases',
@@ -188,213 +263,6 @@ export default defineConfig({
               { text: 'DragonFly', link: '/databases/dragonfly' },
               { text: 'KeyDB', link: '/databases/keydb' },
               { text: 'Clickhouse', link: '/databases/clickhouse' },
-            ]
-          }
-        ],
-      },
-      {
-        text: 'Services',
-        collapsed: true,
-        items: [
-          {
-            text: 'Overview',
-            link: '/services/overview',
-            items: [
-              { text: 'ActivePieces', link: '/services/activepieces' },
-              { text: 'Actual Budget', link: '/services/actualbudget' },
-              { text: 'Affine', link: '/services/affine' },
-              { text: 'AnythingLLM', link: '/services/anythingllm' },
-              { text: 'Apprise API', link: '/services/apprise-api' },
-              { text: 'Appsmith', link: '/services/appsmith' },
-              { text: 'Apache Superset', link: '/services/apache-superset' },
-              { text: 'Appwrite', link: '/services/appwrite' },
-              { text: 'Argilla', link: '/services/argilla' },
-              { text: 'Audiobookshelf', link: '/services/audiobookshelf' },
-              { text: 'Authentik', link: '/services/authentik' },
-              { text: 'Baby Buddy', link: '/services/babybuddy' },
-              { text: 'Beszel', link: '/services/beszel' },
-              { text: 'Bitcoin Core', link: '/services/bitcoin-core' },
-              { text: 'BookStack', link: '/services/bookstack' },
-              { text: 'Browserless', link: '/services/browserless' },
-              { text: 'Budibase', link: '/services/budibase' },
-              { text: 'BudgE', link: '/services/budge' },
-              { text: 'Bugsink', link: '/services/bugsink' },
-              { text: 'Cal.com', link: '/services/calcom' },
-              { text: 'Calibre Web', link: '/services/calibre-web' },
-              { text: 'Castopod', link: '/services/castopod' },
-              { text: 'Change Detection', link: '/services/changedetection' },
-              { text: 'Chaskiq', link: '/services/chaskiq' },
-              { text: 'Chatwoot', link: '/services/chatwoot' },
-              { text: 'Checkmate', link: '/services/checkmate' },
-              { text: 'ClassicPress', link: '/services/classicpress' },
-              { text: 'CloudBeaver', link: '/services/cloudbeaver' },
-              { text: 'Cloudflared', link: '/services/cloudflared' },
-              { text: 'Cockpit', link: '/services/cockpit' },
-              { text: 'Code Server', link: '/services/code-server' },
-              { text: 'ConvertX', link: '/services/convertx' },
-              { text: 'Convex', link: '/services/convex' },
-              { text: 'Cryptgeon', link: '/services/cryptgeon' },
-              { text: 'CyberChef', link: '/services/cyberchef' },
-              { text: 'Dashboard', link: '/services/dashboard' },
-              { text: 'Dashy', link: '/services/dashy' },
-              { text: 'Deno KV', link: '/services/denoKV' },
-              { text: 'Directus', link: '/services/directus' },
-              { text: 'Docker Registry', link: '/services/docker-registry' },
-              { text: 'Docmost', link: '/services/docmost' },
-              { text: 'Documenso', link: '/services/documenso' },
-              { text: 'Docuseal', link: '/services/docuseal' },
-              { text: 'DokuWiki', link: '/services/dokuwiki' },
-              { text: 'Dolibarr', link: '/services/dolibarr' },
-              { text: 'Dozzle', link: '/services/dozzle' },
-              { text: 'Drupal', link: '/services/drupal' },
-              { text: 'Duplicati', link: '/services/duplicati' },
-              { text: 'Easy Appointments', link: '/services/easyappointments' },
-              { text: 'Emby', link: '/services/emby' },
-              { text: 'Emby Stat', link: '/services/emby-stat' },
-              { text: 'Evolution API', link: '/services/evolution-api' },
-              { text: 'Faraday', link: '/services/faraday' },
-              { text: 'Fider', link: '/services/fider' },
-              { text: 'Filebrowser', link: '/services/filebrowser' },
-              { text: 'FileFlows', link: '/services/fileflows' },
-              { text: 'Firefly III', link: '/services/firefly-iii' },
-              { text: 'Firefox', link: '/services/firefox' },
-              { text: 'Flipt', link: '/services/flipt' },
-              { text: 'Flowise', link: '/services/flowise' },
-              { text: 'Forgejo', link: '/services/forgejo' },
-              { text: 'Formbricks', link: '/services/formbricks' },
-              { text: 'Foundry VTT', link: '/services/foundryvtt' },
-              { text: 'FreeScout', link: '/services/freescout' },
-              { text: 'FreshRSS', link: '/services/freshrss' },
-              { text: 'Ghost', link: '/services/ghost' },
-              { text: 'Gitea', link: '/services/gitea' },
-              { text: 'GitLab', link: '/services/gitlab' },
-              { text: 'Glance', link: '/services/glance' },
-              { text: 'Glances', link: '/services/glances' },
-              { text: 'GlitchTip', link: '/services/glitchtip' },
-              { text: 'Gotenberg', link: '/services/gotenberg' },
-              { text: 'Grafana', link: '/services/grafana' },
-              { text: 'Grocy', link: '/services/grocy' },
-              { text: 'Heimdall', link: '/services/heimdall' },
-              { text: 'HeyForm', link: '/services/heyform' },
-              { text: 'Hoarder', link: '/services/hoarder' },
-              { text: 'Homarr', link: '/services/homarr' },
-              { text: 'Homepage', link: '/services/homepage' },
-              { text: 'Hoppscotch', link: '/services/hoppscotch' },
-              { text: 'Immich', link: '/services/immich' },
-              { text: 'Infisical', link: '/services/infisical' },
-              { text: 'Invoice Ninja', link: '/services/invoice-ninja' },
-              { text: 'IT Tools', link: '/services/it-tools' },
-              { text: 'Jellyfin', link: '/services/jellyfin' },
-              { text: 'Jenkins', link: '/services/jenkins' },
-              { text: 'Joomla', link: '/services/joomla' },
-              { text: 'Joplin', link: '/services/joplin' },
-              { text: 'Jupyter Notebook Python', link: '/services/jupyter-notebook-python' },
-              { text: 'Keycloak', link: '/services/keycloak' },
-              { text: 'Kimai', link: '/services/kimai' },
-              { text: 'Kuzzle', link: '/services/kuzzle' },
-              { text: 'Label Studio', link: '/services/labelstudio' },
-              { text: 'Langfuse', link: '/services/langfuse' },
-              { text: 'LibreOffice', link: '/services/libreoffice' },
-              { text: 'LibreTranslate', link: '/services/libretranslate' },
-              { text: 'Listmonk', link: '/services/listmonk' },
-              { text: 'Litellm', link: '/services/litellm' },
-              { text: 'Litequeen', link: '/services/litequeen' },
-              { text: 'Logto', link: '/services/logto' },
-              { text: 'Lowcoder', link: '/services/lowcoder' },
-              { text: 'Mailpit', link: '/services/mailpit' },
-              { text: 'Martin', link: '/services/martin' },
-              { text: 'Mattermost', link: '/services/mattermost' },
-              { text: 'Mautic 5', link: '/services/mautic5' },
-              { text: 'Maybe', link: '/services/maybe' },
-              { text: 'Mealie', link: '/services/mealie' },
-              { text: 'MediaWiki', link: '/services/mediawiki' },
-              { text: 'MeiliSearch', link: '/services/meilisearch' },
-              { text: 'Metabase', link: '/services/metabase' },
-              { text: 'Metube', link: '/services/metube' },
-              { text: 'Minecraft', link: '/services/minecraft' },
-              { text: 'MindsDB', link: '/services/mindsdb' },
-              { text: 'MinIO', link: '/services/minio' },
-              { text: 'Mixpost', link: '/services/mixpost' },
-              { text: 'Moodle', link: '/services/moodle' },
-              { text: 'Mosquitto', link: '/services/mosquitto' },
-              { text: 'N8N', link: '/services/n8n' },
-              { text: 'Neon WS Proxy', link: '/services/neon-ws-proxy' },
-              { text: 'Next Image Transformation', link: '/services/next-image-transformation' },
-              { text: 'Nextcloud', link: '/services/nextcloud' },
-              { text: 'NocoDB', link: '/services/nocodb' },
-              { text: 'NodeBB', link: '/services/nodebb' },
-              { text: 'Ntfy', link: '/services/ntfy' },
-              { text: 'Odoo', link: '/services/odoo' },
-              { text: 'Ollama', link: '/services/ollama' },
-              { text: 'OneDev', link: '/services/onedev' },
-              { text: 'Open WebUI', link: '/services/open-webui' },
-              { text: 'Openblocks', link: '/services/openblocks' },
-              { text: 'Organizr', link: '/services/organizr' },
-              { text: 'osTicket', link: '/services/osticket' },
-              { text: 'Outline', link: '/services/outline' },
-              { text: 'Overseerr', link: '/services/overseerr' },
-              { text: 'ownCloud', link: '/services/owncloud' },
-              { text: 'Pairdrop', link: '/services/pairdrop' },
-              { text: 'Paperless', link: '/services/paperless' },
-              { text: 'Paymenter', link: '/services/paymenter' },
-              { text: 'Penpot', link: '/services/penpot' },
-              { text: 'phpMyAdmin', link: '/services/phpmyadmin' },
-              { text: 'Plane', link: '/services/plane' },
-              { text: 'Plausible Analytics', link: '/services/plausible' },
-              { text: 'Plex', link: '/services/plex' },
-              { text: 'Plunk', link: '/services/plunk' },
-              { text: 'Pocketbase', link: '/services/pocketbase' },
-              { text: 'Portainer', link: '/services/portainer' },
-              { text: 'PostHog', link: '/services/posthog' },
-              { text: 'Postiz', link: '/services/postiz' },
-              { text: 'Prefect', link: '/services/prefect' },
-              { text: 'PrivateBin', link: '/services/privatebin' },
-              { text: 'Prowlarr', link: '/services/prowlarr' },
-              { text: 'qBittorrent', link: '/services/qbittorrent' },
-              { text: 'Qdrant', link: '/services/qdrant' },
-              { text: 'RabbitMQ', link: '/services/rabbitmq' },
-              { text: 'Radarr', link: '/services/radarr' },
-              { text: 'Rallly', link: '/services/rallly' },
-              { text: 'Reactive Resume', link: '/services/reactive-resume' },
-              { text: 'Readeck', link: '/services/readeck' },
-              { text: 'Redlib', link: '/services/redlib' },
-              { text: 'Rocket.Chat', link: '/services/rocketchat' },
-              { text: 'SearXNG', link: '/services/searxng' },
-              { text: 'Shlink', link: '/services/shlink' },
-              { text: 'Slash', link: '/services/slash' },
-              { text: 'Snapdrop', link: '/services/snapdrop' },
-              { text: 'Soketi', link: '/services/soketi' },
-              { text: 'Sonarr', link: '/services/sonarr' },
-              { text: 'Sonatype Nexus', link: '/services/nexus' },
-              { text: 'StatusNook', link: '/services/statusnook' },
-              { text: 'Stirling PDF', link: '/services/stirling-pdf' },
-              { text: 'Strapi', link: '/services/strapi' },
-              { text: 'Supabase', link: '/services/supabase' },
-              { text: 'SuperTokens', link: '/services/supertokens' },
-              { text: 'Syncthing', link: '/services/syncthing' },
-              { text: 'Teable', link: '/services/teable' },
-              { text: 'Tolgee', link: '/services/tolgee' },
-              { text: 'Traccar', link: '/services/traccar' },
-              { text: 'Transmission', link: '/services/transmission' },
-              { text: 'Trigger', link: '/services/trigger' },
-              { text: 'Umami', link: '/services/umami' },
-              { text: 'Unleash', link: '/services/unleash' },
-              { text: 'Unsend', link: '/services/unsend' },
-              { text: 'Unstructured', link: '/services/unstructured' },
-              { text: 'Uptime Kuma', link: '/services/uptime-kuma' },
-              { text: 'Vaultwarden', link: '/services/vaultwarden' },
-              { text: 'Vikunja', link: '/services/vikunja' },
-              { text: 'VvvebJS', link: '/services/vvveb' },
-              { text: 'Wakapi', link: '/services/wakapi' },
-              { text: 'Weaviate', link: '/services/weaviate' },
-              { text: 'Web Check', link: '/services/web-check' },
-              { text: 'Weblate', link: '/services/weblate' },
-              { text: 'Whoogle', link: '/services/whoogle' },
-              { text: 'Wiki.js', link: '/services/wikijs' },
-              { text: 'Windmill', link: '/services/windmill' },
-              { text: 'WireGuard Easy', link: '/services/wireguard-easy' },
-              { text: 'WordPress', link: '/services/wordpress' },
-              { text: 'Zipline', link: '/services/zipline' }
             ]
           }
         ],
@@ -453,6 +321,15 @@ export default defineConfig({
                 ]
               },
               {
+                text: 'Destinations',
+                collapsed: true,
+                items: [
+                  { text: 'Overview', link: '/knowledge-base/destinations/index' },
+                  { text: 'Creating Destinations', link: '/knowledge-base/destinations/create' },
+                  { text: 'Managing Destinations', link: '/knowledge-base/destinations/manage' },
+                ]
+              },
+              {
                 text: 'Resources',
                 collapsed: true,
                 items: [
@@ -475,35 +352,6 @@ export default defineConfig({
                   { text: 'Raspberry Pi OS Setup', link: '/knowledge-base/how-to/raspberry-pi-os' },
                   { text: 'Private NPM Registry', link: '/knowledge-base/how-to/private-npm-registry' },
                   { text: 'Ollama with GPU', link: '/knowledge-base/how-to/ollama-with-gpu' },
-                ]
-              },
-              {
-                text: 'Git',
-                collapsed: true,
-                items: [
-                  {
-                    text: 'Github', collapsed: true, items: [
-                      { text: 'Manually Setup GitHub App', link: '/knowledge-base/git/github/manually-setup-github-app' },
-                      { text: 'Move Between GitHub Apps', link: '/knowledge-base/git/github/move-between-github-apps' },
-                      { text: 'Integrations', link: '/knowledge-base/git/github/integration' },
-                      { text: 'Github Actions', link: '/knowledge-base/git/github/github-actions' },
-                    ]
-                  },
-                  {
-                    text: 'Gitlab', collapsed: true, items: [
-                      { text: 'Integrations', link: '/knowledge-base/git/gitlab/integration' },
-                    ]
-                  },
-                  {
-                    text: 'Bitbucket', collapsed: true, items: [
-                      { text: 'Integrations', link: '/knowledge-base/git/bitbucket/integration' },
-                    ]
-                  },
-                  {
-                    text: 'Gitea', collapsed: true, items: [
-                      { text: 'Integrations', link: '/knowledge-base/git/gitea/integration' },
-                    ]
-                  },
                 ]
               },
               {
@@ -574,7 +422,6 @@ export default defineConfig({
                       { text: 'Custom SSL Certificates', link: '/knowledge-base/proxy/traefik/custom-ssl-certs' },
                       { text: 'Dashboard', link: '/knowledge-base/proxy/traefik/dashboard' },
                       { text: 'Dynamic Configurations', link: '/knowledge-base/proxy/traefik/dynamic-config' },
-                      { text: 'Healthcheck', link: '/knowledge-base/proxy/traefik/healthchecks' },
                       { text: 'Load Balancing', link: '/knowledge-base/proxy/traefik/load-balancing' },
                       { text: 'Redirects', link: '/knowledge-base/proxy/traefik/redirects' },
                       { text: 'Wildcard SSL Certificates', link: '/knowledge-base/proxy/traefik/wildcard-certs' },
@@ -591,6 +438,7 @@ export default defineConfig({
                   },
                 ]
               },
+              { text: 'FAQ', link: '/knowledge-base/faq' },
             ]
           }
         ],
@@ -620,6 +468,7 @@ export default defineConfig({
             text: 'Installation',
             collapsed: true,
             items: [
+              { text: 'Coolify Installation Failed', link: '/troubleshoot/installation/install-script-failed' },
               { text: 'Docker Installation Failed', link: '/troubleshoot/installation/docker-install-failed' },
             ]
           },
@@ -627,7 +476,9 @@ export default defineConfig({
             text: 'Applications',
             collapsed: true,
             items: [
-              { text: 'Bad Gateway', link: '/troubleshoot/applications/bad-gateway.md' },
+              { text: 'Bad Gateway (502)', link: '/troubleshoot/applications/bad-gateway.md' },
+              { text: 'No Available Server (503)', link: '/troubleshoot/applications/no-available-server' },
+              { text: 'Gateway Timeout (504)', link: '/troubleshoot/applications/gateway-timeout' },
               { text: 'Failed To Get Access Token During Deployment', link: '/troubleshoot/applications/failed-to-get-token' },
             ]
           },
@@ -664,6 +515,7 @@ export default defineConfig({
             items: [
               { text: 'Wildcard SSL not working', link: '/troubleshoot/dns-and-domains/wildcard-ssl-certs' },
               { text: "Let's Encrypt not working", link: '/troubleshoot/dns-and-domains/lets-encrypt-not-working' },
+              { text: "Cert Resolver doesn't exist", link: '/troubleshoot/dns-and-domains/certificate-resolver-doesnt-exist' },
             ]
           },
         ],
@@ -743,6 +595,11 @@ export default defineConfig({
       }),
     ],
     assetsInclude: ['**/*.yml'],
+    define: {
+      'import.meta.env.VITE_KORREKTLY_BASE_URL': JSON.stringify(env.KORREKTLY_BASE_URL || env.VITE_KORREKTLY_BASE_URL || ''),
+      'import.meta.env.VITE_KORREKTLY_API_TOKEN': JSON.stringify(env.KORREKTLY_API_TOKEN || env.VITE_KORREKTLY_API_TOKEN || ''),
+      'import.meta.env.VITE_KORREKTLY_DATASET_ID': JSON.stringify(env.KORREKTLY_DATASET_ID || env.VITE_KORREKTLY_DATASET_ID || ''),
+    },
     build: {
       chunkSizeWarningLimit: 5000
     },

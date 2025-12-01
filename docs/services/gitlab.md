@@ -1,8 +1,7 @@
 ---
 title: "GitLab"
-description: "Here you can find the documentation for hosting GitLab with Coolify."
+description: "Deploy GitLab on Coolify for complete DevOps platform with Git repos, CI/CD pipelines, issue tracking, and container registry integration."
 ---
-
 
 ![Gitlab](https://raw.githubusercontent.com/gitlabhq/gitlabhq/refs/heads/master/public/apple-touch-icon.png)
 
@@ -12,9 +11,9 @@ GitLab is a web-based DevOps lifecycle tool that provides a Git-repository manag
 
 ## Demo
 
-- [Demo ›](https://gitlab.com/)
+- [Demo](https://gitlab.com/)
 
 ## Links
 
-- [The official website ›](https://gitlab.com/)
-- [GitHub ›](https://github.com/gitlabhq/gitlabhq)
+- [The official website](https://about.gitlab.com)
+- [GitLab](https://gitlab.com/gitlab-org/gitlab)

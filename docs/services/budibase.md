@@ -1,11 +1,11 @@
 ---
 title: Budibase
-description: Here you can find the documentation for hosting Budibase with Coolify.
+description: "Build internal apps on Coolify with Budibase low-code platform featuring database integration, workflow automation, and custom business applications."
 ---
 
 # Budibase
 
-<ZoomableImage src="/docs/images/services/budibase.svg" />
+<ZoomableImage src="/docs/images/services/budibase-logo.svg" alt="Budibase dashboard" />
 
 ## What is Budibase
 

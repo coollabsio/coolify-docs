@@ -1,8 +1,7 @@
 ---
 title: "Snapdrop"
-description: "Here you can find the documentation for hosting Snapdrop with Coolify."
+description: "Transfer files on Coolify with Snapdrop for local network file sharing, AirDrop-style transfers, and instant peer-to-peer file exchange."
 ---
-
 
 # What is Snapdrop?
 
@@ -10,4 +9,4 @@ A self-hosted file-sharing service for secure and convenient file transfers, whe
 
 ## Links
 
-- [GitHub ›](https://github.com/RobinLinus/snapdrop)
+- [GitHub](https://github.com/RobinLinus/snapdrop)

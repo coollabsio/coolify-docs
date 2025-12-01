@@ -1,6 +1,6 @@
 ---
 title: "OAuth"
-description: "A guide on how to setutp OAuth login to Coolify"
+description: "Set up OAuth authentication with GitHub, GitLab, Google, Azure, or Bitbucket for secure single sign-on access to your Coolify instance."
 ---
 
 # OAuth

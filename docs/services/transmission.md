@@ -1,11 +1,11 @@
 ---
 title: Transmission
-description: Here you can find the documentation for hosting Transmission with Coolify.
+description: "Download torrents on Coolify with Transmission for lightweight BitTorrent client, web interface, encryption, and remote control."
 ---
 
 # Transmission
 
-<ZoomableImage src="/docs/images/services/transmission.png" />
+<ZoomableImage src="/docs/images/services/transmission.png" alt="Transmission dashboard" />
 
 ## What is Transmission
 

@@ -1,11 +1,11 @@
 ---
 title: Cloudbeaver
-description: Here you can find the documentation for hosting Cloudbeaver with Coolify.
+description: "Deploy CloudBeaver on Coolify for web-based database management supporting PostgreSQL, MySQL, MongoDB with SQL editor and data visualization."
 ---
 
 # Cloudbeaver
 
-<ZoomableImage src="/docs/images/services/cloudbeaver-logo.png" />
+<ZoomableImage src="/docs/images/services/cloudbeaver-logo.png" alt="Cloudbeaver Logo logo" />
 
 ## What is Cloudbeaver
 

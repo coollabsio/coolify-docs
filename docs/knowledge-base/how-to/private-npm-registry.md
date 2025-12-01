@@ -1,6 +1,6 @@
 ---
 title: "Private NPM Registry"
-description: "A guide to setup private NPM registry with Coolify."
+description: "Use private NPM registries with Coolify deployments by configuring .npmrc authentication tokens and build environment variables."
 ---
 
 # Private NPM Registry

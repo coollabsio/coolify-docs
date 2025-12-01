@@ -1,0 +1,78 @@
+name: Enforce PR Standards
+
+on:
+  pull_request_target:
+    types: [opened, reopened, edited]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  validate-pr:
+    runs-on: [self-hosted, arm64]
+    steps:
+      - name: Validate PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = pr.number;
+            const prUser = pr.user.login;
+            const currentBase = pr.base.ref;
+            const body = pr.body?.trim() || '';
+
+            // Step 1: Close PR if description is empty
+            if (body === '') {
+              console.log(`PR #${prNumber} has an empty description. Closing...`);
+
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: prNumber,
+                body: `Hi @${prUser},\n\nThis PR has been automatically closed because it has no description.\nPlease provide a valid description explaining your changes in a new PR.`
+              });
+
+              await github.rest.pulls.update({
+                owner,
+                repo,
+                pull_number: prNumber,
+                state: 'closed'
+              });
+
+              return;
+            }
+
+            // Step 2: Check if user is a member
+            let isMember = false;
+            try {
+              await github.rest.orgs.checkMembershipForUser({
+                org: owner,
+                username: prUser
+              });
+              isMember = true;
+            } catch (error) {
+              console.log(`User ${prUser} is not a member of the org.`);
+            }
+
+            // Step 3: Change base branch to `next` if needed
+            if (!isMember && currentBase !== 'next') {
+              console.log(`Changing base branch from ${currentBase} to next for PR #${prNumber}`);
+
+              await github.rest.pulls.update({
+                owner,
+                repo,
+                pull_number: prNumber,
+                base: 'next'
+              });
+
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: prNumber,
+                body: `Hi @${prUser},\n\nThe base branch of this PR has been automatically changed to \`next\`.\nAll contributors must commit changes to the \`next\` branch.\n\nA maintainer will review your PR within 5 to 7 business days. Thank you!`
+              });
+            }

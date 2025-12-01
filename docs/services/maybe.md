@@ -1,11 +1,11 @@
 ---
 title: Maybe
-description: Here you can find the documentation for hosting Maybe with Coolify.
+description: "Manage finances with Maybe on Coolify for net worth tracking, investment portfolio, financial planning, and personal wealth management insights."
 ---
 
 # Maybe
 
-<ZoomableImage src="/docs/images/services/maybe.svg" />
+<ZoomableImage src="/docs/images/services/maybe-logo.svg" alt="Maybe dashboard" />
 
 ## What is Maybe
 

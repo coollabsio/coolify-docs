@@ -1,11 +1,11 @@
 ---
 title: Redlib
-description: Here you can find the documentation for hosting Redlib with Coolify.
+description: "Browse Reddit on Coolify with Redlib alternative frontend for privacy-focused Reddit browsing without tracking or JavaScript requirements."
 ---
 
 # Redlib
 
-<ZoomableImage src="/docs/images/services/redlib.svg" />
+<ZoomableImage src="/docs/images/services/redlib-logo.svg" alt="Redlib dashboard" />
 
 ## What is Redlib
 

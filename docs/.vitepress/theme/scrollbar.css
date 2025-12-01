@@ -87,4 +87,44 @@
   }
 }
 
+/* Sidebar search specific styling */
+.VPSidebar .VPNavBarSearch {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.VPSidebar .VPNavBarSearch > * {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.VPSidebar .VPNavBarSearch #local-search {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.VPSidebar .VPNavBarSearch .DocSearch-Button {
+  width: 100% !important;
+  justify-content: space-between !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.VPSidebar .VPNavBarSearch .DocSearch-Button-Container {
+  flex: 1 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.VPSidebar .VPNavBarSearch .DocSearch-Button-Keys {
+  margin-left: auto !important;
+}
+
   

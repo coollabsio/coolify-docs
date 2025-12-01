@@ -1,6 +1,6 @@
 ---
 title: "Tolgee"
-description: "Here you can find the documentation for hosting Tolgee with Coolify."
+description: "Localize apps on Coolify with Tolgee for translation management, in-context editing, collaboration, and internationalization platform."
 ---
 
 # What is Tolgee?
@@ -13,5 +13,5 @@ Tolgee is an open-source translation management platform that allows you to mana
 
 ## Links
 
-- [Official Website ›](https://tolgee.io)
-- [GitHub ›](https://github.com/tolgee/tolgee-platform)
+- [Official Website](https://tolgee.io)
+- [GitHub](https://github.com/tolgee/tolgee-platform)

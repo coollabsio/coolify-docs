@@ -89,9 +89,6 @@ watchPostEffect(() => {
 }
 
 @media (min-width: 960px) {
-  .VPNavBar:not(.home) {
-    background-color: transparent;
-  }
 
   .VPNavBar:not(.has-sidebar):not(.home.top) {
     background-color: var(--vp-nav-bg-color);

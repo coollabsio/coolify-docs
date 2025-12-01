@@ -1,6 +1,6 @@
 ---
 title: "Langfuse"
-description: "Here you can find the documentation for hosting Langfuse with Coolify."
+description: "Host Langfuse LLM observability on Coolify for prompt management, tracing, debugging, and analytics for LangChain and OpenAI applications."
 ---
 
 # What is Langfuse?

@@ -1,6 +1,6 @@
 ---
 title: "Docker Swarm"
-description: "A guide on how to use Docker Swarm with Coolify."
+description: "Deploy Coolify resources across Docker Swarm clusters with external registry requirements, manager and worker setup, and persistent storage configuration."
 ---
 
 # Docker Swarm

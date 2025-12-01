@@ -1,5 +1,6 @@
 ---
 title: Laravel
+description: Deploy Laravel PHP applications on Coolify with Nixpacks, queue workers, scheduler, supervisor, database, and Redis integration.
 ---
 
 # Laravel
@@ -269,6 +270,28 @@ stdout_logfile=/var/log/worker-inertia-ssr.log
 '''
 ```
 
+> [!NOTE]
+> By default, Nixpacks runs the command `npm run build` to build your application during the deployment. Ensure that your `build` script in `package.json` contains the necessary build commands for server-side rendering. If you use one of the official starter kits including Inertia.js, change your scripts like this:
+> ```diff
+> "scripts": {
+>-     "build": "vite build",
+>+     "build": "vite build && vite build --ssr",
+>     "build:ssr": "vite build && vite build --ssr",
+> }
+> ```
+> Alternatively, if you don't want to adapt your default `build` script in `package.json`, you can add the correct build command for server-side rendering directly in your `nixpacks.toml` configuration file.
+>```diff
+>[phases.build]
+>cmds = [
+>+    "npm run build:ssr",
+>    "mkdir -p /etc/supervisor/conf.d/",
+>    "cp /assets/worker-*.conf /etc/supervisor/conf.d/",
+>    "cp /assets/supervisord.conf /etc/supervisord.conf",
+>    "chmod +x /assets/start.sh",
+>    "..."
+> ]
+>```
+
 ### Persistent php.ini customizations
 
 If you want to customize settings from your php.ini file, you can easily do so by using the `php_admin_value` directive and appending them to your `php-fpm.conf` file like this:
@@ -301,7 +324,7 @@ php_admin_value[post_max_size] = 256M
 
 1. Create a new resource from a private or public repository.
 2. Set the `Ports Exposes` field to `8000`, for example.
-3. Set default environnement variables using `Developer view` in `Environment Variables`:
+3. Set default environment variables using `Developer view` in `Environment Variables`:
 
 ```sh
 APP_DEBUG=false
@@ -399,7 +422,7 @@ CMD ["unitd", "--no-daemon"]
 }
 ```
 > [!NOTE]
-> When using docker-compose for deployment, then there might be an issue with `Mixed content error` when some of the assets are requested via `http://` instead of `https://`. To avoid that, find your load blaancer/proxy subnet or IP address and add it to the unit.config to explicitly tell unit to forward the correct headers to Laravel. Laravel also has to be configured trust proxies. More on that [here](https://laravel.com/docs/12.x/requests#configuring-trusted-proxies).
+> When using docker-compose for deployment, then there might be an issue with `Mixed content error` when some of the assets are requested via `http://` instead of `https://`. To avoid that, find your load balancer/proxy subnet or IP address and add it to the unit.config to explicitly tell unit to forward the correct headers to Laravel. Laravel also has to be configured trust proxies. More on that [here](https://laravel.com/docs/12.x/requests#configuring-trusted-proxies).
 > ```json
 > "listeners": {
 >        "*:8000": {

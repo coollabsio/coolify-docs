@@ -1,11 +1,11 @@
 ---
 title: Rallly
-description: Here you can find the documentation for hosting Rallly with Coolify.
+description: "Schedule meetings on Coolify with Rallly for group polls, availability voting, and collaborative event planning without accounts required."
 ---
 
 # Rallly
 
-<ZoomableImage src="/docs/images/services/rallly.svg" />
+<ZoomableImage src="/docs/images/services/rallly-logo.svg" alt="Rallly dashboard" />
 
 ## What is Rallly
 

@@ -1,5 +1,6 @@
 ---
 title: Delete User
+description: "Safely delete users from Coolify with automatic team ownership transfer, resource cleanup, and team member reassignment procedures."
 ---
 
 # Delete User

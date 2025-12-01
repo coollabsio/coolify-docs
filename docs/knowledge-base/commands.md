@@ -1,5 +1,6 @@
 ---
 title: Commands
+description: "Essential Coolify CLI commands for root password reset, email changes, and deleting stuck services via Docker exec and Artisan commands."
 ---
 
 # Commands

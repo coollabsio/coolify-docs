@@ -1,5 +1,6 @@
 ---
 title: Overview
+description: "Comprehensive Coolify knowledge base covering deployment guides, server setup, Git integration, proxy configuration, and troubleshooting resources."
 ---
 
 # Overview

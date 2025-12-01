@@ -1,6 +1,6 @@
 ---
 title: "Ollama with GPU"
-description: "A guide to setup Ollama with GPU with Coolify."
+description: "Self-host Ollama LLM with NVIDIA GPU acceleration on Coolify including hardware requirements, Docker configuration, and model management setup."
 ---
 
 # Ollama with GPU

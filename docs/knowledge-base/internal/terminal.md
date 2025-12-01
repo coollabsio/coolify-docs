@@ -1,5 +1,6 @@
 ---
 title: "Terminal"
+description: "Access Coolify resources through built-in web terminal with xterm.js, secure SSH connections, and Websocket communication for all containers and servers."
 ---
 
 # Terminal

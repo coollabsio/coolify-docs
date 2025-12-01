@@ -1,6 +1,6 @@
 ---
 title: Portainer
-description: Here you can find the documentation for hosting Portainer with Coolify.
+description: "Manage Docker on Coolify with Portainer for container management, stack deployment, registry access, and web-based Docker administration."
 ---
 
 # Portainer

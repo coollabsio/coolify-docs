@@ -1,6 +1,6 @@
 ---
 title: "Wildcard SSL Certificates"
-description: "A guide to configure wildcard subdomain redirects (with Traefik wildcard certificates) in Coolify."
+description: "Configure Let's Encrypt wildcard SSL certificates with Traefik DNS challenge using Cloudflare, Hetzner, or other providers for automatic subdomain coverage."
 ---
 
 # Setup Wildcard SSL Certificates with Traefik

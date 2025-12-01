@@ -1,5 +1,5 @@
 <template>
-    <div class="relative flex flex-col gap-4 max-w-lg">
+    <div class="relative flex flex-col gap-4 max-w-lg mx-auto">
         <div class="flex flex-row gap-2 z-10">
             <h3 class="text-2xl font-bold tracking-wide">{{ referralTitle }}</h3>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 181.42 22.24" class="w-auto size-3 my-auto mr-0 ml-auto">
@@ -24,7 +24,7 @@
         <p class="text-sm font-bold z-10">
             {{ referralText }}
         </p>
-        <div class="relative rounded-lg border border-gray-200 dark:border-[#202127] overflow-hidden max-w-full z-10">
+        <div class="relative rounded-lg border border-gray-200 dark:border-[#202127] overflow-hidden w-full z-10">
             <div class="flex items-center justify-between px-3 py-1.5 bg-gray-100 dark:bg-[#202127]">
                 <div class="flex items-center gap-1.5">
                     <!-- TODO: Replace w a Icon module source=https://icones.js.org/collection/all?s=command-line&icon=heroicons:command-line -->
@@ -99,11 +99,6 @@
                 {{ !isCopied ? '' : 'Copied to clipboard!' }}
             </span>
         </p>
-        <ClientOnly>
-            <div class="transition duration-1000 ease-in-out absolute top-24 left-0 w-full h-full flex justify-center items-center blur-xl dark:blur-none">
-                <Globe />
-            </div>
-        </ClientOnly>
 
     </div>
 </template>
@@ -148,5 +143,30 @@ a code:hover {
     background-color: var(--vp-c-brand-1) !important;
     color: white !important;
     -webkit-text-fill-color: white !important;
+}
+
+/* Responsive adjustments for the referral component */
+@media (min-width: 640px) {
+    .relative.flex.flex-col.gap-4.max-w-lg.mx-auto {
+        max-width: 32rem; /* 512px */
+    }
+}
+
+@media (min-width: 768px) {
+    .relative.flex.flex-col.gap-4.max-w-lg.mx-auto {
+        max-width: 36rem; /* 576px */
+    }
+}
+
+@media (min-width: 1024px) {
+    .relative.flex.flex-col.gap-4.max-w-lg.mx-auto {
+        max-width: 40rem; /* 640px */
+    }
+}
+
+@media (min-width: 1280px) {
+    .relative.flex.flex-col.gap-4.max-w-lg.mx-auto {
+        max-width: 44rem; /* 704px */
+    }
 }
 </style>

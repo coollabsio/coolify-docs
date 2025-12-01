@@ -1,6 +1,6 @@
 ---
 title: "Logto"
-description: "Here you can find the documentation for hosting Logto with Coolify."
+description: "Deploy Logto Auth0 alternative on Coolify with OIDC authentication, passwordless sign-in, RBAC, multi-tenancy, and customer identity management."
 ---
 
 ![Logto](https://github.com/logto-io/logto/raw/master/logo.png)
@@ -32,5 +32,5 @@ In a more approachable way, we refer to this solution as "[Customer Identity Acc
 
 ## Links
 
-- [The official website ›](https://logto.io)
-- [GitHub ›](https://github.com/logto-io/logto)
+- [The official website](https://logto.io)
+- [GitHub](https://github.com/logto-io/logto)

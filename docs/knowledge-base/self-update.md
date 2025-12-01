@@ -1,5 +1,6 @@
 ---
 title: "Coolify Instance Updates - Self-hosted"
+description: "Configure automatic Coolify updates with custom cron schedules, manual update options, and service template synchronization for self-hosted instances."
 ---
 
 # Coolify Instance Updates - Self-hosted

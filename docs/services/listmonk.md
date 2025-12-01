@@ -1,8 +1,7 @@
 ---
 title: "Listmonk"
-description: "Here you can find the documentation for hosting Listmonk with Coolify."
+description: "Run Listmonk newsletter on Coolify for email campaigns, subscriber management, templates, analytics, and high-performance mailing lists."
 ---
-
 
 ![Listmonk](https://user-images.githubusercontent.com/547147/231084896-835dba66-2dfe-497c-ba0f-787564c0819e.png)
 
@@ -16,5 +15,5 @@ Self-hosted newsletter and mailing list manager.
 
 ## Links
 
-- [The official website ›](https://listmonk.app/)
-- [GitHub ›](https://github.com/knadh/listmonk)
+- [The official website](https://listmonk.app/)
+- [GitHub](https://github.com/knadh/listmonk)

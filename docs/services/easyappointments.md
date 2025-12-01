@@ -1,11 +1,11 @@
 ---
 title: Easyappointments
-description: Here you can find the documentation for hosting Easyappointments with Coolify.
+description: "Run Easy!Appointments on Coolify for online booking system with calendar sync, customer management, SMS notifications, and service scheduling."
 ---
 
 # Easyappointments
 
-<ZoomableImage src="/docs/images/services/easyappointments.png" />
+<ZoomableImage src="/docs/images/services/easyappointments-logo.png" alt="Easyappointments dashboard" />
 
 ## What is Easyappointments
 

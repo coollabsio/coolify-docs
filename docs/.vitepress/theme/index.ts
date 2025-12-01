@@ -10,14 +10,11 @@ import DefaultTheme from "vitepress/theme";
 
 // Import styles
 import "./style.css";
-// import "./style-dark-default.css";
-// Custom Scrollbars on Windows
-import "./scrollbar.css";
-// Custom Style override
-// import "./custom.css";
+import "./custom.css";
 import "./tailwind.postcss";
 import "vitepress-openapi/dist/style.css";
 import 'virtual:group-icons.css'
+
 
 // Import plugins
 import { enhanceAppWithTabs } from "vitepress-plugin-tabs/client";
@@ -27,6 +24,7 @@ import Card from "./components/Card.vue";
 import CardGroup from "./components/CardGroup.vue";
 import Landing from "./layouts/Landing.vue";
 import Sections from "./components/Landing/Sections.vue";
+import ServicesList from "./components/Services/List.vue";
 import Features from "./components/Landing/Features.vue";
 import Installer from "./components/Landing/Installer.vue";
 import Referral from "./components/Landing/Referral.vue";
@@ -35,6 +33,11 @@ import TabBlock from "./components/TabBlock.vue";
 import ZoomableImage from "./components/ZoomableImage.vue";
 import Globe from "./components/Landing/Globe.vue";
 import Browser from "./components/Landing/Browser.vue";
+import KorrektlySearch from "./components/KorrektlySearch.vue";
+
+// Import Vdoc overrides
+import VPDoc from "./components/VPDoc.vue";
+import VPDocAside from "./components/VPDocAside.vue";
 import { DirectiveBinding } from "vue";
 
 export default {
@@ -46,9 +49,9 @@ export default {
     // Dynamically fetch the OpenAPI spec
     try {
       // Use GitHub's raw content API to avoid CORS issues
-      const response = await fetch("https://raw.githubusercontent.com/coollabsio/coolify/v4.x/openapi.json");
+      const response = await fetch("https://raw.githubusercontent.com/coollabsio/coolify/v4.x/openapi.json", { cache: "no-store" });
       const spec = await response.json();
-      
+
       useOpenapi({
         spec,
       });
@@ -70,6 +73,7 @@ export default {
     app.component("CardGroup", CardGroup);
     app.component("LandingSection", Sections);
     app.component("LandingFeatures", Features);
+    app.component("ServicesList", ServicesList);
     app.component("Referral", Referral);
     app.component("Quickstart", Installer);
     app.component("Callout", Callout);
@@ -77,6 +81,11 @@ export default {
     app.component("ZoomableImage", ZoomableImage);
     app.component("Globe", Globe);
     app.component("Browser", Browser);
+    app.component("KorrektlySearch", KorrektlySearch);
+
+    // Register Vdoc overrides
+    app.component("VPDoc", VPDoc);
+    app.component("VPDocAside", VPDocAside);
 
     router.onAfterRouteChange = () => {
       if (typeof window !== "undefined" && (window as any).plausible) {

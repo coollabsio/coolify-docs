@@ -1,5 +1,6 @@
 ---
 title: Symfony
+description: Deploy Symfony PHP applications on Coolify with Nixpacks, Doctrine migrations, database connections, and trusted proxy configuration.
 ---
 
 # Symfony

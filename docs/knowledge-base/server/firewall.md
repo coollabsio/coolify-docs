@@ -1,6 +1,6 @@
 ---
 title: "Firewall"
-description: "Learn which network ports need to be open for Coolify to work properly in self-hosted or cloud environments, including firewall setup tips and GitHub integration requirements."
+description: "Configure firewall ports for Coolify including SSH, HTTP/HTTPS, dashboard access, and terminal with ufw-docker setup for self-hosted and cloud instances."
 ---
 
 # Firewall
@@ -22,7 +22,7 @@ To ensure proper functionality when self-hosting Coolify, the following ports sh
 These ports are required if you're accessing Coolify directly using your server’s IP address (e.g., `http://<SERVER_IP>:8000`).
 
 ::: success Tip
-If you're using a custom domain with Coolify’s integrated reverse proxy (Traefik or Caddy), you can safely close ports **8000**, **6001**, and **6002** after accesing the dashboard from your custom domain.
+If you're using a custom domain with Coolify’s integrated reverse proxy (Traefik or Caddy), you can safely close ports **8000**, **6001**, and **6002** after accessing the dashboard from your custom domain.
 :::
 
 ::: warning Caution
@@ -59,27 +59,8 @@ If your provider does not offer firewall functionality, you can use one of the f
 :::
 
 
-#### Option 1: Use `ufw-docker`
+#### Use `ufw-docker`
 [ufw-docker](https://github.com/chaifeng/ufw-docker) is a community-maintained tool that helps bridge UFW and Docker by allowing you to block specific ports effectively. Refer to the [GitHub repository](https://github.com/chaifeng/ufw-docker) for complete setup instructions
-
-#### Option 2: Prevent Coolify From Listening on External Ports
-You can stop Coolify from exposing ports by editing the `docker-compose.custom.yml` file:
-
-```yaml
-services:
-  coolify: # disables external access to port 8000
-    ports: !reset []
-  soketi:  # disables external access to ports 6001 and 6002
-    ports: !reset []
-```
-
-After making these changes, re-run the [Coolify install script](https://coolify.io/docs/get-started/installation) to apply the updated configuration.
-
-You can verify that the ports are closed using `nmap` from your local machine:
-
-```bash
-nmap -Pn -p 8000,6001,6002 <SERVER_IP>
-```
 
 ---
 

@@ -1,5 +1,6 @@
 ---
 title: Phoenix
+description: Deploy Phoenix framework applications on Coolify with Elixir/Erlang, Nixpacks, environment variables, and database integration.
 ---
 
 # Phoenix

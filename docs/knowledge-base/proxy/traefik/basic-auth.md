@@ -1,5 +1,6 @@
 ---
 title: "Basic Auth Middleware"
+description: "Protect Coolify applications and services with Traefik basic authentication middleware using htpasswd credentials for standard and Docker Compose deployments."
 ---
 
 # Basic Auth Middleware

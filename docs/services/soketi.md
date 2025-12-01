@@ -1,11 +1,11 @@
 ---
 title: Soketi
-description: Here you can find the documentation for hosting Soketi with Coolify.
+description: "Deploy Soketi WebSocket server on Coolify for real-time messaging, Pusher-compatible protocol, and scalable WebSocket broadcasting."
 ---
 
 # Soketi
 
-<ZoomableImage src="/docs/images/services/soketi.jpeg" />
+<ZoomableImage src="/docs/images/services/soketi-logo.jpeg" alt="Soketi dashboard" />
 
 ## What is Soketi
 

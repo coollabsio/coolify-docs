@@ -1,5 +1,6 @@
 ---
 title: Disable 2FA Manually
+description: Manually disable two-factor authentication in Coolify using SSH, Docker exec, and Laravel Tinker commands when you've lost your 2FA device or codes.
 ---
 
 # Disable 2FA Manually

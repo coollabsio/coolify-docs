@@ -1,5 +1,6 @@
 ---
 title: ActivePieces
+description: "Deploy ActivePieces workflow automation platform on Coolify with TypeScript-based extensible automation, visual builder, and 100+ integrations."
 # tabs:
 #   - title: Overview & Requirements
 #     content:
@@ -42,7 +43,7 @@ title: ActivePieces
 #     content:
 #       items:
 #         - code: Official Website
-#           description: https://www.activepieces.com?utm_source=coolify.io
+#           description: "Deploy ActivePieces workflow automation platform on Coolify with TypeScript-based extensible automation, visual builder, and 100+ integrations."
 #         - code: Official Documentation
 #           description: https://www.activepieces.com/docs?utm_source=coolify.io
 #         - code: GitHub Repository
@@ -124,7 +125,7 @@ import { useData } from 'vitepress'
 const { frontmatter } = useData()
 </script> -->
 
-<ZoomableImage src="/docs/images/services/activepieces0.webp" />
+<ZoomableImage src="/docs/images/services/activepieces0.webp" alt="Activepieces dashboard" />
 
 ## What is ActivePieces
 
@@ -132,11 +133,11 @@ Your friendliest open source all-in-one automation tool, designed to be extensib
 
 ## Visual Demos
 
-<ZoomableImage src="/docs/images/services/activepieces1.gif" />
+<ZoomableImage src="/docs/images/services/activepieces1.gif" alt="Activepieces dashboard" />
 
 <br />
 
-<ZoomableImage src="/docs/images/services/activepieces2.gif" />
+<ZoomableImage src="/docs/images/services/activepieces2.gif" alt="Activepieces dashboard" />
 
 <!-- ## Installation & Configuration
 

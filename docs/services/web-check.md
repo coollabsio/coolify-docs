@@ -1,11 +1,11 @@
 ---
 title: Web Check
-description: Here you can find the documentation for hosting Web Check with Coolify.
+description: "Analyze websites on Coolify with Web-Check for SSL, DNS, headers, security, performance audits, and comprehensive site investigation."
 ---
 
 # Web Check
 
-<ZoomableImage src="/docs/images/services/web-check.png" />
+<ZoomableImage src="/docs/images/services/webcheck-logo.png" alt="Web Check dashboard" />
 
 ## What is Web Check
 

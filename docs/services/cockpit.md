@@ -1,11 +1,11 @@
 ---
 title: Cockpit
-description: Here you can find the documentation for hosting Cockpit with Coolify.
+description: "Host Cockpit CMS on Coolify for headless content management with flexible data structures, REST API, GraphQL, and developer-friendly workflows."
 ---
 
 # Cockpit
 
-<ZoomableImage src="/docs/images/services/cockpit.jpg" />
+<ZoomableImage src="/docs/images/services/cockpit.jpg" alt="Cockpit dashboard" />
 
 ## What is Cockpit
 

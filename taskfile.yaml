@@ -1,0 +1,128 @@
+# To use this file:
+# 1. Install Task → https://taskfile.dev/docs/installation
+# 2. Run `task --list` to see all available tasks
+# 3. Run any task with: `task <name>` (example: `task dev`)
+
+version: '3'
+
+tasks:
+  # 🚀 Start the dev server with Bun + VitePress
+  # - Installs dependencies
+  # - Runs the server on port 2222 on all network interfaces
+  # - Automatically opens the docs in the default browser
+  # - Stops cleanly on Ctrl+C
+  dev:
+    desc: "Install dependencies and run dev server on port 2222 on all network interfaces"
+    interactive: true # keep terminal attached (Ctrl+C works)
+    silent: true      # hide task overhead, only show script output
+    cmds:
+      - bun install
+      - |
+        bash -c "
+          set -e
+          # Trap Ctrl+C so the dev server shuts down gracefully
+          trap 'echo; echo Shutting down dev...; jobs -p | xargs -r kill 2>/dev/null || true; exit 0' SIGINT
+          
+          # Run the server in the background
+          bun run dev --port 2222 --host 0.0.0.0 &
+
+          # Give server a moment to start
+          sleep 1
+          # Open docs in browser automatically
+          task _open-browser -- 2222
+
+          # Wait until the server stops
+          wait
+        "
+
+  # 📦 Commit changes locally with message + optional description
+  commit:
+    desc: "Commit changes locally with message and optional description"
+    deps: [ _commit ]
+    silent: true
+
+  # 📤 Commit changes + push to remote in one go
+  push:
+    desc: "Commit changes and push to remote"
+    deps: [ _commit ]
+    silent: true
+    shell: bash
+    cmds:
+      - cmd: |
+          set -e
+          git push || { echo "Error: Push failed."; exit 1; }
+          echo "Pushed!"
+
+
+  # 🐳 Build a Docker image for the docs
+  docker-build:
+    desc: "Build Docker image for docs"
+    silent: true
+    cmds:
+      - docker build -t coolify-docs-dev .
+
+  # 🐳 Run the docs in Docker on port 80
+  # - Builds the image first (depends on docker-build)
+  # - Runs container in foreground (logs visible)
+  # - Opens browser at http://localhost/docs/
+  # - Stops cleanly when Ctrl+C is pressed
+  docker-deploy:
+    desc: "Build and run Docker container with docs on port 80"
+    interactive: true
+    silent: true
+    deps: [ docker-build ]
+    cmds:
+      - |
+        bash -c "
+          set -e
+          # Start container in background
+          docker run --rm -p 80:80 coolify-docs-dev &
+
+          CONTAINER_PID=$!
+
+          # Wait briefly, then open browser
+          sleep 1
+          task _open-browser -- 80
+
+          # Keep container logs attached until Ctrl+C
+          wait $CONTAINER_PID
+        "
+
+
+  # 🔒 Internal task for handling git commit logic
+  _commit:
+    silent: true
+    interactive: true
+    internal: true
+    shell: bash
+    cmds:
+      - cmd: |
+          set -e
+          read -p "Enter commit message: " commit_message
+          [ -z "$commit_message" ] && { echo "Error: Commit message is empty. Aborted."; exit 1; }
+          read -p "Enter description (optional): " description
+          git add . || { echo "Error: git add failed."; exit 1; }
+          if [ -n "$description" ]; then
+            git commit -m "$commit_message" -m "$description"
+          else
+            git commit -m "$commit_message"
+          fi
+          echo "Committed $(git rev-parse --short HEAD)"
+          
+  # 🌐 Internal helper to open the docs in the browser automatically
+  # Supports macOS (open), Linux (xdg-open), and Windows (start)
+  _open-browser:
+    silent: true
+    cmds:
+      - |
+        bash -c '
+          PORT="$1"
+          URL="http://localhost:${PORT}/docs/get-started/introduction"
+          if command -v open >/dev/null 2>&1; then
+            open "$URL"
+          elif command -v xdg-open >/dev/null 2>&1; then
+            xdg-open "$URL"
+          elif command -v start >/dev/null 2>&1; then
+            start "$URL"
+          fi
+        ' sh {{.CLI_ARGS}}

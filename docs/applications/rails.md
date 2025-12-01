@@ -1,5 +1,6 @@
 ---
 title: Ruby on Rails
+description: Deploy Ruby on Rails applications on Coolify with database migrations, MVC pattern support, and automated deployment workflows.
 ---
 
 # Ruby on Rails

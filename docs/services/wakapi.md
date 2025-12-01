@@ -1,11 +1,11 @@
 ---
 title: Wakapi
-description: Here you can find the documentation for hosting Wakapi with Coolify.
+description: "Track coding time on Coolify with Wakapi for WakaTime-compatible time tracking, statistics, and developer productivity analytics."
 ---
 
 # Wakapi
 
-<ZoomableImage src="/docs/images/services/wakapi.svg" />
+<ZoomableImage src="/docs/images/services/wakapi-logo.svg" alt="Wakapi dashboard" />
 
 ## What is Wakapi
 

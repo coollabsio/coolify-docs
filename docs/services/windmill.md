@@ -1,6 +1,6 @@
 ---
 title: "Windmill"
-description: "Here you can find the documentation for hosting Windmill with Coolify."
+description: "Build workflows on Coolify with Windmill for scripts, flows, UIs, and developer-centric workflow automation with TypeScript/Python."
 ---
 
 ![Windmill](https://raw.githubusercontent.com/windmill-labs/windmill/main/imgs/windmill-banner.png)
@@ -19,5 +19,5 @@ Windmill is an open-source developer platform to power your entire infra and tur
 
 ## Links
 
-- [Official Website ›](https://windmill.dev)
-- [GitHub ›](https://github.com/windmill-labs/windmill)
+- [Official Website](https://windmill.dev)
+- [GitHub](https://github.com/windmill-labs/windmill)

@@ -1,11 +1,11 @@
 ---
 title: Cryptgeon
-description: Here you can find the documentation for hosting Cryptgeon with Coolify.
+description: "Share secrets securely on Coolify with Cryptgeon featuring self-destructing messages, end-to-end encryption, and no server-side storage."
 ---
 
 # Cryptgeon
 
-<ZoomableImage src="/docs/images/services/cryptgeon.png" />
+<ZoomableImage src="/docs/images/services/cryptgeon-logo.png" alt="Cryptgeon dashboard" />
 
 ## What is Cryptgeon
 

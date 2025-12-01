@@ -1,5 +1,6 @@
 ---
 title: Django
+description: Deploy Django applications on Coolify with gunicorn, automatic builds, environment variables, and Python package management.
 ---
 
 # Django

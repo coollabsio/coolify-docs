@@ -1,11 +1,11 @@
 ---
 title: Faraday
-description: Here you can find the documentation for hosting Faraday with Coolify.
+description: "Host Faraday security platform on Coolify for penetration testing management, vulnerability tracking, and collaborative security assessment workflows."
 ---
 
 # Faraday
 
-<ZoomableImage src="/docs/images/services/faraday.png" />
+<ZoomableImage src="/docs/images/services/faraday.png" alt="Faraday dashboard" />
 
 ## What is Faraday
 

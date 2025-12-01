@@ -13,7 +13,7 @@ const { theme } = useData()
     <slot name="aside-outline-before" />
     <VPDocAsideOutline />
     <slot name="aside-outline-after" />
-    <VPNavBarSocialLinks class="mt-4 ml-0 mr-auto" />
+    <!-- <VPNavBarSocialLinks class="mt-4 ml-0 mr-auto" /> -->
     <div class="spacer" />
     <slot name="aside-ads-before" />
     <VPDocAsideCarbonAds v-if="theme.carbonAds" :carbon-ads="theme.carbonAds" />

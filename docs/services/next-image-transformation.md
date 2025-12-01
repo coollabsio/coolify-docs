@@ -1,6 +1,6 @@
 ---
 title: Next Image Transformation
-description: Here you can find the documentation for hosting Next Image Transformation with Coolify.
+description: "Host Next.js image optimizer on Coolify for dynamic image resizing, format conversion, CDN caching, and web performance optimization."
 ---
 
 # Next Image Transformation

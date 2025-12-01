@@ -1,11 +1,11 @@
 ---
 title: Martin
-description: Here you can find the documentation for hosting Martin with Coolify.
+description: "Host Martin tile server on Coolify for serving PostGIS vector tiles, MBTiles, PMTiles with high performance for web mapping applications."
 ---
 
 # Martin
 
-<ZoomableImage src="/docs/images/services/martin.png" />
+<ZoomableImage src="/docs/images/services/martin.png" alt="Martin dashboard" />
 
 ## What is Martin
 
