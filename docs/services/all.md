@@ -297,6 +297,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [Cloudflared](/services/cloudflared) - Cloudflare Tunnel client
 - [NetBird Client](/services/netbird-client) - Connect your devices into a secure WireGuard-based mesh network
+- [Newt Pangolin](/services/newt-pangolin) - User space WireGuard tunnel client and TCP/UDP proxy for securely exposing private resources
 
 ## Notifications
 

@@ -1927,6 +1927,13 @@ const services = [
         category: 'Networking'
     },
     {
+        name: 'Newt Pangolin',
+        slug: 'newt-pangolin',
+        icon: '/public/images/services/pangolin_newt.svg',
+        description: 'User space WireGuard tunnel client and TCP/UDP proxy for securely exposing private resources.',
+        category: 'Networking'
+    },
+    {
         name: 'Observium',
         slug: 'observium',
         icon: '/docs/images/services/observium-logo.webp',
