@@ -22,7 +22,7 @@ To ensure proper functionality when self-hosting Coolify, the following ports sh
 These ports are required if you're accessing Coolify directly using your server’s IP address (e.g., `http://<SERVER_IP>:8000`).
 
 ::: success Tip
-If you're using a custom domain with Coolify’s integrated reverse proxy (Traefik or Caddy), you can safely close ports **8000**, **6001**, and **6002** after accesing the dashboard from your custom domain.
+If you're using a custom domain with Coolify’s integrated reverse proxy (Traefik or Caddy), you can safely close ports **8000**, **6001**, and **6002** after accessing the dashboard from your custom domain.
 :::
 
 ::: warning Caution
