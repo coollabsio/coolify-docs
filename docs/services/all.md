@@ -157,6 +157,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Nitropage](/services/nitropage) - Nitropage is an extensible, drag-and-drop website builder based on SolidStart, completely free and open source
 - [OneDev](/services/onedev) - Self-hosted Git server with integrated CI/CD and kanban
 - [Openblocks](/services/openblocks) - Open-source low code platform
+- [OpnForm](/services/opnform) - Open-source form builder for creating beautiful forms without coding
 - [phpMyAdmin](/services/phpmyadmin) - MySQL database management tool
 - [Pocketbase](/services/pocketbase) - Open Source backend for your next SaaS and Mobile app
 - [Portainer](/services/portainer) - Container management platform

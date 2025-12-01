@@ -5,7 +5,7 @@ description: "Build beautiful forms and share them anywhere with OpnForm, an ope
 
 # OpnForm
 
-<ZoomableImage src="/docs/images/services/opnform.svg" alt="OpnForm dashboard" />
+![OpnForm](/public/images/services/opnform.svg)
 
 ## What is OpnForm?
 
