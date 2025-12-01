@@ -234,6 +234,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [FoundryVTT](/services/foundryvtt) - Virtual tabletop for tabletop role-playing games
 - [Minecraft](/services/minecraft) - Minecraft game server
+- [Palworld](/services/palworld) - Dedicated server for the survival-crafting and monster-taming game with full control over game settings
 - [Pterodactyl](/services/pterodactyl) - Game server management panel with Wings daemon for hosting Minecraft, CS:GO, ARK and more
 
 ## Health

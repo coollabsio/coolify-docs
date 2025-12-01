@@ -7,7 +7,7 @@ tags: ["game", "palworld", "server", "multiplayer", "dedicated"]
 
 # Palworld Server
 
-<ZoomableImage src="/docs/public/images/services/palworld.svg" alt="Palworld Server" />
+![Palworld Server](/public/images/services/palworld.svg)
 
 ## What is Palworld Server?
 
