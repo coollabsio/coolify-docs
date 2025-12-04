@@ -10,8 +10,8 @@ The **Terminal Access** feature allows you to enable or disable terminal access 
 ## How to Use Terminal Access
 1. Go to the **Servers** section in the sidebar.
 2. Select your server.
-3. Go to the **Configuration** tab.
-4. Open the **Advanced** section.
+3. Go to the **Security** tab.
+4. Open the **Terminal Access** section.
 5. Use the toggle button to enable or disable terminal access for the server.
 
 <ZoomableImage src="/docs/images/knowledge-base/servers/terminal-access/1.webp" alt="Screenshot of Terminal Access" />
