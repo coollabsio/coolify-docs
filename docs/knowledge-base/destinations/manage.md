@@ -77,6 +77,18 @@ If you want to connect a service stack to a destination, enable [Connect to Pred
 Avoid defining network configurations directly in your service stack's `docker-compose.y[a]ml` and instead use Coolify's Destination settings to manage network connections. This could otherwise lead to undesired behavior, such as [Gateway Timeout](/troubleshoot/applications/gateway-timeout) errors.
 :::
 
+
+### Testing Connections
+
+You can go to the service you want to connect to and get the name from it: 
+<img width="1796" height="788" alt="CleanShot 2025-12-05 at 19 37 10@2x" src="https://github.com/user-attachments/assets/5eb56aa8-780e-4d71-8772-ce836cd1956e" />
+
+Then you can use that name to ping it from the other service (if ping is available)
+
+<img width="1710" height="1260" alt="CleanShot 2025-12-05 at 19 38 49@2x" src="https://github.com/user-attachments/assets/8dfa5018-8414-459f-bf6f-21380cbbf54c" />
+
+
+
 ## Best Practices
 
 1. **Naming Convention**: Use descriptive names for destinations
