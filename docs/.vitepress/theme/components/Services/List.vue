@@ -1745,10 +1745,10 @@ const services = [
         category: 'Development'
     },
     {
-        name: 'Unsend',
-        slug: 'unsend',
-        icon: '/docs/images/services/unsend-logo.svg',
-        description: 'Open-source email recall service.',
+        name: 'UseSend',
+        slug: 'usesend',
+        icon: '/docs/images/services/usesend-logo.svg',
+        description: 'Open-source email platform.',
         category: 'Email'
     },
     {
@@ -2304,4 +2304,3 @@ const { preloadServices, handleImageError, hasImageError, isImageLoading, getFal
         </div>
     </div>
 </template>
-
