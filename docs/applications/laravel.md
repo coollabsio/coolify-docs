@@ -9,6 +9,131 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Example repository [here](https://github.com/coollabsio/coolify-examples/tree/main/laravel).
 
+## Deploy with Dockerfile and Nginx Unit
+
+### Prerequisites
+
+1. Create a new resource from a private or public repository.
+2. Set the `Ports Exposes` field to `8000`, for example.
+3. Set default environment variables using `Developer view` in `Environment Variables`:
+
+```sh
+APP_DEBUG=false
+APP_ENV=staging
+APP_KEY= #YourAppKey
+APP_MAINTENANCE_DRIVER=file
+APP_NAME=Laravel
+CACHE_STORE=file
+DB_CONNECTION= #YourDbConnection
+DB_DATABASE= #YourDb
+DB_HOST= #YourDbHost
+DB_PASSWORD= #YourDbPassword
+DB_PORT= #YourDbPort
+DB_USERNAME= #YourDbUsername
+FILESYSTEM_DISK=public
+MAIL_MAILER=log
+SESSION_DRIVER=file
+```
+
+4. Create a `Dockerfile` in the root of your project with the following content:
+
+```Dockerfile
+FROM unit:1.34.1-php8.3
+
+RUN apt update && apt install -y \
+    curl unzip git libicu-dev libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libssl-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) pcntl opcache pdo pdo_mysql intl zip gd exif ftp bcmath \
+    && pecl install redis \
+    && docker-php-ext-enable redis
+
+RUN echo "opcache.enable=1" > /usr/local/etc/php/conf.d/custom.ini \
+    && echo "opcache.jit=tracing" >> /usr/local/etc/php/conf.d/custom.ini \
+    && echo "opcache.jit_buffer_size=256M" >> /usr/local/etc/php/conf.d/custom.ini \
+    && echo "memory_limit=512M" > /usr/local/etc/php/conf.d/custom.ini \
+    && echo "upload_max_filesize=64M" >> /usr/local/etc/php/conf.d/custom.ini \
+    && echo "post_max_size=64M" >> /usr/local/etc/php/conf.d/custom.ini
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+WORKDIR /var/www/html
+
+RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
+
+RUN chown -R unit:unit /var/www/html/storage bootstrap/cache && chmod -R 775 /var/www/html/storage
+
+COPY . .
+
+RUN chown -R unit:unit storage bootstrap/cache && chmod -R 775 storage bootstrap/cache
+
+RUN composer install --prefer-dist --optimize-autoloader --no-interaction
+
+COPY unit.json /docker-entrypoint.d/unit.json
+
+EXPOSE 8000
+
+CMD ["unitd", "--no-daemon"]
+```
+
+3. Create a `unit.json` file (lowercase) at the root of your project with the following content.
+
+```json
+{
+  "listeners": {
+    "*:8000": {
+      "pass": "routes",
+      "forwarded": {
+        "protocol": "X-Forwarded-Proto",
+        "source": ["<Load balancer IP, Subnet etc.>"]
+      }
+    }
+  },
+
+  "routes": [
+    {
+      "match": {
+        "uri": "!/index.php"
+      },
+      "action": {
+        "share": "/var/www/html/public$uri",
+        "fallback": {
+          "pass": "applications/laravel"
+        }
+      }
+    }
+  ],
+
+  "applications": {
+    "laravel": {
+      "type": "php",
+      "root": "/var/www/html/public/",
+      "script": "index.php"
+    }
+  }
+}
+```
+
+> [!NOTE]
+> When using docker-compose for deployment, then there might be an issue with `Mixed content error` when some of the assets are requested via `http://` instead of `https://`. To avoid that, find your load balancer/proxy subnet or IP address and add it to the unit.config to explicitly tell unit to forward the correct headers to Laravel. Laravel also has to be configured trust proxies. More on that [here](https://laravel.com/docs/12.x/requests#configuring-trusted-proxies).
+>
+> ```json
+> "listeners": {
+>        "*:8000": {
+>            "pass": "routes",
+>            "forwarded": {
+>                "protocol": "X-Forwarded-Proto",
+>                "source": ["<Load balancer IP, Subnet etc.>"]
+>            }
+>        }
+>    },
+> ```
+
+4. Set Post-deployment to:
+
+```sh
+php artisan optimize:clear && php artisan config:clear && php artisan route:clear && php artisan view:clear && php artisan optimize
+```
+
 ## Deploy with Nixpacks
 
 ### Requirements
@@ -37,11 +162,9 @@ REDIS_PASSWORD=null
 REDIS_PORT=6379
 ```
 
-
 ### All-in-one container
 
 If you would like to start queue worker, scheduler, etc within one container (recommended), then you can place a `nixpacks.toml` inside your repository with the following value.
-
 
 ```toml
 [phases.setup]
@@ -186,11 +309,11 @@ http {
         add_header X-Content-Type-Options "nosniff";
 
         client_max_body_size 35M;
-     
+
         index index.php;
-     
+
         charset utf-8;
-     
+
 
         $if(NIXPACKS_PHP_FALLBACK_PATH) (
             location / {
@@ -201,21 +324,21 @@ http {
                 try_files $uri $uri/ /index.php?$query_string;
            }
         )
-     
+
         location = /favicon.ico { access_log off; log_not_found off; }
         location = /robots.txt  { access_log off; log_not_found off; }
-     
+
         $if(IS_LARAVEL) (
             error_page 404 /index.php;
         ) else ()
-     
+
         location ~ \.php$ {
             fastcgi_pass 127.0.0.1:9000;
             fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
             include $!{nginx}/conf/fastcgi_params;
             include $!{nginx}/conf/fastcgi.conf;
         }
-     
+
         location ~ /\.(?!well-known).* {
             deny all;
         }
@@ -228,11 +351,9 @@ http {
 
 When using Laravel with [Inertia.js](https://inertiajs.com/), you may need to specify some additional configuration in your `nixpacks.toml` file.
 
-
 #### Increasing the NGINX buffer size for Inertia requests
 
 Because of a [known issue](https://github.com/inertiajs/inertia-laravel/issues/529) with Inertia.js and default NGINX configuration, you may need to increase the buffer size for NGINX to handle Inertia requests.
-
 
 ```diff toml
 "nginx.template.conf" = '''
@@ -257,7 +378,6 @@ http {
 
 If you are using Inertia.js with [server-side rendering](https://inertiajs.com/server-side-rendering), you should add another worker in your `nixpacks.toml` file to automatically start your SSR server.
 
-
 ```toml
 "worker-inertia-ssr.conf" = '''
 [program:inertia-ssr]
@@ -272,25 +392,28 @@ stdout_logfile=/var/log/worker-inertia-ssr.log
 
 > [!NOTE]
 > By default, Nixpacks runs the command `npm run build` to build your application during the deployment. Ensure that your `build` script in `package.json` contains the necessary build commands for server-side rendering. If you use one of the official starter kits including Inertia.js, change your scripts like this:
+>
 > ```diff
 > "scripts": {
->-     "build": "vite build",
->+     "build": "vite build && vite build --ssr",
+> -     "build": "vite build",
+> +     "build": "vite build && vite build --ssr",
 >     "build:ssr": "vite build && vite build --ssr",
 > }
 > ```
+>
 > Alternatively, if you don't want to adapt your default `build` script in `package.json`, you can add the correct build command for server-side rendering directly in your `nixpacks.toml` configuration file.
->```diff
->[phases.build]
->cmds = [
->+    "npm run build:ssr",
+>
+> ```diff
+> [phases.build]
+> cmds = [
+> +    "npm run build:ssr",
 >    "mkdir -p /etc/supervisor/conf.d/",
 >    "cp /assets/worker-*.conf /etc/supervisor/conf.d/",
 >    "cp /assets/supervisord.conf /etc/supervisord.conf",
 >    "chmod +x /assets/start.sh",
 >    "..."
 > ]
->```
+> ```
 
 ### Persistent php.ini customizations
 
@@ -316,127 +439,4 @@ php_admin_value[max_execution_time] = 60
 php_admin_value[max_input_time] = 60
 php_admin_value[post_max_size] = 256M
 '''
-```
-
-## Deploy with Dockerfile and Nginx Unit
-
-### Prerequisites
-
-1. Create a new resource from a private or public repository.
-2. Set the `Ports Exposes` field to `8000`, for example.
-3. Set default environment variables using `Developer view` in `Environment Variables`:
-
-```sh
-APP_DEBUG=false
-APP_ENV=staging
-APP_KEY= #YourAppKey
-APP_MAINTENANCE_DRIVER=file
-APP_NAME=Laravel
-CACHE_STORE=file
-DB_CONNECTION= #YourDbConnection
-DB_DATABASE= #YourDb
-DB_HOST= #YourDbHost
-DB_PASSWORD= #YourDbPassword
-DB_PORT= #YourDbPort
-DB_USERNAME= #YourDbUsername
-FILESYSTEM_DISK=public
-MAIL_MAILER=log
-SESSION_DRIVER=file
-```
-
-4. Create a `Dockerfile` in the root of your project with the following content:
-
-```Dockerfile
-FROM unit:1.34.1-php8.3
-
-RUN apt update && apt install -y \
-    curl unzip git libicu-dev libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libssl-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) pcntl opcache pdo pdo_mysql intl zip gd exif ftp bcmath \
-    && pecl install redis \
-    && docker-php-ext-enable redis
-
-RUN echo "opcache.enable=1" > /usr/local/etc/php/conf.d/custom.ini \
-    && echo "opcache.jit=tracing" >> /usr/local/etc/php/conf.d/custom.ini \
-    && echo "opcache.jit_buffer_size=256M" >> /usr/local/etc/php/conf.d/custom.ini \
-    && echo "memory_limit=512M" > /usr/local/etc/php/conf.d/custom.ini \        
-    && echo "upload_max_filesize=64M" >> /usr/local/etc/php/conf.d/custom.ini \
-    && echo "post_max_size=64M" >> /usr/local/etc/php/conf.d/custom.ini
-
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-
-WORKDIR /var/www/html
-
-RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
-
-RUN chown -R unit:unit /var/www/html/storage bootstrap/cache && chmod -R 775 /var/www/html/storage
-
-COPY . .
-
-RUN chown -R unit:unit storage bootstrap/cache && chmod -R 775 storage bootstrap/cache
-
-RUN composer install --prefer-dist --optimize-autoloader --no-interaction
-
-COPY unit.json /docker-entrypoint.d/unit.json
-
-EXPOSE 8000
-
-CMD ["unitd", "--no-daemon"]
-```
-
-3. Create a `unit.json` file (lowercase) at the root of your project with the following content.
-
-```json
-{
-    "listeners": {
-        "*:8000": {
-            "pass": "routes",
-            "forwarded": {
-                "protocol": "X-Forwarded-Proto",
-                "source": ["<Load balancer IP, Subnet etc.>"]
-            }
-        }
-    },
-
-    "routes": [
-        {
-            "match": {
-                "uri": "!/index.php"
-            },
-            "action": {
-                "share": "/var/www/html/public$uri",
-                "fallback": {
-                    "pass": "applications/laravel"
-                }
-            }
-        }
-    ],
-
-    "applications": {
-        "laravel": {
-            "type": "php",
-            "root": "/var/www/html/public/",
-            "script": "index.php"
-        }
-    }
-}
-```
-> [!NOTE]
-> When using docker-compose for deployment, then there might be an issue with `Mixed content error` when some of the assets are requested via `http://` instead of `https://`. To avoid that, find your load balancer/proxy subnet or IP address and add it to the unit.config to explicitly tell unit to forward the correct headers to Laravel. Laravel also has to be configured trust proxies. More on that [here](https://laravel.com/docs/12.x/requests#configuring-trusted-proxies).
-> ```json
-> "listeners": {
->        "*:8000": {
->            "pass": "routes",
->            "forwarded": {
->                "protocol": "X-Forwarded-Proto",
->                "source": ["<Load balancer IP, Subnet etc.>"]
->            }
->        }
->    },
->```
-
-4. Set Post-deployment to: 
-
-```sh
-php artisan optimize:clear && php artisan config:clear && php artisan route:clear && php artisan view:clear && php artisan optimize
 ```
