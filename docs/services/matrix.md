@@ -3,7 +3,7 @@ title: "Matrix"
 description: "Run Matrix Synapse server on Coolify for decentralized chat, end-to-end encryption, federation, and secure real-time communication platform."
 ---
 
-# Matrix
+# Matrix (Synapse)
 
 <ZoomableImage src="/docs/images/services/matrix-logo.svg" alt="Matrix dashboard" />
 
@@ -11,7 +11,30 @@ description: "Run Matrix Synapse server on Coolify for decentralized chat, end-t
 
 Matrix is an open-source, decentralized communication protocol that enables secure, real-time communication. It provides end-to-end encrypted messaging, voice and video calls, file sharing, and room-based conversations. Matrix serves as an excellent alternative to proprietary platforms like Slack or Discord, offering federation capabilities that allow different Matrix servers to communicate with each other.
 
+## What is Synapse?
+
+Synapse is a [Matrix homeserver](https://matrix.org/ecosystem/servers/) written in Python/Twisted, [developed and maintained](https://github.com/element-hq/synapse) by the team [Element](https://element.io/), creators of Matrix.
+
+## Deployment Variants
+
+Synapse Matrix server is available in two deployment configurations in Coolify:
+
+### Synapse with SQlite
+- **Database:** SQLite (embedded)
+- **Use case:** Simple deployments, testing, or personal Matrix hosting
+- **Components:** Single Synapse container with built-in SQLite database
+
+### Synapse with PostgreSQL (recommended)
+- **Database:** PostgreSQL
+- **Use case:** Production deployments requiring better performance and scalability
+- **Components:**
+  - Synapse container
+  - PostgreSQL container
+  - Automatic database configuration and health checks
+
 ## Installation Steps
+
+For all deployment variants the installation steps are the same.
 
 ### Matrix domain setup (important)
 
