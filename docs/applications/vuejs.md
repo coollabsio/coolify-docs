@@ -12,7 +12,7 @@ Vue.js is an approachable, performant and versatile framework for building web u
 ## Server build (NodeJS|Express)
 
 - Set `Build Pack` to `nixpacks`.
-- Set 'Start Command` to `node server.js`.
+- Set 'Start Command' to `node server.js`.
 
 ## Static build (SPA)
 
