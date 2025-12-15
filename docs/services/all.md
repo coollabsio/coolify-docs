@@ -224,7 +224,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [Actual Budget](/services/actualbudget) - A local-first personal finance tool based on zero-based budgeting
 - [BudgE](/services/budge) - A budgeting personal finance app
-- [Firefly III](/services/firefly-iii) - A personal finances manager
+- [Firefly III](/services/firefly) - A personal finances manager
 - [Maybe](/services/maybe) - Personal finance and wealth management application
 
 ## Forum
