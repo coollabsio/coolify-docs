@@ -29,6 +29,6 @@ If you're experiencing unstable connections, most of the times (90% of the cases
 In case of Coolify Cloud, you can enable connection from Coolify Cloud IP addresses by adding the following to the UFW rules:
 ```sh
  ufw insert 1 allow from <ipv4>/22 to any port 22
- ufw insert 2 allow from <ipv6>/22 to any port 22
+ ufw insert 2 allow from <ipv6>/64 to any port 64
 ```
 > You can find the IP addresses in the Coolify Cloud here: https://coolify.io/ipv4.txt and https://coolify.io/ipv6.txt
