@@ -9,6 +9,25 @@ description: "Automate workflows on Coolify with Trigger.dev for background jobs
 
 Trigger is an open source Background Jobs framework for TypeScript.
 
+## Deployment Variants
+
+Trigger.dev is available in two deployment configurations in Coolify:
+
+### Trigger.dev (Default)
+- **Database:** Built-in PostgreSQL
+- **Use case:** Standard deployments with managed database
+- **Components:**
+  - Trigger.dev container
+  - Built-in PostgreSQL container
+  - Automatic database configuration and health checks
+
+### Trigger.dev with External Database
+- **Database:** External (user-provided)
+- **Use case:** Advanced deployments with existing database infrastructure or custom database configurations
+- **Components:**
+  - Trigger.dev container
+  - Requires `DATABASE_URL` environment variable pointing to your external database
+
 ## Links
 
 - [Official Website](https://trigger.dev)

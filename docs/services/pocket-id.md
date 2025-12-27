@@ -11,6 +11,23 @@ description: "Deploy Pocket ID on Coolify for simple OIDC provider with password
 
 Pocket ID is a simple OIDC provider for passwordless authentication using [passkeys](https://www.passkeys.io/). It's designed to be straightforward and easy-to-use. It exclusively supports passkey authentication, allowing you to use hardware security keys like Yubikey for secure sign-ins across your self-hosted services.
 
+## Deployment Variants
+
+Pocket ID is available in two deployment configurations in Coolify:
+
+### Pocket ID (Default)
+- **Database:** SQLite (embedded)
+- **Use case:** Simple deployments, testing, or personal authentication server
+- **Components:** Single Pocket ID container with built-in SQLite database
+
+### Pocket ID with PostgreSQL
+- **Database:** PostgreSQL
+- **Use case:** Production deployments requiring better performance and data reliability
+- **Components:**
+  - Pocket ID container
+  - PostgreSQL container
+  - Automatic database configuration and health checks
+
 ## Features
 
 - **Passwordless Authentication**: Uses passkeys instead of passwords for better security

@@ -9,6 +9,23 @@ description: "Host NitroPage website builder on Coolify for drag-and-drop page c
 
 Nitropage is an extensible, visual website builder based on SolidStart, offering a growing library of versatile building blocks.
 
+## Deployment Variants
+
+Nitropage is available in two deployment configurations in Coolify:
+
+### Nitropage (Default)
+- **Database:** SQLite (embedded)
+- **Use case:** Simple deployments, testing, or small websites
+- **Components:** Single Nitropage container with built-in SQLite database
+
+### Nitropage with PostgreSQL
+- **Database:** PostgreSQL
+- **Use case:** Production deployments requiring better performance and scalability
+- **Components:**
+  - Nitropage container
+  - PostgreSQL container
+  - Automatic database configuration and health checks
+
 ## Features
 
 - Reusable element **Presets** and **Layouts**

@@ -1,6 +1,6 @@
 ---
 title: Support
-description: Get Coolify support through Discord community with 13K+ members, direct email support for Cloud users, and core team developer assistance.
+description: Get Coolify support through Discord community with 19K+ members, direct email support for Cloud users, and core team developer assistance.
 ---
 
 <ZoomableImage src="/docs/images/get-started/support-banner.webp" alt="Coolify support banner" />
@@ -9,7 +9,7 @@ description: Get Coolify support through Discord community with 13K+ members, di
 
 ## Community Support
 
-Join our [Discord community](https://coollabs.io/discord) with over **13K members**, where you can create a post in the **support forum channel** for assistance.
+Join our [Discord community](https://coollabs.io/discord) with over **19K members**, where you can create a post in the **support forum channel** for assistance.
 
 While the community does provide some help, the [Core team](/get-started/team) is actively involved in the forum to ensure questions are addressed.
 
@@ -21,5 +21,5 @@ We highly recommend posting in the **Discord support forum** first, as core team
 
 ## Important Notes
 
-- We are a **small team** (fewer than **6 people**) supporting **140K+ users**, making it challenging to offer direct assistance to everyone. However, we do our best to help as much as possible.
+- We are a **small team** (fewer than **6 people**) supporting **325K+ users**, making it challenging to offer direct assistance to everyone. However, we do our best to help as much as possible.
 - We are planning a **paid support option** for **self-hosted users**. If you need dedicated support for your **self-hosted instance**, email **hi@coollabs.io** to discuss options.

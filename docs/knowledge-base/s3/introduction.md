@@ -15,6 +15,7 @@ Currently supported S3 compatible storages are:
 - Hetzner S3 Storage (beta)
 - Wasabi hot cloud storage
 - Vultr
+- CloudPe Object Storage
 
 Other's could work, but not tested yet. If you test it, please let us know.
 

@@ -163,6 +163,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Nitropage](/services/nitropage) - Nitropage is an extensible, drag-and-drop website builder based on SolidStart, completely free and open source
 - [OneDev](/services/onedev) - Self-hosted Git server with integrated CI/CD and kanban
 - [Openblocks](/services/openblocks) - Open-source low code platform
+- [OpnForm](/services/opnform) - Open-source form builder for creating beautiful forms without coding
 - [pgAdmin](/services/pgadmin) - Web-based database management tool for PostgreSQL
 - [phpMyAdmin](/services/phpmyadmin) - MySQL database management tool
 - [Pocketbase](/services/pocketbase) - Open Source backend for your next SaaS and Mobile app
@@ -200,7 +201,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 ## Email
 
-- [Unsend](/services/unsend) - An open source bulk email manager
+- [UseSend](/services/usesend) - An open source bulk email manager
 
 ## Family
 
@@ -223,7 +224,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [Actual Budget](/services/actualbudget) - A local-first personal finance tool based on zero-based budgeting
 - [BudgE](/services/budge) - A budgeting personal finance app
-- [Firefly III](/services/firefly-iii) - A personal finances manager
+- [Firefly III](/services/firefly) - A personal finances manager
 - [Maybe](/services/maybe) - Personal finance and wealth management application
 
 ## Forum
@@ -296,6 +297,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [Cloudflared](/services/cloudflared) - Cloudflare Tunnel client
 - [NetBird Client](/services/netbird-client) - Connect your devices into a secure WireGuard-based mesh network
+- [Newt Pangolin](/services/newt-pangolin) - User space WireGuard tunnel client and TCP/UDP proxy for securely exposing private resources
 
 ## Notifications
 

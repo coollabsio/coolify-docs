@@ -9,6 +9,23 @@ description: "Track time on Coolify with YAMTrack for project time logging, invo
 
 Yamtrack is a self hosted media tracker for movies, tv shows, anime, manga, video games and books.
 
+## Deployment Variants
+
+Yamtrack is available in two deployment configurations in Coolify:
+
+### Yamtrack (Default)
+- **Database:** SQLite (embedded)
+- **Use case:** Simple deployments, testing, or personal media tracking
+- **Components:** Single Yamtrack container with built-in SQLite database
+
+### Yamtrack with PostgreSQL
+- **Database:** PostgreSQL
+- **Use case:** Production deployments requiring better performance and data reliability
+- **Components:**
+  - Yamtrack container
+  - PostgreSQL container
+  - Automatic database configuration and health checks
+
 ## Screenshots
 
 <ZoomableImage src="/docs/images/services/yamtrack-screenshots-1.webp" alt="Yamtrack interface screenshot" />

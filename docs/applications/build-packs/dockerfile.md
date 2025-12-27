@@ -73,6 +73,30 @@ Click on the **Environment Variables** tab to add or update them.
 - **Pre-deployment:** Optionally, specify a script or command to execute in the existing container before deployment begins. This command is run with `sh -c`, so you do not need to add it manually.
 - **Post-deployment:** Optionally, specify a script or command to execute in the newly built container after deployment completes. This command is also executed with `sh -c`.
 
+### Build Arguments
+
+Coolify automatically injects build arguments into your Dockerfile during the build process. These include environment variables you've configured and predefined system values like `SOURCE_COMMIT`.
+
+You can configure these settings in the **Advanced** menu of your application.
+
+#### Inject Build Args to Dockerfile
+
+By default, Coolify injects Docker build arguments (`ARG` statements) into your Dockerfile. If you prefer to manage build arguments manually in your Dockerfile, you can disable this behavior in the Advanced menu.
+
+- **Enabled (default):** Coolify automatically injects build arguments
+- **Disabled:** You manage `ARG` statements yourself in the Dockerfile
+
+#### Include Source Commit in Build
+
+The `SOURCE_COMMIT` variable contains the Git commit hash of your source code. By default, this is excluded from the build to preserve Docker's build cache. You can enable this in the Advanced menu if needed.
+
+- **Disabled (default):** `SOURCE_COMMIT` is not included, improving cache utilization
+- **Enabled:** `SOURCE_COMMIT` is included as a build argument
+
+::: warning Build Cache Optimization
+Enabling "Include Source Commit in Build" will cause Docker's build cache to be invalidated on every commit, since the commit hash changes each time. Only enable this if your build process requires the commit hash.
+:::
+
 ## Known Issues and Solutions
 
 ::: details 1. Visiting the Application Domain Shows "No Available Server"

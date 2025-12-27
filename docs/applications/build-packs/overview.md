@@ -15,12 +15,14 @@ Build packs helps to create this Docker image and manage the build and deploymen
 
 
 ## Why Use Build Packs?
+
 - **Simplifies the Build Process:** Some Build packs automatically create the Docker image needed for deployment, so you don’t have to spend time on learning how to write Dockerfiles on your own.
 
 - **Flexibility for Different Projects:** Since every application is different, you can choose a build pack that suits your specific needs, whether you prefer an automated solution or a custom configuration.
 
 
 ## How Build Packs Work
+
 Each build pack offers a different approach to building your Docker image:
 
 - **Automated Dockerfile Creation:** Build packs like Nixpacks & Static Build Pack automatically generate a Dockerfile based on your codebase and builds the docker image. 
@@ -31,6 +33,7 @@ Each build pack offers a different approach to building your Docker image:
 
 
 ## Choose the Right Build Pack
+
 Coolify have four build packs to meet different requirements:
 - **Nixpacks:** Good for quick and automated Docker image creation with minimal configuration.
 
@@ -42,9 +45,10 @@ Coolify have four build packs to meet different requirements:
 
 
 ## How to use a Build Pack
+
 Each build pack has its own step-by-step guide to help you use them in Coolify. Click the links below to learn more about each build pack.
 
-- [Static Build Pack](/builds/packs/static)
-- [Nixpack](/builds/packs/nixpacks)
-- [Dockerfile](/builds/packs/dockerfile)
-- [Docker Compose](/builds/packs/docker-compose)
+- [Static Build Pack](/applications/build-packs/static)
+- [Nixpack](/applications/build-packs/nixpacks)
+- [Dockerfile](/applications/build-packs/dockerfile)
+- [Docker Compose](/applications/build-packs/docker-compose)

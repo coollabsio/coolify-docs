@@ -279,7 +279,7 @@ const services = [
         icon: '/docs/images/services/plausible-logo.svg',
         description: 'A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies.',
         category: 'Analytics',
-        ignore: true
+        disabled: true
     },
     {
         name: 'Rybbit',
@@ -551,7 +551,8 @@ const services = [
         slug: 'dashboard',
         icon: '/docs/images/services/dashboard-logo.svg',
         description: 'A simple dashboard for your server.',
-        category: 'Administration'
+        category: 'Administration',
+        disabled: true
     },
     {
         name: 'Dashy',
@@ -660,14 +661,14 @@ const services = [
     },
     {
         name: 'Emby Stat',
-        slug: 'emby-stat',
+        slug: 'embystat',
         icon: '/docs/images/services/embystat-logo.svg',
         description: 'A simple and easy-to-use Emby statistics dashboard.',
         category: 'Media'
     },
     {
         name: 'Ente',
-        slug: 'ente',
+        slug: 'ente-photos',
         icon: '/docs/images/services/ente-logo.webp',
         description: 'A fully open-source, end-to-end encrypted platform for you to store data in the cloud without needing to trust the service provider.',
         category: 'Productivity'
@@ -716,7 +717,7 @@ const services = [
     },
     {
         name: 'Firefly III',
-        slug: 'firefly-iii',
+        slug: 'firefly',
         icon: '/docs/images/services/firefly-iii-logo.svg',
         description: 'A personal finances manager.',
         category: 'Finance'
@@ -887,7 +888,8 @@ const services = [
         slug: 'hoarder',
         icon: '/docs/images/services/hoarder-logo.png',
         description: 'Self-hosted bookmark manager with AI-powered tagging.',
-        category: 'Bookmarks'
+        category: 'Bookmarks',
+        disabled: true
     },
     {
         name: 'Homarr',
@@ -1122,7 +1124,7 @@ const services = [
     },
     {
         name: 'Mautic',
-        slug: 'mautic',
+        slug: 'mautic5',
         icon: '/docs/images/services/mautic-logo.svg',
         description: 'Open-source marketing automation platform.',
         category: 'Marketing'
@@ -1328,7 +1330,8 @@ const services = [
         slug: 'openblocks',
         icon: '/docs/images/services/openblocks-logo.svg',
         description: 'Open-source low code platform.',
-        category: 'Development'
+        category: 'Development',
+        disabled: true
     },
     {
         name: 'Organizr',
@@ -1353,7 +1356,7 @@ const services = [
     },
     {
         name: 'Outline',
-        slug: 'outline',
+        slug: 'getoutline',
         icon: '/docs/images/services/outline-logo.svg',
         description: 'Open-source collaboration tool.',
         category: 'Productivity'
@@ -1426,7 +1429,8 @@ const services = [
         slug: 'pingvinshare',
         icon: '/docs/images/services/pingvinshare-logo.svg',
         description: 'Self-hosted file sharing platform that combines lightness and beauty.',
-        category: 'File Sharing'
+        category: 'File Sharing',
+        disabled: true
     },
     {
         name: 'Plane',
@@ -1469,7 +1473,7 @@ const services = [
         icon: '/docs/images/services/posthog-logo.svg',
         description: 'Open source product analytics.',
         category: 'Analytics',
-        ignore: true
+        disabled: true
     },
     {
         name: 'Postiz',
@@ -1745,10 +1749,10 @@ const services = [
         category: 'Development'
     },
     {
-        name: 'Unsend',
-        slug: 'unsend',
-        icon: '/docs/images/services/unsend-logo.svg',
-        description: 'Open-source email recall service.',
+        name: 'UseSend',
+        slug: 'usesend',
+        icon: '/docs/images/services/usesend-logo.svg',
+        description: 'Open-source email platform.',
         category: 'Email'
     },
     {
@@ -1927,11 +1931,25 @@ const services = [
         category: 'Networking'
     },
     {
+        name: 'Newt Pangolin',
+        slug: 'newt-pangolin',
+        icon: '/public/images/services/pangolin_newt.svg',
+        description: 'User space WireGuard tunnel client and TCP/UDP proxy for securely exposing private resources.',
+        category: 'Networking'
+    },
+    {
         name: 'Observium',
         slug: 'observium',
         icon: '/docs/images/services/observium-logo.webp',
         description: 'Low-maintenance auto-discovering network monitoring platform.',
         category: 'Monitoring'
+    },
+    {
+        name: 'OpnForm',
+        slug: 'opnform',
+        icon: '/docs/images/services/opnform.svg',
+        description: 'Open-source form builder that lets you create beautiful forms and share them anywhere.',
+        category: 'Development'
     },
     {
         name: 'OrangeHRM',
@@ -2049,7 +2067,7 @@ onUnmounted(() => {
 
 const filteredServicesByCategory = (category: string) => {
     return services.filter(s =>
-        !s.ignore &&
+        !s.disabled &&
         s.category === category &&
         (search.value === '' || s.name.toLowerCase().includes(search.value.toLowerCase()) || s.description.toLowerCase().includes(search.value.toLowerCase()))
     )
@@ -2290,4 +2308,3 @@ const { preloadServices, handleImageError, hasImageError, isImageLoading, getFal
         </div>
     </div>
 </template>
-
