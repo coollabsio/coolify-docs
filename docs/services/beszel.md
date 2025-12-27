@@ -15,6 +15,7 @@ Lightweight server monitoring hub with historical data, docker stats, and alerts
 - In the UI, `Add a new System`
 - Enter `beszel-agent` in Host/IP
 - Copy the public Key to `KEY` env variable and token to `TOKEN` variable in Beszel's project environment variables (These are obtained from Beszel UI when adding a new system)
+- Disable the gzip compression in the hub service settings.
 
 ## Links
 
