@@ -236,6 +236,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [FoundryVTT](/services/foundryvtt) - Virtual tabletop for tabletop role-playing games
 - [Minecraft](/services/minecraft) - Minecraft game server
 - [Pterodactyl](/services/pterodactyl) - Game server management panel with Wings daemon for hosting Minecraft, CS:GO, ARK and more
+- [Terraria Server](/services/terraria-server) - Docker multi-arch image for Terraria game server
 
 ## Health
 

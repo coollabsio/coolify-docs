@@ -1707,6 +1707,13 @@ const services = [
         category: 'Database'
     },
     {
+        name: 'Terraria Server',
+        slug: 'terraria-server',
+        icon: '/docs/images/services/terraria.svg',
+        description: 'Docker multi-arch image for Terraria game server.',
+        category: 'Gaming'
+    },
+    {
         name: 'Tolgee',
         slug: 'tolgee',
         icon: '/docs/images/services/tolgee-logo.svg',
