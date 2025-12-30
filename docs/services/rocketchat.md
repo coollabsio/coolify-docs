@@ -3,7 +3,6 @@ title: "Rocket.Chat"
 description: "Deploy Rocket.Chat on Coolify for team communication, video conferencing, file sharing, and open-source Slack alternative with federation."
 ---
 
-
 ![Rocket Chat](https://raw.githubusercontent.com/RocketChat/Rocket.Chat.Artwork/master/Logos/2020/png/logo-horizontal-red.png)
 
 ## What is Rocket.Chat?
@@ -18,5 +17,5 @@ Rocket.Chat is an open-source team communication platform that allows you to com
 
 ## Links
 
-- [The official website ›](https://rocket.chat)
-- [GitHub ›](https://github.com/RocketChat/Rocket.Chat)
+- [The official website](https://rocket.chat)
+- [GitHub](https://github.com/RocketChat/Rocket.Chat)

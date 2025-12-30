@@ -19,7 +19,7 @@ Swetrix is a privacy-friendly, cookieless and open-source web analytics alternat
 
 ## Links
 
-- [The official website ›](https://swetrix.com)
-- [GitHub ›](https://github.com/swetrix/swetrix)
-- [Documentation ›](https://docs.swetrix.com)
-- [Community Discord ›](https://swetrix.com/discord)
+- [The official website](https://swetrix.com)
+- [GitHub](https://github.com/swetrix/swetrix)
+- [Documentation](https://docs.swetrix.com)
+- [Community Discord](https://swetrix.com/discord)

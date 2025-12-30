@@ -38,8 +38,8 @@ Perfect for receiving notifications from:
 
 ## Links
 
-- [The official website ›](https://gotify.net/)
-- [GitHub ›](https://github.com/gotify/server)
-- [Documentation ›](https://gotify.net/docs/)
-- [Android App (Google Play) ›](https://play.google.com/store/apps/details?id=com.github.gotify)
-- [Android App (F-Droid) ›](https://f-droid.org/de/packages/com.github.gotify/)
+- [The official website](https://gotify.net/)
+- [GitHub](https://github.com/gotify/server)
+- [Documentation](https://gotify.net/docs/)
+- [Android App (Google Play)](https://play.google.com/store/apps/details?id=com.github.gotify)
+- [Android App (F-Droid)](https://f-droid.org/de/packages/com.github.gotify/)

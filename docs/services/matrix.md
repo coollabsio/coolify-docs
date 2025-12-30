@@ -13,5 +13,5 @@ Matrix is an open-source, decentralized communication protocol that enables secu
 
 ## Links
 
-- [The official website ›](https://matrix.org?utm_source=coolify.io)
-- [GitHub ›](https://github.com/matrix-org/synapse?utm_source=coolify.io)
+- [The official website](https://matrix.org?utm_source=coolify.io)
+- [GitHub](https://github.com/matrix-org/synapse?utm_source=coolify.io)

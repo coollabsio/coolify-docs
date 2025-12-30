@@ -153,7 +153,7 @@ command:
   - "--entrypoints.https.transport.respondingTimeouts.idleTimeout=5m"
 ```
 
-Read more about Traefik timeouts in the [official documentation ↗](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#timeout).
+Read more about Traefik timeouts in the [official documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#timeout).
 
 ##### For Caddy
 
@@ -169,7 +169,7 @@ caddy.servers.timeouts.write=300s
 caddy.servers.timeouts.idle=5m
 ```
 
-Read more about Caddy timeouts in the [official documentation ↗](https://caddyserver.com/docs/caddyfile/options#timeouts).
+Read more about Caddy timeouts in the [official documentation](https://caddyserver.com/docs/caddyfile/options#timeouts).
 
 ##### For Nginx (One-Click Databases)
 
@@ -246,5 +246,5 @@ If these solutions don't resolve your gateway timeout issues:
    docker logs <your-container-name> --tail 200 > app-logs.txt
    ```
 
-2. Join our [Discord Community ↗](https://coolify.io/discord)
+2. Join our [Discord Community](https://coolify.io/discord)
 3. Share your configuration, logs, and the specific steps you've tried

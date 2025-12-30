@@ -3,7 +3,6 @@ title: "Plunk"
 description: "Send emails on Coolify with Plunk for transactional email API, templates, analytics, and developer-friendly email delivery service."
 ---
 
-
 ![Plunk](https://raw.githubusercontent.com/useplunk/plunk/main/assets/card.png)
 
 ## What is Plunk?
@@ -18,5 +17,5 @@ Plunk is an open-source email platform for AWS.
 
 ## Links
 
-- [The official website ›](https://useplunk.com)
-- [GitHub ›](https://github.com/useplunk/plunk)
+- [The official website](https://useplunk.com)
+- [GitHub](https://github.com/useplunk/plunk)

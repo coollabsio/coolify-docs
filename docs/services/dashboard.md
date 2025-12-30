@@ -3,6 +3,9 @@ title: "Dashboard"
 description: "Deploy customizable dashboard on Coolify for application shortcuts, bookmarks, service monitoring, and centralized access to self-hosted tools."
 ---
 
+::: warning SERVICE NOT AVAILABLE
+This service is currently not available in Coolify's service catalog.
+:::
 
 ![dashboard](https://i.imgur.com/tOnPDYQ.png)
 
@@ -21,4 +24,4 @@ So what makes this project different from (or even better than) SUI?
 
 ## Links
 
-- [GitHub ›](https://github.com/phntxx/dashboard?utm_source=coolify.io)
+- [GitHub](https://github.com/phntxx/dashboard?utm_source=coolify.io)

@@ -13,4 +13,4 @@ TriliumNext is a hierarchical note taking application that helps you build your 
 
 ## Links
 
-- [GitHub ›](https://github.com/TriliumNext/Trilium?utm_source=coolify.io)
+- [GitHub](https://github.com/TriliumNext/Trilium?utm_source=coolify.io)

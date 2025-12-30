@@ -15,5 +15,5 @@ See all your upcoming movies in one convenient location. Manual Search Find all 
 
 ## Links
 
-- [The official website ›](https://radarr.video/)
-- [GitHub ›](https://github.com/Radarr/Radarr)
+- [The official website](https://radarr.video/)
+- [GitHub](https://github.com/Radarr/Radarr)

@@ -13,5 +13,5 @@ Pi-hole is a network-wide ad blocker that acts as a DNS sinkhole, protecting you
 
 ## Links
 
-- [The official website ›](https://pi-hole.net?utm_source=coolify.io)
-- [GitHub ›](https://github.com/pi-hole/pi-hole?utm_source=coolify.io)
+- [The official website](https://pi-hole.net?utm_source=coolify.io)
+- [GitHub](https://github.com/pi-hole/pi-hole?utm_source=coolify.io)

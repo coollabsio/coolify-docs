@@ -13,5 +13,5 @@ Sequin is the fastest Postgres change data capture (CDC) solution that helps you
 
 ## Links
 
-- [The official website ›](https://sequinstream.com?utm_source=coolify.io)
-- [GitHub ›](https://github.com/sequinstream/sequin?utm_source=coolify.io)
+- [The official website](https://sequinstream.com?utm_source=coolify.io)
+- [GitHub](https://github.com/sequinstream/sequin?utm_source=coolify.io)

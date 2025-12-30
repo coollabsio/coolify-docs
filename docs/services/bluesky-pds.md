@@ -19,11 +19,11 @@ Pdsadmin requires you to have https in your Bluesky PDS, make sure you have set 
 
 To create an account and start using your PDS, you can use the following pdsadmin commnands in the Terminal tab of the Coolify UI:
 
-```bash 
+```bash
 pdsadmin create-invite-code
 ```
 
-or 
+or
 
 ```bash
 pdsadmin account create <email> <handle>
@@ -53,5 +53,5 @@ And that's it, your PDS should be ready for you to use, it will work like any ot
 
 ## Links
 
-- [The official website ›](https://blueskyweb.xyz?utm_source=coolify.io)
-- [GitHub ›](https://github.com/bluesky-social/pds?utm_source=coolify.io)
+- [The official website](https://blueskyweb.xyz?utm_source=coolify.io)
+- [GitHub](https://github.com/bluesky-social/pds?utm_source=coolify.io)

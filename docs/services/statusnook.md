@@ -5,7 +5,6 @@ description: "Monitor status on Coolify with StatusNook for uptime monitoring, s
 
 <ZoomableImage src="/docs/images/services/statusnook-logo.svg" alt="Statusnook dashboard" />
 
-
 ![Statusnook](https://github.com/goksan/statusnook/assets/17437810/ff2bb1d4-5d75-4b6e-b8d9-a7227d1aee6c)
 
 ## What is Statusnook?
@@ -14,5 +13,5 @@ Statusnook allows you to effortlessly deploy a status page and start monitoring 
 
 ## Links
 
-- [The official website ›](https://statusnook.com)
-- [GitHub ›](https://github.com/goksan/statusnook)
+- [The official website](https://statusnook.com)
+- [GitHub](https://github.com/goksan/statusnook)

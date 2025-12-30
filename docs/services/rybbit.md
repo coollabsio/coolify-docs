@@ -11,7 +11,7 @@ Rybbit is a next-gen, open source, lightweight, cookieless web & product analyti
 
 ## Configuration
 
-- set frontend URL. 
+- set frontend URL.
 - set backend URL to `$frontend_URL/api` and uncheck the "Strip Prefixes" option.
 
 # Screenshots
@@ -20,5 +20,5 @@ Rybbit is a next-gen, open source, lightweight, cookieless web & product analyti
 
 ## Links
 
-- [Official Website ›](https://www.rybbit.io/)
-- [GitHub ›](https://github.com/rybbit-io/rybbit)
+- [Official Website](https://www.rybbit.io/)
+- [GitHub](https://github.com/rybbit-io/rybbit)

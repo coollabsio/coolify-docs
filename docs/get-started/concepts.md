@@ -63,7 +63,7 @@ This setup lets you run multiple applications on one server without tweaking con
 
 Plus, Coolify supports unlimited domains, so you could deploy 20 different apps, each with its own unique domain.
 
-The reverse proxy also automatically manages SSL/TLS certificates for your applications. When you enter a domain with `https://`, the proxy requests and installs certificates from [Let's Encrypt ↗](https://letsencrypt.org?utm_source=coolify.io) automatically, with no manual configuration needed. Certificates are renewed automatically before they expire, keeping your applications secure without any intervention.
+The reverse proxy also automatically manages SSL/TLS certificates for your applications. When you enter a domain with `https://`, the proxy requests and installs certificates from [Let's Encrypt](https://letsencrypt.org?utm_source=coolify.io) automatically, with no manual configuration needed. Certificates are renewed automatically before they expire, keeping your applications secure without any intervention.
 
 ## Security
 

@@ -94,12 +94,12 @@ AnythingLLM is the easiest to use, all-in-one AI application that can do RAG, AI
 
 ![AnythingLLM](/images/services/anythingllm.gif)
 
-<!-- <TabBlock   
-  :tabs="frontmatter.tabs" 
-  :compose="frontmatter.compose" 
+<!-- <TabBlock
+  :tabs="frontmatter.tabs"
+  :compose="frontmatter.compose"
 /> -->
 
 ## Links
 
-- [The official website ›](https://www.anythingllm.com?utm_source=coolify.io)
-- [GitHub ›](https://github.com/Mintplex-Labs/anything-llm?utm_source=coolify.io)
+- [The official website](https://www.anythingllm.com?utm_source=coolify.io)
+- [GitHub](https://github.com/Mintplex-Labs/anything-llm?utm_source=coolify.io)

@@ -11,5 +11,5 @@ Weaviate (we-vee-eight) is an open source, AI-native vector database. Use this d
 
 ## Links
 
-- [The official website ›](https://weaviate.io/?utm_source=coolify.io)
-- [GitHub ›](https://github.com/weaviate/weaviate?utm_source=coolify.io)
+- [The official website](https://weaviate.io/?utm_source=coolify.io)
+- [GitHub](https://github.com/weaviate/weaviate?utm_source=coolify.io)

@@ -1,0 +1,30 @@
+name: Update Korrektly
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - v4.x
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Update Korrektly Chunks
+        env:
+          KORREKTLY_BASE_URL: ${{ secrets.KORREKTLY_BASE_URL }}
+          KORREKTLY_API_TOKEN: ${{ secrets.KORREKTLY_API_TOKEN }}
+          KORREKTLY_DATASET_ID: ${{ secrets.KORREKTLY_DATASET_ID }}
+          NODE_OPTIONS: --max-old-space-size=8192
+        run: bunx @korrektly/vitepress --path . -r https://coolify.io -a docs/api-reference/api/operations

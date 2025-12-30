@@ -13,5 +13,5 @@ KaraKeep is a self-hostable bookmark-everything app with AI-based automatic tagg
 
 ## Links
 
-- [The official website ›](https://docs.karakeep.app?utm_source=coolify.io)
-- [GitHub ›](https://github.com/karakeep-app/karakeep?utm_source=coolify.io)
+- [The official website](https://docs.karakeep.app?utm_source=coolify.io)
+- [GitHub](https://github.com/karakeep-app/karakeep?utm_source=coolify.io)

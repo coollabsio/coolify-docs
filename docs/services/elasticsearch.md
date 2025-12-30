@@ -61,5 +61,5 @@ If any of the above steps are unclear, you can refer to [this Pull Request](http
 
 ## Useful Links
 
-- [Official Website ›](https://www.elastic.co/?utm_source=coolify.io)
-- [Official Documentation ›](https://www.elastic.co/docs/deploy-manage/deploy/self-managed/install-kibana-with-docker?utm_source=coolify.io)
+- [Official Website](https://www.elastic.co/?utm_source=coolify.io)
+- [Official Documentation](https://www.elastic.co/docs/deploy-manage/deploy/self-managed/install-kibana-with-docker?utm_source=coolify.io)

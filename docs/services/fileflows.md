@@ -27,5 +27,5 @@ FileFlows lets you monitor and process any file type with custom flows. Videos, 
 
 ## Links
 
-- [The official website ›](https://fileflows.com/)
-- [Doc ›](https://fileflows.com/docs)
+- [The official website](https://fileflows.com/)
+- [Doc](https://fileflows.com/docs)

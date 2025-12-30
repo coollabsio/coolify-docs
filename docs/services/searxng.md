@@ -11,5 +11,5 @@ SearXNG is a free internet metasearch engine which aggregates results from vario
 
 ## Links
 
-- [The official website ›](https://docs.searxng.org/?utm_source=coolify.io)
-- [GitHub ›](https://github.com/searxng/searxng?utm_source=coolify.io)
+- [The official website](https://docs.searxng.org/?utm_source=coolify.io)
+- [GitHub](https://github.com/searxng/searxng?utm_source=coolify.io)

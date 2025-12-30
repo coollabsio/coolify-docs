@@ -13,5 +13,5 @@ The next-generation LLM gateway and AI asset management system supports multiple
 
 ## Links
 
-- [Official website ↗](https://docs.newapi.pro/en/getting-started?utm_source=coolify.io)
-- [GitHub ↗](https://github.com/QuantumNous/new-api?utm_source=coolify.io)
+- [Official website](https://docs.newapi.pro/en/getting-started?utm_source=coolify.io)
+- [GitHub](https://github.com/QuantumNous/new-api?utm_source=coolify.io)

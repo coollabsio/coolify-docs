@@ -20,8 +20,8 @@ expect, including:
 
 ## Links
 
-- [Official website ↗](https://once.com/campfire?utm_source=coolify.io)
-- [GitHub ↗](https://github.com/basecamp/once-campfire?utm_source=coolify.io)
+- [Official website](https://once.com/campfire?utm_source=coolify.io)
+- [GitHub](https://github.com/basecamp/once-campfire?utm_source=coolify.io)
 
 ## Configuration
 

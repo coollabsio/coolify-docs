@@ -1,7 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 import yaml from 'vite-plugin-yaml'
 import llmstxt from 'vitepress-plugin-llms'
-import coolbotPlugin from './plugins/vitepress-plugin-coolbot';
 import { defineConfig } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
 import spec from './theme/openapi.json' with { type: 'json' }
@@ -42,26 +41,57 @@ export default defineConfig({
     ]
   },
 
+  transformPageData(pageData) {
+    const baseUrl = env.VITE_SITE_URL ?? 'https://coolify.io/docs/'
+    const defaultImage = 'https://coolcdn.b-cdn.net/assets/coolify/og-image-docs.png'
+    const defaultDescription = 'Self hosting with superpowers: An open-source & self-hostable Heroku / Netlify / Vercel alternative.'
+
+    // Build canonical URL for this page
+    const pageUrl = `${baseUrl}${pageData.relativePath.replace(/((^|\/)index)?\.md$/, '$2')}`
+
+    // Extract values with fallback chain
+    const baseTitle = pageData.frontmatter.title || pageData.title || 'Coolify Docs'
+    const title = baseTitle === 'Coolify Docs' ? baseTitle : `${baseTitle} | Coolify`
+    const description = pageData.frontmatter.description || defaultDescription
+
+    // Handle image with relative to absolute URL conversion
+    const relativeImage = pageData.frontmatter.image
+    const image = relativeImage
+      ? `${baseUrl.replace(/\/$/, '')}${relativeImage.startsWith('/') ? relativeImage : '/' + relativeImage}`.replace(/\/docs\/docs\//, '/docs/')
+      : defaultImage
+
+    // Initialize head array if it doesn't exist
+    pageData.frontmatter.head ??= []
+
+    // Add Open Graph tags
+    pageData.frontmatter.head.push(
+      ['meta', { property: 'og:title', content: title }],
+      ['meta', { property: 'og:description', content: description }],
+      ['meta', { property: 'og:url', content: pageUrl }],
+      ['meta', { property: 'og:image', content: image }]
+    )
+
+    // Add Twitter Card tags
+    pageData.frontmatter.head.push(
+      ['meta', { property: 'twitter:title', content: title }],
+      ['meta', { property: 'twitter:description', content: description }],
+      ['meta', { property: 'twitter:url', content: pageUrl }],
+      ['meta', { property: 'twitter:image', content: image }]
+    )
+  },
+
   head: [
     ['meta', { name: 'theme-color', content: '#000000' }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:title', content: 'Coolify Docs' }],
-    ['meta', { property: 'og:url', content: env.VITE_SITE_URL ?? 'https://coolify.io/docs/' }],
-    ['meta', { property: 'og:description', content: 'Self hosting with superpowers: An open-source & self-hostable Heroku / Netlify / Vercel alternative.' }],
-    ['meta', { property: 'og:image', content: 'https://coolcdn.b-cdn.net/assets/coolify/og-image-docs.png' }],
     ['meta', { property: 'twitter:site', content: '@coolifyio' }],
     ['meta', { property: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { property: 'twitter:title', content: 'Coolify Docs' }],
-    ['meta', { property: 'twitter:description', content: 'Self hosting with superpowers: An open-source & self-hostable Heroku / Netlify / Vercel alternative.' }],
-    ['meta', { property: 'twitter:url', content: env.VITE_SITE_URL ?? 'https://coolify.io/docs/' }],
-    ['meta', { property: 'twitter:image', content: 'https://coolcdn.b-cdn.net/assets/coolify/og-image-docs.png' }],
     ['link', { rel: 'icon', href: '/docs/coolify-logo-transparent.png', alt: "Coolify's Logo" }],
     ['link', { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     ['script', { defer: 'true', src: 'https://analytics.coollabs.io/js/script.tagged-events.js', 'data-domain': env.VITE_ANALYTICS_DOMAIN ?? 'coolify.io/docs' }],
-    ['script', { async: 'true', src: '/docs/trieve-user-script.js' }],
   ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    externalLinkIcon: true,
     carbonAds: {
       code: 'CW7IPKJJ',
       placement: 'coolifyio'
@@ -86,7 +116,7 @@ export default defineConfig({
     outline: [2, 4],
 
     editLink: {
-      pattern: 'https://github.com/coollabsio/documentation-coolify/tree/main/docs/:path',
+      pattern: 'https://github.com/coollabsio/documentation-coolify/tree/next/docs/:path',
       text: 'Edit this page on GitHub'
     },
 
@@ -138,31 +168,15 @@ export default defineConfig({
         ],
       },
       {
-        text: 'Builds',
-        collapsed: true,
-        items: [
-          { text: 'Introduction', link: '/builds/introduction' },
-          {
-            text: 'Build Packs',
-            collapsed: true,
-            items: [
-              { text: 'Overview', link: '/builds/packs/overview' },
-              { text: 'Static', link: '/builds/packs/static' },
-              { text: 'Nixpacks', link: '/builds/packs/nixpacks' },
-              { text: 'Dockerfile', link: '/builds/packs/dockerfile' },
-              { text: 'Docker Compose', link: '/builds/packs/docker-compose' },
-            ]
-          },
-          { text: 'Build Servers', link: '/builds/servers' },
-        ],
-      },
-      {
         text: 'Applications',
         collapsed: true,
         items: [
           {
             text: 'Overview',
             link: '/applications/index',
+          },
+          {
+            text: 'Frameworks',
             items: [
               { text: 'Django', link: '/applications/django' },
               { text: 'Jekyll', link: '/applications/jekyll' },
@@ -176,7 +190,53 @@ export default defineConfig({
               { text: 'Nuxt', link: '/applications/nuxt' },
               { text: 'SvelteKit', link: '/applications/svelte-kit' },
             ]
-          }
+          },
+          {
+            text: 'Build Packs',
+            link: '/applications/build-packs/overview',
+            collapsed: true,
+            items: [
+              { text: 'Static', link: '/applications/build-packs/static' },
+              { text: 'Nixpacks', link: '/applications/build-packs/nixpacks' },
+              { text: 'Dockerfile', link: '/applications/build-packs/dockerfile' },
+              { text: 'Docker Compose', link: '/applications/build-packs/docker-compose' },
+            ]
+          },
+          {
+            text: 'CI/CD',
+            link: '/applications/ci-cd/introduction',
+            collapsed: true,
+            items: [
+              {
+                text: 'Github', collapsed: true, items: [
+                  { text: 'Overview', link: '/applications/ci-cd/github/overview' },
+                  { text: 'Actions', link: '/applications/ci-cd/github/actions' },
+                  { text: 'Auto Deploy', link: '/applications/ci-cd/github/auto-deploy' },
+                  { text: 'Preview Deploy', link: '/applications/ci-cd/github/preview-deploy' },
+                  { text: 'Deploy Public Repository', link: '/applications/ci-cd/github/public-repository' },
+                  { text: 'Setup Deploy Key', link: '/applications/ci-cd/github/deploy-key' },
+                  { text: 'Setup Github App', link: '/applications/ci-cd/github/setup-app' },
+                  { text: 'Switch Github Apps', link: '/applications/ci-cd/github/switch-apps' },
+                ]
+              },
+              {
+                text: 'Gitlab',
+                link: '/applications/ci-cd/gitlab/integration',
+              },
+              {
+                text: 'Bitbucket',
+                link: '/applications/ci-cd/bitbucket/integration',
+              },
+              {
+                text: 'Gitea',
+                link: '/applications/ci-cd/gitea/integration',
+              },
+              {
+                text: 'Other Providers',
+                link: '/applications/ci-cd/other-providers',
+              },
+            ]
+          },
         ],
       },
       {
@@ -184,7 +244,7 @@ export default defineConfig({
         collapsed: true,
         items: [
           { text: 'Introduction', link: '/services/introduction' },
-          { text: 'All Services', link: '/services/overview' },
+          { text: 'All One-Click Services', link: '/services/overview' },
           { text: 'Services Directory', link: '/services/all' }
         ]
       },
@@ -214,7 +274,24 @@ export default defineConfig({
         text: 'Integrations',
         collapsed: true,
         items: [
-          { text: 'Webstudio', link: '/integrations/webstudio.md' },
+          {
+            text: 'Cloudflare',
+            collapsed: true,
+            items: [
+              {
+                text: 'Tunnels',
+                collapsed: true,
+                items: [
+                  { text: 'Overview', link: '/integrations/cloudflare/tunnels/overview' },
+                  { text: 'All Resources', link: '/integrations/cloudflare/tunnels/all-resource' },
+                  { text: 'Single Resource', link: '/integrations/cloudflare/tunnels/single-resource' },
+                  { text: 'Server SSH Access', link: '/integrations/cloudflare/tunnels/server-ssh' },
+                  { text: 'Full TLS/HTTPS', link: '/integrations/cloudflare/tunnels/full-tls' },
+                ]
+              },
+              { text: 'DDoS Protection', link: '/integrations/cloudflare/ddos-protection' },
+            ]
+          },
         ],
       },
       {
@@ -295,35 +372,7 @@ export default defineConfig({
                   { text: 'Raspberry Pi OS Setup', link: '/knowledge-base/how-to/raspberry-pi-os' },
                   { text: 'Private NPM Registry', link: '/knowledge-base/how-to/private-npm-registry' },
                   { text: 'Ollama with GPU', link: '/knowledge-base/how-to/ollama-with-gpu' },
-                ]
-              },
-              {
-                text: 'Git',
-                collapsed: true,
-                items: [
-                  {
-                    text: 'Github', collapsed: true, items: [
-                      { text: 'Manually Setup GitHub App', link: '/knowledge-base/git/github/manually-setup-github-app' },
-                      { text: 'Move Between GitHub Apps', link: '/knowledge-base/git/github/move-between-github-apps' },
-                      { text: 'Integrations', link: '/knowledge-base/git/github/integration' },
-                      { text: 'Github Actions', link: '/knowledge-base/git/github/github-actions' },
-                    ]
-                  },
-                  {
-                    text: 'Gitlab', collapsed: true, items: [
-                      { text: 'Integrations', link: '/knowledge-base/git/gitlab/integration' },
-                    ]
-                  },
-                  {
-                    text: 'Bitbucket', collapsed: true, items: [
-                      { text: 'Integrations', link: '/knowledge-base/git/bitbucket/integration' },
-                    ]
-                  },
-                  {
-                    text: 'Gitea', collapsed: true, items: [
-                      { text: 'Integrations', link: '/knowledge-base/git/gitea/integration' },
-                    ]
-                  },
+                  { text: 'Webstudio with Hetzner', link: '/knowledge-base/how-to/webstudio-with-hetzner' },
                 ]
               },
               {
@@ -361,24 +410,6 @@ export default defineConfig({
                   { text: 'Docker Commands', link: '/knowledge-base/docker/custom-commands' },
                   { text: 'Registry', link: '/knowledge-base/docker/registry' },
                   { text: 'Swarm', link: '/knowledge-base/docker/swarm' },
-                ]
-              },
-              {
-                text: 'Cloudflare',
-                collapsed: true,
-                items: [
-                  {
-                    text: 'Tunnels',
-                    collapsed: true,
-                    items: [
-                      { text: 'Overview', link: '/knowledge-base/cloudflare/tunnels/overview' },
-                      { text: 'All Resources', link: '/knowledge-base/cloudflare/tunnels/all-resource' },
-                      { text: 'Single Resource', link: '/knowledge-base/cloudflare/tunnels/single-resource' },
-                      { text: 'Server SSH Access', link: '/knowledge-base/cloudflare/tunnels/server-ssh' },
-                      { text: 'Full TLS/HTTPS', link: '/knowledge-base/cloudflare/tunnels/full-tls' },
-                    ]
-                  },
-                  { text: 'Origin Certificate', link: '/knowledge-base/cloudflare/origin-cert' },
                 ]
               },
               {
@@ -440,6 +471,7 @@ export default defineConfig({
             text: 'Installation',
             collapsed: true,
             items: [
+              { text: 'Coolify Installation Failed', link: '/troubleshoot/installation/install-script-failed' },
               { text: 'Docker Installation Failed', link: '/troubleshoot/installation/docker-install-failed' },
             ]
           },
@@ -534,22 +566,12 @@ export default defineConfig({
   vite: {
     plugins: [
       yaml as any,
-      llmstxt({
-        ignoreFiles: [
-          '/docs/api-reference/api/**/*',
-          '**/api-reference/api/**/*'
-        ],
-      }),
-      coolbotPlugin({
-        docsDir: 'docs',
-        writeRawOutput: false,
-        ignoreFolders: [
-          'vitepress',
-          'api-reference',
-          'node_modules',
-          'dist'
-        ],
-      }),
+       llmstxt({
+         ignoreFiles: [
+           '/docs/api-reference/api/**/*',
+           '**/api-reference/api/**/*'
+         ],
+       }),
       groupIconVitePlugin({
         customIcon: {
           bruno: 'vscode-icons:file-type-bruno',
@@ -566,6 +588,11 @@ export default defineConfig({
       }),
     ],
     assetsInclude: ['**/*.yml'],
+    define: {
+      'import.meta.env.VITE_KORREKTLY_BASE_URL': JSON.stringify(env.KORREKTLY_BASE_URL || env.VITE_KORREKTLY_BASE_URL || ''),
+      'import.meta.env.VITE_KORREKTLY_API_TOKEN': JSON.stringify(env.KORREKTLY_API_TOKEN || env.VITE_KORREKTLY_API_TOKEN || ''),
+      'import.meta.env.VITE_KORREKTLY_DATASET_ID': JSON.stringify(env.KORREKTLY_DATASET_ID || env.VITE_KORREKTLY_DATASET_ID || ''),
+    },
     build: {
       chunkSizeWarningLimit: 5000
     },

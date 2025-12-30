@@ -16,9 +16,11 @@ Paymenter is an open-source billing platform tailored for hosting companies. It 
 3. Set the correct app URL via the terminal:
 
 Select the Paymenter container and run the following command:
-   ```bash
-   php artisan app:init
-   ```
+
+```bash
+php artisan app:init
+```
+
 4. Create the first admin user:
    ```bash
    php artisan app:user:create
@@ -26,6 +28,6 @@ Select the Paymenter container and run the following command:
 
 ## Links
 
-- [The official website ›](https://paymenter.org/)
-- [GitHub ›](https://github.com/Paymenter/Paymenter)
-- [Demo ›](https://demo.paymenter.org/)
+- [The official website](https://paymenter.org/)
+- [GitHub](https://github.com/Paymenter/Paymenter)
+- [Demo](https://demo.paymenter.org/)

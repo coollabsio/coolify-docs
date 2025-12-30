@@ -42,7 +42,7 @@ If there are healthchecks both in the UI and in the Dockerfile defined and enabl
 
 ### Service Stacks
 
-Services or Applications that use the [Docker Compose Build Pack](/builds/packs/docker-compose) require their health checks to be defined in the `Dockerfile` of each service, or in their `docker-compose.y[a]ml` file using the [healthcheck](https://docs.docker.com/reference/compose-file/services/#healthcheck) attribute.
+Services or Applications that use the [Docker Compose Build Pack](/applications/build-packs/docker-compose) require their health checks to be defined in the `Dockerfile` of each service, or in their `docker-compose.y[a]ml` file using the [healthcheck](https://docs.docker.com/reference/compose-file/services/#healthcheck) attribute.
 
 ::: tip When to use health checks?
 It is recommended to enable health checks for all your resources. This way, you can ensure that only healthy resources are receiving traffic.

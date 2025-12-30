@@ -19,5 +19,5 @@ or as a companion to Gramps Desktop, with full control over your data and privac
 
 ## Links
 
-- [Official website ↗](https://www.grampsweb.org/?utm_source=coolify.io)
-- [GitHub ↗](https://github.com/gramps-project/gramps-web?utm_source=coolify.io)
+- [Official website](https://www.grampsweb.org/?utm_source=coolify.io)
+- [GitHub](https://github.com/gramps-project/gramps-web?utm_source=coolify.io)

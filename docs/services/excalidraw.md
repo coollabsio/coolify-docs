@@ -13,5 +13,5 @@ Excalidraw is a virtual whiteboard for sketching hand-drawn like diagrams. It's 
 
 ## Links
 
-- [The official website ›](https://excalidraw.com?utm_source=coolify.io)
-- [GitHub ›](https://github.com/excalidraw/excalidraw?utm_source=coolify.io)
+- [The official website](https://excalidraw.com?utm_source=coolify.io)
+- [GitHub](https://github.com/excalidraw/excalidraw?utm_source=coolify.io)

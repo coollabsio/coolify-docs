@@ -15,5 +15,5 @@ Sonarr is an internet PVR for Usenet and Torrents. Features Calendar See all you
 
 ## Links
 
-- [The official website ›](https://sonarr.tv/)
-- [GitHub ›](https://github.com/Sonarr/Sonarr)
+- [The official website](https://sonarr.tv/)
+- [GitHub](https://github.com/Sonarr/Sonarr)

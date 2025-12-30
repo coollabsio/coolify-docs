@@ -271,7 +271,7 @@ stdout_logfile=/var/log/worker-inertia-ssr.log
 ```
 
 > [!NOTE]
-> Per default, Nixpacks runs the command `npm run build` to build your application during the deployment. Ensure that your `build` script in `package.json` contains the necessary build commands for server-side rendering. If you use one of the official starter kits including Inertia.js, change your scripts like this:
+> By default, Nixpacks runs the command `npm run build` to build your application during the deployment. Ensure that your `build` script in `package.json` contains the necessary build commands for server-side rendering. If you use one of the official starter kits including Inertia.js, change your scripts like this:
 > ```diff
 > "scripts": {
 >-     "build": "vite build",

@@ -5,7 +5,6 @@ description: "Run Ollama on Coolify for local LLM hosting supporting Llama, Mist
 
 <ZoomableImage src="/docs/images/services/ollama-logo.webp" alt="Ollama dashboard" />
 
-
 ## What is Ollama?
 
 Ollama is a lightweight and efficient server for running large language models (LLMs) on your local machine or in the cloud.
@@ -13,9 +12,10 @@ Ollama is a lightweight and efficient server for running large language models (
 It includes OpenWebUI, a web-based interface for interacting with the models.
 
 ## Screenshots
+
 <ZoomableImage src="/docs/images/services/ollama.gif" alt="Ollama dashboard" />
 
 ## Links
 
-- [The official website ›](https://ollama.com/?utm_source=coolify.io)
-- [GitHub ›](https://github.com/ollama/ollama?utm_source=coolify.io)
+- [The official website](https://ollama.com/?utm_source=coolify.io)
+- [GitHub](https://github.com/ollama/ollama?utm_source=coolify.io)

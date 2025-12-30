@@ -13,5 +13,5 @@ GitHub Runner is a self-hosted runner for GitHub Actions that allows you to run 
 
 ## Links
 
-- [The official GitHub Actions documentation ›](https://docs.github.com/en/actions/hosting-your-own-runners?utm_source=coolify.io)
-- [GitHub ›](https://github.com/myoung34/docker-github-actions-runner?utm_source=coolify.io)
+- [The official GitHub Actions documentation](https://docs.github.com/en/actions/hosting-your-own-runners?utm_source=coolify.io)
+- [GitHub](https://github.com/myoung34/docker-github-actions-runner?utm_source=coolify.io)

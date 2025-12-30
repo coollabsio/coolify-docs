@@ -13,4 +13,4 @@ GoWa (Golang WhatsApp) is a WhatsApp Web API service built with Go for efficient
 
 ## Links
 
-- [GitHub ›](https://github.com/aldinokemal/go-whatsapp-web-multidevice?utm_source=coolify.io)
+- [GitHub](https://github.com/aldinokemal/go-whatsapp-web-multidevice?utm_source=coolify.io)

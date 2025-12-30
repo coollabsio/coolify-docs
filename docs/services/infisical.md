@@ -20,5 +20,5 @@ Infisical is the open source security infrastructure platform that engineers use
 
 ## Links
 
-- [The official website ›](https://infisical.com/?utm_source=coolify.io)
-- [GitHub ›](https://github.com/Infisical/infisical?utm_source=coolify.io)
+- [The official website](https://infisical.com/?utm_source=coolify.io)
+- [GitHub](https://github.com/Infisical/infisical?utm_source=coolify.io)

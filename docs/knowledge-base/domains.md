@@ -23,7 +23,7 @@ When you enter a domain using the `https://` protocol (for example, `https://exa
 
 1. **Automatic Proxy Configuration** - Coolify automatically applies the necessary configuration to your reverse proxy (Traefik or Caddy) to serve your application over HTTPS.
 
-2. **Certificate Issuance** - The proxy automatically starts the process to request and install SSL certificates from [Let's Encrypt ↗](https://letsencrypt.org?utm_source=coolify.io).
+2. **Certificate Issuance** - The proxy automatically starts the process to request and install SSL certificates from [Let's Encrypt](https://letsencrypt.org?utm_source=coolify.io).
 
 3. **Automatic Renewal** - Certificates are automatically renewed before they expire. Let's Encrypt certificates are valid for 90 days and Coolify handles renewals seamlessly.
 
@@ -33,7 +33,7 @@ You don't need to do anything special to enable HTTPS. Simply use `https://` whe
 
 ### Self-Signed Certificates
 
-If automatic certificate issuance from [Let's Encrypt ↗](https://letsencrypt.org?utm_source=coolify.io) fails, the Coolify Proxy will provide a self-signed certificate to keep your application accessible. This means your application will still be reachable, but browsers will show a security warning.
+If automatic certificate issuance from [Let's Encrypt](https://letsencrypt.org?utm_source=coolify.io) fails, the Coolify Proxy will provide a self-signed certificate to keep your application accessible. This means your application will still be reachable, but browsers will show a security warning.
 
 ::: warning TROUBLESHOOTING
 If you see a certificate warning in your browser or your application shows a self-signed certificate, see the [Let's Encrypt Not Working](/troubleshoot/dns-and-domains/lets-encrypt-not-working) troubleshooting guide for detailed solutions.

@@ -26,5 +26,5 @@ Available on almost any device, Plex is the first-and-only streaming platform to
 
 ## Links
 
-- [The official website ›](https://www.plex.tv/)
-- [GitHub ›](https://github.com/plexinc/pms-docker)
+- [The official website](https://www.plex.tv/)
+- [GitHub](https://github.com/plexinc/pms-docker)
