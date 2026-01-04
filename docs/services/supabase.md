@@ -19,42 +19,33 @@ You can find your anonymous key in the **Environment Variables** area under **SE
 
 ## Public Port Access
 
-::: warning NOTE:
-There is a bug with making database publicly accessible. This bug will be fixed soon. In the meantime, you can use the following workaround:
-:::
+**while you should access supabase through supavisor**, If you want to access your supabase directly you can do the following:  
 
 Set **Supabase Db** to public
 
 <ZoomableImage src="/docs/images/services/supabase-db-fix.webp" alt="Supabase dashboard" />
 
-Then
-
-Go to the **General** tab then **Edit Compose File**
-
-Then add this line
-`ports:
-      - ${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}`
-
-To
-
-```yaml
-supabase-db:
-  image: "supabase/postgres:15.6.1.146"
-  healthcheck:
-    test: "pg_isready -U postgres -h 127.0.0.1"
-    interval: 5s
-    timeout: 5s
-    retries: 10
-  depends_on:
-    supabase-vector:
-      condition: service_healthy
-  ports:
-    - ${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}
-```
-
 And Restart
 
-> NOTE if you are changing the port to a different port altogether to update the POSTGRES_PORT in the Environment Variables
+## Connecting to the Database through supavisor 
+
+In order to connect to your supabase DB pay attention to those enviroment variabels as you are supposed to connect to it through supavisor for efficient connection management: 
+- `POOLER_TENANT_ID` ( **make sure to change this in production** )
+- `POSTGRES_PORT` (default to 5432)  
+- `POOLER_PROXY_PORT_TRANSACTION` (default to 6543)  
+
+connection string sample:   
+- Direct connection:  
+`psql 'postgres://postgres.[POOLER_TENANT_ID]:[POSTGRES_PASSWORD]@[your-domain]:5432/postgres'`  
+- Pooler connection:  
+`psql 'postgres://postgres.[POOLER_TENANT_ID]:[POSTGRES_PASSWORD]@[your-domain]:6543/postgres'`
+
+
+## Enabling Supabase AI assistance  
+
+Note that supabase also allow AI integrations with an Open-AI key through the following environment variable:  
+      - `OPENAI_API_KEY`
+
 
 ## Opening ports with ufw-docker
 
@@ -63,6 +54,7 @@ Finally, to allow external access to the PostgreSQL port in a Docker setup, you 
 ```bash
 ufw route allow proto tcp from any to any port 5432
 ```
+NOTE: Change **5432** to your environment variable you satup previously `POSTGRES_PORT` OR `POOLER_PROXY_PORT_TRANSACTION` whichever you are trying to expose 
 
 This rule ensures traffic can reach your PostgreSQL database through the Docker network. For more information, read the docs from [ufw-docker](https://github.com/chaifeng/ufw-docker).
 
@@ -70,7 +62,25 @@ This rule ensures traffic can reach your PostgreSQL database through the Docker 
 
 If your server is hosted on Hetzner, you may not need ufw-docker. Instead, you can open the relevant database port (e.g., 5432) directly using [Hetzner's firewall UI](https://docs.hetzner.com/cloud/firewalls/overview).
 
+
+
+## Enforcing SSL connections  
+
+ The pre-set template for supabase does have both files for public and private key mounted under the persistance storage tab. 
+ - `server.key` file for your public key  
+ - `server.crt` file for your certificate
+
+ These are loaded through the environment variables under supavisor  
+ - `GLOBAL_DOWNSTREAM_CERT_PATH=/etc/postcerts/server.crt`
+ - `GLOBAL_DOWNSTREAM_KEY_PATH=/etc/postcerts/server.key`
+
+ simply adding them doesn't enforce SSL but make it a valid option, in order to enforce it you must access the database as `supabase-admin` in away of your choice and access the following: 
+ `Under DB:_supabase -> schema:_supavisor -> enforce_ssl` and set this to `true`
+
+   <ZoomableImage src="/docs/images/services/supabase-enforce-ssl.webp" alt="Path To The Image" />  
+   
 ## Links
 
 - [Official Website](https://supabase.io)
 - [GitHub](https://github.com/supabase/supabase)
+- [Supabase offical selfhosting guide](https://supabase.com/docs/guides/self-hosting/docker)
