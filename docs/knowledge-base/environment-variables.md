@@ -39,7 +39,7 @@ You can set them on the `Environments` page (select a `Project`), under the gear
 
 ### Using Environment and Shared Variables in Docker Compose
 
-Within Coolify you can configure these easily following the details found in the [Knowledge Base for Docker Compose](/knowledge-base/compose#defining-environment-and-shared-variables).
+Within Coolify you can configure these easily following the details found in the [Knowledge Base for Docker Compose](/knowledge-base/docker/compose#shared-environment-variables).
 
 ## Predefined Variables
 
