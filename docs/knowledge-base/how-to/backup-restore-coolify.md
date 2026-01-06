@@ -150,7 +150,7 @@ After restoring the backup, update your environment configuration to allow the n
    ```
 
 2. **Add the Previous APP Key:**
-   Add a new environment variable called `APP_PREVIOUS_KEYS` and paste the value of APP_KEY you saved earlier. If you have migrated multiple times, you can list multiple keys separated by a comma (ensure there are no spaces between them).
+   Add a new environment variable called `APP_PREVIOUS_KEYS` and paste the value of `APP_KEY` you saved earlier. If you have migrated multiple times, you can list multiple keys separated by a comma (ensure there are no spaces between them):
    ```yaml
    # Single key example:
    APP_PREVIOUS_KEYS=your_previous_app_key_here
