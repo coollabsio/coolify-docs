@@ -70,6 +70,44 @@ This rule ensures traffic can reach your PostgreSQL database through the Docker 
 
 If your server is hosted on Hetzner, you may not need ufw-docker. Instead, you can open the relevant database port (e.g., 5432) directly using [Hetzner's firewall UI](https://docs.hetzner.com/cloud/firewalls/overview).
 
+
+## Supabase with MCP (Model Context Protocol)
+
+If you need AI assistants like **Cursor**, **Claude Desktop** to interact with your Supabase database, use the **Supabase with MCP** template instead of the standard Supabase template.
+
+### What is MCP?
+
+MCP (Model Context Protocol) allows AI coding assistants to directly query and interact with your PostgreSQL database, enabling features like:
+- AI-powered database schema exploration
+- Automated query generation
+- Database debugging assistance
+
+### Deployment
+
+1. In Coolify, go to **Projects** → **New Service**
+2. Search for **"Supabase with MCP"** or look for the template with slogan "Supabase with Model Context Protocol for AI assistants"
+3. Deploy as usual
+4. In Coolify UI, configure a domain for the `supabase-mcp` service to expose the MCP endpoint
+
+### Connecting AI Assistants
+
+After deployment, configure your AI assistant with your MCP URL:
+
+**Cursor:**
+Settings → Features → MCP → Add server with your MCP URL
+
+**Claude Desktop:**
+Edit your config file (`~/Library/Application Support/Claude/claude_desktop_config.json` on Mac):
+```json
+{
+  "mcpServers": {
+    "supabase": {
+      "url": "https://your-mcp-domain.com"
+    }
+  }
+}
+```
+
 ## Links
 
 - [Official Website](https://supabase.io)
