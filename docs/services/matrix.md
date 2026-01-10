@@ -11,6 +11,17 @@ description: "Run Matrix Synapse server on Coolify for decentralized chat, end-t
 
 Matrix is an open-source, decentralized communication protocol that enables secure, real-time communication. It provides end-to-end encrypted messaging, voice and video calls, file sharing, and room-based conversations. Matrix serves as an excellent alternative to proprietary platforms like Slack or Discord, offering federation capabilities that allow different Matrix servers to communicate with each other.
 
+### Configure Traefik
+
+While it looks like Matrix is working fine you'll soon find that some things like creating spaces or joining new ones it's not possibles as it throws errors. This is due to Traefik messing with the # and % route symbols. To solve it, just edit the Traefik config on the Server where you've Matrix installed and add this under the `command:` section:
+
+```yml
+      - '--entrypoints.http.http.encodedcharacters.allowencodedhash=true'
+      - '--entrypoints.https.http.encodedcharacters.allowencodedhash=true'
+      - '--entrypoints.http.http.encodedcharacters.allowencodedpercent=true'
+      - '--entrypoints.https.http.encodedcharacters.allowencodedpercent=true'
+```
+
 ## Links
 
 - [The official website](https://matrix.org?utm_source=coolify.io)
