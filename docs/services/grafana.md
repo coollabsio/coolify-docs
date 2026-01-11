@@ -9,6 +9,23 @@ description: "Deploy Grafana on Coolify for data visualization, monitoring dashb
 
 The open and composable observability and data visualization platform. Visualize metrics, logs, and traces from multiple sources like Prometheus, Loki, Elasticsearch, InfluxDB, Postgres and many more.
 
+## Deployment Variants
+
+Grafana is available in two deployment configurations in Coolify:
+
+### Grafana (Default)
+- **Database:** Embedded (SQLite)
+- **Use case:** Simple monitoring setups, testing, or temporary dashboards
+- **Components:** Single Grafana container with built-in database
+
+### Grafana with PostgreSQL
+- **Database:** PostgreSQL
+- **Use case:** Production deployments requiring persistent data storage, high availability, and better performance
+- **Components:**
+  - Grafana container
+  - PostgreSQL 16 container
+  - Automatic database configuration and health checks
+
 ## Features
 
 Grafana allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data-driven culture:

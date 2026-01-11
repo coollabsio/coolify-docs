@@ -7,7 +7,9 @@ description: "Manage household on Coolify with Grocy for grocery inventory, reci
 
 ## What is Grocy?
 
-Grocy is a web-based self-hosted groceries & household management solution for your home
+Grocy is a web-based self-hosted groceries & household management solution for your home.
+After installation your default credentials will be username: `admin`, password: `admin`. 
+Make sure to update these ASAP by logging in and editing the `admin` user in the settings, which can be found in the top right of your screen. 
 
 ## Links
 

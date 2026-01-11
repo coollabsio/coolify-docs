@@ -162,14 +162,78 @@ If you're not logged in as the root user, run the script with sudo:
 curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
 ```
 
-You can also set up the first admin account directly during the installation. For details, see: [Create Root User with Environment Variables](/knowledge-base/create-root-user-with-env)
 :::
 
-There are several environment variables that you can set to customize your Coolify installation.
+#### Advanced: Customizing Installation with Environment Variables
 
-For example, you can setup a default root user or define the default docker network pool.
+The installation script supports several environment variables to customize your Coolify installation. These are completely optional.
 
-See the [Define Custom Docker Network with ENV](/knowledge-base/define-custom-docker-network-with-env) or the [Create Root User with ENV](/knowledge-base/create-root-user-with-env) for more details.
+:::details Click to view all available environment variables
+
+You can set these environment variables before running the installation script to customize your Coolify setup:
+
+| Environment Variable         | Description                                           | Default Value | Example              |
+| ---------------------------- | ----------------------------------------------------- | ------------- | -------------------- |
+| `ROOT_USERNAME`              | Predefined root username for first admin account      | -             | `admin`              |
+| `ROOT_USER_EMAIL`            | Predefined root user email for first admin account    | -             | `admin@example.com`  |
+| `ROOT_USER_PASSWORD`         | Predefined root user password for first admin account | -             | `SecurePassword123!` |
+| `DOCKER_ADDRESS_POOL_BASE`   | Custom Docker address pool base (CIDR notation)       | `10.0.0.0/8`  | `172.16.0.0/12`      |
+| `DOCKER_ADDRESS_POOL_SIZE`   | Custom Docker address pool size (must be 16-28)       | `24`          | `20`                 |
+| `DOCKER_POOL_FORCE_OVERRIDE` | Force override existing Docker pool configuration     | `false`       | `true`               |
+| `AUTOUPDATE`                 | Enable/disable automatic Coolify updates              | `true`        | `false`              |
+| `REGISTRY_URL`               | Custom Docker registry URL for Coolify images         | `ghcr.io`     | `your-registry.com`  |
+
+**Usage Examples:**
+
+**1. Create Admin Account During Installation:**
+
+```bash
+env ROOT_USERNAME=admin \
+ROOT_USER_EMAIL=admin@example.com \
+ROOT_USER_PASSWORD=SecurePassword123 \
+bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
+```
+
+See the [Create Root User with Environment Variables](/knowledge-base/create-root-user-with-env) guide for more details.
+
+**2. Custom Docker Network Pool:**
+
+```bash
+env DOCKER_ADDRESS_POOL_BASE=172.16.0.0/12 \
+DOCKER_ADDRESS_POOL_SIZE=20 \
+bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
+```
+
+See the [Define Custom Docker Network with ENV](/knowledge-base/define-custom-docker-network-with-env) guide for more details.
+
+**3. Disable Auto-Updates:**
+
+```bash
+env AUTOUPDATE=false \
+bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
+```
+
+**4. Use Custom Docker Registry:**
+
+```bash
+env REGISTRY_URL=your-registry.com \
+bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
+```
+
+When using a custom registry, make sure all required Coolify images are available in your registry.
+
+**5. Combine Multiple Variables:**
+
+```bash
+env ROOT_USERNAME=admin \
+ROOT_USER_EMAIL=admin@example.com \
+ROOT_USER_PASSWORD=SecurePassword123 \
+AUTOUPDATE=false \
+DOCKER_ADDRESS_POOL_BASE=172.16.0.0/12 \
+bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
+```
+
+:::
 
 #### 3. Access Coolify
 

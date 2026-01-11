@@ -13,8 +13,10 @@ For those who **self-host** Coolify, you can easily downgrade to the previous ve
 
 :::danger **Backup First!**
 
-> **Always back up your Coolify data before performing an downgrade.** > **Downgrading can introduce issues that can be difficult to fix.**
-> :::
+> **Always back up your Coolify data before performing an downgrade.** 
+
+> **Downgrading can introduce issues that can be difficult to fix.**
+:::
 
 The Downgrade process involves the following three steps:
 

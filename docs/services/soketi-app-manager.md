@@ -3,6 +3,10 @@ title: "Soketi App Manager"
 description: "Manage Soketi apps on Coolify with application configuration, authentication, and WebSocket server administration interface."
 ---
 
+::: warning SERVICE NOT AVAILABLE
+This service is currently not available in Coolify's service catalog.
+:::
+
 <ZoomableImage src="/docs/images/services/soketi-app-manager-logo.webp" alt="Soketi App Manager Logo logo" />
 
 ## What is Soketi App Manager ?

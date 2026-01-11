@@ -2,19 +2,35 @@
 description: Deploy 200+ pre-configured open-source applications instantly with Coolify's one-click services, from development tools to databases.
 ---
 
-# What are One-Click Services?
+# Services
 
-Coolify's One-Click Services are a curated collection of popular open-source applications and tools that you can deploy instantly with just a few clicks. These services eliminate the complexity of manual setup and configuration, making self-hosting accessible to everyone.
+## What are Services?
 
-## How They Work
+Services in Coolify are deployments based on **Docker Compose files** that are stored directly on your server. Unlike [Applications](/applications/introduction), Services are **not connected to a Git source** — they don't pull code from a repository or rebuild on commits.
 
-One-Click Services are essentially **pre-configured Docker Compose files** that have been:
+There are two types of Services in Coolify:
+
+### User-Defined Services
+
+These are Docker Compose files that **you manually provide**. You can paste your own `docker-compose.yml` configuration directly into Coolify, and it will deploy and manage it for you. This gives you complete flexibility to deploy any containerized application or stack that you've configured yourself.
+
+To do so, you select the `Docker Compose Empty` option when creating a new Resource.
+
+### One-Click Services
+
+One-Click Services are a curated collection of 200+ popular open-source applications and tools that you can deploy instantly with just a few clicks. These are **pre-configured Docker Compose templates** provided by Coolify, eliminating the complexity of manual setup and configuration.
+
+Instead of writing your own compose file from scratch, you can select from ready-to-use templates that are automatically filled in for you, making self-hosting accessible to everyone.
+
+#### How They Work
+
+Each template has been:
 
 - **Pre-tested and optimized** for reliable deployment
 - **Configured with sensible defaults** to work out of the box
 - **Integrated with Coolify's features** like automatic SSL and backups
 
-## What's Included
+#### What's Included
 
 Our service library includes a wide variety of applications developed by the open-source community:
 
@@ -26,7 +42,7 @@ Our service library includes a wide variety of applications developed by the ope
 - **Communication**: Chat platforms, email servers, forums
 - **And many more...**
 
-## Key Benefits
+#### Key Benefits
 
 - **Instant Deployment**: No need to write Docker Compose files from scratch
 - **Automatic Updates**: Services can be updated with a single click
@@ -34,7 +50,7 @@ Our service library includes a wide variety of applications developed by the ope
 - **Community Tested**: All services are tested and maintained by the community
 - **Full Control**: You maintain complete control over your data and infrastructure
 
-## Contributing New Services
+#### Contributing New Services
 
 Want to add a service to Coolify's library? We welcome contributions from the community!
 
