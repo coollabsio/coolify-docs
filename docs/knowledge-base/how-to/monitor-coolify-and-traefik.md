@@ -28,24 +28,27 @@ With Grafana, you can setup alerts. When configured correctly you can get notifi
 Here we will show how to do it with a separate monitoring server, which connects through a  
 internal network in Hetzner, but it can be used in other setups.
 
-### 1. Setup Hetzner
-On Hetzner, I've created a new `CX33` VPS: `Monitoring`.
-On the tab `Networks` I've created a network named `Monitoring`.
-This network will be used so all monitoring ports aren't public accesible.
+### 1. Prepare your monitoring server
+You need a separate server to run Prometheus, Grafana, and optionally other monitoring tools (e.g., Uptime Kuma).
+This is so if the Coolify server has high usage, all metrics will still be available.
 
-Inside the `Monitoring` network, you can attach resources.  
-Add here all servers which needs to be monitored (also add the `Monitoring` server).
+#### Recommended specs
+- CPU: 2+ cores
+- RAM: 4GB+
+- Disk: 20GB+ (for Prometheus metrics storage)
+- OS: Any Linux distribution with Docker installed
+- Network: Accessible to all servers you want to monitor (private/internal network recommended for security)
 
-Create a new firewall in Hetzner named `Coolify`.  
-In the resources tab, add all Coolify related servers.  
-Add inbound rules. Mine are:
-- `22`: myIp | SSH
-- `80`: Any IP | HTTP
-- `443`: Any IP | HTTPS
-- `53`: Any IP | DNS
-- `9100`: All IPs from the `Monitoring` network | Resource monitoring
-- `6872`: All IPs from the `Monitoring` network | Docker monitoring (custom port)
-- `8080`: All IPs from the `Monitoring` network | Traefik monitoring
+#### Network considerations
+- Use a private/internal network or VPN to connect your monitoring server with all target servers.
+- Open only the required ports on the monitoring server and target servers:
+    - `9100` → Node Exporter (host resource metrics)
+    - `6872` → cAdvisor (Docker container metrics, can vary)
+    - `8080` → Traefik metrics API
+    - `22` → SSH for management
+- You can expose HTTP/HTTPS if you want to access dashboards externally (or use a reverse proxy with SSL).
+
+Attach all servers you want to monitor to this network so Prometheus can scrape metrics from them.
 
 ### 2. Install Grafana
 To install Grafana, you can follow the [detailed install guide](https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/)  
