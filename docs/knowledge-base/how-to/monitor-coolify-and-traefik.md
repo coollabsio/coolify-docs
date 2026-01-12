@@ -51,11 +51,17 @@ This is so if the Coolify server has high usage, all metrics will still be avail
 Attach all servers you want to monitor to this network so Prometheus can scrape metrics from them.
 
 ### 2. Install Grafana
-To install Grafana, you can follow the [detailed install guide](https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/)  
-But when you use Docker, you can run:
+To install Grafana, you can use the following methods:
+#### Bare metal on a VPS:
+Follow the [detailed install guide](https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/) 
+#### With a Docker command:
 ```bash
 docker run  -d --name=grafana -p 3000:3000 -e "GF_SECURITY_ADMIN_USER=admin" -e "GF_SECURITY_ADMIN_PASSWORD=YOURSECRETPASSWORDHERE!" grafana/grafana-oss
 ```
+#### In Coolify:
+By creating a new Coolify application.
+
+_Note_: It's adviced to run Grafana on a different server then the server(s) you want to monitor.
 
 ### 3. Setup target servers
 On the target servers, you need to have Docker already installed.
