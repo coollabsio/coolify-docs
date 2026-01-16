@@ -3,7 +3,6 @@ title: "Evolution API"
 description: "Deploy Evolution API on Coolify for WhatsApp Business integration, message automation, chatbot workflows, and customer communication management."
 ---
 
-
 ## What is Evolution API?
 
 Evolution API is a robust platform devoted to empowering small businesses, entrepreneurs, freelancers, and individuals with limited resources—offering more than just a basic WhatsApp™ messaging solution.
@@ -20,6 +19,5 @@ Once everything is running, you can access your https://url/manager.
 
 ## Links
 
-
-- [GitHub ›](https://github.com/EvolutionAPI/evolution-api?utm_source=coolify.io)
-- [Official Documentation ›](https://doc.evolution-api.com/v1/en/get-started/introduction?utm_source=coolify.io)
+- [GitHub](https://github.com/EvolutionAPI/evolution-api?utm_source=coolify.io)
+- [Official Documentation](https://doc.evolution-api.com/v1/en/get-started/introduction?utm_source=coolify.io)

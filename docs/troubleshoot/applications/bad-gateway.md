@@ -59,4 +59,4 @@ If your deployed application **maybe** works when you access it via your server�
 
 ## Support
 
-If these steps don’t solve the issue, consider reaching out for further assistance by joining our [Discord community ↗](https://coolify.io/discord) and sharing your app logs, coolify proxy logs, configuration screenshots, and details of the troubleshooting steps you’ve already tried.
+If these steps don’t solve the issue, consider reaching out for further assistance by joining our [Discord community](https://coolify.io/discord) and sharing your app logs, coolify proxy logs, configuration screenshots, and details of the troubleshooting steps you’ve already tried.

@@ -17,7 +17,7 @@ You can easily use Traefik to loadbalance an application between:
 2. You must deploy your application to more than one servers: read more [here](/knowledge-base/server/multiple-servers).
 3. Make sure Traefik is running on all servers.
 4. Set your `fqdn` to the fqdn you would like to use to reach your application.
-5. After your application are deployed on all servers, you need to make a dynamic configuration for Traefik to loadbalance between your servers in the `/data/coolify/proxy/dynamic` directory.
+5. After your application is deployed on all servers, you need to make a dynamic configuration for Traefik to loadbalance between your servers in the `/data/coolify/proxy/dynamic` directory.
 
 ### Dynamic Configuration
 

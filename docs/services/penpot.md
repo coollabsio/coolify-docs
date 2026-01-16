@@ -3,7 +3,6 @@ title: "Penpot"
 description: "Design on Coolify with Penpot open-source Figma alternative for prototyping, collaboration, SVG-based design, and web-based UI/UX workflows."
 ---
 
-
 ![Penpot](https://camo.githubusercontent.com/119ae16473fdd30f3fa077eb2639e9e2639cb3297c5e50c226c0eb25a82ea00d/68747470733a2f2f70656e706f742e6170702f696d616765732f726561646d652f6769746875622d6461726b2d6d6f64652e706e67)
 
 ## What is Penpot?
@@ -18,5 +17,5 @@ Penpot is an open-source design and prototyping tool that empowers teams to crea
 
 ## Links
 
-- [The official website ›](https://penpot.app/)
-- [GitHub ›](https://github.com/penpot/penpot)
+- [The official website](https://penpot.app/)
+- [GitHub](https://github.com/penpot/penpot)

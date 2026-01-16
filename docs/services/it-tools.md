@@ -5,7 +5,7 @@ description: "Host IT Tools collection on Coolify with 80+ developer utilities f
 
 # It Tools
 
-<ZoomableImage src="/docs/images/services/it-tools.svg" alt="It Tools dashboard" />
+<ZoomableImage src="/docs/images/services/ittools-logo.svg" alt="It Tools dashboard" />
 
 ## What is It Tools
 

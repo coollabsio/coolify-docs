@@ -3,12 +3,28 @@ title: "Grafana"
 description: "Deploy Grafana on Coolify for data visualization, monitoring dashboards, alerting, and metric analysis from multiple data sources and databases."
 ---
 
-
 ![Grafana](https://github.com/grafana/grafana/raw/main/docs/logo-horizontal.png#gh-light-mode-only)
 
 ## What is Grafana?
 
 The open and composable observability and data visualization platform. Visualize metrics, logs, and traces from multiple sources like Prometheus, Loki, Elasticsearch, InfluxDB, Postgres and many more.
+
+## Deployment Variants
+
+Grafana is available in two deployment configurations in Coolify:
+
+### Grafana (Default)
+- **Database:** Embedded (SQLite)
+- **Use case:** Simple monitoring setups, testing, or temporary dashboards
+- **Components:** Single Grafana container with built-in database
+
+### Grafana with PostgreSQL
+- **Database:** PostgreSQL
+- **Use case:** Production deployments requiring persistent data storage, high availability, and better performance
+- **Components:**
+  - Grafana container
+  - PostgreSQL 16 container
+  - Automatic database configuration and health checks
 
 ## Features
 
@@ -23,5 +39,5 @@ Grafana allows you to query, visualize, alert on and understand your metrics no 
 
 ## Links
 
-- [The official website ›](https://grafana.com/)
-- [GitHub ›](https://github.com/grafana/grafana)
+- [The official website](https://grafana.com/)
+- [GitHub](https://github.com/grafana/grafana)

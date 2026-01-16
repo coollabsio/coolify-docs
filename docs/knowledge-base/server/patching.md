@@ -4,16 +4,19 @@ description: "Update server packages from Coolify dashboard with APT, DNF, and Z
 ---
 
 
-# Server Patching <Badge type="warning" text="^v4.0.0-beta.419" />
+# Server Patching
 The **Server Patching** feature lets you update all packages on your server directly from the Coolify dashboard.
 
+::: warning IMPORTANT
+This feature is introduced in **v4.0.0-beta.419**. To follow this guide, you **must** be using v4.0.0-beta.419 or a higher version.
+:::
+
 ## How to Use Server Patching
+<ZoomableImage src="/docs/images/knowledge-base/servers/patching/1.webp" alt="Screenshot of Patching" />
 1. Go to the **Servers** section in the sidebar.
 2. Select your server.
 3. Click on the **Security** tab.
 4. Open the **Server Patching** section.
-
-<ZoomableImage src="/docs/images/knowledge-base/servers/patching/1.webp" alt="Screenshot of Patching" />
 
 On this page, you'll see a list of all available package updates.
 
@@ -21,12 +24,18 @@ You can either:
   - Update packages **individually** by clicking the **Update** button next to each one.
   - Or, click **Update All Packages** to apply all updates at once.
 
-::: warning Note
+::: info Note
   Coolify **does not** automatically install updates. It only checks for available updates and displays them in the dashboard.
   
   Updates are applied only when you manually click the **Update** or **Update All Packages** button.
 :::
 
+::: danger Important
+Some package updates may break existing features.
+Docker-related updates will restart Docker, which means all your applications and Coolify itself will be unavailable until Docker is restarted.
+
+**We highly recommend you to review each package carefully before updating.**
+:::
 
 ## Server Patching Notifications
 Coolify checks for updates weekly and sends notifications if any are available.

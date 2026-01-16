@@ -3,7 +3,7 @@ title: "Infisical"
 description: "Deploy Infisical secrets management on Coolify for environment variables, API keys, secure sharing, and centralized secrets across development teams."
 ---
 
-<ZoomableImage src="/docs/images/services/infisical.svg" alt="Infisical dashboard" />
+<ZoomableImage src="/docs/images/services/infisical-logo.svg" alt="Infisical dashboard" />
 
 ## What is Infisical?
 
@@ -20,5 +20,5 @@ Infisical is the open source security infrastructure platform that engineers use
 
 ## Links
 
-- [The official website ›](https://infisical.com/?utm_source=coolify.io)
-- [GitHub ›](https://github.com/Infisical/infisical?utm_source=coolify.io)
+- [The official website](https://infisical.com/?utm_source=coolify.io)
+- [GitHub](https://github.com/Infisical/infisical?utm_source=coolify.io)

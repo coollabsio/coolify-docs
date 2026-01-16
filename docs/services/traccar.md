@@ -5,7 +5,7 @@ description: "Track GPS on Coolify with Traccar for vehicle tracking, geofencing
 
 # Traccar
 
-<ZoomableImage src="/docs/images/services/traccar.png" alt="Traccar dashboard" />
+<ZoomableImage src="/docs/images/services/traccar-logo.png" alt="Traccar dashboard" />
 
 ## What is Traccar
 

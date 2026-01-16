@@ -5,7 +5,7 @@ description: "Deploy FreeScout helpdesk on Coolify as self-hosted HelpScout alte
 
 # Freescout
 
-<ZoomableImage src="/docs/images/services/freescout.png" alt="Freescout dashboard" />
+<ZoomableImage src="/docs/images/services/freescout-logo.png" alt="Freescout dashboard" />
 
 ## What is Freescout
 

@@ -259,1636 +259,1779 @@ img:hover {
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const services = [
+     {
+        name: 'Siyuan',
+        slug: 'siyuan',
+        icon: '/docs/images/services/siyuan.svg',
+        description: 'A privacy-first, self-hosted, fully open source personal knowledge management software, written in typescript and golang.',
+        category: 'Productivity'
+    },
     {
         name: 'Umami',
         slug: 'umami',
-        icon: '/docs/images/services/umami.svg',
+        icon: '/docs/images/services/umami-logo.svg',
         description: 'A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies.',
         category: 'Analytics'
     },
     {
         name: 'Plausible',
         slug: 'plausible',
-        icon: '/docs/images/services/plausible.svg',
+        icon: '/docs/images/services/plausible-logo.svg',
         description: 'A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies.',
         category: 'Analytics',
-        ignore: true
+        disabled: true
+    },
+    {
+        name: 'Rybbit',
+        slug: 'rybbit',
+        icon: '/public/images/services/rybbit.svg',
+        description: 'A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies.',
+        category: 'Analytics'
     },
     {
         name: 'Activepieces',
         slug: 'activepieces',
-        icon: '/docs/images/services/activepieces.svg?url',
+        icon: '/docs/images/services/activepieces-logo.png',
         description: 'Open source no-code business automation.',
         category: 'Automation'
     },
     {
         name: 'Actual Budget',
         slug: 'actualbudget',
-        icon: '/docs/images/services/actualbudget.svg',
+        icon: '/docs/images/services/actualbudget-logo.webp',
         description: 'A local-first personal finance tool based on zero-based budgeting.',
         category: 'Finance'
     },
     {
         name: 'Affine',
         slug: 'affine',
-        icon: '/docs/images/services/affine.svg',
+        icon: '/docs/images/services/affine-logo.webp',
         description: 'Open-source knowledge base and workspace combining docs, whiteboards, and databases.',
         category: 'Productivity'
     },
     {
         name: 'AnythingLLM',
         slug: 'anythingllm',
-        icon: '/docs/images/services/anythingllm.svg',
+        icon: '/docs/images/services/anythingllm-logo.svg',
         description: 'An open-source LLM client that empowers developers to build and scale workflows quickly.',
         category: 'AI'
     },
     {
         name: 'Apprise API',
         slug: 'apprise-api',
-        icon: '/docs/images/services/apprise-api.svg',
+        icon: '/docs/images/services/appriseapi-logo.png',
         description: 'RESTful API for Apprise notification library.',
         category: 'Development'
     },
     {
         name: 'Appsmith',
         slug: 'appsmith',
-        icon: '/docs/images/services/appsmith.svg',
+        icon: '/docs/images/services/appsmith-logo.svg',
         description: 'A low-code application platform for building internal tools.',
         category: 'Development'
     },
     {
         name: 'Appwrite',
         slug: 'appwrite',
-        icon: '/docs/images/services/appwrite.svg',
+        icon: '/docs/images/services/appwrite-logo.svg',
         description: 'A backend-as-a-service platform that simplifies the web & mobile app development.',
         category: 'Development'
     },
     {
         name: 'Argilla',
         slug: 'argilla',
-        icon: '/docs/images/services/argilla.svg',
+        icon: '/docs/images/services/argilla-logo.svg',
         description: 'An open-source platform for building, training, and evaluating conversational AI models.',
         category: 'AI'
     },
     {
         name: 'Audiobookshelf',
         slug: 'audiobookshelf',
-        icon: '/docs/images/services/audiobookshelf.svg',
+        icon: '/docs/images/services/audiobookshelf-logo.svg',
         description: 'Self-hosted audiobook and podcast server.',
         category: 'Media'
     },
     {
         name: 'Authentik',
         slug: 'authentik',
-        icon: '/docs/images/services/authentik.svg',
+        icon: '/docs/images/services/authentik-logo.png',
         description: 'An open-source Identity Provider, focused on flexibility and versatility.',
         category: 'Security'
     },
     {
         name: 'Baby Buddy',
         slug: 'babybuddy',
-        icon: '/docs/images/services/babybuddy.svg',
+        icon: '/docs/images/services/babybuddy-logo.png',
         description: 'It helps parents track their baby\'s daily activities, growth, and health with ease.',
         category: 'Health'
     },
     {
         name: 'Beszel',
         slug: 'beszel',
-        icon: '/docs/images/services/beszel.svg',
+        icon: '/docs/images/services/beszel-logo.svg',
         description: 'Lightweight server monitoring hub with historical data, docker stats, and alerts.',
         category: 'Monitoring'
     },
     {
         name: 'Bluesky PDS',
         slug: 'bluesky-pds',
-        icon: '/docs/images/services/bluesky.svg',
+        icon: '/docs/images/services/bluesky-logo.svg',
         description: 'Bluesky PDS (Personal Data Server) for decentralized social networking.',
         category: 'Social Media'
     },
     {
         name: 'Bitcoin Core',
         slug: 'bitcoin-core',
-        icon: '/docs/images/services/bitcoin-core.svg',
+        icon: '/docs/images/services/bitcoin-logo.svg',
         description: 'Bitcoin Core full node software.',
         category: 'Crypto'
     },
     {
         name: 'BookStack',
         slug: 'bookstack',
-        icon: '/docs/images/services/bookstack.svg',
+        icon: '/docs/images/services/bookstack-logo.png',
         description: 'Self-hosted wiki-style documentation platform.',
         category: 'Documentation'
     },
     {
         name: 'Browserless',
         slug: 'browserless',
-        icon: '/docs/images/services/browserless.svg',
+        icon: '/docs/images/services/browserless-logo.svg',
         description: 'Headless Chrome as a service.',
         category: 'Development'
     },
     {
         name: 'BudgE',
         slug: 'budge',
-        icon: '/docs/images/services/budge.svg',
+        icon: '/docs/images/services/budge-logo.png',
         description: 'A budgeting personal finance app.',
         category: 'Finance'
     },
     {
         name: 'Budibase',
         slug: 'budibase',
-        icon: '/docs/images/services/budibase.svg',
+        icon: '/docs/images/services/budibase-logo.svg',
         description: 'Low-code platform for building internal tools and business apps.',
         category: 'Development'
     },
     {
         name: 'Bugsink',
         slug: 'bugsink',
-        icon: '/docs/images/services/bugsink.svg',
+        icon: '/docs/images/services/bugsink-logo.webp',
         description: 'Self-hosted Error Tracking',
         category: 'Development'
     },
     {
         name: 'Cal.com',
         slug: 'calcom',
-        icon: '/docs/images/services/calcom.svg',
+        icon: '/docs/images/services/calcom-logo.svg',
         description: 'Open-source Calendly alternative for scheduling meetings.',
         category: 'Productivity'
     },
     {
         name: 'Calibre-web',
         slug: 'calibre-web',
-        icon: '/docs/images/services/calibre-web.svg',
+        icon: '/docs/images/services/calibreweb-logo.svg',
         description: 'Web app for browsing, reading and downloading eBooks from a Calibre database.',
         category: 'Media'
     },
     {
-        name: 'Calibre Web Automated with Downloader',
-        slug: 'calibre-web-automated-with-downloader',
-        icon: '/docs/images/services/calibre-web-automated-with-downloader.png',
-        description: 'Automated version of Calibre Web with a book downloader included.',
+        name: 'Cap',
+        icon: '/public/images/services/cap.svg',
+        description: 'Cap is the open source alternative to Loom. Lightweight, powerful, and cross-platform. Record and share in seconds.',
         category: 'Media'
     },
     {
         name: 'Castopod',
         slug: 'castopod',
-        icon: '/docs/images/services/castopod.svg',
+        icon: '/docs/images/services/castopod-logo.svg',
         description: 'Open-source podcast hosting platform.',
         category: 'Media'
     },
     {
         name: 'Changedetection',
         slug: 'changedetection',
-        icon: '/docs/images/services/changedetection.svg',
+        icon: '/docs/images/services/changedetection-logo.png',
         description: 'Website change detection monitor and notifications.',
         category: 'Monitoring'
     },
     {
         name: 'Chroma',
         slug: 'chroma',
-        icon: '/docs/images/services/chroma.svg',
+        icon: '/docs/images/services/chroma-logo.svg',
         description: 'Open-source, AI-native vector database for building applications with embeddings.',
         category: 'AI'
     },
     {
         name: 'Chaskiq',
         slug: 'chaskiq',
-        icon: '/docs/images/services/chaskiq.svg',
+        icon: '/docs/images/services/chaskiq-logo.png',
         description: 'Open source customer engagement platform.',
         category: 'Business'
     },
     {
         name: 'Chatwoot',
         slug: 'chatwoot',
-        icon: '/docs/images/services/chatwoot.svg',
+        icon: '/docs/images/services/chatwoot-logo.svg',
         description: 'Open-source customer engagement suite.',
         category: 'Business'
     },
     {
         name: 'Checkmate',
         slug: 'checkmate',
-        icon: '/docs/images/services/checkmate.svg',
+        icon: '/docs/images/services/checkmate-logo.png',
         description: 'Website monitoring and uptime service.',
         category: 'Monitoring'
     },
     {
         name: 'ClassicPress',
         slug: 'classicpress',
-        icon: '/docs/images/services/classicpress.svg',
+        icon: '/docs/images/services/classicpress-logo.svg',
         description: 'A business-focused CMS with a strong community.',
         category: 'CMS'
     },
     {
         name: 'CloudBeaver',
         slug: 'cloudbeaver',
-        icon: '/docs/images/services/cloudbeaver.svg',
+        icon: '/docs/images/services/cloudbeaver-logo.png',
         description: 'Universal database tool with web interface.',
         category: 'Development'
     },
     {
         name: 'Cloudflared',
         slug: 'cloudflared',
-        icon: '/docs/images/services/cloudflared.svg',
+        icon: '/docs/images/services/cloudflared-logo.svg',
         description: 'Cloudflare Tunnel client.',
         category: 'Networking'
     },
     {
         name: 'Cockpit',
         slug: 'cockpit',
-        icon: '/docs/images/services/cockpit.svg',
+        icon: '/docs/images/services/cockpit-logo.svg',
         description: 'Web-based server administration interface.',
         category: 'Administration'
     },
     {
         name: 'Code Server',
         slug: 'code-server',
-        icon: '/docs/images/services/code-server.svg',
+        icon: '/docs/images/services/codeserver-logo.svg',
         description: 'Run VS Code on any machine anywhere and access it in the browser.',
         category: 'Development'
     },
     {
         name: 'ConvertX',
         slug: 'convertx',
-        icon: '/docs/images/services/convertx.svg',
+        icon: '/docs/images/services/convertx-logo.png',
         description: 'File conversion service supporting multiple formats.',
         category: 'Utilities'
     },
     {
         name: 'Convex',
         slug: 'convex',
-        icon: '/docs/images/services/convex.svg',
+        icon: '/docs/images/services/convex-logo.svg',
         description: 'Backend platform for web developers.',
         category: 'Development'
     },
     {
         name: 'Cryptgeon',
         slug: 'cryptgeon',
-        icon: '/docs/images/services/cryptgeon.svg',
+        icon: '/docs/images/services/cryptgeon-logo.png',
         description: 'Secure note sharing service with self-destructing messages.',
         category: 'Security'
     },
     {
         name: 'CyberChef',
         slug: 'cyberchef',
-        icon: '/docs/images/services/cyberchef.svg',
+        icon: '/docs/images/services/cyberchef-logo.jpeg',
         description: 'Data analysis and manipulation tool for cybersecurity.',
         category: 'Security'
     },
     {
         name: 'Dashboard',
         slug: 'dashboard',
-        icon: '/docs/images/services/dashboard.svg',
+        icon: '/docs/images/services/dashboard-logo.svg',
         description: 'A simple dashboard for your server.',
-        category: 'Administration'
+        category: 'Administration',
+        disabled: true
     },
     {
         name: 'Dashy',
         slug: 'dashy',
-        icon: '/docs/images/services/dashy.svg',
+        icon: '/docs/images/services/dashy-logo.png',
         description: 'Customizable homepage dashboard for self-hosted services.',
         category: 'Administration'
     },
     {
         name: 'Deno KV',
         slug: 'denokv',
-        icon: '/docs/images/services/deno-looking-up.svg',
+        icon: '/docs/images/services/denolookingup-logo.svg',
         description: 'Deno\'s built-in key-value database service.',
         category: 'Development'
     },
     {
         name: 'Directus',
         slug: 'directus',
-        icon: '/docs/images/services/directus.svg',
+        icon: '/docs/images/services/directus-logo.svg',
         description: 'An open-source headless CMS and API for custom databases.',
         category: 'CMS'
     },
     {
         name: 'Docker Registry',
         slug: 'docker-registry',
-        icon: '/docs/images/services/docker-registry.svg',
+        icon: '/docs/images/services/docker-registry-logo.png',
         description: 'A Docker registry to store and manage your Docker images.',
         category: 'Development'
     },
     {
         name: 'Docmost',
         slug: 'docmost',
-        icon: '/docs/images/services/docmost.svg',
+        icon: '/docs/images/services/docmost-logo.png',
         description: 'Open-source document collaboration platform.',
         category: 'Documentation'
     },
     {
         name: 'Documenso',
         slug: 'documenso',
-        icon: '/docs/images/services/documenso.svg',
+        icon: '/docs/images/services/documenso-logo.png',
         description: 'Open-source DocuSign alternative for document signing.',
         category: 'Business'
     },
     {
         name: 'Docuseal',
         slug: 'docuseal',
-        icon: '/docs/images/services/docuseal.svg',
+        icon: '/docs/images/services/docuseal-logo.png',
         description: 'Open source DocuSign alternative.',
         category: 'Business'
     },
     {
         name: 'DokuWiki',
         slug: 'dokuwiki',
-        icon: '/docs/images/services/dokuwiki.svg',
+        icon: '/docs/images/services/dokuwiki-logo.png',
         description: 'A simple to use and highly versatile Open Source wiki software that doesn\'t require a database.',
         category: 'Documentation'
     },
     {
         name: 'Dolibarr',
         slug: 'dolibarr',
-        icon: '/docs/images/services/dolibarr.svg',
+        icon: '/docs/images/services/dolibarr-logo.png',
         description: 'Open-source ERP and CRM software.',
         category: 'Business'
     },
     {
         name: 'Dozzle',
         slug: 'dozzle',
-        icon: '/docs/images/services/dozzle.svg',
+        icon: '/docs/images/services/dozzle-logo.svg',
         description: 'Realtime log viewer for docker containers.',
         category: 'Development'
     },
     {
         name: 'Drupal',
         slug: 'drupal',
-        icon: '/docs/images/services/drupal.svg',
+        icon: '/docs/images/services/drupal-logo.svg',
         description: 'Open-source content management system.',
         category: 'CMS'
     },
     {
         name: 'Duplicati',
         slug: 'duplicati',
-        icon: '/docs/images/services/duplicati.svg',
+        icon: '/docs/images/services/duplicati-logo.webp',
         description: 'A free backup client that securely stores encrypted, incremental, compressed backups on cloud storage services and remote file servers.',
         category: 'Backup'
     },
     {
         name: 'Easy Appointments',
         slug: 'easyappointments',
-        icon: '/docs/images/services/easyappointments.svg',
+        icon: '/docs/images/services/easyappointments-logo.png',
         description: 'Open-source appointment scheduler.',
         category: 'Business'
     },
     {
         name: 'Emby',
         slug: 'emby',
-        icon: '/docs/images/services/emby.svg',
+        icon: '/docs/images/services/emby-logo.png',
         description: 'A media server to organize, play, and stream audio and video to a variety of devices.',
         category: 'Media'
     },
     {
         name: 'Elasticsearch',
         slug: 'elasticsearch',
-        icon: '/docs/images/services/elasticsearch.svg',
+        icon: '/docs/images/services/elasticsearch-logo.svg',
         description: 'Free and Open Source, Distributed, RESTful Search Engine.',
         category: 'Search'
     },
     {
         name: 'Emby Stat',
-        slug: 'emby-stat',
-        icon: '/docs/images/services/emby-stat.svg',
+        slug: 'embystat',
+        icon: '/docs/images/services/embystat-logo.svg',
         description: 'A simple and easy-to-use Emby statistics dashboard.',
         category: 'Media'
     },
     {
         name: 'Ente',
-        slug: 'ente',
-        icon: '/public/images/services/ente.webp',
+        slug: 'ente-photos',
+        icon: '/docs/images/services/ente-logo.webp',
         description: 'A fully open-source, end-to-end encrypted platform for you to store data in the cloud without needing to trust the service provider.',
         category: 'Productivity'
     },
     {
         name: 'Excalidraw',
         slug: 'excalidraw',
-        icon: '/docs/images/services/excalidraw.svg',
+        icon: '/docs/images/services/excalidraw-logo.svg',
         description: 'Virtual whiteboard for sketching hand-drawn like diagrams.',
         category: 'Productivity'
     },
     {
         name: 'Evolution API',
         slug: 'evolution-api',
-        icon: '/docs/images/services/evolution-api.svg',
+        icon: '/docs/images/services/evolution-api-logo.svg',
         description: 'WhatsApp API service for automation.',
         category: 'Automation'
     },
     {
         name: 'Faraday',
         slug: 'faraday',
-        icon: '/docs/images/services/faraday.svg',
+        icon: '/docs/images/services/faraday-logo.png',
         description: 'Collaborative penetration testing and vulnerability management platform.',
         category: 'Security'
     },
     {
         name: 'Fider',
         slug: 'fider',
-        icon: '/docs/images/services/fider.svg',
+        icon: '/docs/images/services/fider-logo.svg',
         description: 'An open platform to collect and organize customer feedback.',
         category: 'Business'
     },
     {
         name: 'Filebrowser',
         slug: 'filebrowser',
-        icon: '/docs/images/services/filebrowser.svg',
+        icon: '/docs/images/services/filebrowser-logo.svg',
         description: 'A file manager for the web.',
         category: 'File Management'
     },
     {
         name: 'FileFlows',
         slug: 'fileflows',
-        icon: '/docs/images/services/fileflows.svg',
+        icon: '/docs/images/services/fileflows-logo.svg',
         description: 'A automatic file processing service.',
         category: 'File Management'
     },
     {
         name: 'Firefly III',
-        slug: 'firefly-iii',
-        icon: '/docs/images/services/firefly-iii.svg',
+        slug: 'firefly',
+        icon: '/docs/images/services/firefly-iii-logo.svg',
         description: 'A personal finances manager.',
         category: 'Finance'
     },
     {
         name: 'Firefox',
         slug: 'firefox',
-        icon: '/docs/images/services/firefox.svg',
+        icon: '/docs/images/services/firefox-logo.png',
         description: 'Firefox browser in a container.',
         category: 'Browser'
     },
     {
         name: 'Flipt',
         slug: 'flipt',
-        icon: '/docs/images/services/flipt.svg',
+        icon: '/docs/images/services/flipt-logo.svg',
         description: 'Open-source feature flag management platform.',
         category: 'Development'
     },
     {
         name: 'Flowise',
         slug: 'flowise',
-        icon: '/docs/images/services/flowise.svg',
+        icon: '/docs/images/services/flowise-logo.svg',
         description: 'Drag & drop UI to build your customized LLM flow.',
         category: 'AI'
     },
     {
         name: 'Forgejo',
         slug: 'forgejo',
-        icon: '/docs/images/services/forgejo.svg',
+        icon: '/docs/images/services/forgejo-logo.svg',
         description: 'A self-hosted Git service fork of Gitea.',
         category: 'Development'
     },
     {
         name: 'Formbricks',
         slug: 'formbricks',
-        icon: '/docs/images/services/formbricks.svg',
+        icon: '/docs/images/services/formbricks-logo.png',
         description: 'A form builder for static sites.',
         category: 'Development'
     },
     {
         name: 'FoundryVTT',
         slug: 'foundryvtt',
-        icon: '/docs/images/services/foundryvtt.svg',
+        icon: '/docs/images/services/foundryvtt-logo.png',
         description: 'Virtual tabletop for tabletop role-playing games.',
         category: 'Gaming'
     },
     {
         name: 'FreeScout',
         slug: 'freescout',
-        icon: '/docs/images/services/freescout.svg',
+        icon: '/docs/images/services/freescout-logo.png',
         description: 'Help desk and customer support application.',
         category: 'Business'
     },
     {
         name: 'FreshRSS',
         slug: 'freshrss',
-        icon: '/docs/images/services/freshrss.svg',
+        icon: '/docs/images/services/freshrss-logo.png',
         description: 'Free, self-hostable RSS feed aggregator.',
         category: 'RSS'
     },
     {
         name: 'Ghost',
         slug: 'ghost',
-        icon: '/docs/images/services/ghost.svg',
+        icon: '/docs/images/services/ghost-logo.svg',
         description: 'A professional publishing platform.',
         category: 'CMS'
     },
     {
         name: 'Gitea',
         slug: 'gitea',
-        icon: '/docs/images/services/gitea.svg',
+        icon: '/docs/images/services/gitea-logo.svg',
         description: 'A painless self-hosted Git service.',
         category: 'Development'
     },
     {
         name: 'GitHub Runner',
         slug: 'github-runner',
-        icon: '/docs/images/services/github-runner.png',
+        icon: '/docs/images/services/githubrunner-logo.png',
         description: 'A GitHub Actions runner for Docker.',
         category: 'Development'
     },
     {
         name: 'GitLab',
         slug: 'gitlab',
-        icon: '/docs/images/services/gitlab.svg',
+        icon: '/docs/images/services/gitlab-logo.svg',
         description: 'DevOps lifecycle tool.',
         category: 'Development'
     },
     {
+        name: 'Gotify',
+        slug: 'gotify',
+        icon: '/docs/images/services/gotify-logo.svg',
+        description: 'Open-source push notifications for web and mobile apps.',
+        category: 'Notifications'
+    },
+    {
         name: 'GoWa',
         slug: 'gowa',
-        icon: '/docs/images/services/gowa.svg',
+        icon: '/docs/images/services/gowa-logo.svg',
         description: 'Golang WhatsApp - Built with Go for efficient memory use.',
         category: 'Communication'
     },
     {
         name: 'Glance',
         slug: 'glance',
-        icon: '/docs/images/services/glance.svg',
+        icon: '/docs/images/services/glance-logo.png',
         description: 'All-in-one Home Server Dashboard.',
         category: 'Administration'
     },
     {
         name: 'Glances',
         slug: 'glances',
-        icon: '/docs/images/services/glances.svg',
+        icon: '/docs/images/services/glances-logo.png',
         description: 'Cross-platform system monitoring tool.',
         category: 'Monitoring'
     },
     {
         name: 'GlitchTip',
         slug: 'glitchtip',
-        icon: '/docs/images/services/glitchtip.svg',
+        icon: '/docs/images/services/glitchtip-logo.png',
         description: 'An open-source error tracking tool.',
         category: 'Development'
     },
     {
         name: 'Gotenberg',
         slug: 'gotenberg',
-        icon: '/docs/images/services/gotenberg.svg',
+        icon: '/docs/images/services/gotenberg-logo.png',
         description: 'A Docker-powered stateless API for PDF files.',
         category: 'Development'
     },
     {
         name: 'Grafana',
         slug: 'grafana',
-        icon: '/docs/images/services/grafana.svg',
+        icon: '/docs/images/services/grafana-logo.svg',
         description: 'The open platform for beautiful analytics and monitoring.',
         category: 'Monitoring'
     },
     {
+        name: 'Gramps Web',
+        slug: 'gramps-web',
+        icon: '/docs/images/services/grampsweb-logo.svg',
+        description: 'The free, open-source genealogy system.',
+        category: 'Family'
+    },
+    {
         name: 'Grocy',
         slug: 'grocy',
-        icon: '/docs/images/services/grocy.svg',
+        icon: '/docs/images/services/grocy-logo.svg',
         description: 'A self-hosted groceries & household management solution for your home.',
         category: 'Home'
     },
     {
         name: 'Heimdall',
         slug: 'heimdall',
-        icon: '/docs/images/services/heimdall.svg',
+        icon: '/docs/images/services/heimdall-logo.svg',
         description: 'An elegant solution to organize all your web applications.',
         category: 'Administration'
     },
     {
         name: 'HeyForm',
         slug: 'heyform',
-        icon: '/docs/images/services/heyform.svg',
+        icon: '/docs/images/services/heyform-logo.svg',
         description: 'Open-source form builder for conversational forms.',
         category: 'Development'
     },
     {
         name: 'Hoarder',
         slug: 'hoarder',
-        icon: '/docs/images/services/hoarder.svg',
+        icon: '/docs/images/services/hoarder-logo.png',
         description: 'Self-hosted bookmark manager with AI-powered tagging.',
-        category: 'Bookmarks'
+        category: 'Bookmarks',
+        disabled: true
     },
     {
         name: 'Homarr',
         slug: 'homarr',
-        icon: '/docs/images/services/homarr.svg',
+        icon: '/docs/images/services/homarr-logo.svg',
         description: 'Customizable browser homepage and dashboard.',
         category: 'Administration'
     },
     {
         name: 'Homebox',
         slug: 'homebox',
-        icon: '/docs/images/services/homebox.svg',
+        icon: '/docs/images/services/homebox-logo.svg',
         description: 'Inventory and organization system built for the Home User.',
+        category: 'Home'
+    },
+    {
+        name: 'Home Assistant',
+        slug: 'home-assistant',
+        icon: '/docs/images/services/homeassistant-logo.svg',
+        description: 'Open-source home automation platform focused on local control and privacy.',
         category: 'Home'
     },
     {
         name: 'Homepage',
         slug: 'homepage',
-        icon: '/docs/images/services/homepage.svg',
+        icon: '/docs/images/services/homepage-logo.png',
         description: 'A modern homepage for your server.',
         category: 'Administration'
     },
     {
         name: 'Hoppscotch',
         slug: 'hoppscotch',
-        icon: '/docs/images/services/hoppscotch.svg',
+        icon: '/docs/images/services/hoppscotch-logo.png',
         description: 'Open-source API development ecosystem.',
         category: 'Development'
     },
     {
         name: 'Immich',
         slug: 'immich',
-        icon: '/docs/images/services/immich.svg',
+        icon: '/docs/images/services/immich-logo.svg',
         description: 'Self-hosted photo and video backup solution.',
         category: 'Media'
     },
     {
         name: 'Infisical',
         slug: 'infisical',
-        icon: '/docs/images/services/infisical.svg',
+        icon: '/docs/images/services/infisical-logo.svg',
         description: 'Open source secret management platform.',
         category: 'Security'
     },
     {
         name: 'Invoice Ninja',
         slug: 'invoice-ninja',
-        icon: '/docs/images/services/invoice-ninja.svg',
+        icon: '/docs/images/services/invoiceninja-logo.png',
         description: 'Invoice management system.',
         category: 'Business'
     },
     {
         name: 'IT Tools',
         slug: 'it-tools',
-        icon: '/docs/images/services/it-tools.svg',
+        icon: '/docs/images/services/ittools-logo.svg',
         description: 'Collection of handy online tools for developers.',
         category: 'Development'
     },
     {
         name: 'Jellyfin',
         slug: 'jellyfin',
-        icon: '/docs/images/services/jellyfin.svg',
+        icon: '/docs/images/services/jellyfin-logo.svg',
         description: 'The Free Software Media System.',
         category: 'Media'
     },
     {
         name: 'Jenkins',
         slug: 'jenkins',
-        icon: '/docs/images/services/jenkins.svg',
+        icon: '/docs/images/services/jenkins-logo.svg',
         description: 'Open-source automation server.',
         category: 'Development'
     },
     {
         name: 'Joomla',
         slug: 'joomla',
-        icon: '/docs/images/services/joomla.svg',
+        icon: '/docs/images/services/joomla-logo.svg',
         description: 'Open-source content management system.',
         category: 'CMS'
     },
     {
         name: 'Joplin',
         slug: 'joplin',
-        icon: '/docs/images/services/joplin.svg',
+        icon: '/docs/images/services/joplin-logo.png',
         description: 'Open-source note taking and to-do application.',
         category: 'Productivity'
     },
     {
         name: 'Jupyter Notebook',
         slug: 'jupyter-notebook-python',
-        icon: '/docs/images/services/jupyter-notebook-python.svg',
+        icon: '/docs/images/services/jupyternotebook-logo.svg',
         description: 'Interactive computing environment for Python.',
         category: 'Development'
     },
     {
         name: 'KaraKeep',
         slug: 'karakeep',
-        icon: '/docs/images/services/karakeep.svg',
+        icon: '/docs/images/services/karakeep-logo.svg',
         description: 'Self-hostable bookmark-everything app with AI-based automatic tagging.',
         category: 'Productivity'
     },
     {
         name: 'Keycloak',
         slug: 'keycloak',
-        icon: '/docs/images/services/keycloak.svg',
+        icon: '/docs/images/services/keycloak-logo.svg',
         description: 'Open-source identity and access management solution.',
         category: 'Security'
     },
     {
         name: 'Kimai',
         slug: 'kimai',
-        icon: '/docs/images/services/kimai.svg',
+        icon: '/docs/images/services/kimai-logo.svg',
         description: 'An open-source time-tracking solution for teams of all sizes.',
         category: 'Business'
     },
     {
         name: 'Kuzzle',
         slug: 'kuzzle',
-        icon: '/docs/images/services/kuzzle.svg',
+        icon: '/docs/images/services/kuzzle-logo.png',
         description: 'A powerful backend that enables you to build modern apps faster.',
         category: 'Development'
     },
     {
         name: 'Label Studio',
         slug: 'labelstudio',
-        icon: '/docs/images/services/labelstudio.svg',
+        icon: '/docs/images/services/labelstudio-logo.png',
         description: 'Open source data labeling platform.',
         category: 'AI'
     },
     {
         name: 'Langfuse',
         slug: 'langfuse',
-        icon: '/docs/images/services/langfuse.svg',
+        icon: '/docs/images/services/langfuse-logo.svg',
         description: 'Open source LLM engineering platform.',
         category: 'AI'
     },
     {
         name: 'LibreOffice',
         slug: 'libreoffice',
-        icon: '/docs/images/services/libreoffice.svg',
+        icon: '/docs/images/services/libreoffice-logo.svg',
         description: 'Free and open-source office suite.',
         category: 'Productivity'
     },
     {
         name: 'LibreChat',
         slug: 'librechat',
-        icon: '/docs/images/services/librechat.svg',
+        icon: '/docs/images/services/librechat-logo.svg',
         description: 'Self-hosted, powerful, and privacy-focused chat UI for multiple AI models.',
+        category: 'AI'
+    },
+    {
+        name: 'LobeChat',
+        slug: 'lobe-chat',
+        icon: '/docs/images/services/lobechat-logo.webp',
+        description: 'Open-source, modern AI chat framework with multi-provider support and knowledge base management.',
         category: 'AI'
     },
     {
         name: 'LibreTranslate',
         slug: 'libretranslate',
-        icon: '/docs/images/services/libretranslate.svg',
+        icon: '/docs/images/services/libretranslate-logo.svg',
         description: 'Free and open-source machine translation API.',
         category: 'AI'
     },
     {
         name: 'Listmonk',
         slug: 'listmonk',
-        icon: '/docs/images/services/listmonk.svg',
+        icon: '/docs/images/services/listmonk-logo.svg',
         description: 'Self-hosted newsletter and mailing list manager.',
         category: 'Marketing'
     },
     {
         name: 'LiteLLM',
         slug: 'litellm',
-        icon: '/docs/images/services/litellm.svg',
+        icon: '/docs/images/services/litellm-logo.svg',
         description: 'Open source LLM Gateway to manage authentication, loadbalancing, and spend tracking across 100+ LLMs. All in the OpenAI format.',
         category: 'AI'
     },
     {
         name: 'LiteQueen',
         slug: 'litequeen',
-        icon: '/docs/images/services/litequeen.svg',
+        icon: '/docs/images/services/litequeen-logo.svg',
         description: 'Lightweight service management platform.',
         category: 'Administration'
     },
     {
         name: 'Logto',
         slug: 'logto',
-        icon: '/docs/images/services/logto.svg',
+        icon: '/docs/images/services/logto-logo.svg',
         description: 'Logto is an Auth0 alternative designed for modern apps and SaaS products.',
         category: 'Security'
     },
     {
         name: 'Lowcoder',
         slug: 'lowcoder',
-        icon: '/docs/images/services/lowcoder.svg',
+        icon: '/docs/images/services/lowcoder-logo.svg',
         description: 'Open-source low-code platform for building internal tools.',
         category: 'Development'
     },
     {
         name: 'Mailpit',
         slug: 'mailpit',
-        icon: '/docs/images/services/mailpit.svg',
+        icon: '/docs/images/services/mailpit-logo.svg',
         description: 'Self-hosted email and SMTP testing tool.',
         category: 'Development'
     },
     {
+        name: 'Mage AI',
+        slug: 'mage-ai',
+        icon: '/docs/images/services/mage-ai.svg',
+        description: 'Build, run, and manage data pipelines for integrating and transforming data.',
+        category: 'Automation'
+    },
+    {
         name: 'Martin',
         slug: 'martin',
-        icon: '/docs/images/services/martin.svg',
+        icon: '/docs/images/services/martin-logo.png',
         description: 'PostGIS vector tile server.',
         category: 'Development'
     },
     {
         name: 'Matrix',
         slug: 'matrix',
-        icon: '/docs/images/services/matrix.svg',
+        icon: '/docs/images/services/matrix-logo.svg',
         description: 'Chat securely with your family, friends, community.',
         category: 'Communication'
     },
     {
         name: 'Mattermost',
         slug: 'mattermost',
-        icon: '/docs/images/services/mattermost.svg',
+        icon: '/docs/images/services/mattermost-logo.svg',
         description: 'Open-source messaging platform for teams.',
         category: 'Communication'
     },
     {
         name: 'Mautic',
-        slug: 'mautic',
-        icon: '/docs/images/services/mautic.svg',
+        slug: 'mautic5',
+        icon: '/docs/images/services/mautic-logo.svg',
         description: 'Open-source marketing automation platform.',
         category: 'Marketing'
     },
     {
         name: 'Maybe',
         slug: 'maybe',
-        icon: '/docs/images/services/maybe.svg',
+        icon: '/docs/images/services/maybe-logo.svg',
         description: 'Personal finance and wealth management application.',
         category: 'Finance'
     },
     {
         name: 'Mealie',
         slug: 'mealie',
-        icon: '/docs/images/services/mealie.svg',
+        icon: '/docs/images/services/mealie-logo.png',
         description: 'Self-hosted recipe manager and meal planner.',
         category: 'Home'
     },
     {
         name: 'MediaWiki',
         slug: 'mediawiki',
-        icon: '/docs/images/services/mediawiki.svg',
+        icon: '/docs/images/services/mediawiki-logo.svg',
         description: 'A free and open-source wiki software package.',
         category: 'Documentation'
     },
     {
         name: 'Meilisearch',
         slug: 'meilisearch',
-        icon: '/docs/images/services/meilisearch.svg',
+        icon: '/docs/images/services/meilisearch-logo.svg',
         description: 'A powerful, fast, open-source, easy to use, and deploy search engine.',
         category: 'Search'
     },
     {
         name: 'Metabase',
         slug: 'metabase',
-        icon: '/docs/images/services/metabase.svg',
+        icon: '/docs/images/services/metabase-logo.svg',
         description: 'The simplest, fastest way to share data and analytics inside your company.',
         category: 'Analytics'
     },
     {
         name: 'Metube',
         slug: 'metube',
-        icon: '/docs/images/services/metube.svg',
+        icon: '/docs/images/services/metube-logo.svg',
         description: 'A self-hosted video sharing platform.',
         category: 'Media'
     },
     {
         name: 'MindsDB',
         slug: 'mindsdb',
-        icon: '/docs/images/services/mindsdb.svg',
+        icon: '/docs/images/services/mindsdb-logo.svg',
         description: 'Machine learning platform that brings AI to databases.',
         category: 'AI'
     },
     {
         name: 'Minecraft',
         slug: 'minecraft',
-        icon: '/docs/images/services/minecraft.svg',
+        icon: '/docs/images/services/minecraft-logo.svg',
         description: 'Minecraft game server.',
         category: 'Gaming'
     },
     {
         name: 'Miniflux',
         slug: 'miniflux',
-        icon: '/docs/images/services/miniflux.svg',
+        icon: '/docs/images/services/miniflux-logo.svg',
         description: 'Minimalist and opinionated feed reader.',
         category: 'RSS'
     },
     {
         name: 'MinIO',
         slug: 'minio',
-        icon: '/docs/images/services/minio.svg',
+        icon: '/docs/images/services/minio-logo.svg',
         description: 'A high-performance, distributed object storage system.',
         category: 'Storage'
     },
     {
         name: 'Mixpost',
         slug: 'mixpost',
-        icon: '/docs/images/services/mixpost.svg',
+        icon: '/docs/images/services/mixpost-logo.svg',
         description: 'Self-hosted social media management software (Buffer alternative).',
         category: 'Social Media'
     },
     {
         name: 'Moodle',
         slug: 'moodle',
-        icon: '/docs/images/services/moodle.svg',
+        icon: '/docs/images/services/moodle-logo.png',
         description: 'Open-source learning platform.',
         category: 'Education'
     },
     {
         name: 'Mosquitto',
         slug: 'mosquitto',
-        icon: '/docs/images/services/mosquitto.svg',
+        icon: '/docs/images/services/mosquitto-logo.svg',
         description: 'Open-source MQTT broker.',
         category: 'IoT'
     },
     {
         name: 'N8N',
         slug: 'n8n',
-        icon: '/docs/images/services/n8n.svg',
+        icon: '/docs/images/services/n8n-logo.png',
         description: 'Workflow automation tool.',
         category: 'Automation'
     },
     {
         name: 'Neon WS Proxy',
         slug: 'neon-ws-proxy',
-        icon: '/docs/images/services/neon-ws-proxy.svg',
+        icon: '/docs/images/services/neon-logo.svg',
         description: 'WebSocket proxy for Neon database.',
         category: 'Development'
     },
     {
+        name: 'NewAPI',
+        slug: 'newapi',
+        icon: '/docs/images/services/newapi-logo.png',
+        description: 'The next-generation LLM gateway and AI asset management system supports multiple languages.',
+        category: 'AI'
+    },
+    {
         name: 'Next Image Transformation',
         slug: 'next-image-transformation',
-        icon: '/docs/images/services/next-image-transformation.svg',
+        icon: '/docs/images/services/nextimage-logo.svg',
         description: 'Image transformation service for Next.js.',
         category: 'Development'
     },
     {
         name: 'Nextcloud',
         slug: 'nextcloud',
-        icon: '/docs/images/services/nextcloud.svg',
+        icon: '/docs/images/services/nextcloud-logo.svg',
         description: 'A safe home for all your data.',
         category: 'Storage'
     },
     {
         name: 'Nexus',
         slug: 'nexus',
-        icon: '/docs/images/services/nexus.svg',
+        icon: '/docs/images/services/nexus-logo.png',
         description: 'A repository manager that allows you to store, manage, and distribute your software artifacts.',
         category: 'Development'
     },
     {
         name: 'Nitropage',
         slug: 'nitropage',
-        icon: '/docs/images/services/nitropage.svg',
+        icon: '/docs/images/services/nitropage-logo.svg',
         description: 'Nitropage is an extensible, drag-and-drop website builder based on SolidStart, completely free and open source.',
         category: 'Development'
     },
     {
         name: 'NocoDB',
         slug: 'nocodb',
-        icon: '/docs/images/services/nocodb.svg',
+        icon: '/docs/images/services/nocodb-logo.svg',
         description: 'Open Source Airtable Alternative.',
         category: 'Database'
     },
     {
         name: 'NodeBB',
         slug: 'nodebb',
-        icon: '/docs/images/services/nodebb.svg',
+        icon: '/docs/images/services/nodebb-logo.svg',
         description: 'Node.js based forum software.',
         category: 'Forum'
     },
     {
         name: 'Ntfy',
         slug: 'ntfy',
-        icon: '/docs/images/services/ntfy.svg',
+        icon: '/docs/images/services/ntfy-logo.svg',
         description: 'Simple HTTP-based pub-sub notification service.',
         category: 'Notifications'
     },
     {
         name: 'Odoo',
         slug: 'odoo',
-        icon: '/docs/images/services/odoo.svg',
+        icon: '/docs/images/services/odoo-logo.svg',
         description: 'Open source ERP and CRM.',
         category: 'Business'
     },
     {
         name: 'Ollama',
         slug: 'ollama',
-        icon: '/docs/images/services/ollama.svg',
+        icon: '/docs/images/services/ollama-logo.svg',
         description: 'A lightweight and efficient server for running large language models (LLMs) on your local machine or in the cloud.',
         category: 'AI'
     },
     {
+        name: 'Once Campfire',
+        slug: 'once-campfire',
+        icon: '/docs/images/services/oncecampfire-logo.png',
+        description: 'Web-based chat application.',
+        category: 'Communication'
+    },
+    {
         name: 'OneDev',
         slug: 'onedev',
-        icon: '/docs/images/services/onedev.svg',
+        icon: '/docs/images/services/onedev-logo.svg',
         description: 'Self-hosted Git server with integrated CI/CD and kanban.',
         category: 'Development'
     },
     {
         name: 'Open WebUI',
         slug: 'open-webui',
-        icon: '/docs/images/services/open-webui.svg',
+        icon: '/docs/images/services/openwebui-logo.svg',
         description: 'User-friendly WebUI for LLMs, formerly Ollama WebUI.',
         category: 'AI'
     },
     {
         name: 'Openblocks',
         slug: 'openblocks',
-        icon: '/docs/images/services/openblocks.svg',
+        icon: '/docs/images/services/openblocks-logo.svg',
         description: 'Open-source low code platform.',
-        category: 'Development'
+        category: 'Development',
+        disabled: true
     },
     {
         name: 'Organizr',
         slug: 'organizr',
-        icon: '/docs/images/services/organizr.svg',
+        icon: '/docs/images/services/organizr-logo.png',
         description: 'Homepage organizer for your server services.',
         category: 'Administration'
     },
     {
         name: 'osTicket',
         slug: 'osticket',
-        icon: '/docs/images/services/osticket.svg',
+        icon: '/docs/images/services/osticket-logo.png',
         description: 'Open-source help desk ticketing system.',
         category: 'Business'
     },
     {
         name: 'OpenPanel',
         slug: 'openpanel',
-        icon: '/docs/images/services/openpanel.svg',
+        icon: '/docs/images/services/openpanel-logo.svg',
         description: 'Open source alternative to Mixpanel and Plausible for product analytics.',
         category: 'Analytics'
     },
     {
         name: 'Outline',
-        slug: 'outline',
-        icon: '/docs/images/services/outline.svg',
+        slug: 'getoutline',
+        icon: '/docs/images/services/outline-logo.svg',
         description: 'Open-source collaboration tool.',
         category: 'Productivity'
     },
     {
         name: 'Overseerr',
         slug: 'overseerr',
-        icon: '/docs/images/services/overseerr.svg',
+        icon: '/docs/images/services/overseerr-logo.svg',
         description: 'A request management and media discovery tool built to work with your existing Plex ecosystem.',
         category: 'Media'
     },
     {
         name: 'ownCloud',
         slug: 'owncloud',
-        icon: '/docs/images/services/owncloud.svg',
+        icon: '/docs/images/services/owncloud-logo.svg',
         description: 'File synchronization and sharing platform.',
         category: 'Storage'
     },
     {
         name: 'Pairdrop',
         slug: 'pairdrop',
-        icon: '/docs/images/services/pairdrop.svg',
+        icon: '/docs/images/services/pairdrop-logo.png',
         description: 'Local file sharing in your browser.',
         category: 'File Sharing'
     },
     {
         name: 'Paperless',
         slug: 'paperless',
-        icon: '/docs/images/services/paperless.svg',
+        icon: '/docs/images/services/paperless-logo.png',
         description: 'Document management system that transforms physical documents into searchable online archives.',
         category: 'Documentation'
     },
     {
         name: 'Paymenter',
         slug: 'paymenter',
-        icon: '/docs/images/services/paymenter.svg',
+        icon: '/docs/images/services/paymenter-logo.svg',
         description: 'Open-Source Billing, Built for Hosting Providers.',
         category: 'Business'
     },
     {
         name: 'Penpot',
         slug: 'penpot',
-        icon: '/docs/images/services/penpot.svg',
+        icon: '/docs/images/services/penpot-logo.svg',
         description: 'Open Source design & prototyping platform.',
         category: 'Design'
     },
     {
         name: 'Pi-hole',
         slug: 'pi-hole',
-        icon: '/docs/images/services/pihole.svg',
+        icon: '/docs/images/services/pihole-logo.svg',
         description: 'Network-wide ad blocker that acts as a DNS sinkhole.',
+        category: 'Security'
+    },
+    {
+        name: 'Pocket ID',
+        slug: 'pocket-id',
+        icon: '/docs/images/services/pocketid-logo.webp',
+        description: 'A simple OIDC provider for passwordless authentication with passkeys.',
         category: 'Security'
     },
     {
         name: 'phpMyAdmin',
         slug: 'phpmyadmin',
-        icon: '/docs/images/services/phpmyadmin.svg',
+        icon: '/docs/images/services/phpmyadmin-logo.svg',
         description: 'MySQL database management tool.',
         category: 'Development'
     },
     {
         name: 'PingvinShare',
         slug: 'pingvinshare',
-        icon: '/docs/images/services/pingvinshare.svg',
+        icon: '/docs/images/services/pingvinshare-logo.svg',
         description: 'Self-hosted file sharing platform that combines lightness and beauty.',
-        category: 'File Sharing'
+        category: 'File Sharing',
+        disabled: true
     },
     {
         name: 'Plane',
         slug: 'plane',
-        icon: '/docs/images/services/plane.svg',
+        icon: '/docs/images/services/plane-logo.svg',
         description: 'Open source project planning tool.',
         category: 'Project Management'
     },
     {
         name: 'Plex',
         slug: 'plex',
-        icon: '/docs/images/services/plex.svg',
+        icon: '/docs/images/services/plex-logo.svg',
         description: 'Media server software.',
         category: 'Media'
     },
     {
         name: 'Plunk',
         slug: 'plunk',
-        icon: '/docs/images/services/plunk.svg',
+        icon: '/docs/images/services/plunk-logo.svg',
         description: 'Self-hosted email marketing platform.',
         category: 'Marketing'
     },
     {
         name: 'Pocketbase',
         slug: 'pocketbase',
-        icon: '/docs/images/services/pocketbase.svg',
+        icon: '/docs/images/services/pocketbase-logo.svg',
         description: 'Open Source backend for your next SaaS and Mobile app.',
         category: 'Development'
     },
     {
         name: 'Portainer',
         slug: 'portainer',
-        icon: '/docs/images/services/portainer.svg',
+        icon: '/docs/images/services/portainer-logo.png',
         description: 'Container management platform.',
         category: 'Development'
     },
     {
         name: 'PostHog',
         slug: 'posthog',
-        icon: '/docs/images/services/posthog.svg',
+        icon: '/docs/images/services/posthog-logo.svg',
         description: 'Open source product analytics.',
         category: 'Analytics',
-        ignore: true
+        disabled: true
     },
     {
         name: 'Postiz',
         slug: 'postiz',
-        icon: '/docs/images/services/postiz.svg',
+        icon: '/docs/images/services/postiz-logo.png',
         description: 'Social media scheduling and analytics tool.',
         category: 'Social Media'
     },
     {
+        name: 'Pterodactyl',
+        slug: 'pterodactyl',
+        icon: '/docs/images/services/pterodactyl_logo_transparent.png',
+        description: 'Game server management panel with Wings daemon for hosting Minecraft, CS:GO, ARK and more.',
+        category: 'Gaming'
+    },
+    {
         name: 'Prefect',
         slug: 'prefect',
-        icon: '/docs/images/services/prefect.svg',
+        icon: '/docs/images/services/prefect-logo.png',
         description: 'Open source workflow management platform.',
         category: 'Development'
     },
     {
         name: 'PrivateBin',
         slug: 'privatebin',
-        icon: '/docs/images/services/privatebin.svg',
+        icon: '/docs/images/services/privatebin-logo.svg',
         description: 'Minimalist, open-source online pastebin.',
         category: 'Development'
     },
     {
         name: 'Prowlarr',
         slug: 'prowlarr',
-        icon: '/docs/images/services/prowlarr.svg',
+        icon: '/docs/images/services/prowlarr-logo.svg',
         description: 'A free and open source BitTorrent client.',
         category: 'Media'
     },
     {
+        name: 'Proxyscotch',
+        slug: 'proxyscotch',
+        icon: '/docs/images/services/proxyscotch.png',
+        description: 'Tiny open-source CORS proxy made by Hoppscotch.',
+        category: 'Development'
+    },
+    {
         name: 'qBittorrent',
         slug: 'qbittorrent',
-        icon: '/docs/images/services/qbittorrent.svg',
+        icon: '/docs/images/services/qbittorrent-logo.svg',
         description: 'Free and open-source BitTorrent client.',
         category: 'Media'
     },
     {
         name: 'Qdrant',
         slug: 'qdrant',
-        icon: '/docs/images/services/qdrant.svg',
+        icon: '/docs/images/services/qdrant-logo.svg',
         description: 'Open source, AI-native vector database.',
         category: 'AI'
     },
     {
         name: 'RabbitMQ',
         slug: 'rabbitmq',
-        icon: '/docs/images/services/rabbitmq.svg',
+        icon: '/docs/images/services/rabbitmq-logo.svg',
         description: 'Open source message broker.',
         category: 'Development'
     },
     {
         name: 'Radarr',
         slug: 'radarr',
-        icon: '/docs/images/services/radarr.svg',
+        icon: '/docs/images/services/radarr-logo.svg',
         description: 'A Media server software.',
         category: 'Media'
     },
     {
         name: 'Rallly',
         slug: 'rallly',
-        icon: '/docs/images/services/rallly.svg',
+        icon: '/docs/images/services/rallly-logo.svg',
         description: 'Open-source meeting scheduling tool.',
         category: 'Productivity'
     },
     {
         name: 'Reactive Resume',
         slug: 'reactive-resume',
-        icon: '/docs/images/services/reactive-resume.svg',
+        icon: '/docs/images/services/rxresume-logo.svg',
         description: 'A free and open source resume builder.',
         category: 'Productivity'
     },
     {
         name: 'Readeck',
         slug: 'readeck',
-        icon: '/docs/images/services/readeck.svg',
+        icon: '/docs/images/services/readeck-logo.svg',
         description: 'Web article reader and bookmark manager.',
         category: 'Productivity'
     },
     {
         name: 'Redlib',
         slug: 'redlib',
-        icon: '/docs/images/services/redlib.svg',
+        icon: '/docs/images/services/redlib-logo.svg',
         description: 'Private front-end for Reddit.',
         category: 'Social Media'
     },
     {
+        name: 'Rivet Engine',
+        slug: 'rivet-engine',
+        icon: '/docs/images/services/rivet-logo.svg',
+        description: 'Backend engine for running stateful actors at scale with automatic scaling and distributed state management.',
+        category: 'Development'
+    },
+    {
         name: 'Rocket.Chat',
         slug: 'rocketchat',
-        icon: '/docs/images/services/rocketchat.svg',
+        icon: '/docs/images/services/rocketchat-logo.svg',
         description: 'Open source team chat software.',
         category: 'Communication'
     },
     {
         name: 'SearXNG',
         slug: 'searxng',
-        icon: '/docs/images/services/searxng.svg',
+        icon: '/docs/images/services/searxng-logo.svg',
         description: 'Open source search engine.',
         category: 'Search'
     },
     {
         name: 'Sequin',
         slug: 'sequin',
-        icon: '/docs/images/services/sequin.svg',
+        icon: '/docs/images/services/sequin-logo.svg',
         description: 'The fastest Postgres change data capture.',
         category: 'Analytics'
     },
     {
         name: 'Shlink',
         slug: 'shlink',
-        icon: '/docs/images/services/shlink.svg',
+        icon: '/docs/images/services/shlink-logo.svg',
         description: 'The open source URL shortener.',
         category: 'Development'
     },
     {
+        name: 'SilverBullet',
+        slug: 'silverbullet',
+        icon: '/docs/images/services/silverbullet.png',
+        description: 'An open source personal productivity platform built on Markdown.',
+        category: 'Productivity'
+    },
+    {
         name: 'Slash',
         slug: 'slash',
-        icon: '/docs/images/services/slash.svg',
+        icon: '/docs/images/services/slash-logo.svg',
         description: 'Open-source, self-hosted links and notes manager.',
         category: 'Productivity'
     },
     {
         name: 'Snapdrop',
         slug: 'snapdrop',
-        icon: '/docs/images/services/snapdrop.svg',
+        icon: '/docs/images/services/snapdrop-logo.svg',
         description: 'Local file sharing in your browser.',
         category: 'File Sharing'
     },
     {
         name: 'Soketi',
         slug: 'soketi',
-        icon: '/docs/images/services/soketi.svg',
+        icon: '/docs/images/services/soketi-logo.jpeg',
         description: 'Open-source WebSocket server.',
         category: 'Development'
     },
     {
         name: 'Sonarr',
         slug: 'sonarr',
-        icon: '/docs/images/services/sonarr.svg',
+        icon: '/docs/images/services/sonarr-logo.svg',
         description: 'A internet PVR for Usenet and Torrents.',
         category: 'Media'
     },
     {
+        name: 'SparkyFitness',
+        slug: 'sparkyfitness',
+        icon: '/docs/images/services/sparkyfitness.webp',
+        description: 'A comprehensive fitness app that helps users track nutrition, exercise, and body metrics.',
+        category: 'Health'
+    },
+    {
         name: 'Statusnook',
         slug: 'statusnook',
-        icon: '/docs/images/services/statusnook.svg',
+        icon: '/docs/images/services/statusnook-logo.svg',
         description: 'A status page system for your website.',
         category: 'Monitoring'
     },
     {
         name: 'Stirling PDF',
         slug: 'stirling-pdf',
-        icon: '/docs/images/services/stirling-pdf.svg',
+        icon: '/docs/images/services/stirling-pdf-logo.png',
         description: 'Powerful PDF manipulation tool.',
         category: 'Documentation'
     },
     {
         name: 'Strapi',
         slug: 'strapi',
-        icon: '/docs/images/services/strapi.svg',
+        icon: '/docs/images/services/strapi-logo.svg',
         description: 'Open-source headless CMS.',
         category: 'CMS'
     },
     {
         name: 'Supabase',
         slug: 'supabase',
-        icon: '/docs/images/services/supabase.svg',
+        icon: '/docs/images/services/supabase-logo.svg',
         description: 'Open source Firebase alternative.',
         category: 'Development'
     },
     {
         name: 'Superset',
         slug: 'superset',
-        icon: '/docs/images/services/superset.svg',
+        icon: '/docs/images/services/superset-logo.svg',
         description: 'Open-source data visualization and exploration platform.',
         category: 'Analytics'
     },
     {
         name: 'SuperTokens',
         slug: 'supertokens',
-        icon: '/docs/images/services/supertokens.svg',
+        icon: '/docs/images/services/supertokens-logo.svg',
         description: 'Open-source authentication solution.',
         category: 'Security'
     },
     {
+        name: 'Swetrix',
+        slug: 'swetrix',
+        icon: '/docs/images/services/swetrix.svg',
+        description: 'Privacy-friendly and cookieless European web analytics alternative to Google Analytics.',
+        category: 'Analytics'
+    },
+    {
         name: 'Syncthing',
         slug: 'syncthing',
-        icon: '/docs/images/services/syncthing.svg',
+        icon: '/docs/images/services/syncthing-logo.svg',
         description: 'Open Source Continuous File Synchronization.',
         category: 'File Management'
     },
     {
         name: 'Teable',
         slug: 'teable',
-        icon: '/docs/images/services/teable.svg',
+        icon: '/docs/images/services/teable-logo.png',
         description: 'No-code database built on PostgreSQL.',
         category: 'Database'
     },
     {
+        name: 'Terraria Server',
+        slug: 'terraria-server',
+        icon: '/docs/images/services/terraria.svg',
+        description: 'Docker multi-arch image for Terraria game server.',
+        category: 'Gaming'
+    },
+    {
         name: 'Tolgee',
         slug: 'tolgee',
-        icon: '/docs/images/services/tolgee.svg',
+        icon: '/docs/images/services/tolgee-logo.svg',
         description: 'Open source localization platform.',
         category: 'Development'
     },
     {
         name: 'Traccar',
         slug: 'traccar',
-        icon: '/docs/images/services/traccar.svg',
+        icon: '/docs/images/services/traccar-logo.png',
         description: 'Open-source GPS tracking platform.',
         category: 'IoT'
     },
     {
         name: 'Transmission',
         slug: 'transmission',
-        icon: '/docs/images/services/transmission.svg',
+        icon: '/docs/images/services/transmission-logo.svg',
         description: 'Fast, easy, and free BitTorrent client.',
         category: 'Media'
     },
     {
         name: 'TriliumNext',
         slug: 'triliumnext',
-        icon: '/docs/images/services/triliumnext.svg',
+        icon: '/docs/images/services/triliumnext-logo.svg',
         description: 'Build your personal knowledge base with TriliumNext Notes.',
         category: 'Productivity'
     },
     {
         name: 'Trigger',
         slug: 'trigger',
-        icon: '/docs/images/services/trigger.svg',
+        icon: '/docs/images/services/trigger-logo.png',
         description: 'Open-source workflow automation tool.',
         category: 'Automation'
     },
     {
         name: 'Unleash',
         slug: 'unleash',
-        icon: '/docs/images/services/unleash.svg',
+        icon: '/docs/images/services/unleash-logo.svg',
         description: 'Open-source feature management platform.',
         category: 'Development'
     },
     {
-        name: 'Unsend',
-        slug: 'unsend',
-        icon: '/docs/images/services/unsend.svg',
+        name: 'Usesend',
+        slug: 'usesend',
+        icon: '/docs/images/services/usesend-logo.svg',
         description: 'Open-source email recall service.',
         category: 'Email'
     },
     {
         name: 'Unstructured',
         slug: 'unstructured',
-        icon: '/docs/images/services/unstructured.svg',
+        icon: '/docs/images/services/unstructured-logo.png',
         description: 'Open-source platform and tools to ingest and process unstructured documents for Retrieval Augmented Generation (RAG) and model fine-tuning.',
         category: 'AI'
     },
     {
         name: 'Uptime Kuma',
         slug: 'uptime-kuma',
-        icon: '/docs/images/services/uptime-kuma.svg',
+        icon: '/docs/images/services/uptime-kuma-logo.svg',
         description: 'A fancy self-hosted monitoring tool.',
         category: 'Monitoring'
     },
     {
         name: 'Vaultwarden',
         slug: 'vaultwarden',
-        icon: '/docs/images/services/vaultwarden.svg',
+        icon: '/docs/images/services/vaultwarden-logo.svg',
         description: 'Unofficial Bitwarden compatible server.',
         category: 'Security'
     },
     {
         name: 'Vikunja',
         slug: 'vikunja',
-        icon: '/docs/images/services/vikunja.svg',
+        icon: '/docs/images/services/vikunja-logo.svg',
         description: 'The open-source to-do app.',
         category: 'Productivity'
     },
     {
         name: 'VvvebJs',
         slug: 'vvveb',
-        icon: '/docs/images/services/vvveb.svg',
+        icon: '/docs/images/services/vvveb-logo.png',
         description: 'Powerful website builder with drag and drop functionality.',
         category: 'Development'
     },
     {
         name: 'Wakapi',
         slug: 'wakapi',
-        icon: '/docs/images/services/wakapi.svg',
+        icon: '/docs/images/services/wakapi-logo.svg',
         description: 'Open-source coding activity tracker.',
         category: 'Development'
     },
     {
         name: 'Weaviate',
         slug: 'weaviate',
-        icon: '/docs/images/services/weaviate.svg',
+        icon: '/docs/images/services/weaviate-logo.webp',
         description: 'Open source, AI-native vector database.',
         category: 'AI'
     },
     {
         name: 'Web Check',
         slug: 'web-check',
-        icon: '/docs/images/services/web-check.svg',
+        icon: '/docs/images/services/webcheck-logo.png',
         description: 'All-in-one website analysis tool.',
         category: 'Development'
     },
     {
         name: 'Weblate',
         slug: 'weblate',
-        icon: '/docs/images/services/weblate.svg',
+        icon: '/docs/images/services/weblate-logo.webp',
         description: 'Web-based translation tool.',
         category: 'Development'
     },
     {
         name: 'Whoogle',
         slug: 'whoogle',
-        icon: '/docs/images/services/whoogle.svg',
+        icon: '/docs/images/services/whoogle-logo.png',
         description: 'Self-hosted, ad-free, privacy-respecting metasearch engine.',
         category: 'Search'
     },
     {
         name: 'Wiki.js',
         slug: 'wikijs',
-        icon: '/docs/images/services/wikijs.svg',
+        icon: '/docs/images/services/wikijs-logo.svg',
         description: 'Modern and powerful wiki software built on Node.js.',
         category: 'Documentation'
     },
     {
         name: 'Windmill',
         slug: 'windmill',
-        icon: '/docs/images/services/windmill.svg',
+        icon: '/docs/images/services/windmill-logo.svg',
         description: 'Open-source developer platform.',
         category: 'Development'
     },
     {
         name: 'WireGuard Easy',
         slug: 'wireguard-easy',
-        icon: '/docs/images/services/wireguard-easy.svg',
+        icon: '/docs/images/services/wireguardeasy-logo.svg',
         description: 'Easy-to-use WireGuard VPN server.',
         category: 'Security'
     },
     {
         name: 'WordPress',
         slug: 'wordpress',
-        icon: '/docs/images/services/wordpress.svg',
+        icon: '/docs/images/services/wordpress-logo.svg',
         description: 'Website and blogging platform.',
         category: 'CMS'
     },
     {
         name: 'Zipline',
         slug: 'zipline',
-        icon: '/docs/images/services/zipline.svg',
+        icon: '/docs/images/services/zipline-logo.svg',
         description: 'Next generation ShareX / File upload server',
         category: 'File Management'
     },
     {
+        name: 'MetaMCP',
+        slug: 'metamcp',
+        icon: '/public/images/services/metamcp.png',
+        description: 'MCP Aggregator, Orchestrator, Middleware, Gateway in one application.',
+        category: 'AI'
+    },
+    {
         name: 'CodiMD',
         slug: 'codimd',
-        icon: '/docs/images/services/codimd.png',
+        icon: '/docs/images/services/codimd-logo.png',
         description: 'Realtime collaborative markdown notes on all platforms.',
         category: 'Productivity'
     },
     {
         name: 'Diun',
         slug: 'diun',
-        icon: '/docs/images/services/diun.svg',
+        icon: '/docs/images/services/diun-logo.svg',
         description: 'Docker Image Update Notifier.',
         category: 'Monitoring'
     },
     {
         name: 'Drizzle Gateway',
         slug: 'drizzle-gateway',
-        icon: '/docs/images/services/drizzle.jpeg',
+        icon: '/docs/images/services/drizzle-logo.jpeg',
         description: 'Drizzle Studio for exploring SQL databases.',
         category: 'Development'
     },
     {
         name: 'Grist',
         slug: 'grist',
-        icon: '/docs/images/services/grist.svg',
+        icon: '/docs/images/services/grist-logo.svg',
         description: 'Modern relational spreadsheet combining flexibility and database robustness.',
         category: 'Productivity'
     },
     {
         name: 'Leantime',
         slug: 'leantime',
-        icon: '/docs/images/services/leantime.svg',
+        icon: '/docs/images/services/leantime-logo.svg',
         description: 'Lean project management system for innovators.',
         category: 'Project Management'
     },
     {
         name: 'LimeSurvey',
         slug: 'limesurvey',
-        icon: '/docs/images/services/limesurvey.svg',
+        icon: '/docs/images/services/limesurvey-logo.svg',
         description: 'The most popular FOSS online survey tool on the web.',
         category: 'Business'
     },
     {
         name: 'Memos',
         slug: 'memos',
-        icon: '/docs/images/services/memos.png',
+        icon: '/docs/images/services/memos-logo.png',
         description: 'Open-source, self-hosted memo hub with knowledge management.',
         category: 'Productivity'
     },
     {
         name: 'Navidrome',
         slug: 'navidrome',
-        icon: '/docs/images/services/navidrome.svg',
+        icon: '/docs/images/services/navidrome-logo.svg',
         description: 'Modern music server and streamer compatible with Subsonic/Airsonic.',
         category: 'Media'
     },
     {
         name: 'NetBird Client',
         slug: 'netbird-client',
-        icon: '/docs/images/services/netbird.png',
+        icon: '/docs/images/services/netbird-logo.png',
         description: 'Connect your devices into a secure WireGuard-based mesh network.',
+        category: 'Networking'
+    },
+    {
+        name: 'Newt Pangolin',
+        slug: 'newt-pangolin',
+        icon: '/public/images/services/pangolin_newt.svg',
+        description: 'User space WireGuard tunnel client and TCP/UDP proxy for securely exposing private resources.',
         category: 'Networking'
     },
     {
         name: 'Observium',
         slug: 'observium',
-        icon: '/docs/images/services/observium.webp',
+        icon: '/docs/images/services/observium-logo.webp',
         description: 'Low-maintenance auto-discovering network monitoring platform.',
         category: 'Monitoring'
     },
     {
+        name: 'OpnForm',
+        slug: 'opnform',
+        icon: '/docs/images/services/opnform.svg',
+        description: 'Open-source form builder that lets you create beautiful forms and share them anywhere.',
+        category: 'Development'
+    },
+    {
         name: 'OrangeHRM',
         slug: 'orangehrm',
-        icon: '/docs/images/services/orangehrm.svg',
+        icon: '/docs/images/services/orangehrm-logo.svg',
         description: 'Free HR management system for businesses.',
         category: 'Business'
     },
     {
         name: 'Passbolt',
         slug: 'passbolt',
-        icon: '/docs/images/services/passbolt.svg',
+        icon: '/docs/images/services/passbolt-logo.svg',
         description: 'Open source password manager for teams.',
         category: 'Security'
     },
     {
         name: 'PGBackWeb',
         slug: 'pgbackweb',
-        icon: '/docs/images/services/pgbackweb.png',
+        icon: '/docs/images/services/pgbackweb-logo.png',
         description: 'Effortless PostgreSQL backups with a user-friendly web interface.',
         category: 'Database'
+    },
+     {
+        name: 'Postgresus',
+        slug: 'postgresus',
+        icon: '/docs/images/services/postgresus-logo.webp',
+        description: 'A free, open source and self-hosted tool to backup PostgreSQL. Make backups with different storages and notifications about progress.',
+        category: 'Backup'
     },
     {
         name: 'Ryot',
         slug: 'ryot',
-        icon: '/docs/images/services/ryot.svg',
+        icon: '/docs/images/services/ryot-logo.svg',
         description: 'Self-hosted platform for tracking various facets of your life.',
         category: 'Productivity'
     },
     {
         name: 'Seafile',
         slug: 'seafile',
-        icon: '/docs/images/services/seafile.svg',
+        icon: '/docs/images/services/seafile-logo.svg',
         description: 'High-performance file syncing and sharing with knowledge management features.',
         category: 'Storage'
     },
     {
         name: 'Typesense',
         slug: 'typesense',
-        icon: '/docs/images/services/typesense.png',
+        icon: '/docs/images/services/typesense-logo.png',
         description: 'Open source alternative to Algolia and easier-to-use alternative to ElasticSearch.',
         category: 'Search'
     },
     {
         name: 'Vert',
         slug: 'vert',
-        icon: '/docs/images/services/vert.png',
+        icon: '/docs/images/services/vert-logo.png',
         description: 'Self-hosted file converter.',
         category: 'Utilities'
     },
     {
-        name: 'Wings',
-        slug: 'wings',
-        icon: '/docs/images/services/pterodactyl.png',
-        description: 'Pterodactyl server control plane for game servers.',
-        category: 'Gaming'
-    },
-    {
         name: 'Yamtrack',
         slug: 'yamtrack',
-        icon: '/docs/images/services/yamtrack.svg',
+        icon: '/docs/images/services/yamtrack-logo.svg',
         description: 'Self-hosted music scrobble database.',
         category: 'Media'
     },
@@ -1897,6 +2040,20 @@ const services = [
         slug: 'marimo',
         icon: '/docs/images/services/marimo.svg',
         description: 'Open-source reactive notebook for Python.',
+        category: 'Development'
+    },
+    {
+        name: 'pgAdmin',
+        slug: 'pgadmin',
+        icon: '/docs/images/services/pgadmin-logo.svg',
+        description: 'A web-based database management tool for administering your PostgreSQL databases through a user-friendly interface.',
+        category: 'Development'
+    },
+    {
+        name: 'Redis Insight',
+        slug: 'redis-insight',
+        icon: '/docs/images/services/redisinsight-logo.png',
+        description: 'Official Redis GUI that lets you do both GUI- and CLI-based interactions in a fully-featured desktop GUI client.',
         category: 'Development'
     }
 ]
@@ -1931,7 +2088,7 @@ onUnmounted(() => {
 
 const filteredServicesByCategory = (category: string) => {
     return services.filter(s =>
-        !s.ignore &&
+        !s.disabled &&
         s.category === category &&
         (search.value === '' || s.name.toLowerCase().includes(search.value.toLowerCase()) || s.description.toLowerCase().includes(search.value.toLowerCase()))
     )

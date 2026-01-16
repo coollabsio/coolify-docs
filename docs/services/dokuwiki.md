@@ -3,7 +3,6 @@ title: "DokuWiki"
 description: "Deploy DokuWiki on Coolify for flat-file wiki without database, version control, ACL permissions, and plugin extensibility for documentation."
 ---
 
-
 ![DokuWiki](https://www.dokuwiki.org/lib/tpl/dokuwiki/images/logo.png)
 
 ## What is DokuWiki?
@@ -34,5 +33,5 @@ DokuWiki are quick to update and new pages are easily added. Designed for collab
 
 ## Links
 
-- [The official website ›](https://www.dokuwiki.org?utm_source=coolify.io)
-- [GitHub ›](https://github.com/splitbrain/DokuWiki?utm_source=coolify.io)
+- [The official website](https://www.dokuwiki.org?utm_source=coolify.io)
+- [GitHub](https://github.com/splitbrain/DokuWiki?utm_source=coolify.io)

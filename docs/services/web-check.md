@@ -5,7 +5,7 @@ description: "Analyze websites on Coolify with Web-Check for SSL, DNS, headers, 
 
 # Web Check
 
-<ZoomableImage src="/docs/images/services/web-check.png" alt="Web Check dashboard" />
+<ZoomableImage src="/docs/images/services/webcheck-logo.png" alt="Web Check dashboard" />
 
 ## What is Web Check
 

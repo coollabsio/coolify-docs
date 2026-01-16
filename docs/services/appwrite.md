@@ -716,7 +716,7 @@ description: "Deploy Appwrite BaaS on Coolify for authentication, databases, sto
 #       image: redis:7.2.4-alpine
 #       container_name: appwrite-redis
 #       command: >
-#         redis-server --maxmemory            512mb --maxmemory-policy    
+#         redis-server --maxmemory            512mb --maxmemory-policy
 #         allkeys-lru --maxmemory-samples    5
 #       volumes:
 #         - appwrite-redis:/data:rw
@@ -734,8 +734,8 @@ description: "Deploy Appwrite BaaS on Coolify for authentication, databases, sto
 #     appwrite-config: null
 ---
 
-
 # Appwrite
+
 ![Appwrite](https://raw.githubusercontent.com/appwrite/appwrite/main/public/images/banner.png)
 
 ## What is Appwrite?
@@ -747,5 +747,5 @@ file management, image manipulation, Cloud Functions, and [more services](https:
 
 ## Links
 
-- [The official website ›](https://appwrite.io?utm_source=coolify.io)
-- [GitHub ›](https://github.com/appwrite/appwrite?utm_source=coolify.io)
+- [The official website](https://appwrite.io?utm_source=coolify.io)
+- [GitHub](https://github.com/appwrite/appwrite?utm_source=coolify.io)

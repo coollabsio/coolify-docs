@@ -5,7 +5,7 @@ description: "Deploy LibreChat on Coolify for unified AI chat interface supporti
 
 # LibreChat
 
-<ZoomableImage src="/docs/images/services/librechat.svg" alt="Librechat dashboard" />
+<ZoomableImage src="/docs/images/services/librechat-logo.svg" alt="Librechat dashboard" />
 
 ## What is LibreChat?
 
@@ -13,5 +13,5 @@ LibreChat is a self-hosted, powerful, and privacy-focused chat UI for multiple A
 
 ## Links
 
-- [The official website ›](https://librechat.ai?utm_source=coolify.io)
-- [GitHub ›](https://github.com/danny-avila/LibreChat?utm_source=coolify.io)
+- [The official website](https://librechat.ai?utm_source=coolify.io)
+- [GitHub](https://github.com/danny-avila/LibreChat?utm_source=coolify.io)

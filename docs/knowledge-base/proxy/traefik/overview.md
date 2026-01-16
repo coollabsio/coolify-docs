@@ -5,7 +5,7 @@ description: "Configure Traefik reverse proxy in Coolify with dynamic routing, S
 
 # Traefik Proxy
 
-[Traefik ↗](https://traefik.io/) is a modern, open-source reverse proxy and load balancer designed to handle incoming requests and route them to the appropriate services. It’s widely used in the container ecosystem, making it a perfect fit for projects running on Coolify.
+[Traefik](https://traefik.io/) is a modern, open-source reverse proxy and load balancer designed to handle incoming requests and route them to the appropriate services. It’s widely used in the container ecosystem, making it a perfect fit for projects running on Coolify.
 
 By default, Coolify uses Traefik as its proxy, enabling easy management of routing, SSL certificates, and more, without requiring deep technical expertise.
 
@@ -13,14 +13,14 @@ By default, Coolify uses Traefik as its proxy, enabling easy management of routi
 
 - Dynamically manages routing between your apps and the internet.
 - Integrates seamlessly with container orchestrators like Docker or Kubernetes.
-- Simplifies SSL/TLS certificate management, including support for [Let's Encrypt ↗](https://letsencrypt.org/).
+- Simplifies SSL/TLS certificate management, including support for [Let's Encrypt](https://letsencrypt.org/).
 - Offers advanced features like load balancing and middleware for fine-grained control.
 - Comes with a built-in dashboard for monitoring routes and configurations.
 
 ## When Not to Use Traefik?
 
 - If you need complete control over every aspect of your reverse proxy.
-- If you prefer using another reverse proxy solution like [NGINX ↗](https://nginx.org/en/).
+- If you prefer using another reverse proxy solution like [NGINX](https://nginx.org/en/).
 - If you have highly customized or complex routing rules that Traefik might not fully support.
 
 ## Ways to Use Traefik with Coolify

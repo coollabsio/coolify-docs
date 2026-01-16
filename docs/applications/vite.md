@@ -13,11 +13,11 @@ Vite is a build tool that aims to provide a faster and leaner development experi
 
 - Set `Build Pack` to `nixpacks`.
 - Enable `Is it a static site?`.
-- Set `Output Directory` to `dist`.
+- Set `Publish Directory` to `dist`.
 
 
 ## Vanilla JavaScript build (Static)
 
 - Set `Build Pack` to `nixpacks`.
 - Enable `Is it a static site?`.
-- Set `Output Directory` to `dist`.
+- Set `Publish Directory` to `dist`.

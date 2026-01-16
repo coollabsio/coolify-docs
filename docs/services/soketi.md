@@ -5,7 +5,7 @@ description: "Deploy Soketi WebSocket server on Coolify for real-time messaging,
 
 # Soketi
 
-<ZoomableImage src="/docs/images/services/soketi.jpeg" alt="Soketi dashboard" />
+<ZoomableImage src="/docs/images/services/soketi-logo.jpeg" alt="Soketi dashboard" />
 
 ## What is Soketi
 

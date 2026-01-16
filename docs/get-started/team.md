@@ -47,16 +47,6 @@ const coreMembers = [
     ]
   },
   {
-    avatar: '../images/team/serdar.webp',
-    name: 'Serdar Yerdelen',
-    title: 'Community Moderator, Docs Maintainer',
-    links: [
-      { icon: 'github', link: 'https://github.com/justserdar' },
-      { icon: 'expedia', link: 'https://justserdar.dev' },
-      { icon: 'x', link: 'https://x.com/darwebdb' }
-    ]
-  },
-  {
     avatar: '../images/team/aditya.webp',
     name: 'Aditya Tripathi',
     title: 'Developer, Community Moderator',

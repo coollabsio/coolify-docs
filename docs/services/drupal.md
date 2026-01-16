@@ -5,7 +5,7 @@ description: "Deploy Drupal CMS on Coolify for enterprise content management wit
 
 # Drupal
 
-<ZoomableImage src="/docs/images/services/drupal.svg" alt="Drupal dashboard" />
+<ZoomableImage src="/docs/images/services/drupal-logo.svg" alt="Drupal dashboard" />
 
 ## What is Drupal
 

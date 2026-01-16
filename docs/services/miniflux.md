@@ -13,5 +13,5 @@ Miniflux is a minimalist and opinionated feed reader that focuses on simplicity 
 
 ## Links
 
-- [The official website ›](https://miniflux.app?utm_source=coolify.io)
-- [GitHub ›](https://github.com/miniflux/v2?utm_source=coolify.io)
+- [The official website](https://miniflux.app?utm_source=coolify.io)
+- [GitHub](https://github.com/miniflux/v2?utm_source=coolify.io)

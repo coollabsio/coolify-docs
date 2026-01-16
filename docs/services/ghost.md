@@ -11,5 +11,5 @@ Ghost is a powerful app for professional publishers to create, share, and grow a
 
 ## Links
 
-- [The official website ›](https://ghost.org/)
-- [GitHub ›](https://github.com/TryGhost/Ghost)
+- [The official website](https://ghost.org/)
+- [GitHub](https://github.com/TryGhost/Ghost)
