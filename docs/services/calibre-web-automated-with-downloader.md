@@ -1,8 +1,8 @@
 ---
-title: Calibre Web Automated + Downloader
-description: "Deploy ActivePieces workflow automation platform on Coolify with TypeScript-based extensible automation, visual builder, and 100+ integrations."
+title: Calibre Web Automated with Downloader
+description: "An intuitive web interface for searching and requesting book downloads, designed to work seamlessly with Calibre-Web-Automated."
 ---
-# What is Calibre Web Automated + Downloader
+# What is Calibre Web Automated with Downloader
 
 <ZoomableImage src="/docs/images/services/calibre-web-automated-with-downloader.png" alt="Calibre Web Automated Logo" />
 
