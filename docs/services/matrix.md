@@ -20,11 +20,13 @@ Synapse is a [Matrix homeserver](https://matrix.org/ecosystem/servers/) written 
 Synapse Matrix server is available in two deployment configurations in Coolify:
 
 ### Synapse with SQlite
+
 - **Database:** SQLite (embedded)
 - **Use case:** Simple deployments, testing, or personal Matrix hosting
 - **Components:** Single Synapse container with built-in SQLite database
 
 ### Synapse with PostgreSQL (recommended)
+
 - **Database:** PostgreSQL
 - **Use case:** Production deployments requiring better performance and scalability
 - **Components:**
@@ -65,6 +67,7 @@ In the service configuration, set the domain to `matrix.example.org:8008`
 #### Environment variables
 
 Set the following environment variable:
+
 - `SYNAPSE_SERVER_NAME=example.org`
 
 ### Delegation (required)
@@ -84,30 +87,12 @@ On `https://example.org`, serve the following files:
 }
 ```
 
-- `/.well-known/matrix/server` for Federation discovery 
+- `/.well-known/matrix/server` for Federation discovery
 
 ```json
 {
   "m.server": "matrix.example.org:443"
 }
-```
-
-## Traefik configuration
-With a successful installation, there is still an issue while using the matrix server with every matrix client.
-
-A matrix user can send DM, but won't be able to view medias or join public or private rooms.
-
--  Root cause: Traefik 3’s new path security rejects %23 (encoded #) and other encoded chars in the URL path by default, which breaks Matrix endpoints that rely on them.
--  Fix: tell Traefik to allow those encodings on the http and https entrypoints.
-
-Solution:  in Coolify's traefik proxy config, under the `command:` key, add:
-
-```yaml
-# For matrix synapse to allow `#` and `%` encoded characters in URLs
-- '--entrypoints.http.http.encodedcharacters.allowencodedhash=true'
-- '--entrypoints.https.http.encodedcharacters.allowencodedhash=true'
-- '--entrypoints.http.http.encodedcharacters.allowencodedpercent=true'
-- '--entrypoints.https.http.encodedcharacters.allowencodedpercent=true'
 ```
 
 ## Links
