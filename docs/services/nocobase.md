@@ -3,11 +3,6 @@ title: NocoBase
 description: "NocoBase is the most extensible AI-powered no-code platform. Total control. Infinite extensibility. AI collaboration."
 ---
 
-<!-- <script setup>
-import { useData } from 'vitepress'
-const { frontmatter } = useData()
-</script> -->
-
 <ZoomableImage src="/docs/images/services/nocobase.png" alt="NocoBase dashboard" />
 
 ## What is NocoBase
