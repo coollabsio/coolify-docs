@@ -3,6 +3,10 @@ title: "Dashboard"
 description: "Deploy customizable dashboard on Coolify for application shortcuts, bookmarks, service monitoring, and centralized access to self-hosted tools."
 ---
 
+::: warning SERVICE NOT AVAILABLE
+This service is currently not available in Coolify's service catalog.
+:::
+
 ![dashboard](https://i.imgur.com/tOnPDYQ.png)
 
 ## What is Dashboard?

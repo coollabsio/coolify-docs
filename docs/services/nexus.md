@@ -7,8 +7,14 @@ description: "Run Nexus Repository on Coolify for artifact management, Docker re
 
 ## What is Sonatype Nexus
 
-Sonatype Nexus is a repository manager that allows you to store, manage, and distribute your software artifacts.
-The official container is for x86_64 architecture. The arm64 version is community maintained and synced with the official repository.
+Sonatype Nexus is a repository manager that allows you to store, manage, and distribute your software artifacts. It supports multiple package formats including Maven, npm, Docker, PyPI, and more.
+
+## Versions Available
+
+Coolify offers two versions of Nexus:
+
+- **Nexus (Standard)**: The official x86_64 architecture version
+- **Nexus ARM**: Community Edition for ARM64 architecture, maintained and synced with the official repository
 
 ## Setup
 

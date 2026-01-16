@@ -9,6 +9,39 @@ description: "Deploy Forgejo Git hosting on Coolify as lightweight GitHub altern
 
 Forgejo is a self-hosted lightweight software forge. It's easy to install and low maintenance, it just does the job.
 
+## Deployment Variants
+
+Forgejo is available in four deployment configurations in Coolify:
+
+### Forgejo (Default)
+- **Database:** SQLite (embedded)
+- **Use case:** Simple deployments, testing, or personal Git hosting
+- **Components:** Single Forgejo container with built-in SQLite database
+
+### Forgejo with PostgreSQL
+- **Database:** PostgreSQL
+- **Use case:** Production deployments requiring better performance and scalability
+- **Components:**
+  - Forgejo container
+  - PostgreSQL container
+  - Automatic database configuration and health checks
+
+### Forgejo with MySQL
+- **Database:** MySQL
+- **Use case:** Production deployments with MySQL preference
+- **Components:**
+  - Forgejo container
+  - MySQL container
+  - Automatic database configuration and health checks
+
+### Forgejo with MariaDB
+- **Database:** MariaDB
+- **Use case:** Production deployments with MariaDB preference
+- **Components:**
+  - Forgejo container
+  - MariaDB container
+  - Automatic database configuration and health checks
+
 ## Forgejo Actions Runner
 
 Forgejo has available a first party "actions runner" to [execute task jobs on a repository](https://forgejo.org/docs/latest/user/actions/), much like [GitHub Actions](https://docs.github.com/en/actions) or [GitLab CI](https://docs.gitlab.com/ee/ci/index.html).

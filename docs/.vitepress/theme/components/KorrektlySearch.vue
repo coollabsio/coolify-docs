@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import { useData } from 'vitepress'
+import { ref, watch, onMounted } from 'vue'
 import { onKeyStroke } from '@vueuse/core'
-
-const { isDark } = useData()
 
 interface SearchResult {
   id: string
@@ -22,6 +19,7 @@ const isLoading = ref(false)
 const selectedIndex = ref(0)
 const searchInputRef = ref<HTMLInputElement | null>(null)
 const searchError = ref<string | null>(null)
+const searchQueryId = ref<string | null>(null)
 
 // Korrektly SDK configuration
 const korrektlyConfig = {
@@ -57,12 +55,19 @@ defineExpose({
   openSearch
 })
 
-const closeSearch = () => {
-  isOpen.value = false
+const clearSearch = () => {
+  cancelOngoingSearch()
   searchQuery.value = ''
   searchResults.value = []
   selectedIndex.value = 0
   searchError.value = null
+  searchQueryId.value = null
+  isLoading.value = false
+}
+
+const closeSearch = () => {
+  clearSearch()
+  isOpen.value = false
 }
 
 // Keyboard shortcuts (only for modal interactions)
@@ -94,21 +99,30 @@ onKeyStroke('Enter', () => {
 
 // Debounced search
 let searchTimeout: NodeJS.Timeout | null = null
+let abortController: AbortController | null = null
 
-watch(searchQuery, async (newQuery) => {
+const cancelOngoingSearch = () => {
   if (searchTimeout) {
     clearTimeout(searchTimeout)
+    searchTimeout = null
   }
+  if (abortController) {
+    abortController.abort()
+    abortController = null
+  }
+}
+
+watch(searchQuery, async (newQuery) => {
+  cancelOngoingSearch()
 
   if (!newQuery.trim()) {
     searchResults.value = []
     searchError.value = null
+    isLoading.value = false
     return
   }
 
-  searchTimeout = setTimeout(async () => {
-    await performSearch(newQuery)
-  }, 300)
+  searchTimeout = setTimeout(() => performSearch(newQuery), 300)
 })
 
 const performSearch = async (query: string) => {
@@ -117,6 +131,16 @@ const performSearch = async (query: string) => {
     searchError.value = 'Search service not initialized. Please try refreshing the page.'
     return
   }
+
+  if (!korrektlyConfig.datasetId || !korrektlyConfig.apiToken) {
+    console.error('Korrektly dataset ID not configured')
+    searchError.value = 'Search is not properly configured. Please check the environment variables.'
+    return
+  }
+
+  // Create new abort controller for this search
+  abortController = new AbortController()
+  const currentAbortController = abortController
 
   isLoading.value = true
   searchError.value = null
@@ -127,10 +151,10 @@ const performSearch = async (query: string) => {
       search_type: 'hybrid',
     })
 
-    // Check if response contains an error
+    if (currentAbortController.signal.aborted) return
+
     if (response?.error || response?.message) {
-      const errorMessage = response.message || response.error || 'An unknown error occurred'
-      searchError.value = errorMessage
+      searchError.value = response.message || response.error || 'An unknown error occurred'
       searchResults.value = []
       console.error('Search API error:', response)
       return
@@ -139,76 +163,66 @@ const performSearch = async (query: string) => {
     // The API returns { success, data: { results: [...] } }
     const results = response?.data?.results || response?.results || response?.chunks || []
 
-    searchResults.value = results.map((chunk: any) => {
-      // Extract metadata from array format
-      const getMetadata = (key: string) => {
-        const meta = chunk.metadata?.find((m: any) => m.key === key)
-        return meta?.value || ''
-      }
+    // Capture search_query_id for click tracking
+    searchQueryId.value = response?.data?.search_query_id || null
 
-      const title = getMetadata('title') || getMetadata('heading') || extractTitle(chunk.content_html) || 'Untitled'
-      const description = getMetadata('description') || ''
-      const hierarchy = getMetadata('hierarchy') || ''
-
-      // Build URL from source_url or group tracking_id
-      let url = chunk.source_url || ''
-      if (url.includes('/home/aditya/workspace/coollabs/coolify-docs/docs')) {
-        // Convert file path to URL path
-        url = url.replace('/home/aditya/workspace/coollabs/coolify-docs/docs', '/docs')
-        url = url.replace('.md', '')
-      } else if (chunk.group?.tracking_id) {
-        url = chunk.group.tracking_id.replace('/home/aditya/workspace/coollabs/coolify-docs/docs', '/docs')
-        url = url.replace('.md', '')
-      }
-
-      // Create breadcrumb from hierarchy or URL (excluding 'docs' prefix)
-      let breadcrumb = ''
-      if (hierarchy) {
-        // Convert "home > aditya > workspace > coollabs > coolify-docs > docs > services > n8n"
-        // to "services / n8n"
-        const parts = hierarchy.split(' > ')
-        const docsIndex = parts.indexOf('docs')
-        if (docsIndex !== -1 && docsIndex < parts.length - 1) {
-          breadcrumb = parts.slice(docsIndex + 1).join(' / ')
-        } else {
-          breadcrumb = hierarchy.replace(/ > /g, ' / ')
-        }
-      } else if (url) {
-        // Extract from URL: /docs/services/n8n -> services / n8n
-        breadcrumb = url.replace(/^\/docs\//, '').replace(/\//g, ' / ')
-      }
-
-      return {
-        id: chunk.id,
-        title,
-        content: description || chunk.content_html || chunk.content || '',
-        url,
-        highlight: chunk.content_html,
-        hierarchy,
-        breadcrumb,
-      }
-    })
+    searchResults.value = results.map((chunk: any) => transformSearchResult(chunk))
 
     selectedIndex.value = 0
   } catch (error: any) {
+    if (currentAbortController.signal.aborted) return
+
     console.error('Search error:', error)
-
-    // Try to extract error message from the error object
-    let errorMessage = 'An unexpected error occurred while searching.'
-
-    if (error?.response?.data?.message) {
-      errorMessage = error.response.data.message
-    } else if (error?.message) {
-      errorMessage = error.message
-    } else if (typeof error === 'string') {
-      errorMessage = error
-    }
-
-    searchError.value = errorMessage
+    searchError.value = extractErrorMessage(error)
     searchResults.value = []
   } finally {
-    isLoading.value = false
+    if (!currentAbortController.signal.aborted) {
+      isLoading.value = false
+    }
   }
+}
+
+const getMetadata = (chunk: any, key: string): any => {
+  const meta = chunk.metadata?.find((m: any) => m.key === key)
+  return meta?.value || ''
+}
+
+const transformSearchResult = (chunk: any): SearchResult => {
+  const title = getMetadata(chunk, 'title') || getMetadata(chunk, 'heading') || extractTitle(chunk.content_html) || 'Untitled'
+  const description = getMetadata(chunk, 'description') || ''
+  const hierarchy = getMetadata(chunk, 'hierarchy') || []
+  const url = normalizeUrl(chunk.source_url || chunk.group?.tracking_id || '')
+  const breadcrumb = createBreadcrumb(hierarchy, url)
+
+  return {
+    id: chunk.id,
+    title,
+    content: description || chunk.content_html || chunk.content || '',
+    url,
+    highlight: chunk.content_html,
+    hierarchy,
+    breadcrumb,
+  }
+}
+
+const normalizeUrl = (path: string): string => {
+  if (!path) return ''
+
+  // Find 'docs' in the path and extract everything from that point
+  const docsIndex = path.indexOf('/docs')
+  if (docsIndex !== -1) {
+    path = path.substring(docsIndex)
+  }
+
+  // Remove .md extension
+  return path.replace(/\.md$/, '')
+}
+
+const extractErrorMessage = (error: any): string => {
+  if (error?.response?.data?.message) return error.response.data.message
+  if (error?.message) return error.message
+  if (typeof error === 'string') return error
+  return 'An unexpected error occurred while searching.'
 }
 
 const extractTitle = (html: string): string => {
@@ -219,7 +233,47 @@ const extractTitle = (html: string): string => {
   return heading?.textContent?.trim() || ''
 }
 
+const createBreadcrumb = (hierarchy: string[], url: string): string => {
+  // Try hierarchy first
+  if (Array.isArray(hierarchy) && hierarchy.length > 0) {
+    const docsIndex = hierarchy.findIndex(item => item === 'docs')
+    return docsIndex !== -1
+      ? hierarchy.slice(docsIndex).join(' / ')
+      : hierarchy.join(' / ')
+  }
+
+  // Fall back to URL
+  if (!url) return ''
+
+  const urlParts = url.replace(/^\/+/, '').split('/')
+  const docsIndex = urlParts.indexOf('docs')
+
+  return docsIndex !== -1
+    ? urlParts.slice(docsIndex).join(' / ')
+    : urlParts.join(' / ')
+}
+
+const trackClick = async (chunkId: string, position: number) => {
+  if (!korrektlySDK || !searchQueryId.value || !korrektlyConfig.datasetId) {
+    return
+  }
+
+  try {
+    await korrektlySDK.trackClick(korrektlyConfig.datasetId, {
+      search_query_id: searchQueryId.value,
+      chunk_id: chunkId,
+      position,
+    })
+  } catch (error) {
+    // Log error but don't block navigation
+    console.error('Failed to track click:', error)
+  }
+}
+
 const navigateToResult = (result: SearchResult) => {
+  // Track click in fire-and-forget manner
+  trackClick(result.id, selectedIndex.value)
+
   window.location.href = result.url
   closeSearch()
 }
@@ -283,7 +337,8 @@ const truncate = (text: string, length: number) => {
                 <button
                   v-if="searchQuery"
                   class="absolute right-3 w-6 h-6 flex items-center justify-center rounded bg-[var(--vp-c-bg-soft)] text-[var(--vp-c-text-2)] hover:bg-[var(--vp-c-bg-elv)] hover:text-[var(--vp-c-text-1)] transition-all text-xl leading-none"
-                  @click="searchQuery = ''"
+                  @click="clearSearch"
+                  title="Clear search"
                 >
                   ×
                 </button>
@@ -353,7 +408,6 @@ const truncate = (text: string, length: number) => {
 
               <!-- Initial State -->
               <div v-else class="py-12 px-6 text-center text-[var(--vp-c-text-2)]">
-                <p class="text-sm mb-6">Start typing to search...</p>
                 <div class="mt-6">
                   <p class="text-xs font-semibold text-[var(--vp-c-text-2)] mb-3 uppercase tracking-wide">Popular searches:</p>
                   <div class="flex flex-wrap gap-2 justify-center">

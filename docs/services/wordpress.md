@@ -10,6 +10,28 @@ description: "Run WordPress on Coolify for blogging, CMS, e-commerce with plugin
 WordPress is a free and open-source content management system written in PHP and paired with a MySQL/MariaDB database.
 It is used for creating websites, blogs, and applications.
 
+## Deployment Variants
+
+WordPress is available in two deployment configurations in Coolify:
+
+### WordPress with MariaDB
+- **Database:** MariaDB
+- **Use case:** Production deployments with MariaDB preference (recommended for most users)
+- **Components:**
+  - WordPress container
+  - MariaDB container
+  - Automatic database configuration and health checks
+
+### WordPress with MySQL
+- **Database:** MySQL
+- **Use case:** Production deployments with MySQL preference
+- **Components:**
+  - WordPress container
+  - MySQL container
+  - Automatic database configuration and health checks
+
+Both variants provide equivalent functionality - choose based on your database preference or existing infrastructure.
+
 ## Links
 
 - [The official website](https://wordpress.org)

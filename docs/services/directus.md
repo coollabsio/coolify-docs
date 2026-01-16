@@ -18,6 +18,24 @@ Directus is a real-time API and App dashboard for managing SQL database content.
 - **Completely Extensible.** Built to white-label, it is easy to customize our modular platform.
 - **A Modern Dashboard.** Our no-code Vue.js app is safe and intuitive for non-technical users, no training required.
 
+## Deployment Variants
+
+Directus is available in two deployment configurations in Coolify:
+
+### Directus (Default)
+- **Database:** SQLite3 (file-based)
+- **Use case:** Development, testing, or small-scale deployments
+- **Components:** Single Directus container with embedded SQLite database
+
+### Directus with PostgreSQL
+- **Database:** PostgreSQL + Redis
+- **Use case:** Production deployments requiring better performance, scalability, and caching
+- **Components:**
+  - Directus container
+  - PostgreSQL 16 container
+  - Redis 7 container for caching
+  - Automatic database configuration and health checks
+
 ## Community Help
 
 [The Directus Documentation](https://docs.directus.io?utm_source=coolify.io) is a great place to start, or explore these other channels:

@@ -148,9 +148,9 @@ Navigate to your server's proxy settings and add the new timeouts under the comm
 
 ```yaml
 command:
-  - "--entrypoints.https.transport.respondingTimeouts.readTimeout=5m"
-  - "--entrypoints.https.transport.respondingTimeouts.writeTimeout=5m"
-  - "--entrypoints.https.transport.respondingTimeouts.idleTimeout=5m"
+  - '--entrypoints.https.transport.respondingTimeouts.readTimeout=5m'
+  - '--entrypoints.https.transport.respondingTimeouts.writeTimeout=5m'
+  - '--entrypoints.https.transport.respondingTimeouts.idleTimeout=5m'
 ```
 
 Read more about Traefik timeouts in the [official documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#timeout).

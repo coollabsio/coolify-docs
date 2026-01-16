@@ -9,6 +9,28 @@ description: "Run ClassicPress CMS on Coolify as WordPress alternative with clas
 
 ClassicPress is a community-led open source content management system for creators. It is a fork of WordPress 6.2 that preserves the TinyMCE classic editor as the default option. It is half the size of WordPress, contains less bloat improving performance, and has no block editor (Gutenberg/Full Site Editing).
 
+## Deployment Variants
+
+ClassicPress is available in two deployment configurations in Coolify:
+
+### ClassicPress with MariaDB
+- **Database:** MariaDB
+- **Use case:** Production deployments with MariaDB preference (recommended for most users)
+- **Components:**
+  - ClassicPress container
+  - MariaDB container
+  - Automatic database configuration and health checks
+
+### ClassicPress with MySQL
+- **Database:** MySQL
+- **Use case:** Production deployments with MySQL preference
+- **Components:**
+  - ClassicPress container
+  - MySQL container
+  - Automatic database configuration and health checks
+
+Both variants provide equivalent functionality - choose based on your database preference or existing infrastructure.
+
 For more information, see:
 
 - [The official website](https://www.classicpress.net?utm_source=coolify.io)

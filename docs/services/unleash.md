@@ -11,6 +11,25 @@ description: "Manage features on Coolify with Unleash for feature toggles, A/B t
 
 Unleash is an open source feature flagging service.
 
+## Deployment Variants
+
+Unleash is available in two deployment configurations in Coolify:
+
+### Unleash with PostgreSQL
+- **Database:** PostgreSQL
+- **Use case:** Standard deployments with managed database
+- **Components:**
+  - Unleash container
+  - PostgreSQL container
+  - Automatic database configuration and health checks
+
+### Unleash without Database
+- **Database:** External (user-provided)
+- **Use case:** Advanced deployments with existing database infrastructure or custom database configurations
+- **Components:**
+  - Unleash container
+  - Requires external database connection configuration
+
 ## Screenshots
 
 ![Unleash Preview](https://raw.githubusercontent.com/Unleash/unleash/main/.github/github_online_demo.svg)

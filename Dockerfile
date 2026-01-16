@@ -1,5 +1,5 @@
-# Stage 1: Build Stage (oven/bun:1.1.44-alpine, ARM64)
-FROM oven/bun:1.1.44-alpine AS builder
+# Stage 1: Build Stage (oven/bun:1.3.4-alpine)
+FROM oven/bun:1.3.4-alpine AS builder
 
 ARG VITE_ANALYTICS_DOMAIN=coolify.io/docs
 ARG VITE_SITE_URL=https://coolify.io/docs/
@@ -17,7 +17,7 @@ RUN apk add --no-cache nodejs npm
 WORKDIR /app
 
 # Copy package files first for better caching
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 
 # Install Git and dependencies
 RUN --mount=type=cache,target=/var/cache/apk \
@@ -34,6 +34,9 @@ COPY nginx/ ./nginx/
 COPY tailwind.config.js .
 COPY env.d.ts .
 COPY tsconfig*.json ./
+
+# Copy git history for lastUpdated timestamps
+COPY .git/ ./.git/
 
 # Build with cache
 RUN --mount=type=cache,target=/root/.bun \
