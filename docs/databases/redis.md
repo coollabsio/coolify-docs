@@ -13,5 +13,5 @@ Redis is an in-memory data store used by millions of developers as a cache, vect
 
 ## Links
 
-- [The official website ›](https://redis.io/)
-- [GitHub ›](https://github.com/redis/redis)
+- [The official website](https://redis.io/)
+- [GitHub](https://github.com/redis/redis)

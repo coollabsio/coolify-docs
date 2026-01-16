@@ -5,7 +5,7 @@ description: "Run LibreOffice Online on Coolify for collaborative document editi
 
 # Libreoffice
 
-<ZoomableImage src="/docs/images/services/libreoffice.svg" alt="Libreoffice dashboard" />
+<ZoomableImage src="/docs/images/services/libreoffice-logo.svg" alt="Libreoffice dashboard" />
 
 ## What is Libreoffice
 

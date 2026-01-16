@@ -18,5 +18,5 @@ NocoDB is an open source Airtable alternative. Turns any MySQL, PostgreSQL, SQL 
 
 ## Links
 
-- [The official website ›](https://nocodb.com/)
-- [GitHub ›](https://github.com/nocodb/nocodb)
+- [The official website](https://nocodb.com/)
+- [GitHub](https://github.com/nocodb/nocodb)

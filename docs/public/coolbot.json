@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Troubleshoot - Bad gateway",
+    "link": "https://coolify.io/docs/troubleshoot/applications/bad-gateway"
+  },
+  {
+    "name": "Troubleshoot - Failed to get access token during deployment",
+    "link": "https://coolify.io/docs/troubleshoot/applications/failed-to-get-token"
+  },
+  {
+    "name": "Troubleshoot - Gateway timeout",
+    "link": "https://coolify.io/docs/troubleshoot/applications/gateway-timeout"
+  },
+  {
+    "name": "Troubleshoot - No available server",
+    "link": "https://coolify.io/docs/troubleshoot/applications/no-available-server"
+  },
+  {
+    "name": "Troubleshoot - Dashboard inaccessible via instance domain",
+    "link": "https://coolify.io/docs/troubleshoot/dashboard/dashboard-inaccessible"
+  },
+  {
+    "name": "Troubleshoot - Slow coolify dashboard performance",
+    "link": "https://coolify.io/docs/troubleshoot/dashboard/dashboard-slow-performance"
+  },
+  {
+    "name": "Troubleshoot - Disable 2fa manually",
+    "link": "https://coolify.io/docs/troubleshoot/dashboard/disable-2fa-manually"
+  },
+  {
+    "name": "Troubleshoot - Certificate resolver not found on coolify proxy",
+    "link": "https://coolify.io/docs/troubleshoot/dns-and-domains/certificate-resolver-doesnt-exist"
+  },
+  {
+    "name": "Troubleshoot - Let's encrypt not generating ssl certificates ",
+    "link": "https://coolify.io/docs/troubleshoot/dns-and-domains/lets-encrypt-not-working"
+  },
+  {
+    "name": "Troubleshoot - Coolify not using wildcard ssl certificates",
+    "link": "https://coolify.io/docs/troubleshoot/dns-and-domains/wildcard-ssl-certs"
+  },
+  {
+    "name": "Troubleshoot - Expired github personal access token (pat)",
+    "link": "https://coolify.io/docs/troubleshoot/docker/expired-github-personal-access-token"
+  },
+  {
+    "name": "Troubleshoot - Docker installation failed",
+    "link": "https://coolify.io/docs/troubleshoot/installation/docker-install-failed"
+  },
+  {
+    "name": "Troubleshoot - Coolify install script failed",
+    "link": "https://coolify.io/docs/troubleshoot/installation/install-script-failed"
+  },
+  {
+    "name": "Troubleshoot - Server connection unstable",
+    "link": "https://coolify.io/docs/troubleshoot/server/connection-issues"
+  },
+  {
+    "name": "Troubleshoot - Server crash during build",
+    "link": "https://coolify.io/docs/troubleshoot/server/crash-during-build"
+  },
+  {
+    "name": "Troubleshoot - Raspberry pi crashes",
+    "link": "https://coolify.io/docs/troubleshoot/server/raspberry-crashes"
+  },
+  {
+    "name": "Troubleshoot - 2fa stopped working",
+    "link": "https://coolify.io/docs/troubleshoot/server/two-factor-stopped-working"
+  },
+  {
+    "name": "Troubleshoot - Server validation issues",
+    "link": "https://coolify.io/docs/troubleshoot/server/validation-issues"
+  }
+]

@@ -17,4 +17,4 @@ Label Studio is an open-source data labeling platform that streamlines the proce
 
 ## Links
 
-- [The official website ›](https://labelstud.io/)
+- [The official website](https://labelstud.io/)

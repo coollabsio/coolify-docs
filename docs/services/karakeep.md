@@ -5,7 +5,7 @@ description: "Host KaraKeep password manager on Coolify for secure credential st
 
 # KaraKeep
 
-<ZoomableImage src="/docs/images/services/karakeep.svg" alt="Karakeep dashboard" />
+<ZoomableImage src="/docs/images/services/karakeep-logo.svg" alt="Karakeep dashboard" />
 
 ## What is KaraKeep?
 
@@ -13,5 +13,5 @@ KaraKeep is a self-hostable bookmark-everything app with AI-based automatic tagg
 
 ## Links
 
-- [The official website ›](https://docs.karakeep.app?utm_source=coolify.io)
-- [GitHub ›](https://github.com/ndom91/briefkasten?utm_source=coolify.io)
+- [The official website](https://docs.karakeep.app?utm_source=coolify.io)
+- [GitHub](https://github.com/karakeep-app/karakeep?utm_source=coolify.io)

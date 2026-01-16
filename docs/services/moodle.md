@@ -3,7 +3,6 @@ title: "Moodle"
 description: "Deploy Moodle LMS on Coolify for online learning, course management, assignments, quizzes, and educational platform with extensive plugins."
 ---
 
-
 ![Moodle](https://raw.githubusercontent.com/moodle/moodle/main/.github/moodlelogo.svg)
 
 ## What is Moodle?
@@ -12,5 +11,5 @@ Moodle is an open-source learning platform that provides a secure and private al
 
 ## Links
 
-- [The official website ›](https://moodle.com/)
-- [GitHub ›](https://github.com/moodle/moodle)
+- [The official website](https://moodle.com/)
+- [GitHub](https://github.com/moodle/moodle)

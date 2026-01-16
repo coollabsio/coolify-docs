@@ -174,7 +174,7 @@ TELESCOPE_ENABLED=true
    - Use the Pull Request Template provided and fill in the details.
 
 ::: danger IMPORTANT
-Always set the base branch for your PR to the `next` branch of the Coolify repository, not the `main` branch.
+Always set the base branch for your PR to the `next` branch of the Coolify repository, not the `v4.x` branch.
 :::
 
 4. Submit your PR:

@@ -5,7 +5,7 @@ description: "Host LibreTranslate on Coolify for self-hosted translation API sup
 
 # Libretranslate
 
-<ZoomableImage src="/docs/images/services/libretranslate.svg" alt="Libretranslate dashboard" />
+<ZoomableImage src="/docs/images/services/libretranslate-logo.svg" alt="Libretranslate dashboard" />
 
 ## What is Libretranslate
 

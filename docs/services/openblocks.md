@@ -3,6 +3,10 @@ title: "OpenBlocks"
 description: "Build apps on Coolify with OpenBlocks low-code platform featuring drag-and-drop UI, database connectors, and rapid application development."
 ---
 
+::: warning SERVICE NOT AVAILABLE
+This service is currently not available in Coolify's service catalog.
+:::
+
 # What is OpenBlocks?
 
 OpenBlocks is an open source low-code platform.
@@ -13,5 +17,5 @@ OpenBlocks is an open source low-code platform.
 
 ## Links
 
-- [The official website ›](https://www.openblocks.dev/)
-- [GitHub ›](https://github.com/openblocks-dev/openblocks)
+- [The official website](https://www.openblocks.dev/)
+- [GitHub](https://github.com/openblocks-dev/openblocks)

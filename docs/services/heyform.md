@@ -5,7 +5,7 @@ description: "Build forms on Coolify with HeyForm featuring conversational forms
 
 # Heyform
 
-<ZoomableImage src="/docs/images/services/heyform.svg" alt="Heyform dashboard" />
+<ZoomableImage src="/docs/images/services/heyform-logo.svg" alt="Heyform dashboard" />
 
 ## What is Heyform
 

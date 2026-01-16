@@ -23,5 +23,5 @@ Free and open source collaborative space for managing and sharing knowledge.
 
 ## Links
 
-- [The official website ›](https://www.mediawiki.org/wiki/MediaWiki)
-- [GitHub ›](https://github.com/wikimedia/mediawiki)
+- [The official website](https://www.mediawiki.org/wiki/MediaWiki)
+- [GitHub](https://github.com/wikimedia/mediawiki)

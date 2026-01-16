@@ -11,5 +11,5 @@ Chatwoot gives you all the tools to manage conversations, build relationships an
 
 ## Links
 
-- [The official website ›](https://www.chatwoot.com?utm_source=coolify.io)
-- [GitHub ›](https://github.com/chatwoot/chatwoot?utm_source=coolify.io)
+- [The official website](https://www.chatwoot.com?utm_source=coolify.io)
+- [GitHub](https://github.com/chatwoot/chatwoot?utm_source=coolify.io)

@@ -5,7 +5,7 @@ description: "Share secrets securely on Coolify with Cryptgeon featuring self-de
 
 # Cryptgeon
 
-<ZoomableImage src="/docs/images/services/cryptgeon.png" alt="Cryptgeon dashboard" />
+<ZoomableImage src="/docs/images/services/cryptgeon-logo.png" alt="Cryptgeon dashboard" />
 
 ## What is Cryptgeon
 

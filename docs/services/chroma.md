@@ -13,5 +13,5 @@ Chroma is an open-source, AI-native vector database designed for building applic
 
 ## Links
 
-- [The official website ›](https://www.trychroma.com?utm_source=coolify.io)
-- [GitHub ›](https://github.com/chroma-core/chroma?utm_source=coolify.io)
+- [The official website](https://www.trychroma.com?utm_source=coolify.io)
+- [GitHub](https://github.com/chroma-core/chroma?utm_source=coolify.io)

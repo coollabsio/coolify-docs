@@ -5,7 +5,7 @@ description: "Share text securely on Coolify with PrivateBin for encrypted paste
 
 # Privatebin
 
-<ZoomableImage src="/docs/images/services/privatebin.svg" alt="Privatebin dashboard" />
+<ZoomableImage src="/docs/images/services/privatebin-logo.svg" alt="Privatebin dashboard" />
 
 ## What is Privatebin
 

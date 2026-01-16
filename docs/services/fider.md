@@ -3,7 +3,6 @@ title: "Fider"
 description: "Deploy Fider feedback platform on Coolify for product ideas, feature voting, roadmap planning, and customer feedback collection for product teams."
 ---
 
-
 ![Fider](https://github.com/getfider/fider/raw/main/etc/homepage.png)
 
 ## What is Fider?
@@ -16,4 +15,4 @@ See the official [Fider + Coolify guide](https://docs.fider.io/hosting-coolify?u
 
 ## Links
 
-- [The official website ›](https://fider.io?utm_source=coolify.io)
+- [The official website](https://fider.io?utm_source=coolify.io)

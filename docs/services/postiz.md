@@ -5,7 +5,7 @@ description: "Schedule social media on Coolify with Postiz for content planning,
 
 # Postiz
 
-<ZoomableImage src="/docs/images/services/postiz.png" alt="Postiz dashboard" />
+<ZoomableImage src="/docs/images/services/postiz-logo.png" alt="Postiz dashboard" />
 
 ## What is Postiz
 

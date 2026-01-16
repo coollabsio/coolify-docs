@@ -5,7 +5,7 @@ description: "Run Dolibarr ERP/CRM on Coolify with invoicing, inventory, project
 
 # Dolibarr
 
-<ZoomableImage src="/docs/images/services/dolibarr.png" alt="Dolibarr dashboard" />
+<ZoomableImage src="/docs/images/services/dolibarr-logo.png" alt="Dolibarr dashboard" />
 
 ## What is Dolibarr
 

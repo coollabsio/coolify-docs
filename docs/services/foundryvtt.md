@@ -5,7 +5,7 @@ description: "Host Foundry VTT on Coolify for virtual tabletop RPG gaming with d
 
 # Foundryvtt
 
-<ZoomableImage src="/docs/images/services/foundryvtt.png" alt="Foundryvtt dashboard" />
+<ZoomableImage src="/docs/images/services/foundryvtt-logo.png" alt="Foundryvtt dashboard" />
 
 ## What is Foundryvtt
 

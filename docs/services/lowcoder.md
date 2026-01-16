@@ -5,7 +5,7 @@ description: "Build internal tools on Coolify with Lowcoder low-code platform fe
 
 # Lowcoder
 
-<ZoomableImage src="/docs/images/services/lowcoder.svg" alt="Lowcoder dashboard" />
+<ZoomableImage src="/docs/images/services/lowcoder-logo.svg" alt="Lowcoder dashboard" />
 
 ## What is Lowcoder
 
