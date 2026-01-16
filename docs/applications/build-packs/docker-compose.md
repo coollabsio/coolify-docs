@@ -50,13 +50,13 @@ Click on **Continue** button once you have set all the above settings to correct
 
 ## Making services available to the outside world
 
-Read more about [Exposing Services to the Internet](/knowledge-base/compose#exposing-services-to-the-internet) in the Knowledge Base.
+Read more about [Exposing Services to the Internet](/knowledge-base/docker/compose#exposing-services-to-the-internet) in the Knowledge Base.
 
 ## Advanced Configuration
 
 ### Using Environment and Shared Variables
 
-Within Coolify you can configure these easily following the details found in the [Knowledge Base for Docker Compose](/knowledge-base/compose#defining-environment-and-shared-variables).
+Within Coolify you can configure these easily following the details found in the [Knowledge Base for Docker Compose](/knowledge-base/docker/compose#defining-environment-and-shared-variables).
 
 ### Storage
 

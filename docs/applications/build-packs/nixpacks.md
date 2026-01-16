@@ -146,10 +146,12 @@ You may need to include a `nixpacks.toml` file in your repository for these chan
 
 Nixpacks supports specifying build configurations in a nixpacks.toml or nixpacks.json file. If one of these files is present in the root of your repository, it will be automatically used. For more details, refer to the [Nixpacks documentation](https://nixpacks.com/docs/configuration/file?utm_source=coolify.io).
 
-## Known issues and solutions
+## Known Issues
 
-::: details 1. Outdated Packages/Dependencies
-Sometimes, Nixpacks may use older package versions. If you encounter this issue, update the `nixpkgs` archive version in your `nixpacks.toml` file. You can learn more about this in the Nixpacks docs on [nixpkgs archive](https://nixpacks.com/docs/configuration/file#nixpkgs-archive?utm_source=coolify.io)
+### Outdated Packages/Dependencies
 
-This is a Nixpacks-related issue, not a Coolify issue. For further assistance, please contact the Nixpacks support team.
-:::
+Sometimes, Nixpacks may use older package versions than you need. This is especially common with Node.js, where you might need a specific minor or patch version.
+
+For Node.js version pinning, see the dedicated [Node.js Versioning](/applications/build-packs/nixpacks/node-versioning) guide.
+
+For other packages, you can update the `nixpkgs` archive version in your `nixpacks.toml` file. Learn more in the Nixpacks docs on [nixpkgs archive](https://nixpacks.com/docs/configuration/file#nixpkgs-archive?utm_source=coolify.io).

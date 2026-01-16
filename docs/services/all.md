@@ -201,7 +201,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 ## Email
 
-- [Unsend](/services/unsend) - An open source bulk email manager
+- [Usesend](/services/usesend) - An open source bulk email manager
 
 ## Family
 
@@ -224,7 +224,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [Actual Budget](/services/actualbudget) - A local-first personal finance tool based on zero-based budgeting
 - [BudgE](/services/budge) - A budgeting personal finance app
-- [Firefly III](/services/firefly-iii) - A personal finances manager
+- [Firefly III](/services/firefly) - A personal finances manager
 - [Maybe](/services/maybe) - Personal finance and wealth management application
 
 ## Forum
@@ -236,6 +236,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [FoundryVTT](/services/foundryvtt) - Virtual tabletop for tabletop role-playing games
 - [Minecraft](/services/minecraft) - Minecraft game server
 - [Pterodactyl](/services/pterodactyl) - Game server management panel with Wings daemon for hosting Minecraft, CS:GO, ARK and more
+- [Terraria Server](/services/terraria-server) - Docker multi-arch image for Terraria game server
 
 ## Health
 

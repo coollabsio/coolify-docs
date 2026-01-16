@@ -1,6 +1,6 @@
 ---
 title: No Available Server Error
-description: Fix No Available Server (503) errors in Coolify by diagnosing health checks, domain configuration, port mismatches, and Traefik routing.
+description: Fix No Available Server (503) errors in Coolify by diagnosing health checks, domain configuration, port mismatches, and Traefik proxy issues.
 tags: ["No Available Server", "503"]
 ---
 
@@ -12,49 +12,49 @@ If your deployed application or service shows a **"No Available Server"** error,
 
 The "No Available Server" error occurs when:
 
-1. **Failed Health Checks** (Most common) - Traefik considers your container unhealthy
+1. **Failed Health Checks** - Traefik considers your container unhealthy
 2. **Domain Configuration Issues** - Incorrect domain setup or missing www/non-www variants
 3. **Port Mismatches** - Exposed ports don't match your application's actual listening port
 4. **Deployment Downtime** - Brief downtime during container updates
+5. **Underlying Traefik Issues** - Problems with Traefik itself (e.g., Docker API version mismatch)
 
 ## Quick Diagnosis Steps
 
 ### 1. Check Container Health Status
 
-First, verify if your containers are healthy:
+First, verify if your containers are running healthy:
 
 ```bash
 # SSH into your server and check container status
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 ```
 
-Look for containers showing `(unhealthy)` status - this is your primary culprit.
+Look for containers showing `(unhealthy)` status - this indicates a health check problem.
 
-### 2. Check Health Check Configuration
+### 2. Check Domain Configuration
 
-#### Applications
+Verify that you entered the domain correctly into your Application / Service configurations and your DNS records are pointing to the correct IP address. See the [Domains](/knowledge-base/domains) documentation for the full formatting rules.
 
-<ZoomableImage src="/docs/images/knowledge-base/resources/healthcheck.webp" alt="Healthcheck configuration" />
+### 3. Check Traefik Proxy Logs
 
-Navigate to your application's configuration and check:
+Check the Traefik logs for underlying issues:
 
-- Is a health check enabled?
-- What path is being checked?
-- What port is the health check using?
+Through Coolify UI:
 
-#### Service Stacks
+- Go to `Servers` → `[Your Server]` → `Proxy` → `Logs`
 
-Look in your `docker-compose.yml` for the `healthcheck` section and check:
+Or via SSH:
 
-- What command is being run?
-- What path is being checked?
-- What port is the health check using?
+```bash
+# Check proxy logs for errors
+docker logs coolify-proxy --tail 50
+```
 
-You can find this either in the Coolify UI by clicking on the `Edit Compose File` button or in the `Docker Compose` section under `Docker Compose Content (raw)`.
+Look for error messages like `client version 1.24 is too old` which indicates a [Docker API version mismatch](#solution-5-update-traefik-to-fix-docker-api-version-issue).
 
 ## Common Solutions
 
-### Solution 1: Fix Failed Health Checks (Most Common)
+### Fix Failed Health Checks (Most Common)
 
 **Symptoms:**
 
@@ -75,7 +75,7 @@ You can find this either in the Coolify UI by clicking on the `Edit Compose File
 2. **Fix Health Check Issues:**
 
    ::: info
-   These are some common solutions to fix a health check. Adjust based on your specific application and health check command.
+   These are some common solutions to fix a health check. Adjust based on your specific application and health check command. Read more about [configuring Health Checks](/knowledge-base/health-checks#configure-health-checks).
    :::
 
    **Missing dependencies in container:**
@@ -109,13 +109,21 @@ You can find this either in the Coolify UI by clicking on the `Edit Compose File
    docker exec -it <container-name> curl -f http://localhost:3000/health
    ```
 
-### Solution 2: Fix Domain Configuration
+### Fix Domain Configuration
+
+#### Incorrect Domain Setup
+
+**Symptoms:**
+
+- Works with auto-generated domain (e.g. `sslip.io`) but not custom domain
+
+**Steps:**
+Verify that your domain is correctly set up in both Coolify and your DNS provider as per the [Domains](/knowledge-base/domains) documentation.
 
 #### Redirect Issues
 
 **Symptoms:**
 
-- Works with auto-generated domain (e.g. `sslip.io`) but not custom domain
 - Redirect is set to either `Redirect to www` or `Redirect to non-www`
 - Works for root domain but not www (or vice versa)
 
@@ -141,7 +149,7 @@ If your site is only accessible via HTTP but not HTTPS, check your domain config
 
 Make sure the protocol in your domain configuration matches how you want to access your site, then restart your application.
 
-### Solution 3: Fix Port Configuration
+### Fix Port Configuration
 
 **Symptoms:**
 
@@ -168,7 +176,7 @@ Make sure the protocol in your domain configuration matches how you want to acce
 
    Your Application / Service might be binding to only `localhost` or `127.0.0.1`, which makes it unreachable from outside the container. Ensure your app listens on all interfaces (`0.0.0.0`).
 
-### Solution 4: Handle Deployment Downtime
+### Handle Deployment Downtime
 
 **Symptoms:**
 
@@ -179,20 +187,19 @@ Make sure the protocol in your domain configuration matches how you want to acce
 
 Ensure that `Rolling Updates` are correctly configured. See [Rolling Updates documentation](/knowledge-base/rolling-updates)
 
-
-### Solution 5: Update Traefik to Fix Docker API Version Issue
+### Update Traefik to Fix Docker API Version Issue
 
 **Symptoms:**
+
 - "No Available Server" error appears
 - Coolify proxy logs shows the following error message:
-    ```py
-    Error response from daemon: client version 1.24 is too old. Minimum supported API version is 1.44, please upgrade your client to a newer version
-    ```
+  ```py
+  Error response from daemon: client version 1.24 is too old. Minimum supported API version is 1.44, please upgrade your client to a newer version
+  ```
 - Application container is running healthy but visiting the domain shows "No Available Server"
 
-
 **Root Cause:**
-The problem happened because Traefik was hard-coding Docker API versions. 
+The problem happened because Traefik was hard-coding Docker API versions.
 
 ::: info
 The Traefik team has released a fix in **v2.11.31** and **v3.6.1**. Starting from v2.11.31 and v3.6.1, Traefik will now auto-negotiate the Docker API version, so this issue shouldn't happen again.
@@ -200,21 +207,14 @@ The Traefik team has released a fix in **v2.11.31** and **v3.6.1**. Starting fro
 
 **Solution:**
 
-Coolify won't automatically update Traefik for existing servers. 
-
-::: warning Why Coolify don't auto-update for existing servers
-Some users have custom configurations (like DNS challenges) that could break when updating to a newer Traefik version. Please check the [Traefik changelog](https://github.com/traefik/traefik/releases) before updating.
-
-- If you're using the default Coolify Traefik configurations, you're safe to update to v3.6.1 without any issues.
-- If you're currently on Traefik v2 and don't want to upgrade to v3, you can update to the patched v2.11.31 instead.
-  :::
-
 If you're already using Coolify, you'll need to update Traefik manually by follow these steps:
 
 1. **Navigate to Proxy Configuration:**
+
    - Go to your Coolify dashboard (https://app.coolify.io/ for cloud users) → Servers → [Your Server] → Proxy → Configuration
 
 2. **Change Traefik Version:**
+
    - Change the version to: `v3.6.1` (or `v2.11.31` if staying on v2)
 
 3. **Restart Proxy:**
@@ -222,12 +222,19 @@ If you're already using Coolify, you'll need to update Traefik manually by follo
 
 <ZoomableImage src="/docs/images/troubleshoot/applications/bad-gateway/no-available-server/update-traefik-version.webp" alt="coolify proxy traefik version update" />
 
-
 **Notes:**
+
 - You need to do this on every server connected to your Coolify instance
 - This applies to both self-hosted and Coolify Cloud users
-    - (Cloud users: Traefik runs on **your own server** not Coolify’s so you’ll need to update it yourself by following the guide above)
+  - (Cloud users: Traefik runs on **your own server** not Coolify’s so you’ll need to update it yourself by following the guide above)
 - If you have changed Docker daemon configs to set Minimum supported API version, then we recommend to revert it as it could potentially cause problems in the future.
+
+::: warning Why Coolify don't auto-update for existing servers
+Some users have custom configurations (like DNS challenges) that could break when updating to a newer Traefik version. Please check the [Traefik changelog](https://github.com/traefik/traefik/releases) before updating.
+
+- If you're using the default Coolify Traefik configurations, you're safe to update to v3.6.1 without any issues.
+- If you're currently on Traefik v2 and don't want to upgrade to v3, you can update to the patched v2.11.31 instead.
+  :::
 
 ## Advanced Debugging
 

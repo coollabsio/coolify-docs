@@ -125,7 +125,7 @@ Go to the **Environment Variables** page, enter your tunnel token, and deploy th
 
 **Congratulations**! You've successfully set up a resource that can be accessed by anyone on the internet your domain.
 
-:::danger HEADS UP!
+::: danger HEADS UP!
 **The steps above show how to tunnel a single resource. Below are the steps for tunneling multiple resources**
 :::
 

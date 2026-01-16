@@ -3,6 +3,39 @@
  * https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css
  */
 
+/* CoolLabs UI compatible background colors for callouts */
+:root {
+  --coollabs-bg-blue-300-5: rgba(147, 197, 253, 0.08);
+  --coollabs-bg-emerald-300-5: rgba(110, 231, 183, 0.08);
+  --coollabs-bg-red-300-5: rgba(255, 115, 146, 0.12);
+  --coollabs-bg-yellow-400-5: rgba(250, 204, 21, 0.08);
+  --coollabs-bg-green-300-5: rgba(134, 239, 172, 0.08);
+  --coollabs-bg-zinc-300-5: rgba(212, 212, 216, 0.08);
+
+  --coollabs-border-blue-300-20: rgba(147, 197, 253, 0.3);
+  --coollabs-border-emerald-300-20: rgba(110, 231, 183, 0.3);
+  --coollabs-border-red-300-20: rgba(255, 125, 165, 0.4);
+  --coollabs-border-yellow-400-20: rgba(250, 204, 21, 0.3);
+  --coollabs-border-green-300-20: rgba(134, 239, 172, 0.3);
+  --coollabs-border-zinc-300-20: rgba(212, 212, 216, 0.3);
+}
+
+.dark {
+  --coollabs-bg-blue-950-20: rgba(30, 58, 138, 0.2);
+  --coollabs-bg-emerald-950-20: rgba(6, 78, 59, 0.2);
+  --coollabs-bg-red-950-20: rgba(127, 29, 29, 0.2);
+  --coollabs-bg-yellow-950-20: rgba(113, 63, 18, 0.2);
+  --coollabs-bg-green-950-20: rgba(20, 83, 45, 0.2);
+  --coollabs-bg-zinc-950-20: rgba(39, 39, 42, 0.2);
+
+  --coollabs-border-blue-700: rgba(59, 130, 246, 0.7);
+  --coollabs-border-emerald-700: rgba(16, 185, 129, 0.7);
+  --coollabs-border-red-700: rgba(239, 68, 68, 0.7);
+  --coollabs-border-yellow-700: rgba(234, 179, 8, 0.7);
+  --coollabs-border-green-700: rgba(34, 197, 94, 0.7);
+  --coollabs-border-zinc-700: rgba(161, 161, 170, 0.7);
+}
+
 /**
  * Colors
  *
@@ -242,14 +275,24 @@
 
 
 .dark {
-  --vp-c-bg: #0D0B0F;
-  --vp-c-bg-alt: #0D0B0F;
+  --vp-c-bg: #0a0d0d;
+  --vp-c-bg-alt: #0a0d0d;
   --vp-c-bg-elv: #202127;
   --vp-c-bg-soft: #161b22 !important;
   --vp-c-text-1: #F2F2F2;
   --vp-c-text-2: #9A989D;
   --vp-c-text-3: #9A989D;
-  
+
+  /* Make main content text more gray and easier on eyes in dark mode - EXCLUDING CALLOUTS */
+  .vp-doc > div > p,
+  .vp-doc > div > ul > li,
+  .vp-doc > div > ol > li,
+  .vp-doc > div > li,
+  .vp-doc > div > table td,
+  .vp-doc > div > table th {
+    color: #d6d3d1 !important;
+  }
+
   /* Lighter code background in dark mode */
   --vp-code-bg: #161b22 !important;  /* Darker background in dark mode */
   
@@ -348,6 +391,7 @@
   padding: 32px 32px 96px !important;
   max-width: var(--vp-sidebar-width) !important;
   width: var(--vp-sidebar-width) !important;
+  background-color: var(--vp-c-bg) !important;
 }
 
 @media (min-width: 960px) {
@@ -355,6 +399,7 @@
     padding: 32px 32px 96px !important;
     max-width: var(--vp-sidebar-width) !important;
     width: var(--vp-sidebar-width) !important;
+    background-color: var(--vp-c-bg) !important;
   }
 }
 
@@ -363,6 +408,7 @@
     padding: 32px 32px 96px !important;
     max-width: var(--vp-sidebar-width) !important;
     width: var(--vp-sidebar-width) !important;
+    background-color: var(--vp-c-bg) !important;
   }
 }
 
@@ -531,7 +577,6 @@
 .VPSidebar .VPNavBarSearch .DocSearch-Button-Container {
   flex: 1 !important;
   display: flex !important;
-  justify-content: space-between !important;
   align-items: center !important;
 }
 
@@ -919,13 +964,13 @@ code:hover {
 /* Markdown Labels like NODE_ENV */
 :not(pre) > code {
   background-color: rgba(40, 44, 52, 0) !important;
-  color: rgba(185, 185, 185, 0.795)  !important;
+  color: #27272a  !important;
   -webkit-text-fill-color: rgba(95, 95, 95, 0.795) !important;
   font-weight: 600 !important;
   padding: 4px 4px !important;
   border-radius: 6px !important;
-  font-size: 0.7em !important;
-  border: 1px solid rgba(185, 185, 185, 0.795) !important;
+  font-size: 0.72em !important;
+  border: 1px solid #d4d4d8 !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 
               0 0 1px rgba(255, 255, 255, 0.05) !important;
   margin: 0 3px !important;
@@ -936,7 +981,7 @@ code:hover {
 
 /* Dark mode adjustments */
 .dark :not(pre) > code {
-  background-color: rgb(50, 50, 60) !important;
+  background-color: #27272a !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   border-color: rgba(255, 255, 255, 0.2) !important;

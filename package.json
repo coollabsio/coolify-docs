@@ -2,6 +2,8 @@
   "name": "documentation-coolify",
   "version": "0.0.1",
   "devDependencies": {
+    "@iconify/vue": "^4.3.0",
+    "@radix-ui/colors": "^3.0.0",
     "@types/js-yaml": "4.0.9",
     "@types/node": "22.13.1",
     "autoprefixer": "10.4.20",
@@ -9,7 +11,7 @@
     "js-yaml": "4.1.1",
     "markdown-it-container": "4.0.0",
     "postcss": "8.5.1",
-    "tailwindcss": "3.2.4",
+    "tailwindcss": "3.4.19",
     "tsx": "4.19.2",
     "vite-plugin-yaml": "^1.0.5",
     "vitepress": "1.6.3",
@@ -20,8 +22,6 @@
   },
   "postcss": {
     "plugins": {
-      "postcss-import": {},
-      "tailwindcss/nesting": {},
       "tailwindcss": {},
       "autoprefixer": {}
     }
@@ -37,6 +37,7 @@
     "@korrektly/sdk": "^0.1.4",
     "@vueuse/core": "12.5.0",
     "globe.gl": "2.39.7",
+    "postcss-selector-parser": "^7.1.1",
     "vitepress-openapi": "0.0.3-alpha.78"
   },
   "packageManager": "pnpm@10.6.3+sha512.bb45e34d50a9a76e858a95837301bfb6bd6d35aea2c5d52094fa497a467c43f5c440103ce2511e9e0a2f89c3d6071baac3358fc68ac6fb75e2ceb3d2736065e6"

@@ -15,9 +15,9 @@ For those who **self-host** Coolify, there are three ways to upgrade your instan
 - [Semi-Automatic Upgrade:](#_2-semi-automatic-upgrade) For users who want control over when to apply updates.
 - [Manual Upgrade:](#_3-manual-upgrade) For advanced users who prefer to manage the upgrade process themselves.
 
-:::danger **Backup First!**
+::: danger Backup First!
 
-> **Always back up your Coolify data before starting an upgrade.**
+- Always back up your Coolify data before starting an upgrade.
 :::
 
 ## 1. Automatic Upgrade

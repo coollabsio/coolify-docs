@@ -1,7 +1,6 @@
 ---
 title: "Soketi App Manager"
 description: "Manage Soketi apps on Coolify with application configuration, authentication, and WebSocket server administration interface."
-disabled: true
 ---
 
 ::: warning SERVICE NOT AVAILABLE

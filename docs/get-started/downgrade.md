@@ -11,11 +11,10 @@ If you're using [Coolify Cloud](https://coolify.io/pricing/), the Coolify team h
 
 For those who **self-host** Coolify, you can easily downgrade to the previous version. Follow the steps below to perform a downgrade on to a previous version.
 
-:::danger **Backup First!**
+::: danger Backup First!
 
-> **Always back up your Coolify data before performing an downgrade.** 
-
-> **Downgrading can introduce issues that can be difficult to fix.**
+- Always back up your Coolify data before performing an downgrade.
+- Downgrading can introduce issues that can be difficult to fix.
 :::
 
 The Downgrade process involves the following three steps:

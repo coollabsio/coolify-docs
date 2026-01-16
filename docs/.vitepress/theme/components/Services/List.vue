@@ -279,7 +279,7 @@ const services = [
         icon: '/docs/images/services/plausible-logo.svg',
         description: 'A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies.',
         category: 'Analytics',
-        ignore: true
+        disabled: true
     },
     {
         name: 'Rybbit',
@@ -551,7 +551,8 @@ const services = [
         slug: 'dashboard',
         icon: '/docs/images/services/dashboard-logo.svg',
         description: 'A simple dashboard for your server.',
-        category: 'Administration'
+        category: 'Administration',
+        disabled: true
     },
     {
         name: 'Dashy',
@@ -887,7 +888,8 @@ const services = [
         slug: 'hoarder',
         icon: '/docs/images/services/hoarder-logo.png',
         description: 'Self-hosted bookmark manager with AI-powered tagging.',
-        category: 'Bookmarks'
+        category: 'Bookmarks',
+        disabled: true
     },
     {
         name: 'Homarr',
@@ -1098,6 +1100,13 @@ const services = [
         icon: '/docs/images/services/mailpit-logo.svg',
         description: 'Self-hosted email and SMTP testing tool.',
         category: 'Development'
+    },
+    {
+        name: 'Mage AI',
+        slug: 'mage-ai',
+        icon: '/docs/images/services/mage-ai.svg',
+        description: 'Build, run, and manage data pipelines for integrating and transforming data.',
+        category: 'Automation'
     },
     {
         name: 'Martin',
@@ -1328,7 +1337,8 @@ const services = [
         slug: 'openblocks',
         icon: '/docs/images/services/openblocks-logo.svg',
         description: 'Open-source low code platform.',
-        category: 'Development'
+        category: 'Development',
+        disabled: true
     },
     {
         name: 'Organizr',
@@ -1426,7 +1436,8 @@ const services = [
         slug: 'pingvinshare',
         icon: '/docs/images/services/pingvinshare-logo.svg',
         description: 'Self-hosted file sharing platform that combines lightness and beauty.',
-        category: 'File Sharing'
+        category: 'File Sharing',
+        disabled: true
     },
     {
         name: 'Plane',
@@ -1469,7 +1480,7 @@ const services = [
         icon: '/docs/images/services/posthog-logo.svg',
         description: 'Open source product analytics.',
         category: 'Analytics',
-        ignore: true
+        disabled: true
     },
     {
         name: 'Postiz',
@@ -1703,6 +1714,13 @@ const services = [
         category: 'Database'
     },
     {
+        name: 'Terraria Server',
+        slug: 'terraria-server',
+        icon: '/docs/images/services/terraria.svg',
+        description: 'Docker multi-arch image for Terraria game server.',
+        category: 'Gaming'
+    },
+    {
         name: 'Tolgee',
         slug: 'tolgee',
         icon: '/docs/images/services/tolgee-logo.svg',
@@ -1745,9 +1763,9 @@ const services = [
         category: 'Development'
     },
     {
-        name: 'Unsend',
-        slug: 'unsend',
-        icon: '/docs/images/services/unsend-logo.svg',
+        name: 'Usesend',
+        slug: 'usesend',
+        icon: '/docs/images/services/usesend-logo.svg',
         description: 'Open-source email recall service.',
         category: 'Email'
     },
@@ -2063,7 +2081,7 @@ onUnmounted(() => {
 
 const filteredServicesByCategory = (category: string) => {
     return services.filter(s =>
-        !s.ignore &&
+        !s.disabled &&
         s.category === category &&
         (search.value === '' || s.name.toLowerCase().includes(search.value.toLowerCase()) || s.description.toLowerCase().includes(search.value.toLowerCase()))
     )
@@ -2304,4 +2322,3 @@ const { preloadServices, handleImageError, hasImageError, isImageLoading, getFal
         </div>
     </div>
 </template>
-

@@ -1,7 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 import yaml from 'vite-plugin-yaml'
 import llmstxt from 'vitepress-plugin-llms'
-import coolbotPlugin from './plugins/vitepress-plugin-coolbot';
 import { defineConfig } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
 import spec from './theme/openapi.json' with { type: 'json' }
@@ -198,7 +197,14 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'Static', link: '/applications/build-packs/static' },
-              { text: 'Nixpacks', link: '/applications/build-packs/nixpacks' },
+              {
+                text: 'Nixpacks',
+                link: '/applications/build-packs/nixpacks',
+                collapsed: true,
+                items: [
+                  { text: 'Node Versioning', link: '/applications/build-packs/nixpacks/node-versioning' },
+                ]
+              },
               { text: 'Dockerfile', link: '/applications/build-packs/dockerfile' },
               { text: 'Docker Compose', link: '/applications/build-packs/docker-compose' },
             ]
@@ -530,6 +536,7 @@ export default defineConfig({
 
   markdown: {
     config: (md) => {
+      // Success callout
       md.use(container, 'success', {
         validate: (params) => {
           return params.trim().match(/^success\s*(.*)$/)
@@ -537,12 +544,93 @@ export default defineConfig({
         render: (tokens, idx) => {
           const m = tokens[idx].info.trim().match(/^success\s+(.*)$/)
           if (tokens[idx].nesting === 1) {
-            // opening tag
-            return `<div class="custom-block success">${m ? `<p class="custom-block-title">${m[1]}</p>` : ''
-              }\n`
+            return `<Callout type="success" title="${m ? m[1] : ''}">`
           } else {
-            // closing tag
-            return '</div>\n'
+            return '</Callout>'
+          }
+        }
+      })
+      // Tip callout
+      md.use(container, 'tip', {
+        validate: (params) => {
+          return params.trim().match(/^tip\s*(.*)$/)
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(/^tip\s+(.*)$/)
+          if (tokens[idx].nesting === 1) {
+            return `<Callout type="tip" title="${m ? m[1] : ''}">`
+          } else {
+            return '</Callout>'
+          }
+        }
+      })
+      // Warning callout
+      md.use(container, 'warning', {
+        validate: (params) => {
+          return params.trim().match(/^warning\s*(.*)$/)
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(/^warning\s+(.*)$/)
+          if (tokens[idx].nesting === 1) {
+            return `<Callout type="warning" title="${m ? m[1] : ''}">`
+          } else {
+            return '</Callout>'
+          }
+        }
+      })
+      // Danger callout
+      md.use(container, 'danger', {
+        validate: (params) => {
+          return params.trim().match(/^danger\s*(.*)$/)
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(/^danger\s+(.*)$/)
+          if (tokens[idx].nesting === 1) {
+            return `<Callout type="danger" title="${m ? m[1] : ''}">`
+          } else {
+            return '</Callout>'
+          }
+        }
+      })
+      // Info callout
+      md.use(container, 'info', {
+        validate: (params) => {
+          return params.trim().match(/^info\s*(.*)$/)
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(/^info\s+(.*)$/)
+          if (tokens[idx].nesting === 1) {
+            return `<Callout type="info" title="${m ? m[1] : ''}">`
+          } else {
+            return '</Callout>'
+          }
+        }
+      })
+      // Neutral callout
+      md.use(container, 'neutral', {
+        validate: (params) => {
+          return params.trim().match(/^neutral\s*(.*)$/)
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(/^neutral\s+(.*)$/)
+          if (tokens[idx].nesting === 1) {
+            return `<Callout type="neutral" title="${m ? m[1] : ''}">`
+          } else {
+            return '</Callout>'
+          }
+        }
+      })
+      // Details accordion
+      md.use(container, 'details', {
+        validate: (params) => {
+          return params.trim().match(/^details\s*(.*)$/)
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(/^details\s+(.*)$/)
+          if (tokens[idx].nesting === 1) {
+             return `<details class="text-sm rounded-xl border px-6 py-0 last:[&>*]:mb-4 my-4 text-zinc-600 dark:text-zinc-300" style="background-color: var(--coollabs-bg-zinc-300-5); border-color: var(--coollabs-border-zinc-300-20);"><summary class="font-semibold mb-2 cursor-pointer select-none text-zinc-800 dark:text-zinc-100">${m ? m[1] : ''}</summary>`
+          } else {
+            return '</details>'
           }
         }
       })
@@ -567,22 +655,12 @@ export default defineConfig({
   vite: {
     plugins: [
       yaml as any,
-      llmstxt({
-        ignoreFiles: [
-          '/docs/api-reference/api/**/*',
-          '**/api-reference/api/**/*'
-        ],
-      }),
-      coolbotPlugin({
-        docsDir: 'docs',
-        writeRawOutput: false,
-        ignoreFolders: [
-          'vitepress',
-          'api-reference',
-          'node_modules',
-          'dist'
-        ],
-      }),
+       llmstxt({
+         ignoreFiles: [
+           '/docs/api-reference/api/**/*',
+           '**/api-reference/api/**/*'
+         ],
+       }),
       groupIconVitePlugin({
         customIcon: {
           bruno: 'vscode-icons:file-type-bruno',
