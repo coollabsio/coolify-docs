@@ -807,6 +807,13 @@ const services = [
         category: 'Development'
     },
     {
+        name: 'GLPI',
+        slug: 'glpi',
+        icon: '/docs/images/services/glpi.svg',
+        description: 'Open-source IT Service Management (ITSM) platform used for IT asset management, helpdesk, and service desk operations.',
+        category: 'Helpdesk'
+    },
+    {
         name: 'Gotify',
         slug: 'gotify',
         icon: '/docs/images/services/gotify-logo.svg',
@@ -2315,3 +2322,4 @@ const { preloadServices, handleImageError, hasImageError, isImageLoading, getFal
         </div>
     </div>
 </template>
+
