@@ -11,7 +11,7 @@ description: "Autobase for PostgreSQL® is an open-source alternative to cloud-m
 
 **Autobase for PostgreSQL®** is an open-source alternative to cloud-managed databases (DBaaS) such as Amazon RDS, Google Cloud SQL, Azure Database, and others.
 
-This automated database platform enables you to create and manage production-ready, highly available PostgreSQL clusters. It simplifies the deployment process, reduces operational costs, and makes database management accessible—even for teams without specialized expertise.
+This automated database platform enables you to create and manage production-ready, highly available PostgreSQL clusters. It simplifies the deployment process, reduces operational costs, and makes database management accessible even for teams without specialized expertise.
 
 *Automate deployment, failover, backups, restore, upgrades, scaling, and more with ease.*
 
@@ -19,7 +19,7 @@ Say goodbye to manual database management 👋
 
 ## Demo
 
-https://demo.autobase.tech/
+[https://demo.autobase.tech/](https://demo.autobase.tech/?utm_source=coolify.io)
 
 Note: use the token *demo* to access.
 
