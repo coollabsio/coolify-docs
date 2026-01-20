@@ -28,6 +28,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Chroma](/services/chroma) - Open-source, AI-native vector database for building applications with embeddings
 - [Flowise](/services/flowise) - Drag & drop UI to build your customized LLM flow
 - [Label Studio](/services/labelstudio) - Open source data labeling platform
+- [Langflow](/services/langflow) - Open-source Python-based framework for building AI agents and workflows with visual drag-and-drop interface
 - [Langfuse](/services/langfuse) - Open source LLM engineering platform
 - [LibreChat](/services/librechat) - Self-hosted, powerful, and privacy-focused chat UI for multiple AI models
 - [LibreTranslate](/services/libretranslate) - Free and open-source machine translation API
