@@ -48,5 +48,5 @@ After the key has been deleted from the database, you need to add the new keys i
    - Make sure the Database\Seeders\PopulateSshKeysDirectorySeeder does not error.
 
 ::: info Note
-  If you recieve an output of "SSH key found for the Coolify host machine (localhost)", the operation completed successfully and unless you get any other output, your new key shall now be working.
+  If you receive an output of "SSH key found for the Coolify host machine (localhost)", the operation completed successfully and unless you get any other output, your new key shall now be working.
 :::
