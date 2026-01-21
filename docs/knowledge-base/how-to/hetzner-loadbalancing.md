@@ -129,7 +129,7 @@ The whole infrastructure costs around ~15€ per month.
 
     As the load balancer communicates with your servers over the private network, we only need to add rules for the public IP addresses.
 
-    The `Inbound` rules includes everything that is allowed. Everyting else is blocked by default.
+    The `Inbound` rules includes everything that is allowed. Everything else is blocked by default.
 
     1. Go to the Hetzner Cloud Console and click on `Firewalls` in the left sidebar.
     2. Click on the `Create Firewall` button.
