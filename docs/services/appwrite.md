@@ -664,7 +664,7 @@ description: "Deploy Appwrite BaaS on Coolify for authentication, databases, sto
 #         - appwrite-functions:/storage/functions:rw
 #         - /tmp:/tmp:rw
 #       environment:
-#         - OPR_EXECUTOR_INACTIVE_TRESHOLD=${_APP_FUNCTIONS_INACTIVE_THRESHOLD}
+#         - OPR_EXECUTOR_INACTIVE_THRESHOLD=${_APP_FUNCTIONS_INACTIVE_THRESHOLD}
 #         - >-
 #           OPR_EXECUTOR_MAINTENANCE_INTERVAL=${_APP_FUNCTIONS_MAINTENANCE_INTERVAL}
 #         - OPR_EXECUTOR_NETWORK=${_APP_FUNCTIONS_RUNTIMES_NETWORK:-runtimes}
