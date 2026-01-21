@@ -19,7 +19,7 @@ Learn more at [help.ente.io](https://help.ente.io/).
 
 ### 1. Remote S3 bucket
 
-- For AWS S3 you can create a bucket and allow access via IAM Roles/User Permissions. Which will generate an access key and secrect key for your S3 Bucket.
+- For AWS S3 you can create a bucket and allow access via IAM Roles/User Permissions. Which will generate an access key and secret key for your S3 Bucket.
 
 - For the S3 bucket, apply the following CORS policy for proper access control from the museum service.
 
