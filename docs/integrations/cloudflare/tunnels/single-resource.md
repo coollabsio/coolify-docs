@@ -11,7 +11,7 @@ Accessing an Resource deployed on Coolify using a Cloudflare Tunnel allows you t
 
 This setup is ideal for people who:
 
-- Don't have a public IP for their server (could be a laptop, rasberry pi etc..).
+- Don't have a public IP for their server (could be a laptop, raspberry pi etc..).
 - Are unable to port forward (e.g., using home internet or on a private network).
 - Want to keep their server’s IP address private and avoid exposing it to the public internet.
 - Have an app already deployed on Coolify and need an external method to access it securely.
@@ -42,7 +42,7 @@ A simple high-level overview diagram to give you a visual idea of how this works
 - [Setup your app for tunneling](#_1-setup-your-app-for-tunneling)
 - [Create a Cloudflare Tunnel](#_2-create-a-cloudflare-tunnel)
 - [Setup Cloudflare Tunnel on Coolify](#_3-setup-cloudflare-tunnel-on-coolify)
-- [Expose Mutiple Resource on Different Domains](#expose-mutiple-resource-on-different-domains)
+- [Expose Multiple Resource on Different Domains](#expose-multiple-resource-on-different-domains)
 - [Known issues and Solutions](#known-issues-and-solutions)
 
 ---
