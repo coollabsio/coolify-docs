@@ -4,7 +4,7 @@ description: "Set up a GitHub App in Coolify to access and deploy from private G
 ---
 
 # GitHub App
-Github app allows you to grant access to a single or mulitple private repositories from your either personal github account or your organization on github.
+Github app allows you to grant access to a single or multiple private repositories from your either personal github account or your organization on github.
 
 
 ### Why use github app with Coolify?
