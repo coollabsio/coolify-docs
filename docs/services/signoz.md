@@ -90,7 +90,7 @@ To enable email alerts, you need to set the following variables from the Environ
 More environment variables are [available to use](https://signoz.io/docs/manage/administrator-guide/configuration/alertmanager/) to authenticate via Identity / Secret or use TLS instead of SmartTLS. Read [Passing environment variables not included in the template](passing-environment-variables-not-included-in-the-template) to learn how to add them.
 
 
-## Permision issue while using non root user
+## Permission issue while using non root user
 
 The issue is mostly due to Coolify re-apply its user' ownership & chmod to the files mounted in the container. 
 
