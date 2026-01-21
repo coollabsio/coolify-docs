@@ -124,7 +124,7 @@ Email notifications can be configured using either SMTP or Resend.
 - Make sure the bot is an admin in the group/channel
 - Include the minus sign (-) in the chat ID if present
 - If `getUpdates` returns an empty response, send another message and try again
-- if you can not acces `getUpdates` make sure you have the correct bot token and you have replace the `{YOUR_BOT_TOKEN}` with your actual bot token (replace everything including the quotes)
+- if you can not access `getUpdates` make sure you have the correct bot token and you have replace the `{YOUR_BOT_TOKEN}` with your actual bot token (replace everything including the quotes)
 :::
 
 ### Discord
