@@ -1117,6 +1117,13 @@ const services = [
         category: 'AI'
     },
     {
+        name: 'Langflow',
+        slug: 'langflow',
+        icon: '/docs/images/services/langflow.svg',
+        description: 'Open source Python-based framework for building AI applications.',
+        category: 'AI'
+    },
+    {
         name: 'Linkding',
         slug: 'linkding',
         icon: '/docs/images/services/linkding-logo.svg',
