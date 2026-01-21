@@ -56,7 +56,7 @@ First, follow the previous section in this documentation: [How to use Nixpacks](
 
 <ZoomableImage src="/docs/images/builds/packs/nixpacks/5.webp" alt="Coolify dashboard screenshot" />
 
-1. **Branch:** Coolify will automatically detect the branch from your Repostiory.
+1. **Branch:** Coolify will automatically detect the branch from your Repository.
 
 2. **Base Directory:** Enter the directory Nixpacks should use as the root (for example, `/` if your files are at the root, or a subfolder if applicable).
 
@@ -100,7 +100,7 @@ First, follow the previous section in this documentation: [How to use Nixpacks](
 
 <ZoomableImage src="/docs/images/builds/packs/nixpacks/8.webp" alt="Coolify dashboard screenshot" />
 
-1. **Branch:** Coolify will automatically detect the branch from your Repostiory.
+1. **Branch:** Coolify will automatically detect the branch from your Repository.
 
 2. **Base Directory:** Enter the directory Nixpacks should use as the root (for example, `/` if your files are at the root, or a subfolder if applicable).
 
