@@ -18,7 +18,7 @@ You need to change default docker compose to the following to make cal.com work 
 ```yaml
 services:
   calcom:
-    image: 'calcom/cal.com:<VERSON compatible with amd64>
+    image: 'calcom/cal.com:<VERSION compatible with amd64>
     platform: linux/amd64
     (... same ...)
 ```
