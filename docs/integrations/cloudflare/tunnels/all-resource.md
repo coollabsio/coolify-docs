@@ -11,7 +11,7 @@ Accessing All Resource deployed on Coolify using a Cloudflare Tunnel allows you 
 
 This setup is ideal for people who:
 
-- Don't have a public IP for their server (could be a laptop, rasberry pi etc..).
+- Don't have a public IP for their server (could be a laptop, raspberry pi etc..).
 - Are unable to port forward (e.g., using home internet or on a private network).
 - Want to keep their server’s IP address private and avoid exposing it to the public internet.
 - Have an resource already deployed on Coolify and need an external method to access it securely.
@@ -43,7 +43,7 @@ A simple high-level overview diagram to give you a visual idea of how this works
 - [Setup Cloudflare Tunnel on Coolify](#_3-setup-cloudflare-tunnel-on-coolify)
 - [Start Coolify Proxy](#_4-start-coolify-proxy)
 - [Configure Your Resource to Use the Tunnel Domain](#_5-configure-your-resource-to-use-the-tunnel-domain)
-- [How to use Mutiple Different Domains](#how-to-use-mutiple-different-domains)
+- [How to use Multiple Different Domains](#how-to-use-multiple-different-domains)
 - [Known issues and Solutions](#known-issues-and-solutions)
 
 ---
@@ -154,7 +154,7 @@ If your app requires **HTTPS** for features like cookies or login, follow the [F
 
 **Congratulations**! You've successfully set up a resource that can be accessed by anyone on the internet your domain.
 
-## How to use Mutiple Different Domains?
+## How to use Multiple Different Domains?
 
 You don't need to create new tunnels for each domain, just create a new hostname with the new domain and point it to the `localhost:80`.
 
