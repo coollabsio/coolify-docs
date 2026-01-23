@@ -330,6 +330,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Productivity
 
 - [Affine](/services/affine) - Open-source knowledge base and workspace combining docs, whiteboards, and databases
+- [Alexandrie](/services/alexandrie) - Markdown note-taking app focused on performance, design and productivity.
 - [AppFlowy](/services/appflowy) - Open-source alternative to Notion with workspaces for docs, wikis, and project management
 - [Ente](/services/ente-photos) - A fully open-source, end-to-end encrypted platform for storing data in the cloud
 - [Cal.com](/services/calcom) - Open-source Calendly alternative for scheduling meetings
