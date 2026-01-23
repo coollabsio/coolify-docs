@@ -310,6 +310,13 @@ const services = [
         category: 'Productivity'
     },
     {
+         name: 'Alexandrie',
+         slug: 'alexandrie'
+         icon: '/docs/images/services/alexandrie-logo.svg',
+         description: 'Self-hosted Markdown note-taking app focused on performance, local data, and knowledge graph navigation.',
+         category: 'Productivity'
+    },
+    {
         name: 'AppFlowy',
         slug: 'appflowy',
         icon: '/docs/images/services/appflowy.svg',
@@ -2533,3 +2540,4 @@ const { preloadServices, handleImageError, hasImageError, isImageLoading, getFal
         </div>
     </div>
 </template>
+
