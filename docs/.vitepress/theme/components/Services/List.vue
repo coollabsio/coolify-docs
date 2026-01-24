@@ -878,6 +878,13 @@ const services = [
         category: 'Development'
     },
     {
+        name: 'GoatCounter',
+        slug: 'goatcounter',
+        icon: '/docs/images/services/goatcounter.svg',
+        description: 'Web analytics platform offering easy to use and meaningful privacy-friendly web analytics.',
+        category: 'Analytics'
+    },
+    {
         name: 'Gotify',
         slug: 'gotify',
         icon: '/docs/images/services/gotify-logo.svg',
