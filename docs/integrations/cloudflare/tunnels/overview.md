@@ -29,14 +29,14 @@ This makes them a great option for hosting projects on devices like old laptops 
 
 You can set up Cloudflare Tunnels with Coolify in several ways, depending on your needs. Below are the available options, each linked to a detailed guide for easy setup:
 
-1. [All Resources](/knowledge-base/cloudflare/tunnels/all-resource) -> Use a tunnel for all resources deployed through Coolify. This is the **easiest** and **most recommended** way for beginners.
+1. [All Resources](/integrations/cloudflare/tunnels/all-resource) -> Use a tunnel for all resources deployed through Coolify. This is the **easiest** and **most recommended** way for beginners.
 
-2. [Single Resource](/knowledge-base/cloudflare/tunnels/single-resource) -> Use a tunnel for a single resource deployed through Coolify.
+2. [Single Resource](/integrations/cloudflare/tunnels/single-resource) -> Use a tunnel for a single resource deployed through Coolify.
 
-3. [Server SSH Access](/knowledge-base/cloudflare/tunnels/server-ssh) -> Securely connect your server to Coolify using a domain through Cloudflare Tunnel.
+3. [Server SSH Access](/integrations/cloudflare/tunnels/server-ssh) -> Securely connect your server to Coolify using a domain through Cloudflare Tunnel.
 
-4. [Full HTTPS/TLS](/knowledge-base/cloudflare/tunnels/full-tls) -> Setup always-on **HTTPS** for all domains and subdomains. Normally, Coolify uses **HTTP** while Cloudflare manages **HTTPS**. If certain apps require **HTTPS** directly on Coolify.
+4. [Full HTTPS/TLS](/integrations/cloudflare/tunnels/full-tls) -> Setup always-on **HTTPS** for all domains and subdomains. Normally, Coolify uses **HTTP** while Cloudflare manages **HTTPS**. If certain apps require **HTTPS** directly on Coolify.
 
 ::: success Tip:
-It’s highly recommended to go with the first option [All Resources](/knowledge-base/cloudflare/tunnels/all-resource) if you're new to Coolify and Cloudflare Tunnels, as it’s much easier to set up and manage.
+It’s highly recommended to go with the first option [All Resources](/integrations/cloudflare/tunnels/all-resource) if you're new to Coolify and Cloudflare Tunnels, as it’s much easier to set up and manage.
 :::
