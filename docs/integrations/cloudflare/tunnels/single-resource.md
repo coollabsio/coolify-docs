@@ -27,7 +27,7 @@ To follow this guide, you'll need:
 ## Before We Start
 
 - We assume you have Coolify running and an app already deployed.
-- If your app requires HTTPS for functionality like cookies or login, then you need to follow the [Full TLS HTTPS guide](/knowledge-base/cloudflare/tunnels/full-tls) after following this guide. This is because in this guide, Cloudflare will manage HTTPS externally, while your app will run over HTTP within Coolify.
+- If your app requires HTTPS for functionality like cookies or login, then you need to follow the [Full TLS HTTPS guide](/integrations/cloudflare/tunnels/full-tls) after following this guide. This is because in this guide, Cloudflare will manage HTTPS externally, while your app will run over HTTP within Coolify.
 
 ## How It Works?
 
@@ -131,7 +131,7 @@ Go to the **Environment Variables** page, enter your tunnel token, and deploy th
 
 ## Tunnel Multiple Resources
 
-The easiest way to tunnel multiple resources is by following our [Tunnel All Resources](/knowledge-base/cloudflare/tunnels/all-resource) guide, which uses Coolify's built-in proxy. However, if you prefer not to use the proxy, there are two alternative methods:
+The easiest way to tunnel multiple resources is by following our [Tunnel All Resources](/integrations/cloudflare/tunnels/all-resource) guide, which uses Coolify's built-in proxy. However, if you prefer not to use the proxy, there are two alternative methods:
 
 - [Tunnel Multiple Single Resources](#tunnel-multiple-single-resources)
 - [Tunnel Coolify](#tunnel-coolify)
@@ -140,7 +140,7 @@ Tunneling multiple single resources is straightforward, but tunneling Coolify it
 
 ## Tunnel Multiple Single Resources
 
-If you want to expose different apps individually, you can follow our [Tunnel All Resources](/knowledge-base/cloudflare/tunnels/all-resource), or take an alternate approach:
+If you want to expose different apps individually, you can follow our [Tunnel All Resources](/integrations/cloudflare/tunnels/all-resource), or take an alternate approach:
 
 <ZoomableImage src="/docs/images/integrations/cloudflare/tunnels/single-resource/11.webp" />
 
@@ -160,7 +160,6 @@ Follow [Step 2](#_2-create-a-cloudflare-tunnel) from the main guide to create pu
 <ZoomableImage src="/docs/images/integrations/cloudflare/tunnels/single-resource/14.webp" />
 
 - **Hostnames**:
-
   1. `app.shadowarcanist.com/terminal/ws` → `localhost:6002` (WebSocket terminal)
   2. `realtime.shadowarcanist.com` → `localhost:6001` (Realtime server)
   3. `app.shadowarcanist.com` → `localhost:8000` (Coolify dashboard)
