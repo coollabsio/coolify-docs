@@ -955,6 +955,13 @@ const services = [
         category: 'Development'
     },
     {
+        name: 'happyDeliver',
+        slug: 'happydeliver',
+        icon: '/docs/images/services/happydeliver.svg',
+        description: 'Open-source email deliverability testing tool.',
+        category: 'Email'
+    },
+    {
         name: 'Heimdall',
         slug: 'heimdall',
         icon: '/docs/images/services/heimdall-logo.svg',
