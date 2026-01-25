@@ -26,7 +26,7 @@ To follow this guide, you'll need:
 ## Before We Start
 
 - We assume you have Coolify running on your server.
-- If your app requires HTTPS for functionality like cookies or login, then you need to follow the [Full TLS HTTPS guide](/knowledge-base/cloudflare/tunnels/full-tls) after following this guide. This is because in this guide, Cloudflare will manage HTTPS externally, while your app will run over HTTP within Coolify.
+- If your app requires HTTPS for functionality like cookies or login, then you need to follow the [Full TLS HTTPS guide](/integrations/cloudflare/tunnels/full-tls) after following this guide. This is because in this guide, Cloudflare will manage HTTPS externally, while your app will run over HTTP within Coolify.
 
 ## How It Works?
 
@@ -149,7 +149,7 @@ Enter the domain you want to use for your resource/app and deploy your resource.
 ::: warning HEADS UP!  
  You should enter the domain as **HTTP** because Cloudflare handles **HTTPS** and TLS terminations. If you use **HTTPS** for your resource, you may encounter a **TOO_MANY_REDIRECTS** error.
 
-If your app requires **HTTPS** for features like cookies or login, follow the [Full TLS HTTPS Guide](/knowledge-base/cloudflare/tunnels/full-tls) after completing this guide.  
+If your app requires **HTTPS** for features like cookies or login, follow the [Full TLS HTTPS Guide](/integrations/cloudflare/tunnels/full-tls) after completing this guide.  
 :::
 
 **Congratulations**! You've successfully set up a resource that can be accessed by anyone on the internet your domain.
