@@ -10,15 +10,13 @@ On each server, `/data/coolify/proxy` is mounted into the Coolify Proxy (Traefik
 
 You can add your custom SSL certificates in the `/data/coolify/proxy/certs` directory.
 
-1. Generate or request an SSL certificate
-    Generate or request an SSL certificate for your domain. It can be a
+1. **Generate or request an SSL certificate** for your domain. It can be a
     self-signed certificate, a certificate from a public CA, or a certificate
     from Let's Encrypt.
 
     Read more [here](https://certbot.eff.org/instructions) about certbot and Let's Encrypt.
 
-2. Copy the key and cert files to the server
-    Copy the key and cert files to the server where your resource that will use the certificate is running.
+2. **Copy the key and cert files to the server** where your resource that will use the certificate is running.
     Use `scp` or any other method to copy the files.
     
     It should be placed under `/data/coolify/proxy` directory, for example:
@@ -32,8 +30,7 @@ You can add your custom SSL certificates in the `/data/coolify/proxy/certs` dire
     Make sure the directory `/data/coolify/proxy/certs` exists on the server.
     :::
 
-3. Configure Traefik
-    You can configure Traefik to use the custom SSL certificates by adding a dynamic configuration file through Coolify's UI or directly adding it to `/data/coolify/proxy/dynamic`:
+3. You can **configure Traefik** to use the custom SSL certificates by adding a dynamic configuration file through Coolify's UI or directly adding it to `/data/coolify/proxy/dynamic`:
 
     ```yaml
     tls:
