@@ -43,6 +43,12 @@ const toggleZoom = () => {
   height: auto;
 }
 
+/*.zoomable-image-container img.logo-image {
+  max-height: 150px;
+  width: auto;
+  margin-top: 1rem;
+}*/
+
 .cursor-zoom-in {
   cursor: zoom-in;
 }

@@ -1,7 +1,6 @@
 ---
 title: Hoarder
 description: "Host Hoarder bookmark manager on Coolify for saving links, organizing collections, tagging, and personal knowledge management with search."
-disabled: true
 ---
 
 ::: warning SERVICE NOT AVAILABLE

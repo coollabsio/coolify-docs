@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   validate-pr:
-    runs-on: [self-hosted, arm64]
+    runs-on: ubuntu-latest
     steps:
       - name: Validate PR
         uses: actions/github-script@v7

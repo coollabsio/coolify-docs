@@ -23,7 +23,7 @@ docker exec -ti coolify sh -c "php artisan root:change-email"
 ```
 
 ## Delete a stuck service
- You can easily delete a stucked service.
+ You can easily delete a stuck service.
  
   Login to your server through SSH and execute the following command:
 

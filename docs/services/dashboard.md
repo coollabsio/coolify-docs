@@ -1,7 +1,6 @@
 ---
 title: "Dashboard"
 description: "Deploy customizable dashboard on Coolify for application shortcuts, bookmarks, service monitoring, and centralized access to self-hosted tools."
-disabled: true
 ---
 
 ::: warning SERVICE NOT AVAILABLE

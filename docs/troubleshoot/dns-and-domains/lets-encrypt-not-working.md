@@ -37,7 +37,7 @@ Sometimes, Let's Encrypt might be having issues on their end. Check the Let's En
 
 ## 5. Note on Certificate Validity
 
-Let's Encrypt certificates are valid for 90 days. If your certificate is still valid, your domain may work fine even if requied port 80 is closed or your domain is being proxied. This is because Coolify will continue using the existing valid certificate until it expires.
+Let's Encrypt certificates are valid for 90 days. If your certificate is still valid, your domain may work fine even if required port 80 is closed or your domain is being proxied. This is because Coolify will continue using the existing valid certificate until it expires.
 
 However, if your domain has been working fine over HTTPS for several months and suddenly fails to generate a new SSL certificate, it’s likely that the existing certificate has expired. At this point, Coolify won’t be able to generate a new certificate due to the issues mentioned earlier (like port 80 being closed or proxy interference).
 

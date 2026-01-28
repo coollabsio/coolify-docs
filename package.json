@@ -1,27 +1,20 @@
 {
-  "name": "documentation-coolify",
-  "version": "0.0.1",
+  "name": "coolify-docs",
   "devDependencies": {
-    "@types/js-yaml": "4.0.9",
-    "@types/node": "22.13.1",
-    "autoprefixer": "10.4.20",
-    "fast-glob": "3.3.3",
-    "js-yaml": "4.1.1",
+    "@iconify/vue": "^5.0.0",
+    "@types/node": "25.0.9",
+    "autoprefixer": "10.4.23",
     "markdown-it-container": "4.0.0",
-    "postcss": "8.5.1",
-    "tailwindcss": "3.2.4",
-    "tsx": "4.19.2",
-    "vite-plugin-yaml": "^1.0.5",
-    "vitepress": "1.6.3",
-    "vitepress-plugin-group-icons": "^1.5.1",
-    "vitepress-plugin-llms": "^1.1.0",
-    "vitepress-plugin-tabs": "^0.6.0",
-    "vue": "^3.5.13"
+    "postcss": "8.5.6",
+    "tailwindcss": "3.4.19",
+    "vitepress": "1.6.4",
+    "vitepress-plugin-group-icons": "^1.6.9",
+    "vitepress-plugin-llms": "^1.10.0",
+    "vitepress-plugin-tabs": "^0.7.3",
+    "vue": "^3.5.26"
   },
   "postcss": {
     "plugins": {
-      "postcss-import": {},
-      "tailwindcss/nesting": {},
       "tailwindcss": {},
       "autoprefixer": {}
     }
@@ -30,14 +23,12 @@
   "scripts": {
     "dev": "vitepress dev docs",
     "build": "vitepress build docs",
-    "preview": "vitepress preview docs",
-    "transform-openapi": "tsx scripts/convert-openapi.ts"
+    "preview": "vitepress preview docs"
   },
   "dependencies": {
     "@korrektly/sdk": "^0.1.4",
-    "@vueuse/core": "12.5.0",
-    "globe.gl": "2.39.7",
-    "vitepress-openapi": "0.0.3-alpha.78"
-  },
-  "packageManager": "pnpm@10.6.3+sha512.bb45e34d50a9a76e858a95837301bfb6bd6d35aea2c5d52094fa497a467c43f5c440103ce2511e9e0a2f89c3d6071baac3358fc68ac6fb75e2ceb3d2736065e6"
+    "@vueuse/core": "14.1.0",
+    "globe.gl": "2.45.0",
+    "vitepress-openapi": "0.1.13"
+  }
 }

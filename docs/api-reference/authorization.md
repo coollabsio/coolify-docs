@@ -9,7 +9,7 @@ API request requires a `Bearer` token in `Authorization` header, which could be 
 
 ## Access
 
-The API can be accesed through `http://<ip>:8000/api`.
+The API can be accessed through `http://<ip>:8000/api`.
 
 With the exception of `/health` and `/feedback`, all routes are additionally prefixed with `/v1` resulting in the base rouce `http://<ip>:8000/api/v1`.
 

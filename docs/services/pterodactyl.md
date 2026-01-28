@@ -3,7 +3,7 @@ title: "Pterodactyl Panel"
 description: "Host game servers on Coolify with Pterodactyl panel for Minecraft, CS:GO, ARK with web management, Docker isolation, and automation."
 ---
 
-<ZoomableImage src="/docs/images/services/pterodactyl_logo_transparent.png" alt="Pterodactyl_Logo_Transparent logo" />
+<ZoomableImage src="/docs/images/services/pterodactyl-logo.png" alt="Pterodactyl logo" />
 
 ## What is Pterodactyl?
 

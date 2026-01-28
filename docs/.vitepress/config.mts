@@ -1,7 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
-import yaml from 'vite-plugin-yaml'
 import llmstxt from 'vitepress-plugin-llms'
-import coolbotPlugin from './plugins/vitepress-plugin-coolbot';
 import { defineConfig } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
 import spec from './theme/openapi.json' with { type: 'json' }
@@ -198,7 +196,14 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'Static', link: '/applications/build-packs/static' },
-              { text: 'Nixpacks', link: '/applications/build-packs/nixpacks' },
+              {
+                text: 'Nixpacks',
+                link: '/applications/build-packs/nixpacks',
+                collapsed: true,
+                items: [
+                  { text: 'Node Versioning', link: '/applications/build-packs/nixpacks/node-versioning' },
+                ]
+              },
               { text: 'Dockerfile', link: '/applications/build-packs/dockerfile' },
               { text: 'Docker Compose', link: '/applications/build-packs/docker-compose' },
             ]
@@ -210,10 +215,14 @@ export default defineConfig({
             items: [
               {
                 text: 'Github', collapsed: true, items: [
-                  { text: 'Integrations', link: '/applications/ci-cd/github/integration' },
-                  { text: 'Manually Setup GitHub App', link: '/applications/ci-cd/github/manually-setup-github-app' },
-                  { text: 'Move Between GitHub Apps', link: '/applications/ci-cd/github/move-between-github-apps' },
-                  { text: 'Github Actions', link: '/applications/ci-cd/github/github-actions' },
+                  { text: 'Overview', link: '/applications/ci-cd/github/overview' },
+                  { text: 'Actions', link: '/applications/ci-cd/github/actions' },
+                  { text: 'Auto Deploy', link: '/applications/ci-cd/github/auto-deploy' },
+                  { text: 'Preview Deploy', link: '/applications/ci-cd/github/preview-deploy' },
+                  { text: 'Deploy Public Repository', link: '/applications/ci-cd/github/public-repository' },
+                  { text: 'Setup Deploy Key', link: '/applications/ci-cd/github/deploy-key' },
+                  { text: 'Setup Github App', link: '/applications/ci-cd/github/setup-app' },
+                  { text: 'Switch Github Apps', link: '/applications/ci-cd/github/switch-apps' },
                 ]
               },
               {
@@ -271,7 +280,24 @@ export default defineConfig({
         text: 'Integrations',
         collapsed: true,
         items: [
-          { text: 'Webstudio', link: '/integrations/webstudio.md' },
+          {
+            text: 'Cloudflare',
+            collapsed: true,
+            items: [
+              {
+                text: 'Tunnels',
+                collapsed: true,
+                items: [
+                  { text: 'Overview', link: '/integrations/cloudflare/tunnels/overview' },
+                  { text: 'All Resources', link: '/integrations/cloudflare/tunnels/all-resource' },
+                  { text: 'Single Resource', link: '/integrations/cloudflare/tunnels/single-resource' },
+                  { text: 'Server SSH Access', link: '/integrations/cloudflare/tunnels/server-ssh' },
+                  { text: 'Full TLS/HTTPS', link: '/integrations/cloudflare/tunnels/full-tls' },
+                ]
+              },
+              { text: 'DDoS Protection', link: '/integrations/cloudflare/ddos-protection' },
+            ]
+          },
         ],
       },
       {
@@ -352,6 +378,7 @@ export default defineConfig({
                   { text: 'Raspberry Pi OS Setup', link: '/knowledge-base/how-to/raspberry-pi-os' },
                   { text: 'Private NPM Registry', link: '/knowledge-base/how-to/private-npm-registry' },
                   { text: 'Ollama with GPU', link: '/knowledge-base/how-to/ollama-with-gpu' },
+                  { text: 'Webstudio with Hetzner', link: '/knowledge-base/how-to/webstudio-with-hetzner' },
                 ]
               },
               {
@@ -389,24 +416,6 @@ export default defineConfig({
                   { text: 'Docker Commands', link: '/knowledge-base/docker/custom-commands' },
                   { text: 'Registry', link: '/knowledge-base/docker/registry' },
                   { text: 'Swarm', link: '/knowledge-base/docker/swarm' },
-                ]
-              },
-              {
-                text: 'Cloudflare',
-                collapsed: true,
-                items: [
-                  {
-                    text: 'Tunnels',
-                    collapsed: true,
-                    items: [
-                      { text: 'Overview', link: '/knowledge-base/cloudflare/tunnels/overview' },
-                      { text: 'All Resources', link: '/knowledge-base/cloudflare/tunnels/all-resource' },
-                      { text: 'Single Resource', link: '/knowledge-base/cloudflare/tunnels/single-resource' },
-                      { text: 'Server SSH Access', link: '/knowledge-base/cloudflare/tunnels/server-ssh' },
-                      { text: 'Full TLS/HTTPS', link: '/knowledge-base/cloudflare/tunnels/full-tls' },
-                    ]
-                  },
-                  { text: 'Origin Certificate', link: '/knowledge-base/cloudflare/origin-cert' },
                 ]
               },
               {
@@ -526,6 +535,7 @@ export default defineConfig({
 
   markdown: {
     config: (md) => {
+      // Success callout
       md.use(container, 'success', {
         validate: (params) => {
           return params.trim().match(/^success\s*(.*)$/)
@@ -533,12 +543,93 @@ export default defineConfig({
         render: (tokens, idx) => {
           const m = tokens[idx].info.trim().match(/^success\s+(.*)$/)
           if (tokens[idx].nesting === 1) {
-            // opening tag
-            return `<div class="custom-block success">${m ? `<p class="custom-block-title">${m[1]}</p>` : ''
-              }\n`
+            return `<Callout type="success" title="${m ? m[1] : ''}">`
           } else {
-            // closing tag
-            return '</div>\n'
+            return '</Callout>'
+          }
+        }
+      })
+      // Tip callout
+      md.use(container, 'tip', {
+        validate: (params) => {
+          return params.trim().match(/^tip\s*(.*)$/)
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(/^tip\s+(.*)$/)
+          if (tokens[idx].nesting === 1) {
+            return `<Callout type="tip" title="${m ? m[1] : ''}">`
+          } else {
+            return '</Callout>'
+          }
+        }
+      })
+      // Warning callout
+      md.use(container, 'warning', {
+        validate: (params) => {
+          return params.trim().match(/^warning\s*(.*)$/)
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(/^warning\s+(.*)$/)
+          if (tokens[idx].nesting === 1) {
+            return `<Callout type="warning" title="${m ? m[1] : ''}">`
+          } else {
+            return '</Callout>'
+          }
+        }
+      })
+      // Danger callout
+      md.use(container, 'danger', {
+        validate: (params) => {
+          return params.trim().match(/^danger\s*(.*)$/)
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(/^danger\s+(.*)$/)
+          if (tokens[idx].nesting === 1) {
+            return `<Callout type="danger" title="${m ? m[1] : ''}">`
+          } else {
+            return '</Callout>'
+          }
+        }
+      })
+      // Info callout
+      md.use(container, 'info', {
+        validate: (params) => {
+          return params.trim().match(/^info\s*(.*)$/)
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(/^info\s+(.*)$/)
+          if (tokens[idx].nesting === 1) {
+            return `<Callout type="info" title="${m ? m[1] : ''}">`
+          } else {
+            return '</Callout>'
+          }
+        }
+      })
+      // Neutral callout
+      md.use(container, 'neutral', {
+        validate: (params) => {
+          return params.trim().match(/^neutral\s*(.*)$/)
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(/^neutral\s+(.*)$/)
+          if (tokens[idx].nesting === 1) {
+            return `<Callout type="neutral" title="${m ? m[1] : ''}">`
+          } else {
+            return '</Callout>'
+          }
+        }
+      })
+      // Details accordion
+      md.use(container, 'details', {
+        validate: (params) => {
+          return params.trim().match(/^details\s*(.*)$/)
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(/^details\s+(.*)$/)
+          if (tokens[idx].nesting === 1) {
+             return `<details class="text-sm rounded-xl border px-6 py-0 last:[&>*]:mb-4 my-4 text-zinc-600 dark:text-zinc-300" style="background-color: var(--coollabs-bg-zinc-300-5); border-color: var(--coollabs-border-zinc-300-20);"><summary class="font-semibold mb-2 cursor-pointer select-none text-zinc-800 dark:text-zinc-100">${m ? m[1] : ''}</summary>`
+          } else {
+            return '</details>'
           }
         }
       })
@@ -562,23 +653,12 @@ export default defineConfig({
 
   vite: {
     plugins: [
-      yaml as any,
       llmstxt({
-        ignoreFiles: [
-          '/docs/api-reference/api/**/*',
-          '**/api-reference/api/**/*'
-        ],
-      }),
-      coolbotPlugin({
-        docsDir: 'docs',
-        writeRawOutput: false,
-        ignoreFolders: [
-          'vitepress',
-          'api-reference',
-          'node_modules',
-          'dist'
-        ],
-      }),
+         ignoreFiles: [
+           '/docs/api-reference/api/**/*',
+           '**/api-reference/api/**/*'
+         ],
+       }),
       groupIconVitePlugin({
         customIcon: {
           bruno: 'vscode-icons:file-type-bruno',
@@ -594,7 +674,6 @@ export default defineConfig({
         ],
       }),
     ],
-    assetsInclude: ['**/*.yml'],
     define: {
       'import.meta.env.VITE_KORREKTLY_BASE_URL': JSON.stringify(env.KORREKTLY_BASE_URL || env.VITE_KORREKTLY_BASE_URL || ''),
       'import.meta.env.VITE_KORREKTLY_API_TOKEN': JSON.stringify(env.KORREKTLY_API_TOKEN || env.VITE_KORREKTLY_API_TOKEN || ''),

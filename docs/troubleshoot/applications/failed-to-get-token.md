@@ -11,7 +11,7 @@ The error is usually related to NTP time synchronization issue.
 
 
 ## Error
-`'Issued at' claim (iat) must be an Integer representing the time that assertation issued.`
+`'Issued at' claim (iat) must be an Integer representing the time that assertion issued.`
 
 
 ## Solution

@@ -17,7 +17,7 @@ Pdsadmin requires you to have https in your Bluesky PDS, make sure you have set 
 
 ## Creating an account in your PDS
 
-To create an account and start using your PDS, you can use the following pdsadmin commnands in the Terminal tab of the Coolify UI:
+To create an account and start using your PDS, you can use the following pdsadmin commands in the Terminal tab of the Coolify UI:
 
 ```bash
 pdsadmin create-invite-code

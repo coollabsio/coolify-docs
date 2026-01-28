@@ -5,7 +5,7 @@ description: "An observability platform native to OpenTelemetry with logs, trace
 
 # SigNoz
 
-<ZoomableImage src="/docs/images/services/signoz.svg" alt="SigNoz logo" />
+<ZoomableImage src="/docs/images/services/signoz-logo.svg" alt="SigNoz logo" />
 
 ## What is SigNoz
 
@@ -88,6 +88,13 @@ To enable email alerts, you need to set the following variables from the Environ
 - `SIGNOZ_ALERTMANAGER_SIGNOZ_GLOBAL_SMTP__AUTH__USERNAME` and `SIGNOZ_ALERTMANAGER_SIGNOZ_GLOBAL_SMTP__AUTH__PASSWORD` are used to authenticate with the SMTP server.
 
 More environment variables are [available to use](https://signoz.io/docs/manage/administrator-guide/configuration/alertmanager/) to authenticate via Identity / Secret or use TLS instead of SmartTLS. Read [Passing environment variables not included in the template](passing-environment-variables-not-included-in-the-template) to learn how to add them.
+
+
+## Permission issue while using non root user
+
+The issue is mostly due to Coolify re-apply its user' ownership & chmod to the files mounted in the container. 
+
+The solution here would be to make the files readable by everyone. Open a terminal on your server, go to `/data/coolify/services/<SERVICE ID>/` clickhouse and run the command `chmod o+r *`. This should allow Clickhouse to access the files as needed.
 
 ## Links
 

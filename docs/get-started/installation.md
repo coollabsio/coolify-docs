@@ -18,7 +18,7 @@ If you like taking control and managing everything yourself, self-hosting Coolif
 
 It's completely free (apart from your server costs) and gives you full control over your setup.
 
-::: success ⚡️ Quick Installation (recommended):
+::: success Quick Installation (recommended):
 
 ```sh
 curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
@@ -78,7 +78,7 @@ Coolify runs on 64-bit systems:
 - AMD64
 - ARM64
 
-::: warning ⚠️ Note for Raspberry Pi users:
+::: warning Note for Raspberry Pi users:
 Be sure to use the 64-bit version of Raspberry Pi OS (Raspbian). For details, check our [Raspberry Pi OS Setup Guide](/knowledge-base/how-to/raspberry-pi-os#prerequisites).
 :::
 
@@ -239,7 +239,7 @@ bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
 
 After installation, the script will display your Coolify URL (e.g., `http://203.0.113.1:8000`). Visit this URL, and you'll be redirected to a registration page to create your first admin account.
 
-::: danger ⚠️ CAUTION:
+::: danger CAUTION:
 **Immediately create your admin account after installation. If someone else accesses the registration page before you, they might gain full control of your server.**
 :::
 
@@ -256,7 +256,7 @@ If you installed Coolify on a Raspberry Pi within your home network, use your pr
 - Configures SSH keys for server management
 - Installs and starts Coolify
 
-::: warning ⚠️ Caution:
+::: warning Caution:
 Docker installed via snap is not supported!
 :::
 
@@ -281,7 +281,7 @@ This manual installation method is required for:
 - **curl**: Confirm that [curl](https://curl.se/) is installed.
 - **Docker Engine**: Install Docker by following the official [Docker Engine Installation guide](https://docs.docker.com/engine/install/#server) (version 24+).
 
-::: warning ⚠️ Caution:
+::: warning Caution:
 Docker installed via snap is not supported!
 :::
 
@@ -352,7 +352,7 @@ sed -i "s|PUSHER_APP_KEY=.*|PUSHER_APP_KEY=$(openssl rand -hex 32)|g" /data/cool
 sed -i "s|PUSHER_APP_SECRET=.*|PUSHER_APP_SECRET=$(openssl rand -hex 32)|g" /data/coolify/source/.env
 ```
 
-::: warning ⚠️ Important:
+::: warning Important:
 Run these commands only the first time you install Coolify. Changing these values later can break your installation. Keep them safe!
 :::
 
@@ -372,7 +372,7 @@ Launch Coolify using Docker Compose:
 docker compose --env-file /data/coolify/source/.env -f /data/coolify/source/docker-compose.yml -f /data/coolify/source/docker-compose.prod.yml up -d --pull always --remove-orphans --force-recreate
 ```
 
-::: warning ⚠️ Important:
+::: warning Important:
 You might have to do `docker login` at this point if you have any issues above.
 :::
 

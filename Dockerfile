@@ -1,5 +1,5 @@
-# Stage 1: Build Stage (oven/bun:1.1.44-alpine, ARM64)
-FROM oven/bun:1.1.44-alpine AS builder
+# Stage 1: Build Stage (oven/bun:1.3.6-alpine)
+FROM oven/bun:1.3.6-alpine AS builder
 
 ARG VITE_ANALYTICS_DOMAIN=coolify.io/docs
 ARG VITE_SITE_URL=https://coolify.io/docs/
@@ -17,7 +17,7 @@ RUN apk add --no-cache nodejs npm
 WORKDIR /app
 
 # Copy package files first for better caching
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 
 # Install Git and dependencies
 RUN --mount=type=cache,target=/var/cache/apk \
@@ -45,8 +45,8 @@ RUN --mount=type=cache,target=/root/.bun \
     --mount=type=cache,target=/app/docs/.vitepress/cache \
     bun run build
 
-# Stage 2: NGINX Unprivileged Setup (1.27.3-alpine-slim, ARM64)
-FROM nginxinc/nginx-unprivileged:1.27.3-alpine-slim AS final
+# Stage 2: NGINX Unprivileged Setup (1.29.3-alpine-slim, ARM64)
+FROM nginxinc/nginx-unprivileged:1.29.3-alpine-slim AS final
 
 # Set working directory for NGINX and copy built files from the build stage
 WORKDIR /usr/share/nginx/html

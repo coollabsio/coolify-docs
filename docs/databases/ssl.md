@@ -31,7 +31,7 @@ To secure your database connection with SSL:
    Choose the SSL mode from the dropdown menu. For example, select **verify-full** for maximum security.  
    <ZoomableImage src="/docs/images/database/ssl/3.webp" alt="Coolify dashboard screenshot" />
 
-::: warning **Note:**  
+::: warning Note
 To make use of SSL after enabling it, you need to use the new connection URL for your app, which includes the SSL configuration. 
 
 If you are not using the new URL, the database connection will not use SSL (in most cases).

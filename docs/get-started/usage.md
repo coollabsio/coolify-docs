@@ -15,7 +15,7 @@ Now, you might be wondering whether to go with **Coolify Cloud** or set it up yo
 
 Coolify Cloud is the easy way to get started. It’s a paid service (starting at just **$5 a month**) where you bring your own servers and connect them to a Coolify instance that’s fully managed by our team.
 
-::: warning **Note**
+::: warning Note
 **We host and update the Coolify instance for you, so you don't have to allocate any of your server resources to Coolify, but you’re still responsible for your own servers and any other services running on them**
 :::
 

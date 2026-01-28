@@ -250,12 +250,34 @@ services:
       - type: bind
         source: ./srv/99-roles.sql
         target: /docker-entrypoint-initdb.d/init-scripts/99-roles.sql
-        content: |
+        content: |  # This will tell Coolify to create the file (this is not available in a normal docker-compose)
           -- NOTE: change to your own passwords for production environments
            \set pgpass `echo "$POSTGRES_PASSWORD"`
 
            ALTER USER authenticator WITH PASSWORD :'pgpass';
            ALTER USER pgbouncer WITH PASSWORD :'pgpass';
+```
+
+Alternatively config files can be created using the [configs](https://docs.docker.com/reference/compose-file/configs/) top level element in Docker Compose.
+
+```yaml
+services:
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    environment:
+      - POSTGRES_PASSWORD=password
+    configs:
+      - source: roles
+        target: /docker-entrypoint-initdb.d/init-scripts/99-roles.sql
+
+configs:
+  roles:
+    content: |
+      -- NOTE: change to your own passwords for production environments
+        \set pgpass `echo "$POSTGRES_PASSWORD"`
+
+        ALTER USER authenticator WITH PASSWORD :'pgpass';
+        ALTER USER pgbouncer WITH PASSWORD :'pgpass';
 ```
 
 ## Exclude from healthchecks

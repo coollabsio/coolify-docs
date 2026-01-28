@@ -106,7 +106,7 @@ onMounted(() => {
   --docsearch-footer-background: var(--vp-c-bg);
 }
 
-.DocSearch-Button {
+.DocSearch.DocSearch-Button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -115,7 +115,7 @@ onMounted(() => {
   width: 100%;
   height: 42px;
   background: transparent;
-  border: 1px solid var(--vp-c-divider);
+  border-color: #e7e6e6 !important;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 500;
@@ -123,8 +123,11 @@ onMounted(() => {
   cursor: pointer;
 }
 
-.DocSearch-Button:hover {
-  border-color: var(--vp-c-brand-1);
+.dark .DocSearch.DocSearch-Button {
+  border-color: #3d3c3c !important;
+}
+
+.DocSearch.DocSearch-Button:hover {
   background: var(--vp-c-bg-alt);
 }
 

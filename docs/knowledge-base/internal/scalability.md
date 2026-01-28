@@ -66,7 +66,7 @@ We also recommend to use [Hetzner](https://coolify.io/hetzner) (referral link) f
     - Requires a proxy on the servers - Coolify automatically configures the proxy for you, but it is +1 component that can fail.
     - "Less expensive" (as one server can host multiple applications).
 - **Cons**:
-    - As a plus proxy is added, there is a small performance hit as the proxy needs to be initialized on each server - not noticable for most use cases.
+    - As a plus proxy is added, there is a small performance hit as the proxy needs to be initialized on each server - not noticeable for most use cases.
     - You need bigger servers to host more applications, as more applications will be running on the same server.
     - Healthcheck are not available for each application, only for the server.
 

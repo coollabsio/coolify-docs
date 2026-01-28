@@ -51,7 +51,7 @@ Coolify includes Forgejo services with a single runner, using [Docker-in-Docker]
 Due to the alpha status of the Forgejo runner, rebooting the Forejo application container after the initial setup is required to fully register the shared secret into Forejo for runners to validate:
 
 1. In the **Environment Variables** section of the service configuration, you may set as `RUNNER_SHARED_SECRET` a random 40-character hexagesimal string. The command `openssl rand -hex 20` creates something you can copy and paste.
-2. After sucessfully setting up Forejo, **reboot the `forgejo` service** and wait some seconds until the runner appears in Forgejo _Actions_ Configuration section.
+2. After successfully setting up Forejo, **reboot the `forgejo` service** and wait some seconds until the runner appears in Forgejo _Actions_ Configuration section.
 
 Forejo is also compatible with third-party CI apps and platforms. Forgejo is a Gitea-fork, so instructions to incorporate these CI may be the same for both.
 

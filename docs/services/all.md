@@ -23,10 +23,12 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## AI
 
 - [AnythingLLM](/services/anythingllm) - An open-source LLM client that empowers developers to build and scale workflows quickly
+- [MetaMCP](/services/metamcp) - MCP Aggregator, Orchestrator, Middleware, Gateway in one application
 - [Argilla](/services/argilla) - An open-source platform for building, training, and evaluating conversational AI models
 - [Chroma](/services/chroma) - Open-source, AI-native vector database for building applications with embeddings
 - [Flowise](/services/flowise) - Drag & drop UI to build your customized LLM flow
 - [Label Studio](/services/labelstudio) - Open source data labeling platform
+- [Langflow](/services/langflow) - Open-source Python-based framework for building AI agents and workflows with visual drag-and-drop interface
 - [Langfuse](/services/langfuse) - Open source LLM engineering platform
 - [LibreChat](/services/librechat) - Self-hosted, powerful, and privacy-focused chat UI for multiple AI models
 - [LibreTranslate](/services/libretranslate) - Free and open-source machine translation API
@@ -42,7 +44,6 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 ## Analytics
 
-- [Apache Superset](/services/apache-superset) - Open-source data visualization and exploration platform
 - [Metabase](/services/metabase) - The simplest, fastest way to share data and analytics inside your company
 - [OpenPanel](/services/openpanel) - Open source alternative to Mixpanel and Plausible for product analytics
 - [PostHog](/services/posthog) - Open source product analytics
@@ -57,17 +58,19 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [Activepieces](/services/activepieces) - Open source no-code business automation
 - [Evolution API](/services/evolution-api) - WhatsApp API service for automation
+- [Mage AI](/services/mage-ai) - Build, run, and manage data pipelines for integrating and transforming data
 - [N8N](/services/n8n) - Workflow automation tool
 - [Trigger](/services/trigger) - Open-source workflow automation tool
 
 ## Backup
 
+- [Databasus](/services/databasus) - Free, open source tool to backup PostgreSQL, MySQL and MongoDB with multiple storage backends
 - [Duplicati](/services/duplicati) - A free backup client that securely stores encrypted, incremental, compressed backups on cloud storage services and remote file servers
-- [Postgresus](/services/postgresus) - A free, open source and self-hosted tool to backup PostgreSQL. Make backups with different storages and notifications about progress.
 
 ## Bookmarks
 
 - [Hoarder](/services/hoarder) - Self-hosted bookmark manager with AI-powered tagging
+- [Linkding](/services/linkding) - A self-hosted bookmark manager designed to be minimal, fast, and easy to set up
 
 ## Browser
 
@@ -77,12 +80,14 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [Chaskiq](/services/chaskiq) - Open source customer engagement platform
 - [Chatwoot](/services/chatwoot) - Open-source customer engagement suite
+- [Twenty](/services/twenty) - Open-source CRM designed to fit your unique business needs
 - [Documenso](/services/documenso) - Open-source DocuSign alternative for document signing
 - [Docuseal](/services/docuseal) - Open source DocuSign alternative
 - [Dolibarr](/services/dolibarr) - Open-source ERP and CRM software
 - [Easy Appointments](/services/easyappointments) - Open-source appointment scheduler
 - [Fider](/services/fider) - An open platform to collect and organize customer feedback
 - [FreeScout](/services/freescout) - Help desk and customer support application
+- [GLPI](/services/glpi) - Free, open-source IT Service Management platform for asset management, helpdesk, and service desk operations
 - [Invoice Ninja](/services/invoice-ninja) - Invoice management system
 - [Kimai](/services/kimai) - An open-source time-tracking solution for teams of all sizes
 - [LimeSurvey](/services/limesurvey) - The most popular FOSS online survey tool on the web
@@ -108,6 +113,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Mattermost](/services/mattermost) - Open-source messaging platform for teams
 - [Once Campfire](/services/once-campfire) - Web-based chat application with rooms, direct messages, and file attachments
 - [Rocket.Chat](/services/rocketchat) - Open source team chat software
+- [Soju](/services/soju) - User-friendly IRC bouncer with modern features
 
 ## Crypto
 
@@ -115,6 +121,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 ## Database
 
+- [Autobase](/services/autobase) - Open-source alternative to cloud-managed databases for PostgreSQL (self-hosted DBaaS)
 - [NocoDB](/services/nocodb) - Open Source Airtable Alternative
 - [PGBackWeb](/services/pgbackweb) - Effortless PostgreSQL backups with a user-friendly web interface
 - [Teable](/services/teable) - No-code database built on PostgreSQL
@@ -147,6 +154,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [GitLab](/services/gitlab) - DevOps lifecycle tool
 - [GlitchTip](/services/glitchtip) - An open-source error tracking tool
 - [Gotenberg](/services/gotenberg) - A Docker-powered stateless API for PDF files
+- [Hatchet](/services/hatchet) - Platform for running background tasks and durable workflows built on Postgres
 - [HeyForm](/services/heyform) - Open-source form builder for conversational forms
 - [Hoppscotch](/services/hoppscotch) - Open-source API development ecosystem
 - [IT Tools](/services/it-tools) - Collection of handy online tools for developers
@@ -161,6 +169,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Nexus](/services/nexus) - A repository manager that allows you to store, manage, and distribute your software artifacts
 - [Next Image Transformation](/services/next-image-transformation) - Image transformation service for Next.js
 - [Nitropage](/services/nitropage) - Nitropage is an extensible, drag-and-drop website builder based on SolidStart, completely free and open source
+- [NocoBase](/services/nocobase) - The most extensible AI-powered no-code platform
 - [OneDev](/services/onedev) - Self-hosted Git server with integrated CI/CD and kanban
 - [Openblocks](/services/openblocks) - Open-source low code platform
 - [OpnForm](/services/opnform) - Open-source form builder for creating beautiful forms without coding
@@ -176,8 +185,10 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Rivet Engine](/services/rivet-engine) - Backend engine for building and scaling stateful workloads with long-lived processes and durable state
 - [Shlink](/services/shlink) - The open source URL shortener
 - [Soketi](/services/soketi) - Open-source WebSocket server
+- [Soketi App Manager](/services/soketi-app-manager) - Manage Soketi apps with application configuration and WebSocket server administration interface
 - [Supabase](/services/supabase) - Open source Firebase alternative
 - [Tolgee](/services/tolgee) - Open source localization platform
+- [TrailBase](/services/trailbase) - Blazingly fast Rust/SQLite/Wasmtime app server with type-safe APIs
 - [Unleash](/services/unleash) - Open-source feature management platform
 - [VvvebJs](/services/vvveb) - Powerful website builder with drag and drop functionality
 - [Wakapi](/services/wakapi) - Open-source coding activity tracker
@@ -201,7 +212,9 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 ## Email
 
-- [Unsend](/services/unsend) - An open source bulk email manager
+- [Open Archiver](/services/open-archiver) - Self-hosted, open-source email archiving solution with full-text search
+- [Sessy](/services/sessy) - Email observability platform for monitoring Amazon SES deliveries, bounces, and more
+- [Usesend](/services/usesend) - An open source bulk email manager
 
 ## Family
 
@@ -209,8 +222,10 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 ## File Management
 
+- [Chibisafe](/services/chibisafe) - A beautiful and performant vault to save all your files in the cloud
 - [Filebrowser](/services/filebrowser) - A file manager for the web
 - [FileFlows](/services/fileflows) - A automatic file processing service
+- [SFTPGo](/services/sftpgo) - Event-driven SFTP, FTP/S, HTTP/S and WebDAV server
 - [Syncthing](/services/syncthing) - Open Source Continuous File Synchronization
 - [Zipline](/services/zipline) - Next generation ShareX / File upload server
 
@@ -235,8 +250,11 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [FoundryVTT](/services/foundryvtt) - Virtual tabletop for tabletop role-playing games
 - [Minecraft](/services/minecraft) - Minecraft game server
+- [Palworld](/services/palworld) - Dedicated server for Palworld multiplayer survival game with creature collection and base building
 - [Pterodactyl](/services/pterodactyl) - Game server management panel with Wings daemon for hosting Minecraft, CS:GO, ARK and more
 - [Satisfactory](/services/satisfactory) - Satisfactory game server
+- [Terraria Server](/services/terraria-server) - Docker multi-arch image for Terraria game server
+- [Wings](/services/wings) - Pterodactyl server control daemon for standalone game server node deployments
 
 ## Health
 
@@ -252,6 +270,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 ## IoT
 
+- [ESPHome](/services/esphome) - Open-source firmware framework for WiFi-enabled microcontrollers
 - [Mosquitto](/services/mosquitto) - Open-source MQTT broker
 - [Traccar](/services/traccar) - Open-source GPS tracking platform
 
@@ -264,11 +283,13 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Media
 
 - [Audiobookshelf](/services/audiobookshelf) - Self-hosted audiobook and podcast server
+- [Booklore](/services/booklore) - Open-source library management system for your digital book collection
 - [Calibre-web](/services/calibre-web) - Web app for browsing, reading and downloading eBooks from a Calibre database
+- [Calibre Web Automated with Downloader](/services/calibre-web-automated-with-downloader) - Intuitive web interface for searching and requesting book downloads with Calibre-Web-Automated
 - [Cap](/services/cap) - Open source alternative to Loom for screen recording and sharing
 - [Castopod](/services/castopod) - Open-source podcast hosting platform
 - [Emby](/services/emby) - A media server to organize, play, and stream audio and video to a variety of devices
-- [Emby Stat](/services/emby-stat) - A simple and easy-to-use Emby statistics dashboard
+- [Emby Stat](/services/embystat) - A simple and easy-to-use Emby statistics dashboard
 - [Immich](/services/immich) - Self-hosted photo and video backup solution
 - [Jellyfin](/services/jellyfin) - The Free Software Media System
 - [Metube](/services/metube) - A self-hosted video sharing platform
@@ -291,6 +312,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Glances](/services/glances) - Cross-platform system monitoring tool
 - [Grafana](/services/grafana) - The open platform for beautiful analytics and monitoring
 - [Observium](/services/observium) - Low-maintenance auto-discovering network monitoring platform
+- [SigNoz](/services/signoz) - Open source observability platform native to OpenTelemetry with logs, traces, and metrics
 - [Statusnook](/services/statusnook) - A status page system for your website
 - [Uptime Kuma](/services/uptime-kuma) - A fancy self-hosted monitoring tool
 
@@ -299,6 +321,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Cloudflared](/services/cloudflared) - Cloudflare Tunnel client
 - [NetBird Client](/services/netbird-client) - Connect your devices into a secure WireGuard-based mesh network
 - [Newt Pangolin](/services/newt-pangolin) - User space WireGuard tunnel client and TCP/UDP proxy for securely exposing private resources
+- [Tailscale Client](/services/tailscale-client) - Zero-config WireGuard VPN client for secure mesh networking and encrypted connections
 
 ## Notifications
 
@@ -308,6 +331,8 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Productivity
 
 - [Affine](/services/affine) - Open-source knowledge base and workspace combining docs, whiteboards, and databases
+- [AppFlowy](/services/appflowy) - Open-source alternative to Notion with workspaces for docs, wikis, and project management
+- [Ente](/services/ente-photos) - A fully open-source, end-to-end encrypted platform for storing data in the cloud
 - [Cal.com](/services/calcom) - Open-source Calendly alternative for scheduling meetings
 - [CodiMD](/services/codimd) - Realtime collaborative markdown notes on all platforms
 - [Excalidraw](/services/excalidraw) - Virtual whiteboard for sketching hand-drawn like diagrams
@@ -316,11 +341,12 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [KaraKeep](/services/karakeep) - Self-hostable bookmark-everything app with AI-based automatic tagging
 - [LibreOffice](/services/libreoffice) - Free and open-source office suite
 - [Memos](/services/memos) - Open-source, self-hosted memo hub with knowledge management
-- [Outline](/services/outline) - Open-source collaboration tool
+- [Outline](/services/getoutline) - Open-source collaboration tool
 - [Rallly](/services/rallly) - Open-source meeting scheduling tool
 - [Reactive Resume](/services/reactive-resume) - A free and open source resume builder
 - [Readeck](/services/readeck) - Web article reader and bookmark manager
 - [Ryot](/services/ryot) - Self-hosted platform for tracking various facets of your life
+- [SilverBullet](/services/silverbullet) - An open source personal productivity platform built on Markdown
 - [Siyuan](/services/siyuan) - A privacy-first, self-hosted, fully open source personal knowledge management software.
 - [Slash](/services/slash) - Open-source, self-hosted links and notes manager
 - [TriliumNext](/services/triliumnext) - Build your personal knowledge base with TriliumNext Notes
@@ -328,8 +354,10 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 ## Project Management
 
+- [Fizzy](/services/fizzy) - Kanban tracking tool for issues and ideas by 37signals
 - [Leantime](/services/leantime) - Lean project management system for innovators
 - [Plane](/services/plane) - Open source project planning tool
+- [Redmine](/services/redmine) - Flexible project management web application
 
 ## RSS
 
@@ -353,6 +381,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Infisical](/services/infisical) - Open source secret management platform
 - [Keycloak](/services/keycloak) - Open-source identity and access management solution
 - [Logto](/services/logto) - Logto is an Auth0 alternative designed for modern apps and SaaS products
+- [Onetime Secret](/services/onetimesecret) - Share secrets securely with self-destructing links that can only be viewed once
 - [Passbolt](/services/passbolt) - Open source password manager for teams
 - [Pi-hole](/services/pi-hole) - Network-wide ad blocker that acts as a DNS sinkhole
 - [Pocket ID](/services/pocket-id) - A simple OIDC provider for passwordless authentication with passkeys
@@ -369,10 +398,13 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 ## Storage
 
+- [Cloudreve](/services/cloudreve) - A self-hosted file management and sharing system
+- [Garage](/services/garage) - S3-compatible distributed object storage service designed for self-hosting
 - [MinIO](/services/minio) - A high-performance, distributed object storage system
 - [Nextcloud](/services/nextcloud) - A safe home for all your data
 - [ownCloud](/services/owncloud) - File synchronization and sharing platform
 - [Seafile](/services/seafile) - High-performance file syncing and sharing with knowledge management features
+- [SeaweedFS](/services/seaweedfs) - Simple and highly scalable distributed file system compatible with S3
 
 ## Utilities
 

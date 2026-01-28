@@ -1,6 +1,6 @@
 ---
 title: "Notifications"
-description: "Configure multi-channel notifications in Coolify with Email, Telegram, Discord, Slack, and Pushover for deployments, backups, and server monitoring alerts."
+description: "Configure multi-channel notifications in Coolify with Email, Telegram, Discord, Slack, Mattermost, Pushover, and Webhooks for deployments, backups, and server monitoring alerts."
 ---
 
 # Notifications
@@ -17,7 +17,6 @@ Below are guides for setting up supported notification providers in Coolify.
 Email notifications can be configured using either SMTP or Resend.
 :::
 
-
 1. Navigate to **Notifications** → **Email**
 
 2. Choose your email provider:
@@ -28,10 +27,12 @@ Email notifications can be configured using either SMTP or Resend.
 3. Configure your chosen provider:
 
 #### System-Wide Email Settings
-   - Enable the `Use system wide (transactional) email settings` checkbox
-   - If you're setting this up yourself, please refer to the [SMTP Server Configuration](#smtp-server-configuration) section below for detailed settings.
+
+- Enable the `Use system wide (transactional) email settings` checkbox
+- If you're setting this up yourself, please refer to the [SMTP Server Configuration](#smtp-server-configuration) section below for detailed settings.
 
 #### SMTP Server Configuration
+
 - Fill in the following fields:
   - `From Name` - Display name for the sender
   - `From Address` - Email address notifications will come from
@@ -54,17 +55,16 @@ Email notifications can be configured using either SMTP or Resend.
 
 ::: info
    Some hosting providers have specific port restrictions. For example, Hetzner blocks port 465 by default. Check with your hosting provider about port availability and any required configuration changes.
-::: 
+:::
 
 #### Resend Configuration
-   - Enter your `Resend API Key`
-   - Enable the `Resend` checkbox
 
-4. Click `Send Test Email` to verify your setup
+- Enter your `Resend API Key`
+- Enable the `Resend` checkbox
 
+1. Click `Send Test Email` to verify your setup
 
 ### Telegram
-
 
 1. Initial Setup (Setup only possible on phone)
    - Create a Telegram account using your phone number
@@ -82,11 +82,11 @@ Email notifications can be configured using either SMTP or Resend.
   After copying your bot token, delete the message containing it from Telegram. Store the token securely as anyone with access to it can control your bot.
 :::
 
-3. Create and add your bot to a group
+1. Create and add your bot to a group
    - Create a new group in Telegram
    - Add your bot to the group (you can add it by using the bot name chosen while creating the bot)
 
-4. Make the bot an admin of the group
+2. Make the bot an admin of the group
    - Click on the group name
    - Locate the members list
    - Click on the bot name
@@ -95,21 +95,21 @@ Email notifications can be configured using either SMTP or Resend.
    - Enable the `admin` toggle
    - Click on **Add bot as admin**
 
-5. Enable Topics (Optional, Setup only possible on phone)
+3. Enable Topics (Optional, Setup only possible on phone)
    - Open the group on your phone
    - Tap the group name
    - Tap the pencil icon (edit)
    - Find and enable **Topics** (this enables threads for the group)
    - You can now create topics using the 3-dot menu in the group (also works on desktop)
 
-6. Get Required IDs
+4. Get Required IDs
    - Visit: `https://api.telegram.org/bot{YOUR_BOT_TOKEN}/getUpdates` (Replace `{YOUR_BOT_TOKEN}` with your actual bot token)
    - Send a test message in your group or thread/topic
    - Find these values in the response:
      - `Chat ID`: Look for `"chat": {"id": -100XXXXXXXXX,` (for groups/channels, the chat ID usually starts with `-100`)
      - `Thread/Topic ID` (if using threads): Look for `"message_thread_id":XXXXX,`
 
-7. Configure Coolify
+5. Configure Coolify
    - Go to **Notifications** → **Telegram**
    - Enter your `bot token` (from step 2)
    - Enter the `chat ID` (include the `-` minus sign if present)
@@ -118,17 +118,16 @@ Email notifications can be configured using either SMTP or Resend.
    - Enable the Telegram channel
    - Send a `Test notification`
 
-
 ::: info
   Common issues:
-  - Make sure the bot is an admin in the group/channel
-  - Include the minus sign (-) in the chat ID if present
-  - If `getUpdates` returns an empty response, send another message and try again
-  - if you can not acces `getUpdates` make sure you have the correct bot token and you have replace the `{YOUR_BOT_TOKEN}` with your actual bot token (replace everything including the quotes)
+
+- Make sure the bot is an admin in the group/channel
+- Include the minus sign (-) in the chat ID if present
+- If `getUpdates` returns an empty response, send another message and try again
+- if you can not access `getUpdates` make sure you have the correct bot token and you have replace the `{YOUR_BOT_TOKEN}` with your actual bot token (replace everything including the quotes)
 :::
 
 ### Discord
-
 
 1. Create a Discord Server and Channel
    - Create a new server or use an existing one
@@ -148,13 +147,13 @@ Email notifications can be configured using either SMTP or Resend.
    - Enable the Discord channel
    - Send a `Test notification`
 
-
 ::: info
   See [Discord's Webhook Guide](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) for more detailed setup instructions.
 :::
 
-### Slack
+### Slack / Mattermost
 
+#### Using Slack
 
 1. Create a Slack App
    - Visit [Slack API](https://api.slack.com/apps)
@@ -175,9 +174,24 @@ Email notifications can be configured using either SMTP or Resend.
    - Enable the Slack channel
    - Send a `Test notification`
 
+#### Using Slack notifications with Mattermost
+
+Slack webhooks in Coolify are fully compatible with Mattermost.
+
+1. Create an Incoming Webhook in Mattermost:
+   - Go to **Product Menu** → **Integrations** → **Incoming Webhooks**
+   - Click **Add Incoming Webhook**
+   - Configure the webhook (name, channel, etc.) and save
+   - Copy the generated webhook URL (format: `https://your-mattermost-server.com/hooks/xxx-key-xxx`)
+
+2. Configure in Coolify:
+   - Go to **Notifications** → **Slack**
+   - Paste the Mattermost `webhook URL` in the Webhook URL field
+   - Save the settings
+   - Enable the Slack channel
+   - Send a `Test notification`
 
 ### Pushover (Push Notifications)
-
 
 1. Get User Key
    - Log in or sign up at [Pushover](https://pushover.net)
@@ -197,33 +211,52 @@ Email notifications can be configured using either SMTP or Resend.
    - Enable the Pushover channel
    - Send a `Test notification`
 
-
 ::: info
   Pushover allows you to receive notifications on multiple devices including iOS, Android, and desktop.
 :::
+
+### Webhook
+
+Webhook notifications allow you to send notifications to any custom endpoint that accepts HTTP requests.
+
+1. Configure in Coolify:
+   - Go to **Notifications** → **Webhook**
+   - Enter a `HTTP` or `HTTPS` URL in the Webhook URL field
+   - Save the settings
+   - Enable the Webhook channel
+   - Send a `Test notification`
+
+Coolify will send `POST` requests to your specified endpoint when events occur. You can use this to integrate with custom applications, automation tools, or any service that accepts webhooks.
 
 ## Notification Events
 
 You can configure which events trigger notifications in your notification settings:
 
 ### Deployments
-  - Deployment Success
-  - Deployment Failure
-  - Container Status changes
+
+- Deployment Success
+- Deployment Failure
+- Container Status Changes
 
 ### Backups
-  - Backup Success
-  - Backup Failure
+
+- Backup Success
+- Backup Failure
 
 ### Scheduled Tasks
-  - Task Success
-  - Task Failure
 
-### Server Events
-  - Docker Cleanup Success
-  - Docker Cleanup Failure
-  - High Disk Usage Alerts
-  - Server Status Updates
+- Scheduled Task Success
+- Scheduled Task Failure
+
+### Server
+
+- Docker Cleanup Success
+- Docker Cleanup Failure
+- Server Disk Usage
+- Server Reachable
+- Server Unreachable
+- Server Patching
+- Traefik Proxy Outdated
 
 ::: success Multiple Channels
   You can configure different events for each notification channel. For example, you can send deployment failure notifications to Email and successes to Slack.
