@@ -140,7 +140,7 @@ Once you have entered the name, scroll down till the bottom of the page and clic
 Once the Policy is created you will be redirected to this page:
 <ZoomableImage src="/docs/images/aws-s3/10.webp" alt="Screenshot of Aws" />
 ::: success Tip
-You won't see the policy you just created, you have to search for it's name on the search box.
+You won't see the policy you just created, you have to search for its name on the search box.
 :::
 
 
@@ -160,7 +160,7 @@ You’ll be asked to choose a name for the user:
 3. Click on **Next** button
 
 <ZoomableImage src="/docs/images/aws-s3/14.webp" alt="Screenshot of Aws" />
-  - Click on **Create user** button (you don't have to change anything on this page />
+  - Click on **Create user** button (you don't have to change anything on this page)
 
 Once the Policy is created you will be redirected to this page:
 <ZoomableImage src="/docs/images/aws-s3/15.webp" alt="Screenshot of Aws" />
@@ -168,7 +168,7 @@ Once the Policy is created you will be redirected to this page:
 
 
 ## 4. Create an Access Key
-After you have clicked on the username on previous step, you will be redirect to this page:
+After you have clicked on the username on previous step, you will be redirected to this page:
 <ZoomableImage src="/docs/images/aws-s3/16.webp" alt="Screenshot of Aws" />
   - Click on **Create access key** option to setup a new access key.
 
@@ -179,7 +179,7 @@ After you have clicked on the username on previous step, you will be redirect to
   - Click on **Create access key** button.
 
 <ZoomableImage src="/docs/images/aws-s3/19.webp" alt="Screenshot of Aws" />
-  - Save the Access Key and Secrete Access Key somewhere safe and click on **Done** button
+  - Save the Access Key and Secret Access Key somewhere safe and click on **Done** button
   ::: warning Note
   You won't able able to see the access key after you click the **Done** button, so make sure to save the keys somewhere safe.
   :::
