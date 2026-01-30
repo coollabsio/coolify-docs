@@ -380,6 +380,13 @@ const services = [
         category: 'Health'
     },
     {
+        name: 'BentoPDF',
+        slug: 'bento-pdf',
+        icon: '/docs/images/services/bento-pdf.png',
+        description: 'Process PDFs entirely in your browser. No uploads. No servers. Complete privacy.',
+        category: 'Productivity'
+    },
+    {
         name: 'Beszel',
         slug: 'beszel',
         icon: '/docs/images/services/beszel-logo.svg',

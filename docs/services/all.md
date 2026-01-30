@@ -331,9 +331,10 @@ Complete directory of all one-click services available in Coolify, organized by 
 
 - [Affine](/services/affine) - Open-source knowledge base and workspace combining docs, whiteboards, and databases
 - [AppFlowy](/services/appflowy) - Open-source alternative to Notion with workspaces for docs, wikis, and project management
-- [Ente](/services/ente-photos) - A fully open-source, end-to-end encrypted platform for storing data in the cloud
+- [BentoPDF](/services/bento-pdf) - Process PDFs entirely in your browser. No uploads. No servers. Complete privacy.
 - [Cal.com](/services/calcom) - Open-source Calendly alternative for scheduling meetings
 - [CodiMD](/services/codimd) - Realtime collaborative markdown notes on all platforms
+- [Ente](/services/ente-photos) - A fully open-source, end-to-end encrypted platform for storing data in the cloud
 - [Excalidraw](/services/excalidraw) - Virtual whiteboard for sketching hand-drawn like diagrams
 - [Grist](/services/grist) - Modern relational spreadsheet combining flexibility and database robustness
 - [Joplin](/services/joplin) - Open-source note taking and to-do application
