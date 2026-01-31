@@ -19,3 +19,12 @@ The Redirect URI to provide to the IDP should be in the format of **YOUR_COOLIFY
 - [Github OAuth](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app)
   - Homepage URL should be **YOUR_COOLIFY_DASHBOARD**
   - Authorization callback URL should be the redirect uri you set in **YOUR_COOLIFY_DASHBOARD**/settings/oauth for github. for example.com : https://coolify.example.com/auth/github/callback
+
+## Registration and login behavior
+
+By default, Coolify respects the global registration setting. If you want to allow OAuth signups even when normal registration is disabled, enable the OAuth-specific toggle:
+
+1. Open **Settings > Advanced**.
+2. Enable **OAuth Registration Allowed**.
+
+When OAuth registration is enabled, users can create accounts via an OAuth provider even if **Registration Allowed** is turned off. OAuth-created users are marked as OAuth-only, so they cannot log in with a password and must continue using OAuth to sign in.
