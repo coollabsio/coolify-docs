@@ -26,6 +26,8 @@ For deploying your resources, you can add custom options to the final docker com
 - `--privileged`
 - `--gpus`
 - `--entrypoint`
+- `--runtime`
+- `--pids-limit`
 
 ## Usage
 
