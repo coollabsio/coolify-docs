@@ -94,7 +94,7 @@ After installing Docker (or Orbstack) and Spin, verify the installation:
    |--------|----------|---------------|
    | Visual Studio Code (recommended free) | Windows/macOS/Linux | [Download](https://code.visualstudio.com/download?ref=coolify) |
    | Cursor (recommended but paid) | Windows/macOS/Linux | [Download](https://www.cursor.com/?ref=coolify) |
-   | Zed (very fast) | macOS/Linux | [Download](https://zed.dev/download?ref=coolify) |
+   | Zed (very fast) | Windows/macOS/Linux | [Download](https://zed.dev/download?ref=coolify) |
 
 3. Clone the Coolify Repository from your fork to your local machine
    - Use `git clone` in the command line, or
