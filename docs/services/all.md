@@ -124,6 +124,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Database
 
 - [Autobase](/services/autobase) - Open-source alternative to cloud-managed databases for PostgreSQL (self-hosted DBaaS)
+- [ElectricSQL](/services/electricsql) - Sync shape-based subsets of your Postgres data over HTTP
 - [NocoDB](/services/nocodb) - Open Source Airtable Alternative
 - [PGBackWeb](/services/pgbackweb) - Effortless PostgreSQL backups with a user-friendly web interface
 - [Teable](/services/teable) - No-code database built on PostgreSQL

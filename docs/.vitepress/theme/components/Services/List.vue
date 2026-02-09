@@ -752,6 +752,13 @@ const services = [
         category: 'Productivity'
     },
     {
+        name: 'ElectricSQL',
+        slug: 'electricsql',
+        icon: '/docs/images/services/electricsql.svg',
+        description: 'Sync shape-based subsets of your Postgres data over HTTP',
+        category: 'Database'
+    },
+    {
         name: 'Evolution API',
         slug: 'evolution-api',
         icon: '/docs/images/services/evolution-api-logo.svg',
