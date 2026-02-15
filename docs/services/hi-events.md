@@ -41,6 +41,7 @@ It is well suited for concerts, workshops, conferences, and any ticketed event.
 
 ---
 
+
 ## Links
 
 - [Official website](https://hi.events/)
