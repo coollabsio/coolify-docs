@@ -9,9 +9,37 @@ description: "Here you can find documentation for hosting Hi.Events with coolify
 
 ## What is Hi.Events ?
 
-Hi.Event is an Event ticketing and management platform. 
+Hi.Events is an open-source event ticketing and management platform.
 
-You can create event, and connect your stripe account to be paid. Perfectly adapted for concerts, workshops, conférences
+With Hi.Events, you can:
+
+- Create and manage events
+- Sell tickets online
+- Connect your Stripe account to receive payments
+- Manage attendees and check-ins
+
+It is well suited for concerts, workshops, conferences, and any ticketed event.
+
+## ⚠️ Architecture Compatibility
+
+> ⚠️ **Important**
+>
+> The official Docker image provided by the Hi.Events team currently supports **amd64 only**.
+>
+> ARM64 devices (such as Raspberry Pi servers) are **not officially supported yet**.
+>
+> A related Pull Request is open:
+> https://github.com/HiEventsDev/Hi.Events/pull/1042
+>
+> If you need to run Hi.Events on **arm64**, you can use the following unofficial image:
+>
+> ```
+> vianmora/hi-events-all-in-one
+> ```
+>
+> This image is community-maintained and not officially supported by the Hi.Events team.
+
+---
 
 ## Links
 
