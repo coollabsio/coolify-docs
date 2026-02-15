@@ -2128,6 +2128,13 @@ const services = [
         category: 'Productivity'
     },
     {
+        name: 'Hi.Events',
+        slug: 'hi-events', # Match the filename of your documentation file
+        icon: '/docs/images/services/hi-events.svg', # Path to your logo
+        description: 'Event ticketing and management platform.',
+        category: 'Events' # Choose an appropriate category
+    },
+    {
         name: 'Leantime',
         slug: 'leantime',
         icon: '/docs/images/services/leantime-logo.svg',
