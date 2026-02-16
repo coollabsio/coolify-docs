@@ -160,7 +160,7 @@ Or in the normal view, the Name is what's referenced in the Docker Compose file 
 
 ### Coolify's Magic Environment Variables
 
-Coolify can generate dynamic environment variables for you using the following syntax: `SERVICE_<TYPE>_<IDENTIFIER>`. The type may be one of:
+Coolify can generate dynamic environment variables for you using the following syntax: `SERVICE_<TYPE>_<IDENTIFIER>`. For a quick reference of all types and their output, see the [Magic Environment Variables table](/knowledge-base/environment-variables#magic-environment-variables-docker-compose). The type may be one of:
 
 - **URL**: This will [generate](/knowledge-base/server/introduction#wildcard-domain) an URL for the service. The example below shows how you can add paths and ports.
 - **FQDN**: Generates FQDN for the service based on the URL you have defined. The example below shows how you can add paths and ports.
