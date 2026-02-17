@@ -2301,7 +2301,14 @@ const services = [
         icon: '/docs/images/services/redisinsight-logo.png',
         description: 'Official Redis GUI that lets you do both GUI- and CLI-based interactions in a fully-featured desktop GUI client.',
         category: 'Development'
-    }
+    },
+    {
+        name: 'Corsfix',
+        slug: 'corsfix',
+        icon: '/docs/images/services/corsfix-logo.svg',
+        description: 'Production-ready and secure CORS proxy platform for fixing CORS errors.',
+        category: 'Development'
+    },
 ]
 
 const search = ref('')

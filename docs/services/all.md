@@ -144,6 +144,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Cloudflared](/services/cloudflared) - Cloudflare Tunnel client
 - [Code Server](/services/code-server) - Run VS Code on any machine anywhere and access it in the browser
 - [Convex](/services/convex) - Backend platform for web developers
+- [Corsfix](/services/corsfix/) - Production-ready and secure CORS proxy platform for fixing CORS errors
 - [Deno KV](/services/denokv) - Deno's built-in key-value database service
 - [Docker Registry](/services/docker-registry) - A Docker registry to store and manage your Docker images
 - [Dozzle](/services/dozzle) - Realtime log viewer for docker containers
