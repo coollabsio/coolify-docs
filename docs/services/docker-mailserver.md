@@ -26,6 +26,14 @@ The Coolify one-click template configures:
 - Set up valid DNS records (MX, SPF, DKIM, DMARC) for deliverability.
 - Provide TLS certificates and verify `SSL_TYPE` according to your setup.
 
+## DNS and Deliverability Checklist
+
+1. MX record points to the same host as `MAILSERVER_HOSTNAME`.
+2. SPF record includes your outbound mail host.
+3. DKIM key is generated/published before enabling outbound production traffic.
+4. DMARC policy starts with monitoring mode (`p=none`) and is tightened after validation.
+5. Reverse DNS (PTR) is aligned with your sending hostname when possible.
+
 ## Links
 
 - [Docker Mailserver Documentation](https://docker-mailserver.github.io/docker-mailserver/latest/?utm_source=coolify.io)
