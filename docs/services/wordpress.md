@@ -31,6 +31,11 @@ WordPress is available in three deployment configurations in Coolify:
   - MariaDB container
   - First-run bootstrap that initializes WordPress files and `wp-config.php`
 
+#### Variant Notes (OpenLiteSpeed)
+- Best fit when you specifically want OpenLiteSpeed cache/performance behavior.
+- Keep persistent storage enabled so first-run generated files and uploads survive restarts.
+- If migrating from Apache/Nginx WordPress stacks, verify permalink/cache plugin behavior after cutover.
+
 ### WordPress with MySQL
 - **Database:** MySQL
 - **Use case:** Production deployments with MySQL preference
