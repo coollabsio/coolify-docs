@@ -12,7 +12,7 @@ It is used for creating websites, blogs, and applications.
 
 ## Deployment Variants
 
-WordPress is available in two deployment configurations in Coolify:
+WordPress is available in three deployment configurations in Coolify:
 
 ### WordPress with MariaDB
 - **Database:** MariaDB
@@ -22,6 +22,15 @@ WordPress is available in two deployment configurations in Coolify:
   - MariaDB container
   - Automatic database configuration and health checks
 
+### WordPress with OpenLiteSpeed + MariaDB
+- **Web Server:** OpenLiteSpeed
+- **Database:** MariaDB
+- **Use case:** Users who prefer OpenLiteSpeed while keeping MariaDB as the database backend
+- **Components:**
+  - OpenLiteSpeed + WordPress container
+  - MariaDB container
+  - First-run bootstrap that initializes WordPress files and `wp-config.php`
+
 ### WordPress with MySQL
 - **Database:** MySQL
 - **Use case:** Production deployments with MySQL preference
@@ -30,7 +39,7 @@ WordPress is available in two deployment configurations in Coolify:
   - MySQL container
   - Automatic database configuration and health checks
 
-Both variants provide equivalent functionality - choose based on your database preference or existing infrastructure.
+All variants provide equivalent core functionality - choose based on your preferred web server and database stack.
 
 ## Links
 
