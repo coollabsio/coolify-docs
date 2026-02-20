@@ -48,6 +48,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [GoatCounter](/services/goatcounter) - A web analytics platform that aims to offer easy to use and meaningful privacy-friendly web analytics.
 - [Metabase](/services/metabase) - The simplest, fastest way to share data and analytics inside your company
 - [OpenPanel](/services/openpanel) - Open source alternative to Mixpanel and Plausible for product analytics
+- [OpenReplay](/services/openreplay) - Open-source session replay and product analytics platform for debugging user journeys
 - [PostHog](/services/posthog) - Open source product analytics
 - [Plausible](/services/plausible) - A lightweight, open-source web analytics tool that prioritizes user privacy by not using cookies
 - [Rybbit](/services/rybbit) - Next-gen, open source, lightweight, cookieless web & product analytics for everyone
