@@ -215,6 +215,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Email
 
 - [Open Archiver](/services/open-archiver) - Self-hosted, open-source email archiving solution with full-text search
+- [Docker Mailserver](/services/docker-mailserver) - Fullstack self-hosted mail server with SMTP, IMAP, and anti-spam tooling
 - [Sessy](/services/sessy) - Email observability platform for monitoring Amazon SES deliveries, bounces, and more
 - [Usesend](/services/usesend) - An open source bulk email manager
 
