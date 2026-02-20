@@ -27,6 +27,18 @@ The Coolify one-click template deploys OpenReplay with its required components, 
 - Keep persistent volumes enabled for PostgreSQL, ClickHouse, and MinIO.
 - Verify healthchecks for database and migration services before first login.
 
+## Before You Start
+
+- Plan for at least a medium instance profile (multiple services run together: database, object storage, analytics, frontend).
+- Confirm your Coolify server has enough disk I/O headroom for ClickHouse and replay storage growth.
+- Decide your public URL before first deploy so callbacks and links stay consistent.
+
+## Post-Deployment Checklist
+
+1. Open the dashboard and create a test project.
+2. Send one sample replay from the tracker snippet and confirm it appears in sessions.
+3. Verify ClickHouse/PostgreSQL/MinIO services are healthy after the first restart.
+
 ## Links
 
 - [OpenReplay Website](https://openreplay.com/?utm_source=coolify.io)
