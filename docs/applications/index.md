@@ -115,6 +115,12 @@ If you would like to force HTTPS, so no HTTP connections allowed, you can set th
 
 If you would like to deploy automatically when a new commit is pushed to the repository, you can set this to `true`. `Enabled by default`.
 
+### Skip Auto Deploy
+
+> This feature is only available for GitHub App based repositories.
+
+If you would like to skip a deployment when you have auto deploy enabled. For example, when you edit a README file and push the changes. Include `[skip cd]` or `[skip ci]` in your commit to skip the deployment.
+
 ### Preview Deployments
 
 Preview deployments are a great way to test your application before merging it into the main branch. Imagine it like a staging environment.
