@@ -15,6 +15,11 @@ To enable access from the internet, you need to add a dynamic configuration and 
   How to configure Traefik's dynamic configuration? [Read more](/knowledge-base/proxy/traefik/dynamic-config)
 :::
 
+::: danger CAUTION!
+  Enabling dashboard will also enable traeifk API which will sit on `/api` path, protected with this `basicAuth`. This is a conflict with Coolify's own api which also sits on `/api` and uses a `Bearer token`.
+  If you enable the dashboard, you will be unable to use Coolify's API and will always get `401`. Disabling dashboard will help you access the API again.
+:::
+
 You can enable Traefik's dashboard by adding the following dynamic configuration:
 
 ```yaml
