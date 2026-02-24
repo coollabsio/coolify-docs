@@ -229,6 +229,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [FileFlows](/services/fileflows) - A automatic file processing service
 - [SFTPGo](/services/sftpgo) - Event-driven SFTP, FTP/S, HTTP/S and WebDAV server
 - [Syncthing](/services/syncthing) - Open Source Continuous File Synchronization
+- [Pydio Cells](/services/pydio-cells) - Next generation file sharing platform for organizations.
 - [Zipline](/services/zipline) - Next generation ShareX / File upload server
 
 ## File Sharing

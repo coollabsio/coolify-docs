@@ -1680,6 +1680,13 @@ const services = [
         category: 'Development'
     },
     {
+        name: 'Pydio Cells',
+        slug: 'pydio-cells',
+        icon: '/docs/images/services/pydio.webp',
+        description: 'File sharing platform for organizations.',
+        category: 'File Sharing'
+    },
+    {
         name: 'qBittorrent',
         slug: 'qbittorrent',
         icon: '/docs/images/services/qbittorrent-logo.svg',
