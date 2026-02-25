@@ -5,7 +5,7 @@ description: "Deploy Librespeed on Coolify for self-hosted lightweight speed tes
 
 # Librespeed
 
-<ZoomableImage src="/docs/images/services/librespeed.svg" alt="Librespeed dashboard" />
+<ZoomableImage src="/docs/images/services/librespeed.png" alt="Librespeed dashboard" />
 
 ## What is Librespeed
 
