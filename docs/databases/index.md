@@ -52,6 +52,15 @@ Public port is used to expose the container port to the internet, by starting an
 - Port mappings makes the connection/port permanent (you need to restart your database to change it).
 - The public port makes the connection/port dynamic (you can change it without restarting the database, Coolify will restart the Nginx TCP proxy for you).
 
+## Proxy Timeout
+
+When using a public port, Coolify starts an Nginx TCP proxy to expose your database. By default, the proxy timeout is set to **3600 seconds** (1 hour).
+
+You can configure this in the database settings under **Proxy Timeout (seconds)**. This controls how long idle connections are kept open before Nginx closes them.
+
+- The minimum value is **1 second**.
+- Set a higher value if you have long-running queries or connections that stay idle for extended periods.
+
 ## Access database during builds
 
 If you are using `Nixpacks` build pack, you have two ways to access your database during builds:
