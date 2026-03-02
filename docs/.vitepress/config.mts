@@ -8,6 +8,7 @@ import { bundledLanguages } from 'shiki'
 import { join, dirname } from 'node:path'
 import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs'
 import { groupIconVitePlugin } from 'vitepress-plugin-group-icons'
+import tailwindcss from '@tailwindcss/vite'
 import { loadEnv } from 'vitepress'
 const env = loadEnv('', process.cwd())
 const sidebar = useSidebar({ spec })
@@ -661,6 +662,7 @@ export default defineConfig({
 
   vite: {
     plugins: [
+      tailwindcss(),
       llmstxt({
          ignoreFiles: [
            '/docs/api-reference/api/**/*',

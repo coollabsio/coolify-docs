@@ -1,4 +1,6 @@
 <style scoped>
+@reference "tailwindcss";
+
 .default-soft {
     background: rgba(101, 117, 133, 0.16);
     border-color: #3c3f44;
@@ -2470,7 +2472,7 @@ const { preloadServices, handleImageError, hasImageError, isImageLoading, getFal
                     style="background-color: rgba(101, 117, 133, 0.16);">
                     <span class="text-sm sm:text-base">{{ selectedCategories.length === 1 ? selectedCategories[0] :
                         `${selectedCategories.length} categories` }}</span>
-                    <svg class="w-4 h-4 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 ml-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
                 </button>

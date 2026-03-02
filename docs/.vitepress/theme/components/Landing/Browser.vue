@@ -3,7 +3,7 @@
         <!-- Add wrapper for glow effect -->
         <div class="relative group glow-wrapper">
             <!-- Glow effect overlay -->
-            <div class="absolute -inset-0.5 bg-gradient-to-r from-brand-alt/50 to-purple-600/50 rounded-lg blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+            <div class="absolute -inset-0.5 bg-linear-to-r from-brand-alt/50 to-purple-600/50 rounded-lg blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
             
             <div class="relative bg-[#1C1C1C] rounded-lg">
                 <!-- Toolbars -->

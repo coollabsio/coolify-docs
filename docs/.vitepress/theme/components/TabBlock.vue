@@ -192,7 +192,10 @@ const isLastTab = computed(() => currentIndex.value === allTabs.value.length - 1
     </div>
   </div>
 </template>
+
 <style scoped>
+@reference "tailwindcss";
+
 .tabs-container {
   @apply my-6;
 }
