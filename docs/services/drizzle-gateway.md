@@ -5,7 +5,7 @@ description: "Deploy and host Drizzle Studio with Coolify to explore SQL databas
 
 # Drizzle Gateway
 
-<ZoomableImage src="/docs/images/services/drizzle.jpeg" />
+<ZoomableImage src="/docs/images/services/drizzle-logo.jpeg" />
 
 ## What is Drizzle Gateway?
 
