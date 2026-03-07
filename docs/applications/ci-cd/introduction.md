@@ -11,7 +11,7 @@ Applications in Coolify are designed to be deployed directly from **Git reposito
 
 When you deploy an application in Coolify, you connect it to a Git repository from **any Git provider**. Coolify works with all Git platforms, including:
 
-- **[GitHub](/applications/ci-cd/github/integration)** - Full GitHub App integration or deploy keys
+- **[GitHub](/applications/ci-cd/github/overview)** - Full GitHub App integration or deploy keys
 - **[GitLab](/applications/ci-cd/gitlab/integration)** - GitLab integration with webhooks
 - **[Bitbucket](/applications/ci-cd/bitbucket/integration)** - Bitbucket integration with webhooks
 - **[Gitea](/applications/ci-cd/gitea/integration)** - Self-hosted Git platform
