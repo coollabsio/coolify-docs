@@ -110,7 +110,51 @@ services:
     ...
 ```
 
-### Connect to Predefined Networks
+### Networking
+
+When you deploy a Docker Compose stack, Coolify automatically creates an isolated bridge network (named after your resource UUID, e.g. `ewc08w0`) for all services in your stack. All services can communicate with each other using their service names as hostnames (e.g. `http://backend:8080`).
+
+Coolify also connects its reverse proxy (Traefik) to this network so it can route external traffic to your services.
+
+#### Do Not Define Custom Networks
+
+::: danger WARNING
+If your `docker-compose.yml` defines custom networks, **remove them**. Defining custom networks causes intermittent outages where your app becomes unreachable over HTTPS.
+:::
+
+For example, do **not** do this:
+
+```yaml
+services:
+  frontend:
+    networks:
+      - my-network
+  backend:
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
+```
+
+When you define a custom network, your containers end up on **two networks** simultaneously — the Coolify-managed one and your custom one. Traefik is only on the Coolify-managed network, but non-deterministically picks which network IP to route to. If it picks the custom network IP, it cannot reach your container and requests will **hang indefinitely** or return **504 Gateway Timeout**.
+
+This behavior is intermittent — it may work after one deploy and break after the next, depending on which IP Traefik selects. See [#4483](https://github.com/coollabsio/coolify/issues/4483), [#6215](https://github.com/coollabsio/coolify/issues/6215), [#6153](https://github.com/coollabsio/coolify/issues/6153).
+
+**Instead**, simply remove the `networks:` sections entirely:
+
+```yaml
+services:
+  frontend:
+    ...
+  backend:
+    ...
+```
+
+Coolify's auto-created network already provides inter-service communication.
+
+#### Connect to Predefined Networks
 
 By default, each compose stack is deployed to a separate network named after your resource UUID. This setup allows each service in the stack to communicate with one another.
 
