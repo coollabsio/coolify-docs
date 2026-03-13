@@ -6,7 +6,7 @@ keywords: ["Healthchecks", "Not Found", "No available server", "404", "503"]
 
 # Health checks
 
-Health checks are a way to ensure that your applications and services are running correctly. They allow Coolify to monitor the health of your resources and ensure that traffic is only routed to healthy instances. This for example important for [Rolling Updates](/knowledge-base/rolling-updates) to work correctly.
+Health checks are a way to ensure that your applications and services are running correctly. They allow Coolify to monitor the health of your resources and ensure that traffic is only routed to healthy instances. This is, for example, important for [Rolling Updates](/knowledge-base/rolling-updates) to work correctly.
 
 ## Traefik
 
