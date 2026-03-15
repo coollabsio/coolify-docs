@@ -5,7 +5,7 @@ description: "Add custom domains to Coolify with FQDN format, multiple domain su
 
 # Domains
 
-You can easily add your own domains to Coolify or your resources.
+You can easily add your own domains to your applications and services in Coolify. Databases do not support domain configuration.
 
 All domain fields are capable to generate your proxy configurations based on the following rules:
 

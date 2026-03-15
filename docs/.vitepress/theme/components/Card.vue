@@ -22,7 +22,7 @@ const imageSizeClass = computed(() => ({
 <template>
   <div class="group p-1 bg-gray-50 rounded-lg dark:bg-gray-800 border transition-all duration-200 border-gray-50 dark:border-gray-800 hover:border-purple-500 dark:hover:border-purple-700">
     <div class="flex flex-col h-[225px] dark:bg-gray-800 rounded-lg cursor-pointer transition-transform duration-200">
-      <div class="flex-[3] bg-gradient-to-r from-[#00D1EE] via-[#08ABDD] via-[#15ACF1] via-[#1575C1] to-[#14336d] rounded-lg flex items-center justify-center">
+      <div class="flex-[3] bg-linear-to-r from-[#00D1EE] via-[#08ABDD] via-[#15ACF1] via-[#1575C1] to-[#14336d] rounded-lg flex items-center justify-center">
         <img 
           :src="image" 
           :alt="imageAlt"

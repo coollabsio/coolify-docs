@@ -6,9 +6,12 @@ description: "Host MinIO object storage on Coolify as S3-compatible high-perform
 # MinIO Community Edition
 ![MinIO](/images/services/minio-logo.svg)
 
-::: info NOTE 
-MinIO team stopped providing pre-built Docker images for new releases, [this repository](https://github.com/coollabsio/minio) by Coolify team automatically builds and publishes them to both GitHub Container Registry and Docker Hub based on MinIO official codebase on [GitHub](https://github.com/minio/minio?utm_source=coolify.io)
+::: danger SERVICE REMOVED FROM COOLIFY
+This service has been removed from Coolify’s one-click service catalog because it is no longer maintained by its original author.
 
+The community-maintained MinIO service on Coolify was an effort by the Coolify team to automatically build Docker images and publish them to both GitHub Container Registry and Docker Hub, using the official MinIO codebase on GitHub as the source.
+
+However, since the original upstream repository is no longer actively maintained, this community service will not receive any further updates.
 :::
 
 ## What is MinIO?

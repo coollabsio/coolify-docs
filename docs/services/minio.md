@@ -8,11 +8,7 @@ description: "Host MinIO object storage on Coolify as S3-compatible high-perform
 ![MinIO](/images/services/minio-logo.svg)
 
 ::: danger SERVICE REMOVED FROM COOLIFY
-This service has been removed from Coolify’s one-click service catalog because it no longer receives official Docker images and is currently in maintenance mode by the original author. You can find more information about the project’s maintenance status [here](https://github.com/minio/minio?tab=readme-ov-file#maintenance-mode)
-
-The last Docker image published by the original author does not include a fix for the following security vulnerability: https://github.com/minio/minio/security/advisories/GHSA-jjjj-jwhf-8rgr
-
-We recommend using the **Community-maintained MinIO service on Coolify**, which provides automated Docker builds based on the official MinIO codebase. You can learn more about using the Community version [here](/services/minio-community-edition)
+This service has been removed from Coolify’s one-click service catalog because it is no longer maintained by its original author. More info on https://github.com/minio/minio/blob/master/README.md
 :::
 
 ## What is MinIO?

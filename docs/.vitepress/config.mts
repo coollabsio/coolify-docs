@@ -8,6 +8,7 @@ import { bundledLanguages } from 'shiki'
 import { join, dirname } from 'node:path'
 import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs'
 import { groupIconVitePlugin } from 'vitepress-plugin-group-icons'
+import tailwindcss from '@tailwindcss/vite'
 import { loadEnv } from 'vitepress'
 const env = loadEnv('', process.cwd())
 const sidebar = useSidebar({ spec })
@@ -335,6 +336,7 @@ export default defineConfig({
                   { text: 'Default Root User', link: '/knowledge-base/create-root-user-with-env' },
                   { text: 'Custom Docker Network', link: '/knowledge-base/define-custom-docker-network-with-env' },
                   { text: 'Custom Docker Registry', link: '/knowledge-base/custom-docker-registry' },
+                  { text: 'Custom Compose Overrides', link: '/knowledge-base/custom-compose-overrides' },
                   { text: 'Change Localhost Key', link: '/knowledge-base/change-localhost-key' },
                 ]
               },
@@ -430,9 +432,16 @@ export default defineConfig({
                       { text: 'Basic Auth', link: '/knowledge-base/proxy/traefik/basic-auth' },
                       { text: 'Custom SSL Certificates', link: '/knowledge-base/proxy/traefik/custom-ssl-certs' },
                       { text: 'Dashboard', link: '/knowledge-base/proxy/traefik/dashboard' },
+                      {
+                        text: 'Custom Middlewares',
+                        link: '/knowledge-base/proxy/traefik/custom-middlewares',
+                        collapsed: true,
+                        items: [
+                          { text: 'Redirects', link: '/knowledge-base/proxy/traefik/redirects' },
+                        ]
+                      },
                       { text: 'Dynamic Configurations', link: '/knowledge-base/proxy/traefik/dynamic-config' },
                       { text: 'Load Balancing', link: '/knowledge-base/proxy/traefik/load-balancing' },
-                      { text: 'Redirects', link: '/knowledge-base/proxy/traefik/redirects' },
                       { text: 'Wildcard SSL Certificates', link: '/knowledge-base/proxy/traefik/wildcard-certs' },
                       { text: 'Protect Services with Authentik', link: '/knowledge-base/proxy/traefik/protect-services-with-authentik' }
                     ]
@@ -653,6 +662,7 @@ export default defineConfig({
 
   vite: {
     plugins: [
+      tailwindcss(),
       llmstxt({
          ignoreFiles: [
            '/docs/api-reference/api/**/*',

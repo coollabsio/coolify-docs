@@ -1,4 +1,6 @@
 <style scoped>
+@reference "tailwindcss";
+
 .default-soft {
     background: rgba(101, 117, 133, 0.16);
     border-color: #3c3f44;
@@ -1331,7 +1333,8 @@ const services = [
         slug: 'minio',
         icon: '/docs/images/services/minio-logo.svg',
         description: 'A high-performance, distributed object storage system.',
-        category: 'Storage'
+        category: 'Storage',
+        disabled: true
     },
     {
         name: 'Mixpost',
@@ -1687,6 +1690,13 @@ const services = [
         category: 'Development'
     },
     {
+        name: 'Pydio Cells',
+        slug: 'pydio-cells',
+        icon: '/docs/images/services/pydio.webp',
+        description: 'File sharing platform for organizations.',
+        category: 'File Sharing'
+    },
+    {
         name: 'qBittorrent',
         slug: 'qbittorrent',
         icon: '/docs/images/services/qbittorrent-logo.svg',
@@ -1768,7 +1778,7 @@ const services = [
         slug: 'satisfactory',
         // No icon available on the codebase yet.
         description: 'Game server for Satisfactory open-world factory building game with a dash of exploration and combat.',
-        category: 'Search'
+        category: 'Gaming'
     },
     {
         name: 'SearXNG',
@@ -2477,7 +2487,7 @@ const { preloadServices, handleImageError, hasImageError, isImageLoading, getFal
                     style="background-color: rgba(101, 117, 133, 0.16);">
                     <span class="text-sm sm:text-base">{{ selectedCategories.length === 1 ? selectedCategories[0] :
                         `${selectedCategories.length} categories` }}</span>
-                    <svg class="w-4 h-4 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 ml-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
                 </button>

@@ -101,9 +101,10 @@ To set up encryption on Cloudflare, follow these steps:
 
 <ZoomableImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/15.webp" />
 
-1. Go to **SSL/TLS** in Cloudflare.
-2. Select **Overview**.
-3. Click **Configure** button
+1. Go to https://dash.cloudflare.com/ and select the domain you created the tunnel for.
+2. Click **SSL/TLS** in the sidebar.
+3. Select **Overview**.
+4. Click **Configure** button
 
 <ZoomableImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/16.webp" />
 

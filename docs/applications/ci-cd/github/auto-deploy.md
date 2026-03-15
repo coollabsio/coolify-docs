@@ -23,7 +23,7 @@ Coolify automatically enables "Auto Deploy" after you set up your GitHub App. If
 3. Enable "Auto Deploy" under the general section.
 
 ## GitHub Actions
-We have a dedicated guide for setting up GitHub Actions, which you can follow here: [/github/setup-app](/applications/ci-cd/github/setup-app).
+We have a dedicated guide for setting up GitHub Actions, which you can follow here: [/github/actions](/applications/ci-cd/github/actions).
 
 ## Webhooks
 

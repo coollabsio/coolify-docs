@@ -1,0 +1,114 @@
+name: PRs Label Management
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, labeled, unlabeled]
+  schedule:
+    - cron: '0 0 * * *' # Daily at midnight
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  label-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            const actor = context.actor;
+            const prUser = pr.user.login;
+            const prNumber = pr.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const currentLabels = pr.labels.map(l => l.name);
+            const body = pr.body || '';
+
+            const MAINTAINER_LABEL = '✨ Maintainer';
+            const WAITING_CORE_LABEL = '⏳ Waiting for PR merge on Core Repo';
+            const WAITING_CHANGES_LABEL = '⏱️ Waiting for Changes';
+            const WAITING_FEEDBACK_LABEL = '⏳ Waiting for Feedback';
+            const STALE_LABEL = '💤 Stale';
+
+            const maintainers = ['andrasbacsai', 'peaklabs-dev', 'ShadowArcanist', 'Cinzya', 'adiologydev'];
+
+            // Helper to add label
+            async function addLabel(label) {
+              if (!currentLabels.includes(label)) {
+                await github.rest.issues.addLabels({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  labels: [label]
+                });
+                console.log(`Added label: ${label}`);
+              }
+            }
+
+            // Helper to remove label
+            async function removeLabel(label) {
+              if (currentLabels.includes(label)) {
+                await github.rest.issues.removeLabel({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  name: label
+                });
+                console.log(`Removed label: ${label}`);
+              }
+            }
+
+            // 1. Add "✨ Maintainer" label if author is a maintainer
+            if (maintainers.includes(prUser)) {
+              await addLabel(MAINTAINER_LABEL);
+            } else {
+              await removeLabel(MAINTAINER_LABEL);
+            }
+
+            // 2. Add "⏳ Waiting for PR merge on Core Repo" if description links to coollabsio/coolify
+            const coreRepoRegex = /https:\/\/github\.com\/coollabsio\/coolify\/(issues|pull)\/(\d+)/gi;
+            const coreLinks = body.match(coreRepoRegex);
+            
+            if (coreLinks && coreLinks.length > 0) {
+              await addLabel(WAITING_CORE_LABEL);
+            } else {
+              await removeLabel(WAITING_CORE_LABEL);
+            }
+
+            // 3. Check for stale PRs (only for scheduled runs or when relevant labels change)
+            const hasWaitingLabel = currentLabels.includes(WAITING_CHANGES_LABEL) || currentLabels.includes(WAITING_FEEDBACK_LABEL);
+            
+            if (hasWaitingLabel) {
+              // Get timeline events to find last activity
+              const { data: events } = await github.rest.issues.listEvents({
+                owner,
+                repo,
+                issue_number: prNumber,
+                per_page: 50
+              });
+
+              // Find last event not from PR author
+              const lastExternalEvent = events.find(e => e.actor.login !== prUser);
+              
+              if (lastExternalEvent) {
+                const eventDate = new Date(lastExternalEvent.created_at);
+                const now = new Date();
+                const daysSinceLastActivity = Math.floor((now - eventDate) / (1000 * 60 * 60 * 24)); // 7 Days
+
+                console.log(`Last external event by ${lastExternalEvent.actor.login}: ${daysSinceLastActivity} days ago`);
+
+                if (daysSinceLastActivity > 7) {
+                  await addLabel(STALE_LABEL);
+                } else {
+                  await removeLabel(STALE_LABEL);
+                }
+              } else {
+                await removeLabel(STALE_LABEL);
+              }
+            } else {
+              await removeLabel(STALE_LABEL);
+            }

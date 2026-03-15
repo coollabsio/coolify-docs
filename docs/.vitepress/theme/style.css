@@ -1,3 +1,5 @@
+@reference "tailwindcss";
+
 /**
  * Customize default theme styling by overriding CSS variables:
  * https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css
@@ -261,7 +263,7 @@
 .DocSearch {
   --docsearch-primary-color: var(--vp-c-brand-1) !important;
   border-color: var(--vp-c-brand-1) !important;
-  @apply border !important ;
+  @apply !border;
 }
 
 /**
@@ -1068,7 +1070,7 @@ pre[class*='language-'] *:hover {
 }
 
 .title {
-  @apply border-0 !important;
+  @apply !border-0;
 }
 
 /* Modern Table Styling */

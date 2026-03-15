@@ -2,22 +2,15 @@
   "name": "coolify-docs",
   "devDependencies": {
     "@iconify/vue": "^5.0.0",
+    "@tailwindcss/vite": "^4.2.1",
     "@types/node": "25.0.9",
-    "autoprefixer": "10.4.23",
     "markdown-it-container": "4.0.0",
-    "postcss": "8.5.6",
-    "tailwindcss": "3.4.19",
+    "tailwindcss": "^4.2.1",
     "vitepress": "1.6.4",
-    "vitepress-plugin-group-icons": "^1.6.9",
-    "vitepress-plugin-llms": "^1.10.0",
+    "vitepress-plugin-group-icons": "^1.7.1",
+    "vitepress-plugin-llms": "^1.11.0",
     "vitepress-plugin-tabs": "^0.7.3",
-    "vue": "^3.5.26"
-  },
-  "postcss": {
-    "plugins": {
-      "tailwindcss": {},
-      "autoprefixer": {}
-    }
+    "vue": "^3.5.29"
   },
   "private": true,
   "scripts": {

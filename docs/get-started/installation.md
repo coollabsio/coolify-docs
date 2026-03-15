@@ -376,6 +376,10 @@ docker compose --env-file /data/coolify/source/.env -f /data/coolify/source/dock
 You might have to do `docker login` at this point if you have any issues above.
 :::
 
+::: tip
+You can customize Coolify's containers (ports, resource limits, labels, etc.) in a way that survives upgrades by creating a `docker-compose.custom.yml` file. See [Custom Compose Overrides](/knowledge-base/custom-compose-overrides) for details.
+:::
+
 #### 8. Access Coolify
 
 You can now access Coolify by visiting `http://203.0.113.1:8000` (replace the `203.0.113.1` with the IP address of your server).

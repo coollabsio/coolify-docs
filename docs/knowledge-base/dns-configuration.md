@@ -11,6 +11,15 @@ Note that you can use the same IP address for multiple domains and subdomains.
 
 **In the examples, `1.1.1.1` is your server's IP address.**
 
+::: info Note
+If your domain contains special or non-ASCII characters (for example `å`, `ä`, `ö`, `é`, etc.), you must use the **punycode version** of the domain when configuring DNS or entering the FQDN in Coolify.
+
+For example:
+- `münchen.example.com` → `xn--mnchen-3ya.example.com`
+
+Most DNS providers automatically convert these domains, but if you experience issues you should manually use the punycode representation.
+:::
+
 ## Single Domain
 
 Let's say you want deploy your resource to `example.com` with the IP address `1.1.1.1`.

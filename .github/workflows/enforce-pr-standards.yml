@@ -2,7 +2,7 @@ name: Enforce PR Standards
 
 on:
   pull_request_target:
-    types: [opened, reopened, edited]
+    types: [opened, reopened, edited, synchronize]
 
 permissions:
   pull-requests: write
@@ -18,22 +18,32 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
+            const actor = context.actor;
+            const prUser = pr.user.login;
+            const prNumber = pr.number;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            const prNumber = pr.number;
-            const prUser = pr.user.login;
             const currentBase = pr.base.ref;
             const body = pr.body?.trim() || '';
 
-            // Step 1: Close PR if description is empty
+            const maintainers = ['andrasbacsai', 'peaklabs-dev', 'ShadowArcanist', 'Cinzya', 'adiologydev'];
+
+            // Skip validation if a maintainer triggered this action
+            // This includes: opening PR, changing base branch, syncing, etc.
+            if (maintainers.includes(actor)) {
+              console.log(`Maintainer (${actor}) triggered this action. Skipping validation.`);
+              return;
+            }
+
+            // If PR description is empty, close it with a comment
             if (body === '') {
-              console.log(`PR #${prNumber} has an empty description. Closing...`);
+              console.log(`PR #${prNumber} has empty description. Closing...`);
 
               await github.rest.issues.createComment({
                 owner,
                 repo,
                 issue_number: prNumber,
-                body: `Hi @${prUser},\n\nThis PR has been automatically closed because it has no description.\nPlease provide a valid description explaining your changes in a new PR.`
+                body: `Hi @${prUser},\n\nThis PR was automatically closed because it has no description.\n\nYou can either fix this PR or open a new one. If you'd like this PR to be reopened, feel free to ping "ShadowArcanist" (preferred) or another maintainer.`
               });
 
               await github.rest.pulls.update({
@@ -42,24 +52,11 @@ jobs:
                 pull_number: prNumber,
                 state: 'closed'
               });
-
               return;
             }
 
-            // Step 2: Check if user is a member
-            let isMember = false;
-            try {
-              await github.rest.orgs.checkMembershipForUser({
-                org: owner,
-                username: prUser
-              });
-              isMember = true;
-            } catch (error) {
-              console.log(`User ${prUser} is not a member of the org.`);
-            }
-
-            // Step 3: Change base branch to `next` if needed
-            if (!isMember && currentBase !== 'next') {
+            // Change base branch to `next` if targeting wrong branch
+            if (currentBase !== 'next') {
               console.log(`Changing base branch from ${currentBase} to next for PR #${prNumber}`);
 
               await github.rest.pulls.update({
@@ -73,6 +70,6 @@ jobs:
                 owner,
                 repo,
                 issue_number: prNumber,
-                body: `Hi @${prUser},\n\nThe base branch of this PR has been automatically changed to \`next\`.\nAll contributors must commit changes to the \`next\` branch.\n\nA maintainer will review your PR within 5 to 7 business days. Thank you!`
+                body: `Hi @${prUser},\n\nThe base branch was automatically changed to \`next\`.\n\nAll contributors must target the \`next\` branch.\n\nA maintainer will review your PR when they have some free time`
               });
             }

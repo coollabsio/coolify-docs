@@ -35,13 +35,13 @@ Below are some of the key features and ways you can use Traefik with Coolify:
 
 3. [Dashboard](/knowledge-base/proxy/traefik/dashboard) -> Enable Traefik’s built-in dashboard for real-time monitoring and insights.
 
-4. [Dynamic Configuration](/knowledge-base/proxy/traefik/dynamic-config) -> Manage dynamic configuration changes like routing rules or middlewares.
+4. [Custom Middlewares](/knowledge-base/proxy/traefik/custom-middlewares) -> Apply custom Traefik middlewares like rate limiting, IP whitelisting, redirects, custom headers, and more.
 
-5. [Health Checks](/knowledge-base/health-checks) -> Configure health checks to ensure your applications are running smoothly.
+5. [Dynamic Configuration](/knowledge-base/proxy/traefik/dynamic-config) -> Manage dynamic configuration changes like routing rules or middlewares.
 
-6. [Load Balancing](/knowledge-base/proxy/traefik/load-balancing) -> Distribute traffic across multiple app instances for better performance.
+6. [Health Checks](/knowledge-base/health-checks) -> Configure health checks to ensure your applications are running smoothly.
 
-7. [Redirects](/knowledge-base/proxy/traefik/redirects) -> Set up HTTP-to-HTTPS redirection or create specific URL redirects.
+7. [Load Balancing](/knowledge-base/proxy/traefik/load-balancing) -> Distribute traffic across multiple app instances for better performance.
 
 8. [Wildcard Certificates](/knowledge-base/proxy/traefik/wildcard-certs) -> Secure multiple subdomains with a single SSL certificate.
 
