@@ -87,6 +87,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Docuseal](/services/docuseal) - Open source DocuSign alternative
 - [Dolibarr](/services/dolibarr) - Open-source ERP and CRM software
 - [Easy Appointments](/services/easyappointments) - Open-source appointment scheduler
+- [EspoCRM](/services/espocrm) - A free and open-source CRM platform
 - [Fider](/services/fider) - An open platform to collect and organize customer feedback
 - [FreeScout](/services/freescout) - Help desk and customer support application
 - [GLPI](/services/glpi) - Free, open-source IT Service Management platform for asset management, helpdesk, and service desk operations

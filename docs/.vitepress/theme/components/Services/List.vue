@@ -747,6 +747,13 @@ const services = [
         category: 'IoT'
     },
     {
+        name: 'EspoCRM',
+        slug: 'espocrm',
+        icon: '/docs/images/services/espocrm.svg',
+        description: 'A free and open-source CRM platform.',
+        category: 'Business'
+    },
+    {
         name: 'Excalidraw',
         slug: 'excalidraw',
         icon: '/docs/images/services/excalidraw-logo.svg',
