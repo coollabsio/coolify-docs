@@ -41,6 +41,18 @@ You can manage multiple projects on the same server, each with its own unique se
 
 For example, you might create one project for all your hobby-related resources and another for work-related ones.
 
+### Project colors
+
+Projects can have an optional color to make them easier to spot in larger lists.
+
+To set it, open the project edit page, choose a color, and save your changes.
+
+The selected color is shown as a left border accent on project cards in Dashboard and the Projects list.
+
+You can clear the color at any time, and the project returns to the default appearance.
+
+Accepted format is a 6-character hex color code, for example `#FF5733`.
+
 ## Containers
 
 In Coolify, everything you deploy runs as a Docker container, making it easy to manage and isolate your application.
