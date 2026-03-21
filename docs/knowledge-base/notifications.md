@@ -228,6 +228,8 @@ Webhook notifications allow you to send notifications to any custom endpoint tha
 
 Coolify will send `POST` requests to your specified endpoint when events occur. You can use this to integrate with custom applications, automation tools, or any service that accepts webhooks.
 
+For the full JSON payload structure of each event, see the [Webhook Payloads](/knowledge-base/webhook-payloads) reference.
+
 ## Notification Events
 
 You can configure which events trigger notifications in your notification settings:

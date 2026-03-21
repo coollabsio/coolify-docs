@@ -329,6 +329,7 @@ export default defineConfig({
                 items: [
                   { text: 'Monitoring', link: '/knowledge-base/monitoring' },
                   { text: 'Notifications', link: '/knowledge-base/notifications' },
+                  { text: 'Webhook Payloads', link: '/knowledge-base/webhook-payloads' },
                   { text: 'Coolify Updates', link: '/knowledge-base/self-update' },
                   { text: 'Commands', link: '/knowledge-base/commands' },
                   { text: 'Delete User', link: '/knowledge-base/delete-user' },
