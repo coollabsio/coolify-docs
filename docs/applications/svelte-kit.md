@@ -24,7 +24,7 @@ You need to use `@sveltejs/adapter-node` ([docs](https://kit.svelte.dev/docs/ada
 4. Set your `Start Command` to `node build`.
 5. Click `Save`.
 6. In your Environment Variables tab, check the current Node version supported by Nix. In the example screenshot below, it's `version 22`.
-   <ZoomableImage src="/images/svelte-kit/deploy-settings.png" />
+   <ZoomableImage src="/docs/images/applications/svelte-kit/deploy-settings.png" />
 7. Add `engines` to your `package.json` with the Node version from your environment variables. For example
 
 ```json
@@ -36,6 +36,6 @@ You need to use `@sveltejs/adapter-node` ([docs](https://kit.svelte.dev/docs/ada
 8. Git Commit
 9. Click Deploy from your Coolify Dashboard
 10. Add an Environment Variable ORIGIN with your app's actual domain. For example:
-    <ZoomableImage src="/images/svelte-kit/env-vars.png" />
+    <ZoomableImage src="/docs/images/applications/svelte-kit/env-vars.png" />
 11. Optional, but recommended: Go to the Healthcheck tab and click `Enable Healthcheck`
-    <ZoomableImage src="/images/svelte-kit/healthcheck.png" />
+    <ZoomableImage src="/docs/images/applications/svelte-kit/healthcheck.png" />
