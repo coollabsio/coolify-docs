@@ -73,7 +73,7 @@ To enable SMTP emailing (including inviting new team members), you need to set t
 - `SIGNOZ_EMAILING_SMTP_FROM` is the email address to use in the From field.
 - `SIGNOZ_EMAILING_SMTP_AUTH_USERNAME` and `SIGNOZ_EMAILING_SMTP_AUTH_PASSWORD` are used to authenticate with the SMTP server.
 
-More environment variables are [available to use](https://signoz.io/docs/manage/administrator-guide/configuration/smtp-email-invitations/) to authenticate via Identity / Secret or use TLS instead of SmartTLS. Read [Passing environment variables not included in the template](passing-environment-variables-not-included-in-the-template) to learn how to add them.
+More environment variables are [available to use](https://signoz.io/docs/manage/administrator-guide/configuration/smtp-email-invitations/) to authenticate via Identity / Secret or use TLS instead of SmartTLS. Read [Passing environment variables not included in the template](https://coolify.io/docs/knowledge-base/environment-variables#developer-view)) to learn how to add them.
 
 #### Alert Manager emails
 
