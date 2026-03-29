@@ -378,7 +378,7 @@ export default defineConfig({
                   { text: 'Load-balancing on Hetzner', link: '/knowledge-base/how-to/hetzner-loadbalancing' },
                   { text: 'WordPress Multisite', link: '/knowledge-base/how-to/wordpress-multisite' },
                   { text: 'Raspberry Pi OS Setup', link: '/knowledge-base/how-to/raspberry-pi-os' },
-                  { text: 'Apple Silicon Setup', link: '/knowledge-base/how-to/apple-silicon' },
+                  { text: 'macOS using Colima Setup', link: '/knowledge-base/how-to/macos-colima' },
                   { text: 'Private NPM Registry', link: '/knowledge-base/how-to/private-npm-registry' },
                   { text: 'Ollama with GPU', link: '/knowledge-base/how-to/ollama-with-gpu' },
                   { text: 'Webstudio with Hetzner', link: '/knowledge-base/how-to/webstudio-with-hetzner' },

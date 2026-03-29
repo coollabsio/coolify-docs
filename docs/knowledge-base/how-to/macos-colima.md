@@ -1,15 +1,15 @@
 ---
-title: "Apple Silicon Setup Guide"
-description: "Install Coolify on Apple Silicon Macs using a Colima virtual machine with Docker, covering VM creation, networking, and SSH configuration."
+title: "macOS using Colima Setup Guide"
+description: "Install Coolify on macOS using a Colima virtual machine with Docker, covering VM creation, networking, and SSH configuration."
 ---
 
-# Apple Silicon Setup Guide
+# macOS using Colima Setup Guide
 
-This guide walks you through setting up Coolify on an Apple Silicon Mac (M1/M2/M3/M4) using [Colima](https://github.com/abiosoft/colima?utm_source=coolify.io), a lightweight container runtime for macOS.
+This guide walks you through setting up Coolify on macOS using [Colima](https://github.com/abiosoft/colima?utm_source=coolify.io), a lightweight container runtime for macOS.
 
 ## Prerequisites
 
-- A Mac with Apple Silicon (M1 - M5)
+- A Mac (Intel or Apple Silicon)
 - [Homebrew](https://brew.sh/?utm_source=coolify.io) installed
 - Remote Login enabled on your Mac — see [Apple's guide to allow remote access](https://support.apple.com/guide/mac-help/mchlp1066/mac?utm_source=coolify.io) to enable SSH in **System Settings > General > Sharing > Remote Login**
 - An SSH key without a passphrase
