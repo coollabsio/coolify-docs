@@ -140,7 +140,78 @@ The above workflow is just an example to show how the process works. Adjust it t
 Make sure the **Deploy to Coolify** step comes after all checks and tests so it only runs when everything before it passes.
 :::
 
-## 7. Authenticate with Container Registry
+## 7. Community GitHub Actions
+
+As an alternative to writing manual `curl` requests in your workflow, you can use dedicated, open-source GitHub Actions that provide a more robust deployment experience with built-in error handling and deployment status tracking.
+
+- [**medeiroz/coolify-deploy**](https://github.com/medeiroz/coolify-github-actions?utm_source=coolify.io) — Triggers a deployment via API or webhook, replacing the manual `curl` call with a proper action that returns a deployment UUID.
+- [**medeiroz/coolify-wait**](https://github.com/medeiroz/coolify-github-actions?utm_source=coolify.io) — Polls the Coolify API to wait for a deployment to reach a final status (`finished`, `failed`, or `cancelled`) and fails the pipeline accordingly.
+
+::: tip Why use community actions?
+These actions handle edge cases like network retries, status polling, and proper error propagation that are difficult to implement with a simple `curl` command. They also provide structured outputs that can be used in subsequent workflow steps.
+:::
+
+### Configuring the Actions
+
+To use these actions, you need to provide your Coolify API URL and the Application UUID. You can find the **Application UUID** in your application's settings under the Webhook page. The **API URL** is simply the base domain of your Coolify instance followed by `/api/v1`.
+
+<ZoomableImage src="/docs/images/applications/ci-cd/github/actions/9.webp" alt="Locating the Application UUID and API URL in Coolify" />
+
+**Example Workflow:**
+
+```yaml
+name: Build and Deploy
+on:
+  push:
+    branches: ["main"]
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: "andrasbacsai/github-actions-with-coolify"
+  COOLIFY_API_URL: "https://your-coolify-instance.com/api/v1"
+  COOLIFY_APP_UUID: "your-app-uuid"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Trigger Deploy on Coolify
+        id: deploy
+        uses: medeiroz/coolify-deploy@v1
+        with:
+          api_url: ${{ env.COOLIFY_API_URL }}
+          token: ${{ secrets.COOLIFY_TOKEN }}
+          app_uuid: ${{ env.COOLIFY_APP_UUID }}
+
+      - name: Wait for Deployment
+        uses: medeiroz/coolify-wait@v1
+        with:
+          api_url: ${{ env.COOLIFY_API_URL }}
+          token: ${{ secrets.COOLIFY_TOKEN }}
+          app_uuid: ${{ env.COOLIFY_APP_UUID }}
+          deployment_uuid: ${{ steps.deploy.outputs.deployment_uuid }}
+          timeout_minutes: 10
+```
+
+## 8. Authenticate with Container Registry
 If pushing to a private registry, authenticate it on your server so it can pull the image.
 
 Run one of these commands on your server's terminal (based on the registry):
