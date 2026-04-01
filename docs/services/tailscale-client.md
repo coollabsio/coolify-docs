@@ -61,7 +61,6 @@ Reason:
 - Coolify connects to itself via internal networking (Docker bridge or host interfaces)
 - Without these rules, self-SSH connections fail
 
----
 
 ### Remote Server Firewall (Managed Servers)
 
@@ -84,7 +83,6 @@ Notes:
   - Secure restricted SSH access
   - Coolify can still deploy and manage services
 
----
 
 ### Tailscale Integration Notes
 
