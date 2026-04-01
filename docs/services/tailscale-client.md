@@ -38,16 +38,16 @@ Coolify relies on SSH (port 22) to manage deployments, even when communicating w
 
 If you deny incoming traffic on port 22 (`deny all`), you must explicitly allow **internal traffic** from your local Docker or system networks.
 
-✔️ Example:
+Example:
 
-* Allow port 22 from local subnets (Docker / internal interfaces)
-* Typical ranges include:
+- Allow port 22 from local subnets (Docker / internal interfaces)
+- Typical ranges include:
 
-  * `172.16.0.0/12`
-  * `192.168.0.0/16`
-  * `10.0.0.0/8`
+  - `172.16.0.0/12`
+  - `192.168.0.0/16`
+  - `10.0.0.0/8`
 
-✔️ Example rule (conceptual):
+Example rule (conceptual):
 
 ```
 ALLOW TCP 22 FROM 172.16.0.0/12
@@ -56,10 +56,10 @@ ALLOW TCP 22 FROM 10.0.0.0/8
 DENY  TCP 22 FROM ANY
 ```
 
-💡 Reason:
+Reason:
 
-* Coolify connects to itself via internal networking (Docker bridge or host interfaces)
-* Without these rules, self-SSH connections fail
+- Coolify connects to itself via internal networking (Docker bridge or host interfaces)
+- Without these rules, self-SSH connections fail
 
 ---
 
@@ -67,53 +67,43 @@ DENY  TCP 22 FROM ANY
 
 If Coolify deploys to external servers, similar logic applies:
 
-✔️ You must allow SSH **only from the Coolify host**
-
-✔️ Example:
-
+- You must allow SSH **only from the Coolify host**
+  
+- Example:
+  
 ```
 ALLOW TCP 22 FROM <COOLIFY_SERVER_IP>
 DENY  TCP 22 FROM ANY
 ```
 
-💡 Notes:
+Notes:
 
-* Replace `<COOLIFY_SERVER_IP>` with the public or Tailscale IP of your Coolify instance
-* This ensures:
+- Replace `<COOLIFY_SERVER_IP>` with the public or Tailscale IP of your Coolify instance
+- This ensures:
 
-  * Secure restricted SSH access
-  * Coolify can still deploy and manage services
+  - Secure restricted SSH access
+  - Coolify can still deploy and manage services
 
 ---
 
 ### Tailscale Integration Notes
 
-✔️ When using Tailscale:
+When using Tailscale:
 
-* You can allow SSH via Tailscale IPs instead of public IPs
-* Example:
+- You can allow SSH via Tailscale IPs instead of public IPs
+- Example:
 
 ```
 ALLOW TCP 22 FROM 100.x.x.x/10
 ```
 
-💡 Advantages:
+Advantages:
 
-* No public exposure of SSH
-* Encrypted peer-to-peer communication
-* Simplified access control via Tailscale ACLs
+- No public exposure of SSH
+- Encrypted peer-to-peer communication
+- Simplified access control via Tailscale ACLs
 
----
 
-## Summary
 
-✔️ Do not fully block port 22 without exceptions
-❌ Blocking SSH entirely will break Coolify functionality
 
----
 
-## Links
-
-* Official Website: https://tailscale.com
-* Documentation: https://tailscale.com/kb
-* GitHub: https://github.com/tailscale/tailscale
