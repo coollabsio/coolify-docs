@@ -5,7 +5,7 @@ description: "Here you can find the documentation for hosting Grimmory with Cool
 
 # Grimmory
 
-<ZoomableImage src="/docs/images/services/grimmory.svg" alt="Grimmory dashboard" />
+<img src="/docs/images/services/grimmory.svg" alt="Grimmory Logo" />
 
 ## What is Grimmory?
 
