@@ -294,6 +294,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Castopod](/services/castopod) - Open-source podcast hosting platform
 - [Emby](/services/emby) - A media server to organize, play, and stream audio and video to a variety of devices
 - [Emby Stat](/services/embystat) - A simple and easy-to-use Emby statistics dashboard
+- [Grimmory](/services/grimmory) - Self-hosted ebook library manager and reader, successor to Booklore
 - [Immich](/services/immich) - Self-hosted photo and video backup solution
 - [Jellyfin](/services/jellyfin) - The Free Software Media System
 - [Metube](/services/metube) - A self-hosted video sharing platform
