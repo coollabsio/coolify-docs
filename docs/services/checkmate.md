@@ -13,4 +13,4 @@ An open source server monitoring application
 
 ## Links
 
-- [Official Documentation](https://bluewavelabs.gitbook.io/checkmate?utm_source=coolify.io)
+- [Official Documentation](https://checkmate.so/docs?utm_source=coolify.io)
