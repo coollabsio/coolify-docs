@@ -17,7 +17,8 @@ See [Coolify's docker-compose specs](/knowledge-base/docker/compose#coolify-s-ma
 
    ```yaml
    # documentation: https://docs.example.com/
-   # slogan: A brief description of your service.
+   # slogan: A brief description of your service
+   # category: One word, broad app type
    # tags: tag1,tag2,tag3
    # logo: svgs/your-service.svg
    # port: 1234
@@ -25,6 +26,7 @@ See [Coolify's docker-compose specs](/knowledge-base/docker/compose#coolify-s-ma
 
    - `documentation`: Link to the service's official documentation
    - `slogan`: A short description of the service
+   - `category`: A one word broad app type
    - `tags`: Comma-separated list for better searchability
    - `logo`: Path to the service's logo (see step 3)
    - `port`: The main entrypoint port of the service
