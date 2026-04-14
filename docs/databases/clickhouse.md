@@ -17,6 +17,14 @@ ClickHouse uses a column-oriented storage format and employs various optimizatio
 
 It supports SQL with extensions and can handle both batch and stream data ingestion, making it versatile for various analytical workloads.
 
+## To connect
+
+Map the port `8123:8123` for the HTTP interface.
+
+In DBeaver, connect to `http://__ip_address__:8123` and use the `default` username plus the password in the UI.
+
+If you also want the native TCP protocol (used by [clickhouse-client](https://clickhouse.com/docs/interfaces/cli) CLI), publish `9000:9000` as well.
+
 ## Backup and Restore Guide
 
 Currently, Coolify does not support modifying ClickHouse configurations, which means certain native backup options (e.g., backing up to a local Disk or using `ALTER TABLE ... FREEZE PARTITION ...`) are not possible. Instead, the recommended approach is to use S3 for backups.

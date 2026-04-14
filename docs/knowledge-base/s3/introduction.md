@@ -1,18 +1,19 @@
 ---
 title: "Introduction"
-description: "Configure S3-compatible storage for Coolify backups including AWS, DigitalOcean Spaces, MinIO, Cloudflare R2, Backblaze B2, and Scaleway Object Storage."
+description: "Configure S3-compatible storage for Coolify backups including AWS, DigitalOcean Spaces, MinIO, Cloudflare R2, Supabase Storage, Backblaze B2, and Scaleway Object Storage."
 ---
 
 # S3 Introduction
 Currently supported S3 compatible storages are:
 
-- AWS (see [the AWS guide](/knowledge-base/s3/aws) for a detailed walkthrough)
+- AWS (see [the AWS guide](/knowledge-base/s3/aws))
 - DigitalOcean Spaces
 - MinIO
-- Cloudflare's R2
+- Cloudflare's R2 (see the [R2 guide](/knowledge-base/s3/r2))
+- Supabase Storage (see the [Supabase guide](/knowledge-base/s3/supabase))
 - Backblaze B2
 - Scaleway Object Storage
-- Hetzner S3 Storage (beta)
+- Hetzner S3 Storage
 - Wasabi hot cloud storage
 - Vultr
 - CloudPe Object Storage

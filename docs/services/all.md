@@ -87,6 +87,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [Docuseal](/services/docuseal) - Open source DocuSign alternative
 - [Dolibarr](/services/dolibarr) - Open-source ERP and CRM software
 - [Easy Appointments](/services/easyappointments) - Open-source appointment scheduler
+- [EspoCRM](/services/espocrm) - A free and open-source CRM platform
 - [Fider](/services/fider) - An open platform to collect and organize customer feedback
 - [FreeScout](/services/freescout) - Help desk and customer support application
 - [GLPI](/services/glpi) - Free, open-source IT Service Management platform for asset management, helpdesk, and service desk operations
@@ -124,6 +125,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Database
 
 - [Autobase](/services/autobase) - Open-source alternative to cloud-managed databases for PostgreSQL (self-hosted DBaaS)
+- [ElectricSQL](/services/electricsql) - Sync shape-based subsets of your Postgres data over HTTP
 - [NocoDB](/services/nocodb) - Open Source Airtable Alternative
 - [PGBackWeb](/services/pgbackweb) - Effortless PostgreSQL backups with a user-friendly web interface
 - [Teable](/services/teable) - No-code database built on PostgreSQL
@@ -287,13 +289,13 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Media
 
 - [Audiobookshelf](/services/audiobookshelf) - Self-hosted audiobook and podcast server
-- [Booklore](/services/booklore) - Open-source library management system for your digital book collection
 - [Calibre-web](/services/calibre-web) - Web app for browsing, reading and downloading eBooks from a Calibre database
 - [Calibre Web Automated with Downloader](/services/calibre-web-automated-with-downloader) - Intuitive web interface for searching and requesting book downloads with Calibre-Web-Automated
 - [Cap](/services/cap) - Open source alternative to Loom for screen recording and sharing
 - [Castopod](/services/castopod) - Open-source podcast hosting platform
 - [Emby](/services/emby) - A media server to organize, play, and stream audio and video to a variety of devices
 - [Emby Stat](/services/embystat) - A simple and easy-to-use Emby statistics dashboard
+- [Grimmory](/services/grimmory) - Self-hosted ebook library manager and reader, successor to Booklore
 - [Immich](/services/immich) - Self-hosted photo and video backup solution
 - [Jellyfin](/services/jellyfin) - The Free Software Media System
 - [Metube](/services/metube) - A self-hosted video sharing platform

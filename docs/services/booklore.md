@@ -7,6 +7,10 @@ description: "Booklore is an open-source library management system for your digi
 
 <ZoomableImage src="/docs/images/services/booklore-logo.svg" alt="Booklore logo" />
 
+::: warning SERVICE NOT AVAILABLE
+This service has been removed from Coolify. BookLore is no longer maintained by its authors and removed by the authors from GitHub.
+:::
+
 ## What is Booklore?
 
 Booklore is an open-source library management system that gives you complete control over your digital book collection. Your books and data stay on your own server, ensuring privacy and independence.

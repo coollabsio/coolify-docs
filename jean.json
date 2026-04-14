@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "setup": "bun i",
+    "teardown": null,
+    "run": "bun run dev"
+  },
+  "ports": [
+    {
+      "port": 3000,
+      "label": "Docs"
+    }
+  ]
+}

@@ -428,6 +428,14 @@ const services = [
         slug: 'booklore',
         icon: '/docs/images/services/booklore-logo.svg',
         description: 'Open-source library management system for your digital book collection.',
+        category: 'Media',
+        disabled: true
+    },
+    {
+        name: 'Grimmory',
+        slug: 'grimmory',
+        icon: '/docs/images/services/grimmory.svg',
+        description: 'A self-hosted ebook library manager and reader, successor to Booklore.',
         category: 'Media'
     },
     {
@@ -747,11 +755,25 @@ const services = [
         category: 'IoT'
     },
     {
+        name: 'EspoCRM',
+        slug: 'espocrm',
+        icon: '/docs/images/services/espocrm.svg',
+        description: 'A free and open-source CRM platform.',
+        category: 'Business'
+    },
+    {
         name: 'Excalidraw',
         slug: 'excalidraw',
         icon: '/docs/images/services/excalidraw-logo.svg',
         description: 'Virtual whiteboard for sketching hand-drawn like diagrams.',
         category: 'Productivity'
+    },
+    {
+        name: 'ElectricSQL',
+        slug: 'electricsql',
+        icon: '/docs/images/services/electricsql.svg',
+        description: 'Sync shape-based subsets of your Postgres data over HTTP',
+        category: 'Database'
     },
     {
         name: 'Evolution API',

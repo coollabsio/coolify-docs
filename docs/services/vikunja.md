@@ -33,4 +33,4 @@ Vikunja is available in two deployment configurations in Coolify:
 ## Links
 
 - [Official Website](https://vikunja.io)
-- [GitHub](https://kolaente.dev/vikunja/vikunja)
+- [GitHub](https://github.com/go-vikunja/vikunja)
