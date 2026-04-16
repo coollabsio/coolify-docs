@@ -16,5 +16,6 @@ bookdrop folder.
 
 ## Links
 
-- [Official website](https://github.com/grimmory/grimmory?utm_source=coolify.io)
+- [Official website](https://grimmory.org/)
+- [GitHub](https://github.com/grimmory-tools/grimmory?utm_source=coolify.io)
 - [Docker Hub](https://hub.docker.com/r/grimmory/grimmory?utm_source=coolify.io)
