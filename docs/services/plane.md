@@ -11,10 +11,6 @@ icon: "/docs/images/services/plane-logo.svg"
 
 ## What is Plane?
 
-::: danger SERVICE REMOVED FROM COOLIFY
-This service has been removed from Coolify’s one-click service catalog. More info on https://github.com/coollabsio/coolify/pull/8580
-:::
-
 Plane is a free and open-source project management tool that empowers teams to collaborate and manage projects efficiently.
 
 ## Screenshots
