@@ -1670,6 +1670,13 @@ const services = [
         category: 'Social Media'
     },
     {
+        name: 'PowerSync',
+        slug: 'powersync',
+        icon: '/docs/images/services/powersync-logo.svg',
+        description: 'Open-source & source-available sync engine that keeps your backend database in sync with on-device SQLite for instantly-responsive, offline-capable apps.',
+        category: 'Development'
+    },
+    {
         name: 'Pterodactyl',
         slug: 'pterodactyl',
         icon: '/docs/images/services/pterodactyl_logo_transparent.png',
