@@ -9,6 +9,11 @@ icon: "/docs/images/services/calcom-logo.svg"
 
 # Calcom
 
+::: danger SERVICE REMOVED FROM COOLIFY
+This service has been removed from Coolify’s one-click service catalog. More info on https://github.com/coollabsio/coolify/pull/9776
+:::
+
+
 <ZoomableImage src="/docs/images/services/calcom.png" alt="Calcom dashboard" />
 
 ## What is Calcom
