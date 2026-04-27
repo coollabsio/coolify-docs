@@ -197,6 +197,13 @@
     "category": "Media"
   },
   {
+    "name": "Cap (CAPTCHA)",
+    "slug": "cap-captcha",
+    "icon": "/docs/images/services/cap-captcha.png",
+    "description": "The self-hosted CAPTCHA for the modern web.",
+    "category": "Security"
+  },
+  {
     "name": "Castopod",
     "slug": "castopod",
     "icon": "/docs/images/services/castopod-logo.svg",

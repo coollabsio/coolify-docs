@@ -385,6 +385,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 ## Security
 
 - [Authentik](/services/authentik) - An open-source Identity Provider, focused on flexibility and versatility.
+- [Cap (CAPTCHA)](/services/cap-captcha) - The self-hosted CAPTCHA for the modern web.
 - [Cryptgeon](/services/cryptgeon) - Secure note sharing service with self-destructing messages.
 - [Cyberchef](/services/cyberchef) - Data analysis and manipulation tool for cybersecurity.
 - [Faraday](/services/faraday) - Collaborative penetration testing and vulnerability management platform.
