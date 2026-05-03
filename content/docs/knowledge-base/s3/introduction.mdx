@@ -17,6 +17,7 @@ Currently supported S3 compatible storages are:
 - Wasabi hot cloud storage
 - Vultr
 - CloudPe Object Storage
+- IDrive e2
 
 Other's could work, but not tested yet. If you test it, please let us know.
 
