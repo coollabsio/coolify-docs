@@ -1476,8 +1476,7 @@
     "slug": "plane",
     "icon": "/docs/images/services/plane-logo.svg",
     "description": "Open source project planning tool.",
-    "category": "Project Management",
-    "disabled": true
+    "category": "Project Management"
   },
   {
     "name": "Plausible Analytics",
