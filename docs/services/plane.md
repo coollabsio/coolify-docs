@@ -7,7 +7,7 @@ category: "Project Management"
 icon: "/docs/images/services/plane-logo.svg"
 ---
 
-![Plane](https://camo.githubusercontent.com/82feb9c8f8212561ecebe55b26622afa2b11e9943c698d3a28789f0bed77b651/68747470733a2f2f706c616e652d6d61726b6574696e672e73332e61702d736f7574682d312e616d617a6f6e6177732e636f6d2f706c616e652d726561646d652f706c616e655f6c6f676f5f2e77656270)
+![Plane](/public/images/services/plane-logo.svg)
 
 ## What is Plane?
 
