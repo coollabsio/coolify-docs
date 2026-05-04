@@ -173,7 +173,8 @@
     "slug": "calcom",
     "icon": "/docs/images/services/calcom-logo.svg",
     "description": "Open-source Calendly alternative for scheduling meetings.",
-    "category": "Productivity"
+    "category": "Productivity",
+    "disabled": true
   },
   {
     "name": "Calibre Web",

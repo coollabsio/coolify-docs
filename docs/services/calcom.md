@@ -5,6 +5,7 @@ og:
   description: "Host Cal.com scheduling platform on Coolify with calendar integration, team booking, payment processing, and customizable appointment workflows."
 category: "Productivity"
 icon: "/docs/images/services/calcom-logo.svg"
+disabled: true
 ---
 
 # Calcom
