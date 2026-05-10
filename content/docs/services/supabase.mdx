@@ -21,6 +21,119 @@ The open source Firebase alternative.
 
 You can find your anonymous key in the **Environment Variables** area under **SERVICE_SUPABASEANON_KEY**.
 
+## Supabase MCP Access
+
+Supabase Studio includes a Model Context Protocol (MCP) endpoint at `/api/mcp`. Coolify routes this through Kong as `/mcp`, but the template blocks the route by default. Use an SSH tunnel or WireGuard connection so the endpoint is only available from your own machine.
+
+::: warning
+Do not expose the MCP endpoint directly to the public internet. It can allow AI tools to inspect and operate on your Supabase project.
+:::
+
+### Enable the Kong route persistently
+
+On your Coolify server, find the Kong container for the Supabase service and note its container IP and Docker gateway:
+
+```bash
+KONG_CONTAINER=$(docker ps --format '{{.Names}}' | grep 'supabase-kong' | head -n 1)
+KONG_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$KONG_CONTAINER")
+KONG_GATEWAY=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.Gateway}}{{end}}' "$KONG_CONTAINER" | head -n 1)
+
+echo "Container: $KONG_CONTAINER"
+echo "Kong IP: $KONG_IP"
+echo "Gateway IP: $KONG_GATEWAY"
+```
+
+In Coolify, open the Supabase service, go to **General** > **Edit Compose File**, and find the `supabase-kong` file mount for `./volumes/api/kong.yml`:
+
+```yaml
+source: ./volumes/api/kong.yml
+target: /home/kong/temp.yml
+```
+
+Inside that file's `content: |` block, find the `mcp` service and replace only its `request-termination` plugin with an IP allowlist:
+
+```yaml
+plugins:
+  - name: cors
+  - name: ip-restriction
+    config:
+      allow:
+        - 127.0.0.1
+        - ::1
+        - 172.18.0.1 # Replace with the KONG_GATEWAY value from above.
+      deny: []
+```
+
+Do not remove the separate `mcp-blocker` service for `/api/mcp`. That route should stay blocked.
+
+Redeploy the Supabase service or restart Kong after changing the compose file:
+
+```bash
+docker restart "$KONG_CONTAINER"
+```
+
+::: info
+Editing the compose-backed `./volumes/api/kong.yml` content keeps the workaround across service redeploys. Editing `/usr/local/kong/kong.yml` inside the running container is temporary.
+:::
+
+### Connect through SSH or WireGuard
+
+From your local machine, open a tunnel to the Kong container IP shown above:
+
+```bash
+ssh -N -L 127.0.0.1:8080:<KONG_IP>:8000 user@your-coolify-server
+```
+
+If you use WireGuard, connect to the VPN first and use the server's WireGuard IP or hostname in the SSH command. Keep the tunnel bound to `127.0.0.1` unless you intentionally want to share it with other devices on your network.
+
+Your local MCP URL is now:
+
+```text
+http://127.0.0.1:8080/mcp
+```
+
+### Configure your MCP client
+
+For Cursor, add an HTTP MCP server:
+
+```json
+{
+  "mcpServers": {
+    "supabase-local": {
+      "url": "http://127.0.0.1:8080/mcp"
+    }
+  }
+}
+```
+
+For Claude Code:
+
+```bash
+claude mcp add --transport http supabase-local http://127.0.0.1:8080/mcp
+```
+
+For Windsurf:
+
+```json
+{
+  "mcpServers": {
+    "supabase-local": {
+      "serverUrl": "http://127.0.0.1:8080/mcp"
+    }
+  }
+}
+```
+
+### Multiple Supabase instances
+
+Each Supabase service has its own Kong container and Docker network. Repeat the container lookup for each instance and use a different local port for each tunnel:
+
+```bash
+ssh -N -L 127.0.0.1:8081:<SECOND_KONG_IP>:8000 user@your-coolify-server
+```
+
+Then register each instance with a unique client name, such as `supabase-staging` and `supabase-production`.
+
 ## Public Port Access
 
 
