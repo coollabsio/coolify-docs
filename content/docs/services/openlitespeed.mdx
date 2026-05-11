@@ -1,0 +1,26 @@
+---
+title: "OpenLiteSpeed"
+description: "A lightweight, open-source web server from LiteSpeed Technologies."
+og:
+  description: "Run OpenLiteSpeed on Coolify as a reusable web server for PHP, WordPress, or static sites."
+category: "Web Server"
+---
+
+## What is OpenLiteSpeed?
+
+OpenLiteSpeed is the open-source edition of the LiteSpeed web server. It can serve PHP applications, WordPress sites, and static websites.
+
+## Setup
+
+- Deploy OpenLiteSpeed using the Coolify template.
+- The public site is exposed through the generated service URL.
+- Server configuration, admin configuration, site files, ACME data, and logs are stored in persistent volumes.
+
+## WordPress
+
+To run WordPress on top of this template, place the WordPress files in the persisted vhosts volume and configure WordPress to use your database service credentials. The OpenLiteSpeed template is intentionally reusable, so the database can be managed as a separate Coolify database resource.
+
+## Links
+
+- [OpenLiteSpeed documentation](https://docs.openlitespeed.org/)
+- [Official Docker guide](https://docs.litespeedtech.com/cloud/docker/openlitespeed/)
