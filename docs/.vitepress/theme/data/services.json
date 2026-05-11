@@ -1338,6 +1338,13 @@
     "category": "AI"
   },
   {
+    "name": "OpenLiteSpeed",
+    "slug": "openlitespeed",
+    "icon": "",
+    "description": "A lightweight, open-source web server from LiteSpeed Technologies.",
+    "category": "Web Server"
+  },
+  {
     "name": "OpenPanel",
     "slug": "openpanel",
     "icon": "/docs/images/services/openpanel-logo.svg",
