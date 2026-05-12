@@ -21,6 +21,219 @@ The open source Firebase alternative.
 
 You can find your anonymous key in the **Environment Variables** area under **SERVICE_SUPABASEANON_KEY**.
 
+## Using the Supabase MCP server
+
+Self-hosted Supabase includes an MCP server behind Studio at `/api/mcp`. The Coolify service template already routes `/mcp` to that internal endpoint through Kong, but the route is blocked by default.
+
+<Callout type="error" title="Do not expose MCP publicly">
+
+Supabase's self-hosted MCP server does not provide OAuth authentication. Only enable it behind a VPN or an SSH tunnel, and keep `/api/mcp` blocked.
+
+</Callout>
+
+### Enable the Kong MCP route
+
+1. Open your Supabase service in Coolify.
+2. Go to **General** > **Edit Compose File**.
+3. In `supabase-kong`, find the `## MCP endpoint - local access` section inside the `./volumes/api/kong.yml` bind mount content.
+4. Comment out the `request-termination` plugin for the `/mcp` route.
+5. Uncomment the `cors` and `ip-restriction` plugins.
+6. Add only the IPs that should reach MCP.
+
+The enabled route should look like this:
+
+```yaml
+## MCP endpoint - local access
+- name: mcp
+  _comment: 'MCP: /mcp -> http://supabase-studio:3000/api/mcp (local access)'
+  url: http://supabase-studio:3000/api/mcp
+  routes:
+    - name: mcp
+      strip_path: true
+      paths:
+        - /mcp
+  plugins:
+    # Keep this disabled when you intentionally enable MCP.
+    #- name: request-termination
+    #  config:
+    #    status_code: 403
+    #    message: "Access is forbidden."
+    - name: cors
+    - name: ip-restriction
+      config:
+        allow:
+          - 172.18.0.1
+        deny: []
+```
+
+For SSH tunnels, allow the Docker bridge gateway IP. You can find it on the Coolify server:
+
+```bash
+docker ps --format '{{.Names}}' | grep supabase-kong
+docker inspect <supabase-kong-container-name> --format '{{range .NetworkSettings.Networks}}{{println .Gateway}}{{end}}'
+```
+
+After editing the compose file, restart the Supabase service or at least the `supabase-kong` container so Kong reloads the route.
+
+### Use MCP through an SSH tunnel
+
+Coolify normally exposes Supabase through the proxy, not through a fixed host port. Add a host-only port mapping to `supabase-kong`:
+
+```yaml
+supabase-kong:
+  ports:
+    - "${SUPABASE_MCP_BIND_IP:-127.0.0.1}:${SUPABASE_MCP_PORT:-18080}:8000"
+```
+
+Then set the environment variable for that Supabase service:
+
+```env
+SUPABASE_MCP_PORT=18080
+```
+
+From your local machine, open the tunnel:
+
+```bash
+ssh -L 8080:127.0.0.1:18080 <user>@<coolify-server>
+```
+
+Your local MCP endpoint is:
+
+```text
+http://localhost:8080/mcp
+```
+
+### Use MCP through WireGuard
+
+Deploy the [Wireguard Easy service](/services/wireguard-easy), create a client, and connect your development machine to the VPN.
+
+For a VPN-only MCP endpoint, bind the Supabase Kong port to the server's WireGuard interface IP instead of `127.0.0.1`:
+
+```env
+SUPABASE_MCP_BIND_IP=10.8.0.1
+SUPABASE_MCP_PORT=18080
+```
+
+With the same `ports` mapping shown above, your MCP URL becomes:
+
+```text
+http://10.8.0.1:18080/mcp
+```
+
+If requests are rejected, add both the WireGuard client CIDR and the Docker bridge gateway IP to Kong's `ip-restriction.allow` list. Never bind this port to `0.0.0.0` unless another firewall blocks all non-VPN traffic.
+
+### Configure MCP clients
+
+Use the private URL from the SSH tunnel or WireGuard setup.
+
+For Claude Code:
+
+```bash
+claude mcp add --transport http coolify-supabase http://localhost:8080/mcp
+```
+
+For Cursor, add a Streamable HTTP server in the MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "coolify-supabase": {
+      "url": "http://localhost:8080/mcp"
+    }
+  }
+}
+```
+
+For Windsurf, edit `mcp_config.json` and use `serverUrl` or `url`:
+
+```json
+{
+  "mcpServers": {
+    "coolify-supabase": {
+      "serverUrl": "http://localhost:8080/mcp"
+    }
+  }
+}
+```
+
+You can test the endpoint before opening your editor:
+
+```bash
+curl http://localhost:8080/mcp \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "MCP-Protocol-Version: 2025-06-18" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "initialize",
+    "params": {
+      "protocolVersion": "2025-06-18",
+      "capabilities": {},
+      "clientInfo": {
+        "name": "test-client",
+        "version": "1.0.0"
+      }
+    }
+  }'
+```
+
+### Connect to multiple Supabase instances
+
+Each Coolify Supabase service has its own `supabase-kong` container and its own generated compose file. Keep the `/mcp` route the same, but give each instance a unique host port and a unique MCP client name.
+
+Example environment variables:
+
+```env
+# Supabase production service
+SUPABASE_MCP_PORT=18080
+
+# Supabase staging service
+SUPABASE_MCP_PORT=18081
+```
+
+Example SSH tunnels:
+
+```bash
+ssh -L 8080:127.0.0.1:18080 <user>@<coolify-server>
+ssh -L 8081:127.0.0.1:18081 <user>@<coolify-server>
+```
+
+Example MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "coolify-supabase-prod": {
+      "url": "http://localhost:8080/mcp"
+    },
+    "coolify-supabase-staging": {
+      "url": "http://localhost:8081/mcp"
+    }
+  }
+}
+```
+
+For WireGuard, use the same idea with different ports:
+
+```json
+{
+  "mcpServers": {
+    "coolify-supabase-prod": {
+      "url": "http://10.8.0.1:18080/mcp"
+    },
+    "coolify-supabase-staging": {
+      "url": "http://10.8.0.1:18081/mcp"
+    }
+  }
+}
+```
+
+This avoids path conflicts because every MCP client entry points to a different Supabase Kong port. It also avoids relying on public domains or Traefik routing for MCP access.
+
+For the upstream Supabase guidance, see [Enabling MCP Server Access](https://supabase.com/docs/guides/self-hosting/enable-mcp?utm_source=coolify.io).
+
 ## Public Port Access
 
 
