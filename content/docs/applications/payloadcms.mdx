@@ -1,0 +1,175 @@
+---
+title: "Payload CMS"
+description: Deploy Payload CMS applications on Coolify from a Git repository with Next.js, Dockerfile, MongoDB or PostgreSQL, persistent uploads, and production environment variables.
+---
+
+# Payload CMS
+
+[Payload CMS](https://payloadcms.com?utm_source=coolify.io) is a code-first headless CMS and application framework built on Next.js. Payload projects should be deployed as Applications in Coolify because each project contains its own Payload config, collections, access control, migrations, plugins, and frontend code.
+
+Payload is usually not a good fit for a generic one-click Service template. A useful production deployment needs your project's repository, build output, database adapter, upload storage strategy, and environment variables.
+
+## Prerequisites
+
+- A Payload project committed to a Git repository.
+- A package manager lockfile (`pnpm-lock.yaml`, `package-lock.json`, or `yarn.lock`).
+- A production database. Payload officially supports MongoDB, PostgreSQL, and SQLite adapters.
+- A strong `PAYLOAD_SECRET`.
+
+## Database
+
+Create the database in Coolify before deploying the Payload app.
+
+For PostgreSQL, create a PostgreSQL database resource and copy the internal connection string into the application as `DATABASE_URL`.
+
+For MongoDB, create a MongoDB database resource and copy the internal connection string into the application as `DATABASE_URL`.
+
+Your Payload config should already pass that value to the matching database adapter:
+
+```ts
+import { buildConfig } from "payload";
+import { mongooseAdapter } from "@payloadcms/db-mongodb";
+
+export default buildConfig({
+  secret: process.env.PAYLOAD_SECRET || "",
+  db: mongooseAdapter({
+    url: process.env.DATABASE_URL || "",
+  }),
+});
+```
+
+Use the PostgreSQL adapter instead if your project was created for PostgreSQL.
+
+## Environment Variables
+
+Set these variables on the Coolify Application:
+
+```bash
+NODE_ENV=production
+PAYLOAD_SECRET=<long-random-secret>
+DATABASE_URL=<internal-database-connection-string>
+```
+
+Add any project-specific variables your Payload app requires, such as email provider keys, S3 credentials, payment keys, or public frontend settings.
+
+If your Payload config uses `serverURL`, set it to the public URL for the app:
+
+```bash
+SERVER_URL=https://payload.example.com
+```
+
+## Deploy with Nixpacks
+
+Nixpacks can work for simple Payload projects that use the standard Next.js scripts.
+
+1. Create a new Application from your Git repository.
+2. Set `Build Pack` to `nixpacks`.
+3. Set `Ports Exposes` to `3000`.
+4. Add the environment variables from the previous section.
+5. Deploy.
+
+Make sure your `package.json` has production scripts similar to:
+
+```json
+{
+  "scripts": {
+    "build": "next build",
+    "start": "next start"
+  }
+}
+```
+
+## Deploy with Dockerfile
+
+Use a Dockerfile when you need a reproducible production image, native dependencies, or full control over the build. Payload's production documentation recommends using Next.js standalone output for Docker deployments.
+
+Add this to `next.config.js` or `next.config.mjs`:
+
+```js
+const nextConfig = {
+  output: "standalone",
+};
+
+export default nextConfig;
+```
+
+Then create a `Dockerfile` in your Payload repository:
+
+```dockerfile
+FROM node:24-alpine AS base
+
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+COPY package.json pnpm-lock.yaml* package-lock.json* yarn.lock* ./
+RUN \
+  if [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN \
+  if [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  elif [ -f package-lock.json ]; then npm run build; \
+  elif [ -f yarn.lock ]; then yarn build; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+RUN mkdir .next && chown nextjs:nodejs .next
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+EXPOSE 3000
+
+CMD HOSTNAME="0.0.0.0" node server.js
+```
+
+In Coolify:
+
+1. Create a new Application from the repository.
+2. Set `Build Pack` to `Dockerfile`.
+3. Set `Ports Exposes` to `3000`.
+4. Add the required environment variables.
+5. Deploy.
+
+## Uploads and Persistent Files
+
+If your Payload project uses upload collections, do not rely on files written inside the application container unless you have configured persistent storage for that path.
+
+For production, prefer one of these options:
+
+- Use Payload's cloud storage adapters, such as S3-compatible storage.
+- Add a persistent storage mount in Coolify for the local upload directory used by your project.
+
+Cloud storage is usually the safer option because rolling deployments and container rebuilds can replace the application container.
+
+## Building Without Database Access
+
+Some Payload projects query Payload during Next.js static generation. If that happens, the production build may require database access during the image build.
+
+If your build fails because the database is not reachable during build time:
+
+- Disable static generation for routes that need Payload data at build time.
+- Follow Payload's "building without a DB connection" guidance.
+- Use runtime data fetching for admin/API-dependent routes where possible.
+
+## Links
+
+- [Payload production deployment](https://payloadcms.com/docs/production/deployment?utm_source=coolify.io)
+- [Payload environment variables](https://payloadcms.com/docs/configuration/environment-vars?utm_source=coolify.io)
+- [Payload database adapters](https://payloadcms.com/docs/database/overview?utm_source=coolify.io)
