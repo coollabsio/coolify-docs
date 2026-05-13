@@ -1,0 +1,101 @@
+---
+title: "Payload CMS"
+description: "A Next.js-native open-source CMS and application framework that you can deploy on Coolify as a Dockerfile-based application."
+og:
+  description: "Deploy Payload CMS on Coolify using your own Git repository, a production Dockerfile, and a PostgreSQL or MongoDB database."
+category: "CMS"
+icon: "/docs/images/services/payloadcms-logo.svg"
+---
+
+<ZoomImage src="/docs/images/services/payloadcms-logo.svg" alt="Payload CMS logo" />
+
+<Callout type="info" title="DEPLOY AS AN APPLICATION">
+
+Payload is best deployed on Coolify as a Git-connected application with a production Dockerfile, not as a generic one-click service template. Each real deployment is tied to your own Payload codebase and configuration.
+
+</Callout>
+
+## What is Payload CMS?
+
+Payload CMS is an open-source, Next.js-native CMS and application framework. It gives you a CMS, admin panel, API layer, and full control over your application code in one codebase.
+
+## How to deploy Payload CMS with Coolify?
+
+### 1. Create or prepare your Payload project
+
+Start from an existing Payload project or create one with `npx create-payload-app@latest`.
+
+For production Docker deployments, make sure your Next.js configuration enables standalone output:
+
+```js
+export default {
+  output: 'standalone',
+}
+```
+
+### 2. Add a production Dockerfile
+
+Payload's production deployment docs use a multi-stage Docker build. A typical Dockerfile looks like this:
+
+```Dockerfile
+FROM node:24-alpine AS base
+WORKDIR /app
+
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+RUN if [ -f yarn.lock ]; then yarn --frozen-lockfile; elif [ -f package-lock.json ]; then npm ci; else corepack enable pnpm && pnpm i --frozen-lockfile; fi
+
+FROM base AS builder
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN if [ -f yarn.lock ]; then yarn build; elif [ -f package-lock.json ]; then npm run build; else corepack enable pnpm && pnpm build; fi
+
+FROM base AS runner
+ENV NODE_ENV=production
+WORKDIR /app
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+EXPOSE 3000
+CMD ["node", "server.js"]
+```
+
+If your project uses local uploads, make sure the upload path is backed by persistent storage or replaced with one of Payload's supported cloud storage adapters.
+
+### 3. Create a database in Coolify
+
+Payload works with PostgreSQL or MongoDB-compatible databases. In Coolify, create the database resource first, then copy the internal connection string into your application's `DATABASE_URL`.
+
+### 4. Create the application in Coolify
+
+1. Add a new resource and choose the Git-based application flow.
+2. Connect the repository that contains your Payload app.
+3. Select the Dockerfile-based deployment option.
+4. Set the exposed port to `3000`.
+5. Save the application configuration.
+
+### 5. Configure environment variables
+- [Official documentation](https://payloadcms.com/docs/production/deployment?utm_source=coolify.io)
+- [GitHub](https://github.com/payloadcms/payload?utm_source=coolify.io)
+
+At minimum, set these variables in Coolify:
+
+- `PAYLOAD_SECRET`
+- `DATABASE_URL`
+- `NODE_ENV=production`
+- `PORT=3000`
+
+You may also need project-specific variables such as mail credentials, S3 keys, or any custom environment variables used by your Payload config.
+
+### 6. Handle uploads and media storage
+
+If your project stores uploads on disk, mount persistent storage to the directory used by your upload collections. If you prefer object storage, use Payload's official cloud storage plugins instead of relying on the container filesystem.
+
+### 7. Deploy
+
+After the Dockerfile, environment variables, and database are configured, deploy the application from Coolify. Once the build finishes, open the generated domain or your custom domain and complete the initial Payload setup in the browser.
+
+## Links
+
+- [Official doc
