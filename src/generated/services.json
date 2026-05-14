@@ -479,6 +479,13 @@
     "category": "Media"
   },
   {
+    "name": "EMQX Enterprise",
+    "slug": "emqx-enterprise",
+    "icon": "/docs/images/services/emqx-enterprise.svg",
+    "description": "Scalable, distributed MQTT messaging platform for IoT.",
+    "category": "IoT"
+  },
+  {
     "name": "Ente",
     "slug": "ente-photos",
     "icon": "/docs/images/services/ente-logo.webp",
