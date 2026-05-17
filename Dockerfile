@@ -44,7 +44,7 @@ RUN --mount=type=cache,target=/root/.bun \
     bun run build
 
 # Stage 2: NGINX Unprivileged Setup
-FROM nginxinc/nginx-unprivileged:1.29.8-alpine-slim AS final
+FROM nginxinc/nginx-unprivileged:1.30.1-alpine-slim AS final
 
 # Set working directory for NGINX and copy built files from the build stage
 WORKDIR /usr/share/nginx/html
