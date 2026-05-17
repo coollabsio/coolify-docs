@@ -13,6 +13,26 @@ All domain fields are capable to generate your proxy configurations based on the
 2. You can give multiple domains, separated by comma: `https://coolify.io,https://www.coolify.io`
 3. You can also add a port to the domain, so the proxy will know which port you would like to map to the domain: `https://coolify.io:8080,http://api.coolify.io:3000`
 
+## sslip.io Domains
+
+If the server has no [Wildcard Domain](#wildcard-domain) configured, Coolify falls back to generating a [sslip.io](https://sslip.io?utm_source=coolify.io) domain when a Resource is created.
+
+`sslip.io` is a free, public, third-party DNS service that resolves any subdomain containing an IP address back to that IP. There is nothing to register, no DNS records to create, and no certificate to install — it is a *magic resolver*:
+
+- `1.2.3.4.sslip.io` resolves to `1.2.3.4`
+- `anything.1.2.3.4.sslip.io` also resolves to `1.2.3.4`
+- `myapp.staging.1.2.3.4.sslip.io` also resolves to `1.2.3.4`
+
+Because the IP is encoded *into the hostname itself*, sslip.io can answer for an unbounded number of subdomains without anyone configuring DNS in advance. This makes it ideal for getting a working URL on a fresh server in seconds, before you have purchased or pointed a real domain.
+
+::: info NOTE
+The generated URL always uses `http://`; do not switch it to `https://`, because [Let's Encrypt](https://letsencrypt.org?utm_source=coolify.io) rate-limits the entire shared `sslip.io` zone and certificate issuance will fail. Use your own domain (or a wildcard you own) if you need HTTPS.
+:::
+
+::: tip WHEN TO USE sslip.io
+sslip.io domains are best for: trying Coolify on a new server, sharing a quick preview link, internal demos, and any flow where you want plain HTTP and an instantly-working URL. Move to a custom domain (or a wildcard you own) before you need TLS, before you go to production, and before you share the link with end users — browsers will increasingly warn on HTTP-only sites.
+:::
+
 ## HTTPS & SSL Certificates
 
 Coolify automatically handles SSL/TLS certificates for your applications. When you enter a domain with the `https://` protocol, everything is configured for you behind the scenes.
@@ -92,5 +112,8 @@ You can set a wildcard domain (`example: http://example.com`) to your server, so
 ## DNS Validation
 
 Since version `beta.191`, Coolify will validates DNS records for your domains with `1.1.1.1` Cloudflare DNS server.
+
+DNS Validation check is automatically **skipped** for `*.sslip.io` hostnames. There is no record to look up — the IP is already in the hostname — so the check would be both redundant and impossible.
+
 
 If you want to use different DNS server, go to your `Settings > Advanced` page and change the `Custom DNS Servers` field (comma separated list).
