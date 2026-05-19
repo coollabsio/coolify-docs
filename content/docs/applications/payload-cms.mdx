@@ -1,0 +1,77 @@
+---
+title: Payload CMS
+description: Deploy Payload CMS applications on Coolify as Git-connected Next.js apps with Dockerfile builds, databases, environment variables, and persistent uploads.
+---
+
+# Payload CMS
+
+Payload CMS is a TypeScript-first headless CMS that runs as part of your application code. Deploy it on Coolify as an application from a Git repository, not as a one-click service template.
+
+Payload projects usually need their own collections, access control, admin customization, plugins, and storage configuration. Because of that, the recommended Coolify flow is to deploy the project source with a Dockerfile or Nixpacks and attach the database and storage resources your project uses.
+
+## Deploy with Dockerfile
+
+### Requirements
+
+1. Create or connect the database that your Payload project uses, such as PostgreSQL or MongoDB.
+2. Add the database connection string and Payload secrets to your application environment variables.
+3. Set `Build Pack` to `Dockerfile`.
+4. Set `Ports Exposes` to the port your Payload app listens on, commonly `3000`.
+5. Configure persistent uploads with external object storage or a persistent volume.
+
+### Environment Variables
+
+Payload templates commonly read database and secret values from environment variables. Add the variables that match your project configuration in the Coolify UI.
+
+```bash
+DATABASE_URL=postgresql://user:password@host:5432/payload
+PAYLOAD_SECRET=replace-with-a-long-random-secret
+NEXT_PUBLIC_SERVER_URL=https://payload.example.com
+```
+
+If your project uses MongoDB, set the MongoDB connection string expected by your adapter instead of `DATABASE_URL`.
+
+### Dockerfile
+
+Payload 3 runs on Next.js, so the standard Next.js standalone Dockerfile pattern works well. Make sure your `next.config` enables standalone output before building the image.
+
+```ts
+// next.config.ts
+import type { NextConfig } from 'next'
+
+const nextConfig: NextConfig = {
+  output: 'standalone',
+}
+
+export default nextConfig
+```
+
+Then add a production Dockerfile to your repository, or adapt the official Next.js Dockerfile example for your package manager.
+
+### Uploads
+
+Do not rely on the container filesystem for production uploads unless you configure persistent storage. For most production Payload projects, use an object storage plugin such as S3, DigitalOcean Spaces, or another compatible provider.
+
+If you use local uploads, create a persistent storage mount in Coolify and point your Payload upload directory to that mounted path.
+
+### Migrations
+
+If your Payload project uses migrations, run them as part of your deployment process before the new container starts serving traffic. You can use Coolify's pre-deployment or post-deployment commands for project-specific migration commands.
+
+## Deploy with Nixpacks
+
+Use Nixpacks when your Payload project follows the standard Node.js build and start flow and does not require a custom Dockerfile.
+
+1. Set `Build Pack` to `nixpacks`.
+2. Set the install, build, and start commands if Nixpacks does not detect them correctly.
+3. Set `Ports Exposes` to the app port.
+4. Add the same database, secret, and upload storage environment variables.
+
+For projects that need precise image contents, native dependencies, or standalone Next.js output control, prefer the Dockerfile build pack.
+
+## Related Guides
+
+- [Next.js](/applications/nextjs)
+- [Dockerfile Build Pack](/applications/build-packs/dockerfile)
+- [Environment Variables](/knowledge-base/environment-variables)
+- [Persistent Storage](/knowledge-base/persistent-storage)

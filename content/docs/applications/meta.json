@@ -5,6 +5,7 @@
     "django",
     "jekyll",
     "laravel",
+    "payload-cms",
     "phoenix",
     "rails",
     "symfony",
