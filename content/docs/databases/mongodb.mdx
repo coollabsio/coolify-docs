@@ -13,6 +13,151 @@ MongoDB is a popular, open-source document-oriented NoSQL database designed for 
 
 MongoDB is known for its horizontal scalability, powerful query language, and ability to handle large volumes of unstructured or semi-structured data. It's widely used in modern web applications, content management systems, and other scenarios where flexible data models and scalability are crucial.
 
+## Deploy a MongoDB replica set
+
+Coolify's one-click MongoDB database deploys a standalone MongoDB instance. If your application requires MongoDB replica set semantics, such as transactions or change streams, deploy a small replica set as a **Docker Compose Empty** service stack instead.
+
+<Callout type="warn" title="Replica set scope">
+
+This compose example runs all MongoDB members on the same Coolify server. It is useful when an application requires a replica set, but it is not a high-availability replacement for a multi-server MongoDB deployment.
+
+</Callout>
+
+### Create the stack
+
+1. Create a new resource in Coolify.
+2. Select **Docker Compose Empty**.
+3. Paste the compose file below.
+4. Deploy the stack.
+
+```yaml
+services:
+  mongodb-primary:
+    image: mongo:8
+    command: sh -c "chmod 400 /etc/mongo-keyfile/keyfile && exec mongod --replSet $${MONGODB_REPLICA_SET_NAME:-rs0} --bind_ip_all --keyFile /etc/mongo-keyfile/keyfile"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${SERVICE_USER_MONGODB}
+      MONGO_INITDB_ROOT_PASSWORD: ${SERVICE_PASSWORD_MONGODB}
+      MONGODB_REPLICA_SET_NAME: ${MONGODB_REPLICA_SET_NAME:-rs0}
+    volumes:
+      - mongodb-primary-data:/data/db
+      - type: bind
+        source: ./mongo-keyfile
+        target: /etc/mongo-keyfile/keyfile
+        content: |
+          ${SERVICE_PASSWORD_64_MONGODB_KEYFILE}
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+
+  mongodb-secondary:
+    image: mongo:8
+    command: sh -c "chmod 400 /etc/mongo-keyfile/keyfile && exec mongod --replSet $${MONGODB_REPLICA_SET_NAME:-rs0} --bind_ip_all --keyFile /etc/mongo-keyfile/keyfile"
+    environment:
+      MONGODB_REPLICA_SET_NAME: ${MONGODB_REPLICA_SET_NAME:-rs0}
+    volumes:
+      - mongodb-secondary-data:/data/db
+      - type: bind
+        source: ./mongo-keyfile
+        target: /etc/mongo-keyfile/keyfile
+        content: |
+          ${SERVICE_PASSWORD_64_MONGODB_KEYFILE}
+    depends_on:
+      mongodb-primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+
+  mongodb-arbiter:
+    image: mongo:8
+    command: sh -c "chmod 400 /etc/mongo-keyfile/keyfile && exec mongod --replSet $${MONGODB_REPLICA_SET_NAME:-rs0} --bind_ip_all --keyFile /etc/mongo-keyfile/keyfile"
+    environment:
+      MONGODB_REPLICA_SET_NAME: ${MONGODB_REPLICA_SET_NAME:-rs0}
+    volumes:
+      - type: bind
+        source: ./mongo-keyfile
+        target: /etc/mongo-keyfile/keyfile
+        content: |
+          ${SERVICE_PASSWORD_64_MONGODB_KEYFILE}
+    depends_on:
+      mongodb-primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+
+  mongodb-init:
+    image: mongo:8
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${SERVICE_USER_MONGODB}
+      MONGO_INITDB_ROOT_PASSWORD: ${SERVICE_PASSWORD_MONGODB}
+      MONGODB_REPLICA_SET_NAME: ${MONGODB_REPLICA_SET_NAME:-rs0}
+    command: >
+      sh -lc '
+        until mongosh --host mongodb-primary --username "$$MONGO_INITDB_ROOT_USERNAME" --password "$$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin --eval "db.adminCommand(\"ping\")" >/dev/null 2>&1; do
+          sleep 2;
+        done;
+
+        mongosh --host mongodb-primary --username "$$MONGO_INITDB_ROOT_USERNAME" --password "$$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin --eval "
+          try {
+            rs.status();
+            print(\"Replica set already initialized\");
+          } catch (error) {
+            rs.initiate({
+              _id: \"$$MONGODB_REPLICA_SET_NAME\",
+              members: [
+                { _id: 0, host: \"mongodb-primary:27017\", priority: 2 },
+                { _id: 1, host: \"mongodb-secondary:27017\", priority: 1 },
+                { _id: 2, host: \"mongodb-arbiter:27017\", arbiterOnly: true }
+              ]
+            });
+          }
+        ";
+      '
+    depends_on:
+      mongodb-primary:
+        condition: service_healthy
+      mongodb-secondary:
+        condition: service_healthy
+      mongodb-arbiter:
+        condition: service_healthy
+    restart: "no"
+    exclude_from_hc: true
+
+volumes:
+  mongodb-primary-data:
+  mongodb-secondary-data:
+```
+
+Coolify generates `SERVICE_USER_MONGODB`, `SERVICE_PASSWORD_MONGODB`, and `SERVICE_PASSWORD_64_MONGODB_KEYFILE` automatically and keeps them stable between deployments. You can edit them from the stack's environment variables page if needed.
+
+### Connect from an application
+
+Use both data-bearing members in the connection string:
+
+```bash
+mongodb://<user>:<password>@mongodb-primary:27017,mongodb-secondary:27017/?replicaSet=rs0&authSource=admin
+```
+
+If your application is in another stack, enable **Connect to Predefined Network** on that resource and use the service names that Coolify shows for the MongoDB stack.
+
+### Verify the replica set
+
+Open a terminal for the `mongodb-primary` container and run:
+
+```bash
+mongosh --username "$MONGO_INITDB_ROOT_USERNAME" --password "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin --eval "rs.status().ok"
+```
+
+The command should return `1` after `mongodb-init` has finished.
+
 ## Links
 
 - [The official website](https://www.mongodb.com/)
