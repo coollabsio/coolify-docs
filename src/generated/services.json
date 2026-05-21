@@ -745,6 +745,13 @@
     "category": "Development"
   },
   {
+    "name": "Healthchecks",
+    "slug": "healthchecks",
+    "icon": "/docs/images/services/healthchecks.webp",
+    "description": "Open-source cron job and background task monitoring service.",
+    "category": "Monitoring"
+  },
+  {
     "name": "Heimdall",
     "slug": "heimdall",
     "icon": "/docs/images/services/heimdall-logo.svg",
