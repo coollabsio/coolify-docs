@@ -63,6 +63,10 @@ cmd = '/assets/start.sh'
 "start.sh" = '''
 #!/bin/bash
 
+# Ensure storage and bootstrap cache are writable by www-data
+chown -R www-data:www-data /app/storage /app/bootstrap/cache
+chmod -R 775 /app/storage /app/bootstrap/cache
+
 # Transform the nginx configuration
 node /assets/scripts/prestart.mjs /assets/nginx.template.conf /etc/nginx.conf
 
@@ -119,6 +123,7 @@ stderr_logfile=/var/log/worker-phpfpm.log
 [program:worker-laravel]
 process_name=%(program_name)s_%(process_num)02d
 command=bash -c 'exec php /app/artisan queue:work --sleep=3 --tries=3 --max-time=3600'
+user=www-data
 autostart=true
 autorestart=true
 stopasgroup=true
