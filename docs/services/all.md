@@ -414,6 +414,7 @@ Complete directory of all one-click services available in Coolify, organized by 
 - [MinIO](/services/minio-community-edition) - A high-performance, distributed object storage system.
 - [MinIO](/services/minio) - A high-performance, distributed object storage system.
 - [NextCloud](/services/nextcloud) - A safe home for all your data.
+- [Obsidian LiveSync](/services/obsidian-livesync) - Self-hosted sync backend for the Obsidian LiveSync plugin using CouchDB.
 - [Owncloud](/services/owncloud) - File synchronization and sharing platform.
 - [Seafile](/services/seafile) - High-performance file syncing and sharing with knowledge management features.
 - [SeaweedFS](/services/seaweedfs) - Simple and highly scalable distributed file system compatible with S3.
