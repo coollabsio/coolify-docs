@@ -6,7 +6,7 @@ og:
 category: "Storage"
 ---
 
-![Obsidian LiveSync](/docs/images/services/obsidian-livesync.svg)
+<img src="/docs/images/services/obsidian-livesync.svg" alt="Obsidian LiveSync" width="150" />
 
 ## What is Obsidian LiveSync?
 
