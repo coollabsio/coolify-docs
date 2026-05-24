@@ -1,0 +1,151 @@
+---
+title: Payload CMS
+description: Deploy Payload CMS applications on Coolify with Git-based Next.js builds, database configuration, persistent uploads, and Dockerfile options.
+---
+
+# Payload CMS
+
+[Payload CMS](https://payloadcms.com/?utm_source=coolify.io) is a headless CMS and application framework that runs inside a Next.js application.
+
+Because Payload projects depend on your application source code, database adapter, environment variables, and upload strategy, they are usually deployed as a Git-connected application in Coolify instead of a generic one-click service template.
+
+## Before You Start
+
+Prepare these parts before creating the application in Coolify:
+
+- A Payload project in a Git repository.
+- A database supported by your Payload adapter, such as [PostgreSQL](/databases/postgresql) or [MongoDB](/databases/mongodb).
+- A long production secret for `PAYLOAD_SECRET`.
+- A decision for uploaded files: persistent storage on the server or an external storage provider.
+
+<Callout type="info" title="Payload is a Next.js app">
+
+Payload uses the Next.js production build process. If your Payload project is based on the official starter, the existing `build` script should build the app for production.
+
+</Callout>
+
+## Deploy with Nixpacks
+
+Use Nixpacks when your project can be built with the standard Node.js workflow from `package.json`.
+
+1. In Coolify, create a new **Application** from your Git repository.
+2. Set **Build Pack** to **Nixpacks**.
+3. Set **Port Exposes** to `3000`.
+4. Keep your package manager lock file in the repository (`package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`, or `bun.lockb`).
+5. Make sure your `package.json` has production scripts:
+
+```json
+{
+  "scripts": {
+    "build": "next build",
+    "start": "next start"
+  }
+}
+```
+
+6. Add the required environment variables in Coolify.
+7. Deploy the application.
+
+For more details about automatic builds, see [Nixpacks Build Pack](/applications/build-packs/nixpacks).
+
+## Environment Variables
+
+Add the variables your Payload project expects in [Environment Variables](/knowledge-base/environment-variables).
+
+Common variables:
+
+| Variable | Purpose |
+| --- | --- |
+| `DATABASE_URL` | Connection string used by the Payload database adapter. |
+| `PAYLOAD_SECRET` | Production secret used by Payload. Use a long, random value. |
+| `SERVER_URL` or `NEXT_PUBLIC_SERVER_URL` | Public URL used by your project if it references its own origin. |
+| `PAYLOAD_CONFIG_PATH` | Optional path override if your project does not use the default Payload config location. |
+
+Keep secrets as runtime variables unless your build step needs them.
+
+<Callout type="warn" title="Database access during builds">
+
+Some Next.js routes can try to read Payload data during `next build`. If your build uses the Payload Local API during static generation, either make the database reachable during the build or adjust your project to avoid static generation for those routes.
+
+</Callout>
+
+## Database Setup
+
+Payload supports multiple database adapters, including MongoDB, PostgreSQL, and SQLite. For most Coolify deployments, PostgreSQL or MongoDB is the best fit.
+
+1. Create the database in Coolify.
+2. Copy the internal connection string.
+3. Set it as `DATABASE_URL` on the Payload application.
+4. Confirm your `payload.config.ts` reads the same variable.
+
+Example with MongoDB:
+
+```ts
+import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { buildConfig } from 'payload'
+
+export default buildConfig({
+  db: mongooseAdapter({
+    url: process.env.DATABASE_URL || '',
+  }),
+})
+```
+
+If you use PostgreSQL with migrations, run your project's migration command before serving production traffic.
+
+## Deploy with Dockerfile
+
+Use the [Dockerfile Build Pack](/applications/build-packs/dockerfile) when you want a reproducible production image or when Nixpacks does not match your project.
+
+1. Add `output: 'standalone'` to your Next.js config.
+
+```js
+const nextConfig = {
+  output: 'standalone',
+}
+
+export default nextConfig
+```
+
+2. Add a production Dockerfile based on the official Next.js standalone Docker pattern.
+3. In Coolify, set **Build Pack** to **Dockerfile**.
+4. Set **Port Exposes** to `3000`.
+5. Add the same runtime environment variables described above.
+6. Deploy the application.
+
+Payload's production deployment guide includes a Dockerfile example that follows the Next.js standalone output flow.
+
+## Uploaded Files
+
+If your Payload collections use uploads, decide where files should live in production.
+
+- For local filesystem uploads, add [Persistent Storage](/knowledge-base/persistent-storage) to the directory used by your upload collection.
+- For object storage, configure the storage plugin and set the provider variables in Coolify.
+
+Do not rely on files written only inside the container layer. A new deployment replaces the running container.
+
+## Troubleshooting
+
+### The build cannot connect to the database
+
+Check whether any route uses the Payload Local API during static generation. You can either make `DATABASE_URL` available during the build or change those routes to render dynamically.
+
+### The container starts but the app is not reachable
+
+Verify that:
+
+- **Port Exposes** is `3000`.
+- The production start command listens on `0.0.0.0`.
+- The application has a domain configured in Coolify.
+
+### Uploaded files disappear after deployment
+
+Add persistent storage for the upload directory or use an external storage provider. Container files that are not in a mounted volume are not durable across deployments.
+
+## Related Links
+
+- [Payload production deployment](https://payloadcms.com/docs/production/deployment?utm_source=coolify.io)
+- [Payload environment variables](https://payloadcms.com/docs/configuration/environment-vars?utm_source=coolify.io)
+- [Payload database adapters](https://payloadcms.com/docs/database/overview?utm_source=coolify.io)
+- [Building Payload without a database connection](https://payloadcms.com/docs/production/building-without-a-db-connection?utm_source=coolify.io)
+- [Next.js on Coolify](/applications/nextjs)
