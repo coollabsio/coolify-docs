@@ -1,0 +1,386 @@
+# Coolify Compose Parser
+
+Learn how Coolify transforms your Docker Compose files during deployment. Understanding these transformations helps you debug issues, make informed decisions about deployment modes, and leverage Coolify's automatic management features.
+
+## Overview of the Parser
+
+Coolify uses a two-stage parsing process when deploying Docker Compose applications:
+
+1. **Parse Stage**: Read and validate your compose file
+2. **Transform Stage**: Generate the final deployable compose with Coolify's enhancements
+
+### Why Coolify Transforms Your Compose File
+
+Coolify modifies compose files to:
+- **Enable Management**: Add labels for tracking and managing deployed services
+- **Integrate Networking**: Automatically configure proxy routing and service discovery
+- **Ensure Isolation**: Separate preview deployments from production
+- **Simplify Operations**: Standardize naming conventions and configuration
+
+### Raw Compose Deployment
+
+If you prefer to deploy your compose file exactly as written without transformations, use **Raw Compose** mode. This bypasses all automatic processing but also disables features like automatic proxy routing and management labels.
+
+---
+
+## Container Name Transformations
+
+### Standard Naming
+
+Coolify renames containers using the format:
+
+```
+{service-name}-{application-uuid}
+```
+
+**Example:**
+- User specifies: `web`
+- Deployed as: `web-a1b2c3d4e5f6`
+
+### Timestamp-Based Naming
+
+For environments requiring unique instances or when consistent naming is disabled, Coolify appends timestamps:
+
+```
+{service-name}-{application-uuid}-{timestamp}
+```
+
+### Preview Deployment Naming
+
+Pull request and preview deployments add a preview suffix:
+
+```
+{service-name}-{application-uuid}-pr-{pr-id}
+```
+
+**Example:**
+- Service: `api`
+- Preview for PR #42: `api-a1b2c3d4e5f6-pr-42`
+
+---
+
+## Network Modifications
+
+### Auto-Generated Base Network
+
+Coolify creates an isolated network for each application:
+
+```
+network-{uuid}
+```
+
+All services automatically connect to this network, enabling service-to-service communication without explicit network configuration.
+
+### Proxy Integration
+
+The proxy service (Traefik or Caddy) is automatically added to your application's network, enabling:
+- Automatic routing to exposed services
+- SSL/TLS termination
+- Path-based routing
+
+### Preview Deployment Network Isolation
+
+Preview deployments use isolated networks:
+
+```
+network-{uuid}-pr-{pr-id}
+```
+
+This prevents preview containers from accessing production services.
+
+---
+
+## Volume Path Transformations
+
+### Bind Mount Rewriting
+
+Bind mounts are rewritten to Coolify's managed data directory:
+
+```yaml
+# User specifies:
+volumes:
+  - ./data:/app/data
+
+# Coolify deploys as:
+volumes:
+  - /data/coolify/applications/{uuid}/data:/app/data
+```
+
+Benefits:
+- Centralized data management
+- Easier backups and migrations
+- Consistent paths across deployments
+
+### Named Volume Transformations
+
+Named volumes are renamed to avoid conflicts:
+
+```yaml
+# User specifies:
+volumes:
+  - postgres_data:/var/lib/postgresql/data
+
+# Coolify deploys as:
+volumes:
+  - {uuid}_postgres_data:/var/lib/postgresql/data
+```
+
+### Preview Deployment Volume Isolation
+
+Preview deployments use isolated volumes with the `-pr-{id}` suffix:
+
+```
+{uuid}_{volume-name}-pr-{pr-id}
+```
+
+This ensures preview data doesn't interfere with production.
+
+---
+
+## Label Additions
+
+### Management Labels
+
+Coolify automatically adds labels for internal management and monitoring:
+
+```yaml
+labels:
+  coolify.managed: "true"
+  coolify.application.uuid: "{uuid}"
+  coolify.application.name: "{app-name}"
+  coolify.deployment.id: "{deployment-id}"
+```
+
+### Proxy Routing Labels
+
+Based on configured domains, Coolify auto-generates proxy routing labels:
+
+```yaml
+labels:
+  traefik.enable: "true"
+  traefik.http.routers.{service}-{uuid}.rule: "Host(`example.com`)"
+  traefik.http.services.{service}-{uuid}.loadbalancer.server.port: "3000"
+```
+
+Or for Caddy:
+```yaml
+labels:
+  caddy.reverse_proxy: "{{upstreams}}"
+```
+
+### Custom Labels Preservation
+
+Your custom labels are always preserved and included alongside Coolify's automatic labels:
+
+```yaml
+labels:
+  # Your custom labels
+  app.version: "1.0.0"
+  app.environment: "production"
+  # Coolify management labels (added automatically)
+  coolify.managed: "true"
+```
+
+---
+
+## Configuration Options Affecting Transformations
+
+### Consistent Container Naming
+
+**Setting**: Application → Settings → Container Naming
+
+- **Enabled**: Uses static naming format `{service}-{uuid}`
+- **Disabled**: Appends timestamps for unique instances
+
+### Label Escape Settings
+
+**Setting**: Application → Settings → Label Escaping
+
+Controls how special characters in labels are escaped for compatibility with different proxy backends.
+
+### Custom Docker Run Options
+
+Custom options specified in application settings are converted and merged:
+
+```
+--cpus=1 --memory=512m --restart=unless-stopped
+```
+
+These are applied to all containers in the compose deployment.
+
+---
+
+## Before/After Examples
+
+### Example 1: Basic Web Application
+
+**Original Compose File:**
+```yaml
+version: '3'
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    labels:
+      app.version: "1.0"
+```
+
+**Deployed by Coolify:**
+```yaml
+version: '3'
+services:
+  web:
+    image: nginx:latest
+    container_name: web-a1b2c3d4e5f6
+    networks:
+      - network-a1b2c3d4e5f6
+    volumes:
+      - /data/coolify/applications/a1b2c3d4e5f6/nginx.conf:/etc/nginx/nginx.conf:ro
+    labels:
+      app.version: "1.0"
+      coolify.managed: "true"
+      coolify.application.uuid: "a1b2c3d4e5f6"
+      traefik.enable: "true"
+      traefik.http.routers.web-a1b2c3d4e5f6.rule: "Host(`myapp.com`)"
+      traefik.http.services.web-a1b2c3d4e5f6.loadbalancer.server.port: "80"
+
+networks:
+  network-a1b2c3d4e5f6:
+    driver: bridge
+```
+
+**Key Changes:**
+- Container renamed with UUID
+- Bind mount path changed to managed directory
+- Network automatically added
+- Custom labels preserved
+- Proxy routing labels generated
+
+---
+
+### Example 2: Multi-Service Application
+
+**Original Compose File:**
+```yaml
+version: '3'
+services:
+  web:
+    image: myapp:latest
+    environment:
+      DATABASE_URL: "postgresql://db:5432"
+    
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: secret
+```
+
+**Deployed by Coolify:**
+```yaml
+version: '3'
+services:
+  web:
+    image: myapp:latest
+    container_name: web-b2c3d4e5f6a1
+    networks:
+      - network-b2c3d4e5f6a1
+    environment:
+      DATABASE_URL: "postgresql://db-b2c3d4e5f6a1:5432"
+    labels:
+      coolify.managed: "true"
+      coolify.application.uuid: "b2c3d4e5f6a1"
+  
+  db:
+    image: postgres:15
+    container_name: db-b2c3d4e5f6a1
+    networks:
+      - network-b2c3d4e5f6a1
+    volumes:
+      - b2c3d4e5f6a1_postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: secret
+    labels:
+      coolify.managed: "true"
+      coolify.application.uuid: "b2c3d4e5f6a1"
+
+volumes:
+  b2c3d4e5f6a1_postgres_data:
+
+networks:
+  network-b2c3d4e5f6a1:
+    driver: bridge
+```
+
+**Key Changes:**
+- Both containers renamed with UUID
+- Database URL updated to use new container name
+- Named volume renamed with UUID prefix
+- Single shared network created
+- Service discovery enabled through container naming
+
+---
+
+## Debugging Tips
+
+### View Transformed Compose
+
+To see how Coolify transforms your compose file:
+
+1. Go to Application → Deployments
+2. Click on a deployment
+3. Look for "Generated Compose" or "Deployment Configuration"
+
+### Understanding Volume Paths
+
+Check actual volume locations on the server:
+```bash
+ls -la /data/coolify/applications/{uuid}/
+```
+
+### Verify Container Names
+
+List running containers:
+```bash
+docker ps
+```
+
+Look for containers named `{service}-{uuid}` format.
+
+### Check Applied Labels
+
+Inspect a container:
+```bash
+docker inspect {container-name} | grep Labels
+```
+
+---
+
+## When to Use Raw Compose vs. Managed Compose
+
+| Feature | Managed Compose | Raw Compose |
+|---------|-----------------|-------------|
+| Automatic networking | ✅ | ❌ |
+| Container renaming | ✅ | ❌ |
+| Volume path management | ✅ | ❌ |
+| Proxy integration | ✅ | ❌ |
+| Management labels | ✅ | ❌ |
+| Full control over compose | ❌ | ✅ |
+| Simplified setup | ✅ | ❌ |
+
+**Use Managed Compose** for most applications—Coolify's transformations simplify networking, management, and proxy integration.
+
+**Use Raw Compose** when you have specific requirements that conflict with Coolify's transformations, or need complete control over your compose definition.
+
+---
+
+## Related Documentation
+
+- [Docker Compose Features](/knowledge-base/docker/compose)
+- [Docker Compose Build Pack](/applications/build-packs/docker-compose)
+- [Application Settings](/applications/settings)
+- [Domains and Routing](/applications/domains)
