@@ -30,7 +30,12 @@
     "how-to",
     "server",
     "s3",
-    "docker",
+    "---docker---",
+    "compose-parsing",
+    "compose",
+    "custom-commands",
+    "registry",
+    "swarm",
     "proxy",
     "faq"
   ]
