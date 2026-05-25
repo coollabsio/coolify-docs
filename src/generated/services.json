@@ -1276,6 +1276,13 @@
     "category": "Monitoring"
   },
   {
+    "name": "Obsidian LiveSync",
+    "slug": "obsidian-livesync",
+    "icon": "/docs/images/services/obsidian-livesync.svg",
+    "description": "Self-hosted sync backend for the Obsidian LiveSync plugin using CouchDB.",
+    "category": "Storage"
+  },
+  {
     "name": "Odoo",
     "slug": "odoo",
     "icon": "/docs/images/services/odoo-logo.svg",
