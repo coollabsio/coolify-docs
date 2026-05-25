@@ -1,6 +1,7 @@
 {
   "title": "Docker",
   "pages": [
+    "compose-parsing",
     "compose",
     "custom-commands",
     "registry",
