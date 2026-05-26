@@ -11,6 +11,7 @@ import { CoolifyHome } from './coolify-home';
 import { MediaCard, MediaCardGroup } from './media-card';
 import { ScreenshotTab, ScreenshotTabs } from './screenshot-tabs';
 import { ServicesList } from './services-list';
+import { SponsorsList } from './sponsors-list';
 import { ZoomImage } from './zoom-image';
 
 function Badge({ text, children }: { type?: string; text?: string; children?: React.ReactNode }) {
@@ -39,6 +40,7 @@ export function getMDXComponents(components?: MDXComponents) {
     ScreenshotTab,
     ScreenshotTabs,
     ServicesList,
+    SponsorsList,
     Step,
     Steps,
     Tab,

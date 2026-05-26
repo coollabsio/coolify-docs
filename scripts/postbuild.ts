@@ -119,7 +119,12 @@ async function writeOgImages() {
       await mkdir(dirname(outputPath), { recursive: true });
 
       const svg = renderOgSvg(doc.title, doc.description, logoDataUri);
-      const png = new Resvg(svg).render().asPng();
+      const png = new Resvg(svg, {
+        font: {
+          loadSystemFonts: true,
+          defaultFontFamily: 'DejaVu Sans',
+        },
+      }).render().asPng();
 
       await writeFile(outputPath, png);
     }),

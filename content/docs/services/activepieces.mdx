@@ -61,25 +61,25 @@ icon: "/docs/images/services/activepieces-logo.png"
 #         - AP_API_KEY=$SERVICE_PASSWORD_64_APIKEY
 #         - AP_ENCRYPTION_KEY=$SERVICE_PASSWORD_ENCRYPTIONKEY
 #         - >-
-#           AP_ENGINE_EXECUTABLE_PATH=$&#123;AP_ENGINE_EXECUTABLE_PATH:-dist/packages/engine/main.js&#125;
-#         - AP_ENVIRONMENT=$&#123;AP_ENVIRONMENT:-prod&#125;
-#         - AP_EXECUTION_MODE=$&#123;AP_EXECUTION_MODE:-UNSANDBOXED&#125;
-#         - AP_FRONTEND_URL=$&#123;SERVICE_FQDN_ACTIVEPIECES&#125;
+#           AP_ENGINE_EXECUTABLE_PATH=${AP_ENGINE_EXECUTABLE_PATH:-dist/packages/engine/main.js};
+#         - AP_ENVIRONMENT=${AP_ENVIRONMENT:-prod};
+#         - AP_EXECUTION_MODE=${AP_EXECUTION_MODE:-UNSANDBOXED};
+#         - AP_FRONTEND_URL=${SERVICE_FQDN_ACTIVEPIECES};
 #         - AP_JWT_SECRET=$SERVICE_PASSWORD_64_JWT
-#         - AP_POSTGRES_DATABASE=$&#123;POSTGRES_DB:-activepieces&#125;
-#         - AP_POSTGRES_HOST=$&#123;POSTGRES_HOST:-postgres&#125;
-#         - AP_POSTGRES_PASSWORD=$&#123;SERVICE_PASSWORD_POSTGRES&#125;
-#         - AP_POSTGRES_PORT=$&#123;POSTGRES_PORT:-5432&#125;
+#         - AP_POSTGRES_DATABASE=${POSTGRES_DB:-activepieces};
+#         - AP_POSTGRES_HOST=${POSTGRES_HOST:-postgres};
+#         - AP_POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES};
+#         - AP_POSTGRES_PORT=${POSTGRES_PORT:-5432};
 #         - AP_POSTGRES_USERNAME=$SERVICE_USER_POSTGRES
-#         - AP_REDIS_HOST=$&#123;REDIS_HOST:-redis&#125;
-#         - AP_REDIS_PORT=$&#123;REDIS_PORT:-6379&#125;
-#         - AP_SANDBOX_RUN_TIME_SECONDS=$&#123;AP_SANDBOX_RUN_TIME_SECONDS:-600&#125;
-#         - AP_TELEMETRY_ENABLED=$&#123;AP_TELEMETRY_ENABLED:-false&#125;
+#         - AP_REDIS_HOST=${REDIS_HOST:-redis};
+#         - AP_REDIS_PORT=${REDIS_PORT:-6379};
+#         - AP_SANDBOX_RUN_TIME_SECONDS=${AP_SANDBOX_RUN_TIME_SECONDS:-600};
+#         - AP_TELEMETRY_ENABLED=${AP_TELEMETRY_ENABLED:-false};
 #         - >-
-#           AP_TEMPLATES_SOURCE_URL=$&#123;AP_TEMPLATES_SOURCE_URL:-https://cloud.activepieces.com/api/v1/flow-templates&#125;
+#           AP_TEMPLATES_SOURCE_URL=${AP_TEMPLATES_SOURCE_URL:-https://cloud.activepieces.com/api/v1/flow-templates};
 #         - >-
-#           AP_TRIGGER_DEFAULT_POLL_INTERVAL=$&#123;AP_TRIGGER_DEFAULT_POLL_INTERVAL:-5&#125;
-#         - AP_WEBHOOK_TIMEOUT_SECONDS=$&#123;AP_WEBHOOK_TIMEOUT_SECONDS:-30&#125;
+#           AP_TRIGGER_DEFAULT_POLL_INTERVAL=${AP_TRIGGER_DEFAULT_POLL_INTERVAL:-5};
+#         - AP_WEBHOOK_TIMEOUT_SECONDS=${AP_WEBHOOK_TIMEOUT_SECONDS:-30};
 #       depends_on:
 #         postgres:
 #           condition: service_healthy
@@ -97,16 +97,16 @@ icon: "/docs/images/services/activepieces-logo.png"
 #     postgres:
 #       image: postgres:latest
 #       environment:
-#         - POSTGRES_DB=$&#123;POSTGRES_DB:-activepieces&#125;
-#         - POSTGRES_PASSWORD=$&#123;SERVICE_PASSWORD_POSTGRES&#125;
-#         - POSTGRES_USER=$&#123;SERVICE_USER_POSTGRES&#125;
-#         - POSTGRES_PORT=$&#123;POSTGRES_PORT:-5432&#125;
+#         - POSTGRES_DB=${POSTGRES_DB:-activepieces};
+#         - POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES};
+#         - POSTGRES_USER=${SERVICE_USER_POSTGRES};
+#         - POSTGRES_PORT=${POSTGRES_PORT:-5432};
 #       volumes:
 #         - pg-data:/var/lib/postgresql/data
 #       healthcheck:
 #         test:
 #           - CMD-SHELL
-#           - pg_isready -U $$&#123;POSTGRES_USER&#125; -d $$&#123;POSTGRES_DB&#125;
+#           - pg_isready -U $${POSTGRES_USER}; -d $${POSTGRES_DB};
 #         interval: 5s
 #         timeout: 20s
 #         retries: 10

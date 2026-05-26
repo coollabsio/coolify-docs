@@ -1,0 +1,243 @@
+---
+title: "MCP Server"
+description: "Connect AI assistants like Claude Desktop and Cursor to your Coolify instance using the Model Context Protocol (MCP) for read-only infrastructure visibility."
+---
+
+# MCP Server
+
+Coolify includes a built-in MCP (Model Context Protocol) server that lets AI assistants query your Coolify Instance without exposing sensitive credentials. 
+
+<Callout type="warn" title="Currently Read-Only">
+The MCP server is currently **read-only**, with write operations planned for a future release.
+</Callout>
+
+
+## Who this is for?
+
+This setup is ideal for people who:
+
+- Use AI coding assistants like [Claude Code](https://claude.com/product/claude-code), [Cursor](https://cursor.com), [Codex](https://openai.com/codex/)  and want them to understand your infrastructure.
+- Want to ask natural language questions about your deployed apps, databases, and servers.
+- Need a read-only view of your Coolify resources from AI tools without risking accidental changes.
+- Manage multiple projects and want AI help navigating your infrastructure.
+
+---
+
+## Before We Start
+
+<Callout type="warn" title="API Access Required">
+
+MCP relies on API tokens for authentication. 
+
+Make sure **API access is enabled** on your instance before enabling the MCP server. 
+
+You can enable it by following the [API Setup](/api-reference/authorization) guide.
+
+</Callout>
+
+---
+
+## How It Works?
+
+Your AI assistant connects to Coolify's MCP endpoint over HTTP using a standard API token. Once connected, the assistant can call any of the 10 built-in tools to browse your infrastructure — listing servers, inspecting applications, checking database status, and more.
+
+All data is scoped to the **team** associated with your API token. If you have multiple teams, the assistant only sees resources belonging to the token's team.
+
+
+---
+
+## Example Data
+
+<Callout type="info">
+
+The following data is used as an example in this guide. Please replace it with your actual data when following the steps.
+
+- **Coolify Domain:** coolify.shadowarcanist.com
+- **MCP Endpoint:** https://coolify.shadowarcanist.com/mcp
+- **API Token:** `67|abcthisisa123dummytoken`
+
+</Callout>
+
+---
+
+## 1. Enable the MCP Server
+
+<Tabs items={['Dashboard', 'API']}>
+
+<Tab value="Dashboard">
+
+You can enable or disable the MCP server from the dashboard:
+
+<ZoomImage src="/docs/images/integrations/mcp/enable-mcp.webp" />
+
+1. Log in to your Coolify dashboard
+2. Go to **Settings** in the sidebar.
+3. Click on **Advanced**.
+4. Find the **MCP Server** section and toggle **Enable MCP Server** on.
+
+</Tab>
+
+<Tab value="API">
+
+You can enable or disable the MCP server programmatically using the API:
+
+```bash
+# Enable MCP
+curl -X POST https://coolify.shadowarcanist.com/api/v1/mcp/enable \
+  -H "Authorization: Bearer 67|abcthisisa123dummytoken"
+
+# Disable MCP
+curl -X POST https://coolify.shadowarcanist.com/api/v1/mcp/disable \
+  -H "Authorization: Bearer 67|abcthisisa123dummytoken"
+```
+
+These endpoints require a API token with `root` permissions.
+
+</Tab>
+
+</Tabs>
+
+Once enabled, your MCP endpoint becomes available at:
+
+```sh
+https://coolify.shadowarcanist.com/mcp
+```
+
+## 2. Create an API Token
+
+The MCP server uses your existing Coolify API tokens for authentication. Follow the [API Authorization guide](/api-reference/authorization) to create a token.
+
+Your token must have the `read` permission.
+
+<Callout type="warn" title="Token Permissions">
+
+Your MCP token only needs `read` permissions for now. 
+
+Since the server currently only supports read operations, extra permissions provide no benefit and increase risk if the token is leaked.
+
+</Callout>
+
+## 3. Configure Your AI Client
+
+Use your MCP endpoint and API token to connect your AI assistant. 
+
+Coolify's MCP server uses **Streamable HTTP** transport. 
+
+When configuring any client, you'll need:
+- **URL:** `https://coolify.shadowarcanist.com/mcp`
+- **Authentication Header:** `Authorization: Bearer 67|abcthisisa123dummytoken`
+
+Follow the setup guide for your client:
+
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code/mcp)
+- [Cursor](https://cursor.com/docs/mcp)
+
+Any other MCP-compatible client that supports **Streamable HTTP** transport can also connect using the URL and authentication header above.
+
+---
+
+## Available Tools
+
+Once connected, your AI assistant can use the following 10 tools. All tools are currently read-only.
+
+### Overview
+
+| Tool | Description |
+|------|-------------|
+| `get_infrastructure_overview` | High-level summary of your entire infrastructure — start here |
+
+### Servers
+
+| Tool | Description |
+|------|-------------|
+| `list_servers` | List all servers with name, IP, and reachability status |
+| `get_server` | Full details for a specific server by UUID |
+
+### Projects
+
+| Tool | Description |
+|------|-------------|
+| `list_projects` | List all projects with name and description |
+
+### Applications
+
+| Tool | Description |
+|------|-------------|
+| `list_applications` | List all applications (filterable by tag) |
+| `get_application` | Full details for a specific application by UUID |
+
+### Databases
+
+| Tool | Description |
+|------|-------------|
+| `list_databases` | List all databases with name, status, and type |
+| `get_database` | Full details for a specific database by UUID |
+
+### Services
+
+| Tool | Description |
+|------|-------------|
+| `list_services` | List all one-click services and stacks |
+| `get_service` | Full details for a specific service by UUID |
+
+<Callout type="success" title="Recommended Workflow">
+
+Start with `get_infrastructure_overview` to get a bird's-eye view of your setup. 
+
+Then use `list_*` tools to browse specific resource types, and `get_*` tools when you need full details on a particular resource.
+
+</Callout>
+
+### Pagination
+
+All `list_*` tools support pagination:
+
+- **page** — Page number (default: 1)
+- **per_page** — Items per page (default: 50, max: 100)
+
+The response includes a `_pagination` field with a `next` value indicating the next page, if available.
+
+---
+
+## Security Considerations
+
+Your infrastructure metadata (server IPs, application names, domains, environment variable names) is visible to the AI client. 
+
+Revoking the API token used for MCP immediately cuts off MCP access.
+
+---
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="MCP endpoint returns 404">
+
+Make sure the MCP server is enabled in **Settings &gt; Advanced**. The endpoint only responds when the toggle is active.
+
+</Accordion>
+
+<Accordion title="Authentication fails">
+
+- Verify your API token is correct and hasn't been revoked.
+- Make sure **API access** is enabled on your instance (**Settings &gt; API**).
+- Check that the token has `read` permissions.
+
+</Accordion>
+
+<Accordion title="AI client can't connect">
+
+- Confirm the MCP endpoint URL is correct: `https://coolify.shadowarcanist.com/mcp`
+- Make sure your Coolify instance is accessible from the machine running your AI client.
+- Check that the transport type is set to **Streamable HTTP** (not SSE or stdio).
+
+</Accordion>
+
+<Accordion title="Missing resources in responses">
+
+- Resources are scoped to the API token's team. If you don't see a resource, it may belong to a different team.
+- Use `get_infrastructure_overview` first to verify what's visible with your token.
+
+</Accordion>
+
+</Accordions>

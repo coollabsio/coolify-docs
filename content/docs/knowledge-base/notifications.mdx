@@ -119,10 +119,10 @@ Email notifications can be configured using either SMTP or Resend.
    - You can now create topics using the 3-dot menu in the group (also works on desktop)
 
 4. Get Required IDs
-   - Visit: `https://api.telegram.org/bot&#123;YOUR_BOT_TOKEN&#125;/getUpdates` (Replace `&#123;YOUR_BOT_TOKEN&#125;` with your actual bot token)
+   - Visit: `https://api.telegram.org/bot{YOUR_BOT_TOKEN}/getUpdates` (Replace `{YOUR_BOT_TOKEN}` with your actual bot token)
    - Send a test message in your group or thread/topic
    - Find these values in the response:
-     - `Chat ID`: Look for `"chat": &#123;"id": -100XXXXXXXXX,` (for groups/channels, the chat ID usually starts with `-100`)
+     - `Chat ID`: Look for `"chat": {"id": -100XXXXXXXXX,` (for groups/channels, the chat ID usually starts with `-100`)
      - `Thread/Topic ID` (if using threads): Look for `"message_thread_id":XXXXX,`
 
 5. Configure Coolify
@@ -142,7 +142,7 @@ Email notifications can be configured using either SMTP or Resend.
 - Make sure the bot is an admin in the group/channel
 - Include the minus sign (-) in the chat ID if present
 - If `getUpdates` returns an empty response, send another message and try again
-- if you can not access `getUpdates` make sure you have the correct bot token and you have replace the `&#123;YOUR_BOT_TOKEN&#125;` with your actual bot token (replace everything including the quotes)
+- if you can not access `getUpdates` make sure you have the correct bot token and you have replace the `{YOUR_BOT_TOKEN}` with your actual bot token (replace everything including the quotes)
 
 </Callout>
 
