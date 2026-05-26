@@ -109,9 +109,9 @@ services:
 
 **Key behaviors:**
 
-- **Required variables** (`$&#123;VAR:?&#125;`) appear first in the environment variables list and show a red border when empty
-- **Required with defaults** (`$&#123;VAR:?default&#125;`) are prefilled with the default value but remain editable
-- **Optional variables** (`$&#123;VAR:-default&#125;`) use standard Docker Compose behavior
+- **Required variables** (`{VAR:?}`) appear first in the environment variables list and show a red border when empty
+- **Required with defaults** (`{VAR:?default}`) are prefilled with the default value but remain editable
+- **Optional variables** (`{VAR:-default}`) use standard Docker Compose behavior
 
 If a required variable is not set during deployment:
 

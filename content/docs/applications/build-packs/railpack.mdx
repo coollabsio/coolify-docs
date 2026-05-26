@@ -1,0 +1,107 @@
+---
+title: Railpack Build Pack
+description: Build applications with Railpack — the successor to Nixpacks — automatically detecting your codebase, building optimized images, and deploying static sites or dynamic apps.
+---
+
+# Railpack
+
+Railpack is an open source build pack created by [Railway](https://railway.com?utm_source=coolify.io) as the successor to [Nixpacks](/applications/build-packs/nixpacks). The source is available on [GitHub](https://github.com/railwayapp/railpack?utm_source=coolify.io). Coolify uses Railpack as one of the build packs.
+
+Railpack checks your git repository and automatically detects your programming language, installs dependencies, and configures build and start commands — all with zero configuration. It then builds an optimized Docker image using BuildKit.
+
+Railpack can deploy both fully static websites and non-static applications. Once your repository is set up, you can use Coolify to deploy your project with ease.
+
+---
+
+## How to use Railpack?
+
+On Coolify you can only use Railpack on git-based deployments. 
+
+The setup steps are the same as Nixpacks — follow the [Nixpacks guide](/applications/build-packs/nixpacks#how-to-use-nixpacks) but select **Railpack** instead of **Nixpacks** in the build pack selector (Step 4).
+
+<Callout type="warn" title="Beta">
+
+Railpack is currently marked as **Beta** in Coolify. It is fully functional but may receive changes as it matures.
+
+</Callout>
+
+---
+
+## Deploying Static Websites
+
+The steps for deploying a fully static website with Railpack are the same as Nixpacks. Follow the [Nixpacks static site guide](/applications/build-packs/nixpacks#how-to-deploy-fully-static-website) — the only difference is that Railpack is selected as the build pack.
+
+---
+
+## Deploying Non-Static Applications
+
+The steps for deploying a non-static application with Railpack are the same as Nixpacks. Follow the [Nixpacks non-static guide](/applications/build-packs/nixpacks#how-to-deploy-non-static-website-applications) — the only difference is that Railpack is selected as the build pack.
+
+---
+
+## Advanced Configuration
+
+### Environment Variables
+
+You can customize Railpack's behavior using environment variables prefixed with `RAILPACK_`. Below are the available variables:
+
+| Variable | Description |
+|----------|-------------|
+| `RAILPACK_BUILD_CMD` | Override the build command detected by Railpack |
+| `RAILPACK_INSTALL_CMD` | Override the install command detected by Railpack |
+| `RAILPACK_START_CMD` | Override the start command for the container |
+| `RAILPACK_PACKAGES` | Install additional [Mise](https://mise.jdx.dev?utm_source=coolify.io) packages (format: `pkg[@version]`, space-separated) |
+| `RAILPACK_BUILD_APT_PACKAGES` | Install additional apt packages during the build phase (space-separated) |
+| `RAILPACK_DEPLOY_APT_PACKAGES` | Install additional apt packages in the final deployed image (space-separated) |
+| `RAILPACK_DISABLE_CACHES` | Disable specific BuildKit cache keys, or `*` to disable all caches |
+| `RAILPACK_VERBOSE` | Enable verbose logging during the build |
+
+For more details, see the [Railpack Environment Variables](https://railpack.com/config/environment-variables/?utm_source=coolify.io) documentation.
+
+To add or modify environment variables in Coolify, simply click on the **Environment Variables** tab, where you can manage them easily.
+
+
+### Configuration file
+
+Railpack supports specifying build configurations in a `railpack.json` file. If this file is present in the root of your repository, it will be automatically used. For example:
+
+```json
+{
+  "$schema": "https://schema.railpack.com",
+  "packages": {
+    "node": "22"
+  },
+  "steps": {
+    "install": {
+      "commands": ["npm install"]
+    },
+    "build": {
+      "commands": ["npm run build"]
+    }
+  },
+  "deploy": {
+    "startCommand": "node dist/index.js"
+  }
+}
+```
+
+Adding `$schema` to your `railpack.json` enables autocomplete and validation in your editor.
+
+For more details, refer to the [Railpack Configuration File](https://railpack.com/config/file/?utm_source=coolify.io) documentation.
+
+---
+
+## Railpack vs Nixpacks
+
+Railpack is the successor to [Nixpacks](/applications/build-packs/nixpacks), built by the same team at Railway. Key differences include:
+
+| | Railpack | Nixpacks |
+|---|---------|----------|
+| **Config file** | `railpack.json` (JSON) | `nixpacks.toml` (TOML) |
+| **Build system** | Docker BuildKit with frontend | Native Docker build |
+| **Package manager** | [Mise](https://mise.jdx.dev?utm_source=coolify.io) | Nix |
+| **Env var prefix** | `RAILPACK_*` | `NIXPACKS_*` |
+| **Maintenance** | Actively developed | Maintenance mode |
+| **Status in Coolify** | Beta | Stable |
+
+Both build packs support automatic language detection, static site deployment, custom install/build/start commands, and environment variable configuration.

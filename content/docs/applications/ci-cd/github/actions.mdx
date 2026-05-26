@@ -154,7 +154,7 @@ If pushing to a private registry, authenticate it on your server so it can pull 
 Run one of these commands on your server's terminal (based on the registry):
 
 - **Docker Hub**: `docker login`
-- **GitHub Container Registry (GHCR)**: `docker login ghcr.io -u USERNAME --password-stdin`
+- **GitHub Container Registry (GHCR)**: `echo $GH_TOKEN | docker login ghcr.io -u $USERNAME --password-stdin`
 
 For other registries, refer to their documentation.
 

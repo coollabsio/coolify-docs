@@ -1,69 +1,302 @@
 ---
-title: Authorization
-layout: doc
-description: "Learn how to authorize API requests in Coolify with Bearer tokens, scoped permissions, and secure access control."
+title: "Authorization"
+description: "Authenticate API requests to your Coolify instance using Bearer tokens with scoped permissions, team isolation, and rate limiting."
 ---
 
-# Authorization
-API request requires a `Bearer` token in `Authorization` header, which could be generated from the UI.
+# API Authorization
 
-## Access
+Coolify uses Bearer tokens to authenticate API requests. 
 
-The API can be accessed through `http://<ip>:8000/api`.
-
-With the exception of `/health` and `/feedback`, all routes are additionally prefixed with `/v1` resulting in the base route `http://<ip>:8000/api/v1`.
-
-## Generate
-
-1. Go to `Keys & Tokens` / `API tokens`.
-2. Define a name for your token and click `Create New Token`.
+Tokens are scoped to a single team and carry specific permissions that control what data and actions are available.
 
 
-<Callout type="success" title="Tip">
+## Who this is for?
 
-  You will see the token once, so make sure to copy it and store it in a safe place.
+This guide is for people who:
+
+- Want to automate infrastructure management through the Coolify API.
+- Are building integrations that interact with Coolify programmatically.
+- Need to set up authentication for the [MCP Server](/integrations/mcp) or other API-based tools.
+
+---
+
+## How It Works?
+
+Every API request must include a Bearer token in the `Authorization` header. 
+
+Coolify validates the token, identifies the user and team, then checks whether the token's permissions allow the requested action.
+
+All resources returned by the API are scoped to the **team** the token was created under. 
+
+If you work across multiple teams, you need a separate token for each one.
+
+---
+
+## Example Data
+
+<Callout type="info">
+
+The following data is used as an example in this guide. Replace it with your actual instance URL and token.
+
+- **Coolify URL:** `https://coolify.shadowarcanist.com`
+- **API Base:** `https://coolify.shadowarcanist.com/api/v1`
+- **API Token:** `67|abcthisisa123dummytoken`
 
 </Callout>
 
+---
 
-## Scope
+## 1. Enable the API
 
-The token will only be able to access resources that are owned by the team that the token is scoped to.
+<Tabs items={['Dashboard', 'API']}>
 
-```php
-# Sample token
-3|WaobqX9tJQshKPuQFHsyApxuOOggg4wOfvGc9xa233c376d7
+<Tab value="Dashboard">
+
+You can enable or disable the API from the dashboard:
+
+<ZoomImage src="/docs/images/api/enable-api.webp" />
+
+1. Go to **Settings** in the sidebar.
+2. Click on **Advanced**.
+3. Find the **API Settings** section and toggle **API Access** on.
+
+<Callout type="success" title="TIP">
+Optionally, configure **Allowed IPs** to restrict API access to specific IP addresses. 
+
+Leave it empty or set to `0.0.0.0` to allow all IPs (not recommended for production usage)
+</Callout>
+
+</Tab>
+
+<Tab value="API">
+
+If you already have a token with `root` permissions, you can enable or disable the API programmatically:
+
+```bash
+# Enable API
+curl -X POST https://coolify.shadowarcanist.com/api/v1/enable \
+  -H "Authorization: Bearer 67|abcthisisa123dummytoken"
+
+# Disable API
+curl -X POST https://coolify.shadowarcanist.com/api/v1/disable \
+  -H "Authorization: Bearer 67|abcthisisa123dummytoken"
 ```
+
+These endpoints require a token with `root` permissions.
+
+</Tab>
+
+</Tabs>
+
+---
+
+## 2. Create an API Token
+
+<ZoomImage src="/docs/images/api/create-api-token.webp" />
+
+1. Go to **Security** in the sidebar.
+2. Click on **API Tokens**.
+3. Enter a name for your token.
+4. Choose an expiration period — **7, 30, 60, 90, 1 year**, or **no expiration**.
+5. Select the permissions you need (see [Permissions](#permissions) below).
+6. Click **Create** button.
+
+<Callout type="warn" title="Copy Your Token">
+
+The token is displayed **only once** after creation. 
+
+Copy it immediately and store it somewhere safe — you won't be able to see it again.
+
+</Callout>
+
+Your token will look like this:
+
+```sh
+67|abcthisisa123dummytoken
+```
+
+The number before the `|` is the token ID. Everything after is the secret — both parts are required for authentication.
+
+---
+
+## 3. Make API Requests
+
+Include your token in the `Authorization` header of every request:
+
+```bash
+curl https://coolify.shadowarcanist.com/api/v1/teams \
+  -H "Authorization: Bearer 67|abcthisisa123dummytoken"
+```
+
+### Base URL
+
+All API endpoints are available under:
+
+```sh
+https://coolify.shadowarcanist.com/api/v1
+```
+
+The only exceptions are `/api/health` and `/api/feedback`, which sit outside the `/v1` prefix.
+
+---
 
 ## Permissions
 
+Each token carries one or more permissions that control what it can access. 
 
-<Callout type="warn" title="HEADS UP!">
+Select correct permissions when creating the token.
 
-Some API data won't get returned if the API token doesn't have correct permissions
+| Permission | Access Level | Description |
+|---|---|---|
+| `read` | Read-only | View resources — servers, projects, applications, databases, services |
+| `read:sensitive` | Read + secrets | Everything in `read`, plus access to passwords, private keys, environment variables, and logs |
+| `write` | Modify | Create, update, and delete resources |
+| `deploy` | Deploy | Trigger deployments and manage deploy webhooks |
+| `root` | Full access | Bypasses all permission checks — complete control over the API |
+
+<Callout type="warn" title="Root Permission">
+
+The `root` permission can only be assigned by users with **Admin** or **Owner** roles. 
+
+It grants unrestricted API access, including enabling/disabling the API itself.
+
+Only use `root` when absolutely necessary.
 
 </Callout>
 
+### How Permissions Are Checked
 
-Currently there are three types of permissions:
+- Each API endpoint requires a specific permission — `read`, `write`, or `deploy`.
+- If your token doesn't have the required permission, the request returns **403 Forbidden** with a list of the missing permissions.
+- Tokens with `root` bypass all permission checks entirely.
+- The `read:sensitive` permission controls whether sensitive fields (passwords, secrets, private keys, compose files) are included or redacted in responses.
 
-- read-only `(default)`
-- read:sensitive
-- view:sensitive
-- `*` (all permissions)
+<Callout type="success" title="Least Privilege">
 
-### `read-only`
+Grant only the permissions your integration actually needs. 
 
-With this permission, you can only read data from the API, but you can't create, update, or delete any resources. Also you can't see sensitive data.
+A monitoring dashboard only needs `read`. 
 
-### `read:sensitive`
+A CI/CD pipeline might need `read` and `deploy`. 
 
-With this permission, you can only read data from the API and see sensitive information that is normally redacted. You cannot create, update, or delete any resources.
+Reserve `root` for administrative automation.
 
-### `view:sensitive`
+</Callout>
 
-Without this permission, passwords, api keys, and other sensitive data will be redacted from the API response.
+---
 
-### `*`
+## Team Scoping
 
-Full access to all resources and sensitive data.
+Every API token is bound to the team that was active when the token was created. The token can **only** access resources belonging to that team.
+
+- Servers, projects, applications, databases, and services are all filtered by the token's team.
+- If you don't see a resource in API responses, it likely belongs to a different team.
+- To access resources across multiple teams, create a separate token while each team is active.
+
+---
+
+## Rate Limiting
+
+API requests are rate-limited to **200 requests per minute** by default. This applies globally and can be configured via the `API_RATE_LIMIT` environment variable for Coolify.
+
+When you exceed the rate limit, the API returns **429 Too Many Requests**.
+
+---
+
+## IP Allowlisting
+
+You can restrict API access to specific IP addresses, so only trusted networks can reach your instance's API.
+
+### Configure Allowed IPs
+
+<ZoomImage src="/docs/images/api/enable-api.webp" />
+
+1. Go to **Settings** in the sidebar.
+2. Click on **Advanced**.
+3. Find the **Allowed IPs for API Access** field.
+4. Enter your allowed IPs as a comma-separated list.
+
+```sh
+# Single IPs
+192.168.1.100,203.0.113.50
+
+# CIDR notation
+10.0.0.0/8,172.16.0.0/16
+
+# Mixed
+192.168.1.100,10.0.0.0/8,203.0.113.0/24
+```
+
+Both IPv4 and IPv6 addresses are supported, including CIDR ranges.
+
+### Behavior
+
+| Configuration | Result |
+|---|---|
+| Empty (default) | All IPs allowed |
+| `0.0.0.0` | All IPs allowed (explicit wildcard) |
+| Comma-separated IPs/CIDRs | Only listed IPs can access the API |
+
+<Callout type="warn" title="Lock-Out Risk">
+
+If you set allowed IPs incorrectly, you could lock yourself out of the API. 
+
+Make sure your current IP is included before saving. You can always change this setting from the dashboard.
+
+</Callout>
+
+Coolify automatically deduplicates entries — if a specific IP is already covered by a CIDR range in your list, the redundant entry is removed.
+
+---
+
+## Security Considerations
+
+- **Token storage** — Tokens are stored as SHA-256 hashes. Coolify cannot retrieve your token after creation — if you lose it, create a new one.
+- **Token expiration** — Set an expiration period for tokens used in automated systems. Coolify sends an email warning before a token expires.
+- **IP allowlisting** — Restrict API access to trusted IPs only. See [IP Allowlisting](#ip-allowlisting) above.
+- **Team isolation** — Tokens only access resources within their team. A leaked token cannot access other teams' resources.
+- **Revocation** — Delete a token from **Security &gt; API Tokens** to immediately revoke access.
+
+---
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="API returns 403 Forbidden">
+
+- Check that **API access is enabled** on your instance (**Settings &gt; API**).
+- If IP allowlisting is configured, make sure your IP is in the allowed list.
+- Verify your token has the required permission for the endpoint you're calling.
+
+</Accordion>
+
+<Accordion title="API returns 401 Unauthenticated">
+
+- Verify your token is correct and includes both the ID and secret (e.g., `67|abcth...`).
+- Check that the token hasn't expired — create a new one if needed.
+- Make sure the `Authorization` header format is exactly `Bearer <token>`.
+
+</Accordion>
+
+<Accordion title="Missing resources in responses">
+
+- Resources are scoped to the token's team. If you don't see a resource, it may belong to a different team.
+- Switch to the correct team in the dashboard and create a new token for that team.
+
+</Accordion>
+
+<Accordion title="Sensitive data is redacted">
+
+- Your token needs the `read:sensitive` or `root` permission to see passwords, private keys, and other secrets.
+- Tokens with only `read` permission receive redacted values for sensitive fields.
+
+</Accordion>
+
+<Accordion title="Rate limited (429 Too Many Requests)">
+
+- The default limit is 200 requests per minute. Space out your requests or ask your instance administrator to adjust the `API_RATE_LIMIT` setting.
+
+</Accordion>
+
+</Accordions>

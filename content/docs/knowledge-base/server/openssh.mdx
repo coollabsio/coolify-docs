@@ -26,37 +26,45 @@ There are two ways to setup OpenSSH
 ### 1. Install OpenSSH Server
 
 
-<Callout type="info">
+<Tabs items={['Debian / Ubuntu / PopOS', 'CentOS / RHEL / Rocky / Fedora', 'SLES/openSUSE', 'Arch Linux', 'Alpine Linux']}>
 
-== Debian / Ubuntu / PopOS
+<Tab value="Debian / Ubuntu / PopOS">
 
 ```bash
 apt update && apt install -y openssh-server
 systemctl enable --now ssh
 ```
 
-== CentOS / RHEL / Rocky / Fedora
+</Tab>
+
+<Tab value="CentOS / RHEL / Rocky / Fedora">
 
 ```bash
 dnf install -y openssh-server
 systemctl enable --now sshd
 ```
 
-== SLES/openSUSE
+</Tab>
+
+<Tab value="SLES/openSUSE">
 
 ```bash
 zypper install -y openssh
 systemctl enable --now sshd
 ```
 
-== Arch Linux
+</Tab>
+
+<Tab value="Arch Linux">
 
 ```bash
 pacman -Sy --noconfirm openssh
 systemctl enable --now sshd
 ```
 
-== Alpine Linux
+</Tab>
+
+<Tab value="Alpine Linux">
 
 ```bash
 apk add openssh
@@ -64,7 +72,9 @@ rc-update add sshd
 rc-service sshd start
 ```
 
-</Callout>
+</Tab>
+
+</Tabs>
 
 
 
@@ -102,28 +112,33 @@ PermitRootLogin prohibit-password
 3. Restart SSH:
 
 
-<Callout type="info">
+<Tabs items={['Debian / Ubuntu / PopOS', 'CentOS / RHEL / Rocky / Fedora / Arch / openSUSE', 'Alpine Linux']}>
 
-== Debian / Ubuntu / PopOS
+<Tab value="Debian / Ubuntu / PopOS">
 
 ```bash
 systemctl restart ssh
 ````
 
-== CentOS / RHEL / Rocky / Fedora / Arch / openSUSE
+</Tab>
+
+<Tab value="CentOS / RHEL / Rocky / Fedora / Arch / openSUSE">
 
 ```bash
 systemctl restart sshd
 ```
 
-== Alpine Linux
+</Tab>
+
+<Tab value="Alpine Linux">
 
 ```bash
 rc-service sshd restart
 ```
 
-</Callout>
+</Tab>
 
+</Tabs>
 
 
 
@@ -139,38 +154,45 @@ The following steps are handled automatically by the Coolify installation script
 
 ### 1. Install OpenSSH Server
 
+<Tabs items={['Debian / Ubuntu / PopOS', 'CentOS / RHEL / Rocky / Fedora', 'SLES/openSUSE', 'Arch Linux', 'Alpine Linux']}>
 
-<Callout type="info">
-
-== Debian / Ubuntu / PopOS
+<Tab value="Debian / Ubuntu / PopOS">
 
 ```bash
 apt update && apt install -y openssh-server
 systemctl enable --now ssh
 ```
 
-== CentOS / RHEL / Rocky / Fedora
+
+</Tab>
+
+<Tab value="CentOS / RHEL / Rocky / Fedora">
 
 ```bash
 dnf install -y openssh-server
 systemctl enable --now sshd
 ```
 
-== SLES/openSUSE
+</Tab>
+
+<Tab value="SLES/openSUSE">
 
 ```bash
 zypper install -y openssh
 systemctl enable --now sshd
 ```
 
-== Arch Linux
+</Tab>
+
+<Tab value="Arch Linux">
 
 ```bash
 pacman -Sy --noconfirm openssh
 systemctl enable --now sshd
 ```
+</Tab>
 
-== Alpine Linux
+<Tab value="Alpine Linux">
 
 ```bash
 apk add openssh
@@ -178,7 +200,10 @@ rc-update add sshd
 rc-service sshd start
 ```
 
-</Callout>
+</Tab>
+
+</Tabs>
+
 
 
 ### 2. Configure SSH
@@ -215,27 +240,33 @@ PermitRootLogin prohibit-password
 3. Restart SSH:
 
 
-<Callout type="info">
+<Tabs items={['Debian / Ubuntu / PopOS', 'CentOS / RHEL / Rocky / Arch / Fedora /openSUSE', 'Alpine Linux']}>
 
-== Debian / Ubuntu / PopOS
+<Tab value="Debian / Ubuntu / PopOS">
 
 ```bash
 systemctl restart ssh
 ````
+</Tab>
 
-== CentOS / RHEL / Rocky / Fedora / Arch / openSUSE
+<Tab value="CentOS / RHEL / Rocky / Fedora / Arch / openSUSE">
+
 
 ```bash
 systemctl restart sshd
 ```
 
-== Alpine Linux
+</Tab>
+
+<Tab value="Alpine Linux">
 
 ```bash
 rc-service sshd restart
 ```
 
-</Callout>
+</Tab>
+
+</Tabs>
 
 
 ### 3. Generate SSH Key for Coolify

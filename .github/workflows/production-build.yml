@@ -1,6 +1,7 @@
 name: Production Build
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - v4.x
