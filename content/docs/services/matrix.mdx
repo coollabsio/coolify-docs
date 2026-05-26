@@ -74,6 +74,34 @@ Set the following environment variable:
 
 - `SYNAPSE_SERVER_NAME=example.org`
 
+#### User registration
+
+Registration is **disabled** by default. There are three optional variables (all default to `false`):
+
+| Variable | Description |
+| --- | --- |
+| `ENABLE_REGISTRATION` | Allow sign-up via Matrix clients |
+| `ENABLE_REGISTRATION_WITHOUT_VERIFICATION` | Skip email or CAPTCHA verification |
+| `REGISTRATION_REQUIRES_TOKEN` | Require a registration token (invite-only) |
+
+With `ENABLE_REGISTRATION=true`, set **at least one** of `ENABLE_REGISTRATION_WITHOUT_VERIFICATION=true` or `REGISTRATION_REQUIRES_TOKEN=true`.
+
+**Invite-only:**
+
+```bash
+ENABLE_REGISTRATION=true
+REGISTRATION_REQUIRES_TOKEN=true
+```
+
+Create tokens with the Synapse admin API.
+
+**Open registration:**
+
+```bash
+ENABLE_REGISTRATION=true
+ENABLE_REGISTRATION_WITHOUT_VERIFICATION=true
+```
+
 ### Delegation (required)
 
 Because Synapse runs on `matrix.example.org` but identifies as `example.org`,
