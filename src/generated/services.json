@@ -752,6 +752,13 @@
     "category": "Administration"
   },
   {
+    "name": "Hermes Agent",
+    "slug": "hermes-agent",
+    "icon": "",
+    "description": "Autonomous AI agent with persistent memory and scheduling, plus a self-hosted web chat UI.",
+    "category": "AI"
+  },
+  {
     "name": "Heyform",
     "slug": "heyform",
     "icon": "/docs/images/services/heyform-logo.svg",
