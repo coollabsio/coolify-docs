@@ -893,6 +893,13 @@
     "category": "Productivity"
   },
   {
+    "name": "Keila",
+    "slug": "keila",
+    "icon": "/docs/images/services/keila-logo.svg",
+    "description": "Open-source newsletter and email campaign tool.",
+    "category": "Email"
+  },
+  {
     "name": "Keycloak",
     "slug": "keycloak",
     "icon": "/docs/images/services/keycloak-logo.svg",
