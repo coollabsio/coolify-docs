@@ -11,6 +11,12 @@ icon: "/docs/images/services/healthchecks.webp"
 
 Healthchecks is a cron job monitoring service. It listens for HTTP requests and email messages from your cron jobs and scheduled tasks. When a ping does not arrive on time, Healthchecks sends out alerts.
 
+After deploying Healthchecks, you have two options for creating an account:
+*   **Magic Link:** Send a login link directly to your email (requires SMTP to be set up).
+*   **CLI Setup:** Use the `manage.py` script inside the app container to create a superuser account.
+
+For more information on this setup, refer to the [official docker self hosting documentation](https://healthchecks.io/docs/self_hosted_docker/).
+
 ## Screenshots
 
 <ZoomImage src="/docs/images/services/healthchecks-screenshot.png" alt="Healthchecks interface screenshot" />
