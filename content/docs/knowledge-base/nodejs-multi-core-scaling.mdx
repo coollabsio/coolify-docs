@@ -35,8 +35,8 @@ Run **multiple worker processes** inside the container. Each runtime has its pre
 | --- | --- | --- | --- |
 | Node.js | **PM2 cluster mode** | None | Easiest; wraps your existing start command |
 | Node.js | `node:cluster` module | App-level | Built-in, no extra dependency |
-| Bun | `Bun.serve(&#123; reusePort: true &#125;)` | One-line app change | Kernel load-balances via `SO_REUSEPORT` |
-| Deno | `Deno.serve(&#123; reusePort: true &#125;)` | One-line app change | Same kernel mechanism as Bun |
+| Bun | `Bun.serve({ reusePort: true })` | One-line app change | Kernel load-balances via `SO_REUSEPORT` |
+| Deno | `Deno.serve({ reusePort: true })` | One-line app change | Same kernel mechanism as Bun |
 
 This guide covers **PM2 cluster mode** (Node.js) and **`reusePort`** (Bun, Deno), with examples for the [Dockerfile](/applications/build-packs/dockerfile) and [Nixpacks](/applications/build-packs/nixpacks) build packs.
 

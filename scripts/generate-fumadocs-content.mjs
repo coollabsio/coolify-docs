@@ -85,7 +85,7 @@ const sidebarMetas = {
   },
   'applications/build-packs': {
     title: 'Build Packs',
-    pages: ['static', 'nixpacks', 'dockerfile', 'docker-compose'],
+    pages: ['static', 'nixpacks', 'railpack', 'dockerfile', 'docker-compose'],
   },
   'applications/build-packs/nixpacks': {
     pages: ['node-versioning'],
@@ -149,7 +149,9 @@ const sidebarMetas = {
       'dns-configuration',
       'domains',
       '---Destinations---',
-      'destinations',
+      'destinations/index',
+      'destinations/create',
+      'destinations/manage',
       '---Resources---',
       'environment-variables',
       'persistent-storage',
@@ -549,7 +551,7 @@ function normalizeMeta(dir, meta) {
     if (!title) return true
 
     const next = pages[index + 1]
-    if (!next || sectionTitle(next)) return true
+    if (!next || sectionTitle(next) || next.endsWith('/index')) return true
 
     return title !== titleForMetaItem(dir, next)
   })

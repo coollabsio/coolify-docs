@@ -63,6 +63,10 @@ cmd = '/assets/start.sh'
 "start.sh" = '''
 #!/bin/bash
 
+# Ensure storage and bootstrap cache are writable by www-data
+chown -R www-data:www-data /app/storage /app/bootstrap/cache
+chmod -R 775 /app/storage /app/bootstrap/cache
+
 # Transform the nginx configuration
 node /assets/scripts/prestart.mjs /assets/nginx.template.conf /etc/nginx.conf
 
@@ -119,6 +123,7 @@ stderr_logfile=/var/log/worker-phpfpm.log
 [program:worker-laravel]
 process_name=%(program_name)s_%(process_num)02d
 command=bash -c 'exec php /app/artisan queue:work --sleep=3 --tries=3 --max-time=3600'
+user=www-data
 autostart=true
 autorestart=true
 stopasgroup=true
@@ -234,15 +239,14 @@ When using Laravel with [Inertia.js](https://inertiajs.com/), you may need to sp
 Because of a [known issue](https://github.com/inertiajs/inertia-laravel/issues/529) with Inertia.js and default NGINX configuration, you may need to increase the buffer size for NGINX to handle Inertia requests.
 
 
-```diff
-"nginx.template.conf" = '''
+```sh
 # ...
 http {
     # ...
     server {
         # ...
         location ~ \.php$ {
-+            fastcgi_buffer_size 8k;
+            fastcgi_buffer_size 8k;  # [!code ++][!code focus]
             fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
             include $!{nginx}/conf/fastcgi_params;
             include $!{nginx}/conf/fastcgi.conf;
@@ -270,27 +274,30 @@ stdout_logfile=/var/log/worker-inertia-ssr.log
 '''
 ```
 
-> [!NOTE]
-> By default, Nixpacks runs the command `npm run build` to build your application during the deployment. Ensure that your `build` script in `package.json` contains the necessary build commands for server-side rendering. If you use one of the official starter kits including Inertia.js, change your scripts like this:
-> ```diff
-> "scripts": {
->-     "build": "vite build",
->+     "build": "vite build && vite build --ssr",
->     "build:ssr": "vite build && vite build --ssr",
-> }
-> ```
-> Alternatively, if you don't want to adapt your default `build` script in `package.json`, you can add the correct build command for server-side rendering directly in your `nixpacks.toml` configuration file.
->```diff
->[phases.build]
->cmds = [
->+    "npm run build:ssr",
->    "mkdir -p /etc/supervisor/conf.d/",
->    "cp /assets/worker-*.conf /etc/supervisor/conf.d/",
->    "cp /assets/supervisord.conf /etc/supervisord.conf",
->    "chmod +x /assets/start.sh",
->    "..."
-> ]
->```
+<Callout type="info" title="Note">
+By default, Nixpacks runs the command `npm run build` to build your application during the deployment. Ensure that your `build` script in `package.json` contains the necessary build commands for server-side rendering. If you use one of the official starter kits including Inertia.js, change your scripts like this:
+
+```yaml
+"scripts": {
+     "build": "vite build", # [!code --]
+     "build": "vite build && vite build --ssr", # [!code ++]
+     "build:ssr": "vite build && vite build --ssr",
+ }
+ ```
+Alternatively, if you don't want to adapt your default `build` script in `package.json`, you can add the correct build command for server-side rendering directly in your `nixpacks.toml` configuration file.
+
+```yaml
+[phases.build]
+cmds = [  
+    "npm run build:ssr", # [!code ++]
+    "mkdir -p /etc/supervisor/conf.d/",
+    "cp /assets/worker-*.conf /etc/supervisor/conf.d/",
+    "cp /assets/supervisord.conf /etc/supervisord.conf",
+    "chmod +x /assets/start.sh",
+    "..."
+ ]
+```
+</Callout>
 
 ### Persistent php.ini customizations
 
@@ -421,19 +428,25 @@ CMD ["unitd", "--no-daemon"]
     }
 }
 ```
-> [!NOTE]
-> When using docker-compose for deployment, then there might be an issue with `Mixed content error` when some of the assets are requested via `http://` instead of `https://`. To avoid that, find your load balancer/proxy subnet or IP address and add it to the unit.config to explicitly tell unit to forward the correct headers to Laravel. Laravel also has to be configured trust proxies. More on that [here](https://laravel.com/docs/12.x/requests#configuring-trusted-proxies).
-> ```json
-> "listeners": {
->        "*:8000": {
->            "pass": "routes",
->            "forwarded": {
->                "protocol": "X-Forwarded-Proto",
->                "source": ["<Load balancer IP, Subnet etc.>"]
->            }
->        }
->    },
->```
+<Callout type="info" title="Note">
+When using docker-compose for deployment, then there might be an issue with `Mixed content error` when some of the assets are requested via `http://` instead of `https://`. 
+
+To avoid that, find your load balancer/proxy subnet or IP address and add it to the unit.config to explicitly tell unit to forward the correct headers to Laravel. 
+
+Laravel also has to be configured trust proxies. More on that [here](https://laravel.com/docs/12.x/requests#configuring-trusted-proxies).
+```json
+"listeners": {
+       "*:8000": {
+           "pass": "routes",
+           "forwarded": {
+               "protocol": "X-Forwarded-Proto",
+               "source": ["<Load balancer IP, Subnet etc.>"]
+           }
+       }
+   },
+```
+
+</Callout>
 
 4. Set Post-deployment to: 
 

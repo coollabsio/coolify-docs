@@ -41,9 +41,9 @@ services:
     image: 'lucaslorentz/caddy-docker-proxy:2.8-alpine' # [!code --][!code focus]
     build: # [!code ++:7][!code focus:7]
       dockerfile_inline: | 
-        FROM caddy:2.9-builder AS builder
-        RUN xcaddy build --with github.com/lucaslorentz/caddy-docker-proxy/v2 --with github.com/caddy-dns/hetzner
-        FROM caddy:2.9-alpine
+        FROM caddy:2.11-builder AS builder
+        RUN xcaddy build --with github.com/lucaslorentz/caddy-docker-proxy/v2@v2.8.11 --with github.com/caddy-dns/hetzner/v2@v2.0.0
+        FROM caddy:2.11-alpine
         COPY --from=builder /usr/bin/caddy /usr/bin/caddy
         CMD ["caddy", "docker-proxy"]
     restart: unless-stopped
@@ -84,9 +84,9 @@ services:
     image: 'lucaslorentz/caddy-docker-proxy:2.8-alpine' # [!code --][!code focus]
     build: # [!code ++:7][!code focus:7]
       dockerfile_inline: |
-        FROM caddy:2.9-builder AS builder
-        RUN xcaddy build --with github.com/lucaslorentz/caddy-docker-proxy/v2 --with github.com/caddy-dns/cloudflare
-        FROM caddy:2.9-alpine
+        FROM caddy:2.11-builder AS builder
+        RUN xcaddy build --with github.com/lucaslorentz/caddy-docker-proxy/v2@v2.8.11 --with github.com/caddy-dns/cloudflare@v0.2.4
+        FROM caddy:2.11-alpine
         COPY --from=builder /usr/bin/caddy /usr/bin/caddy
         CMD ["caddy", "docker-proxy"]
     restart: unless-stopped
@@ -127,9 +127,9 @@ services:
     image: 'lucaslorentz/caddy-docker-proxy:2.8-alpine' # [!code --][!code focus]
     build: # [!code ++:7][!code focus:7]
       dockerfile_inline: |
-        FROM caddy:2.9-builder AS builder
-        RUN xcaddy build --with github.com/lucaslorentz/caddy-docker-proxy/v2 --with github.com/caddy-dns/route53
-        FROM caddy:2.9-alpine
+        FROM caddy:2.11-builder AS builder
+        RUN xcaddy build --with github.com/lucaslorentz/caddy-docker-proxy/v2@v2.8.11 --with github.com/caddy-dns/route53@v1.6.2
+        FROM caddy:2.11-alpine
         COPY --from=builder /usr/bin/caddy /usr/bin/caddy
         CMD ["caddy", "docker-proxy"]
     restart: unless-stopped

@@ -3,6 +3,7 @@
   "pages": [
     "static",
     "nixpacks",
+    "railpack",
     "dockerfile",
     "docker-compose"
   ]

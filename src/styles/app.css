@@ -62,3 +62,8 @@ body {
 [data-media-card] p {
   margin: 0 !important;
 }
+
+[data-docs-index] [data-sidebar-placeholder],
+[data-docs-index] [data-sidebar-panel] {
+  display: none;
+}

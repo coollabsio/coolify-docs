@@ -479,6 +479,13 @@
     "category": "Media"
   },
   {
+    "name": "EMQX Enterprise",
+    "slug": "emqx-enterprise",
+    "icon": "/docs/images/services/emqx-enterprise.svg",
+    "description": "Scalable, distributed MQTT messaging platform for IoT.",
+    "category": "IoT"
+  },
+  {
     "name": "Ente",
     "slug": "ente-photos",
     "icon": "/docs/images/services/ente-logo.webp",
@@ -757,6 +764,13 @@
     "icon": "/docs/images/services/heimdall-logo.svg",
     "description": "An elegant solution to organize all your web applications.",
     "category": "Administration"
+  },
+  {
+    "name": "Hermes Agent",
+    "slug": "hermes-agent",
+    "icon": "",
+    "description": "Autonomous AI agent with persistent memory and scheduling, plus a self-hosted web chat UI.",
+    "category": "AI"
   },
   {
     "name": "Heyform",
