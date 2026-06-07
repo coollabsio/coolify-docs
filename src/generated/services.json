@@ -1361,6 +1361,13 @@
     "category": "Analytics"
   },
   {
+    "name": "OpenReplay",
+    "slug": "openreplay",
+    "icon": "/docs/images/services/openreplay-logo.svg",
+    "description": "Open-source session replay tool that shows you exactly what users did on your app.",
+    "category": "Monitoring"
+  },
+  {
     "name": "OpnForm",
     "slug": "opnform",
     "icon": "/docs/images/services/opnform.svg",
