@@ -13,6 +13,12 @@ icon: "/docs/images/services/litellm-logo.svg"
 
 LiteLLM is an open-source LLM Gateway to manage authentication, loadbalancing, and spend tracking across 100+ LLMs. All in the OpenAI format.
 
+## Configuration
+
+Coolify stores LiteLLM model configuration in the service database by default. This keeps model settings available across redeployments without requiring you to manage an external config file.
+
+The one-click service also generates a stable salt value for LiteLLM so stored model records continue to work after the service is recreated or updated.
+
 ## Screenshots
 
 <br />
