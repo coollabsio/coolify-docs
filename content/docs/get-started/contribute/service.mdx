@@ -67,13 +67,22 @@ Always specify a port, as Caddy Proxy cannot automatically determine the service
          - ${COOLIFY_VOLUME_APP}:/data
    ```
 
+   **Template compose checklist:**
+
+   - Pin images to a versioned tag when the upstream project provides one. Avoid `latest` for new service templates, because upstream image changes can break a previously working one-click service.
+   - Prefer Coolify's generated variables for public URLs, passwords, and storage paths instead of hardcoding deployment-specific values.
+   - Use Coolify storage variables such as `${COOLIFY_VOLUME_APP}` for persistent data. Avoid fixed host paths unless the service specifically requires them.
+   - Avoid static `container_name` values unless the upstream service requires them. Static names can collide when users deploy multiple copies of the same template.
+   - Avoid copying `restart` policies from upstream examples unless the service needs a non-default restart behavior.
+   - Add a useful `healthcheck` for services that expose an HTTP endpoint or have a reliable readiness command.
+
    **Using Required Environment Variables:**
    When creating service templates, mark critical configuration as required to improve user experience:
 
    ```yaml
    services:
      app:
-       image: your-service:latest
+       image: your-service:1.2.3
        environment:
          # Required - critical configuration that must be set by the user
          - DATABASE_URL=${DATABASE_URL:?}
