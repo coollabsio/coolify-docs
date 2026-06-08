@@ -1,0 +1,154 @@
+---
+title: "Setup GitLab App"
+description: "Connect a self-hosted or GitLab.com instance to Coolify with an OAuth application to deploy private repositories, with webhook-based automatic deployments and merge request previews."
+---
+
+# GitLab App
+
+A GitLab App connects Coolify to a **self-hosted GitLab** instance (or GitLab.com) using an OAuth application. Once connected, Coolify can list your private repositories, clone them over an OAuth access token, and deploy them — the GitLab counterpart to the [GitHub App](/applications/ci-cd/github/setup-app).
+
+### Why use a GitLab App with Coolify?
+
+- **Private repositories over HTTPS** — clone and deploy without managing SSH deploy keys.
+- **Repository browser** — pick a repository and branch directly in the new resource wizard.
+- **Automatic deployments** — push and merge request webhooks trigger deployments and preview environments.
+- **Self-hosted friendly** — point Coolify at your own GitLab instance, including custom ports.
+
+<Callout type="info" title="GitLab App vs Deploy Key">
+
+If you only need to deploy a single repository, or your GitLab instance is on a private/reserved network address, the [Deploy Key](/applications/ci-cd/gitlab/integration#private-repositories) method may be simpler. The GitLab App is the better choice when you want repository browsing, OAuth-based HTTPS cloning, and webhook-based push and merge request deployments.
+
+</Callout>
+
+<Callout type="warn" title="The GitLab URL must be publicly reachable">
+
+For security (SSRF protection), Coolify rejects GitLab URLs that resolve to private or reserved IP addresses (for example `http://192.168.x.x` or `http://10.x.x.x`). Your self-hosted GitLab must be reachable through a public hostname or address. A custom port is allowed (for example `https://gitlab.example.com:8443`).
+
+</Callout>
+
+## Overview of the Steps
+
+1. Create a GitLab App in Coolify.
+2. Create an OAuth Application on your GitLab instance using the redirect URI Coolify shows you.
+3. Enter the Application ID and Secret in Coolify and authorize the connection.
+4. (Optional) Configure the webhook for automatic and preview deployments.
+5. Create a resource from a private GitLab repository.
+
+<Callout type="info" title="Example Data">
+
+The following placeholders are used in this guide. Replace them with your own values:
+
+- **Coolify dashboard URL:** `https://coolify.example.com`
+- **GitLab instance URL:** `https://gitlab.example.com`
+
+</Callout>
+
+## 1. Create a GitLab App in Coolify
+
+1. In your Coolify dashboard, click **Sources** in the sidebar.
+2. Click **+ Add GitLab**.
+3. Fill in the fields:
+   - **Name** — any name to identify this source.
+   - **GitLab URL** — your instance URL, for example `https://gitlab.example.com` (use `https://gitlab.com` for GitLab.com).
+   - **Group Name** *(optional)* — a comma-separated list of group names to limit which repositories are listed, for example `myorg,myteam`.
+   - **System Wide?** *(optional, self-hosted only)* — if checked, every team on this Coolify instance can use this source. Leave it unchecked to keep it scoped to the current team.
+4. Click **Save**.
+
+<Callout type="warn">
+
+Coolify Cloud users will not see the **System Wide** option, because it would expose the source to all Cloud teams.
+
+</Callout>
+
+Coolify creates the source and opens its configuration page. Because it is not connected yet, the page guides you through the remaining steps.
+
+## 2. Create an OAuth Application on GitLab
+
+On the source page, Coolify shows the exact **Redirect URI** you need. It looks like:
+
+```text
+https://coolify.example.com/webhooks/source/gitlab/redirect
+```
+
+1. Open your GitLab user settings → **Applications** (Coolify links directly to `https://gitlab.example.com/-/profile/applications`).
+
+   <Callout type="info">
+
+   You can also create the OAuth application at the **group** or **instance** (admin) level if you want it owned by a group or shared instance-wide instead of a single user.
+
+   </Callout>
+
+2. Create a new application:
+   - **Name** — for example `Coolify`.
+   - **Redirect URI** — paste the Redirect URI shown on the Coolify source page.
+   - **Scopes** — enable `api`, `read_user`, and `read_repository`.
+   - **Confidential** — if the OAuth flow fails, try unchecking this option.
+3. Save the application. GitLab shows an **Application ID** and a **Secret**. Keep this page open — you will copy these values into Coolify next.
+
+<Callout type="info" title="What the scopes are for">
+
+- `api` — list your projects and read repository metadata.
+- `read_user` — identify the authenticated user (used by **Test Connection**).
+- `read_repository` — clone repositories over HTTPS during deployments.
+
+</Callout>
+
+## 3. Enter Credentials and Authorize
+
+Back on the Coolify source page:
+
+1. Under **Step 2: Enter the credentials**, fill in:
+   - **Application ID** — the Application ID from GitLab.
+   - **Application Secret** — the Secret from GitLab.
+   - Confirm **GitLab URL** / **API URL** are correct (the API URL defaults to `<GitLab URL>/api/v4`).
+
+   The remaining fields (**Name**, **Group Name**, **SSH User**, **SSH Port**, and **System Wide?**) are pre-filled from step 1 with sensible defaults — adjust them if needed, but typically you only need to add the Application ID and Secret.
+2. Click **Save Credentials**.
+3. Under **Step 3: Authorize with GitLab**, click **Connect to GitLab**.
+4. GitLab asks you to authorize the application. Approve it.
+5. GitLab redirects you back to Coolify, which stores the access and refresh tokens. The page now shows a green **Connected** badge.
+
+<Callout type="info">
+
+You can verify the connection at any time with the **Test Connection** button. On success it reports the authenticated GitLab username. Use **Disconnect** to clear the stored tokens without deleting the source.
+
+</Callout>
+
+## 4. Configure the Webhook (Optional)
+
+To deploy automatically on push and to create preview deployments for merge requests, add a webhook to each GitLab project you deploy:
+
+1. On the connected Coolify source page, copy the **Webhook URL** (it ends with `/webhooks/source/gitlab/events`) and the **Webhook Secret Token**.
+2. In your GitLab project, open **Settings → Webhooks** and click **Add new webhook**.
+3. Paste the **URL** and set the **Secret token** to the same value shown in Coolify.
+4. Under **Trigger**, enable:
+   - **Push events** — for automatic deployments on new commits.
+   - **Merge request events** — for preview deployments of merge requests (each open merge request gets its own deployment, which is removed when the merge request is closed).
+5. Save the webhook.
+
+<Callout type="warn">
+
+Coolify rejects webhook calls that are missing or have an invalid secret token (HTTP 401), so the token in GitLab must match the **Webhook Secret Token** in Coolify exactly.
+
+</Callout>
+
+## 5. Deploy a Private Repository
+
+1. Open a project and click **+ New** to create a new resource.
+2. Choose **Private Repository (with GitLab App)**.
+3. Select the server to deploy to.
+4. Select the GitLab App you connected.
+5. Click **Load Repositories**, then choose a repository and branch.
+6. Configure the [build pack](/applications/build-packs), ports, and other settings, then deploy.
+
+That's it — Coolify clones the repository over the OAuth token and deploys it. With the webhook configured, future pushes and merge requests deploy automatically.
+
+<Callout type="info" title="OAuth tokens are kept private">
+
+Access and refresh tokens are stored encrypted and are redacted from deployment logs, so they are never printed during clone or build.
+
+</Callout>
+
+## Using SSH Instead of HTTPS (Optional)
+
+By default the GitLab App clones over HTTPS using the OAuth token. If you prefer SSH-based cloning, attach a **Private Key** to the source under **SSH Key (Optional)** on the connected source page, and set the **SSH User** and **SSH Port** to match your GitLab instance.

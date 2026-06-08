@@ -12,7 +12,7 @@ Applications in Coolify are designed to be deployed directly from **Git reposito
 When you deploy an application in Coolify, you connect it to a Git repository from **any Git provider**. Coolify works with all Git platforms, including:
 
 - **[GitHub](/applications/ci-cd/github/overview)** - Full GitHub App integration or deploy keys
-- **[GitLab](/applications/ci-cd/gitlab/integration)** - GitLab integration with webhooks
+- **[GitLab](/applications/ci-cd/gitlab/integration)** - GitLab App (OAuth) integration or deploy keys
 - **[Bitbucket](/applications/ci-cd/bitbucket/integration)** - Bitbucket integration with webhooks
 - **[Gitea](/applications/ci-cd/gitea/integration)** - Self-hosted Git platform
 - **Any other Git provider** - Works with any Git-compatible platform with publicly accessible repositories or using deploy keys
@@ -74,10 +74,10 @@ Choose from authentication methods based on your Git provider:
 
 1. **Git Provider App Integration (Recommended for supported providers)**
 
-   - Available for GitHub
+   - Available for GitHub (GitHub App) and GitLab (self-hosted or GitLab.com OAuth App)
    - Full integration with automatic webhooks
-   - Pull request deployments
-   - Commit status updates
+   - Pull request / merge request deployments
+   - Commit status updates (GitHub)
    - No SSH key management
 
 2. **Deploy Keys (Works with any Git provider)**
@@ -92,7 +92,7 @@ Choose from authentication methods based on your Git provider:
 While we provide detailed integration guides for popular platforms, **Coolify works with any Git provider** that supports standard Git protocols:
 
 - **Public Repositories**: Any Git provider (no authentication required)
-- **With App Integration**: GitHub
+- **With App Integration**: GitHub (GitHub App), GitLab (self-hosted or GitLab.com OAuth App)
 - **With Deploy Keys**: Any Git provider (GitHub, GitLab, Bitbucket, Gitea, Gogs, Forgejo, self-hosted solutions, and more)
 
 ## Next Steps
