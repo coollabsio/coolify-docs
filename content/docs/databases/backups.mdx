@@ -22,6 +22,26 @@ const VALID_CRON_STRINGS = [
 ];
 ```
 
+## Service database environment variables
+
+For databases deployed through service templates or Docker Compose services, Coolify reads the backup credentials from the running database container before creating the backup. The container must be running, and the variable names must match the database image conventions.
+
+| Database type | Variables Coolify reads | Notes |
+| --- | --- | --- |
+| PostgreSQL | `POSTGRES_PASSWORD`, `POSTGRES_USER`, `POSTGRES_DB` | `POSTGRES_USER` defaults to `postgres` when it is not set. `POSTGRES_DB` defaults to the resolved user. |
+| MySQL | `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE` | `MYSQL_DATABASE` is required so Coolify knows which database to dump. |
+| MariaDB | `MARIADB_ROOT_PASSWORD` or `MYSQL_ROOT_PASSWORD`; `MARIADB_DATABASE` or `MYSQL_DATABASE` | MariaDB variables are preferred. MySQL-style names are accepted as fallbacks. |
+| MongoDB | `MONGO_INITDB_ROOT_USERNAME`, `MONGO_INITDB_ROOT_PASSWORD` | Required when Coolify needs to build the internal MongoDB connection URL from container environment variables. |
+
+You can check a service database container manually with:
+
+```bash
+docker exec <container-name> env | grep POSTGRES_
+docker exec <container-name> env | grep MYSQL_
+docker exec <container-name> env | grep MARIADB_
+docker exec <container-name> env | grep MONGO_INITDB_
+```
+
 ## PostgreSQL
 
 Coolify creates a full backup of your PostgreSQL databases. You can specify which database to backup, with a comma separated list.
