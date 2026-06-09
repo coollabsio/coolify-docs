@@ -8,6 +8,15 @@ You can drain logs of your deployed services to a third-party applications like 
 
 > We will support more services in the future, like Signoz, HyperDX, etc.
 
+## How log drains work
+
+Log drains have two parts:
+
+1. A server-level log drain configuration starts the `coolify-log-drain` container. This container runs Fluent Bit and listens for forwarded logs on port `24224`.
+2. A resource-level **Drain Logs** setting changes that resource's container logging configuration on the next restart. Coolify sets the Docker logging driver to `fluentd` and sends log events to `tcp://127.0.0.1:24224`.
+
+Both parts are required. If you only enable **Drain Logs** on a resource, but no log drain is enabled and running on the server, the resource will not have anywhere to send its logs.
+
 ## How to enable?
 
 1. Enable on your Server. 
@@ -56,3 +65,15 @@ When COOLIFY_APP_NAME is present, New Relic will receive a coolify.app_name attr
 ## Custom FluentBit configuration
 
 If you know how to configure FluentBit, you can use the `Custom FluentBit configuration` to configure the drain logs.
+
+Your custom Fluent Bit configuration needs an input that accepts forwarded Docker logs on port `24224`. For example:
+
+```conf
+[INPUT]
+    Name         forward
+    Listen       0.0.0.0
+    Port         24224
+    Tag          docker
+```
+
+Then add your own filters and outputs for the destination you want to use. Without this `forward` input, Docker can send logs to `127.0.0.1:24224`, but Fluent Bit will not accept them.
