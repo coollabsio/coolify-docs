@@ -837,6 +837,13 @@
     "category": "Security"
   },
   {
+    "name": "Inngest",
+    "slug": "inngest",
+    "icon": "/docs/images/services/inngest-logo.svg",
+    "description": "Durable workflow engine for background jobs, queues, and event-driven systems.",
+    "category": "Automation"
+  },
+  {
     "name": "Invoice Ninja",
     "slug": "invoice-ninja",
     "icon": "/docs/images/services/invoiceninja-logo.png",
