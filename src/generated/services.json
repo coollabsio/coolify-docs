@@ -549,6 +549,13 @@
     "category": "File Management"
   },
   {
+    "name": "Firecrawl",
+    "slug": "firecrawl",
+    "icon": "/docs/images/services/firecrawl-logo.svg",
+    "description": "Web scraping and crawling API - turn any website into LLM-ready data.",
+    "category": "AI"
+  },
+  {
     "name": "Firefly III",
     "slug": "firefly",
     "icon": "/docs/images/services/firefly-iii-logo.svg",
