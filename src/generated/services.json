@@ -761,8 +761,8 @@
   {
     "name": "Hermes Agent",
     "slug": "hermes-agent",
-    "icon": "",
-    "description": "Autonomous AI agent with persistent memory and scheduling, plus a self-hosted web chat UI.",
+    "icon": "/docs/images/services/hermes-agent-logo.png",
+    "description": "Autonomous AI agent from Nous Research with persistent memory, scheduling, and a web interface. Available as a two-container WebUI stack or a single-container dashboard.",
     "category": "AI"
   },
   {
