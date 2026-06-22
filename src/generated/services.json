@@ -2107,6 +2107,13 @@
     "category": "Media"
   },
   {
+    "name": "Zero",
+    "slug": "zero",
+    "icon": "/docs/images/services/zero.svg",
+    "description": "Query-driven sync engine for TypeScript apps backed by Postgres.",
+    "category": "Development"
+  },
+  {
     "name": "Zipline",
     "slug": "zipline",
     "icon": "/docs/images/services/zipline-logo.svg",
