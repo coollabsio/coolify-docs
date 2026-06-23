@@ -1,20 +1,60 @@
 ---
+
 title: Bookstack
 description: "Self-hosted wiki-style documentation platform."
 og:
-  description: "Deploy BookStack wiki on Coolify for organized documentation with WYSIWYG editor, hierarchical structure, search, and team collaboration features."
+description: "Deploy BookStack wiki on Coolify for organized documentation with WYSIWYG editor, hierarchical structure, search, and team collaboration features."
 category: "Documentation"
 icon: "/docs/images/services/bookstack-logo.png"
----
+------------------------------------------------
 
 # Bookstack
 
-<ZoomImage src="/docs/images/services/bookstack-logo.png" alt="Bookstack logo" />
-
 ## What is Bookstack
 
-BookStack is a simple, self-hosted, easy-to-use platform for organising and storing information
+BookStack is a simple, self-hosted, easy-to-use platform for organising and storing information.
 
-## Links
+## Initial login
 
-- [Official Documentation](https://www.bookstackapp.com/docs/?utm_source=coolify.io)
+After deploying the service, open your BookStack URL and log in with an admin user.
+
+If you cannot log in, or if you want to create a new administrator, open the **Terminal** for the BookStack container in Coolify and run the BookStack admin creation command.
+
+## Create an admin user
+
+### Interactive mode
+
+Run:
+
+```bash
+php /app/www/artisan bookstack:create-admin
+```
+
+You will be prompted for the admin name, email address, and password.
+
+### Create an admin with a generated password
+
+For a new installation, you can create an admin user and let BookStack generate a secure password:
+
+```bash
+php /app/www/artisan bookstack:create-admin \
+  --email="admin@example.com" \
+  --name="Admin" \
+  --generate-password
+```
+
+BookStack will print the generated password in the terminal. Use that password for the first login, then change it from the user profile if needed.
+
+### Set the initial admin user
+
+For first-time setup or automation, use the `--initial` option:
+
+```bash
+php /app/www/artisan bookstack:create-admin \
+  --initial \
+  --email="admin@example.com" \
+  --name="Admin" \
+  --generate-password
+```
+
+The `--initial` option is useful when setting the first administrator for a fresh instance.
