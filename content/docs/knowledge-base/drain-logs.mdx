@@ -27,6 +27,38 @@ You can drain logs of your deployed services to a third-party applications like 
 
 
 ## How to configure?
+
+## How Log Draining Works
+
+When Drain Logs is enabled for a resource, Coolify updates the Docker logging configuration for that container and forwards log events to the configured log drain service.
+
+Logs are not sent directly to Axiom, New Relic, or other providers. Instead, Docker forwards log events to the Fluent Bit log drain container. Fluent Bit then processes and forwards those logs to the configured destination.
+
+By default, Fluent Bit receives forwarded logs on port "24224".
+
+Requirements
+
+For log draining to work correctly:
+
+1. A log drain service must be enabled on the server.
+2. Drain Logs must be enabled for the resource.
+3. The resource must be restarted after enabling log draining.
+4. Fluent Bit must be configured to receive forwarded logs on port "24224".
+
+If no log drain service is running, or Fluent Bit is not listening on the expected port, logs will not be forwarded.
+
+Custom Fluent Bit Configuration
+
+If you use a custom Fluent Bit configuration, ensure it includes an input that listens for forwarded Docker logs:
+
+[INPUT]
+    Name         forward
+    Listen       0.0.0.0
+    Port         24224
+    Tag          docker
+
+Without a matching input on port "24224", Fluent Bit will not receive log events from Docker containers and log forwarding will not work.
+
 ### Axiom
 
 You need to have a `Dataset` and an `API key` from Axiom. 
