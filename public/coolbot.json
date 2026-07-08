@@ -1,0 +1,486 @@
+[
+  {
+    "name": "API Reference - Authorization",
+    "link": "https://coolify.io/docs/api-reference/authorization"
+  },
+  {
+    "name": "Docker Compose Build Packs",
+    "link": "https://coolify.io/docs/applications/build-packs/docker-compose"
+  },
+  {
+    "name": "Dockerfile Build Pack",
+    "link": "https://coolify.io/docs/applications/build-packs/dockerfile"
+  },
+  {
+    "name": "Nixpacks Build Pack",
+    "link": "https://coolify.io/docs/applications/build-packs/nixpacks"
+  },
+  {
+    "name": "Nixpacks - Node.js Versioning",
+    "link": "https://coolify.io/docs/applications/build-packs/nixpacks/node-versioning"
+  },
+  {
+    "name": "Railpack Build Pack",
+    "link": "https://coolify.io/docs/applications/build-packs/railpack"
+  },
+  {
+    "name": "Static Build Packs",
+    "link": "https://coolify.io/docs/applications/build-packs/static"
+  },
+  {
+    "name": "CI/CD Bitbucket - Integration",
+    "link": "https://coolify.io/docs/applications/ci-cd/bitbucket/integration"
+  },
+  {
+    "name": "CI/CD Gitea - Integration",
+    "link": "https://coolify.io/docs/applications/ci-cd/gitea/integration"
+  },
+  {
+    "name": "CI/CD Github - GitHub Actions",
+    "link": "https://coolify.io/docs/applications/ci-cd/github/actions"
+  },
+  {
+    "name": "CI/CD Github - GitHub Auto Deploy",
+    "link": "https://coolify.io/docs/applications/ci-cd/github/auto-deploy"
+  },
+  {
+    "name": "CI/CD Github - GitHub Deploy Key",
+    "link": "https://coolify.io/docs/applications/ci-cd/github/deploy-key"
+  },
+  {
+    "name": "CI/CD Github - GitHub Preview Deploy",
+    "link": "https://coolify.io/docs/applications/ci-cd/github/preview-deploy"
+  },
+  {
+    "name": "CI/CD Github - Deploy Public Repository",
+    "link": "https://coolify.io/docs/applications/ci-cd/github/public-repository"
+  },
+  {
+    "name": "CI/CD Github - Setup GitHub App",
+    "link": "https://coolify.io/docs/applications/ci-cd/github/setup-app"
+  },
+  {
+    "name": "CI/CD Github - Switch GitHub Apps",
+    "link": "https://coolify.io/docs/applications/ci-cd/github/switch-apps"
+  },
+  {
+    "name": "Get Started - Coolify Cloud",
+    "link": "https://coolify.io/docs/get-started/cloud"
+  },
+  {
+    "name": "Get Started - Contributing to Core",
+    "link": "https://coolify.io/docs/get-started/contribute/coolify"
+  },
+  {
+    "name": "Get Started - Contributing to Documentation",
+    "link": "https://coolify.io/docs/get-started/contribute/documentation"
+  },
+  {
+    "name": "Get Started - Add a new service template to Coolify",
+    "link": "https://coolify.io/docs/get-started/contribute/service"
+  },
+  {
+    "name": "Get Started - Downgrading",
+    "link": "https://coolify.io/docs/get-started/downgrade"
+  },
+  {
+    "name": "Get Started - Installation",
+    "link": "https://coolify.io/docs/get-started/installation"
+  },
+  {
+    "name": "Get Started - Introduction",
+    "link": "https://coolify.io/docs/get-started/introduction"
+  },
+  {
+    "name": "Get Started - Uninstalling",
+    "link": "https://coolify.io/docs/get-started/uninstallation"
+  },
+  {
+    "name": "Get Started - Upgrading",
+    "link": "https://coolify.io/docs/get-started/upgrade"
+  },
+  {
+    "name": "Cloudflare - Cloudflare DDoS Protection",
+    "link": "https://coolify.io/docs/integrations/cloudflare/ddos-protection"
+  },
+  {
+    "name": "Cloudflare - Access All Resource via Cloudflare Tunnels",
+    "link": "https://coolify.io/docs/integrations/cloudflare/tunnels/all-resource"
+  },
+  {
+    "name": "Cloudflare - Full HTTPS/TLS Setup for All Resources",
+    "link": "https://coolify.io/docs/integrations/cloudflare/tunnels/full-tls"
+  },
+  {
+    "name": "Cloudflare - Cloudflare Tunnels",
+    "link": "https://coolify.io/docs/integrations/cloudflare/tunnels"
+  },
+  {
+    "name": "Cloudflare - Server SSH Access via Cloudflare Tunnels",
+    "link": "https://coolify.io/docs/integrations/cloudflare/tunnels/server-ssh"
+  },
+  {
+    "name": "Cloudflare - Access Single Resource via Cloudflare Tunnels",
+    "link": "https://coolify.io/docs/integrations/cloudflare/tunnels/single-resource"
+  },
+  {
+    "name": "Integrations - MCP Server",
+    "link": "https://coolify.io/docs/integrations/mcp"
+  },
+  {
+    "name": "Knowledge Base - Change Localhost Key",
+    "link": "https://coolify.io/docs/knowledge-base/change-localhost-key"
+  },
+  {
+    "name": "Knowledge Base - Commands",
+    "link": "https://coolify.io/docs/knowledge-base/commands"
+  },
+  {
+    "name": "Knowledge Base - Create Root User with Environment Variables",
+    "link": "https://coolify.io/docs/knowledge-base/create-root-user-with-env"
+  },
+  {
+    "name": "Knowledge Base - Supported Cron Syntax",
+    "link": "https://coolify.io/docs/knowledge-base/cron-syntax"
+  },
+  {
+    "name": "Knowledge Base - Custom Compose Overrides",
+    "link": "https://coolify.io/docs/knowledge-base/custom-compose-overrides"
+  },
+  {
+    "name": "Knowledge Base - Custom Docker Registry",
+    "link": "https://coolify.io/docs/knowledge-base/custom-docker-registry"
+  },
+  {
+    "name": "Knowledge Base - Define Custom Docker Network with Environment Variables",
+    "link": "https://coolify.io/docs/knowledge-base/define-custom-docker-network-with-env"
+  },
+  {
+    "name": "Knowledge Base - Delete User",
+    "link": "https://coolify.io/docs/knowledge-base/delete-user"
+  },
+  {
+    "name": "Destinations - Creating Destinations",
+    "link": "https://coolify.io/docs/knowledge-base/destinations/create"
+  },
+  {
+    "name": "Destinations - Introduction",
+    "link": "https://coolify.io/docs/knowledge-base/destinations"
+  },
+  {
+    "name": "Destinations - Managing Destinations",
+    "link": "https://coolify.io/docs/knowledge-base/destinations/manage"
+  },
+  {
+    "name": "Knowledge Base - DNS Configuration",
+    "link": "https://coolify.io/docs/knowledge-base/dns-configuration"
+  },
+  {
+    "name": "Docker - Docker Compose",
+    "link": "https://coolify.io/docs/knowledge-base/docker/compose"
+  },
+  {
+    "name": "Docker - Custom Commands",
+    "link": "https://coolify.io/docs/knowledge-base/docker/custom-commands"
+  },
+  {
+    "name": "Docker - Docker Registry",
+    "link": "https://coolify.io/docs/knowledge-base/docker/registry"
+  },
+  {
+    "name": "Docker - Docker Swarm",
+    "link": "https://coolify.io/docs/knowledge-base/docker/swarm"
+  },
+  {
+    "name": "Knowledge Base - Domains",
+    "link": "https://coolify.io/docs/knowledge-base/domains"
+  },
+  {
+    "name": "Knowledge Base - Drain Logs",
+    "link": "https://coolify.io/docs/knowledge-base/drain-logs"
+  },
+  {
+    "name": "Knowledge Base - Environment Variables",
+    "link": "https://coolify.io/docs/knowledge-base/environment-variables"
+  },
+  {
+    "name": "Knowledge Base - FAQ",
+    "link": "https://coolify.io/docs/knowledge-base/faq"
+  },
+  {
+    "name": "Knowledge Base - Health checks",
+    "link": "https://coolify.io/docs/knowledge-base/health-checks"
+  },
+  {
+    "name": "How To - Backup and Restore Coolify",
+    "link": "https://coolify.io/docs/knowledge-base/how-to/backup-restore-coolify"
+  },
+  {
+    "name": "How To - Load Balancing on Hetzner",
+    "link": "https://coolify.io/docs/knowledge-base/how-to/hetzner-loadbalancing"
+  },
+  {
+    "name": "How To - macOS using Colima Setup Guide",
+    "link": "https://coolify.io/docs/knowledge-base/how-to/macos-colima"
+  },
+  {
+    "name": "How To - Migrate Applications",
+    "link": "https://coolify.io/docs/knowledge-base/how-to/migrate-apps-different-host"
+  },
+  {
+    "name": "How To - Ollama with GPU",
+    "link": "https://coolify.io/docs/knowledge-base/how-to/ollama-with-gpu"
+  },
+  {
+    "name": "How To - Private NPM Registry",
+    "link": "https://coolify.io/docs/knowledge-base/how-to/private-npm-registry"
+  },
+  {
+    "name": "How To - Raspberry Pi OS Setup Guide",
+    "link": "https://coolify.io/docs/knowledge-base/how-to/raspberry-pi-os"
+  },
+  {
+    "name": "How To - Deploy Webstudio Projects to Hetzner with Coolify",
+    "link": "https://coolify.io/docs/knowledge-base/how-to/webstudio-with-hetzner"
+  },
+  {
+    "name": "How To - Using WordPress Multisite with Coolify",
+    "link": "https://coolify.io/docs/knowledge-base/how-to/wordpress-multisite"
+  },
+  {
+    "name": "Internal - Scalability",
+    "link": "https://coolify.io/docs/knowledge-base/internal/scalability"
+  },
+  {
+    "name": "Internal - Terminal",
+    "link": "https://coolify.io/docs/knowledge-base/internal/terminal"
+  },
+  {
+    "name": "Knowledge Base - Monitoring",
+    "link": "https://coolify.io/docs/knowledge-base/monitoring"
+  },
+  {
+    "name": "Knowledge Base - Node.js Multi-Core Scaling",
+    "link": "https://coolify.io/docs/knowledge-base/nodejs-multi-core-scaling"
+  },
+  {
+    "name": "Knowledge Base - Notifications",
+    "link": "https://coolify.io/docs/knowledge-base/notifications"
+  },
+  {
+    "name": "Knowledge Base - OAuth",
+    "link": "https://coolify.io/docs/knowledge-base/oauth"
+  },
+  {
+    "name": "Knowledge Base - Persistent Storage",
+    "link": "https://coolify.io/docs/knowledge-base/persistent-storage"
+  },
+  {
+    "name": "Proxy Caddy - Caddy Basic Auth",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/caddy/basic-auth"
+  },
+  {
+    "name": "Proxy Caddy - DNS Challenge",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/caddy/dns-challenge"
+  },
+  {
+    "name": "Proxy Caddy - Caddy Overview",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/caddy"
+  },
+  {
+    "name": "Proxy Traefik - Basic Auth Middleware",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/traefik/basic-auth"
+  },
+  {
+    "name": "Proxy Traefik - Custom Middlewares",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/traefik/custom-middlewares"
+  },
+  {
+    "name": "Proxy Traefik - Redirects",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/traefik/custom-middlewares/redirects"
+  },
+  {
+    "name": "Proxy Traefik - Custom SSL Certificates",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/traefik/custom-ssl-certs"
+  },
+  {
+    "name": "Proxy Traefik - Enable Dashboard",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/traefik/dashboard"
+  },
+  {
+    "name": "Proxy Traefik - DNS Challenge",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/traefik/dns-challenge"
+  },
+  {
+    "name": "Proxy Traefik - Dynamic Configurations",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/traefik/dynamic-config"
+  },
+  {
+    "name": "Proxy Traefik - Traefik Overview",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/traefik"
+  },
+  {
+    "name": "Proxy Traefik - Load-balancing",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/traefik/load-balancing"
+  },
+  {
+    "name": "Proxy Traefik - Authentik Forward Authentication Middleware",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/traefik/protect-services-with-authentik"
+  },
+  {
+    "name": "Proxy Traefik - Wildcard SSL Certificates",
+    "link": "https://coolify.io/docs/knowledge-base/proxy/traefik/wildcard-certs"
+  },
+  {
+    "name": "Knowledge Base - Rolling updates",
+    "link": "https://coolify.io/docs/knowledge-base/rolling-updates"
+  },
+  {
+    "name": "S3 - Aws S3 Backup Setup",
+    "link": "https://coolify.io/docs/knowledge-base/s3/aws"
+  },
+  {
+    "name": "S3 - Introduction",
+    "link": "https://coolify.io/docs/knowledge-base/s3/introduction"
+  },
+  {
+    "name": "S3 - Cloudflare R2",
+    "link": "https://coolify.io/docs/knowledge-base/s3/r2"
+  },
+  {
+    "name": "S3 - Supabase Storage",
+    "link": "https://coolify.io/docs/knowledge-base/s3/supabase"
+  },
+  {
+    "name": "Knowledge Base - Coolify Instance Updates - Self-hosted",
+    "link": "https://coolify.io/docs/knowledge-base/self-update"
+  },
+  {
+    "name": "Server - Automated Docker Cleanup",
+    "link": "https://coolify.io/docs/knowledge-base/server/automated-cleanup"
+  },
+  {
+    "name": "Server - Build Server",
+    "link": "https://coolify.io/docs/knowledge-base/server/build-server"
+  },
+  {
+    "name": "Server - Firewall",
+    "link": "https://coolify.io/docs/knowledge-base/server/firewall"
+  },
+  {
+    "name": "Server - Introduction",
+    "link": "https://coolify.io/docs/knowledge-base/server/introduction"
+  },
+  {
+    "name": "Server - Multiple Servers",
+    "link": "https://coolify.io/docs/knowledge-base/server/multiple-servers"
+  },
+  {
+    "name": "Server - Non-root user",
+    "link": "https://coolify.io/docs/knowledge-base/server/non-root-user"
+  },
+  {
+    "name": "Server - OpenSSH",
+    "link": "https://coolify.io/docs/knowledge-base/server/openssh"
+  },
+  {
+    "name": "Server - Oracle Cloud",
+    "link": "https://coolify.io/docs/knowledge-base/server/oracle-cloud"
+  },
+  {
+    "name": "Server - Server Patching",
+    "link": "https://coolify.io/docs/knowledge-base/server/patching"
+  },
+  {
+    "name": "Server - Supported Proxy",
+    "link": "https://coolify.io/docs/knowledge-base/server/proxies"
+  },
+  {
+    "name": "Server - Sentinel and Metrics",
+    "link": "https://coolify.io/docs/knowledge-base/server/sentinel"
+  },
+  {
+    "name": "Server - Terminal Access",
+    "link": "https://coolify.io/docs/knowledge-base/server/terminal-access"
+  },
+  {
+    "name": "Knowledge Base - Webhook Payloads",
+    "link": "https://coolify.io/docs/knowledge-base/webhook-payloads"
+  },
+  {
+    "name": "Troubleshoot - Bad Gateway Error",
+    "link": "https://coolify.io/docs/troubleshoot/applications/bad-gateway"
+  },
+  {
+    "name": "Troubleshoot - Failed To Get Access Token During Deployment",
+    "link": "https://coolify.io/docs/troubleshoot/applications/failed-to-get-token"
+  },
+  {
+    "name": "Troubleshoot - Gateway Timeout Errors",
+    "link": "https://coolify.io/docs/troubleshoot/applications/gateway-timeout"
+  },
+  {
+    "name": "Troubleshoot - No Available Server Error",
+    "link": "https://coolify.io/docs/troubleshoot/applications/no-available-server"
+  },
+  {
+    "name": "Troubleshoot - Dashboard Inaccessible via Instance Domain",
+    "link": "https://coolify.io/docs/troubleshoot/dashboard/dashboard-inaccessible"
+  },
+  {
+    "name": "Troubleshoot - Slow Coolify Dashboard Performance",
+    "link": "https://coolify.io/docs/troubleshoot/dashboard/dashboard-slow-performance"
+  },
+  {
+    "name": "Troubleshoot - Disable 2FA Manually",
+    "link": "https://coolify.io/docs/troubleshoot/dashboard/disable-2fa-manually"
+  },
+  {
+    "name": "Troubleshoot - Certificate Resolver Not Found on Coolify Proxy",
+    "link": "https://coolify.io/docs/troubleshoot/dns-and-domains/certificate-resolver-doesnt-exist"
+  },
+  {
+    "name": "Troubleshoot - Let's Encrypt Not Generating SSL Certificates on Coolify",
+    "link": "https://coolify.io/docs/troubleshoot/dns-and-domains/lets-encrypt-not-working"
+  },
+  {
+    "name": "Troubleshoot - Coolify not using Wildcard SSL Certificates",
+    "link": "https://coolify.io/docs/troubleshoot/dns-and-domains/wildcard-ssl-certs"
+  },
+  {
+    "name": "Troubleshoot - Expired GitHub Personal Access Token (PAT)",
+    "link": "https://coolify.io/docs/troubleshoot/docker/expired-github-personal-access-token"
+  },
+  {
+    "name": "Troubleshoot - Troubleshooting Overview",
+    "link": "https://coolify.io/docs/troubleshoot"
+  },
+  {
+    "name": "Troubleshoot - Docker Installation Failed",
+    "link": "https://coolify.io/docs/troubleshoot/installation/docker-install-failed"
+  },
+  {
+    "name": "Troubleshoot - Coolify Install Script Failed",
+    "link": "https://coolify.io/docs/troubleshoot/installation/install-script-failed"
+  },
+  {
+    "name": "Troubleshoot - Connection Unstable",
+    "link": "https://coolify.io/docs/troubleshoot/server/connection-issues"
+  },
+  {
+    "name": "Troubleshoot - Server Crash During Build",
+    "link": "https://coolify.io/docs/troubleshoot/server/crash-during-build"
+  },
+  {
+    "name": "Troubleshoot - Raspberry Pi Crashes",
+    "link": "https://coolify.io/docs/troubleshoot/server/raspberry-crashes"
+  },
+  {
+    "name": "Troubleshoot - 2FA Stopped Working",
+    "link": "https://coolify.io/docs/troubleshoot/server/two-factor-stopped-working"
+  },
+  {
+    "name": "Troubleshoot - Server Validation Issues",
+    "link": "https://coolify.io/docs/troubleshoot/server/validation-issues"
+  }
+]
