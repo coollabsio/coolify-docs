@@ -1,6 +1,6 @@
 ---
 title: Domains
-description: "Add custom domains to Coolify with FQDN format, multiple domain support, port mapping, path-based routing, wildcard domains, and custom DNS server validation."
+description: "Add custom domains to Coolify with FQDN format, multiple domain support, port mapping, path-based routing, per-domain noindex, wildcard domains, and custom DNS server validation."
 ---
 
 # Domains
@@ -43,6 +43,38 @@ If automatic certificate issuance from [Let's Encrypt](https://letsencrypt.org?u
 <Callout type="warn" title="TROUBLESHOOTING">
 
 If you see a certificate warning in your browser or your application shows a self-signed certificate, see the [Let's Encrypt Not Working](/troubleshoot/dns-and-domains/lets-encrypt-not-working) troubleshooting guide for detailed solutions.
+
+</Callout>
+
+
+## Search Engine Indexing (noindex)
+
+You can flag individual domains so they are served with an `X-Robots-Tag: noindex, nofollow` response header, which keeps them out of search engines. This is useful for auto-generated or staging domains you don't want indexed, while your production domain on the same resource stays indexable.
+
+Because the flag is set per domain, a resource with several domains can keep some indexable and exclude others, without changing your application code.
+
+### Applications
+
+Open your application's **General** settings. Under **Search Engine Indexing**, check the domains you want to exclude from indexing and the change is applied on save.
+
+
+<Callout type="info" title="READONLY CONTAINER LABELS">
+
+The **Search Engine Indexing** section only appears when at least one domain is configured and **Readonly container labels** is enabled for the application. If you manage your own container labels, add the `X-Robots-Tag` header manually instead.
+
+</Callout>
+
+
+### Services
+
+Open the domain editor of the service and use the **Search Engine Indexing** section, which lists each configured domain with a checkbox.
+
+
+<Callout type="info" title="GOOD TO KNOW">
+
+- The `noindex` header overrides any `X-Robots-Tag` your application or service sets itself.
+- Preview deployments are always served as `noindex`.
+- Works with both the Traefik and Caddy proxies.
 
 </Callout>
 
