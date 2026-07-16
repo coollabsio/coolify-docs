@@ -1,0 +1,22 @@
+---
+title: systemprompt
+description: "Self-hosted AI governance gateway for Claude, OpenAI, and Gemini with policy checks, audit trails, and rate limits on every call."
+og:
+  description: "Run the systemprompt AI governance gateway on Coolify: policy checks, audit trails, rate limits, and MCP orchestration for Claude, OpenAI, and Gemini."
+category: "AI"
+icon: "/docs/images/services/systemprompt-logo.svg"
+---
+
+# systemprompt
+
+## What is systemprompt?
+
+systemprompt is a self-hosted AI governance gateway for Claude, OpenAI, and Gemini. Every AI request and MCP tool call passes through a governance pipeline (scope check, secret scan, blocklist, rate limit) and is audited to PostgreSQL with a trace linking identity, agent, tool, result, and cost.
+
+The Coolify template provisions the gateway web service from the official GHCR image plus a PostgreSQL 18 database. Database credentials and the JWT secret are generated automatically; you only need to supply at least one AI provider API key (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY`) before the first deploy.
+
+## Links
+
+- [The official website](https://systemprompt.io?utm_source=coolify.io)
+- [GitHub](https://github.com/systempromptio/systemprompt-template?utm_source=coolify.io)
+- [Documentation](https://github.com/systempromptio/systemprompt-template/tree/main/docs?utm_source=coolify.io)
