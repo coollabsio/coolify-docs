@@ -1,0 +1,28 @@
+---
+title: Engram
+description: "Persistent memory sync server for AI coding agents (MCP)."
+og:
+  description: "Deploy Engram on Coolify: a self-hosted sync server that replicates persistent memory for AI coding agents across machines over MCP, backed by PostgreSQL."
+category: "AI"
+icon: "/docs/images/services/engram-logo.png"
+---
+
+# Engram
+
+## What is Engram?
+
+Engram is a persistent memory system for AI coding agents. It is an agent-agnostic Go binary that records decisions, conventions, bug fixes, and discoveries, then exposes them back to agents through an MCP server, an HTTP API, a CLI, and a terminal UI. Locally it keeps memories in SQLite with full-text search, so context survives across sessions instead of being lost when a conversation ends.
+
+This one-click template deploys Engram Cloud, the opt-in replication server that runs `engram cloud serve`. Local Engram installs sync their project memory to it, which makes the same memories available across several machines or shared between teammates. The template runs the server together with a PostgreSQL container that stores the replicated data.
+
+The server serves both the dashboard and the API on the same port. Coolify generates the API token, the dashboard admin token, and the JWT signing secret automatically at deploy time, so the stack boots authenticated without manual configuration.
+
+<Callout type="info" title="Project allowlist">
+`ENGRAM_CLOUD_ALLOWED_PROJECTS` defaults to `*`, which accepts any project name while access stays gated by the generated API token. Set it to a comma-separated list to restrict the server to specific projects.
+</Callout>
+
+## Links
+
+- [GitHub](https://github.com/Gentleman-Programming/engram?utm_source=coolify.io)
+- [Documentation](https://github.com/Gentleman-Programming/engram/blob/main/DOCS.md?utm_source=coolify.io)
+- [Engram Cloud docs](https://github.com/Gentleman-Programming/engram/blob/main/docs/engram-cloud/README.md?utm_source=coolify.io)
