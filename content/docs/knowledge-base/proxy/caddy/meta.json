@@ -2,6 +2,7 @@
   "title": "Caddy",
   "pages": [
     "basic-auth",
+    "noindex",
     "dns-challenge"
   ]
 }
