@@ -1,8 +1,8 @@
 ---
 title: systemprompt
-description: "Self-hosted AI governance gateway for Claude, OpenAI, and Gemini with policy checks, audit trails, and rate limits on every call."
+description: "The self-owned AI control plane. Run and govern every Claude, OpenAI, and Gemini call on infrastructure you own."
 og:
-  description: "Run the systemprompt AI governance gateway on Coolify: policy checks, audit trails, rate limits, and MCP orchestration for Claude, OpenAI, and Gemini."
+  description: "Run the systemprompt AI control plane on Coolify: one binary and one Postgres that put policy checks, audit trails, and rate limits on every AI call your team makes."
 category: "AI"
 icon: "/docs/images/services/systemprompt-logo.svg"
 ---
@@ -11,9 +11,11 @@ icon: "/docs/images/services/systemprompt-logo.svg"
 
 ## What is systemprompt?
 
-systemprompt is a self-hosted AI governance gateway for Claude, OpenAI, and Gemini. Every AI request and MCP tool call passes through a governance pipeline (scope check, secret scan, blocklist, rate limit) and is audited to PostgreSQL with a trace linking identity, agent, tool, result, and cost.
+systemprompt is the self-owned AI control plane: one binary and one Postgres that run and govern every model, agent, and tool call your team makes. Instead of renting a dashboard that sits as a black box between your engineers and their models, you own the gateway.
 
-The Coolify template provisions the gateway web service from the official GHCR image plus a PostgreSQL 18 database. Database credentials and the JWT secret are generated automatically; you only need to supply at least one AI provider API key (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY`) before the first deploy.
+Every AI request and MCP tool call passes through a four-stage governance pipeline (scope check, secret scan, blocklist, rate limit) and lands in your PostgreSQL with a trace linking identity, agent, tool, result, and cost. Point any Anthropic-compatible client, including Claude Code, at the gateway and usage becomes something you can see, cap, and audit.
+
+The Coolify template provisions the gateway from the official GHCR image plus a PostgreSQL 18 database. Database credentials and the JWT secret are generated automatically; supply at least one provider key (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY`) before the first deploy.
 
 ## Links
 
