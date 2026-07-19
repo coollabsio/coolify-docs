@@ -285,8 +285,8 @@
     "name": "Cockpit",
     "slug": "cockpit",
     "icon": "/docs/images/services/cockpit-logo.svg",
-    "description": "Web-based server administration interface.",
-    "category": "Administration"
+    "description": "Headless CMS with REST & GraphQL APIs.",
+    "category": "CMS"
   },
   {
     "name": "Code Server",
@@ -1825,6 +1825,13 @@
     "icon": "/docs/images/services/sparkyfitness.webp",
     "description": "A comprehensive fitness app that helps users track nutrition, exercise, and body metrics.",
     "category": "Health"
+  },
+  {
+    "name": "Stalwart",
+    "slug": "stalwart",
+    "icon": "/docs/images/services/stalwart-logo.svg",
+    "description": "All-in-one mail server with SMTP, IMAP, POP3, JMAP, Sieve, built-in anti-spam, and a web admin interface.",
+    "category": "Communication"
   },
   {
     "name": "Statusnook",
