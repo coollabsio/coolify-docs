@@ -1608,6 +1608,13 @@
     "category": "Development"
   },
   {
+    "name": "Portabase",
+    "slug": "portabase",
+    "icon": "/docs/images/services/portabase.svg",
+    "description": "A free, open-source and self-hosted tool from a non-profit organization that helps you automate backups and restore your databases on demand.",
+    "category": "Backup"
+  },
+  {
     "name": "Portainer",
     "slug": "portainer",
     "icon": "/docs/images/services/portainer-logo.png",
