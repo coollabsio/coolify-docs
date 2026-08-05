@@ -1,6 +1,6 @@
 ---
 title: Domains
-description: "Add custom domains to Coolify with FQDN format, multiple domain support, port mapping, path-based routing, wildcard domains, and custom DNS server validation."
+description: "Add custom domains to Coolify with FQDN format, multiple domain support, port mapping, path-based routing, search engine indexing control, wildcard domains, and custom DNS server validation."
 ---
 
 # Domains
@@ -46,6 +46,14 @@ If you see a certificate warning in your browser or your application shows a sel
 
 </Callout>
 
+
+## Search Engine Indexing (noindex)
+
+You can flag individual domains so they are served with an `X-Robots-Tag: noindex, nofollow` response header, which keeps them out of search engines. This is useful for auto-generated or staging domains you don't want indexed, while your production domain on the same resource stays indexable.
+
+Check the domains you want to exclude under **Search Engine Indexing**, in your application's **General** settings or in the domain editor of a service.
+
+Since the header is applied by your reverse proxy, the details — including how to set it up manually if you manage your own container labels — live with each proxy: [Traefik](/knowledge-base/proxy/traefik/noindex) and [Caddy](/knowledge-base/proxy/caddy/noindex).
 
 ## Path-Based Routing
 

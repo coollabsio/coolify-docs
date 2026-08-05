@@ -3,6 +3,7 @@
   "type": "module",
   "sideEffects": false,
   "devDependencies": {
+    "@shadowarcanist/atlas-devkit": "0.1.1",
     "@tailwindcss/vite": "4.2.1",
     "@types/mdx": "2.0.13",
     "@types/node": "25.0.9",
@@ -20,6 +21,7 @@
     "generate:services": "node scripts/generate-service-list.mjs && node scripts/generate-services-page.mjs",
     "generate:content": "node scripts/generate-fumadocs-content.mjs",
     "dev": "bun run generate:services && vite dev",
+    "dev:atlas": "atlas --root .",
     "build": "NODE_ENV=production bun run generate:services && NODE_ENV=production vite build && NODE_ENV=production bun run scripts/postbuild.ts",
     "preview": "vite preview",
     "types:check": "bun run generate:services && bunx fumadocs-mdx && tsc --noEmit"

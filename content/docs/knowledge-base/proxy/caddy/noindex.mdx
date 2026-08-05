@@ -1,0 +1,101 @@
+---
+title: Caddy Noindex Header
+description: "Keep individual Coolify domains out of search engines with a Caddy header directive that sets X-Robots-Tag noindex, nofollow on the responses it serves."
+---
+
+# Caddy Noindex Header
+
+You can flag individual domains so they are served with an `X-Robots-Tag: noindex, nofollow` response header, which keeps them out of search engines. This is useful for auto-generated or staging domains you don't want indexed, while your production domain on the same resource stays indexable.
+
+Because the flag is set per domain, a resource with several domains can keep some indexable and exclude others, without changing your application code.
+
+## Using the Toggle
+
+With **Readonly container labels** enabled, Coolify writes the header directive for you — you only pick the domains:
+
+- **Applications** — open the **General** settings. Under **Search Engine Indexing**, check the domains you want to exclude from indexing.
+- **Docker Compose build pack** — domains are configured per service, so the flags are too. Each **Domains for {service}** field has its own **Search Engine Indexing** section.
+- **Services** — open the domain editor and use the **Search Engine Indexing** section.
+
+
+<Callout type="info" title="GOOD TO KNOW">
+
+- The header overrides any `X-Robots-Tag` your application sets itself.
+- Preview deployments are always served as `noindex`.
+
+</Callout>
+
+
+## Setting It Up Manually
+
+If you disable **Readonly container labels**, Coolify stops generating the routing labels and the **Search Engine Indexing** toggle disappears — you own the labels from that point on. You can still get the same result by writing the header directive yourself.
+
+The Docker Compose build pack is the exception: it always generates its own routing labels, so the toggle stays available there regardless of this setting.
+
+### 1. Find the Domain's Label Index
+
+Caddy labels are numbered per domain — `caddy_0` is your first domain, `caddy_1` the second, and so on, in the order they appear in the `Domains` field. Everything below applies to the index of the domain you want excluded, leaving your other domains indexable.
+
+A single domain typically looks like this:
+
+```bash
+caddy_0=https://staging.mysite.com
+caddy_0.header=-Server
+caddy_0.try_files={path} /index.html /index.php
+caddy_0.handle_path.0_reverse_proxy={{upstreams 80}}
+```
+
+### 2. Move the header Directive to Block Form
+
+This is the part that trips people up. Caddy's `header` directive takes **either** inline arguments **or** a block, never both. The generated `caddy_0.header=-Server` is the inline form, so you cannot simply add a second `header` label next to it — you have to move `-Server` into the block alongside the new header.
+
+Replace this line:
+
+```bash
+caddy_0.header=-Server
+```
+
+with these two:
+
+```bash
+caddy_0.header.0_-Server=
+caddy_0.header.1_X-Robots-Tag="noindex, nofollow"
+```
+
+The numeric prefixes (`0_`, `1_`) order the entries inside the block. The `-Server` entry keeps its trailing `=` with an empty value: it removes the `Server` header rather than setting one, which is what the original inline form did.
+
+
+<Callout type="warn" title="Note">
+
+Keep the quotes around `"noindex, nofollow"`. The value contains a comma, and without quotes it is parsed as two separate arguments.
+
+</Callout>
+
+
+### 3. Apply the Configuration
+
+Save your configuration changes and redeploy your application to apply the new labels.
+
+The result for `staging.mysite.com` looks like this:
+
+```bash
+caddy_0=https://staging.mysite.com
+caddy_0.header.0_-Server=
+caddy_0.header.1_X-Robots-Tag="noindex, nofollow"
+caddy_0.try_files={path} /index.html /index.php
+caddy_0.handle_path.0_reverse_proxy={{upstreams 80}}
+```
+
+## Verifying It Works
+
+```bash
+curl -sI https://staging.mysite.com | grep -i x-robots-tag
+```
+
+You should see:
+
+```bash
+x-robots-tag: noindex, nofollow
+```
+
+If the header is missing, check that you edited the label index that matches the domain you are testing, and that the `header` directive uses the block form rather than a leftover inline value.

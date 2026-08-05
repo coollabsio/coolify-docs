@@ -1,5 +1,5 @@
 export const SPONSORS_URL =
-  'https://raw.githubusercontent.com/coollabsio/coollabs-cdn/main/json/sponsors.json';
+  'https://cdn.coollabs.io/sponsors.json';
 
 export type SponsorTier = 'huge' | 'big';
 
