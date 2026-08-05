@@ -36,125 +36,132 @@ A simple high-level overview diagram to give you a visual idea of how this works
 
 ---
 
-### Quick Links to Important Sections:
 
-- [Create a Cloudflare Tunnel](#_1-create-a-cloudflare-tunnel)
-- [Setup Encryption mode on Cloudflare](#_2-setup-encryption-mode-on-cloudflare)
-- [Setup Cloudflare Tunnel on Coolify](#_3-setup-cloudflare-tunnel-on-coolify)
-- [Start Coolify Proxy](#_4-start-coolify-proxy)
-- [Configure Your Resource to Use the Tunnel Domain](#_5-configure-your-resource-to-use-the-tunnel-domain)
-- [How to use Multiple Different Domains](#how-to-use-multiple-different-domains)
-- [Known issues and Solutions](#known-issues-and-solutions)
+<Callout type="info" title="Example Data">
 
----
-
-
-<Callout type="warn" title="Example Data">
-
-The following data is used as an example in this guide. Please replace it with your actual data when following the steps:
-
-- **Domain Name:** shadowarcanist.com
+  The following data is used as an example in this guide. Please replace it with your actual data when following the steps:
+  
+  - **Domain Name:** `shadowarcanist.com`
 
 </Callout>
-
 
 ---
 
 ## 1. Create a Cloudflare Tunnel
 
-To create a Cloudflare Tunnel, first log in to your Cloudflare account and go to the [Zero Trust](https://one.dash.cloudflare.com/) page.
+To create a Cloudflare Tunnel, first log in to your [Cloudflare dashboard](https://dash.cloudflare.com/)
+
+<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/0.webp" />
+
+1. Go to **Networking** in the sidebar.
+2. Click on **Tunnels**
+3. Click on **Create tunnel** button
+
 
 <ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/1.webp" />
 
-1. On the Zero Trust page, go to **Networks** in the sidebar.
-2. Click on **Tunnels**
-3. Click on **Add a tunnel** button
-
-You will be prompted to choose a tunnel type. Click the **Select Cloudflared** button.
+You will be prompted to enter a tunnel name. Enter a name that you prefer and click on **Create tunnel** button.
 
 <ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/2.webp" />
 
-You will be prompted to enter a tunnel name. Choose a name that you prefer.
+1. Select the **Docker** option
+2. Copy the docker run command, which contains the token for your tunnel (token starts with "`eyJ`"). Make sure to save only the token, removing the command part before it, and store it in a safe place, as we need it later.
+
+
+## 2. Deploy cloudflared on Coolify
+
+Go to your project on Coolify dashboard and click the `+ New` button to create a new resource.
 
 <ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/3.webp" />
 
-Next you will see the configuration page with multiple options to install cloudflared.
+Search for `Cloudflared` and click on it.
 
 <ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/4.webp" />
 
-Copy the install command, which contains the token for your tunnel (token starts with "eyJ"). Make sure to save only the token, removing the command part before it, and store it in a safe place, as we need it later.
+Go to the **Environment Variables** page, enter your tunnel token, and deploy the Cloudflared app.
 
 <ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/5.webp" />
 
-Scroll down until you see the **Next** button, then click it.
-
-Then, you will be prompted to add a hostname.
+Once cloudflared starts running you will be able to see it's status on Cloudflare dashboard
 
 <ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/6.webp" />
 
-1. **Subdomain** - (Optional) You can make your all of your resource accessible on any subdomain/domain. For this guide, we are using a wildcard subdomain.
-2. **Domain** - Choose the domain you want to use for the tunnel.
-3. **Path** - Leave this field empty.
-4. **Type** - Choose **HTTP** (this is very important).
-5. **URL** - Enter **localhost:80** (this is very important).
-6. After filling in the details, click the **Save Tunnel** button.
+Click on continue button to create the tunnel.
 
-## 2. Setup Encryption mode on Cloudflare
 
-To set up encryption on Cloudflare, follow these steps:
-
-<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/15.webp" />
-
-1. Go to https://dash.cloudflare.com/ and select the domain you created the tunnel for.
-2. Click **SSL/TLS** in the sidebar.
-3. Select **Overview**.
-4. Click **Configure** button
-
-<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/16.webp" />
-
-Choose **Full** as the encryption mode.
-
-## 3. Setup Cloudflare Tunnel on Coolify
-
-To set up the tunnel on Coolify, follow these steps:
+## 3. Start Coolify Proxy
 
 <ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/7.webp" />
 
-Go to your project on Coolify dashboard and click the **+ New** button to create a new resource.
+1. In the Coolify dashboard, go to the **Servers** page from the sidebar.
+2. Select the server where your application is running, and check if the proxy is showing as running.
+
+
+## 4. Set Up TLS Encryption
+To make Cloudflare use stricter encryption when connecting to your server, configure your TLS encryption in Cloudflare:
+
+<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/13.webp" />
+
+1. Go to **SSL/TLS** in Cloudflare.
+2. Select **Overview**.
+3. Click **Configure** button
+
+<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/14.webp" />
+
+1. Choose **Full (Strict)** as the encryption mode.
+2. Click **Save** button
+
+
+## 5. Configure tunnel routes
 
 <ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/8.webp" />
 
-You will see many options to deploy a new app. Search for Cloudflared and click on it.
+1. Click on your tunnel 
+2. Click on **Configure** option
 
 <ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/9.webp" />
 
-Go to the **Environment Variables** page, enter your tunnel token, and deploy the Cloudflared app. This token was copied in [Step 1](#_1-create-a-cloudflare-tunnel)
-
-## 4. Start Coolify Proxy
-
-To start the Coolify proxy, follow these steps:
+1. Select **Routes**.
+2. Click **Add route** button
 
 <ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/10.webp" />
 
-1. In the Coolify dashboard, go to the **Servers** page from the sidebar.
-2. Select the server where coolify is running, then Click on the **Proxy** tab.
-3. Open the **General** tab.
-4. Click the **Start Proxy** button.
+3. Select **Published Application** as the route type
 
+<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/11.webp" />
+
+1. **Subdomain** - (Optional) You can make your all of your resource accessible on any subdomain/domain. For this guide, we are using a wildcard subdomain which is `*`
+2. **Domain** - Choose the domain you want to use for the tunnel.
+3. **Path** - Leave this field empty.
+4. **Service URL** - Enter **http://localhost:80** (this is very important).
+6. After filling in the details, click the **Add route** button.
+
+<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/12.webp" />
 
 <Callout type="success" title="Tip">
 
- The Coolify proxy is used to route traffic to apps running on your server. This eliminates the need to create new hostnames on the Cloudflare tunnel every time you deploy a new app.  
+ The Coolify proxy (runs on `http://localhost:80`) is used to route traffic to apps running on your server. This eliminates the need to create new routes on the Cloudflare tunnel every time you deploy a new app.  
 
 </Callout>
 
 
-## 5. Configure Your Resource to Use the Tunnel Domain
+## 6. Configure your resource domain
 
-Enter the domain you want to use for your resource/app and deploy your resource.
+Enter the domain you want to use for your resource on Coolify and deploy your resource.
 
-<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/11.webp" />
+<Tabs items={['Services', 'Application']}>
 
+<Tab value="Services">
+
+<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/15.webp" />
+
+</Tab>
+
+<Tab value="Application">
+<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/16.webp" />
+
+</Tab>
+</Tabs>
 
 <Callout type="warn" title="HEADS UP!">
 
@@ -167,25 +174,35 @@ If your app requires **HTTPS** for features like cookies or login, follow the [F
 
 **Congratulations**! You've successfully set up a resource that can be accessed by anyone on the internet your domain.
 
-## How to use Multiple Different Domains?
 
-You don't need to create new tunnels for each domain, just create a new hostname with the new domain and point it to the `localhost:80`.
+---
 
-<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/12.webp" />
+## How to use multiple different domains?
+
+You don't need to create new tunnels for each domain, just create a new routes with the new domain and point it to the `http://localhost:80`.
+
+<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/17.webp" />
+
+---
 
 ## Known issues and Solutions
 
-When you create a new public hostname in [Step 1](#_1-create-a-cloudflare-tunnel), Cloudflare will create a DNS record for the hostname.
+When you create a new routes in [Step 5](/integrations/cloudflare/tunnels/all-resource#5-configure-tunnel-routes), Cloudflare will create a DNS record for the hostname.
 
-However, if a DNS record for the hostname already exists, Cloudflare won’t create a new one.
+However, if a DNS record for the hostname already exists, Cloudflare won’t update existing record.
 
 In this case, your app won’t work. To fix this issue, follow the steps below:
 
-<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/13.webp" />
+<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/8.webp" />
 
-First, copy your tunnel ID from the Tunnels page on the Cloudflare dashboard.
+1. Click on your tunnel 
+2. Click on **Configure** option
 
-<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/14.webp" />
+<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/18.webp" />
+
+3. Copy your tunnel ID from the Tunnels details section.
+
+<ZoomImage src="/docs/images/integrations/cloudflare/tunnels/all-resource/19.webp" />
 
 Create a new DNS record with the following details:
 

@@ -1,5 +1,5 @@
 export const SPONSORS_URL =
-  'https://raw.githubusercontent.com/coollabsio/coollabs-cdn/main/json/sponsors.json';
+  'https://cdn.coollabs.io/sponsors.json';
 
 export type SponsorTier = 'huge' | 'big';
 
@@ -7,12 +7,16 @@ export type Sponsor = {
   name: string;
   url: string;
   description: string;
-  imageKey?: string;
-  imagePath?: string;
-  imageUrl?: string;
-  docsImageKey?: string;
-  docsImagePath?: string;
-  docsImageUrl?: string;
+  image?: {
+    key?: string;
+    path?: string;
+    url: string;
+    docs?: {
+      key?: string;
+      path?: string;
+      url?: string;
+    };
+  };
   tier: SponsorTier;
   pinned?: boolean;
   imageStyle?: string;
@@ -32,7 +36,6 @@ export type SponsorsResponse = {
     repository: string;
     landing: string;
     imagesBaseUrl: string;
-    docsImagesBaseUrl?: string;
   };
   tiers: Record<SponsorTier, Sponsor[]>;
 };

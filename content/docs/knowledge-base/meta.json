@@ -10,6 +10,7 @@
     "commands",
     "delete-user",
     "oauth",
+    "sso",
     "create-root-user-with-env",
     "define-custom-docker-network-with-env",
     "custom-docker-registry",

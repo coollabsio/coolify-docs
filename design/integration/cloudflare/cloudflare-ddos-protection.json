@@ -1,0 +1,1149 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "nmpv4gsfn0",
+      "type": "infra",
+      "position": {
+        "x": 55.28621724550965,
+        "y": 324.14134826347106
+      },
+      "style": {
+        "width": 220,
+        "height": 72
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "container",
+        "label": "Visitor",
+        "subtitle": "",
+        "variant": "row",
+        "borderColor": "#f5d0fe",
+        "iconName": "UserRound",
+        "borderWidth": 2,
+        "accent": "fuchsia",
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 220,
+        "height": 72
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv4iwry1",
+      "type": "infra",
+      "position": {
+        "x": 416.8225898886063,
+        "y": 302.5217184164309
+      },
+      "style": {
+        "width": 180,
+        "height": 150
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "service-provider",
+        "label": "Protected Website",
+        "subtitle": "shadowarcanist.com",
+        "variant": "card",
+        "borderColor": "#eab308",
+        "iconName": "AppWindow",
+        "accent": "amber",
+        "borderWidth": 2,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 152,
+        "height": 126
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 152,
+      "height": 126,
+      "resizing": false
+    },
+    {
+      "id": "nmpv4pu0k3",
+      "type": "infra",
+      "position": {
+        "x": 759.9178096554232,
+        "y": 324.2080841966228
+      },
+      "style": {
+        "width": 220,
+        "height": 72
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "server",
+        "label": "Origin Server",
+        "subtitle": "",
+        "variant": "row",
+        "borderColor": "#06b6d4",
+        "borderWidth": 2,
+        "accent": "sky",
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 220,
+        "height": 72
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv4rqmn4",
+      "type": "infra",
+      "position": {
+        "x": 410.6258146573786,
+        "y": 538.4933070093641
+      },
+      "style": {
+        "width": 180,
+        "height": 150
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "service-provider",
+        "label": "Edge TLS Certificate",
+        "subtitle": "Issued by Public CA",
+        "variant": "card",
+        "borderColor": "#8b5cf6",
+        "accent": "indigo",
+        "iconName": "ScrollText",
+        "borderWidth": 2,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 164,
+        "height": 150
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 164,
+      "height": 150,
+      "resizing": false
+    },
+    {
+      "id": "nmpv4wyc87",
+      "type": "infra",
+      "position": {
+        "x": 690.3667411375666,
+        "y": 532.2494717679201
+      },
+      "style": {
+        "width": 180,
+        "height": 150
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "service-provider",
+        "label": "TLS Certificate",
+        "subtitle": "Cloudflare Origin CA",
+        "variant": "card",
+        "borderColor": "#8b5cf6",
+        "accent": "indigo",
+        "iconName": "ScrollText",
+        "borderWidth": 2,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 161,
+        "height": 150
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 161,
+      "height": 150,
+      "resizing": false
+    },
+    {
+      "id": "nmpv4xgby8",
+      "type": "infra",
+      "position": {
+        "x": 892.0312968398249,
+        "y": 532.7233455550504
+      },
+      "style": {
+        "width": 180,
+        "height": 150
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "service-provider",
+        "label": "TLS Certificate",
+        "subtitle": "Let's Encrypt",
+        "variant": "card",
+        "borderColor": "#8b5cf6",
+        "accent": "indigo",
+        "iconName": "ScrollText",
+        "borderWidth": 2,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 157,
+        "height": 150
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 157,
+      "height": 150,
+      "resizing": false
+    },
+    {
+      "id": "nmpv52kz8a",
+      "type": "text",
+      "position": {
+        "x": 408.62073479085785,
+        "y": 698.582487744142
+      },
+      "zIndex": 1,
+      "data": {
+        "text": "Managed by Cloudflare",
+        "accent": "indigo",
+        "borderRadius": 5,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 173,
+        "height": 28
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv5685wc",
+      "type": "text",
+      "position": {
+        "x": 693.9897688867798,
+        "y": 696.3840434641077
+      },
+      "zIndex": 1,
+      "data": {
+        "text": "Issued by Cloudflare",
+        "accent": "indigo",
+        "borderRadius": 5,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 155,
+        "height": 28
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv5b2h9d",
+      "type": "shape",
+      "position": {
+        "x": 676.4178096554233,
+        "y": 506.808466000517
+      },
+      "style": {
+        "width": 300,
+        "height": 200
+      },
+      "zIndex": 0,
+      "data": {
+        "shape": "rectangle",
+        "label": "",
+        "accent": "indigo",
+        "borderStyle": "solid",
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 387,
+        "height": 232
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 387,
+      "height": 232,
+      "resizing": false
+    },
+    {
+      "id": "nmpv5mj2vh",
+      "type": "text",
+      "position": {
+        "x": 896.1970674092989,
+        "y": 695.8037264265189
+      },
+      "zIndex": 1,
+      "data": {
+        "text": "Issued by Public CA",
+        "accent": "indigo",
+        "borderRadius": 5,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 151,
+        "height": 28
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv5yx59k",
+      "type": "shape",
+      "position": {
+        "x": 384.2398303140868,
+        "y": 259.18598229432195
+      },
+      "style": {
+        "width": 300,
+        "height": 200
+      },
+      "zIndex": 0,
+      "data": {
+        "shape": "rectangle",
+        "label": "CLOUDFLARE INFRASTRUCTURE",
+        "accent": "orange",
+        "borderStyle": "solid",
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 226,
+        "height": 200
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 226,
+      "height": 200,
+      "resizing": false
+    },
+    {
+      "id": "nmpv65awum",
+      "type": "text",
+      "position": {
+        "x": 354.8640769270648,
+        "y": 139.63584516782365
+      },
+      "zIndex": 1,
+      "data": {
+        "text": "Cloudflare DDoS Protection\n",
+        "accent": "indigo",
+        "fontSize": 26,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 352,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv6a6veo",
+      "type": "infra",
+      "position": {
+        "x": 62.54226576086364,
+        "y": 1124.06856899921
+      },
+      "style": {
+        "width": 220,
+        "height": 72
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "container",
+        "label": "Visitor",
+        "subtitle": "",
+        "variant": "row",
+        "borderColor": "#f5d0fe",
+        "iconName": "UserRound",
+        "borderWidth": 2,
+        "accent": "fuchsia",
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 220,
+        "height": 72
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv6a6vep",
+      "type": "infra",
+      "position": {
+        "x": 424.07863840396027,
+        "y": 1102.4489391521697
+      },
+      "style": {
+        "width": 180,
+        "height": 150
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "service-provider",
+        "label": "Protected Website",
+        "subtitle": "shadowarcanist.com",
+        "variant": "card",
+        "borderColor": "#eab308",
+        "iconName": "AppWindow",
+        "accent": "amber",
+        "borderWidth": 2,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 152,
+        "height": 126
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 152,
+      "height": 126,
+      "resizing": false
+    },
+    {
+      "id": "nmpv6a6veq",
+      "type": "infra",
+      "position": {
+        "x": 767.1738581707772,
+        "y": 1124.1353049323616
+      },
+      "style": {
+        "width": 220,
+        "height": 72
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "server",
+        "label": "Origin Server",
+        "subtitle": "",
+        "variant": "row",
+        "borderColor": "#06b6d4",
+        "borderWidth": 2,
+        "accent": "sky",
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 220,
+        "height": 72
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv6a6ver",
+      "type": "infra",
+      "position": {
+        "x": 417.8818631727326,
+        "y": 1338.420527745103
+      },
+      "style": {
+        "width": 180,
+        "height": 150
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "service-provider",
+        "label": "Edge TLS Certificate",
+        "subtitle": "Issued by Public CA",
+        "variant": "card",
+        "borderColor": "#8b5cf6",
+        "accent": "indigo",
+        "iconName": "ScrollText",
+        "borderWidth": 2,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 164,
+        "height": 150
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 164,
+      "height": 150,
+      "resizing": false
+    },
+    {
+      "id": "nmpv6a6ves",
+      "type": "infra",
+      "position": {
+        "x": 797.0786466186588,
+        "y": 1331.781578799201
+      },
+      "style": {
+        "width": 180,
+        "height": 150
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "service-provider",
+        "label": "TLS Certificate",
+        "subtitle": "Cloudflare Origin CA",
+        "variant": "card",
+        "borderColor": "#8b5cf6",
+        "accent": "indigo",
+        "iconName": "ScrollText",
+        "borderWidth": 2,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 161,
+        "height": 150
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 161,
+      "height": 150,
+      "resizing": false
+    },
+    {
+      "id": "nmpv6a6veu",
+      "type": "text",
+      "position": {
+        "x": 415.87678330621185,
+        "y": 1501.6962688650233
+      },
+      "zIndex": 1,
+      "data": {
+        "text": "Managed by Cloudflare",
+        "accent": "indigo",
+        "borderRadius": 5,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 173,
+        "height": 28
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv6a6vev",
+      "type": "text",
+      "position": {
+        "x": 800.701674367872,
+        "y": 1501.4926311693878
+      },
+      "zIndex": 1,
+      "data": {
+        "text": "Issued by Cloudflare",
+        "accent": "indigo",
+        "borderRadius": 5,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 155,
+        "height": 28
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv6a6vey",
+      "type": "shape",
+      "position": {
+        "x": 391.4958788294408,
+        "y": 1059.113203030061
+      },
+      "style": {
+        "width": 300,
+        "height": 200
+      },
+      "zIndex": 0,
+      "data": {
+        "shape": "rectangle",
+        "label": "CLOUDFLARE INFRASTRUCTURE",
+        "accent": "orange",
+        "borderStyle": "solid",
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 226,
+        "height": 200
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 226,
+      "height": 200,
+      "resizing": false
+    },
+    {
+      "id": "nmpv6a6vez",
+      "type": "text",
+      "position": {
+        "x": 283.4296145673075,
+        "y": 964.250356726975
+      },
+      "zIndex": 1,
+      "data": {
+        "text": "Origin Server with Cloudflare Origin CA Certificate",
+        "accent": "indigo",
+        "fontSize": 26,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 609,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv6cl8l10",
+      "type": "infra",
+      "position": {
+        "x": 71.74480141853849,
+        "y": 1879.7330033721619
+      },
+      "style": {
+        "width": 220,
+        "height": 72
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "container",
+        "label": "Visitor",
+        "subtitle": "",
+        "variant": "row",
+        "borderColor": "#f5d0fe",
+        "iconName": "UserRound",
+        "borderWidth": 2,
+        "accent": "fuchsia",
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 220,
+        "height": 72
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv6cl8l11",
+      "type": "infra",
+      "position": {
+        "x": 433.2811740616351,
+        "y": 1858.1133735251217
+      },
+      "style": {
+        "width": 180,
+        "height": 150
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "service-provider",
+        "label": "Protected Website",
+        "subtitle": "shadowarcanist.com",
+        "variant": "card",
+        "borderColor": "#eab308",
+        "iconName": "AppWindow",
+        "accent": "amber",
+        "borderWidth": 2,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 152,
+        "height": 126
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 152,
+      "height": 126,
+      "resizing": false
+    },
+    {
+      "id": "nmpv6cl8l12",
+      "type": "infra",
+      "position": {
+        "x": 776.376393828452,
+        "y": 1879.7997393053136
+      },
+      "style": {
+        "width": 220,
+        "height": 72
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "server",
+        "label": "Origin Server",
+        "subtitle": "",
+        "variant": "row",
+        "borderColor": "#06b6d4",
+        "borderWidth": 2,
+        "accent": "sky",
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 220,
+        "height": 72
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv6cl8l13",
+      "type": "infra",
+      "position": {
+        "x": 427.08439883040745,
+        "y": 2094.084962118055
+      },
+      "style": {
+        "width": 180,
+        "height": 150
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "service-provider",
+        "label": "Edge TLS Certificate",
+        "subtitle": "Issued by Public CA",
+        "variant": "card",
+        "borderColor": "#8b5cf6",
+        "accent": "indigo",
+        "iconName": "ScrollText",
+        "borderWidth": 2,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 164,
+        "height": 150
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 164,
+      "height": 150,
+      "resizing": false
+    },
+    {
+      "id": "nmpv6cl8l14",
+      "type": "infra",
+      "position": {
+        "x": 806.2811822763337,
+        "y": 2087.446013172153
+      },
+      "style": {
+        "width": 180,
+        "height": 150
+      },
+      "zIndex": 1,
+      "data": {
+        "blockId": "service-provider",
+        "label": "TLS Certificate",
+        "subtitle": "Let's Encrypt",
+        "variant": "card",
+        "borderColor": "#8b5cf6",
+        "accent": "indigo",
+        "iconName": "ScrollText",
+        "borderWidth": 2,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 161,
+        "height": 150
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 161,
+      "height": 150,
+      "resizing": false
+    },
+    {
+      "id": "nmpv6cl8l15",
+      "type": "text",
+      "position": {
+        "x": 425.0793189638867,
+        "y": 2257.360703237975
+      },
+      "zIndex": 1,
+      "data": {
+        "text": "Managed by Cloudflare",
+        "accent": "indigo",
+        "borderRadius": 5,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 173,
+        "height": 28
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv6cl8l16",
+      "type": "text",
+      "position": {
+        "x": 748.5629226115569,
+        "y": 2256.360425446054
+      },
+      "zIndex": 1,
+      "data": {
+        "text": "Issued by Public CA via DNS Challenge",
+        "accent": "indigo",
+        "borderRadius": 5,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 276,
+        "height": 28
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "nmpv6cl8l17",
+      "type": "shape",
+      "position": {
+        "x": 400.69841448711566,
+        "y": 1814.777637403013
+      },
+      "style": {
+        "width": 300,
+        "height": 200
+      },
+      "zIndex": 0,
+      "data": {
+        "shape": "rectangle",
+        "label": "CLOUDFLARE INFRASTRUCTURE",
+        "accent": "orange",
+        "borderStyle": "solid",
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 226,
+        "height": 200
+      },
+      "selected": false,
+      "dragging": false,
+      "width": 226,
+      "height": 200,
+      "resizing": false
+    },
+    {
+      "id": "nmpv6cl8l18",
+      "type": "text",
+      "position": {
+        "x": 304.73817945655986,
+        "y": 1713.9168041800172
+      },
+      "zIndex": 1,
+      "data": {
+        "text": "Origin Server with Public CA Certificate",
+        "accent": "indigo",
+        "fontSize": 26,
+        "groupId": "gmpv68a5tn"
+      },
+      "measured": {
+        "width": 485,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    }
+  ],
+  "edges": [
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv4pu0k3",
+      "sourceHandle": "bottom",
+      "target": "nmpv5b2h9d",
+      "targetHandle": "top",
+      "data": {
+        "label": "Origin Server Options (choose one)",
+        "turbo": false,
+        "color": "#6366f1",
+        "lineStyle": "solid",
+        "dashGap": 6,
+        "labelTextColor": "#6366f1"
+      },
+      "id": "xy-edge__nmpv4pu0k3bottom-nmpv5b2h9dtop",
+      "selected": false
+    },
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv5hmw8f",
+      "sourceHandle": "bottom",
+      "target": "nmpv4gsfn0",
+      "targetHandle": "right",
+      "data": {
+        "label": "",
+        "turbo": false,
+        "lineStyle": "solid",
+        "dashGap": 6
+      },
+      "id": "xy-edge__nmpv5hmw8fbottom-nmpv4gsfn0right",
+      "selected": false
+    },
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv4gsfn0",
+      "sourceHandle": "right",
+      "target": "nmpv5yx59k",
+      "targetHandle": "left",
+      "data": {
+        "label": "HTTPS",
+        "turbo": false,
+        "lineStyle": "solid",
+        "dashGap": 6
+      },
+      "id": "xy-edge__nmpv4gsfn0right-nmpv5yx59kleft",
+      "selected": false
+    },
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv5yx59k",
+      "sourceHandle": "right",
+      "target": "nmpv4pu0k3",
+      "targetHandle": "left",
+      "data": {
+        "label": "HTTPS",
+        "turbo": false,
+        "lineStyle": "solid",
+        "dashGap": 6
+      },
+      "id": "xy-edge__nmpv5yx59kright-nmpv4pu0k3left",
+      "selected": false
+    },
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv4rqmn4",
+      "sourceHandle": "top",
+      "target": "nmpv4iwry1",
+      "targetHandle": "bottom",
+      "data": {
+        "label": "",
+        "turbo": false,
+        "color": "#6366f1",
+        "lineStyle": "solid",
+        "dashGap": 6
+      },
+      "id": "xy-edge__nmpv4rqmn4top-nmpv4iwry1bottom",
+      "selected": false
+    },
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv6a6veo",
+      "sourceHandle": "right",
+      "target": "nmpv6a6vey",
+      "targetHandle": "left",
+      "data": {
+        "label": "HTTPS",
+        "turbo": false,
+        "lineStyle": "solid",
+        "dashGap": 6
+      },
+      "id": "empv6a6ve1",
+      "selected": false
+    },
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv6a6vey",
+      "sourceHandle": "right",
+      "target": "nmpv6a6veq",
+      "targetHandle": "left",
+      "data": {
+        "label": "HTTPS",
+        "turbo": false,
+        "lineStyle": "solid",
+        "dashGap": 6
+      },
+      "id": "empv6a6ve2",
+      "selected": false
+    },
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv6a6ver",
+      "sourceHandle": "top",
+      "target": "nmpv6a6vep",
+      "targetHandle": "bottom",
+      "data": {
+        "label": "",
+        "turbo": false,
+        "color": "#6366f1",
+        "lineStyle": "solid",
+        "dashGap": 6
+      },
+      "id": "empv6a6ve3",
+      "selected": false
+    },
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv6a6veq",
+      "sourceHandle": "bottom",
+      "target": "nmpv6a6ves",
+      "targetHandle": "top",
+      "data": {
+        "label": "",
+        "turbo": false,
+        "color": "#6366f1",
+        "lineStyle": "solid",
+        "dashGap": 6
+      },
+      "id": "xy-edge__nmpv6a6veqbottom-nmpv6a6vestop",
+      "selected": false
+    },
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv6cl8l10",
+      "sourceHandle": "right",
+      "target": "nmpv6cl8l17",
+      "targetHandle": "left",
+      "data": {
+        "label": "HTTPS",
+        "turbo": false,
+        "lineStyle": "solid",
+        "dashGap": 6
+      },
+      "id": "empv6cl8l4",
+      "selected": false
+    },
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv6cl8l17",
+      "sourceHandle": "right",
+      "target": "nmpv6cl8l12",
+      "targetHandle": "left",
+      "data": {
+        "label": "HTTPS",
+        "turbo": false,
+        "lineStyle": "solid",
+        "dashGap": 6
+      },
+      "id": "empv6cl8l5",
+      "selected": false
+    },
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv6cl8l13",
+      "sourceHandle": "top",
+      "target": "nmpv6cl8l11",
+      "targetHandle": "bottom",
+      "data": {
+        "label": "",
+        "turbo": false,
+        "color": "#6366f1",
+        "lineStyle": "solid",
+        "dashGap": 6
+      },
+      "id": "empv6cl8l6",
+      "selected": false
+    },
+    {
+      "type": "labeled",
+      "animated": false,
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 18,
+        "height": 18,
+        "color": "#94a3b8"
+      },
+      "source": "nmpv6cl8l12",
+      "sourceHandle": "bottom",
+      "target": "nmpv6cl8l14",
+      "targetHandle": "top",
+      "data": {
+        "label": "",
+        "turbo": false,
+        "color": "#6366f1",
+        "lineStyle": "solid",
+        "dashGap": 6
+      },
+      "id": "empv6cl8l7",
+      "selected": false
+    }
+  ],
+  "customBlocks": [],
+  "groups": [
+    {
+      "id": "gmpv68a5tn",
+      "name": "Cloudflare DDoS Protection",
+      "parentGroupId": null,
+      "collapsed": true
+    }
+  ],
+  "turbo": false,
+  "animateEdges": false,
+  "animationSpeed": 0.8,
+  "turboColors": [
+    "#ec4899",
+    "#3b82f6"
+  ]
+}

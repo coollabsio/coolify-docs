@@ -255,6 +255,14 @@ Support for Magic Environment Variables in Compose files based on Git sources re
 
 You can predefine storage normally in your compose file, but there are a few extra options that you can set to tell Coolify what to do with the storage.
 
+<Callout type="warn" title="File mount prerequisites">
+
+When you bind mount a file, the source file must already exist on the server or be created by Coolify with `content:`. If the file is stored in your Git repository, enable **Preserve Repository During Deployment** in the application settings so the repository files remain available during the Docker Compose deployment.
+
+If the source file is missing, Docker can create a directory at that path instead. This often causes deployment errors such as `not a directory: unknown`.
+
+</Callout>
+
 ### Create an empty directory
 
 ```yaml
@@ -312,6 +320,14 @@ configs:
         ALTER USER authenticator WITH PASSWORD :'pgpass';
         ALTER USER pgbouncer WITH PASSWORD :'pgpass';
 ```
+
+### Troubleshooting file mounts
+
+If a deployment fails with `not a directory: unknown`, check the bind mount source path:
+
+- For generated configuration files, add `content:` to the bind mount so Coolify creates the file.
+- For files committed to your Git repository, enable **Preserve Repository During Deployment**.
+- For host files outside the repository, SSH into the server and verify that the source path exists as a file, not a directory.
 
 ## Exclude from healthchecks
 

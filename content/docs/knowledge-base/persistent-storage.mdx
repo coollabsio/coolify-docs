@@ -46,6 +46,14 @@ To create a bind mount, you need to define:
 - `Source Path` from the host system. **No docker volume created in this case.**
 - `Destination Path` where the volume will be mounted inside the container.
 
+<Callout type="warn" title="File bind mounts">
+
+If the bind mount source is a file, make sure that file already exists on the server before deployment. If Docker receives a missing file path, it can create a directory at that path and the container may fail with errors like `not a directory: unknown`.
+
+For Docker Compose applications that mount files from the Git repository, enable **Preserve Repository During Deployment** in the application settings. For generated configuration files, use the Docker Compose `content:` option described in [Docker Compose storage](/knowledge-base/docker/compose#storage).
+
+</Callout>
+
 
 <Callout type="warn" title="Caution">
 

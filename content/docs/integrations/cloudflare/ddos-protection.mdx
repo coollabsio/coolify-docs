@@ -11,22 +11,19 @@ When using Cloudflare’s Proxy, CDN, and security features, all incoming traffi
 
 ---
 
-### Why Use Cloudflare for DDoS Protection with Coolify?
+## Why Use Cloudflare for DDoS Protection with Coolify?
 
-1. Blocks malicious traffic before it reaches your server, reducing risk and server load.
+1. Blocks malicious traffic before it reaches your server.
 2. No need to scale server resources during DDoS attacks — Cloudflare absorbs the impact.
-3. Minimal configuration required to enable robust protection against potentially costly attacks.
-4. Hides your server’s real IP address by resolving your domain to Cloudflare’s IPs.
+3. Hides your server’s real IP address by proxying your application through Cloudflare’s global network. 
 
 ---
 
-### When Not to Use Cloudflare for DDoS Protection
+## When Not to Use Cloudflare for DDoS Protection
 
 1. You prefer not to route all traffic through Cloudflare’s network.
 2. Privacy concerns, Cloudflare terminates TLS, which means they can inspect incoming requests.
-3. Cloudflare downtime, although extremely rare, could affect your service if you rely entirely on their protection.
-4. You want full control over SSL/TLS certificates issued by a global Certificate Authority.
-5. You need free wildcard support for deep subdomains (more than 1 level subdomains -- e.g., `*.sub.domain.com` which Cloudflare does not offer for free).
+3. You need free wildcard support for deep subdomains (more than 1 level subdomains -- e.g., `*.sub.domain.com` which Cloudflare does not offer for free).
 
 ---
 
@@ -35,35 +32,69 @@ When using Cloudflare’s Proxy, CDN, and security features, all incoming traffi
 
   The following data is used as an example in this guide. Please replace it with your actual data when following the steps:
   
-  - **IPv4 Address of Origin Server:** 203.0.113.1
-  - **Domain Name:** shadowarcanist.com
-  - **Username:** shadowarcanist
+  - **IPv4 Address of Origin Server:** `203.0.113.1`
+  - **Domain Name:** `shadowarcanist.com`
+  - **Username:** `shadowarcanist`
 
 </Callout>
 
+## How It Works?
+
+A simple high-level overview diagram to give you a visual idea of how this works:
+
+<ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/overview-diagram.webp" />
+
+## 1. Setup Origin TLS Certificate
+Communication between your server and Cloudflare is encrypted using a TLS certificate. 
+
+There are two ways to do this:
+* Use a TLS certificate from Cloudflare
+* Get your own TLS certificate from a trusted public Certificate Authority (this requires a DNS challenge)
 
 
-## 1. Create the Origin Certificate
-Communication between your server and Cloudflare is encrypted using a custom Cloudflare Origin Certificate (required when using Cloudflare’s proxy).
 
-<ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/origin-cert-illustration.webp" />
+Here's a concise comparison table between a **Cloudflare Origin Certificate** and a **Public CA Certificate**:
+
+| Feature | Cloudflare Origin Certificate | Public CA Certificate |
+|----------|------------------------|----------------|
+| Trusted By | Cloudflare only | Browsers, OSs, Cloudflare |
+| Use Case | Cloudflare ↔ Origin only | Any direct client |
+| Direct Browser Access | Shows certificate errors if users bypass Cloudflare | ✅ Works normally |
+| Requires CF Proxy | ✅ Yes | ❌ No |
+| Works Without CF | ❌ No | ✅ Yes |
+| Issuer | Cloudflare | Public CA (eg: Let's Encrypt) |
+| Cost | Free | Free |
+| DNS Challenge | ❌ No | ✅ Yes |
+
+<Callout type="success" title="Tip">
+  If you plan to have Cloudflare always in front of your application, use a Cloudflare Origin Certificate. Otherwise, use a Public CA Cert.
+</Callout>
+
+There are 2 ways to setup the Origin TLS Certificate so follow one of the methods from below:
 
 
-To create your Cloudflare Origin Certificate, follow these steps:
+<Tabs items={['Cloudflare Origin Certificate', 'Public CA Certificate']}>
 
+<Tab value="Cloudflare Origin Certificate">
+A simple high-level overview diagram to give you a visual idea of how this works:
+<ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/cf-origin-certificate-overview-diagram.webp" />
+
+---
+
+## A. Create Cloudflare Origin Certificate [!toc]
 <ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/1.webp" />
 
 1. In your Cloudflare dashboard, go to **SSL/TLS**.
 2. Select **Origin Server**.
+3. Select **Origin Certificates**
 3. Click the **Create Certificate** button.
-
-You’ll be asked to choose a private key type, hostnames, and certificate validity.
 
 <ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/2.webp" />
 
 1. Choose **RSA (2048)** for the key type.
 2. Add the hostnames you want the certificate to cover.
-
+3. Set the certificate validity to **15 years**.
+4. Click the **Create** button.
 
 <Callout type="warn" title="HEADS UP!">
 
@@ -78,22 +109,19 @@ You’ll be asked to choose a private key type, hostnames, and certificate valid
 
 </Callout>
 
-
-3. Set the certificate validity to **15 years**.
-
-Your certificate will now be generated.
-
 <ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/3.webp" />
 
 1. Choose **PEM** as the key format.
-2. Copy your **Certificate**.
-3. Copy your **Private Key**.
+2. Copy your **Origin Certificate** and save it somewhere safe
+3. Copy your **Private Key** and save it somewhere safe
+4. Click the **Ok** button.
 
 Next, you'll add these to your server running Coolify and configure Coolify to use this certificate.
 
+---
 
-## 2. Add Certificate to Your Server
-SSH into your server or use Coolify's terminal feature. For this guide, I’m using SSH:
+## B. Add Certificate to Your Server [!toc]
+SSH into your server or use Coolify's terminal feature. For this guide, I’m using my external terminal:
 ```bash
 ssh shadowarcanist@203.0.113.1
 ```
@@ -103,8 +131,7 @@ Once logged in, navigate to the Coolify proxy directory:
 $ cd /data/coolify/proxy
 ```
 
-Adding certificates slightly varies for Caddy and Traefik proxy so choose the correct one from the below section
-
+Certificate locations slightly vary between Caddy and Traefik, so choose the one based on the proxy you are using from the section below.
 
 <Tabs items={['Traefik', 'Caddy']}>
 
@@ -126,29 +153,6 @@ Now, navigate into the **certs** directory:
 $ cd certs
 ```
 
-Create two new files for the certificate and private key:
-```bash
-$ touch shadowarcanist.cert shadowarcanist.key
-```
-
-Verify the files were created:
-```bash
-$ ls
-> shadowarcanist.cert shadowarcanist.key
-```
-
-Open the **shadowarcanist.cert** file and paste the certificate from the Cloudflare dashboard:
-```bash
-$ nano shadowarcanist.cert 
-```
-Save and exit after pasting the certificate.
-
-Do the same for the **shadowarcanist.key** file and paste the private key:
-```bash
-$ nano shadowarcanist.key 
-```
-Save and exit.
-
 </Tab>
 
 <Tab value="Caddy">
@@ -169,6 +173,11 @@ Now, navigate into the **certs** directory:
 $ cd caddy/data/certs
 ```
 
+</Tab>
+
+</Tabs>
+
+
 Create two new files for the certificate and private key:
 ```bash
 $ touch shadowarcanist.cert shadowarcanist.key
@@ -192,58 +201,12 @@ $ nano shadowarcanist.key
 ```
 Save and exit.
 
-</Tab>
-
-</Tabs>
-
-
 Now the origin certificate is installed on your server.
 
-
-## 3. Set Up DNS Records and TLS Encryption
-To make the origin certificate work, configure your DNS records, enable TLS, and set up HTTP to HTTPS redirects in Cloudflare:
-
-<ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/4.webp" />
-
-1. In Cloudflare, go to **DNS**.
-2. Select **Records**.
-3. Add 2 A records:
-4. Enter name as **`shadowarcanist.com`** and `*`
-5. Use the **IP address** of your server as the content for both records.
-6. Set the proxy status to **Proxied** for both records.
+---
 
 
-<Callout type="info">
-
-Enabling the "Proxied" (orange cloud) option for both A records — `shadowarcanist.com` and `*` — will proxy the root domain and all one-level subdomains via a wildcard. 
-
-This isn't necessary if you only need to proxy (or protect against DDoS) for a specific domain. In that case, simply enable proxying for the domain you want protection for.
-
-</Callout>
-
-
-Next, set up TLS encryption:
-
-<ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/5.webp" />
-
-1. Go to **SSL/TLS** in Cloudflare.
-2. Select **Overview**.
-3. Click **Configure** button
-
-Choose **Full (Strict)** as the encryption mode.
-
-<ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/6.webp" />
-
-Finally, enable HTTP to HTTPS redirects:
-
-<ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/7.webp" />
-
-1. In Cloudflare, go to **SSL/TLS** 
-2. Select **Edge Certificates**.
-3. Enable **Always Use HTTPS**.
-
-
-## 4. Configure Coolify proxy to Use the Origin Certificate
+## C. Configure Coolify proxy to Use the Origin Certificate [!toc]
 <ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/8.webp" />
 
 1. Go to the **Server** section in the sidebar.
@@ -253,19 +216,18 @@ Finally, enable HTTP to HTTPS redirects:
 
 You will now be prompted to enter the Dynamic Configuration.
 
-Adding Dynamic Configuration slightly varies for Caddy and Traefik proxy so choose the correct one from the below section
+Dynamic configuration file slightly varies between Caddy and Traefik, so choose the one based on the proxy you are using from the section below.
 
 
-<Callout type="info">
+<Tabs items={['Traefik', 'Caddy']}>
 
-
-== Traefik
+<Tab value="Traefik">
 
 <ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/9.webp" />
 
 1. Choose a name for your configuration (must end with `.yaml`).
 2. Enter the following details in the configuration field:
-```bash
+```yaml
 tls:
   certificates:
     -
@@ -274,23 +236,31 @@ tls:
 ```
 
 3. Save the configuration
----
-If you want to add multiple certificates and keys, you can do it like this:
-```bash
-tls:
-  certificates:
-    -
-      certFile: /traefik/certs/shadowarcanist.cert
-      keyFile: /traefik/certs/shadowarcanist.key
-    -
-      certFile: /traefik/certs/name2.cert
-      keyFile: /traefik/certs/name2.key
-    -
-      certFile: /traefik/certs/name3.cert
-      keyFile: /traefik/certs/name3.key
-```
 
-== Caddy
+<Callout type="info" title="Adding multiple certificates">
+  
+  If you want to add multiple certificates and keys, you can do it like this:
+  ```yaml
+  tls:
+    certificates:
+      -
+        certFile: /traefik/certs/shadowarcanist.cert
+        keyFile: /traefik/certs/shadowarcanist.key
+      -
+        certFile: /traefik/certs/name2.cert
+        keyFile: /traefik/certs/name2.key
+      -
+        certFile: /traefik/certs/name3.cert
+        keyFile: /traefik/certs/name3.key
+  ```
+  
+</Callout>
+
+
+</Tab>
+
+<Tab value="Caddy">
+
 <ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/10.webp" />
 
 1. Choose a name for your configuration (must end with `.caddy`).
@@ -301,60 +271,115 @@ tls:
 }
 ```
 
-> Note: The wildcard `*.shadowarcanist.com` provides coverage for all subdomains, exclude it if you’re only securing a single domain (i.e, `shadowarcanist.com`).
+<Callout type="info" title="Note">
+  
+The wildcard `*.shadowarcanist.com` provides coverage for all subdomains, exclude it if you’re only securing a single domain (i.e, `shadowarcanist.com`).
+</Callout>
+
 
 3. Save the configuration
 
----
-
-If you want to add multiple certificates and keys, you can do it like this:
-```bash
-*.shadowarcanist.com, shadowarcanist.com {
-    tls /data/certs/shadowarcanist.cert /data/certs/shadowarcanist.key
-}
-
-*.name2.com, name2.com {
-    tls /data/certs/name2.cert /data/certs/name2.key
-}
-
-*.name3.com, name3.com {
-    tls /data/certs/name3.cert /data/certs/name3.key
-}
-```
-
+<Callout type="info" title="Adding multiple certificates">
+  
+  If you want to add multiple certificates and keys, you can do it like this:
+  ```bash
+  *.shadowarcanist.com, shadowarcanist.com {
+      tls /data/certs/shadowarcanist.cert /data/certs/shadowarcanist.key
+  }
+  
+  *.name2.com, name2.com {
+      tls /data/certs/name2.cert /data/certs/name2.key
+  }
+  
+  *.name3.com, name3.com {
+      tls /data/certs/name3.cert /data/certs/name3.key
+  }
+  ```
+  
 </Callout>
 
 
+</Tab>
+
+</Tabs>
 
 From now on, Coolify will use the origin certificate for requests matching the hostname.
 
-Now you’re done! Your server is set up to use the Cloudflare Origin Certificate, and all traffic is proxied through Cloudflare network so all incoming attacks like DDoS are prevented by Cloudflare before it reaches your server.
+</Tab>
+
+<Tab value="Public CA Certificate">
+A simple high-level overview diagram to give you a visual idea of how this works:
+<ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/public-ca-origin-certificate-overview-diagram.webp" />
+
+We already have guides to set up DNS challenge for TLS certificates, you can follow them here:
+
+- [Traefik DNS challenge](/knowledge-base/proxy/traefik/dns-challenge)
+- [Caddy DNS challenge](/knowledge-base/proxy/caddy/dns-challenge)
+
+Come back to this guide after you finish setting up the DNS challenge using the guides above.
+
+  
+</Tab>
+
+</Tabs>
 
 
-<Callout type="error" title="HEADS UP!!">
+## 2. Set Up DNS Records
+To route traffic through Cloudflare, configure your DNS records in Cloudflare:
 
-**All the steps below are optional. Cloudflare should already be protecting your applications. Follow the below steps if you want to prevent attackers from directly attacking your server by it's IP Address on Port 80 and 443**
+<ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/4.webp" />
+
+1. In Cloudflare dashboard, go to **DNS**.
+2. Select **Records**.
+3. Add 2 A records:
+4. Enter name as **`shadowarcanist.com`** and `*`
+5. Use the **IP address** of your server as the content for both records.
+6. Set the proxy status to **Proxied** for both records.
+
+
+<Callout type="info" title="Note">
+
+Enabling the "Proxied" (orange cloud) option for both A records: `shadowarcanist.com` and `*` will proxy the root domain and all one-level subdomains via a wildcard. 
+
+This isn't necessary if you only need to proxy (or protect against DDoS) for a specific domain. In that case, simply enable proxying for the domain you want protection for.
 
 </Callout>
 
+## 3. Set Up TLS Encryption
+To make Cloudflare use stricter encryption when connecting to your server, configure your TLS encryption in Cloudflare:
+
+<ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/5.webp" />
+
+1. Go to **SSL/TLS** in Cloudflare.
+2. Select **Overview**.
+3. Click **Configure** button
+
+<ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/6.webp" />
+
+1. Choose **Full (Strict)** as the encryption mode.
+2. Click **Save** button
+
+## 4. Set Up Always Use HTTPS
+To make Cloudflare automatically redirect HTTP requests to HTTPS, configure your redirects in Cloudflare:
+
+<ZoomImage src="/docs/images/integrations/cloudflare/ddos-protection/7.webp" />
+
+1. In Cloudflare, go to **SSL/TLS** 
+2. Select **Edge Certificates**.
+3. Enable **Always Use HTTPS**.
 
 
-## 5. Configure Firewall to Allow Only Cloudflare Traffic
+## 5. Configure Firewall
+
+<Callout type="info" title="Note">
+  This step is completely optional but recommended.
+</Callout>
+
 Configure your firewall to allow incoming traffic on port **443** only from [Cloudflare’s IP ranges ↗](https://www.cloudflare.com/en-gb/ips/).
 
 Block all other inbound traffic, except for your SSH port.
 
 This prevents attackers from bypassing Cloudflare and directly targeting your server with traffic on ports 80 or 443.
 
-This step is completely optional but recommended.
 
-
-## Credits
-The origin-cert-illustration image is designed using icons from [Flaticon ↗](https://www.flaticon.com/). 
-Links to each icon can be found below:
-- [Medal icon ↗](https://www.flaticon.com/free-icon/medal_14468558) by [Vlad Szirka ↗](https://www.flaticon.com/authors/vlad-szirka)
-- [Award icon ↗](https://www.flaticon.com/free-icon/award_15218157) by [explanaicon ↗](https://www.flaticon.com/authors/explanaicon)
-- [Worldwide icon ↗](https://www.flaticon.com/free-icon/worldwide_870169) by [Freepik ↗](https://www.flaticon.com/authors/freepik)
-- [Lock icon ↗](https://www.flaticon.com/free-icon/lock_2089784) by [Those Icons ↗](https://www.flaticon.com/authors/those-icons)
-- [Browser icon ↗](https://www.flaticon.com/free-icon/browser_331190) by [Alfredo Hernandez ↗](https://www.flaticon.com/authors/alfredo-hernandez)
-- [Database icon ↗](https://www.flaticon.com/free-icon/database_8028666) by [Tanah Basah ↗](https://www.flaticon.com/authors/tanah-basah)
+Now you’re done! Your server is set up to use Origin TLS Certificate, and all traffic is proxied through Cloudflare's network so all incoming attacks like DDoS are prevented by Cloudflare before it reaches your server.

@@ -9,7 +9,7 @@ function addRef(url: string): string {
 }
 
 function sponsorImageUrl(sponsor: Sponsor): string | undefined {
-  return sponsor.docsImageUrl ?? sponsor.imageUrl;
+  return sponsor.image?.docs?.url ?? sponsor.image?.url;
 }
 
 function SponsorCard({ sponsor, size }: { sponsor: Sponsor; size: 'huge' | 'big' }) {

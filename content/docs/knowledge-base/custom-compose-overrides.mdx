@@ -29,6 +29,25 @@ docker compose \
 
 Docker Compose [merges these files](https://docs.docker.com/compose/how-tos/multiple-compose-files/merge/?utm_source=coolify.io) in order — properties in later files override the same properties in earlier files. You only need to specify the keys you want to change.
 
+If you use the [internal PostgreSQL upgrade script](/get-started/internal-postgresql-upgrade), Coolify also creates:
+
+```text
+/data/coolify/source/docker-compose.postgres-upgrade.yml
+```
+
+When that file exists, it is loaded **after** `docker-compose.custom.yml`:
+
+```bash
+docker compose \
+  -f docker-compose.yml \
+  -f docker-compose.prod.yml \
+  -f docker-compose.custom.yml \
+  -f docker-compose.postgres-upgrade.yml \
+  up -d
+```
+
+This lets the PostgreSQL upgrade override keep the upgraded PostgreSQL image and Docker volume active across future Coolify upgrades. If both files define conflicting `postgres` service settings, `docker-compose.postgres-upgrade.yml` takes precedence because it is loaded last.
+
 
 <Callout type="info">
 
@@ -148,6 +167,18 @@ docker compose \
   -f docker-compose.yml \
   -f docker-compose.prod.yml \
   -f docker-compose.custom.yml \
+  config
+```
+
+If `/data/coolify/source/docker-compose.postgres-upgrade.yml` exists, include it too so you validate the same file order Coolify will use:
+
+```bash
+cd /data/coolify/source
+docker compose \
+  -f docker-compose.yml \
+  -f docker-compose.prod.yml \
+  -f docker-compose.custom.yml \
+  -f docker-compose.postgres-upgrade.yml \
   config
 ```
 

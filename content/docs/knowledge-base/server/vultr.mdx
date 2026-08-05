@@ -1,0 +1,66 @@
+---
+title: "Vultr"
+description: "Provision and manage Vultr servers from Coolify."
+---
+
+# Vultr
+
+Coolify can provision and manage servers on Vultr using a Vultr API token.
+
+## Create a Vultr API token
+
+1. Log in to your Vultr account.
+2. Open **Account** > **[API Access](https://console.vultr.com/user/apiaccess/)**.
+3. Enable API access if it is not already enabled.
+4. Create a new API key and give it a recognizable name, for example, **"Coolify API"**.
+5. Copy your API key.
+
+> For more information, see the [Vultr API documentation](https://docs.vultr.com/platform/other/api).
+
+Keep this token private. It allows Coolify to create and manage Vultr instances in your account.
+
+## Add the token to Coolify
+
+1. In Coolify, open **Keys & Tokens** > **Cloud Tokens**.
+2. Select **Vultr** as the provider.
+3. Paste your Vultr API token.
+4. Save and validate the token.
+
+## Create a Vultr server
+
+1. Open **Servers**.
+2. Click **Add Server**.
+3. Select **Vultr**.
+4. Choose the token, region, plan, operating system, and SSH key.
+5. Create the server.
+
+Coolify creates the Vultr instance and links it to the Coolify server record.
+
+After the server is created, validate the server and install Docker from Coolify.
+
+## Stopped servers
+
+If a Vultr instance is stopped, Coolify detects the stopped power state and prevents server validation until the instance is running again.
+
+You can start a stopped Vultr instance from the server page using the **Power On** button.
+
+## Link an existing Vultr server
+
+You can link an existing Coolify server to a Vultr instance from the server page.
+
+Linking only connects the Coolify server record to the Vultr instance for status refresh and power controls. The server must still have working SSH access configured in Coolify before it can be validated or used for deployments.
+
+You can manage Vultr SSH keys from the [Vultr SSH Keys page](https://console.vultr.com/sshkeys/).
+
+Use one of the following:
+
+- The Vultr instance ID
+- The server IP address
+
+Once linked, Coolify can refresh the Vultr status and show power controls for that server.
+
+## Delete behavior
+
+When deleting a Vultr-linked server from Coolify, you can choose whether to also delete the Vultr instance.
+
+If you only delete the server from Coolify, the Vultr instance remains in your Vultr account.

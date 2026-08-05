@@ -10,6 +10,7 @@
     "non-root-user",
     "openssh",
     "oracle-cloud",
+    "vultr",
     "proxies",
     "patching",
     "terminal-access"

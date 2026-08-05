@@ -41,6 +41,7 @@ const sidebarMetas = {
       'introduction',
       'installation',
       'upgrade',
+      'internal-postgresql-upgrade',
       'downgrade',
       'uninstallation',
       'cloud',
