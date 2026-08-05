@@ -1,0 +1,133 @@
+---
+title: "Noindex Middleware"
+description: "Keep individual Coolify domains out of search engines with a Traefik middleware that sets the X-Robots-Tag noindex, nofollow response header."
+---
+
+# Noindex Middleware
+
+You can flag individual domains so they are served with an `X-Robots-Tag: noindex, nofollow` response header, which keeps them out of search engines. This is useful for auto-generated or staging domains you don't want indexed, while your production domain on the same resource stays indexable.
+
+Because the flag is set per domain, a resource with several domains can keep some indexable and exclude others, without changing your application code.
+
+## Using the Toggle
+
+With **Readonly container labels** enabled, Coolify writes the middleware for you — you only pick the domains:
+
+- **Applications** — open the **General** settings. Under **Search Engine Indexing**, check the domains you want to exclude from indexing.
+- **Docker Compose build pack** — domains are configured per service, so the flags are too. Each **Domains for {service}** field has its own **Search Engine Indexing** section.
+- **Services** — open the domain editor and use the **Search Engine Indexing** section.
+
+
+<Callout type="info" title="GOOD TO KNOW">
+
+- The header overrides any `X-Robots-Tag` your application sets itself.
+- Preview deployments are always served as `noindex`.
+
+</Callout>
+
+
+## Setting It Up Manually
+
+If you disable **Readonly container labels**, Coolify stops generating the routing labels and the **Search Engine Indexing** toggle disappears — you own the labels from that point on. You can still get the same result by adding the middleware yourself.
+
+The Docker Compose build pack is the exception: it always generates its own routing labels, so the toggle stays available there regardless of this setting.
+
+### Standard Applications
+
+```yaml
+traefik.http.middlewares.<random_unique_name>.headers.customresponseheaders.X-Robots-Tag=noindex, nofollow
+traefik.http.routers.<unique_router_name>.middlewares=<random_unique_name>
+```
+
+The `<random_unique_name>` is a unique name for the middleware and you need to make that up yourself. The `<unique_router_name>` is the unique name for the router that Coolify has already generated for you.
+
+
+<Callout type="info">
+
+You most likely have a `middlewares` label already set on the router. In that case, you must append your middleware to the existing value:
+
+  ```yaml
+  traefik.http.routers.<unique_router_name>.middlewares=gzip,<random_unique_name>
+  ```
+
+</Callout>
+
+
+Attach the middleware to **every router serving the domain you want excluded**. A domain reached over both `http` and `https` has two routers, and only the routers you attach it to will send the header.
+
+### An nginx Simple Web Container Example
+
+Let's say Coolify generated these `Container Labels` for an application on `https://staging.mysite.com`:
+
+```bash
+traefik.enable=true
+traefik.http.middlewares.gzip.compress=true
+traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+traefik.http.routers.http-0-wc04wo4ow4scokgsw8wow4s8.entryPoints=http
+traefik.http.routers.http-0-wc04wo4ow4scokgsw8wow4s8.middlewares=redirect-to-https
+traefik.http.routers.http-0-wc04wo4ow4scokgsw8wow4s8.rule=Host(`staging.mysite.com`) && PathPrefix(`/`)
+traefik.http.routers.http-0-wc04wo4ow4scokgsw8wow4s8.service=http-0-wc04wo4ow4scokgsw8wow4s8
+traefik.http.routers.https-0-wc04wo4ow4scokgsw8wow4s8.entryPoints=https
+traefik.http.routers.https-0-wc04wo4ow4scokgsw8wow4s8.middlewares=gzip
+traefik.http.routers.https-0-wc04wo4ow4scokgsw8wow4s8.rule=Host(`staging.mysite.com`) && PathPrefix(`/`)
+traefik.http.routers.https-0-wc04wo4ow4scokgsw8wow4s8.service=https-0-wc04wo4ow4scokgsw8wow4s8
+traefik.http.routers.https-0-wc04wo4ow4scokgsw8wow4s8.tls.certresolver=letsencrypt
+traefik.http.routers.https-0-wc04wo4ow4scokgsw8wow4s8.tls=true
+traefik.http.services.http-0-wc04wo4ow4scokgsw8wow4s8.loadbalancer.server.port=80
+traefik.http.services.https-0-wc04wo4ow4scokgsw8wow4s8.loadbalancer.server.port=80
+```
+
+Assuming you want to name your middleware `mynoindex`, add this label below the first line `traefik.enable=true`:
+
+```yaml
+traefik.http.middlewares.mynoindex.headers.customresponseheaders.X-Robots-Tag=noindex, nofollow
+```
+
+Then append it to the router. Since a middleware is already set, update the current line
+
+```yaml
+traefik.http.routers.https-0-wc04wo4ow4scokgsw8wow4s8.middlewares=gzip
+```
+
+to:
+
+```yaml
+traefik.http.routers.https-0-wc04wo4ow4scokgsw8wow4s8.middlewares=gzip,mynoindex
+```
+
+`staging.mysite.com` is now served with `X-Robots-Tag: noindex, nofollow` and search engines will leave it alone.
+
+### Multiple Domains
+
+Router names end in an index (`https-0-...`, `https-1-...`) — one per domain, in the order the domains appear in the `Domains` field. To exclude only the second of two domains, attach the middleware to the `-1-` router and leave the `-0-` router untouched. A single middleware can be reused across as many routers as you like.
+
+### Docker Compose And Services
+
+To add the middleware to a service, add the labels to your `docker-compose.yml` file:
+
+```yaml
+services:
+  nginx-simple-web-container:
+    image: 'nginx:alpine'
+    ports:
+      - '8080:80'
+    labels:
+      - 'traefik.http.middlewares.<random_unique_name>.headers.customresponseheaders.X-Robots-Tag=noindex, nofollow'
+      - 'traefik.http.routers.<unique_router_name>.middlewares=<random_unique_name>'
+```
+
+Replace `<random_unique_name>` with a name you make up, for example `mynoindex`.
+
+## Verifying It Works
+
+```bash
+curl -sI https://staging.mysite.com | grep -i x-robots-tag
+```
+
+You should see:
+
+```bash
+x-robots-tag: noindex, nofollow
+```
+
+If the header is missing, the middleware is most likely attached to a different router than the one serving the request — check that the router index matches the domain, and that you appended rather than replaced the existing `middlewares` value.
