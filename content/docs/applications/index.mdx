@@ -169,6 +169,20 @@ You can manually deploy a Pull Request to a unique URL by clicking on the `Deplo
 
 If you are using git submodules, you can set this to `true`. `Enabled by default`.
 
+For private submodules, make sure the GitHub App or deploy key you use for the application can access both the parent repository and every submodule repository.
+
+If a private GitHub submodule fails with an authentication error such as `fatal: could not read Username for 'https://github.com'`, prefer relative URLs in `.gitmodules` when the repositories are in the same GitHub user or organization:
+
+```gitmodules
+[submodule "prisma"]
+    path = prisma
+    url = ../prisma.git
+```
+
+This lets Git resolve the submodule from the parent repository remote instead of trying to clone it through an unauthenticated absolute HTTPS URL. Keep the **Submodules** option enabled for this setup.
+
+Changing only the submodule repository does not update the parent repository's submodule pointer. Commit the updated submodule reference in the parent repository, or use your own automation if submodule-only changes should trigger a new deployment.
+
 ### Git LFS
 
 If you are using git lfs, you can set this to `true`. `Enabled by default`.

@@ -207,6 +207,23 @@ To apply the restored backup and updated environment settings, restart your Cool
 
 ## Troubleshooting
 
+- **"MAC invalid" or "The MAC is invalid" Errors When Accessing Configurations:**
+  This usually means Coolify restored the database, but the new instance cannot decrypt data that was encrypted with an older `APP_KEY`. You may still be able to log in, but opening S3 storage, servers, SSH keys, projects, or resources can fail.
+
+  Make sure the old `APP_KEY` from the previous instance is listed in `APP_PREVIOUS_KEYS` on the new server:
+
+  ```yaml
+  APP_PREVIOUS_KEYS=base64:your_old_app_key_here
+  ```
+
+  If you migrated or restored Coolify multiple times, include every previous key that may have encrypted your data. Separate the keys with commas and no spaces:
+
+  ```yaml
+  APP_PREVIOUS_KEYS=base64:first_old_key,base64:second_old_key,base64:third_old_key
+  ```
+
+  After updating the `.env` file, re-run the Coolify installation script from [step 8](#_8-restart-coolify). If the original `APP_KEY` is lost, encrypted values cannot be recovered and must be recreated.
+
 - **500 Error on Login or Project Access:**  
   Double-check that the `APP_PREVIOUS_KEYS` variable is correctly set in your `.env` file.
 

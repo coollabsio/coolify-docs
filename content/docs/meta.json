@@ -6,6 +6,7 @@
     "services",
     "databases",
     "integrations",
+    "hetzner",
     "knowledge-base",
     "api-reference",
     "troubleshoot"

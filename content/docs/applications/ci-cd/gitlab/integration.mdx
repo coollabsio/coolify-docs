@@ -5,6 +5,17 @@ description: "Connect GitLab repositories to Coolify with deploy keys, Gitlab co
 
 # GitLab Integration
 
+## Ways to Use GitLab with Coolify
+
+You can integrate GitLab with Coolify in several ways, depending on your needs:
+
+| Method | Description |
+|--------|-------------|
+| [Public Repository](#public-repositories) | Deploy applications directly using the HTTPS URL of a public repository. |
+| [Private Repository using GitLab App](/applications/ci-cd/gitlab/setup-app) | Connect a self-hosted or GitLab.com instance with an OAuth application to deploy private repositories, with repository browsing and webhook-based push and merge request deployments. |
+| [Private Repository using Deploy Key](#private-repositories) | Deploy applications from private repositories using an SSH deploy key. |
+| [Container Registry](#public-container-registry) | Deploy directly from images in the GitLab Container Registry. |
+
 ## Public Repositories
 
 You can use public repositories without any additional setup.
