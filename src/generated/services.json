@@ -268,13 +268,6 @@
     "category": "Development"
   },
   {
-    "name": "Cloudflare DDNS",
-    "slug": "cloudflare-ddns",
-    "icon": "/docs/images/services/cloudflare-ddns.svg",
-    "description": "Cloudflare DNS updater for dynamic public IP addresses.",
-    "category": "Automation"
-  },
-  {
     "name": "Cloudflared",
     "slug": "cloudflared",
     "icon": "/docs/images/services/cloudflared-logo.svg",
@@ -292,8 +285,8 @@
     "name": "Cockpit",
     "slug": "cockpit",
     "icon": "/docs/images/services/cockpit-logo.svg",
-    "description": "Headless CMS with REST & GraphQL APIs.",
-    "category": "CMS"
+    "description": "Web-based server administration interface.",
+    "category": "Administration"
   },
   {
     "name": "Code Server",
@@ -759,13 +752,6 @@
     "category": "Development"
   },
   {
-    "name": "Healthchecks",
-    "slug": "healthchecks",
-    "icon": "/docs/images/services/healthchecks.webp",
-    "description": "Open-source cron job and background task monitoring service.",
-    "category": "Monitoring"
-  },
-  {
     "name": "Heimdall",
     "slug": "heimdall",
     "icon": "/docs/images/services/heimdall-logo.svg",
@@ -849,13 +835,6 @@
     "icon": "/docs/images/services/infisical-logo.svg",
     "description": "Open source secret management platform.",
     "category": "Security"
-  },
-  {
-    "name": "Inngest",
-    "slug": "inngest",
-    "icon": "/docs/images/services/inngest-logo.svg",
-    "description": "Durable workflow engine for background jobs, queues, and event-driven systems.",
-    "category": "Automation"
   },
   {
     "name": "Invoice Ninja",
@@ -1375,13 +1354,6 @@
     "category": "AI"
   },
   {
-    "name": "OpenObserve",
-    "slug": "openobserve",
-    "icon": "/docs/images/services/openobserve-logo.svg",
-    "description": "Observability platform for logs, metrics, traces, RUM, and session replays.",
-    "category": "Monitoring"
-  },
-  {
     "name": "OpenPanel",
     "slug": "openpanel",
     "icon": "/docs/images/services/openpanel-logo.svg",
@@ -1832,6 +1804,13 @@
     "icon": "/docs/images/services/soketi-app-manager-logo.webp",
     "description": "Manage Soketi apps with application configuration and WebSocket server administration interface.",
     "category": "Development"
+  },
+  {
+    "name": "Solidtime",
+    "slug": "solidtime",
+    "icon": "/docs/images/services/solidtime.svg",
+    "description": "Modern open-source time tracking for freelancers, agencies and teams.",
+    "category": "Productivity"
   },
   {
     "name": "Sonarr",
