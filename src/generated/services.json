@@ -169,6 +169,13 @@
     "category": "Development"
   },
   {
+    "name": "Bulwark",
+    "slug": "bulwark",
+    "icon": "/docs/images/services/bulwark.svg",
+    "description": "Modern webmail client for Stalwart Mail Server built on the JMAP protocol.",
+    "category": "Email"
+  },
+  {
     "name": "Buzz",
     "slug": "buzz",
     "icon": "/docs/images/services/buzz-logo.svg",
