@@ -22,17 +22,128 @@ const VALID_CRON_STRINGS = [
 ];
 ```
 
+## Environment Variable Requirements for Service Database Backups
+
+<Callout type="important">
+  This section applies to **Service Databases** (databases deployed as Docker Compose services within Coolify). Standalone or external databases have different configuration requirements.
+</Callout>
+
+For backup jobs to successfully detect and authenticate with your database containers, specific environment variables must be present and correctly named. Backup failures often occur due to missing or incorrectly named variables.
+
+### Required Environment Variables by Database Type
+
+| Database Type | Required Variables | Optional Variables | Notes |
+|---------------|-------------------|-------------------|-------|
+| **PostgreSQL** | `POSTGRES_PASSWORD` | `POSTGRES_USER` (default: `postgres`)<br/>`POSTGRES_DB` (default: username) | If `POSTGRES_DB` is not set, uses `POSTGRES_USER` as database name |
+| **MySQL** | `MYSQL_ROOT_PASSWORD`<br/>`MYSQL_DATABASE` | None | **Both are required** - backup will fail if `MYSQL_DATABASE` is missing |
+| **MariaDB** | `MARIADB_ROOT_PASSWORD`<br/>(fallback: `MYSQL_ROOT_PASSWORD`) | `MARIADB_DATABASE` or `MYSQL_DATABASE` | At least one database variable required; fallback to MySQL variables supported |
+| **MongoDB** | `MONGO_INITDB_ROOT_USERNAME`<br/>`MONGO_INITDB_ROOT_PASSWORD` | None | Both are required for authentication |
+
+### How Coolify Detects Database Credentials
+
+Coolify uses the following commands to detect credentials from running containers:
+
+```bash
+# PostgreSQL
+docker exec <container> env | grep POSTGRES_
+
+# MySQL
+docker exec <container> env | grep MYSQL_
+
+# MariaDB
+docker exec <container> env
+
+# MongoDB
+docker exec <container> env | grep MONGO_INITDB_
+```
+
+### Prerequisites for Successful Backups
+
+- Container must be in **running** status
+- Container naming follows the pattern: `{database_name}-{service_uuid}`
+- Coolify server must have `docker exec` access to containers
+- Environment variables are **case-sensitive** and must match exactly as shown above
+
+### Troubleshooting Backup Failures
+
+If your service database backups are failing, verify the environment variables are correctly set:
+
+```bash
+# List all environment variables for a specific container
+docker exec <container_name> env
+
+# Filter for specific database type (example for PostgreSQL)
+docker exec <container_name> env | grep POSTGRES_
+
+# Example for MySQL
+docker exec <container_name> env | grep MYSQL_
+```
+
+<Callout type="info">
+  Replace `<container_name>` with your actual container name (e.g., `my-postgres-abc123`).
+</Callout>
+
+### Common Issues and Solutions
+
+| Issue | Likely Cause | Solution |
+|-------|-------------|----------|
+| **PostgreSQL:** Backup fails with "no such container" | Container not running or naming mismatch | Ensure database service is running and container name follows `{name}-{uuid}` pattern |
+| **MySQL:** Backup fails with "MYSQL_DATABASE not found" | Missing `MYSQL_DATABASE` environment variable | Add `MYSQL_DATABASE=your_database` to your service configuration |
+| **MariaDB:** Backup fails with "MARIADB_DATABASE or MYSQL_DATABASE not found" | Missing database name variable | Add `MARIADB_DATABASE=your_database` to your service configuration |
+| **MongoDB:** Backup fails with "MongoDB credentials not found" | Missing `MONGO_INITDB_ROOT_USERNAME` or `MONGO_INITDB_ROOT_PASSWORD` | Add both environment variables to your service configuration |
+| **Any database:** Backup fails silently | Missing required environment variable or authentication error | Check the backup execution log for specific error messages |
+| **Any database:** "docker exec" permission denied | Coolify server lacks Docker access | Ensure the Coolify user has permission to execute Docker commands |
+
+### Verifying Your Configuration
+
+Before relying on automated backups, manually verify your setup:
+
+1. **Check container is running:**
+   ```bash
+   docker ps | grep <your-database-name>
+   ```
+
+2. **Verify environment variables are present:**
+   ```bash
+   # For PostgreSQL
+   docker exec <container_name> env | grep POSTGRES_
+   
+   # For MySQL
+   docker exec <container_name> env | grep MYSQL_
+   
+   # For MariaDB
+   docker exec <container_name> env | grep -E "(MARIADB_|MYSQL_)"
+   
+   # For MongoDB
+   docker exec <container_name> env | grep MONGO_INITDB_
+   ```
+
+3. **Test backup command manually** (see database-specific commands below)
+
+4. **Check the backup execution log** in the Coolify UI for specific error messages
+
+<Callout type="warning">
+  Always test backup restoration in a non-production environment before relying on automated backups for critical data.
+</Callout>
+
+### Technical Reference
+
+For implementation details, refer to the `DatabaseBackupJob.php` file, which handles:
+- Detection of environment variables via `docker exec`
+- Construction of backup commands for each database type
+- S3 upload and backup retention policies
+
+---
+
 ## PostgreSQL
 
 Coolify creates a full backup of your PostgreSQL databases. You can specify which database to backup, with a comma separated list.
-
 
 <Callout type="info" title="Tip">
 
 Coolify's own database is also backed up using this method.
 
 </Callout>
-
 
 ### Backup command
 
