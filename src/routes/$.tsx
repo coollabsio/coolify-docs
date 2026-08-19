@@ -210,7 +210,8 @@ const clientLoader = browserCollections.docs.createClientLoader({
     );
 
     const pageTitle = typeof frontmatter.title === 'string' ? frontmatter.title : undefined;
-    const heading = pageTitle && !tocHasH1(toc) ? <DocsTitle>{pageTitle}</DocsTitle> : null;
+    const heading =
+      !frontmatter.full && pageTitle && !tocHasH1(toc) ? <DocsTitle>{pageTitle}</DocsTitle> : null;
 
     if (frontmatter.full) {
       return (
@@ -222,7 +223,6 @@ const clientLoader = browserCollections.docs.createClientLoader({
           footer={{ enabled: !hideFooter }}
         >
           <DocsBody>
-            {heading}
             <MDX components={useMDXComponents()} />
           </DocsBody>
         </DocsPage>
@@ -253,6 +253,7 @@ function Page() {
     content = (
       <DocsPage full tableOfContent={{ enabled: false }} breadcrumb={{ enabled: false }}>
         <DocsBody>
+          <DocsTitle>{data.title}</DocsTitle>
           <ClientAPIPage {...data.props} />
         </DocsBody>
       </DocsPage>
