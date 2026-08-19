@@ -4,10 +4,10 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import mdx from 'fumadocs-mdx/vite';
 import { nitro } from 'nitro/vite';
 import { defineConfig } from 'vite';
-import { getDocEntries } from './scripts/lib/content';
+import { getDocEntries, getOpenApiEntries } from './scripts/lib/content';
 import { siteDefinition } from './config/site.shared';
 
-const docEntries = await getDocEntries();
+const docEntries = [...(await getDocEntries()), ...(await getOpenApiEntries())];
 const prerenderDocPages = docEntries.map((doc) => ({
   path:
     doc.routeSegments.length === 0

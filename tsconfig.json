@@ -1,5 +1,6 @@
 {
   "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"],
+  "exclude": ["node_modules", "**/*.test.ts"],
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
