@@ -1,6 +1,7 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { extname, join, relative, resolve, sep } from 'node:path';
 import matter from 'gray-matter';
+import { frontmatterOgDescription, resolveSeoDescription } from '../../src/lib/seo';
 import { site } from './site';
 import { currentDirFromMetaUrl } from './runtime-path';
 
@@ -90,6 +91,54 @@ function buildRoute(relativeFilePath: string) {
   };
 }
 
+export async function getOpenApiEntries(): Promise<DocEntry[]> {
+  const { loader, multiple, source: createSource } = await import('fumadocs-core/source');
+  const { openapiPlugin, openapiSource } = await import('fumadocs-openapi/server');
+  const { openapi } = await import('../../src/lib/openapi');
+  const { getDocOgPath } = await import('../../src/lib/site');
+
+  const docsSource = loader(
+    multiple({
+      docs: createSource({ metas: [], pages: [] }),
+      openapi: await openapiSource(openapi, {
+        baseDir: 'api-reference/api',
+        groupBy: 'tag',
+      }),
+    }),
+    {
+      baseUrl: '/',
+      plugins: [openapiPlugin()],
+    },
+  );
+
+  const lastModified = new Date().toISOString();
+
+  return docsSource
+    .getPages()
+    .filter((page) => page.data.type === 'openapi')
+    .map((page) => {
+      const title = page.data.title ?? 'API Reference';
+      const routePath =
+        page.url === '/' ? `${site.docsBasePath}/` : `${site.docsBasePath}${page.url}`;
+
+      return {
+        filePath: page.path,
+        ogOutputPath: `og/${page.slugs.join('/')}.png`,
+        routeSegments: page.slugs,
+        routePath,
+        ogImagePath: getDocOgPath(page.slugs),
+        title,
+        description: resolveSeoDescription({
+          title,
+          description: page.data.description,
+          slugs: page.slugs,
+          fallback: site.description,
+        }),
+        lastModified,
+      } satisfies DocEntry;
+    });
+}
+
 export async function getDocEntries(): Promise<DocEntry[]> {
   const files = await walk(docsDir);
   const docs = await Promise.all(
@@ -102,6 +151,8 @@ export async function getDocEntries(): Promise<DocEntry[]> {
         const parsed = matter(raw);
         const fileStat = await stat(filePath);
         const fallbackTitle = toTitleCase(routeSegments.at(-1) ?? site.name);
+        const title = typeof parsed.data.title === 'string' ? parsed.data.title : fallbackTitle;
+        const description = typeof parsed.data.description === 'string' ? parsed.data.description : undefined;
 
         return {
           filePath,
@@ -109,9 +160,14 @@ export async function getDocEntries(): Promise<DocEntry[]> {
           routeSegments,
           routePath,
           ogImagePath,
-          title: typeof parsed.data.title === 'string' ? parsed.data.title : fallbackTitle,
-          description:
-            typeof parsed.data.description === 'string' ? parsed.data.description : site.description,
+          title,
+          description: resolveSeoDescription({
+            title,
+            description,
+            ogDescription: frontmatterOgDescription(parsed.data as Record<string, unknown>),
+            slugs: routeSegments,
+            fallback: site.description,
+          }),
           lastModified: fileStat.mtime.toISOString(),
         } satisfies DocEntry;
       }),

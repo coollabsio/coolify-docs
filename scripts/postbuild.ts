@@ -3,10 +3,11 @@ import { dirname, resolve } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
 import { loader, multiple, source as createSource } from 'fumadocs-core/source';
 import { openapiPlugin, openapiSource } from 'fumadocs-openapi/server';
-import { getDocEntries, getDocSourceFiles } from './lib/content';
+import { getDocEntries, getDocSourceFiles, getOpenApiEntries } from './lib/content';
 import { getManifestKey } from '../src/lib/docs-manifest';
 import { openapi } from '../src/lib/openapi';
 import { preparePageTree } from '../src/lib/page-tree';
+import { resolveSeoDescription } from '../src/lib/seo';
 import { absoluteUrl, site } from './lib/site';
 import { getDocMarkdownPath, getDocOgPath } from '../src/lib/site';
 import { currentDirFromMetaUrl } from './lib/runtime-path';
@@ -108,8 +109,35 @@ function renderOgSvg(title: string, description: string, logoDataUri: string): s
   `.trim();
 }
 
+async function createDocsSource() {
+  const { metas, pages: sourcePages } = await getDocSourceFiles();
+
+  return loader(
+    multiple({
+      docs: createSource({ metas, pages: sourcePages }),
+      openapi: await openapiSource(openapi, {
+        baseDir: 'api-reference/api',
+        groupBy: 'tag',
+      }),
+    }),
+    {
+      baseUrl: '/',
+      plugins: [openapiPlugin()],
+    },
+  );
+}
+
+async function getSitemapEntries() {
+  const [docs, openapiDocs] = await Promise.all([getDocEntries(), getOpenApiEntries()]);
+  const seen = new Set(docs.map((doc) => doc.routePath.replace(/\/$/, '')));
+
+  return [...docs, ...openapiDocs.filter((doc) => !seen.has(doc.routePath.replace(/\/$/, '')))].sort(
+    (left, right) => left.routePath.localeCompare(right.routePath),
+  );
+}
+
 async function writeOgImages() {
-  const docs = await getDocEntries();
+  const docs = await getSitemapEntries();
   const outputRoot = resolve(currentDir, '../.output/public');
   const logoDataUri = await loadCoolifyLogoDataUri();
 
@@ -132,7 +160,7 @@ async function writeOgImages() {
 }
 
 async function writeSitemap() {
-  const docs = await getDocEntries();
+  const docs = await getSitemapEntries();
   const outputRoot = resolve(currentDir, '../.output/public');
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -165,28 +193,21 @@ Sitemap: ${absoluteUrl(`${site.docsBasePath}/sitemap.xml`)}
 
 async function writeDocsManifest() {
   const outputRoot = resolve(currentDir, '../.output/public');
-  const { metas, pages: sourcePages } = await getDocSourceFiles();
-  const docsSource = loader(
-    multiple({
-      docs: createSource({ metas, pages: sourcePages }),
-      openapi: await openapiSource(openapi, {
-        baseDir: 'api-reference/api',
-        groupBy: 'tag',
-      }),
-    }),
-    {
-      baseUrl: '/',
-      plugins: [openapiPlugin()],
-    },
-  );
+  const docsSource = await createDocsSource();
   const pageTree = await docsSource.serializePageTree(preparePageTree(docsSource.getPageTree()));
   const pages = Object.fromEntries(
     await Promise.all(docsSource.getPages().map(async (page) => {
+      const title = page.data.title ?? 'API Reference';
       const base = {
-        description: page.data.description ?? site.description,
+        description: resolveSeoDescription({
+          title,
+          description: page.data.description,
+          slugs: page.slugs,
+          fallback: site.description,
+        }),
         isIndex: page.slugs.length === 0,
         ogImagePath: getDocOgPath(page.slugs),
-        title: page.data.title,
+        title,
         url: page.url === '/' ? site.docsBasePath : `${site.docsBasePath}${page.url}`,
       };
 
@@ -224,9 +245,16 @@ async function copyBaseScopedPublicAssets() {
   const publicManifest = resolve(currentDir, '../public/site.webmanifest');
   const docsManifest = resolve(currentDir, '../.output/public/docs/site.webmanifest');
 
+  const publicNotFound = resolve(currentDir, '../public/404.html');
+  const docsNotFound = resolve(currentDir, '../.output/public/docs/404.html');
+  const rootNotFound = resolve(currentDir, '../.output/public/404.html');
+
   await cp(publicImages, docsImages, { recursive: true, force: true });
   await cp(publicBrand, docsBrand, { recursive: true, force: true });
   await cp(publicManifest, docsManifest, { force: true });
+  await mkdir(dirname(docsNotFound), { recursive: true });
+  await cp(publicNotFound, docsNotFound, { force: true });
+  await cp(publicNotFound, rootNotFound, { force: true });
 }
 
 async function cleanupNonStaticOutput() {

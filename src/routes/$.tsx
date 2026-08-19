@@ -7,12 +7,13 @@ import { Suspense, useLayoutEffect, type CSSProperties, type ReactNode } from 'r
 import { ClientAPIPage } from '@/components/api-page';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { useSidebar } from 'fumadocs-ui/layouts/docs/slots/sidebar';
-import { DocsBody, DocsPage, MarkdownCopyButton } from 'fumadocs-ui/layouts/docs/page';
+import { DocsBody, DocsPage, DocsTitle, MarkdownCopyButton } from 'fumadocs-ui/layouts/docs/page';
 import { useMDXComponents } from '@/components/mdx';
 import { ViewOptionsPopover } from '@/components/page-actions';
 import { type DocsManifest, getManifestKey, type LoaderData } from '@/lib/docs-manifest';
 import { baseOptions } from '@/lib/layout.shared';
 import { preparePageTree } from '@/lib/page-tree';
+import { resolveSeoDescription, tocHasH1 } from '@/lib/seo';
 import { absoluteUrl, getDocGithubPath, getDocOgPath, site } from '@/lib/site';
 import { getPageMarkdownUrl, source } from '@/lib/source';
 
@@ -30,11 +31,24 @@ function toPublicDocUrl(url: string): string {
 const folderIndexRedirects = new Map([
   ['applications/build-packs/overview', '/applications/build-packs'],
   ['applications/ci-cd/introduction', '/applications/ci-cd'],
+  ['applications/vitepress', '/applications/vite'],
+  ['api-reference/api', '/api-reference/authorization'],
+  ['cloud', '/get-started/cloud'],
+  ['cloud-vs-selfhost', '/get-started/usage'],
+  ['contact', '/get-started/support'],
+  ['downgrade', '/get-started/downgrade'],
+  ['installation', '/get-started/installation'],
   ['integrations/cloudflare/tunnels/overview', '/integrations/cloudflare/tunnels'],
   ['knowledge-base/overview', '/knowledge-base'],
-  ['knowledge-base/proxy/traefik/overview', '/knowledge-base/proxy/traefik'],
   ['knowledge-base/proxy/caddy/overview', '/knowledge-base/proxy/caddy'],
+  ['knowledge-base/proxy/traefik/overview', '/knowledge-base/proxy/traefik'],
+  ['screenshots', '/get-started/screenshots'],
+  ['support', '/get-started/support'],
   ['troubleshoot/overview', '/troubleshoot'],
+  ['uninstallation', '/get-started/uninstallation'],
+  ['upgrade', '/get-started/upgrade'],
+  ['videos', '/get-started/videos'],
+  ['what-is-coolify', '/get-started/introduction'],
 ]);
 
 export const Route = createFileRoute('/$')({
@@ -117,7 +131,12 @@ const serverLoader = createServerFn({
     if (page.data.type === 'openapi') {
       return {
         type: 'openapi',
-        description: page.data.description ?? site.description,
+        description: resolveSeoDescription({
+          title: page.data.title ?? 'API Reference',
+          description: page.data.description,
+          slugs: page.slugs,
+          fallback: site.description,
+        }),
         isIndex: page.slugs.length === 0,
         ogImagePath: getDocOgPath(page.slugs),
         pageTree,
@@ -129,7 +148,12 @@ const serverLoader = createServerFn({
 
     return {
       type: 'docs',
-      description: page.data.description ?? site.description,
+      description: resolveSeoDescription({
+        title: page.data.title,
+        description: page.data.description,
+        slugs: page.slugs,
+        fallback: site.description,
+      }),
       isIndex: page.slugs.length === 0,
       markdownUrl: getPageMarkdownUrl(page).url,
       ogImagePath: getDocOgPath(page.slugs),
@@ -185,6 +209,9 @@ const clientLoader = browserCollections.docs.createClientLoader({
       />
     );
 
+    const pageTitle = typeof frontmatter.title === 'string' ? frontmatter.title : undefined;
+    const heading = pageTitle && !tocHasH1(toc) ? <DocsTitle>{pageTitle}</DocsTitle> : null;
+
     if (frontmatter.full) {
       return (
         <DocsPage
@@ -195,6 +222,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
           footer={{ enabled: !hideFooter }}
         >
           <DocsBody>
+            {heading}
             <MDX components={useMDXComponents()} />
           </DocsBody>
         </DocsPage>
@@ -209,6 +237,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
         tableOfContentPopover={{ footer: pageActions }}
       >
         <DocsBody>
+          {heading}
           <MDX components={useMDXComponents()} />
         </DocsBody>
       </DocsPage>

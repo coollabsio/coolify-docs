@@ -19,7 +19,7 @@ export function baseOptions(): BaseLayoutProps {
     links: [
       {
         type: 'main',
-        url: 'https://coolify.io/pricing/',
+        url: 'https://coolify.io/pricing',
         text: 'Coolify Cloud',
         external: true,
       },

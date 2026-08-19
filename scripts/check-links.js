@@ -246,14 +246,56 @@ function shouldIgnoreUrl(url) {
 }
 
 function parseRedirects(contents) {
-  return Array.from(
-    contents.matchAll(/location\s+=\s+(\S+)\s+\{\s+return\s+(30[1278])\s+([^;\s]+)\s*;\s+\}/g),
-    (match) => ({
-      from: match[1],
-      status: Number(match[2]),
-      to: match[3],
-    }),
-  );
+  const redirects = [];
+  const seen = new Set();
+
+  const add = (from, status, to) => {
+    const key = `${from}=>${to}`;
+    if (!from || seen.has(key)) return;
+    seen.add(key);
+    redirects.push({ from, status, to });
+  };
+
+  for (const match of contents.matchAll(/location\s+=\s+(\S+)\s+\{\s+return\s+(30[1278])\s+([^;\s]+)\s*;\s+\}/g)) {
+    add(match[1], Number(match[2]), match[3]);
+  }
+
+  for (const match of contents.matchAll(/location\s+~\s+\^(.+?)\$\s+\{\s+return\s+(30[1278])\s+([^;\s]+)\s*;\s+\}/g)) {
+    const status = Number(match[2]);
+    const to = match[3];
+    for (const from of expandRedirectPattern(match[1])) {
+      add(from, status, to);
+    }
+  }
+
+  return redirects;
+}
+
+function expandRedirectPattern(pattern) {
+  const paths = new Set();
+
+  const expand = (current) => {
+    const optionalGroup = current.match(/^(.*)(?:\(\?:([^)]+)\)\?)(.*)$/);
+    if (optionalGroup && optionalGroup[2] && !optionalGroup[2].includes('(')) {
+      expand(`${optionalGroup[1]}${optionalGroup[3]}`);
+      expand(`${optionalGroup[1]}${optionalGroup[2]}${optionalGroup[3]}`);
+      return;
+    }
+
+    const optionalSlash = current.match(/^(.*)\/\?(.*)$/);
+    if (optionalSlash) {
+      expand(`${optionalSlash[1]}${optionalSlash[2]}`);
+      expand(`${optionalSlash[1]}/${optionalSlash[2]}`);
+      return;
+    }
+
+    if (/[()[\]{}.*+]/.test(current)) return;
+
+    paths.add(current.startsWith('/') ? current : `/${current}`);
+  };
+
+  expand(pattern);
+  return [...paths];
 }
 
 async function findMdxFiles(directory) {
@@ -281,6 +323,10 @@ function sourceFileToPageUrl(file) {
 
 function docsUrlForPath(pathname) {
   const path = pathname.startsWith('/') ? pathname : `/${pathname}`;
+  if (docsPathPrefix !== '/' && (path === docsPathPrefix || path.startsWith(`${docsPathPrefix}/`))) {
+    return new URL(path, docsOrigin).href;
+  }
+
   const prefix = docsPathPrefix === '/' ? '' : docsPathPrefix;
   return new URL(`${prefix}${path}`, docsOrigin).href;
 }

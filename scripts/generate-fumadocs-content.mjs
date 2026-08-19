@@ -77,7 +77,6 @@ const sidebarMetas = {
       'vuejs',
       'nuxt',
       'svelte-kit',
-      'vitepress',
       '---Build Packs---',
       'build-packs',
       '---CI/CD---',
