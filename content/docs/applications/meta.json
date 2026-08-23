@@ -28,6 +28,7 @@
     "---Configuration---",
     "configuration/overview",
     "configuration/general",
+    "configuration/multi-tenant-domains",
     "configuration/advanced",
     "configuration/environment-variables",
     "configuration/persistent-storage",
