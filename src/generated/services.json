@@ -1069,6 +1069,13 @@
     "category": "Development"
   },
   {
+    "name": "Marimo Hub",
+    "slug": "marimo-hub",
+    "icon": "/docs/images/services/marimo-logo.svg",
+    "description": "Collaborative Marimo notebooks with isolated Docker compute and SeaweedFS object storage.",
+    "category": "Development"
+  },
+  {
     "name": "Martin",
     "slug": "martin",
     "icon": "/docs/images/services/martin-logo.png",
