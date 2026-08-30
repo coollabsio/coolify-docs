@@ -493,6 +493,13 @@
     "category": "IoT"
   },
   {
+    "name": "Engram",
+    "slug": "engram",
+    "icon": "/docs/images/services/engram-logo.png",
+    "description": "Persistent memory sync server for AI coding agents (MCP).",
+    "category": "AI"
+  },
+  {
     "name": "Ente",
     "slug": "ente-photos",
     "icon": "/docs/images/services/ente-logo.webp",
