@@ -1813,6 +1813,13 @@
     "category": "File Sharing"
   },
   {
+    "name": "Snipe-IT",
+    "slug": "snipe-it",
+    "icon": "/docs/images/services/snipe-it-logo.webp",
+    "description": "A free open source IT asset/license management system ",
+    "category": "Business"
+  },
+  {
     "name": "Soju",
     "slug": "soju",
     "icon": "/docs/images/services/soju-logo.svg",
