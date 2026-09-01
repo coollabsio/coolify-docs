@@ -977,6 +977,13 @@
     "category": "AI"
   },
   {
+    "name": "Lidarr",
+    "slug": "lidarr",
+    "icon": "/docs/images/services/lidarr-logo.svg",
+    "description": "A Media server software.",
+    "category": "Media"
+  },
+  {
     "name": "LimeSurvey",
     "slug": "limesurvey",
     "icon": "/docs/images/services/limesurvey-logo.svg",
