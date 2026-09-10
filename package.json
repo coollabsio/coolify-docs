@@ -16,6 +16,7 @@
   },
   "private": true,
   "scripts": {
+    "check:redirects": "node scripts/check-redirects.mjs",
     "generate:cli-reference": "node scripts/generate-cli-command-reference.mjs",
     "generate:openapi": "node scripts/fetch-openapi.mjs",
     "generate:services:data": "node scripts/generate-service-list.mjs",
