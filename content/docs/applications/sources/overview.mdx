@@ -1,0 +1,59 @@
+---
+title: Overview
+description: Choose how Coolify accesses a public or private Git repository.
+---
+
+import { BranchUp, Code, Key } from 'reicon-react';
+
+# Connect source code
+
+Git-based applications need a repository URL, branch, and authentication method that Coolify can use from the deployment path.
+
+<CoolCallout icon={BranchUp} title="The short version">
+
+Use HTTPS for a public repository, an SSH deploy key for one private repository, or a GitHub App for scoped repository access with integrated webhooks.
+
+</CoolCallout>
+
+---
+
+## Choose a source method
+
+| Method | When to use it | Guide |
+| :--- | :--- | :--- |
+| Public repository | The repository is public and can be cloned over HTTPS without credentials. | [Connect a public repository](/applications/sources/public-repositories) |
+| Deploy key | One private repository needs read-only SSH access. | [Use a deploy key](/applications/sources/deploy-keys) |
+| GitHub App | GitHub repositories need scoped access, integrated webhooks, and pull-request events. | [Configure a GitHub App](/applications/sources/github/app) |
+
+Official Git App integrations configure provider webhooks as part of the source. Public repositories and deploy keys require [manual webhooks](/applications/deployments/manual-webhooks) for automatic deployments and previews.
+
+## Repository access and container registries are separate
+
+Git credentials let Coolify clone source code. Registry credentials let Docker pull or push images.
+
+A deploy key cannot authenticate to a private container registry. Read [Docker registries](/applications/builds/docker-registries) when the application uses a private image or pushes a built image.
+
+## Choose the next source guide
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Connect a public repository',
+      href: '/applications/sources/public-repositories',
+      description: 'Deploy source that can be cloned over HTTPS without credentials.',
+      icon: BranchUp,
+    },
+    {
+      title: 'Use a deploy key',
+      href: '/applications/sources/deploy-keys',
+      description: 'Grant read-only SSH access to one private repository.',
+      icon: Key,
+    },
+    {
+      title: 'Connect GitHub',
+      href: '/applications/sources/github/overview',
+      description: 'Choose a public repository, deploy key, or GitHub App connection.',
+      icon: Code,
+    },
+  ]}
+/>

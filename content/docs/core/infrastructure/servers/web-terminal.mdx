@@ -1,0 +1,108 @@
+---
+title: Web Terminal
+description: Open a browser terminal for a server or container and enable or disable terminal access for a server.
+---
+
+# Web terminal
+
+The Coolify Web Terminal lets you open a shell for a connected server or running container from the dashboard.
+
+Only team owners and administrators can use terminal features. Commands run with the permissions of the selected server user or container, so close the terminal when you finish.
+
+## Before you start
+
+Make sure:
+
+- the server is reachable and validated
+- **Terminal Access** is enabled for the server
+- you are a team owner or administrator
+
+---
+
+## Open a terminal
+
+<Steps>
+<Step>
+
+### Select a server or container
+
+1. Select **Terminal** in the Coolify sidebar.
+2. Open **Select a server or container**.
+3. Choose the server or running container you want to access.
+4. Select **Connect**.
+
+Wait for the command prompt to appear.
+
+</Step>
+<Step>
+
+### Confirm the terminal works
+
+Run a read-only command first:
+
+```sh
+pwd
+```
+
+For a server, the output should show the current directory for the SSH user configured in Coolify. For a container, it shows the current directory inside that container.
+
+You can now run the command needed for your task. Close the browser terminal when you finish.
+
+</Step>
+</Steps>
+
+## Open a resource terminal
+
+You can also open **Terminal** from an individual server, application, database, or service when that resource provides a terminal page.
+
+The same server setting controls both the global Terminal page and these resource terminals.
+
+---
+
+## Change terminal access
+
+Use this setting when nobody should be able to open dashboard terminals for a server or its containers.
+
+<Steps>
+<Step>
+
+### Disable terminal access
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/web-terminal/terminal-access-setting.webp" alt="Terminal Access setting under server Security" />
+
+1. Open **Servers**.
+2. Select the server.
+3. Select **Security**.
+4. Open **Terminal Access**.
+
+5. Select **Disable Terminal**.
+6. Enter the server name and your Coolify account password in the confirmation window.
+7. Complete the confirmation.
+
+The change takes effect immediately. The server and its containers disappear from dashboard terminal selectors, including for owners and administrators.
+
+Disabling this setting does not block normal SSH connections made outside Coolify.
+
+</Step>
+<Step>
+
+### Enable terminal access again
+
+1. Return to **Servers > your server > Security > Terminal Access**.
+2. Select **Enable Terminal**.
+3. Enter the server name and your Coolify account password.
+4. Complete the confirmation.
+5. Return to **Terminal** and confirm the server appears in the selector.
+
+</Step>
+</Steps>
+
+---
+
+## If the terminal does not connect
+
+- Confirm the server is reachable from its **General** page.
+- Confirm **Terminal Access** is enabled.
+- Confirm the container is running if you selected a container.
+- If you open a self-hosted Coolify dashboard directly on port `8000`, confirm port `6002` is allowed by the [firewall](/core/infrastructure/servers/firewall).
+- Try the server terminal before the container terminal to confirm the SSH connection works.

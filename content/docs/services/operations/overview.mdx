@@ -1,0 +1,82 @@
+---
+title: Overview
+description: Deploy, update, monitor, and protect a Docker Compose Service.
+---
+
+import { BranchUp, BrowserTerminal, Refresh23 } from 'reicon-react';
+
+# Operate Services
+
+After a Service is deployed, Coolify provides stack lifecycle actions, deployment output, container logs, terminal access, scheduled tasks, component controls, and resource operations.
+
+## Know where to look
+
+| Page or control | Use it to |
+| :--- | :--- |
+| **Configuration** | Change the Compose definition, components, environment variables, storage, and automation. |
+| **Deployment output** | Follow image pulls, generated configuration, Compose startup, and command failures for the current operation. |
+| **Logs** | Read stdout and stderr from the Service containers. |
+| **Terminal** | Open a shell in a selected running container when your role can access terminals. |
+| **Component Settings** | Change domains, image, public database access, status exclusion, or log-drain behavior for one component. |
+| **Update Service** | Change image versions and merge required Compose or environment updates. |
+| **Troubleshooting** | Diagnose a failed deployment, degraded component, configuration difference, connection failure, or domain error. |
+| **Scheduled Tasks** | Run a recurring command inside a selected component container. |
+| **Resource Operations** | Clone the Service or move it between projects and environments. |
+| **Danger Zone** | Permanently delete the Service and selected Docker resources. |
+
+## Choose a lifecycle action
+
+| Goal | Action | What Coolify does |
+| :--- | :--- | :--- |
+| Deploy a new or stopped Service | **Deploy** | Pulls the configured images, writes the generated Compose and `.env` files, and runs the stack. |
+| Recreate a running stack without intentionally updating images | **Restart** | Stops the current containers and starts the stack from the saved configuration without first running a Compose pull. |
+| Pull the image tags saved in Compose and recreate the stack | **Advanced > Pull Latest Images & Restart** | Runs a Compose pull, then recreates the stack. |
+| Take the stack offline without deleting its configuration | **Stop** | Stops and removes the component containers. Persistent volumes and the Service resource remain. |
+| Recover from a stuck or degraded deployment | **Advanced > Force Restart** or **Force Deploy** | Marks active deployment records as failed when necessary and starts a forced deployment path. Use only after checking the current operation and logs. |
+
+<Callout type="warning" title="Pulling an image is an upgrade">
+
+A mutable tag can resolve to different software than the currently running image. Read upstream release notes, back up stateful components, and confirm version compatibility before selecting **Pull Latest Images & Restart** in production.
+
+</Callout>
+
+## Protect Service state
+
+<Callout type="warning" title="Container filesystems are temporary">
+
+Data outside a declared persistent mount can disappear when Coolify recreates a container. Identify and back up every stateful component before relying on Service lifecycle actions.
+
+</Callout>
+
+Use database-aware backups for databases and storage backups for file data. Keep a tested copy outside the Service server.
+
+## Run recurring commands
+
+Use **Configuration > Scheduled Tasks** for a command that must run inside one Service container on a schedule. A multi-container Service requires the Compose service name so Coolify can select the correct running container.
+
+Follow [Scheduled tasks](/services/operations/scheduled-tasks) for frequency, timeout, target, manual execution, and verification.
+
+## Continue operating the Service
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Update a Service',
+      href: '/services/operations/update-service',
+      description: 'Test and apply image, Compose, and environment changes safely.',
+      icon: Refresh23,
+    },
+    {
+      title: 'Clone or move a Service',
+      href: '/services/operations/resource-operations',
+      description: 'Change the destination or dashboard organization.',
+      icon: BranchUp,
+    },
+    {
+      title: 'Troubleshoot a Service',
+      href: '/services/operations/troubleshooting',
+      description: 'Follow the branch for a failed deployment, component, connection, or domain.',
+      icon: BrowserTerminal,
+    },
+  ]}
+/>

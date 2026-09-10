@@ -1,0 +1,220 @@
+---
+title: What is Coolify
+description: A practical introduction to Coolify for people new to self-hosting.
+---
+
+import {
+  ArrowsRight,
+  Box2,
+  Database,
+  Globe3,
+  Layers,
+  Rocket2,
+  Server,
+  ServerCloud,
+  Settings,
+  ShieldSecurity2,
+  WindowPointer,
+} from 'reicon-react';
+
+# What is Coolify
+
+Coolify is an open source, self-hostable platform for deploying and managing applications, databases, and services on servers you control.
+
+Coolify gives you a platform-as-a-service (PaaS) workflow for configuring, deploying, and operating a resource from a dashboard or API, while the workloads remain standard Docker resources on your infrastructure.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Coolify is the control plane for your infrastructure. Coolify connects to each server over SSH, prepares the server to run Docker workloads, and coordinates builds, deployments, domains, HTTPS, health checks, and day-to-day operations.
+
+You can run the Coolify instance yourself or use Coolify Cloud. In both cases, you provide the servers where applications, databases, and services run.
+
+</CoolCallout>
+
+---
+
+## What Coolify manages
+
+Coolify calls each deployable item a **resource**. A resource belongs to a project and environment, then runs on a server connected to Coolify.
+
+<CoolIconCardGrid
+  surface
+  cards={[
+    {
+      title: 'Applications',
+      description: 'Deploy from a Git repository, Dockerfile, Docker Compose file, or prebuilt Docker image.',
+      icon: WindowPointer,
+    },
+    {
+      title: 'Databases',
+      description: 'Run supported databases with persistent storage, lifecycle controls, and backup configuration.',
+      icon: Database,
+    },
+    {
+      title: 'One-click services',
+      description: 'Launch preconfigured software from maintained Docker Compose templates.',
+      icon: Box2,
+    },
+    {
+      title: 'Resource operations',
+      description: 'Manage domains, environment variables, deployments, health checks, logs, storage, and container lifecycle.',
+      icon: Settings,
+    },
+  ]}
+/>
+
+A single Coolify instance can manage resources on one or more connected servers.
+
+---
+
+## How Coolify fits into your infrastructure
+
+The Coolify instance coordinates work. Docker runs the resulting resources on the servers you connect.
+
+<CoolFlow
+  id="coolify-resource-flow"
+  icon={Layers}
+  title="From configuration to running containers"
+  description="Most resources follow the same basic model whether they start from source code, a container image, a database, or a one-click template."
+  steps={[
+    'Connect a server',
+    'Create a resource',
+    'Build or pull an image',
+    'Start Docker containers',
+    'Route traffic when needed',
+  ]}
+  list={[
+    'Coolify validates SSH access and the Docker environment on the connected server.',
+    'You choose the source, image, database, or service template and configure its settings.',
+    'Coolify builds an image when needed or pulls an existing image from a registry.',
+    'Docker runs the containers and keeps persistent data in volumes or mounted storage.',
+    'For HTTP resources, the proxy on that server routes configured domains to the correct containers and handles HTTPS.',
+  ]}
+  endnote="The Coolify instance coordinates this lifecycle from the dashboard and API. Traffic for HTTP resources goes to the proxy on the server running the resource."
+/>
+
+Because deployed resources use standard Docker containers, networks, and storage on your servers, they do not depend on a proprietary Coolify runtime. If the Coolify instance becomes unavailable, resources that are already running keep running; you lose Coolify automation and dashboard control until the Coolify instance returns.
+
+Workload data and persistent storage remain on the connected servers. Read [How Coolify works](/core/how-coolify-works) for a closer look at the control plane, connected servers, Docker, and proxy traffic.
+
+---
+
+## What stays in your control
+
+Coolify is not a hosting provider for workload servers. Coolify automates deployment work on infrastructure you supply, but you still operate that infrastructure.
+
+<CoolCompare
+  id="coolify-responsibility-boundary"
+  className="not-prose"
+  icon={ShieldSecurity2}
+  title="The responsibility boundary"
+  description="The responsibility boundary applies to both self-hosted Coolify and Coolify Cloud. If you self-host, you also operate the Coolify instance."
+>
+<CoolCompareColumn
+  title="Coolify coordinates"
+  items={[
+    'Server connection validation and Docker setup',
+    'Application builds, image pulls, deployments, and lifecycle actions',
+    'Resource configuration, environment variables, logs, and health checks',
+    'Proxy routing, domains, and HTTPS certificate automation',
+  ]}
+/>
+<CoolCompareColumn
+  title="You remain responsible for"
+  items={[
+    'Choosing and paying for the connected servers',
+    'Operating system updates, SSH access, firewall rules, and DNS',
+    'Application data, database data, and a tested backup and restore strategy',
+    'Secrets, access permissions, and the security of exposed workloads',
+    'Coolify instance updates, backups, and recovery when you self-host',
+  ]}
+/>
+</CoolCompare>
+
+Read the [Security model](/core/security-model) before placing production workloads on a connected server.
+
+---
+
+## Self-hosted or Coolify Cloud
+
+Coolify has two deployment models. The resource workflow stays the same; the difference is who operates the Coolify control plane.
+
+<CoolCompare
+  id="coolify-deployment-models"
+  className="not-prose"
+  icon={ServerCloud}
+  title="Choose who runs the Coolify instance"
+  description="Your applications, databases, and services still run on servers you connect in either model."
+>
+<CoolCompareColumn
+  title="Self-hosted"
+  items={[
+    'Install the Coolify instance on infrastructure you control.',
+    'Choose when to update the Coolify instance and manage its backups and recovery.',
+    'Use the instance to manage one or more connected servers.',
+  ]}
+/>
+<CoolCompareColumn
+  title="Coolify Cloud"
+  items={[
+    'Use the Coolify instance hosted and maintained by the Coolify team.',
+    'Connect your own servers to the managed control plane.',
+    'Keep responsibility for the operating system, network, and workloads on those servers.',
+  ]}
+/>
+</CoolCompare>
+
+[Compare self-hosted Coolify and Coolify Cloud](/core/selfhosted-cloud-comparison) for a detailed responsibility and pricing breakdown.
+
+---
+
+## Start using Coolify
+
+If you are new to Coolify, choose a control plane model first. Then connect a server and deploy a first resource.
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Choose your path',
+      href: '/choose-your-path',
+      description: 'Compare the two starting paths before setting up a Coolify instance.',
+      icon: Globe3,
+    },
+    {
+      title: 'Start with self-hosted',
+      href: '/start-with-self-hosted',
+      description: 'Install Coolify on infrastructure you control and prepare the first server.',
+      icon: Server,
+    },
+    {
+      title: 'Start with Coolify Cloud',
+      href: '/start-with-cloud',
+      description: 'Use the managed control plane and connect your own workload server.',
+      icon: ServerCloud,
+    },
+  ]}
+  groups={[
+    {
+      title: 'Understand the platform',
+      description: 'Learn how the control plane, Docker, builds, networking, and security fit together.',
+      icon: Layers,
+      links: [
+        { title: 'How Coolify works', href: '/core/how-coolify-works' },
+        { title: 'Docker and containers', href: '/core/docker-and-containers' },
+        { title: 'Build and deployment model', href: '/core/build-deployment-model' },
+        { title: 'Networking in Coolify', href: '/core/networking-in-coolify' },
+        { title: 'Security model', href: '/core/security-model' },
+      ],
+    },
+    {
+      title: 'Deploy a first resource',
+      description: 'Verify your setup with one of the beginner deployment guides.',
+      icon: Rocket2,
+      links: [
+        { title: 'Deploy your first app', href: '/deploy-your-first-app' },
+        { title: 'Deploy your first database', href: '/deploy-your-first-database' },
+        { title: 'Deploy your first service', href: '/deploy-your-first-service' },
+      ],
+    },
+  ]}
+/>

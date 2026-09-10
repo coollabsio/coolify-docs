@@ -1,0 +1,33 @@
+---
+title: "Server update"
+description: "Update server shared env"
+---
+
+# Server update
+
+Update server shared env
+
+## Usage
+
+```sh
+coolify shared-env server update <server_uuid> <id>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--comment` | `string` | No | — | Comment |
+| `--key` | `string` | No | — | Variable key |
+| `--literal` | `boolean` | No | `false` | Treat value as literal |
+| `--multiline` | `boolean` | No | `false` | Multiline value |
+| `--shown-once` | `boolean` | No | `false` | Show value only once |
+| `--value` | `string` | No | — | Variable value |
+
+## Get current help
+
+```sh
+coolify shared-env server update --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

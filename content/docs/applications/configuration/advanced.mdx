@@ -1,0 +1,287 @@
+---
+title: Advanced
+description: Configure advanced application build, deployment, Git, proxy, restart, logging, and GPU behavior.
+---
+
+import { Box2, BranchUp, Code, Globe3, Server, Settings } from 'reicon-react';
+
+# Advanced settings
+
+Open an application, then select **Configuration > Advanced**. These controls change build caching, deployment triggers, container names, proxy behavior, restart handling, logging, and GPU access.
+
+The available controls depend on the application's source and build method. A setting that does not apply is hidden.
+
+## Settings available by application type
+
+| Application type | Additional settings shown |
+| :--- | :--- |
+| Git-based application | Automatic deployments, preview deployments, pull-request access, submodules, Git LFS, and shallow cloning. |
+| Docker Compose application | **Raw Compose Deployment** and **Connect To Predefined Network**. GPU controls are hidden. |
+| Non-Compose application | GPU controls. |
+| Every application | Build, container name, proxy, shutdown, restart, and log-drain controls. |
+
+<Tabs id="application-advanced-configuration" items={['Build', 'Deployment & Git', 'Container', 'Proxy', 'Operations', 'GPU']}>
+<Tab value="Build" icon={Code}>
+
+Build controls cache reuse, Docker build arguments, commit metadata, and Docker Compose processing.
+
+### Disable Build Cache
+
+Enable **Disable Build Cache** to prevent Coolify-generated builds from reusing Docker build cache on every deployment.
+
+Leave it disabled for normal deployments. Select **Force deploy (without cache)** instead when only the next deployment needs a clean generated build.
+
+A custom Docker Compose build command controls its own cache flags, so this setting cannot add or remove cache arguments from that command.
+
+---
+
+### Inject Build Args to Dockerfile
+
+**Inject Build Args to Dockerfile** is enabled by default. Coolify adds `ARG` instructions for application variables that are available during the build.
+
+Disable it when the Dockerfile declares and manages every required `ARG` itself. This avoids duplicate injected instructions and gives the Dockerfile complete control over cache boundaries.
+
+---
+
+### Include Source Commit in Build
+
+Enable **Include Source Commit in Build** when the image build needs `SOURCE_COMMIT`, the selected Git commit hash.
+
+The setting is disabled by default so commits with otherwise identical inputs can reuse cached image layers. `SOURCE_COMMIT` remains available to the running container when it is excluded from the build.
+
+Read [Build cache](/applications/builds/overview#build-cache) before enabling it for every deployment.
+
+---
+
+### Raw Compose Deployment
+
+This setting appears only for Docker Compose applications. Coolify normally parses the Compose definition and adds the networking, labels, and other configuration it needs to manage the deployment.
+
+<Callout type="warning" title="Raw mode removes Coolify's Compose changes">
+
+With **Raw Compose Deployment** enabled, Coolify deploys the Compose definition as written. The definition must provide its own proxy labels, networking, and other required runtime configuration.
+
+</Callout>
+
+Read [Raw Compose deployment](/applications/builds/docker-compose#raw-compose-deployment-for-an-application) before enabling it.
+
+---
+
+### Connect To Predefined Network
+
+This setting appears only for Docker Compose applications. Enable **Connect To Predefined Network** when services in the Compose application must communicate with resources attached to the selected Coolify destination network.
+
+Docker Compose services already receive a private network for communication within their own definition. Joining the predefined network is only needed for communication across Coolify resources, and service DNS names can change after joining it.
+
+Read [Compose networking](/applications/builds/docker-compose#compose-networking) before configuring another resource's hostname.
+
+</Tab>
+<Tab value="Deployment & Git" icon={BranchUp}>
+
+These settings appear only for applications connected to a Git repository.
+
+### Auto Deploy
+
+**Auto Deploy** allows supported Git webhook events to start a deployment. It is enabled by default, but the repository connection must still have a working webhook or provider integration.
+
+Disable it when deployments should start only from the Coolify dashboard, API, deploy webhook, or an external workflow.
+
+---
+
+### Preview Deployments
+
+Enable **Preview Deployments** to deploy opened pull requests or merge requests automatically. Closing the request removes its preview deployment.
+
+The source integration and preview-domain configuration must also support previews. Read [Preview deployments](/applications/deployments/preview-deployments) for the complete setup.
+
+---
+
+### Allow Public PR Deployments
+
+This control becomes available after **Preview Deployments** is enabled.
+
+When disabled, Coolify blocks preview deployments from forked requests unless the actor owns, belongs to, or collaborates on the repository. When enabled, anyone who can open a pull request can trigger a preview deployment.
+
+<Callout type="warning" title="Public pull requests can run untrusted code">
+
+Keep this disabled unless the preview environment, credentials, network access, and deployment server are prepared to run contributor-controlled code.
+
+</Callout>
+
+---
+
+### Submodules
+
+Enable **Submodules** when the selected repository commit depends on Git submodules. Coolify includes them during source checkout.
+
+The connected source or deploy key must be able to access every private submodule.
+
+For private submodules in the same GitHub user or organization, prefer a relative URL in `.gitmodules`:
+
+```ini
+[submodule "prisma"]
+    path = prisma
+    url = ../prisma.git
+```
+
+The relative URL uses the authenticated parent-repository remote instead of starting a separate unauthenticated HTTPS clone. If checkout still fails, confirm that the GitHub App installation or deploy key can access both repositories.
+
+Changing only the submodule repository does not update the commit recorded by the parent repository. Commit the new submodule pointer in the parent repository before deploying it.
+
+---
+
+### LFS
+
+Enable **LFS** when the repository stores required files with Git Large File Storage. Coolify downloads the LFS-managed content during source checkout.
+
+Leave it disabled when the build does not need LFS objects.
+
+---
+
+### Shallow Clone
+
+Enable **Shallow Clone** to check out only the latest commit history with `--depth=1`. This can reduce clone time and transferred history for large repositories.
+
+Leave it disabled when the build needs earlier commits, complete tags, or history-based versioning.
+
+Read [Automatic deployments](/applications/deployments/automatic-deployments) for provider webhook setup.
+
+</Tab>
+<Tab value="Container" icon={Box2}>
+
+Container settings control the runtime name assigned to a non-preview application container.
+
+### Consistent Container Names
+
+Enable **Consistent Container Names** to use the application UUID as the container name on every deployment.
+
+<Callout type="warning" title="A fixed name disables rolling updates">
+
+Docker cannot run the current and replacement containers with the same name. Enabling this setting prevents Coolify from starting the replacement beside the running container.
+
+</Callout>
+
+Leave it disabled when the application depends on [rolling updates](/applications/deployments/rolling-updates).
+
+---
+
+### Custom Container Name
+
+**Custom Container Name** appears when **Consistent Container Names** is disabled. Enter a recognizable fixed name when another system must address the container by that exact runtime name.
+
+Coolify converts the value to slug format when you save it. The name must be unique among applications on the same deployment server.
+
+A custom name also disables rolling updates because the current and replacement containers cannot use it simultaneously. Leave the field empty to keep Coolify's generated deployment-specific names.
+
+</Tab>
+<Tab value="Proxy" icon={Globe3}>
+
+Proxy settings change labels generated by Coolify Proxy for the application's configured domains.
+
+### Force Https
+
+Enable **Force Https** to redirect HTTP requests to HTTPS when the application domain begins with `https://`.
+
+The domain, DNS, and certificate must already support HTTPS. A domain beginning with `http://` is not converted into an HTTPS domain by this switch.
+
+---
+
+### Enable Gzip Compression
+
+**Enable Gzip Compression** allows Coolify Proxy to compress supported responses.
+
+Disable it when the application already compresses responses or when a streaming or binary workload should not be compressed by the proxy.
+
+---
+
+### Strip Prefixes
+
+Enable **Strip Prefixes** when the application is exposed under a path but should receive the request without that routing prefix. For example, a request to `/api/users` can be forwarded to the container as `/users`.
+
+Test application routes after changing this setting because the application may generate links or redirects that still include the original prefix.
+
+<Callout type="info" title="Manual labels control these settings">
+
+These three controls become read-only when **Readonly labels** is disabled under **Configuration > General**. In manual-label mode, change the equivalent proxy labels yourself.
+
+</Callout>
+
+</Tab>
+<Tab value="Operations" icon={Settings}>
+
+Operations controls graceful shutdown, crash restart limits, log forwarding, and when changes reach the running container.
+
+### Stop Grace Period (seconds)
+
+Coolify waits for the application process to stop gracefully during rolling updates, manual stops, and restarts.
+
+**Accepted values:**
+
+- Leave the field empty to use the 30-second default.
+- Enter a whole number from `1` to `3600` seconds.
+
+Give the process enough time to finish in-flight work after receiving its shutdown signal. Increasing the value does not fix a process that ignores the signal.
+
+---
+
+### Max Restart Count
+
+**Max Restart Count** limits how many times Coolify automatically restarts a crashing application before stopping it and sending a notification.
+
+**Accepted values:**
+
+- The default is `10` restarts.
+- Enter `0` to disable the limit.
+- Enter a positive whole number to set another limit.
+
+---
+
+### Drain Logs
+
+Enable **Drain Logs** to forward application logs to the log-drain endpoint configured on the deployment server.
+
+Coolify rejects the setting when log draining is not enabled on that server. Follow [Log drains](/core/observability/log-drains/overview) before enabling it for the application.
+
+---
+
+### Apply changes
+
+Most switches save immediately. **Custom Container Name**, **Stop Grace Period (seconds)**, **Max Restart Count**, and enabled GPU fields use their adjacent **Save** action.
+
+Redeploy or restart the application after changing a setting that affects the image, container name, proxy labels, network, shutdown behavior, logging, or GPU access.
+
+</Tab>
+<Tab value="GPU" icon={Server}>
+
+GPU controls appear only for non-Compose applications. The deployment server must already have working GPU drivers and a container runtime configured for GPU access.
+
+### Enable GPU
+
+Enable **Enable GPU** to add GPU access to the application container. Additional GPU fields appear after it is enabled.
+
+---
+
+### GPU Driver
+
+**GPU Driver** selects the container runtime's GPU driver. Enter the driver configured on the deployment server.
+
+---
+
+### GPU Count and device IDs
+
+Use **GPU Count** to request a number of GPUs. Leave it empty to make all available GPUs accessible to the container.
+
+Use **GPU Device Ids** to select specific devices as a comma-separated list, such as `0,2`.
+
+Do not set **GPU Count** and **GPU Device Ids** together. Coolify rejects the configuration and clears both values when both are provided.
+
+---
+
+### GPU Options
+
+**GPU Options** accepts additional driver-specific runtime options. Add only options supported by the GPU driver and container runtime installed on the deployment server.
+
+Select **Save**, then redeploy or restart the application and verify GPU access from inside the container.
+
+</Tab>
+</Tabs>

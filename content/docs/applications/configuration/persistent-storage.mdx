@@ -1,0 +1,90 @@
+---
+title: Persistent Storage
+description: Configure application volume, directory, and file mounts and keep data outside replaceable containers.
+---
+
+# Configure persistent storage
+
+Application containers are replaceable. Data written only to a container filesystem can disappear when Coolify redeploys or removes that container.
+
+Use **Configuration > Persistent Storage** to mount application data outside the container at the path where the application expects it.
+
+<Callout type="info" title="Detailed storage reference">
+
+This page covers the application workflow. The [Persistent storage section in Core](/core/persistent-storage/storage-mounts/overview) explains volume, bind, directory, file, host-file, permissions, and backup behavior in detail.
+
+</Callout>
+
+## Understand the two paths
+
+Every mount connects:
+
+- a storage location on the deployment server
+- a **Destination Path** inside the application container
+
+For example, if the application writes uploads to `/app/uploads`, the mount's **Destination Path** must be `/app/uploads`. Only data written under that destination path is persistent.
+
+| Coolify choice | Use it when |
+| :--- | :--- |
+| **Volume Mount** | Docker should manage the storage location. Add a **Source Path** only when the volume must use a specific server path. |
+| **Directory Mount** | The application needs a specific directory on the deployment server. |
+| **File Mount** | The container needs one file whose contents Coolify manages. |
+| **Host File Mount** | The container needs an existing file at an exact path on the deployment server. |
+
+Read [Storage mount types](/core/persistent-storage/storage-mounts/overview#choose-a-storage-mount) before choosing a mount.
+
+## Add a mount to an application
+
+<Steps>
+<Step>
+
+### Open Persistent Storage
+
+Open the application in its project and environment, select **Configuration**, then select **Persistent Storage**.
+
+</Step>
+<Step>
+
+### Choose the mount type
+
+Select **Add**, then choose **Volume Mount**, **Directory Mount**, **File Mount**, or **Host File Mount**. If you are not sure which type to use, read [Storage mount types](/core/persistent-storage/storage-mounts/overview#choose-a-storage-mount) to compare how each one works.
+
+</Step>
+<Step>
+
+### Enter the source and destination
+
+Enter the source location or file content required by the selected mount. Enter the exact **Destination Path** used by the application inside the container.
+
+For a volume or directory that must be copied between servers, record the source name or path. You will need it for a [migration](/applications/operations/migrate-between-instances) or backup restore.
+
+</Step>
+<Step>
+
+### Save and apply the mount
+
+Save the mount, then redeploy or restart the application so the container starts with the new mount.
+
+Verify that the application can read and write the expected data before relying on the mount.
+
+</Step>
+</Steps>
+
+## Compose applications
+
+For a Docker Compose application, the Compose file is the source of truth for volume and bind-mount definitions. Define or change the mount in the Compose file, then reload the Compose configuration. Coolify displays parsed mounts but does not provide the same mount editor for Compose services.
+
+## Important boundaries
+
+- A mount does not recover data that was already written to a removed container.
+- Storage is local to the deployment server; connecting another server to Coolify does not make the mount shared.
+- The container user must have permission to read and write the mounted destination.
+- Do not share a writable directory between containers unless the application supports concurrent access and file locking.
+- Persistent storage is not a backup. Use [Storage mount backups](/core/persistent-storage/storage-mounts/backups) for eligible volume and directory mounts, and test the restore procedure separately.
+
+## Continue with the Core guides
+
+- [Volume mounts](/core/persistent-storage/storage-mounts/volume-mounts)
+- [Bind mounts](/core/persistent-storage/storage-mounts/bind-mounts)
+- [File mounts](/core/persistent-storage/storage-mounts/file-mounts)
+- [Storage mount backups](/core/persistent-storage/storage-mounts/backups)

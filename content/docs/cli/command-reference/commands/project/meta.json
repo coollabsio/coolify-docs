@@ -1,0 +1,15 @@
+{
+  "title": "Project",
+  "pages": [
+    "create",
+    "delete",
+    "environments-create",
+    "environments-delete",
+    "environments-list",
+    "environments-update",
+    "get",
+    "list",
+    "update",
+    "update-environment"
+  ]
+}

@@ -1,0 +1,74 @@
+---
+title: Authentication
+description: Authenticate the Coolify CLI with a scoped API token for Coolify Cloud or a self-hosted instance.
+---
+
+import { Cloud, ServerCloud } from 'reicon-react';
+
+# Authenticate the Coolify CLI
+
+The Coolify CLI authenticates through the Coolify REST API. Each request uses an API token associated with a saved [context](/cli/contexts) or supplied for one command with `--token`.
+
+<Callout type="warning" title="Treat API tokens as passwords">
+Use a separate, least-privilege token for each team and automation workflow. Do not commit tokens to a repository, paste them into shared logs, or store them in unprotected scripts.
+</Callout>
+
+## Create an API token
+
+Follow [API Tokens](/core/security/credentials/api-tokens) to create a token for the active team. Select only the permissions required by the CLI commands you plan to run.
+
+On self-hosted Coolify, an administrator must also enable **API Access** and allow the caller's source IP when an allowlist is configured. Read [IP Allowlist](/api/ip-allowlist) for these instance settings.
+
+## Choose your Coolify deployment
+
+<Tabs id="cli-authentication-deployment" items={['Coolify Cloud', 'Self-hosted Coolify']}>
+<Tab value="Coolify Cloud" icon={Cloud}>
+
+### Authenticate with Coolify Cloud
+
+The CLI creates a `cloud` context for `https://app.coolify.io` when it creates the configuration file for the first time. Save your Cloud token, select the context, and verify it:
+
+```sh
+coolify context set-token cloud <api-token>
+coolify context use cloud
+coolify context verify
+```
+
+A successful verification reports that the connection and authentication are valid, followed by the Coolify version.
+
+</Tab>
+
+<Tab value="Self-hosted Coolify" icon={ServerCloud}>
+
+### Authenticate with self-hosted Coolify
+
+Create a context with the full instance URL without `/api/v1`:
+
+```sh
+coolify context add --default production https://coolify.example.com <api-token>
+coolify context verify
+```
+
+The URL must start with `http://` or `https://`. Use HTTPS for any instance accessed over a network.
+
+</Tab>
+</Tabs>
+
+## Override a saved token
+
+The global `--token <api-token>` flag overrides the token saved in the selected context for one command:
+
+```sh
+coolify --context production --token <api-token> resource list
+```
+
+Prefer a saved context for interactive work. In automation, inject the override from the CI or orchestration platform's secret store rather than writing it directly in the command or configuration file.
+
+## Troubleshoot authentication
+
+- Run `coolify context verify` to test the selected URL and token together.
+- A `401` response usually means the token is missing, expired, revoked, or invalid.
+- A `403` response can mean the token lacks permission, self-hosted API access is disabled, or the caller does not match the IP allowlist.
+- If expected resources are missing, confirm that the token belongs to the team that owns them.
+
+Read [API authorization](/api/authorization) for the complete access checks. Follow [Contexts](/cli/contexts) to add, switch, update, or remove saved connections.

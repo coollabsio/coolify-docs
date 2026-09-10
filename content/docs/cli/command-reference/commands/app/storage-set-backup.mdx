@@ -1,0 +1,40 @@
+---
+title: "Storage set backup"
+description: "Create or replace storage volume backup schedule"
+---
+
+# Storage set backup
+
+Create or replace storage volume backup schedule
+
+## Usage
+
+```sh
+coolify app storage set-backup <app_uuid> <storage_uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--disable-local-backup` | `boolean` | No | `false` | Disable local backup retention |
+| `--enabled` | `boolean` | No | `true` | Enable the schedule |
+| `--frequency` | `string` | Yes | — | Cron frequency (required) |
+| `--retention-amount-locally` | `integer` | No | `7` | Local retention count |
+| `--retention-amount-s3` | `integer` | No | `7` | S3 retention count |
+| `--retention-days-locally` | `integer` | No | `0` | Local retention days |
+| `--retention-days-s3` | `integer` | No | `0` | S3 retention days |
+| `--retention-max-storage-locally` | `float64` | No | `0` | Local max storage |
+| `--retention-max-storage-s3` | `float64` | No | `0` | S3 max storage |
+| `--s3-storage-uuid` | `string` | No | — | S3 storage UUID when --save-s3 is set |
+| `--save-s3` | `boolean` | No | `false` | Also save backups to S3 |
+| `--stop-during-backup` | `boolean` | No | `false` | Stop resource during backup |
+| `--timeout` | `integer` | No | `3600` | Backup timeout seconds |
+
+## Get current help
+
+```sh
+coolify app storage set-backup --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

@@ -1,0 +1,63 @@
+---
+title: What is the Coolify CLI?
+description: Install and configure the Coolify CLI to manage Coolify resources from a terminal or automation workflow.
+---
+
+# What is the Coolify CLI?
+
+The Coolify CLI lets you inspect and manage Coolify resources from a terminal. It calls the Coolify REST API and works with both Coolify Cloud and self-hosted Coolify.
+
+Use the CLI for repeatable deployments, scripts, CI jobs, resource inventory, and operational tasks that do not require the dashboard.
+
+## Before you begin
+
+You need:
+
+- an [API token](/core/security/credentials/api-tokens) with the permissions required by your commands
+- API access, which is enabled by default on Coolify Cloud and must be [enabled by an administrator on self-hosted Coolify](/api/ip-allowlist)
+
+## Get started
+
+1. [Install the CLI](/cli/installation).
+2. [Authenticate the CLI](/cli/authentication) and [create a context](/cli/contexts) for Coolify Cloud or your self-hosted instance.
+3. Verify the saved URL and token with `coolify context verify`.
+4. Run an inventory command:
+
+```sh
+coolify resource list
+```
+
+The command uses your default context and displays a table of applications, services, and databases that the token can access.
+
+## How the CLI connects to Coolify
+
+Read [How the CLI works](/cli/how-cli-works) to understand how the CLI selects a context, authenticates API requests, handles failures, and formats responses.
+
+## Find commands and options
+
+Run `coolify --help` to list command groups. Add `--help` after any group or command to see its current arguments and flags:
+
+```sh
+coolify app --help
+coolify app create --help
+coolify database backup --help
+```
+
+The built-in help is the authoritative reference for the installed CLI version. Open **Commands** in the sidebar for operation-level syntax and options. Follow [Deploy applications](/cli/deploy-applications), [Automate with the CLI](/cli/automate-with-cli), or [Manage database backups](/cli/database-backups) for complete workflows.
+
+Use [Update the Coolify CLI](/cli/update) when a new release is available. Follow [Uninstall the Coolify CLI](/cli/uninstallation) to remove the local command without affecting resources managed through Coolify.
+
+## Use the CLI with AI agents
+
+The CLI repository publishes generated catalogs for tools that need machine-readable command context:
+
+- [`llms.txt`](https://github.com/coollabsio/coolify-cli/blob/main/llms.txt) contains concise instructions and common commands.
+- [`llms-full.txt`](https://github.com/coollabsio/coolify-cli/blob/main/llms-full.txt) contains the generated command and flag catalog.
+
+CLI contributors can regenerate both files from the repository with:
+
+```sh
+go run ./coolify docs llms
+```
+
+The [Coolify CLI source repository](https://github.com/coollabsio/coolify-cli) also contains build, test, contribution, and release instructions for CLI development.

@@ -1,0 +1,153 @@
+---
+title: Shared Variables
+description: Create team, project, environment, and server-scoped values and reference them in Coolify resource configuration.
+---
+
+# Shared variables
+
+Shared variables let you define a value once and reference it from more than one resource. Coolify supports team, project, environment, and server scopes.
+
+Defining a shared variable does not automatically add it to every application, database, or service. Add a reference where the resource needs the value, then redeploy or restart the resource as required for its configuration change.
+
+## How shared variables work
+
+A shared variable has a name, a value, and a scope. For example, a team variable named `NODE_ENV` can be referenced as:
+
+```txt
+{{team.NODE_ENV}}
+```
+
+Keep `team` as the literal scope keyword. Do not replace it with the team's name.
+
+When Coolify prepares a resource configuration, it replaces a valid reference with the value stored at that scope. If the reference does not match an available shared variable, it remains unresolved.
+
+---
+
+## Choose a scope
+
+Use the narrowest scope that covers every resource which needs the value.
+
+| Scope | Available to | Reference syntax |
+| :--- | :--- | :--- |
+| **Team** | Resources in the active team | `{{team.VARIABLE_NAME}}` |
+| **Project** | Resources in one project | `{{project.VARIABLE_NAME}}` |
+| **Environment** | Resources in one project environment, such as `production` or `staging` | `{{environment.VARIABLE_NAME}}` |
+| **Server** | Resources deployed to one server | `{{server.VARIABLE_NAME}}` |
+
+The scope words `team`, `project`, `environment`, and `server` are fixed. Replace only `VARIABLE_NAME` with the shared variable's name.
+
+Server-scoped references use the server that runs the resource. This lets the same resource configuration resolve a server-specific value when deployed to different servers.
+
+---
+
+## Create a shared variable
+
+<Steps>
+<Step>
+
+### Open Shared Variables
+
+Select **Shared Variables** in the Coolify sidebar.
+
+</Step>
+<Step>
+
+### Choose the scope
+
+Select **Team wide**, **Project wide**, **Environment wide**, or **Server wide**.
+
+For project, environment, or server scope, select the specific item that should own the variable.
+
+</Step>
+<Step>
+
+### Add the variable
+
+Select **+ Add**, then enter:
+
+- **Name**: the variable key, such as `NODE_ENV`
+- **Value**: the value to reuse, such as `production`
+- **Comment**: optional context about what uses the value
+
+Enable **Is Multiline?** when the value contains line breaks. Select **Save**.
+
+The new entry appears on the selected scope page.
+
+</Step>
+</Steps>
+
+---
+
+## Reference a shared variable
+
+<Steps>
+<Step>
+
+### Open the resource environment variables
+
+Open the application, database, or service that needs the value, then open its **Environment Variables** page.
+
+</Step>
+<Step>
+
+### Add the resource variable
+
+Create the environment variable the workload should receive. For example:
+
+```dotenv
+NODE_ENV={{team.NODE_ENV}}
+```
+
+The left side is the environment variable available to the workload. The right side tells Coolify which shared value to insert.
+
+You can also combine shared references with text:
+
+```dotenv
+DATABASE_URL=postgresql://{{environment.DB_HOST}}:{{environment.DB_PORT}}/app
+```
+
+</Step>
+<Step>
+
+### Apply and verify the change
+
+Save the resource environment variable, then redeploy or restart the resource when its configuration requires it.
+
+Verify inside the workload or through its behavior that the environment variable contains the expected resolved value. Do not print a secret value into public deployment logs.
+
+</Step>
+</Steps>
+
+---
+
+## Manage variables in Developer view
+
+Select **Developer view** on a scope page to edit ordinary shared variables as `KEY=value` lines. Select **Save All Environment Variables** to apply the complete editor contents.
+
+Lines beginning with `#` are treated as comments. Developer view can create new variables, update existing ordinary values, and delete variables omitted from the editor.
+
+<Callout type="warning" title="Developer view saves the complete list">
+Removing a variable's line and saving deletes that shared variable. Review the entire editor before selecting **Save All Environment Variables**.
+</Callout>
+
+Locked and multiline variables appear as placeholders in Developer view and cannot be changed there. Edit multiline variables in **Normal view**. To change a locked value, delete the variable and create it again.
+
+---
+
+## Update or delete a shared variable
+
+In **Normal view**, open the variable entry to change its name, value, comment, or multiline setting, then select **Update**.
+
+References use the variable name. If you rename a shared variable, update every `{{scope.VARIABLE_NAME}}` reference that used the previous name.
+
+To permanently remove a variable, select **Delete**, enter the variable name shown in the confirmation dialog, and select **Permanently Delete**.
+
+Deleting a shared variable does not remove its references from resource configuration. Search the affected resources and replace or remove those references before their next deployment.
+
+---
+
+## Use shared variables in Docker Compose
+
+Docker Compose resources can reference shared variables in their Compose configuration. The placement depends on whether the value configures Compose interpolation or a container environment variable.
+
+Follow [Environment variables in Docker Compose](/applications/builds/docker-compose#environment-variables) for the supported patterns and examples.

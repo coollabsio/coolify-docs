@@ -1,0 +1,11 @@
+{
+  "title": "S3",
+  "pages": [
+    "create",
+    "delete",
+    "get",
+    "list",
+    "update",
+    "validate"
+  ]
+}

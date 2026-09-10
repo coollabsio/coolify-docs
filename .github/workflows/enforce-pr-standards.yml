@@ -28,10 +28,9 @@ jobs:
 
             const maintainers = ['andrasbacsai', 'peaklabs-dev', 'ShadowArcanist', 'Cinzya', 'adiologydev'];
 
-            // Skip validation if a maintainer triggered this action
-            // This includes: opening PR, changing base branch, syncing, etc.
-            if (maintainers.includes(actor)) {
-              console.log(`Maintainer (${actor}) triggered this action. Skipping validation.`);
+            // Skip validation for maintainer PRs or events triggered by a maintainer
+            if (maintainers.includes(prUser) || maintainers.includes(actor)) {
+              console.log(`Maintainer PR or event detected (author: ${prUser}, actor: ${actor}). Skipping validation.`);
               return;
             }
 

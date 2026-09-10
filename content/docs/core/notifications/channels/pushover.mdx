@@ -1,0 +1,66 @@
+---
+title: Pushover
+description: Send Coolify push notifications through a Pushover application.
+---
+
+# Pushover
+
+Coolify sends Pushover notifications with your Pushover user key and an API token created for a Pushover application.
+
+## Create a Pushover application
+
+Before configuring Coolify, sign in to Pushover and register at least one phone, tablet, or desktop client with your account. The test notification is delivered to devices registered to that account.
+
+<Steps>
+<Step>
+
+### Copy your user key
+
+Sign in to the [Pushover dashboard](https://pushover.net/). Copy **Your User Key** from the account dashboard.
+
+The user key identifies the Pushover account that receives the notification. It is not the same as the application API token created in the next step.
+
+</Step>
+<Step>
+
+### Create an application token
+
+1. Open [Create an Application/API Token](https://pushover.net/apps/build).
+2. Enter an application name, such as `Coolify`.
+3. Accept the terms and create the application. The description, URL, and icon are optional unless Pushover states otherwise.
+4. Open the created application and copy its **API Token/Key**.
+
+The application token identifies Coolify as the sender and lets Pushover track its message usage separately.
+
+</Step>
+</Steps>
+
+<Callout type="warning" title="Protect the API token">
+Store the Pushover API token as a secret. If it is exposed, replace the token in Pushover and update Coolify.
+</Callout>
+
+---
+
+## Configure Coolify
+
+1. Open **Notifications > Pushover**.
+2. Enter the **User Key** and **API Token**, then select **Save**.
+3. Turn on **Enabled**.
+4. Under **Notification Settings**, select the events to send through Pushover.
+5. Select **Send Test Notification**.
+
+Confirm that the test arrives on a device connected to your Pushover account before selecting more events.
+
+---
+
+## Troubleshoot Pushover delivery
+
+If the test does not arrive:
+
+1. Confirm that **User Key** came from the receiving account dashboard.
+2. Confirm that **API Token** came from the Pushover application you created for Coolify. Do not enter the user key in both fields.
+3. Confirm that at least one device is registered and active on the receiving Pushover account.
+4. Open the Pushover application page and check its message usage and status.
+5. If you regenerated the application token, save the new value in Coolify and test again.
+
+See [Notification events](/core/notifications/events) for the trigger behind each event setting.

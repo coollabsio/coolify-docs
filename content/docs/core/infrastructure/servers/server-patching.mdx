@@ -1,0 +1,110 @@
+---
+title: Server Patching
+description: Check for operating-system package updates and install selected updates from the Coolify dashboard.
+---
+
+# Patch server packages
+
+**Server Patching** lets you check for operating-system package updates and install them from the Coolify dashboard.
+
+Coolify does not install updates automatically. You choose when to update one package or all available packages.
+
+<Callout type="error" title="Review updates before installing them">
+Docker, kernel, and system updates can restart services or require a server reboot. Back up important data and choose a maintenance window before selecting **Update All Packages**.
+
+Newer package versions, especially Docker releases, can introduce changes that break Coolify or your applications. Review the release notes carefully before updating.
+</Callout>
+
+---
+
+## Update server packages
+
+<Steps>
+<Step>
+
+### Open Server Patching
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/server-patching/server-patching-page.webp" alt="Server Patching page in Coolify" />
+
+1. Open **Servers** in the Coolify sidebar.
+2. Select the server you want to update.
+3. Select **Security** in the server menu.
+4. Select **Server Patching**.
+
+</Step>
+<Step>
+
+### Check for updates
+
+Select **Check for Updates**.
+
+Coolify connects to the server and refreshes its package list. Keep the page open until the check finishes.
+
+When updates are available, the page lists the package name and the version that can be installed. If no packages appear after a successful check, the server is up to date.
+
+</Step>
+<Step>
+
+### Review the packages
+
+Before installing anything:
+
+1. Read the package names in the update list.
+2. Check release notes for important services you run.
+3. Pay extra attention to Docker and kernel packages.
+4. Create a current backup for important applications and databases.
+
+If you are unsure about a package, update it during a maintenance window or leave it for your server administrator.
+
+</Step>
+<Step>
+
+### Install updates
+
+Choose one of these options:
+
+- Select **Update** beside one package to install only that update.
+- Select **Update All Packages** to install everything in the list.
+
+Complete the confirmation when Coolify asks. An activity window shows the output from the server while the update runs.
+
+Do not close the activity window until the command finishes.
+
+</Step>
+<Step>
+
+### Check the server again
+
+After the update finishes:
+
+1. Select **Check for Updates** again.
+2. Confirm the installed packages no longer appear.
+3. Return to **Servers** and confirm the server is reachable.
+4. Open important applications and databases hosted on the server.
+5. If the update requires a reboot, reboot the server through your normal server-management method and wait for it to reconnect to Coolify.
+
+</Step>
+</Steps>
+
+---
+
+## Update notifications
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/server-patching/notification-setting.webp" alt="Server Patching notification setting" />
+
+Coolify checks connected servers for package updates once a week. It sends a **Server Patching** notification when updates are available or when the check fails.
+
+To review the notification setting:
+
+1. Open **Notifications** in Coolify.
+2. Select the notification channel you use.
+3. Find **Server Patching**.
+4. Enable or disable the notification and save the channel settings.
+
+The weekly check only reports available updates. It does not install them.
+
+---
+
+## Supported package managers
+
+Server Patching currently supports APT, DNF, Zypper, and Pacman. Alpine Linux package updates are not supported from this page.

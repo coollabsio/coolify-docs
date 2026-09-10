@@ -1,0 +1,153 @@
+---
+title: Railpack
+description: Create an application image from Git source with Coolify's Railpack Beta build method.
+---
+
+# Railpack
+
+Railpack is Railway's successor to Nixpacks. It detects the application's language and framework from its codebase, installs dependencies, and creates an application image with Docker BuildKit.
+
+Railpack can build server applications and frontend applications that produce static files. Coolify supports Railpack only for Git-based applications.
+
+<Callout type="warning" title="Railpack is in Beta">
+
+Coolify labels Railpack as **Beta**. Test the generated image and application behavior before replacing an existing production build.
+
+</Callout>
+
+## Deploy with Railpack
+
+<Steps>
+<Step>
+
+### Connect the repository
+
+Create an application from a [public repository](/applications/sources/public-repositories), [deploy key](/applications/sources/deploy-keys), or supported Git App.
+
+Select the repository and branch.
+
+</Step>
+<Step>
+
+### Select Railpack
+
+Choose **Railpack (Beta)** as the **Build Pack**.
+
+Set **Base Directory** to the directory Railpack should inspect. Use `/` for the repository root or a path such as `/apps/api` for an application in a monorepo.
+
+</Step>
+<Step>
+
+### Configure the application type
+
+For a server application:
+
+- leave **Is it a static site?** disabled
+- enter the internal port where the process listens
+
+For a static output:
+
+- enable **Is it a static site?**
+- enter **Publish Directory**, such as `/dist`
+- keep the generated Nginx port `80`
+
+</Step>
+<Step>
+
+### Review detected commands
+
+Continue to **Configuration > General** and review the detected **Install Command**, **Build Command**, and **Start Command**.
+
+Override a command only when detection is incorrect or the codebase requires a custom command.
+
+</Step>
+<Step>
+
+### Deploy and verify
+
+Configure the required environment variables and domain, then select **Deploy**.
+
+Inspect the deployment log to confirm the generated plan and commands before using the application in production.
+
+</Step>
+</Steps>
+
+<Callout type="info" title="Railpack requires Docker Buildx">
+
+The server that runs the build and the Coolify helper container must have the Docker Buildx CLI plugin. A Railpack deployment stops with an error when either copy of Buildx is unavailable.
+
+</Callout>
+
+## Command overrides
+
+Coolify can pass install, build, and start command overrides to Railpack.
+
+Use the **Install Command**, **Build Command**, and **Start Command** fields under **Configuration > General** for a direct override. Use `railpack.json` when the build needs additional packages, multiple commands, or other repository-owned configuration.
+
+## Railpack environment variables
+
+Railpack build variables use the `RAILPACK_` prefix. Add them under **Configuration > Environment Variables** with **Build Variable** enabled.
+
+| Variable | Purpose |
+| :--- | :--- |
+| `RAILPACK_BUILD_CMD` | Override the detected build command. |
+| `RAILPACK_INSTALL_CMD` | Override the detected install command. |
+| `RAILPACK_START_CMD` | Override the container start command. |
+| `RAILPACK_PACKAGES` | Install additional [Mise](https://mise.jdx.dev?utm_source=coolify.io) packages as space-separated `package[@version]` values. |
+| `RAILPACK_BUILD_APT_PACKAGES` | Install additional space-separated APT packages in the build environment. |
+| `RAILPACK_DEPLOY_APT_PACKAGES` | Install additional space-separated APT packages in the final image. Coolify also adds `curl` and `wget`. |
+| `RAILPACK_DISABLE_CACHES` | Disable named BuildKit cache keys, or use `*` to disable all Railpack caches. |
+| `RAILPACK_VERBOSE` | Enable verbose Railpack output. |
+
+Use the Coolify command fields instead of defining the three command variables when the application only needs an install, build, or start override.
+
+Refer to the upstream [Railpack environment variables](https://railpack.com/config/environment-variables/?utm_source=coolify.io) for accepted values and additional variables.
+
+## `railpack.json`
+
+Add `railpack.json` to the application source directory selected by **Base Directory**:
+
+```json
+{
+  "$schema": "https://schema.railpack.com",
+  "packages": {
+    "node": "22"
+  },
+  "steps": {
+    "install": {
+      "commands": ["npm install"]
+    },
+    "build": {
+      "commands": ["npm run build"]
+    }
+  },
+  "deploy": {
+    "startCommand": "node dist/index.js"
+  }
+}
+```
+
+The `$schema` value enables editor validation and completion. During deployment, Coolify reads this file and passes the resulting configuration to `railpack prepare`.
+
+Refer to the [Railpack configuration-file reference](https://railpack.com/config/file/?utm_source=coolify.io) for the supported schema.
+
+## Static output
+
+When **Is it a static site?** is enabled, Railpack builds the application and Coolify copies the selected publish directory into an Nginx image.
+
+Use **Configuration > General > Nginx Configuration** only when the default static-server configuration is insufficient. Redeploy after saving a change because Coolify copies the configuration into the final static image during the image build.
+
+## Choose Railpack or Nixpacks
+
+Both methods detect supported codebases, create an image, support static output, and allow command overrides.
+
+| Difference | Railpack | Nixpacks |
+| :--- | :--- | :--- |
+| Repository configuration | `railpack.json` | `nixpacks.toml` or `nixpacks.json` |
+| Image build | Docker BuildKit frontend through Docker Buildx | Generated Dockerfile built by Docker |
+| Package versions | [Mise](https://mise.jdx.dev?utm_source=coolify.io) | Nix |
+| Build-variable prefix | `RAILPACK_` | `NIXPACKS_` |
+| Upstream development | Actively developed successor | Maintenance mode; not under active development |
+| Status in Coolify | **Beta** | Supported |
+
+Use [Dockerfile](/applications/builds/dockerfile) when the repository needs deterministic image instructions beyond either automatic builder.

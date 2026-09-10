@@ -1,0 +1,22 @@
+---
+title: Prompts and resources
+description: Use Coolify MCP prompts and resources for guided workflows and read-only context.
+---
+
+# Prompts and resources
+
+## Resources
+
+| Resource | Purpose |
+| :--- | :--- |
+| `coolify://overview` | Infrastructure overview for the authenticated team. |
+| `coolify://application/{uuid}` | Summary JSON for a team-owned application. |
+
+## Prompts
+
+| Prompt | Purpose |
+| :--- | :--- |
+| `troubleshoot_application` | Guide an application diagnosis using database-first checks and optional live logs. |
+| `explain_failed_deploy` | Explain a failed deployment using deployment details and optional log summary. |
+
+Prompts do not expand token permissions. The tools they recommend still enforce team scope and token abilities.

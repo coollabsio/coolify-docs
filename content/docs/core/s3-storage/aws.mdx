@@ -1,0 +1,230 @@
+---
+title: Amazon S3
+description: Connect Amazon S3 to Coolify by creating a bucket, IAM policy, IAM user, and access key.
+---
+
+import { ArrowsRight } from 'reicon-react';
+
+# Configure Amazon S3 Storage
+
+Connect a private Amazon S3 bucket to Coolify so it can store backup files. This guide creates bucket-scoped IAM credentials and validates the storage connection in Coolify.
+
+<Callout type="warning" title="Example data">
+Replace these example values with your own values while following the guide:
+
+- **S3 Bucket Name:** `envix-coolify-backups-s3`
+- **IAM Policy Name:** `EnvixCoolifyBackupS3Access`
+- **IAM Username:** `EnvixCoolifyBackupS3User`
+- **Endpoint:** `https://s3.ap-northeast-2.amazonaws.com`
+</Callout>
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+1. Create a bucket in the AWS Console.
+2. Create a custom IAM policy with the permissions below.
+3. Create an IAM user and attach the policy.
+4. Create an access key for the IAM user.
+5. Add the access key and secret key when you create the S3 storage in Coolify.
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetObject",
+        "s3:DeleteObject",
+        "s3:GetObjectAcl",
+        "s3:PutObjectAcl",
+        "s3:PutObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::your-bucket-name",
+        "arn:aws:s3:::your-bucket-name/*"
+      ]
+    }
+  ]
+}
+```
+
+Replace `your-bucket-name` in both resource values with your bucket name.
+
+<Callout type="success" title="Endpoint format">
+Use the S3 HTTP endpoint without the bucket name, for example `https://s3.eu-central-1.amazonaws.com`.
+</Callout>
+
+</CoolCallout>
+
+## Set up Amazon S3
+
+<Steps>
+<Step>
+
+### Create an S3 bucket
+
+Open the [Amazon S3 console](https://console.aws.amazon.com/s3) and select **Create bucket**.
+
+<ZoomImage src="/docs/images/aws-s3/1.webp" alt="Create bucket button in the Amazon S3 console" />
+
+Enter the bucket name and choose its AWS Region, object ownership, and other settings.
+
+<ZoomImage src="/docs/images/aws-s3/2.webp" alt="Amazon S3 bucket name and Region settings" />
+
+<Callout type="info" title="Keep the default settings unless you need different controls">
+The default settings work for a standard private backup bucket. Change encryption, versioning, object ownership, or public access only when your AWS requirements call for it.
+</Callout>
+
+<ZoomImage src="/docs/images/aws-s3/3.webp" alt="Amazon S3 bucket object ownership settings" />
+
+<ZoomImage src="/docs/images/aws-s3/4.webp" alt="Amazon S3 Block Public Access settings" />
+
+<ZoomImage src="/docs/images/aws-s3/5.webp" alt="Additional Amazon S3 bucket settings" />
+
+Select **Create bucket**. After AWS creates the bucket, it appears in the bucket list.
+
+<ZoomImage src="/docs/images/aws-s3/6.webp" alt="New Amazon S3 bucket in the bucket list" />
+
+</Step>
+<Step>
+
+### Create an IAM policy
+
+Open [IAM Policies](https://console.aws.amazon.com/iam/home#/policies) and select **Create policy**.
+
+<ZoomImage src="/docs/images/aws-s3/7.webp" alt="Create policy button in AWS IAM" />
+
+Choose the **JSON** policy editor.
+
+<ZoomImage src="/docs/images/aws-s3/8.webp" alt="JSON editor for a new AWS IAM policy" />
+
+Paste this policy into the editor:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetObject",
+        "s3:DeleteObject",
+        "s3:GetObjectAcl",
+        "s3:PutObjectAcl",
+        "s3:PutObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::envix-coolify-backups-s3",
+        "arn:aws:s3:::envix-coolify-backups-s3/*"
+      ]
+    }
+  ]
+}
+```
+
+Replace `envix-coolify-backups-s3` in both resource values with the bucket name created in the previous step.
+
+Continue to the policy details and enter the policy name.
+
+<ZoomImage src="/docs/images/aws-s3/9.webp" alt="AWS IAM policy name field" />
+
+Create the policy. AWS opens the policy page after creation.
+
+<ZoomImage src="/docs/images/aws-s3/10.webp" alt="Created AWS IAM policy" />
+
+<Callout type="success" title="Find the new policy by name">
+If the policy does not appear immediately in a list, search for the exact policy name you entered.
+</Callout>
+
+</Step>
+<Step>
+
+### Create an IAM user
+
+Open [IAM Users](https://console.aws.amazon.com/iam/home#/users) and select **Create user**.
+
+<ZoomImage src="/docs/images/aws-s3/11.webp" alt="Create user button in AWS IAM" />
+
+Enter the IAM username.
+
+<ZoomImage src="/docs/images/aws-s3/12.webp" alt="AWS IAM username field" />
+
+Select **Next** after entering the name.
+
+<ZoomImage src="/docs/images/aws-s3/13.webp" alt="AWS IAM permission options for the new user" />
+
+1. Select **Attach policies directly**.
+2. Select the policy created in the previous step.
+3. Select **Next**.
+
+<ZoomImage src="/docs/images/aws-s3/14.webp" alt="AWS IAM user review page" />
+
+Review the user and select **Create user**.
+
+<ZoomImage src="/docs/images/aws-s3/15.webp" alt="Created AWS IAM user" />
+
+Select the username to create its access key.
+
+</Step>
+<Step>
+
+### Create an access key
+
+On the IAM user page, open **Security credentials**.
+
+<ZoomImage src="/docs/images/aws-s3/16.webp" alt="Security credentials tab for the AWS IAM user" />
+
+Under **Access keys**, select **Create access key**.
+
+<ZoomImage src="/docs/images/aws-s3/17.webp" alt="AWS IAM access key use-case options" />
+
+Choose **Other**, then continue.
+
+<ZoomImage src="/docs/images/aws-s3/18.webp" alt="Create access key confirmation in AWS IAM" />
+
+Select **Create access key**.
+
+<ZoomImage src="/docs/images/aws-s3/19.webp" alt="AWS IAM access key and secret access key" />
+
+Save the **Access key** and **Secret access key** somewhere secure, then select **Done**.
+
+<Callout type="warning" title="Save the secret access key before leaving">
+AWS does not show the secret access key again after you close this page. If you lose it, create a replacement access key.
+</Callout>
+
+</Step>
+<Step>
+
+### Set up Amazon S3 in Coolify
+
+In the Coolify dashboard, open **S3 Storages** from the sidebar.
+
+<ZoomImage src="/docs/images/aws-s3/20.webp" alt="S3 Storages section in the Coolify sidebar" />
+
+Select **Add**.
+
+<ZoomImage src="/docs/images/aws-s3/21.webp" alt="New S3 Storage form in Coolify" />
+
+Complete the form:
+
+1. Enter a name for the S3 storage. This name only identifies it in Coolify.
+2. Enter an optional description.
+3. Enter the endpoint without the bucket name, such as `https://s3.YOUR_REGION_NAME.amazonaws.com`.
+4. Enter the S3 bucket name.
+5. Enter the bucket's AWS Region.
+6. Enter the IAM **Access Key**.
+7. Enter the IAM **Secret Key**.
+8. Select **Validate Connection & Continue**.
+
+After validation succeeds, Coolify opens the storage details page.
+
+<ZoomImage src="/docs/images/aws-s3/22.webp" alt="Validated Amazon S3 storage in Coolify" />
+
+<Callout type="success" title="Amazon S3 storage is ready">
+The connection is configured and validated. You can now select this storage when you configure an [instance backup](/core/backup-and-recovery/instance-backup) or a [database backup](/databases/backups).
+</Callout>
+
+</Step>
+</Steps>

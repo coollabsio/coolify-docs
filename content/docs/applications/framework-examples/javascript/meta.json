@@ -1,0 +1,10 @@
+{
+  "title": "JavaScript",
+  "pages": [
+    "nextjs",
+    "vite",
+    "vuejs",
+    "nuxt",
+    "svelte-kit"
+  ]
+}

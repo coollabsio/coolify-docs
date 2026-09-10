@@ -1,0 +1,10 @@
+{
+  "title": "Cloud Init",
+  "pages": [
+    "create",
+    "delete",
+    "get",
+    "list",
+    "update"
+  ]
+}

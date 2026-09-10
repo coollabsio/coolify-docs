@@ -1,0 +1,118 @@
+---
+title: Overview
+description: Understand how Coolify monitors server availability, container state, disk usage, backups, and CPU and memory metrics.
+---
+
+import {
+  ArrowsRight,
+  Box2,
+  Globe3,
+  Layers,
+  Server,
+  Settings,
+  ShieldSecurity2,
+} from 'reicon-react';
+
+# Monitoring overview
+
+Coolify tracks the state of connected servers and the workloads running on them. The dashboard shows current status, while notification channels can report selected failures and operational events to your team.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+[Sentinel](/core/observability/monitoring/sentinel) provides the preferred server-to-Coolify status path on supported servers. [Metrics](/core/observability/monitoring/metrics) adds historical CPU and memory charts. Metrics can be disabled while Sentinel continues to report server and container health.
+
+</CoolCallout>
+
+---
+
+## What Coolify monitors
+
+Monitoring in Coolify covers server state, workload state, resource usage, operational events, and logs.
+
+<CoolIconCardGrid
+  surface
+  cards={[
+    {
+      title: 'Server availability',
+      description: 'Shows whether a connected server is reachable, validated, and usable.',
+      icon: Server,
+    },
+    {
+      title: 'Workload state',
+      description: 'Reports container state and Docker health status for applications, databases, and services.',
+      icon: Box2,
+    },
+    {
+      title: 'Disk checks and metrics',
+      description: 'Checks disk usage and records CPU and memory metrics.',
+      icon: Layers,
+    },
+    {
+      title: 'Events and logs',
+      description: 'Sends operational notifications and forwards workload logs.',
+      icon: Globe3,
+    },
+  ]}
+/>
+
+---
+
+## Monitoring boundaries
+
+Built-in monitoring provides platform and container visibility, but it is not a complete external observability system.
+
+<CoolCompare
+  id="monitoring-boundaries"
+  className="not-prose"
+  icon={ShieldSecurity2}
+  title="What Coolify covers"
+  description="Use external tools when you need endpoint checks, threshold alerting, long-term analysis, or provider-managed retention."
+>
+<CoolCompareColumn
+  title="Built into Coolify"
+  items={[
+    'Server reachability, validation state, and disk usage checks',
+    'Container state and Docker health information',
+    'Historical CPU and memory charts when Sentinel metrics are enabled',
+    'Selected operational notifications and workload log forwarding',
+  ]}
+/>
+<CoolCompareColumn
+  title="Requires an external system"
+  items={[
+    'CPU or memory threshold alerts from the built-in charts',
+    'Public endpoint checks from outside your infrastructure',
+    'Application workflow checks beyond the health endpoint you configure',
+    'Log retention, queries, dashboards, and log-based alerts',
+  ]}
+/>
+</CoolCompare>
+
+Log drains forward workload container output. They do not forward Coolify deployment logs or replace the retention and alerting controls in your log provider.
+
+---
+
+## Continue with observability
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Configure Sentinel',
+      href: '/core/observability/monitoring/sentinel',
+      description: 'Set up server health reporting, container status, disk usage, and metric collection.',
+      icon: Server,
+    },
+    {
+      title: 'Enable metrics',
+      href: '/core/observability/monitoring/metrics',
+      description: 'Collect and view CPU and memory history for servers and supported resources.',
+      icon: Layers,
+    },
+    {
+      title: 'Configure log drains',
+      href: '/core/observability/log-drains/overview',
+      description: 'Forward selected workload container logs to an external destination.',
+      icon: Settings,
+    },
+  ]}
+/>

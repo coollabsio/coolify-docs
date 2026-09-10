@@ -3,18 +3,154 @@ title: Troubleshooting Overview
 description: Comprehensive Coolify troubleshooting guides covering deployment errors, server issues, proxy problems, SSL certificates, and application configuration fixes.
 ---
 
+import { Box2, Computer, Globe3, Layers, Package, Server } from 'reicon-react';
+
 # 🔧 Troubleshooting
 
-This section provides solutions for resolving issues you might encounter with Coolify.
+This section provides solutions for resolving issues you might encounter with Coolify. Pick the category that matches your problem.
 
-Check the sidebar for a list of all available trouble shooting guides.
+## Installation
 
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Install script failed',
+      href: '/troubleshoot/installation/install-script-failed',
+      description: 'Debug an installation that fails or completes without a working dashboard or containers.',
+      icon: Package,
+    },
+    {
+      title: 'Docker installation failed',
+      href: '/troubleshoot/installation/docker-install-failed',
+      description: 'Fix the Docker install step failing on non-LTS operating systems.',
+      icon: Package,
+    },
+  ]}
+/>
 
-<Callout type="warn" title="Note:">
+## Applications
 
-**Please note that this troubleshooting guide is still being actively developed.**
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Bad Gateway (502)',
+      href: '/troubleshoot/applications/bad-gateway',
+      description: 'Resolve 502 errors from wrong ports, host mapping, or an app bound only to localhost.',
+      icon: Box2,
+    },
+    {
+      title: 'No Available Server (503)',
+      href: '/troubleshoot/applications/no-available-server',
+      description: 'Fix 503 errors from failed health checks, domain mismatches, or Traefik issues.',
+      icon: Box2,
+    },
+    {
+      title: 'Gateway Timeout (504)',
+      href: '/troubleshoot/applications/gateway-timeout',
+      description: 'Fix 504 errors from custom network isolation or proxy timeouts that are too short.',
+      icon: Box2,
+    },
+    {
+      title: 'Failed to get access token',
+      href: '/troubleshoot/applications/failed-to-get-token',
+      description: 'Fix GitHub token errors during deployment caused by server clock drift.',
+      icon: Box2,
+    },
+  ]}
+/>
 
-</Callout>
+## Dashboard
 
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Dashboard inaccessible',
+      href: '/troubleshoot/dashboard/dashboard-inaccessible',
+      description: 'Restore access to the dashboard by checking the proxy, containers, and firewall.',
+      icon: Computer,
+    },
+    {
+      title: 'Slow dashboard performance',
+      href: '/troubleshoot/dashboard/dashboard-slow-performance',
+      description: 'Speed up a slow dashboard, often caused by Cloudflare Rocket Loader.',
+      icon: Computer,
+    },
+  ]}
+/>
+
+## Docker
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Expired GitHub Personal Access Token',
+      href: '/troubleshoot/docker/expired-github-personal-access-token',
+      description: 'Fix ghcr.io authentication errors by logging out or renewing an expired PAT.',
+      icon: Layers,
+    },
+  ]}
+/>
+
+## Server
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Connection unstable',
+      href: '/troubleshoot/server/connection-issues',
+      description: 'Fix dropped connections caused by UFW or iptables rate-limit rules on port 22.',
+      icon: Server,
+    },
+    {
+      title: 'Server crash during build',
+      href: '/troubleshoot/server/crash-during-build',
+      description: 'Stop builds from overloading the server by offloading them to a build server.',
+      icon: Server,
+    },
+    {
+      title: '2FA stopped working',
+      href: '/troubleshoot/server/two-factor-stopped-working',
+      description: 'Fix rejected two-factor codes by synchronizing the server clock with NTP.',
+      icon: Server,
+    },
+    {
+      title: 'Raspberry Pi crashes',
+      href: '/troubleshoot/server/raspberry-crashes',
+      description: 'Stabilize a Raspberry Pi that crashes under load on low-RAM models.',
+      icon: Server,
+    },
+    {
+      title: 'Server validation issues',
+      href: '/troubleshoot/server/validation-issues',
+      description: 'Resolve server validation errors from malformed SSH keys or missing authorization.',
+      icon: Server,
+    },
+  ]}
+/>
+
+## DNS & Domains
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Wildcard SSL certificates',
+      href: '/troubleshoot/dns-and-domains/wildcard-ssl-certs',
+      description: 'Fix Coolify not using a wildcard SSL certificate for your domain.',
+      icon: Globe3,
+    },
+    {
+      title: "Let's Encrypt not working",
+      href: '/troubleshoot/dns-and-domains/lets-encrypt-not-working',
+      description: 'Fix Let\'s Encrypt failing to issue certificates from ports, DNS, or proxy interference.',
+      icon: Globe3,
+    },
+    {
+      title: 'Certificate resolver not found',
+      href: '/troubleshoot/dns-and-domains/certificate-resolver-doesnt-exist',
+      description: 'Fix the "cert resolver doesn\'t exist" error from acme.json file permissions.',
+      icon: Globe3,
+    },
+  ]}
+/>
 
 If you have a suggestion for a new troubleshooting guide or want to contribute, feel free to submit a pull request or open an issue with a detailed description in our GitHub [docs repository](https://github.com/coollabsio/documentation-coolify/issues).

@@ -1,0 +1,72 @@
+---
+title: "Create dockerimage"
+description: "Create an application from a pre-built Docker image"
+---
+
+# Create dockerimage
+
+Create an application from a pre-built Docker image
+
+## Usage
+
+```sh
+coolify app create dockerimage
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--custom-internal-name` | `string` | No | — | Custom internal hostname |
+| `--description` | `string` | No | — | Application description |
+| `--destination-uuid` | `string` | No | — | Destination UUID if server has multiple destinations |
+| `--disable-build-cache` | `boolean` | No | `false` | Disable the build cache |
+| `--docker-images-to-keep` | `integer` | No | `0` | Number of Docker images to retain |
+| `--docker-registry-image-name` | `string` | Yes | — | Docker image name from registry (required) |
+| `--docker-registry-image-tag` | `string` | No | — | Docker image tag (defaults to 'latest') |
+| `--dockerfile-target-build` | `string` | No | — | Dockerfile target build stage |
+| `--domains` | `string` | No | — | Domain(s) for the application |
+| `--environment-name` | `string` | No | — | Environment name |
+| `--environment-uuid` | `string` | No | — | Environment UUID |
+| `--gpu-count` | `string` | No | — | GPU count |
+| `--gpu-device-ids` | `string` | No | — | GPU device IDs |
+| `--gpu-driver` | `string` | No | — | GPU driver |
+| `--gpu-options` | `string` | No | — | GPU options |
+| `--health-check-enabled` | `boolean` | No | `false` | Enable health checks |
+| `--health-check-path` | `string` | No | — | Health check path |
+| `--include-source-commit-in-build` | `boolean` | No | `false` | Include the source commit in the build |
+| `--inject-build-args-to-dockerfile` | `boolean` | No | `false` | Inject build arguments into the Dockerfile |
+| `--instant-deploy` | `boolean` | No | `false` | Deploy immediately after creation |
+| `--is-consistent-container-name-enabled` | `boolean` | No | `false` | Use consistent container names |
+| `--is-env-sorting-enabled` | `boolean` | No | `false` | Sort environment variables |
+| `--is-git-lfs-enabled` | `boolean` | No | `false` | Enable Git LFS |
+| `--is-git-shallow-clone-enabled` | `boolean` | No | `false` | Use a shallow Git clone |
+| `--is-git-submodules-enabled` | `boolean` | No | `false` | Clone Git submodules |
+| `--is-gpu-enabled` | `boolean` | No | `false` | Enable GPU |
+| `--is-gzip-enabled` | `boolean` | No | `false` | Enable gzip compression |
+| `--is-log-drain-enabled` | `boolean` | No | `false` | Enable application log drain |
+| `--is-pr-deployments-public-enabled` | `boolean` | No | `false` | Make pull request deployments public |
+| `--is-preview-deployments-enabled` | `boolean` | No | `false` | Enable preview deployments |
+| `--is-raw-compose-deployment-enabled` | `boolean` | No | `false` | Deploy the raw Docker Compose definition |
+| `--is-stripprefix-enabled` | `boolean` | No | `false` | Enable path prefix stripping |
+| `--limits-cpus` | `string` | No | — | CPU limit |
+| `--limits-memory` | `string` | No | — | Memory limit |
+| `--max-restart-count` | `integer` | No | `0` | Maximum container restart count |
+| `--name` | `string` | No | — | Application name |
+| `--ports-exposes` | `string` | Yes | — | Exposed ports, e.g., '80' or '80,443' (required) |
+| `--ports-mappings` | `string` | No | — | Port mappings (host:container) |
+| `--preview-url-template` | `string` | No | — | Preview URL template |
+| `--project-uuid` | `string` | Yes | — | Project UUID (required) |
+| `--server-uuid` | `string` | Yes | — | Server UUID (required) |
+| `--stop-grace-period` | `integer` | No | `0` | Container stop grace period in seconds |
+| `--tag` | `stringArray` | No | — | Tag to assign to the application (repeatable) |
+| `--tags` | `stringSlice` | No | — | Tags to assign to the application |
+| `--use-build-secrets` | `boolean` | No | `false` | Use Docker Build Secrets for build-time variables |
+
+## Get current help
+
+```sh
+coolify app create dockerimage --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

@@ -6,7 +6,7 @@ tags: ["No Available Server", "503"]
 
 # No Available Server (503) Error
 
-If your deployed application or service shows a **"No Available Server"** error, this indicates that [Traefik](/knowledge-base/proxy/traefik) (the reverse proxy) cannot find any (healthy) containers to route traffic to under the provided secured URL (`https`).
+If your deployed application or service shows a **"No Available Server"** error, this indicates that [Traefik](/core/networking/proxy/traefik/overview) (the reverse proxy) cannot find any (healthy) containers to route traffic to under the provided secured URL (`https`).
 
 ## What Causes This Error?
 
@@ -20,7 +20,10 @@ The "No Available Server" error occurs when:
 
 ## Quick Diagnosis Steps
 
-### 1. Check Container Health Status
+<Steps>
+<Step>
+
+### Check Container Health Status
 
 First, verify if your containers are running healthy:
 
@@ -31,11 +34,17 @@ docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
 Look for containers showing `(unhealthy)` status - this indicates a health check problem.
 
-### 2. Check Domain Configuration
+</Step>
+<Step>
 
-Verify that you entered the domain correctly into your Application / Service configurations and your DNS records are pointing to the correct IP address. See the [Domains](/knowledge-base/domains) documentation for the full formatting rules.
+### Check Domain Configuration
 
-### 3. Check Traefik Proxy Logs
+Verify that you entered the domain correctly in the application or service configuration and that its DNS records point to the correct IP address. See [Domains](/core/networking/domains) for the supported formats.
+
+</Step>
+<Step>
+
+### Check Traefik Proxy Logs
 
 Check the Traefik logs for underlying issues:
 
@@ -52,9 +61,13 @@ docker logs coolify-proxy --tail 50
 
 Look for error messages like `client version 1.24 is too old` which indicates a [Docker API version mismatch](#solution-5-update-traefik-to-fix-docker-api-version-issue).
 
+</Step>
+</Steps>
+
 ## Common Solutions
 
-### Fix Failed Health Checks (Most Common)
+<Accordions type="multiple">
+<Accordion title="Fix Failed Health Checks (Most Common)">
 
 **Symptoms:**
 
@@ -77,7 +90,7 @@ Look for error messages like `client version 1.24 is too old` which indicates a 
 
 <Callout type="info">
 
-   These are some common solutions to fix a health check. Adjust based on your specific application and health check command. Read more about [configuring Health Checks](/knowledge-base/health-checks#configure-health-checks).
+   These are some common solutions to fix a health check. Adjust based on your specific application and health check command. Read more about [configuring health checks](/applications/configuration/health-checks).
 
 </Callout>
 
@@ -113,7 +126,8 @@ Look for error messages like `client version 1.24 is too old` which indicates a 
    docker exec -it <container-name> curl -f http://localhost:3000/health
    ```
 
-### Fix Domain Configuration
+</Accordion>
+<Accordion title="Fix Domain Configuration">
 
 #### Incorrect Domain Setup
 
@@ -122,7 +136,7 @@ Look for error messages like `client version 1.24 is too old` which indicates a 
 - Works with auto-generated domain (e.g. `sslip.io`) but not custom domain
 
 **Steps:**
-Verify that your domain is correctly set up in both Coolify and your DNS provider as per the [Domains](/knowledge-base/domains) documentation.
+Verify that your domain is correctly set up in both Coolify and your DNS provider. See [Domains](/core/networking/domains) for the complete setup.
 
 #### Redirect Issues
 
@@ -153,12 +167,13 @@ If your site is only accessible via HTTP but not HTTPS, check your domain config
 
 Make sure the protocol in your domain configuration matches how you want to access your site, then restart your application.
 
-### Fix Port Configuration
+</Accordion>
+<Accordion title="Fix Port Configuration">
 
 **Symptoms:**
 
 - Application / Service works via `http://IP:port` but not via domain (manual port mapping required)
-- [Traefik](/knowledge-base/proxy/traefik) can't reach the application
+- [Traefik](/core/networking/proxy/traefik/overview) can't reach the application
 
 **Steps:**
 
@@ -180,7 +195,8 @@ Make sure the protocol in your domain configuration matches how you want to acce
 
    Your Application / Service might be binding to only `localhost` or `127.0.0.1`, which makes it unreachable from outside the container. Ensure your app listens on all interfaces (`0.0.0.0`).
 
-### Handle Deployment Downtime
+</Accordion>
+<Accordion title="Handle Deployment Downtime">
 
 **Symptoms:**
 
@@ -189,9 +205,10 @@ Make sure the protocol in your domain configuration matches how you want to acce
 
 **Solution: Configure Rolling Updates**
 
-Ensure that `Rolling Updates` are correctly configured. See [Rolling Updates documentation](/knowledge-base/rolling-updates)
+Ensure that rolling updates are correctly configured. See [Rolling updates](/applications/deployments/rolling-updates).
 
-### Update Traefik to Fix Docker API Version Issue
+</Accordion>
+<Accordion title="Update Traefik to Fix Docker API Version Issue">
 
 **Symptoms:**
 
@@ -248,9 +265,14 @@ Some users have custom configurations (like DNS challenges) that could break whe
 </Callout>
 
 
+</Accordion>
+</Accordions>
+
 ## Advanced Debugging
 
-### Check Traefik Configuration
+<Accordions type="multiple">
+
+<Accordion title="Check Traefik Configuration">
 
 ```bash
 # View Traefik dynamic configuration
@@ -263,20 +285,28 @@ docker logs coolify-proxy -f
 docker inspect <your-container-name> --format='{{json .Config.Labels}}' | jq
 ```
 
-### Check Application Logs
+</Accordion>
+
+<Accordion title="Check Application Logs">
 
 ```bash
 # Check your application's logs for errors
 docker logs <your-container-name> -f
 ```
 
-### Test Health Check from Inside Container
+</Accordion>
+
+<Accordion title="Test Health Check from Inside Container">
 
 ```bash
 # Execute health check command manually
 docker exec -it <container-name> /bin/sh
 curl -f http://localhost:3000/health
 ```
+
+</Accordion>
+
+</Accordions>
 
 ## Prevention Tips
 

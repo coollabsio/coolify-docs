@@ -1,0 +1,75 @@
+---
+title: Overview
+description: Find the Coolify settings used to configure a standalone database after it is created.
+---
+
+import { BranchUp, Pulse, Settings } from 'reicon-react';
+
+# Configure a database
+
+Open a database resource and select **Configuration** to change its engine settings, credentials, networking, storage, health check, and resource limits.
+
+The available pages depend on the database engine and the resource state. For example, **Backups** is available only for engines supported by Coolify's database backup workflow, while **Import Backup** is available only for supported restore paths.
+
+## Configuration pages
+
+| <span className="inline-block min-w-36 whitespace-nowrap">Configuration page</span> | What it controls | Guide |
+| :--- | :--- | :--- |
+| **General** | Database identity, image, credentials, engine settings, network access, and proxy settings. | [Review General settings](/databases/configuration/general) |
+| **Environment Variables** | Runtime variables passed to the database container. | [Configure environment variables](/databases/configuration/environment-variables) |
+| **Servers** | The server and destination where the database runs. | [Configure multi-server deployments](/core/infrastructure/scaling/multi-server-deployments) |
+| **Persistent Storage** | Volumes, directories, and files mounted into the database container. | [Configure persistent storage](/databases/configuration/persistent-storage) |
+| **Import Backup** | Restore a supported PostgreSQL, MySQL, MariaDB, or MongoDB backup. The page is also shown for unsupported engines, where Coolify displays that restore is not supported. | [Restore a database](/databases/restore) |
+| **Webhooks** | Authenticated requests for database operations from external automation. | [Deploy webhooks](/core/automation/deploy-webhooks) |
+| **Healthcheck** | The Docker health probe used to report database health. | [Configure health checks](/databases/configuration/health-checks) |
+| **Resource Limits** | CPU and memory limits applied to the database container. | [Configure resource limits](/databases/configuration/resource-limits) |
+| **Resource Operations** | Clone the database to another destination or move it between projects and environments. | [Clone or move a database](/databases/operations/resource-operations) |
+| **Metrics** | CPU and memory usage for the database container. | [Monitor resource metrics](/core/observability/monitoring/metrics) |
+| **Tags** | Team-level labels used to organize resources. | [Organize resources with tags](/core/automation/tags/overview) |
+| **Danger Zone** | Destructive actions, including deleting the database resource. | [Delete a database](/databases/operations/danger-zone) |
+
+## Apply configuration changes
+
+Saving a setting updates the database resource configuration. It does not always recreate the running container immediately.
+
+Restart or redeploy the database after changing settings that affect its container, including:
+
+- image, credentials, or engine configuration
+- environment variables
+- persistent storage mounts
+- ports or public proxy settings
+- health-check settings
+- resource limits
+
+Use the configuration-change indicator and the database status to confirm whether Coolify is waiting for a restart or redeploy.
+
+<Callout type="warning" title="Back up before changing database configuration">
+
+Take and verify a database backup before changing a production image, data mount, engine configuration, or credential. A configuration change can prevent the database from starting even when the stored data is intact.
+
+</Callout>
+
+## Continue with configuration guides
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Environment variables',
+      href: '/databases/configuration/environment-variables',
+      description: 'Pass runtime configuration and secrets to the database container.',
+      icon: Settings,
+    },
+    {
+      title: 'Health checks',
+      href: '/databases/configuration/health-checks',
+      description: 'Configure how Docker determines whether the database is healthy.',
+      icon: Pulse,
+    },
+    {
+      title: 'Persistent storage',
+      href: '/databases/configuration/persistent-storage',
+      description: 'Keep database files outside the replaceable container filesystem.',
+      icon: BranchUp,
+    },
+  ]}
+/>

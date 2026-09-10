@@ -1,0 +1,117 @@
+---
+title: Clerk
+description: Configure Clerk SSO for Coolify by creating a Clerk OAuth application and using its Frontend API URL.
+---
+
+# Configure Clerk SSO
+
+Configure Clerk as the identity provider for Coolify by creating a Clerk OAuth application with profile and email access.
+
+<Callout type="warning" title="Requires Coolify v4.3.0">
+  Clerk SSO is available in Coolify v4.3.0 or above
+</Callout>
+
+<Callout type="warning" title="Example data">
+Replace these values while following the guide:
+
+- **Coolify callback:** `https://coolify.shadowarcanist.com/auth/clerk/callback`
+- **Clerk Base URL:** `https://shadowarcanist.clerk.accounts.dev`
+</Callout>
+
+## Set up Clerk SSO
+
+<Steps>
+<Step>
+
+### Create a Clerk OAuth application
+
+Open the [Clerk Dashboard OAuth applications](https://dashboard.clerk.com/~/oauth-applications) page for the Clerk instance that will authenticate Coolify users.
+
+Select **Add OAuth application**, enter a name such as `Coolify`, and include the `email` and `profile` scopes. Add `openid` only when another client needs OIDC; Coolify's Clerk integration requests `email` and `profile`.
+
+Select **Add**.
+
+See Clerk's [OAuth application guide](https://clerk.com/docs/guides/configure/auth-strategies/oauth/single-sign-on) if the dashboard navigation differs.
+
+</Step>
+<Step>
+
+### Save the Clerk credentials
+
+Copy the **Client Secret** from the creation modal and store it securely. Clerk does not show the complete secret again.
+
+On the OAuth application's settings page, copy **Client ID**.
+
+</Step>
+<Step>
+
+### Register the Coolify redirect
+
+In the Clerk OAuth application, add this value under **Redirect URIs**:
+
+```txt
+https://coolify.shadowarcanist.com/auth/clerk/callback
+```
+
+Save the application.
+
+Use Clerk's user and organization controls to decide who may authenticate through the OAuth application.
+
+</Step>
+<Step>
+
+### Copy the Clerk Base URL
+
+Open **API Keys** in the Clerk Dashboard and copy the instance's **Frontend API URL**. A development instance usually resembles:
+
+```txt
+https://shadowarcanist.clerk.accounts.dev
+```
+
+A production instance may use a custom Clerk domain. Use the origin shown by Clerk without `/oauth/authorize`, `/oauth/token`, or another path.
+
+</Step>
+<Step>
+
+### Configure Clerk in Coolify
+
+Open **Settings > OAuth** and find **Clerk**.
+
+| Coolify field | Clerk value |
+| :--- | :--- |
+| **Client ID** | Clerk OAuth application client ID |
+| **Client Secret** | Clerk OAuth application client secret |
+| **Redirect URI** | `https://coolify.shadowarcanist.com/auth/clerk/callback` |
+| **Base URL** | Clerk Frontend API URL |
+
+Select **Save**, then turn on **Enabled** for Clerk.
+
+</Step>
+<Step>
+
+### Verify Clerk sign-in
+
+Open the Coolify login page in a private browser window and select **Login with Clerk**. Complete Clerk authentication, then confirm that Coolify opens the account matching the primary Clerk email address.
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="Clerk rejects the redirect URI">
+
+Confirm that the Clerk OAuth application lists the exact public Coolify callback under **Redirect URIs**.
+
+</Accordion>
+<Accordion title="Coolify cannot start Clerk authentication">
+
+Confirm that **Base URL** is the Clerk Frontend API origin, not `dashboard.clerk.com` and not a URL with `/oauth/authorize` appended.
+
+</Accordion>
+<Accordion title="Coolify returns to the login page">
+
+Confirm that the OAuth application grants `email` and `profile`, that the Clerk user has a primary email address, and that the client secret in Coolify is current.
+
+</Accordion>
+</Accordions>

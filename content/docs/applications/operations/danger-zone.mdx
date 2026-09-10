@@ -1,0 +1,78 @@
+---
+title: Danger Zone
+description: Permanently delete an application and choose which related Docker resources Coolify removes.
+---
+
+# Delete an application
+
+Deleting an application removes it from Coolify, stops its production and preview containers, and removes its environment variables. The deletion cannot be undone.
+
+Open the application, then select **Configuration > Danger Zone**.
+
+## Before deletion
+
+- Back up every persistent volume that contains required data.
+- Record the source, domains, environment variables, storage mounts, and deployment settings needed to recreate the application.
+- Move production traffic before deletion when the application must remain available.
+- Confirm that you have permission to delete the application. Otherwise, Coolify shows **Insufficient Permissions**.
+
+<Callout type="danger" title="Deleting volumes permanently removes their data">
+
+Application rollback images are not backups of persistent volumes. Verify a volume backup outside the affected volume before continuing.
+
+Deleting the application also deletes its scheduled volume-backup configuration and the backup archives created by those schedules from local and S3 storage. This happens regardless of which optional deletion actions you select.
+
+</Callout>
+
+## Delete the application
+
+<Steps>
+<Step>
+
+### Review the deletion actions
+
+Select **Delete** and review the actions in the confirmation modal. Coolify selects all four optional actions by default:
+
+| Action | Result |
+| :--- | :--- |
+| **Permanently delete all volumes associated with this resource.** | Deletes the application's Docker volumes and their Coolify storage records. |
+| **Permanently delete all non-predefined networks associated with this resource.** | Deletes application networks that were not defined as shared networks. |
+| **Permanently delete all configuration files from the server.** | Deletes Coolify-generated configuration files for the application from its server. |
+| **Run Docker Cleanup (remove unused images and builder cache).** | Starts Docker cleanup on the application server after deletion. |
+
+The application record, environment variables, file-mount records, scheduled volume-backup configuration and archives, and application containers are removed even when optional actions are cleared.
+
+</Step>
+<Step>
+
+### Confirm the application name
+
+Enter the exact application name shown in the confirmation modal. Coolify skips this step when the instance-wide two-step confirmation setting is disabled.
+
+</Step>
+<Step>
+
+### Confirm your password
+
+Enter your Coolify account password, then confirm the deletion. Coolify skips password confirmation for OAuth accounts without a password and when the instance-wide two-step confirmation setting is disabled.
+
+Coolify returns to the project environment while the deletion job removes the selected Docker resources.
+
+</Step>
+</Steps>
+
+## Verify deletion
+
+Confirm that:
+
+1. The application no longer appears in the project environment.
+2. Its production and preview containers no longer appear on the server.
+3. Any domain that should remain in use now routes to its replacement.
+
+Coolify does not manage DNS records at your DNS provider. Remove or update obsolete records separately.
+
+## Recreate a deleted application
+
+Coolify cannot restore a deleted application record from the Danger Zone. Create a new application, configure its source and environment variables, attach new or restored storage, and deploy it.
+
+Use [Persistent storage backups](/core/persistent-storage/storage-mounts/backups) to restore data from a backup created before deletion.

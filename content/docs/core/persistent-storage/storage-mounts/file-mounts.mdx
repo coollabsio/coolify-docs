@@ -1,0 +1,115 @@
+---
+title: File mounts
+description: Mount one Coolify-managed file or an existing host file at an exact path inside a container.
+---
+
+# File mounts
+
+A file mount places one file from the deployment server at an exact path inside a container. Coolify provides two file workflows under **Persistent Storage**:
+
+| Workflow | Source file | What Coolify manages |
+| :--- | :--- | :--- |
+| **File Mount** | Coolify creates the file under the resource's configuration directory | The source file, its content, and the mount configuration |
+| **Host File Mount** | You create and maintain an existing file at an absolute server path | Only the mount configuration |
+
+Use a file mount for one configuration file, initialization script, policy file, or mapping file. Use a [bind mount](/core/persistent-storage/storage-mounts/bind-mounts) for a directory, and keep database files, uploads, and other changing application data in a [volume mount](/core/persistent-storage/storage-mounts/volume-mounts).
+
+Do not use the dashboard editor as a replacement for source control or a secret manager. Anyone with permission to manage the resource may be able to view or change the content of a managed File Mount.
+
+## Add a managed file mount
+
+1. Open the application or standalone database in Coolify.
+2. Select **Configuration** > **Persistent Storage**.
+3. Select **Add** > **File Mount**.
+4. Enter the exact **Destination Path** inside the container, such as `/etc/example/app.conf`.
+5. Check the displayed **Host file path**. This is where Coolify will create the source file on the deployment server.
+6. Enter the file **Content**.
+7. Select **Add**, then redeploy the resource.
+
+Coolify creates the source file under a resource-specific directory on the deployment server:
+
+- Application: `/data/coolify/applications/<resource-uuid>/<destination-path>`
+- Standalone database: `/data/coolify/databases/<resource-uuid>/<destination-path>`
+
+For example, the application destination `/etc/example/app.conf` is stored at `/data/coolify/applications/<resource-uuid>/etc/example/app.conf` on the deployment server.
+
+After redeploying, verify that the file exists at the destination path inside the running container and that the application loads the expected configuration.
+
+## Edit a managed file mount
+
+The content shown in Coolify may be older than the file currently stored on the deployment server.
+
+1. Select **Load from server** before editing when the application or an administrator may have changed the source file outside Coolify.
+2. Edit **Content**.
+3. Select **Save**.
+
+Coolify writes the updated content to the source file on the deployment server. The running container sees the mounted file, but the application may need a reload or restart before it reads the new content.
+
+## Add a host file mount
+
+Use **Host File Mount** when a file already exists on the deployment server and another process or administrator manages it.
+
+1. Connect over SSH to the resource's deployment server.
+2. Create the source file at its permanent absolute path and set permissions that allow the container process to read it.
+3. Open the application or standalone database in Coolify.
+4. Select **Configuration** > **Persistent Storage**.
+5. Select **Add** > **Host File Mount**.
+6. Enter the existing absolute path in **Host File Path**.
+7. Enter the exact path inside the container in **Destination Path**.
+8. Select **Add**, then redeploy the resource.
+
+Verify that the container can read the file and that the application loads the expected configuration.
+
+<Callout type="warning" title="Coolify does not manage the host file">
+Coolify does not create, edit, load, change permissions on, or delete the source file used by a Host File Mount. If the source file is missing or unreadable, correct it directly on the deployment server.
+</Callout>
+
+If the source path does not exist, Docker can create a directory where the file should be. A deployment can then fail with `not a directory: unknown`. Remove the incorrectly created directory, create the expected file at the same path, and redeploy the resource.
+
+## Define file mounts in Docker Compose
+
+For a Docker Compose application or one-click service, define file mounts in the Compose file. Coolify supports a bind mount with inline `content`:
+
+```yaml
+services:
+  app:
+    image: example/app:latest
+    volumes:
+      - type: bind
+        source: ./config/app.conf
+        target: /etc/example/app.conf
+        content: |
+          log_level=info
+```
+
+Save the Compose file and reload its configuration in Coolify. The dashboard lists the parsed file mount. Change its source or destination in the Compose file.
+
+Read the [Docker Compose storage guide](/applications/builds/docker-compose#storage) for directory mounts and other Compose-specific storage behavior.
+
+## File mount limits
+
+- Coolify does not edit managed files larger than 5 MiB in the dashboard.
+- Binary files cannot be edited in the text field.
+- A file declared read-only in Docker Compose cannot be changed from the dashboard.
+- The destination must be a file path, not a directory. Use **Directory Mount** for a directory.
+- File paths cannot contain `.` or `..` path segments or use backslashes as directory separators.
+- The container process still needs permission to read the mounted file.
+
+If a managed file exceeds the editor limit, edit it directly on the deployment server or manage it through the resource's source repository.
+
+## Back up file mounts
+
+File Mounts and Host File Mounts are not targets for Coolify's scheduled storage backups. Keep the original managed content in source control or another secure location when appropriate, and back up an existing host file through the process that manages it.
+
+Coolify can schedule file-level archives for application volumes and Directory Mounts. Read [Storage mount backups](/core/persistent-storage/storage-mounts/backups) for supported targets and limitations.
+
+## Delete a file mount safely
+
+Deleting a managed **File Mount** can also delete its source file from the deployment server. Before confirming deletion:
+
+1. Copy the source file if its content is not stored anywhere else.
+2. Check whether the application still requires the destination path.
+3. Read the permanent-deletion option in the confirmation dialog.
+4. Redeploy after removing the mount so the next container no longer expects it.
+
+Deleting a **Host File Mount** removes only the mount configuration. Coolify leaves the source file on the deployment server. Redeploy the resource so its next container starts without the mount.

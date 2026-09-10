@@ -1,0 +1,8 @@
+{
+  "title": "Authentication",
+  "pages": [
+    "oauth",
+    "sso",
+    "2fa"
+  ]
+}

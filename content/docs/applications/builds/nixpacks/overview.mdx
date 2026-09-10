@@ -1,0 +1,79 @@
+---
+title: Overview
+description: Understand how Nixpacks detects an application's codebase and generates image build instructions.
+---
+
+# Nixpacks
+
+Nixpacks detects the application's language and framework from its codebase and generates a Dockerfile. Coolify builds the application image from those generated instructions.
+
+Use Nixpacks when the codebase follows a supported convention and does not need a custom Dockerfile. Nixpacks is available for Git-based applications.
+
+<Callout type="warning" title="Nixpacks is in maintenance mode">
+
+Railway states that [Nixpacks](https://github.com/railwayapp/nixpacks) is not under active development and recommends [Railpack](https://github.com/railwayapp/railpack) as its successor.
+
+Coolify still supports Nixpacks. For a new application, evaluate Railpack first, but note that Coolify currently labels Railpack as **Beta**. Test the generated image before switching an existing application because the two builders use different configuration files and can produce different results.
+
+</Callout>
+
+## When to use Nixpacks
+
+Nixpacks is a good fit when:
+
+- the application uses a language or framework supported by Nixpacks
+- its manifest and lockfile are available inside the configured **Base Directory**
+- automatic install, build, and start command detection is sufficient
+- the build needs only small command, package, or phase overrides
+
+Use [Dockerfile](/applications/builds/dockerfile) when the image needs exact base images, operating-system configuration, copy instructions, users, or build stages.
+
+Follow [Deploy with Nixpacks](/applications/builds/nixpacks/deploy) for the complete setup procedure.
+
+## How Coolify uses Nixpacks
+
+For each deployment, Coolify gives Nixpacks the application source directory and build configuration. Nixpacks detects providers, packages, and commands, then generates the Dockerfile used to build the image.
+
+For a server application, Coolify starts a container from that image and routes requests to the configured internal port.
+
+For a static application, Nixpacks builds the frontend and Coolify copies the selected **Publish Directory** into an Nginx image.
+
+## Configure Nixpacks
+
+Coolify shows the detected **Install Command**, **Build Command**, and **Start Command** under **Configuration > General**. Override only the command the application needs to change.
+
+Nixpacks can also read `nixpacks.toml` or `nixpacks.json` from the application source directory. Use a configuration file when the build needs packages, phases, or behavior that cannot be expressed through the Coolify command fields.
+
+Nixpacks environment variables use the `NIXPACKS_` prefix. Add build configuration under **Configuration > Environment Variables** and keep **Build Variable** enabled.
+
+Refer to the [Nixpacks configuration documentation](https://nixpacks.com/docs/configuration/file?utm_source=coolify.io) for the supported file schema.
+
+## Static applications
+
+When **Is it a static site?** is enabled, Coolify serves the selected publish directory through Nginx.
+
+Use **Configuration > General > Nginx Configuration** only when the default static-server configuration is insufficient. Redeploy after saving a change because Coolify copies the configuration into the final static image during the image build.
+
+## Node.js versions
+
+Nixpacks selects Node.js from repository configuration such as `engines.node`, `.nvmrc`, or `.node-version`, or from `NIXPACKS_NODE_VERSION`.
+
+Read [Node.js versioning](/applications/builds/nixpacks/node-versioning) before depending on a specific minor or patch version.
+
+### Use multiple CPU cores with Node.js
+
+A plain Node.js process uses one CPU core. Read [Node.js multi-core scaling](/knowledge-base/nodejs-multi-core-scaling) when a Node.js or Bun application should use multiple cores from one Nixpacks deployment.
+
+## Troubleshoot detection
+
+If the build uses the wrong provider or command:
+
+1. confirm **Base Directory** contains the application manifest
+2. inspect the generated plan in the deployment log
+3. remove conflicting lockfiles or manifests from that source directory
+4. add a Nixpacks configuration file or override the affected command
+5. use [Dockerfile](/applications/builds/dockerfile) when the build needs complete image control
+
+### Nixpacks resolves an older package
+
+Nixpacks can resolve an older package from its selected nixpkgs archive. For Node.js, read [Node.js versioning](/applications/builds/nixpacks/node-versioning). For other packages, refer to the upstream [nixpkgs archive setting](https://nixpacks.com/docs/configuration/file#nixpkgs-archive?utm_source=coolify.io) and test an archive change before using it in production.

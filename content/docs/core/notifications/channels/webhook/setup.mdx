@@ -1,0 +1,107 @@
+---
+title: Setup
+description: Configure Coolify to send notification events as JSON POST requests to an HTTP or HTTPS endpoint.
+---
+
+# Set up webhook notifications
+
+Coolify webhook notifications send a JSON `POST` request to an endpoint you control. Use this channel to connect Coolify to an automation workflow, incident system, or custom application.
+
+## Before you start
+
+Prepare an endpoint that:
+
+- Accepts `POST` requests over HTTP or HTTPS.
+- Accepts a JSON request body.
+- Is reachable from the Coolify instance.
+- Records requests or provides another way to verify delivery.
+- Returns a successful HTTP response promptly after accepting a request.
+- Can safely receive the same event more than once if a delivery is retried.
+
+For an initial test, use a development endpoint or request inspector where you can view the method, headers, and JSON body. Move to the production endpoint only after the test succeeds.
+
+---
+
+## Configure the webhook
+
+<Steps>
+<Step>
+
+### Add the endpoint
+
+Open **Notifications > Webhook**, enter the endpoint in **Webhook URL (POST)**, and select **Save**.
+
+</Step>
+<Step>
+
+### Enable the channel
+
+Turn on **Enabled**. Coolify requires a valid webhook URL before it enables the channel.
+
+</Step>
+<Step>
+
+### Choose events
+
+Under **Notification Settings**, select the events to send to the endpoint. See [Notification events](/core/notifications/events) for each trigger.
+
+</Step>
+<Step>
+
+### Send a test
+
+Select **Send Test Notification** and inspect the request received by your endpoint.
+
+Confirm all of the following:
+
+- The request method is `POST`.
+- The body is valid JSON.
+- The body contains `"event": "test"`.
+- Your endpoint returns a successful response without waiting on long-running work.
+
+A received test confirms that Coolify can reach the current URL and submit a request. It does not verify that every event-specific field is handled by your application.
+
+</Step>
+</Steps>
+
+---
+
+## Endpoint requirements
+
+Coolify accepts URLs with the `http` or `https` scheme. The URL must contain a valid host.
+
+For server-side request protection, Coolify rejects:
+
+- `localhost`, `0.0.0.0`, and IPv6 loopback addresses.
+- IPv4 addresses in `127.0.0.0/8`.
+- Link-local IPv4 addresses in `169.254.0.0/16`, including common cloud metadata endpoints.
+- Hostnames ending in `.internal`.
+
+Private-network IP addresses are accepted, but the Coolify instance must still have a network route to the endpoint.
+
+---
+
+## Delivery behavior
+
+Coolify queues webhook deliveries and sends the JSON request body with Laravel's HTTP client. A delivery job allows up to five total attempts, with a 10-second backoff after an unhandled exception.
+
+Coolify currently does not fail the job only because the endpoint returns a non-2xx HTTP status. Return a 2xx response when your application accepts the event, and use the receiver's logs or monitoring to detect rejected requests.
+
+Your endpoint should respond promptly and handle duplicate event payloads safely. Coolify does not add a signature or shared-secret header, so use an unguessable HTTPS URL or an authenticated gateway when the endpoint is exposed to the internet.
+
+See the [webhook payload reference](/core/notifications/channels/webhook/payload-reference) for all event identifiers and fields.
+
+---
+
+## Troubleshoot webhook delivery
+
+If the test does not reach your endpoint:
+
+1. Confirm that the URL starts with `http://` or `https://` and includes the complete path expected by the receiver.
+2. Confirm that the URL is not in one of the blocked loopback, link-local, or `.internal` ranges above.
+3. From the Coolify server's network, confirm that DNS resolves the hostname and that firewalls allow the connection.
+4. Check the receiving service's access and application logs. A request can reach a reverse proxy but fail before the application records it.
+5. Confirm that the endpoint accepts `POST` with a JSON body and responds promptly.
+6. If a private IP is used, confirm that the Coolify instance has a route to that private network.
+
+If the test succeeds but a production event does not arrive, confirm that the event is enabled under **Notification Settings** and compare the receiver's parser with the [payload for that event](/core/notifications/channels/webhook/payload-reference).

@@ -1,0 +1,141 @@
+---
+title: Provision Cloud Server
+description: Purchase and create a Hetzner, DigitalOcean, or Vultr server from the Coolify dashboard.
+---
+
+import { CloudBolt, Droplet, ServerCloud } from 'reicon-react';
+
+# Provision a cloud server
+
+Coolify can create a server in a connected Hetzner, DigitalOcean, or Vultr account. After the provider assigns an IP address, validate the server so Coolify can prepare it for deployments.
+
+<Callout type="warning" title="This creates a billable server">
+Selecting **Buy & Create Server** sends a server-creation request to the provider. The provider charges your account according to the selected plan and options.
+</Callout>
+
+## What you need
+
+Before you start:
+
+1. Follow [Cloud Tokens](/core/security/credentials/cloud-tokens) to add a valid provider token.
+2. Open **Keys & Tokens > Private Keys** and create or import an SSH key.
+3. Confirm that the provider account can create servers and has a valid payment method.
+
+Coolify uploads the selected public key to the provider when needed. It uses the `root` user and SSH port `22` for the new server.
+
+---
+
+## Create the server
+
+<Steps>
+<Step>
+
+### Choose a provider
+
+1. Select **Servers** in the Coolify sidebar.
+2. Select **+ Add**.
+3. Select **Hetzner**, **DigitalOcean**, or **Vultr**.
+4. Select the cloud token for the provider account.
+
+</Step>
+<Step>
+
+### Configure the server
+
+Complete the fields for your provider.
+
+<Tabs id="provision-provider-fields" items={['Hetzner', 'DigitalOcean', 'Vultr']}>
+<Tab value="Hetzner" icon={ServerCloud}>
+
+| Field | What to choose |
+| :--- | :--- |
+| **Server Name** | A recognizable name for the server. |
+| **Location** | The Hetzner data center location. |
+| **Server Type** | The server plan and resources. |
+| **Image** | A supported Linux image. |
+| **Private Key** | The SSH key Coolify will use. |
+
+Under **Advanced Hetzner Options**, you can add extra SSH keys, firewalls, and private networks; control IPv4 and IPv6; enable Hetzner backups; and provide a cloud-init script.
+
+Hetzner backups add 20% to the monthly server price.
+
+</Tab>
+<Tab value="DigitalOcean" icon={Droplet}>
+
+| Field | What to choose |
+| :--- | :--- |
+| **Server Name** | A recognizable name for the Droplet. |
+| **Region** | The DigitalOcean data-center region. |
+| **Size** | The Droplet plan and resources. |
+| **Image** | A supported Linux image. |
+| **Private Key** | The SSH key Coolify will use. |
+
+Under the advanced options, you can add extra SSH keys, control IPv6, enable DigitalOcean monitoring, and provide a cloud-init script.
+
+</Tab>
+<Tab value="Vultr" icon={CloudBolt}>
+
+| Field | What to choose |
+| :--- | :--- |
+| **Server Name** | A recognizable name for the instance. |
+| **Region** | The Vultr data-center region. |
+| **Plan** | The instance plan and resources. |
+| **Operating System** | A supported Linux image. |
+| **Private Key** | The SSH key Coolify will use. |
+
+Under the advanced options, you can add SSH keys, control IPv6, disable public IPv4, and provide a cloud-init script.
+
+Do not disable public IPv4 unless Coolify has another working SSH path to the server.
+
+</Tab>
+</Tabs>
+
+If you need startup configuration, select a saved script or enter one in the cloud-init field. Read [Cloud-Init Scripts](/core/security/credentials/cloud-init-scripts) before using this option.
+
+</Step>
+<Step>
+
+### Send the creation request
+
+Review the selected plan and options, then select **Buy & Create Server**.
+
+Coolify creates its server record immediately. The provider may take several minutes to create the machine and assign its public IP address.
+
+</Step>
+<Step>
+
+### Wait for the provider
+
+Keep the server page open while Coolify checks the provider status and updates the server IP address.
+
+Wait until:
+
+- the provider reports that the server is running
+- the server has its final reachable IP address
+- SSH has had time to start
+
+If the provider reports the machine as stopped or otherwise unavailable, power it on in the provider console or relink it before validation.
+
+</Step>
+<Step>
+
+### Validate the server
+
+Select **Validate Server & Install Docker Engine**. Depending on the server state, the button may be labeled **Validate Server**.
+
+Coolify checks SSH access, the operating system, required tools, Docker Engine, and Docker Compose. When validation finishes, confirm that the server is reachable and validated.
+
+</Step>
+</Steps>
+
+---
+
+## If provisioning fails
+
+- Confirm that the cloud token is valid and has write permissions.
+- Confirm that the provider account can create the selected plan in the selected region.
+- Check provider quotas, account balance, and payment status.
+- Confirm that the selected SSH key is valid.
+- Open the provider console to determine whether the machine was created before retrying. Delete unwanted billable machines there.
+
+For token-specific checks, follow [Cloud Tokens troubleshooting](/core/security/credentials/cloud-tokens#troubleshooting).

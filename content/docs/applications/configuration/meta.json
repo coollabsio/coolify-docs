@@ -1,0 +1,12 @@
+{
+  "title": "Configuration",
+  "pages": [
+    "overview",
+    "general",
+    "advanced",
+    "environment-variables",
+    "persistent-storage",
+    "health-checks",
+    "resource-limits"
+  ]
+}

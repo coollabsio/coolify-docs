@@ -1,0 +1,132 @@
+---
+title: Uninstall
+description: Remove the Coolify CLI binary and optionally delete its saved contexts and API tokens.
+---
+
+import { Code, Computer, Package, TerminalSquare } from 'reicon-react';
+
+# Uninstall the Coolify CLI
+
+Uninstalling the CLI removes the local `coolify` command. It does not remove your Coolify instance or any applications, databases, services, servers, or other resources managed through Coolify.
+
+## Remove the CLI
+
+Use the method that installed the binary.
+
+<Tabs id="cli-uninstallation-method" items={['Linux and macOS', 'Homebrew', 'Windows', 'Go']}>
+<Tab value="Linux and macOS" icon={TerminalSquare}>
+
+### Remove an install-script binary
+
+For a global installation:
+
+```sh
+sudo rm /usr/local/bin/coolify
+```
+
+For a user installation:
+
+```sh
+rm ~/.local/bin/coolify
+```
+
+</Tab>
+
+<Tab value="Homebrew" icon={Package}>
+
+### Uninstall with Homebrew
+
+```sh
+brew uninstall coolify-cli
+```
+
+</Tab>
+
+<Tab value="Windows" icon={Computer}>
+
+### Remove a PowerShell-installed binary
+
+For an administrator installation, run PowerShell as an administrator:
+
+```powershell
+Remove-Item "$env:ProgramFiles\Coolify\coolify.exe"
+```
+
+For a user installation:
+
+```powershell
+Remove-Item "$env:LOCALAPPDATA\Coolify\coolify.exe"
+```
+
+Remove the corresponding `Coolify` directory from your user or system `PATH` if the installer added it and no other programs use that directory.
+
+</Tab>
+
+<Tab value="Go" icon={Code}>
+
+### Remove a Go-installed binary
+
+On Linux or macOS, print the directory where Go installs binaries:
+
+```sh
+go env GOBIN GOPATH
+```
+
+When `GOBIN` is set, remove `coolify` from that directory. Otherwise, remove it from the `bin` directory under the first `GOPATH` entry. For the common default location:
+
+```sh
+rm "$(go env GOPATH)/bin/coolify"
+```
+
+On Windows, run the following in PowerShell:
+
+```powershell
+$goBin = go env GOBIN
+if (-not $goBin) { $goBin = Join-Path (go env GOPATH) "bin" }
+Remove-Item (Join-Path $goBin "coolify.exe")
+```
+
+</Tab>
+</Tabs>
+
+## Verify binary removal
+
+Open a new terminal, then run:
+
+```sh
+coolify version
+```
+
+The shell should report that `coolify` is not a recognized command. If it still runs, inspect the resolved path with `command -v coolify` on Linux or macOS, or `Get-Command coolify` in PowerShell, and remove the remaining installation through its owning method.
+
+## Optionally delete saved contexts
+
+<Callout type="danger" title="Deleting the configuration cannot be undone">
+The CLI configuration contains every saved Coolify URL and API token. Copy any context details you still need before deleting the file. Removing the file does not revoke its API tokens in Coolify.
+</Callout>
+
+Delete the configuration only if you no longer need the saved contexts.
+
+<Tabs id="cli-configuration-removal" items={['Linux and macOS', 'Windows']}>
+<Tab value="Linux and macOS" icon={TerminalSquare}>
+
+### Delete the Linux or macOS configuration
+
+```sh
+rm ~/.config/coolify/config.json
+```
+
+</Tab>
+
+<Tab value="Windows" icon={Computer}>
+
+### Delete the Windows configuration
+
+```powershell
+Remove-Item "$env:APPDATA\coolify\config.json"
+```
+
+</Tab>
+</Tabs>
+
+Revoke tokens you no longer use under **Keys & Tokens > API Tokens** in each affected Coolify team. Deleting the local file alone leaves those tokens valid.

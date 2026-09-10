@@ -1,0 +1,85 @@
+---
+title: Contexts
+description: Save, select, update, and remove Coolify CLI connections for Cloud and self-hosted instances.
+---
+
+# Manage CLI contexts
+
+A context stores a Coolify URL and API token under a name such as `production` or `staging`. Contexts let one CLI installation connect to Coolify Cloud and multiple self-hosted instances without repeating connection details.
+
+<Callout type="warning" title="Protect the CLI configuration">
+The configuration file contains API tokens in plain text and is created with permissions limited to your user. Do not commit, share, or print the file.
+</Callout>
+
+## Add a context
+
+Create a self-hosted context with the full instance URL without `/api/v1`:
+
+```sh
+coolify context add production https://coolify.example.com <api-token>
+```
+
+Add `--default` to make the new context the default:
+
+```sh
+coolify context add --default staging https://staging-coolify.example.com <api-token>
+```
+
+The first context added to an otherwise empty configuration becomes the default even without `--default`.
+
+For Coolify Cloud, update the preconfigured `cloud` context by following [Authentication](/cli/authentication#authenticate-with-coolify-cloud).
+
+## Select a context
+
+List saved contexts and select the default used by subsequent commands:
+
+```sh
+coolify context list
+coolify context use production
+```
+
+Use another context for one command without changing the default:
+
+```sh
+coolify --context staging app list
+```
+
+## Verify a context
+
+```sh
+coolify context verify
+coolify context version
+```
+
+`context verify` checks the selected URL and authentication. `context version` prints the Coolify version returned by the selected instance.
+
+## Update a context
+
+Change one or more saved properties:
+
+```sh
+coolify context update production --name primary
+coolify context update primary --url https://new-coolify.example.com
+coolify context set-token primary <replacement-api-token>
+```
+
+Renaming a context fails when the new name already exists. The URL must start with `http://` or `https://`.
+
+## Remove a context
+
+```sh
+coolify context delete staging
+```
+
+Deleting the default context makes the first remaining context the new default. Deleting a context removes only the locally saved URL and token; it does not revoke the token in Coolify. Revoke unused credentials under **Keys & Tokens > API Tokens**.
+
+## Configuration file location
+
+Run `coolify config` to print the active path.
+
+| Platform | Default path |
+| :--- | :--- |
+| Linux and macOS | `~/.config/coolify/config.json` |
+| Windows | `%APPDATA%\coolify\config.json` |
+
+Follow [Uninstall](/cli/uninstallation#optionally-delete-saved-contexts) if you also want to delete all saved contexts after removing the CLI.

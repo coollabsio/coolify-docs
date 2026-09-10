@@ -1,0 +1,38 @@
+---
+title: Environment Variables
+description: Configure runtime environment variables passed to a standalone database container.
+---
+
+# Environment variables
+
+Database environment variables pass configuration to the database container at runtime.
+
+Open the database resource, then select **Configuration > Environment Variables**.
+
+## Add or edit a variable
+
+Use **Normal view** to add or edit variables individually. Use **Developer view** to review or edit the production variable list as text. The exact controls depend on your team permissions.
+
+Each variable has a key and value. Treat passwords, tokens, and connection strings as secrets. Do not put a secret in a database image, custom configuration that is committed to Git, or a public URL.
+
+## Database variables and General settings
+
+Environment variables are separate from the credentials and engine fields on **Configuration > General**. Some database images use environment variables during initialization, while other settings are generated from the General form.
+
+When both pages control the same value, keep them synchronized. This is especially important for Redis-family databases: if `REDIS_USERNAME` or `REDIS_PASSWORD` changes, update the matching value shown in **General** so connection URLs and Coolify automation continue to work.
+
+## Apply changes
+
+Saving a variable updates the stored resource configuration. Restart or redeploy the database so the container starts with the new environment.
+
+After it starts:
+
+1. Open the database **Logs** and confirm the process starts without an environment-variable error.
+2. Check the database status and health check.
+3. Connect using the updated **Internal URL** or the client configuration that uses the variable.
+
+<Callout type="warning" title="Initialization variables may only run once">
+
+Many database images use environment variables only when the data directory is initialized. Changing an initialization variable does not necessarily change an existing database. Follow the engine documentation and use a deliberate migration or SQL command for an already-initialized data directory.
+
+</Callout>

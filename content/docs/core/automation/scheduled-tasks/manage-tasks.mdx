@@ -1,0 +1,76 @@
+---
+title: Manage Tasks
+description: Update, enable, disable, run, and delete scheduled tasks in Coolify.
+---
+
+# Manage scheduled tasks
+
+Each application and service keeps its own scheduled tasks. Open a task to change its configuration or control whether it can run.
+
+## Open a task
+
+1. Open the application or service.
+2. Select **Configuration > Scheduled Tasks**.
+3. Select the task you want to manage.
+
+The task page shows its configuration and recent executions.
+
+---
+
+## Update task configuration
+
+You can change the task's **Name**, **Frequency**, **Timeout**, **Container name** or **Service name**, and **Command**.
+
+Click **Save** after making changes. Coolify validates the schedule before saving it.
+
+If you change the command or target container, run the task manually and review its output before relying on the next scheduled execution.
+
+---
+
+## Enable or disable a task
+
+Click **Disable Task** to stop future scheduled executions without deleting the configuration or its history. Click **Enable Task** when the task should run on its schedule again.
+
+Disabling a task does not stop an execution that is already running.
+
+---
+
+## Run a task now
+
+When the application or service is running, click **Execute Now** to dispatch the task immediately. Manual execution uses the saved command, container, and timeout, but it does not change the task's next scheduled time.
+
+Open the new record under **Recent executions** to verify the result.
+
+If **Execute Now** is not shown, start the resource first.
+
+---
+
+## Delete a task
+
+<Callout type="warn" title="Deletion is permanent">
+Deleting a scheduled task removes its configuration from the resource, and its execution history is no longer available from the dashboard. Disable the task instead if you may need it again.
+</Callout>
+
+1. Open the task.
+2. Click **Delete**.
+3. Enter the scheduled task name shown in the confirmation dialog.
+4. Click **Permanently Delete**.
+
+Coolify returns to the resource's **Scheduled Tasks** list, and the deleted task no longer runs.
+
+---
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="A saved task does not run on schedule">
+
+Confirm that the task is enabled, the application or service is running, and its server is validated and functional. Then compare **Frequency** with [Cron Syntax](/core/automation/cron-syntax) and the server timezone.
+
+</Accordion>
+<Accordion title="Execute Now runs the command in the wrong container">
+
+Open the task and set **Container name** or **Service name** to the component that contains the command. Save the change before running the task again.
+
+</Accordion>
+</Accordions>

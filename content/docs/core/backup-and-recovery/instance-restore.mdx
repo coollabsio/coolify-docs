@@ -1,0 +1,247 @@
+---
+title: Restore Coolify
+description: Restore a self-hosted Coolify instance on the same machine or move it to a replacement machine.
+---
+
+# Restore Coolify
+
+Restoring Coolify replaces the instance database with a backup. It restores your projects, resources, settings, saved credentials, and deployment history.
+
+It does not restore data stored inside your applications, databases, services, or volumes.
+
+<Callout type="warn" title="Self-hosted instances only">
+The Coolify team manages Coolify Cloud instance recovery. This guide is for self-hosted Coolify instances.
+</Callout>
+
+## Before you restore
+
+Make sure you have:
+
+- a Coolify database backup file ending in `.dmp`
+- the value after `APP_KEY=` in `/data/coolify/source/.env` that you saved when you followed [Back up Coolify](/core/backup-and-recovery/instance-backup)
+- SSH access to the server where you will restore Coolify
+- the version number shown in the Coolify dashboard when the backup was created, if you saved it
+- when moving Coolify to another machine, access to `/data/coolify/ssh/keys/` and `~/.ssh/authorized_keys` on the original machine, or a separate backup of those files
+
+If the backup is in S3, download it from your S3 storage provider and copy it to the server where you will perform the restore.
+
+<Callout type="danger" title="The current Coolify data will be replaced">
+The restore command removes the current Coolify database objects before loading the backup. Do not continue unless the backup file and saved `APP_KEY` belong to the instance you want to recover.
+</Callout>
+
+## Prepare the restore target
+
+Choose where you are restoring Coolify.
+
+<Tabs id="restore-target" items={['Same Coolify server', 'Replacement server']}>
+<Tab value="Same Coolify server">
+
+Choose this option when you are restoring Coolify on the same machine where the instance was already installed.
+
+Confirm that the `coolify-db` container is running, then place the backup somewhere on that machine, such as `/data/backups/coolify-db-backup.dmp`.
+
+```sh
+docker ps --filter name=coolify-db --format '{{.Names}}  {{.Status}}'
+```
+
+The command should show `coolify-db` as running and healthy.
+
+</Tab>
+<Tab value="Replacement server">
+
+Choose this option when you are moving Coolify to another machine.
+
+Install Coolify on the replacement machine before restoring the database. Use the version that was installed when the backup was created.
+
+```sh
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash -s 4.1.2
+```
+
+`4.1.2` is an example. Replace it with the version that was installed when the backup was created.
+
+If you do not know the previous version, install the latest stable release instead:
+
+```sh
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
+```
+
+Confirm that the fresh dashboard opens, then copy the database backup to the replacement server.
+
+</Tab>
+</Tabs>
+
+## Restore the instance
+
+<Steps>
+<Step>
+
+### Check the backup file
+
+Confirm that the backup exists and is not empty:
+
+```sh
+export BACKUP_PATH=/data/backups/coolify-db-backup.dmp
+test -s "$BACKUP_PATH" && ls -lh "$BACKUP_PATH"
+```
+
+Change the value of `BACKUP_PATH` if your backup is stored somewhere else. The restore command below uses this variable, so you only need to enter the file path once.
+
+</Step>
+
+<Step>
+
+### Stop the Coolify control plane
+
+Stop the containers that can use the instance database, but keep `coolify-db` running:
+
+```sh
+docker stop coolify coolify-redis coolify-realtime
+```
+
+The dashboard will be unavailable during the restore. Deployed resources and Coolify Proxy keep running.
+
+</Step>
+
+<Step>
+
+### Set the saved APP_KEY
+
+Coolify needs the same `APP_KEY` value that was used when the database backup was created. Without it, Coolify cannot read encrypted credentials and private keys from the restored database.
+
+Open Coolify's environment file on the server where you are performing the restore:
+
+```sh
+sudo nano /data/coolify/source/.env
+```
+
+Find the `APP_KEY=` line and replace its current value with the `APP_KEY` value you saved while following [Back up Coolify](/core/backup-and-recovery/instance-backup).
+
+If you are restoring Coolify on the original machine and the existing value already matches the saved value, leave the `APP_KEY=` line unchanged.
+
+<Callout type="warning" title="Replace only APP_KEY">
+On a replacement server, keep the rest of the new installation's `.env` file. Values such as `DB_PASSWORD` belong to the new installation and must continue to match its running containers.
+</Callout>
+
+</Step>
+
+<Step>
+
+### Restore the database
+
+Run the restore while `coolify-db` is the only Coolify container using the database:
+
+```sh
+docker exec -i coolify-db pg_restore \
+  --clean \
+  --if-exists \
+  --exit-on-error \
+  --no-acl \
+  --no-owner \
+  --username=coolify \
+  --dbname=coolify \
+  < "$BACKUP_PATH"
+```
+
+`--exit-on-error` stops the restore at the first error so a failed restore is not mistaken for success.
+
+</Step>
+
+<Step>
+
+### Restore the SSH keys
+
+<Tabs id="restore-ssh-keys" items={['Same Coolify server', 'Replacement server']}>
+<Tab value="Same Coolify server">
+
+If the original key files are still under `/data/coolify/ssh/keys/`, skip this step.
+
+If those files were removed, restore them from a separate backup before continuing.
+
+</Tab>
+<Tab value="Replacement server">
+
+Remove the keys created by the fresh Coolify installation:
+
+```sh
+rm -f /data/coolify/ssh/keys/*
+```
+
+Copy the contents of `/data/coolify/ssh/keys/` from the original Coolify server into the same directory on the replacement server. If the original server is unavailable, use your separate backup of that directory.
+
+Make sure the corresponding public key from the original Coolify server is also present in `~/.ssh/authorized_keys` on the replacement server.
+
+</Tab>
+</Tabs>
+
+</Step>
+
+<Step>
+
+### Start Coolify
+
+Run the installer again. If you installed a specific Coolify version, include that version number:
+
+```sh
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash -s 4.1.2
+```
+
+`4.1.2` is an example. Replace it with the version you installed before restoring the database. If you installed the latest stable release, omit `-s 4.1.2`.
+
+The installer starts the Coolify containers and applies any required database migrations.
+
+Wait for the installation to finish before opening the dashboard.
+
+</Step>
+</Steps>
+
+## Verify the restore
+
+Open the Coolify dashboard after the installer finishes.
+
+Confirm that:
+
+- the dashboard opens without an encryption error
+- your projects, environments, and resources are present
+- **Servers > localhost** validates successfully
+- other managed servers connect successfully
+- recent deployments and instance settings appear as expected
+
+Application volume and database data are not part of an instance backup. Restore those resources from their own backups when needed.
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="The dashboard shows an encryption or Invalid MAC error">
+
+The active `APP_KEY` does not match the key used to encrypt the restored database.
+
+Stop `coolify`, confirm that `/data/coolify/source/.env` contains the saved `APP_KEY` value, then run the installer again. Current Coolify reads `APP_KEY`; do not add `APP_PREVIOUS_KEYS`.
+
+</Accordion>
+
+<Accordion title="pg_restore stops with an error">
+
+Keep the Coolify control-plane containers stopped and read the first error in the command output. Confirm that the file is a non-empty `.dmp` backup created by `pg_dump --format=custom`, then rerun the restore after correcting the problem.
+
+</Accordion>
+
+<Accordion title="The replacement server fails validation">
+
+Confirm that the original SSH key files are under `/data/coolify/ssh/keys/` and that the matching public key from the original Coolify server is present in `~/.ssh/authorized_keys` on the replacement server.
+
+</Accordion>
+
+<Accordion title="Another managed server is unreachable">
+
+Open that server's **Private Key** page and confirm that the expected key is selected. Use **Copy public key** and make sure that public key still exists in the remote user's `~/.ssh/authorized_keys` file.
+
+</Accordion>
+
+<Accordion title="Application data is missing">
+
+An instance backup restores Coolify's own database only. Restore each application's volumes and each database resource from their separate backups.
+
+</Accordion>
+
+</Accordions>

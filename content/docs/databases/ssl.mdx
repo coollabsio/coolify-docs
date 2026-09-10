@@ -1,144 +1,97 @@
 ---
 title: Database SSL
-description: Secure database connections on Coolify with SSL encryption, automatic certificate generation, and multiple SSL modes for enhanced security.
+description: Enable SSL for standalone database connections in Coolify, choose a verification mode, and mount the Coolify CA certificate when required.
 ---
 
-# Database SSL  `^v4.0.0-beta.399`
-Database SSL in Coolify encrypts the communication between your applications and databases, ensuring that data remains secure. 
+# Database SSL
 
-With automatic certificate binding and generation, this feature simplifies secure setup. It was first introduced in Coolify version **v4.0.0-beta.399**.
+Coolify can generate a server certificate for supported standalone databases and add the certificate to the database container. For engines that expose SSL connection parameters, the **General** page also includes those parameters in the generated internal and public connection URLs.
 
+SSL settings are changed from the database's **Configuration > General** page. Stop the database before changing **Enable SSL** or **SSL Mode**, then restart it after saving so the generated certificate and connection port are applied.
 
-## Introduction
-Database SSL adds an extra layer of security by encrypting data exchanged with your database. This guide covers:
-- Enabling SSL mode for your database connections.
-- Selecting the appropriate SSL mode based on your security needs.
-- Managing the CA certificate that verifies database connections.
+<Callout type="warning" title="Update the connection URL">
 
-
-## 1. How to Enable Database SSL
-To secure your database connection with SSL:
-
-1. **Access Database Settings**  
-   In your Coolify dashboard, access the general settings of the database you want to secure.
-   <ZoomImage src="/docs/images/database/ssl/1.webp" alt="Coolify dashboard screenshot" />
-
-2. **Enable SSL Mode**  
-   Check the **Enable SSL** option to activate SSL for the database connection.
-   <ZoomImage src="/docs/images/database/ssl/2.webp" alt="Coolify dashboard screenshot" />
-
-3. **Select the SSL Mode**  
-   Choose the SSL mode from the dropdown menu. For example, select **verify-full** for maximum security.  
-   <ZoomImage src="/docs/images/database/ssl/3.webp" alt="Coolify dashboard screenshot" />
-
-
-<Callout type="warn" title="Note">
-
-To make use of SSL after enabling it, you need to use the new connection URL for your app, which includes the SSL configuration. 
-
-If you are not using the new URL, the database connection will not use SSL (in most cases).
+Applications use SSL only when their connection configuration enables it. Copy the new **Internal URL** or **Public URL** after enabling SSL and update the application that connects to the database.
 
 </Callout>
 
+## Enable SSL
 
-Coolify automatically binds the generated certificates and keys to the required locations, so manual changes are only needed if you wish to use custom certificates.
+1. Stop the database.
+2. Open **Configuration > General**.
+3. Enable **Enable SSL**.
+4. Choose an **SSL Mode** when the database provides that field.
+5. Select **Save** if other configuration changed, then restart the database.
 
-## 2. SSL Modes Explained
-Coolify supports several SSL modes, each providing a different level of security:
-<ZoomImage src="/docs/images/database/ssl/4.webp" alt="Coolify dashboard screenshot" />
+Coolify creates a database certificate signed by the CA certificate for the database's server. If no server CA certificate exists, Coolify attempts to generate one. The certificate status and expiration date appear on the database's General page.
 
-### PostgreSQL
-- **allow (insecure)**  
-  This mode permits both encrypted and unencrypted connections. It does not enforce SSL, so if SSL fails, the connection will fall back to an unencrypted state. 
-  
-  This option is considered insecure because it allows unencrypted traffic.
+To regenerate a database certificate, use **Regenerate SSL Certificates** on the General page, then restart the database. A regenerated certificate can require the connecting application to trust the server CA again.
 
-- **prefer (secure)**  
-  With this mode, Coolify will attempt to use SSL first. If an SSL connection is available, it will be used, otherwise, it will fall back to an unencrypted connection. 
-  
-  While this option prefers encryption, it doesn’t guarantee that every connection will be secured.
+## SSL modes
 
-- **require (secure)**  
-  This mode mandates that the connection must be encrypted. However, it does not perform any checks on the server certificate. 
-  
-  This means the connection is encrypted, but the identity of the server is not verified.
+<Tabs id="database-ssl-modes" items={['PostgreSQL', 'MySQL', 'MongoDB', 'MariaDB, Redis, Dragonfly & KeyDB', 'ClickHouse']}>
+<Tab value="PostgreSQL">
 
-- **verify-ca (secure)**  
-  This option goes a step further by encrypting the connection and verifying that the server's certificate is signed by a trusted Certificate Authority (CA). It does not check if the hostname matches the certificate. 
-  
-  This mode offers a balance between security and ease of setup.
+PostgreSQL exposes these modes. The default is `require`.
 
-- **verify-full (secure)**  
-  This is the most secure mode. It not only encrypts the connection and verifies the certificate authority but also confirms that the server’s hostname matches the certificate. 
-  
-  This provides full assurance that you are connecting to the correct server, similar to the security level provided by Cloudflare Origin Certificate setups.
+| Mode | Behavior |
+| :--- | :--- |
+| `allow` | Allows an unencrypted connection and does not require SSL. |
+| `prefer` | Tries SSL first, then can fall back to an unencrypted connection. |
+| `require` | Requires encryption but does not verify the server certificate. |
+| `verify-ca` | Requires encryption and verifies the certificate authority. |
+| `verify-full` | Requires encryption, verifies the CA, and verifies the server hostname. |
 
-### Other Databases
-- **MySQL & MongoDB:**  
-  Only the following modes are available: **prefer, require, verify ca, verify full**.
-- **MariaDB, Redis, KeyDB, DragonFly DB:**  
-  No SSL modes are visible in the UI.
-- **Clickhouse DB:**  
-  SSL is not supported, there is no checkbox to enable SSL nor dropdown options.
+Use `verify-ca` or `verify-full` only when the client container trusts the Coolify CA certificate.
 
+</Tab>
+<Tab value="MySQL">
 
-<Callout type="warn" title="Developer Note">
+MySQL exposes **Prefer**, **Require**, **Verify CA**, and **Verify Full**. The default is **Require**. Coolify writes these values to the connection URL as `ssl-mode` options. **Verify CA** and **Verify Full** also require the client to trust the Coolify CA certificate.
 
-Modes lower than **require** are not 100% secure as they only encrypt the connection without full verification of the server’s identity. 
+</Tab>
+<Tab value="MongoDB">
 
-For modes higher than **require** (i.e., **verify-ca** and **verify-full**), you must mount the Coolify CA certificate into the container that connects to the database for additional security. 
+MongoDB exposes `allow`, `prefer`, `require`, and `verify-full`. The default is `require`, and **Enable SSL** is enabled by default for newly created MongoDB resources. The generated MongoDB URL uses `/etc/mongo/certs/ca.pem` for the CA and adds `/etc/mongo/certs/server.pem` for `verify-full`. If the consuming application runs in another container, mount or configure the client certificate paths expected by its MongoDB driver instead of assuming that paths inside the database container are available to the application.
 
-Note that in most cases (for example, PostgreSQL), merely enabling SSL does nothing unless you use the new connection URL that enforces SSL. 
+</Tab>
+<Tab value="MariaDB, Redis, Dragonfly & KeyDB">
 
-However, for some databases, like the redis-based ones, enabling SSL in the UI does enforce the mode.
+These databases expose **Enable SSL** but no SSL mode selector in the Coolify interface. Coolify configures the database's TLS listener. Redis, Dragonfly, and KeyDB generated URLs use the `rediss` scheme and TLS port `6380`; configure the MariaDB client with its SSL options when connecting.
 
-</Callout>
+</Tab>
+<Tab value="ClickHouse">
 
+ClickHouse does not expose SSL controls in the standalone database interface.
 
+</Tab>
+</Tabs>
 
-<Callout type="success" title="Tip">
+## Trust the Coolify CA certificate
 
-For maximum security, **verify-full** is recommended (when available).
+When the connection URL requires certificate verification, mount the server CA certificate into the application container that connects to the database. The common mount used by Coolify clients is:
 
-</Callout>
-
-
-
-## 3. CA SSL Certificate Management
-Coolify manages the CA certificate automatically, ensuring that secure database connections are validated. 
-
-In the dashboard, under **Servers > YOUR_SERVER_NAME > Proxy > Advanced**, you can see the following options:
-<ZoomImage src="/docs/images/database/ssl/5.webp" alt="Coolify dashboard screenshot" />
-
-- **CA SSL Certificate**: Displays the current CA certificate used.
-- **Save Certificate**: Allows you to save a local copy of the certificate.
-- **Regenerate Certificate**: Lets you generate a new CA certificate if needed.
-
-
-### Recommended Configuration
-For secure connections, mount the Coolify CA certificate into all containers that need to connect to your databases. 
-
-The recommended bind mount is:
-
-```bash
+```sh
 /data/coolify/ssl/coolify-ca.crt:/etc/ssl/certs/coolify-ca.crt:ro
 ```
 
+The path on the left is on the database server. The path on the right is inside the application container. Configure the application or Compose service to trust `/etc/ssl/certs/coolify-ca.crt` using the client library's CA option.
 
-## 4. Using a Custom CA Certificate
-If you wish to use your own CA certificate instead of the one generated by Coolify:
+Redis, Dragonfly, and KeyDB do not expose a normal SSL mode selector. Their generated URLs use `rediss` and port `6380`; configure CA verification in the client library when required. The generated URL does not add a CA parameter for these engines.
 
-1. **Prepare Your CA Certificate**  
-   Make sure your certificate is in PEM format.
+For a Compose application, define the mount on the service that opens the database connection, not only on the database service.
 
-2. **Upload Your Certificate**  
-   Upload your custom CA certificate in the following location:
-   ```bash
-   /data/coolify/ssl/coolify-ca.crt
-   ```
+## Verify the connection
 
-3. **Mount the Certificate**  
-   Make sure that the container that requires database access mounts the certificate at:
-   ```bash
-   /data/coolify/ssl/coolify-ca.crt:/etc/ssl/certs/coolify-ca.crt:ro
-   ```
+After restarting the database:
+
+1. Copy the updated connection URL from the database's **General** page.
+2. Confirm the client container contains the CA file when using certificate verification.
+3. Run the application's database connection check or a simple query.
+4. Open the database logs if the connection fails.
+
+A URL that still uses the old non-SSL parameters can connect without SSL or fail, depending on the engine and client. Update the consuming application configuration rather than editing only the database resource.
+
+## Server CA management
+
+Open the server's advanced CA certificate settings to view or regenerate the server CA certificate. Regenerating a server CA can invalidate certificates signed by the previous CA; restart affected databases and update clients that trust the CA before using the new certificate.
