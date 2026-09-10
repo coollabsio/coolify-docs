@@ -10,11 +10,35 @@ type Service = {
   slug: string;
   description: string;
   category: string;
-  logo?: string;
+  icon: string;
+  disabled?: boolean;
 };
 
-const serviceList = services as Service[];
+const serviceList = (services as Service[]).filter((service) => !service.disabled);
 const reportUrl = 'https://github.com/coollabsio/coolify/issues/';
+
+function ServiceLogo({ name, icon }: Pick<Service, 'name' | 'icon'>) {
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <div className="flex h-16 items-center justify-center rounded-md bg-fd-muted">
+      {icon && !failed ? (
+        <img
+          src={icon}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onError={() => setFailed(true)}
+          className="h-7 w-auto max-w-[70%] object-contain"
+        />
+      ) : (
+        <span aria-hidden="true" className="text-2xl font-semibold text-fd-muted-foreground">
+          {name.charAt(0).toUpperCase()}
+        </span>
+      )}
+    </div>
+  );
+}
 
 export function ServicesList() {
   const [search, setSearch] = useState('');
@@ -80,16 +104,14 @@ export function ServicesList() {
                 <a
                   key={service.slug}
                   href={`/docs/services/${service.slug}`}
-                  className="rounded-lg border border-fd-border bg-fd-card p-4 transition-colors hover:bg-fd-accent"
+                  className="flex h-full flex-col rounded-lg border border-fd-border bg-fd-card p-4 transition-colors hover:bg-fd-accent"
                 >
-                  <div className="flex items-start gap-3">
-                    {service.logo ? (
-                      <img src={service.logo} alt="" className="mt-1 size-8 rounded object-contain" loading="lazy" />
-                    ) : null}
-                    <div className="min-w-0">
-                      <h3 className="font-medium text-fd-foreground">{service.name}</h3>
-                      <p className="mt-1 line-clamp-2 text-sm text-fd-muted-foreground">{service.description}</p>
-                    </div>
+                  <div className="min-w-0">
+                    <h3 className="font-medium text-fd-foreground">{service.name}</h3>
+                    <p className="mt-1 line-clamp-2 text-sm text-fd-muted-foreground">{service.description}</p>
+                  </div>
+                  <div className="mt-auto pt-4">
+                    <ServiceLogo name={service.name} icon={service.icon} />
                   </div>
                 </a>
               ))}
