@@ -58,6 +58,31 @@ export function Tabs({
     );
   }, [panels]);
 
+  // Panels with an `id` can be opened from the URL hash, e.g. /docs/start-with-self-hosted#_4-compose-overrides.
+  const hashTargets = JSON.stringify(
+    panels.flatMap((panel) => (panel.props.id && panel.props.value ? [[panel.props.id, normalizeTabValue(panel.props.value)]] : [])),
+  );
+
+  useEffect(() => {
+    const valueById = new Map<string, string>(JSON.parse(hashTargets));
+    if (!valueById.size) return;
+
+    function activateFromHash() {
+      const value = valueById.get(decodeURIComponent(window.location.hash.slice(1)));
+      if (!value) return;
+
+      setActiveValue(value);
+      setPendingScrollHash(window.location.hash);
+    }
+
+    activateFromHash();
+    window.addEventListener('hashchange', activateFromHash);
+
+    return () => {
+      window.removeEventListener('hashchange', activateFromHash);
+    };
+  }, [hashTargets]);
+
   useLayoutEffect(() => {
     if (!pendingScrollHash) return;
 

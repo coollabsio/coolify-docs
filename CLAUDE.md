@@ -155,6 +155,8 @@ Build output includes:
 
 Custom Nginx config lives in [nginx/nginx.conf](nginx/nginx.conf) and redirect rules live in [nginx/redirects.conf](nginx/redirects.conf).
 
+Production and next.coolify.io strip the `/docs` prefix before the request reaches Nginx, so write every redirect as `location ~ ^(?:/docs)?/old/path/?$ { return 301 "/docs/new/path"; }`. Run `bun run check:redirects -- --base origin/next` before opening a PR that renames or removes pages. It fails when a page that exists on `next` has no redirect, when a legacy URL in `scripts/fixtures/legacy-urls.txt` dead-ends, or when a rule loops or shadows a real page. The `Check redirects` workflow runs the same check on pull requests.
+
 ## Troubleshooting
 
 | Issue | Solution |
@@ -162,7 +164,7 @@ Custom Nginx config lives in [nginx/nginx.conf](nginx/nginx.conf) and redirect r
 | Build fails in MDX | Open the `content/docs/` file named in the error and check its frontmatter and component syntax |
 | Service not listed | Check the page's frontmatter in `content/docs/services/`, then run `bun run generate:services` |
 | Image missing | Check the asset in `public/images/` and the `/docs/images/...` path in the page |
-| Broken renamed page | Update `nginx/redirects.conf` and any links in `content/docs/`. Run `node scripts/check-links.js <docs-url>` against a running site to find broken links |
+| Broken renamed page | Add a redirect in `nginx/redirects.conf`, update links in `content/docs/`, and run `bun run check:redirects -- --base origin/next`. Run `node scripts/check-links.js <docs-url>` against a running site to find broken links |
 
 ## Important Notes
 
