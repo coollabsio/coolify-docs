@@ -858,6 +858,13 @@
     "category": "Security"
   },
   {
+    "name": "InfluxDB",
+    "slug": "influxdb",
+    "icon": "/docs/images/services/influxdb.svg",
+    "description": "Open-source time series database for metrics, events, and IoT data.",
+    "category": "Database"
+  },
+  {
     "name": "Inngest",
     "slug": "inngest",
     "icon": "/docs/images/services/inngest-logo.svg",
