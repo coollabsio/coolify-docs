@@ -24,8 +24,16 @@ jobs:
         with:
           node-version: 22
 
-      - name: Replay legacy URLs through redirects.conf
-        run: node scripts/check-redirects.mjs
+      - name: Fetch the base branch
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git fetch --no-tags --depth=1 origin "+refs/heads/${BASE_REF}:refs/remotes/origin/${BASE_REF}"
+
+      # Replays legacy URLs and every page that exists on the base branch but not in this PR.
+      - name: Check redirects
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: node scripts/check-redirects.mjs --base "origin/${BASE_REF}"
 
       - name: Validate nginx config syntax
         run: |

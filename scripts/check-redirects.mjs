@@ -6,11 +6,13 @@
 // prefix (local) and without it (production).
 //
 // Usage:
-//   node scripts/check-redirects.mjs                       # static check (CI)
+//   node scripts/check-redirects.mjs                       # static check
+//   node scripts/check-redirects.mjs --base origin/next    # also require redirects for pages removed since origin/next (CI)
 //   node scripts/check-redirects.mjs --compare old.conf    # show behaviour changes vs another conf
 //   node scripts/check-redirects.mjs --live https://next.coolify.io
 //   node scripts/check-redirects.mjs --live http://localhost:8080 --strip   # emulate the prod proxy
 
+import { execFileSync } from 'node:child_process';
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -26,6 +28,7 @@ const confPath = option('--conf') ?? path.join(root, 'nginx/redirects.conf');
 const comparePath = option('--compare');
 const liveBase = option('--live');
 const liveStrip = args.includes('--strip');
+const baseRef = option('--base');
 const fixturesPath = path.join(root, 'scripts/fixtures/legacy-urls.txt');
 const expectationsPath = path.join(root, 'scripts/fixtures/redirect-expectations.tsv');
 const MAX_HOPS = 5;
@@ -121,14 +124,27 @@ function slugifyTag(tag) {
   return tag.replace(/\s+/g, '-').toLowerCase();
 }
 
+// content/docs/<relative>.mdx -> /docs/<page URL>
+function pageUrlFor(relative) {
+  const withoutExtension = relative.replace(/\.mdx$/, '');
+  const pagePath = withoutExtension === 'index' ? '' : withoutExtension.replace(/\/index$/, '');
+  return pagePath ? `/docs/${pagePath}` : '/docs';
+}
+
+function pagesOnRef(ref) {
+  const files = execFileSync('git', ['ls-tree', '-r', '--name-only', ref, '--', 'content/docs'], { cwd: root, encoding: 'utf8' });
+  return files
+    .split('\n')
+    .filter((file) => file.endsWith('.mdx'))
+    .map((file) => pageUrlFor(file.replace(/^content\/docs\//, '')));
+}
+
 async function loadPages() {
   const pages = new Map();
   const contentDir = path.join(root, 'content/docs');
 
   for (const file of await findMdxFiles(contentDir)) {
-    const relative = path.relative(contentDir, file).split(path.sep).join('/').replace(/\.mdx$/, '');
-    const pagePath = relative === 'index' ? '' : relative.replace(/\/index$/, '');
-    pages.set(pagePath ? `/docs/${pagePath}` : '/docs', file);
+    pages.set(pageUrlFor(path.relative(contentDir, file).split(path.sep).join('/')), file);
   }
 
   // API endpoint pages are generated from the OpenAPI spec (src/lib/docs/source.ts, src/lib/config/openapi.ts).
@@ -234,6 +250,28 @@ function resolve(conf, pages, url, strip) {
 const describe = (result) =>
   result.status === 'ok' ? `${result.final}${result.fragment ? `#${result.fragment}` : ''}` : result.status;
 
+// A URL must end on a real page (and existing anchor), with and without /docs.
+async function urlProblems(conf, pages, url) {
+  const problems = [];
+
+  for (const strip of [true, false]) {
+    const mode = strip ? 'prod' : 'local';
+    const result = resolve(conf, pages, url, strip);
+
+    if (result.status !== 'ok') {
+      problems.push(`[${mode}] ${url}: ${result.status}${result.hops.length ? `\n      ${result.hops.join('\n      ')}` : ''}`);
+      continue;
+    }
+
+    const file = pages.get(result.final);
+    if (result.fragment && file && !(await anchorsFor(file)).has(result.fragment)) {
+      problems.push(`[${mode}] ${url}: anchor #${result.fragment} does not exist on ${result.final}`);
+    }
+  }
+
+  return problems;
+}
+
 // ---------------------------------------------------------------------------
 // Fixtures
 
@@ -315,20 +353,16 @@ async function runStatic() {
   // Every legacy URL must end on a real page, with and without /docs.
   let resolved = 0;
   for (const { url, allowed } of fixtures) {
-    for (const strip of [true, false]) {
-      const result = resolve(conf, pages, url, strip);
-      const mode = strip ? 'prod' : 'local';
-      if (result.status !== 'ok') {
-        if (!allowed) errors.push(`[${mode}] ${url}: ${result.status}${result.hops.length ? `\n      ${result.hops.join('\n      ')}` : ''}`);
-        continue;
-      }
-      const file = pages.get(result.final);
-      if (result.fragment && file && !(await anchorsFor(file)).has(result.fragment)) {
-        errors.push(`[${mode}] ${url}: anchor #${result.fragment} does not exist on ${result.final}`);
-        continue;
-      }
-      if (strip) resolved++;
-    }
+    const problems = await urlProblems(conf, pages, url);
+    if (!problems.length) resolved++;
+    else if (!allowed) errors.push(...problems);
+  }
+
+  // Pages that exist on the base branch but not here were removed or renamed: they need a redirect.
+  const removed = baseRef ? pagesOnRef(baseRef).filter((page) => !pages.has(page)) : [];
+  for (const url of removed) {
+    const problems = await urlProblems(conf, pages, url);
+    errors.push(...problems.map((problem) => `${problem}\n      (page removed or renamed since ${baseRef}: add a redirect for it)`));
   }
 
   for (const { source, expected } of expectations) {
@@ -338,7 +372,7 @@ async function runStatic() {
     }
   }
 
-  console.log(`Checked ${rules.length} rules, ${pages.size} pages, ${fixtures.length} legacy URLs (${resolved} resolve), ${expectations.length} expectations.`);
+  console.log(`Checked ${rules.length} rules, ${pages.size} pages, ${fixtures.length} legacy URLs (${resolved} resolve), ${expectations.length} expectations${baseRef ? `, ${removed.length} page(s) removed since ${baseRef}` : ''}.`);
 
   if (errors.length) {
     console.error(`\n${errors.length} problem(s):\n${errors.map((error) => `  - ${error}`).join('\n')}`);
