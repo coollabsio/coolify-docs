@@ -21,7 +21,7 @@ function ServiceLogo({ name, icon }: Pick<Service, 'name' | 'icon'>) {
   const [failed, setFailed] = useState(false);
 
   return (
-    <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-fd-muted">
+    <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-fd-muted">
       {icon && !failed ? (
         <img
           src={icon}
@@ -29,10 +29,10 @@ function ServiceLogo({ name, icon }: Pick<Service, 'name' | 'icon'>) {
           loading="lazy"
           decoding="async"
           onError={() => setFailed(true)}
-          className="size-7 object-contain"
+          className="size-6 object-contain"
         />
       ) : (
-        <span aria-hidden="true" className="text-base font-semibold text-fd-muted-foreground">
+        <span aria-hidden="true" className="text-sm font-semibold text-fd-muted-foreground">
           {name.charAt(0).toUpperCase()}
         </span>
       )}
@@ -104,13 +104,13 @@ export function ServicesList() {
                 <a
                   key={service.slug}
                   href={`/docs/services/${service.slug}`}
-                  className="flex h-full items-start gap-3 rounded-lg border border-fd-border bg-fd-card p-4 transition-colors hover:bg-fd-accent"
+                  className="h-full rounded-lg border border-fd-border bg-fd-card p-4 transition-colors hover:bg-fd-accent"
                 >
-                  <ServiceLogo name={service.name} icon={service.icon} />
-                  <div className="min-w-0">
-                    <h3 className="font-medium text-fd-foreground">{service.name}</h3>
-                    <p className="mt-1 line-clamp-2 text-sm text-fd-muted-foreground">{service.description}</p>
+                  <div className="flex items-center gap-3">
+                    <ServiceLogo name={service.name} icon={service.icon} />
+                    <h3 className="min-w-0 font-medium text-fd-foreground">{service.name}</h3>
                   </div>
+                  <p className="mt-2 line-clamp-2 text-sm text-fd-muted-foreground">{service.description}</p>
                 </a>
               ))}
             </div>
