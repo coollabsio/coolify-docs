@@ -10,11 +10,35 @@ type Service = {
   slug: string;
   description: string;
   category: string;
-  logo?: string;
+  icon: string;
+  disabled?: boolean;
 };
 
-const serviceList = services as Service[];
+const serviceList = (services as Service[]).filter((service) => !service.disabled);
 const reportUrl = 'https://github.com/coollabsio/coolify/issues/';
+
+function ServiceLogo({ name, icon }: Pick<Service, 'name' | 'icon'>) {
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-fd-muted">
+      {icon && !failed ? (
+        <img
+          src={icon}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onError={() => setFailed(true)}
+          className="size-6 object-contain"
+        />
+      ) : (
+        <span aria-hidden="true" className="text-sm font-semibold text-fd-muted-foreground">
+          {name.charAt(0).toUpperCase()}
+        </span>
+      )}
+    </span>
+  );
+}
 
 export function ServicesList() {
   const [search, setSearch] = useState('');
@@ -80,17 +104,13 @@ export function ServicesList() {
                 <a
                   key={service.slug}
                   href={`/docs/services/${service.slug}`}
-                  className="rounded-lg border border-fd-border bg-fd-card p-4 transition-colors hover:bg-fd-accent"
+                  className="h-full rounded-lg border border-fd-border bg-fd-card p-4 transition-colors hover:bg-fd-accent"
                 >
-                  <div className="flex items-start gap-3">
-                    {service.logo ? (
-                      <img src={service.logo} alt="" className="mt-1 size-8 rounded object-contain" loading="lazy" />
-                    ) : null}
-                    <div className="min-w-0">
-                      <h3 className="font-medium text-fd-foreground">{service.name}</h3>
-                      <p className="mt-1 line-clamp-2 text-sm text-fd-muted-foreground">{service.description}</p>
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <ServiceLogo name={service.name} icon={service.icon} />
+                    <h3 className="min-w-0 font-medium text-fd-foreground">{service.name}</h3>
                   </div>
+                  <p className="mt-2 line-clamp-2 text-sm text-fd-muted-foreground">{service.description}</p>
                 </a>
               ))}
             </div>
