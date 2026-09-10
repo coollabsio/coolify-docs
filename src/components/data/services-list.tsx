@@ -21,7 +21,7 @@ function ServiceLogo({ name, icon }: Pick<Service, 'name' | 'icon'>) {
   const [failed, setFailed] = useState(false);
 
   return (
-    <div className="flex h-16 items-center justify-center rounded-md bg-fd-muted">
+    <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-fd-muted">
       {icon && !failed ? (
         <img
           src={icon}
@@ -29,14 +29,14 @@ function ServiceLogo({ name, icon }: Pick<Service, 'name' | 'icon'>) {
           loading="lazy"
           decoding="async"
           onError={() => setFailed(true)}
-          className="h-7 w-auto max-w-[70%] object-contain"
+          className="size-7 object-contain"
         />
       ) : (
-        <span aria-hidden="true" className="text-2xl font-semibold text-fd-muted-foreground">
+        <span aria-hidden="true" className="text-base font-semibold text-fd-muted-foreground">
           {name.charAt(0).toUpperCase()}
         </span>
       )}
-    </div>
+    </span>
   );
 }
 
@@ -104,14 +104,12 @@ export function ServicesList() {
                 <a
                   key={service.slug}
                   href={`/docs/services/${service.slug}`}
-                  className="flex h-full flex-col rounded-lg border border-fd-border bg-fd-card p-4 transition-colors hover:bg-fd-accent"
+                  className="flex h-full items-start gap-3 rounded-lg border border-fd-border bg-fd-card p-4 transition-colors hover:bg-fd-accent"
                 >
+                  <ServiceLogo name={service.name} icon={service.icon} />
                   <div className="min-w-0">
                     <h3 className="font-medium text-fd-foreground">{service.name}</h3>
                     <p className="mt-1 line-clamp-2 text-sm text-fd-muted-foreground">{service.description}</p>
-                  </div>
-                  <div className="mt-auto pt-4">
-                    <ServiceLogo name={service.name} icon={service.icon} />
                   </div>
                 </a>
               ))}
