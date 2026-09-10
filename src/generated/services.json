@@ -1862,6 +1862,13 @@
     "category": "Health"
   },
   {
+    "name": "Stalwart",
+    "slug": "stalwart",
+    "icon": "/docs/images/services/stalwart-logo.svg",
+    "description": "All-in-one mail server with SMTP, IMAP, POP3, JMAP, Sieve, built-in anti-spam, and a web admin interface.",
+    "category": "Email"
+  },
+  {
     "name": "Statusnook",
     "slug": "statusnook",
     "icon": "/docs/images/services/statusnook-logo.svg",
