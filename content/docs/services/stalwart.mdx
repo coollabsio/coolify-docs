@@ -1,5 +1,5 @@
 ---
-title: Stalwart
+title: "Stalwart"
 description: "All-in-one mail server with SMTP, IMAP, POP3, JMAP, Sieve, built-in anti-spam, and a web admin interface."
 og:
   description: "Deploy Stalwart mail server on Coolify for a complete email solution with SMTP, IMAP, POP3, JMAP, built-in spam filtering, DKIM signing, and web administration."
@@ -21,10 +21,12 @@ The following steps will guide you through the configuration of Stalwart once yo
 
 ### Initial setup
 
-1. Coolify auto-generates a service URL for the admin interface (from `SERVICE_FQDN_STALWART_8080`). You can access the admin panel immediately. However, for sending and receiving email you will need your own domain — see the DNS records section below.
-2. Log in with username `admin`. The password is set in the `SERVICE_PASSWORD_ADMIN` environment variable. If this variable was not declared before deployment, the password is auto-generated and printed in the container logs. To retrieve it:
-   - SSH into your server and run `docker logs <container-name>` to find the generated password, or
-   - Use the Coolify terminal from the service dashboard to view the container logs.
+1. Coolify auto-generates a service URL for the admin interface (from `SERVICE_URL_STALWART_8080`). You can access the admin panel immediately. However, for sending and receiving email you will need your own domain — see the DNS records section below.
+2. Open `/admin` on the service URL and log in with username `admin`. On first start, Stalwart runs in bootstrap mode and prints a temporary administrator password to the container logs (it is only shown once). To retrieve it:
+   - Open the **Logs** of the Stalwart service in Coolify, or
+   - SSH into your server and run `docker logs <container-name>`.
+
+   To use a fixed password instead, add `STALWART_RECOVERY_ADMIN=admin:<your-password>` to the service environment variables before the first deployment. Remove it once setup is complete.
 3. Follow the setup wizard to add your domain and create your first mailbox.
 4. Create additional mailboxes under **Accounts** > **Mailboxes**.
 
@@ -62,7 +64,7 @@ Look for `IPv4Address` in the output. If it shows `10.0.1.6/24`, your network is
 
 If you are already locked out:
 
-1. Add `STALWART_RECOVERY_MODE=1` and `STALWART_RECOVERY_ADMIN` to your environment variables and redeploy.
+1. Add `STALWART_RECOVERY_MODE=1` and `STALWART_RECOVERY_ADMIN=admin:<your-password>` to your environment variables and redeploy. Remove both once you have regained access.
 2. Go to **Settings** > **Security** > **Blocked IPs** and remove the blocked IP.
 
 <ZoomImage src="/docs/images/services/stalwart-blocked-ips.webp" alt="Stalwart blocked IPs page" />
@@ -82,4 +84,4 @@ If you are already locked out:
 ## Links
 
 - [GitHub](https://github.com/stalwartlabs/stalwart?utm_source=coolify.io)
-- [Documentation](https://stalw.art/docs/install/get-started?utm_source=coolify.io)
+- [Documentation](https://stalw.art/docs/install/platform/docker?utm_source=coolify.io)
