@@ -1,0 +1,10 @@
+{
+  "title": "Destination",
+  "pages": [
+    "create",
+    "delete",
+    "get",
+    "list",
+    "update"
+  ]
+}

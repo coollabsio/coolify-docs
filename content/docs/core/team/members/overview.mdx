@@ -1,0 +1,67 @@
+---
+title: Overview
+description: Understand how team membership controls access to team-scoped resources and choose the right member management task.
+---
+
+import { ArrowsRight, Settings, UserAdd, UserRemove2 } from 'reicon-react';
+
+# Members overview
+
+A Coolify team groups the people, resources, and settings they work with. Each person can belong to more than one team and can have a different role in each team.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Select the team you want to work with before changing its members. Owners and administrators can invite people, change other members' roles, revoke pending invitations, and remove members.
+
+</CoolCallout>
+
+---
+
+## How team membership works
+
+Coolify uses the active team as the boundary for dashboard work. Projects, servers, shared variables, credentials, notification settings, and other team-owned resources shown in the dashboard belong to that team.
+
+When you switch teams, Coolify changes the resources and settings available in the dashboard. Your role is also evaluated for the newly active team.
+
+Removing someone from a team removes their access to that team. It does not delete their Coolify account, their membership in other teams, or resources owned by the team.
+
+Read [Roles & Permissions](/core/team/roles-and-permissions) before granting administrative access.
+
+---
+
+## What the Members page shows
+
+Open **Teams** in the Coolify sidebar, then select **Members**.
+
+The member list shows each person's name, email address, role in the active team, and the actions available to you. Owners and administrators also see the invitation form and any pending invitations.
+
+Coolify marks your own row with **This is you**. You cannot change your own role or remove yourself from this page.
+
+---
+
+## Choose the next task
+
+<CoolIconCardGrid
+  columns={3}
+  surface
+  cards={[
+    {
+      title: 'Add a member',
+      description: 'Invite someone by email or create an invitation link to share with them.',
+      href: '/core/team/members/add-a-member',
+      icon: UserAdd,
+    },
+    {
+      title: 'Manage members',
+      description: 'Review the team, change roles, and revoke pending invitations.',
+      href: '/core/team/members/manage-members',
+      icon: Settings,
+    },
+    {
+      title: 'Remove a member',
+      description: 'Remove a person from the active team without deleting their account.',
+      href: '/core/team/members/remove-a-member',
+      icon: UserRemove2,
+    },
+  ]}
+/>

@@ -1,0 +1,10 @@
+{
+  "title": "Instance Management",
+  "pages": [
+    "instance-settings",
+    "update",
+    "update-coolify-database",
+    "downgrade",
+    "uninstallation"
+  ]
+}

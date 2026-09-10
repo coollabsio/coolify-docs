@@ -1,0 +1,225 @@
+---
+title: Contribution Guidelines
+description: Learn what kinds of Coolify contributions are likely to be accepted, when to discuss changes first, and how to submit pull requests properly.
+---
+
+import { ContributionGuidelinesPage } from '@/components/pages/contribution-guidelines-page';
+import {
+  ArrowsRight,
+  Box5,
+  BranchUp,
+  BrowserCode,
+  Bug,
+  Checklist2,
+  DocumentText2,
+  MagicWand,
+  MedalStars,
+  MessageQuestion2,
+  ShieldCheck,
+  StarSparkle,
+  Warning22,
+} from 'reicon-react';
+
+# Contributing to Coolify
+
+We are happy that you are interested in contributing to Coolify.
+
+<ContributionGuidelinesPage>
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Coolify is used by 470K+ people and maintained by two core maintainers. Contributions are welcome, but alignment matters more than volume: keep changes focused, discuss larger work before coding, test what you submit, and target the `next` branch.
+
+</CoolCallout>
+
+<CoolCallout icon={Warning22} title="Important" type="warn">
+
+These guidelines are stricter than many open-source projects on purpose. Clear structure and boundaries reduce maintainer burnout and keep Coolify sustainable long term.
+
+</CoolCallout>
+
+<CoolCallout icon={MessageQuestion2} title="Ways to contribute">
+<CoolCardGrid columns={2}>
+<CoolCard
+  icon={MedalStars}
+  title="Support others"
+  description="Answer questions in Discord or GitHub Discussions when you can verify the answer."
+  bullets={['Be patient and respectful', 'Share verified information', 'Remember support is voluntary']}
+  buttons={[
+    { href: 'https://coollabs.io/discord', label: 'Join Discord', type: 'primary' },
+    { href: 'https://github.com/coollabsio/coolify/discussions', label: 'View discussions', type: 'tertiary' },
+  ]}
+/>
+
+<CoolCard
+  icon={Bug}
+  title="Report bugs"
+  description="Create an issue only when the bug is reproducible and not already reported."
+  bullets={['Include reproduction steps', 'Add expected and actual results', 'Attach logs or screenshots']}
+  buttons={[
+    { href: 'https://github.com/coollabsio/coolify/issues', label: 'Open issues', type: 'secondary' },
+  ]}
+/>
+
+<CoolCard
+  icon={BrowserCode}
+  title="Submit code"
+  description="Small fixes are welcome. Larger changes need alignment before implementation."
+  bullets={['One pull request per logical change', 'Reference an issue or discussion', 'Target the next branch']}
+  buttons={[
+    { href: 'https://github.com/coollabsio/coolify', label: 'View repository', type: 'secondary' },
+  ]}
+/>
+
+<CoolCard
+  icon={DocumentText2}
+  title="Improve docs and services"
+  description="Help improve documentation or add one-click service templates."
+  bullets={['Keep wording clear', 'Use existing docs patterns', 'Follow service contribution rules']}
+  buttons={[
+    { href: '/docs/contribute/documentation', label: 'Read docs guide', type: 'secondary' },
+  ]}
+/>
+</CoolCardGrid>
+</CoolCallout>
+
+<CoolCompare
+  id="project-direction"
+  icon={ShieldCheck}
+  title="Project direction"
+  description="Coolify v4 is focused on stability and sustainable maintenance. Small, focused contributions are easier to review; larger or directional changes need maintainer alignment before implementation."
+>
+<CoolCompareColumn
+  title="Likely to be accepted"
+  items={[
+    'Small bug fixes with a clear reproduction path',
+    'Documentation fixes that improve clarity or accuracy',
+    'One-click service additions that follow the template rules',
+    'Narrow code-quality improvements with tests or manual verification',
+  ]}
+/>
+
+<CoolCompareColumn
+  title="Discuss first or avoid"
+  items={[
+    'Major features or architectural changes without prior discussion',
+    'Large UI or UX rewrites without prior discussion',
+    'Broad refactors mixed into unrelated fixes',
+    'Low-effort AI-generated pull requests',
+    'Pull requests that target a branch other than next',
+  ]}
+/>
+</CoolCompare>
+
+<CoolFlow
+  id="pull-request-flow"
+  icon={BranchUp}
+  title="Before opening a pull request"
+  description="For anything beyond a small, obvious fix, align with the maintainers before spending time on implementation."
+  steps={[
+    'Check existing issues and discussions',
+    'Discuss larger changes before coding',
+    'Keep one pull request to one logical change',
+    'Test the change in a clean environment',
+    'Open the pull request against the next branch',
+  ]}
+  list={[
+    'Reference and close an issue or discussion when possible.',
+    'Do not reformat unrelated files or fix unrelated style issues.',
+    'Keep the contributor agreement in the pull request description.',
+    'Include detailed testing steps so maintainers can reproduce the result.',
+  ]}
+/>
+
+<CoolCallout icon={Checklist2} title="Commit and pull request format" contentClassName="!p-0">
+<CoolPanel>
+
+Commit messages and pull request titles should start with an action and category. Keep descriptions concise; walls of text listing every small change may be rejected.
+
+</CoolPanel>
+<CoolPanel withDivider>
+
+| Prefix | Use |
+| :--- | :--- |
+| fix(ui): | UI-related fixes |
+| fix(api): | API-related fixes |
+| feat(api): | API-related additions |
+| feat(service): | One-click service changes |
+
+</CoolPanel>
+</CoolCallout>
+
+<CoolCallout icon={MagicWand} title="AI usage">
+
+AI tools are allowed, but you must disclose AI usage in the pull request description. You are still responsible for understanding every change, verifying correctness, and following existing project patterns.
+
+</CoolCallout>
+
+<CoolCallout icon={MessageQuestion2} title="FAQ" contentClassName="!p-0">
+<CoolAccordions>
+<Accordion title="Should I ask before fixing a typo or small bug?">
+
+No. Small, obvious fixes can be submitted directly as a pull request.
+
+</Accordion>
+<Accordion title="Can I open a pull request for a new feature?">
+
+Discuss it first in GitHub Discussions or Discord. New features without prior alignment may be closed without review.
+
+</Accordion>
+<Accordion title="Can I work on an open issue?">
+
+Comment first to confirm the issue is still relevant and that no one else is actively working on it.
+
+</Accordion>
+<Accordion title="Can I clean up code while fixing something else?">
+
+Keep the pull request focused on the stated goal. Refactors and cleanup work should be discussed and submitted separately.
+
+</Accordion>
+<Accordion title="Can I use AI to help?">
+
+Yes, but disclose it in the pull request description. You must understand, verify, and own every change.
+
+</Accordion>
+<Accordion title="Why was my pull request closed without detailed feedback?">
+
+It usually means the change did not align with project direction, required too much review capacity, or targeted work that is not planned.
+
+</Accordion>
+</CoolAccordions>
+</CoolCallout>
+
+<CoolCallout icon={DocumentText2} title="Development guides">
+<CoolActionCardGrid>
+<CoolActionCard
+  href="/docs/contribute/coolify"
+  icon={StarSparkle}
+  title="Coolify Core"
+  type="secondary"
+  description="Set up local development and prepare code contributions for the main Coolify repository."
+  bullets={['Local development setup', 'Code contribution flow', 'Pull request expectations']}
+  btn-cta="View core guide"
+/>
+<CoolActionCard
+  href="/docs/contribute/service"
+  icon={Box5}
+  title="Service Templates"
+  type="secondary"
+  description="Add one-click service templates with the expected structure, metadata, and verification."
+  bullets={['Template requirements', 'Service metadata', 'Testing checklist']}
+  btn-cta="View service guide"
+/>
+<CoolActionCard
+  href="/docs/contribute/documentation"
+  icon={DocumentText2}
+  title="Documentation"
+  type="secondary"
+  description="Improve these docs while keeping the existing writing style and component patterns."
+  bullets={['Docs structure', 'MDX patterns', 'Review expectations']}
+  btn-cta="View docs guide"
+/>
+</CoolActionCardGrid>
+</CoolCallout>
+
+</ContributionGuidelinesPage>

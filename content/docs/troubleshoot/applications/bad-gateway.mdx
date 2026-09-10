@@ -20,43 +20,152 @@ If your deployed application **maybe** works when you access it via your server�
 
 ## Diagnosis
 
-- **Port Configuration:**
+<Steps>
+<Step>
 
-  - **Applications:** Make sure the port your app is listening on is correctly entered in the **Port Exposes** field on the Coolify dashboard.
-  - **Services:** Check that your Compose or one-click service configuration has the appropriate network configuration.
+### Port Configuration
 
-- **Host Mapping:**
+- **Applications:** Make sure the port your app is listening on is correctly entered in the **Port Exposes** field on the Coolify dashboard.
+- **Services:** Check that your Compose or one-click service configuration has the appropriate network configuration.
 
-  - **Applications:** Verify that the application’s port is not incorrectly mapped to the host system.
-  - **Services:** Confirm that any port mapping in your Compose file or service configuration aligns with the proxy routing requirements.
+</Step>
+<Step>
 
-- **Listening Address:** Check if the app is only listening to `localhost` inside the container. It should be configured to listen on all network interfaces (`0.0.0.0`).
+### Host Mapping
 
-- **Domain Port Inclusion:** Make sure your domain URL includes the correct port number if required.
+- **Applications:** Verify that the application’s port is not incorrectly mapped to the host system.
+- **Services:** Confirm that any port mapping in your Compose file or service configuration aligns with the proxy routing requirements.
 
-- **Container Status:** Check the status of the container where your app or service is running. Is it unhealthy? Stuck at Starting? A failing health check might be the reason.
+</Step>
+<Step>
+
+### Listening Address
+
+Check if the app is only listening to `localhost` inside the container. It should be configured to listen on all network interfaces (`0.0.0.0`).
+
+</Step>
+<Step>
+
+### Domain Port Inclusion
+
+Make sure your domain URL includes the correct port number if required.
+
+</Step>
+<Step>
+
+### Container Status
+
+Check the status of the container where your app or service is running. Is it unhealthy? Stuck at Starting? A failing health check might be the reason.
+
+</Step>
+</Steps>
 
 ## Solution
 
-- **Update Port Settings:** Enter the correct port number in the **Port Exposes** field on the Coolify dashboard and restart your app.
+<Tabs items={['Applications', 'Services']}>
+<Tab value="Applications">
 
-    <ZoomImage src="/docs/images/troubleshoot/applications/bad-gateway/1.webp" alt="Screenshot showing Bad Gateway" />
+<Steps>
+<Step>
 
-- **Remove Host Port Mapping:** If the port is mapped to the host system, remove the mapping so the proxy can route traffic correctly, then restart your app.
+### Update Port Settings
 
-    <ZoomImage src="/docs/images/troubleshoot/applications/bad-gateway/2.webp" alt="Screenshot showing Bad Gateway" />
+Enter the correct port number in the **Port Exposes** field on the Coolify dashboard and restart your app.
 
-- **Adjust Listening Address:** Change your application so it listens on all network interfaces (`0.0.0.0`) instead of just `localhost`.
+<ZoomImage src="/docs/images/troubleshoot/applications/bad-gateway/1.webp" alt="Screenshot showing Bad Gateway" />
 
-    <ZoomImage src="/docs/images/troubleshoot/applications/bad-gateway/3.webp" alt="Screenshot showing Bad Gateway" />
+</Step>
+<Step>
 
-- **Correct Domain URL:** Add the correct port number at the end of your domain URL if needed, and restart your application.
+### Remove Host Port Mapping
 
-    <ZoomImage src="/docs/images/troubleshoot/applications/bad-gateway/4.webp" alt="Screenshot showing Bad Gateway" />
+If the port is mapped to the host system, remove the mapping so the proxy can route traffic correctly, then restart your app.
 
-- **Restart Container / Check Logs:** Restart the container or check its logs to diagnose the issue.
-  <ZoomImage src="/docs/images/troubleshoot/applications/bad-gateway/5.webp" alt="Screenshot showing Bad Gateway" />
+<ZoomImage src="/docs/images/troubleshoot/applications/bad-gateway/2.webp" alt="Screenshot showing Bad Gateway" />
+
+</Step>
+<Step>
+
+### Adjust Listening Address
+
+Change your application so it listens on all network interfaces (`0.0.0.0`) instead of just `localhost`.
+
+<ZoomImage src="/docs/images/troubleshoot/applications/bad-gateway/3.webp" alt="Screenshot showing Bad Gateway" />
+
+</Step>
+<Step>
+
+### Correct Domain URL
+
+Add the correct port number at the end of your domain URL if needed, and restart your application.
+
+<ZoomImage src="/docs/images/troubleshoot/applications/bad-gateway/4.webp" alt="Screenshot showing Bad Gateway" />
+
+</Step>
+<Step>
+
+### Restart Container / Check Logs
+
+Restart the container or check its logs to diagnose the issue.
+
+<ZoomImage src="/docs/images/troubleshoot/applications/bad-gateway/5.webp" alt="Screenshot showing Bad Gateway" />
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Services">
+
+Services do not have a **Port Exposes** field, so the port is configured differently. Work through these checks.
+
+<Steps>
+<Step>
+
+### Set the correct port in the domain URL
+
+For a Service, the port your app listens on is added at the **end of the URL** in the **Domains** field (for example `https://example.com:3000`).
+
+Make sure the port at the end of the URL matches the port the app actually listens on inside the container. If it points to the wrong port, correct it, then restart the service.
+
+</Step>
+<Step>
+
+### Check the listening address
+
+Make sure the service listens on all network interfaces (`0.0.0.0`) inside the container, not only `localhost` or `127.0.0.1`. A service bound to `localhost` is unreachable from the proxy.
+
+</Step>
+<Step>
+
+### Check the Compose port mapping
+
+If your Compose file publishes the port to the host (for example `ports: - "3000:3000"`), the proxy may not be able to route to it. Let Coolify route traffic through the domain instead of mapping the port to the host, then restart the service.
+
+</Step>
+<Step>
+
+### Verify the health check
+
+If a health check is configured, make sure it is passing. An unhealthy or stuck-at-starting container gives the proxy no healthy target to route to. Disable the health check temporarily to test — if that fixes the error, the problem is in the health check.
+
+</Step>
+<Step>
+
+### Restart and check logs
+
+Restart the service and inspect the container logs to diagnose any remaining issues.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
 
 ## Support
 
-If these steps don’t solve the issue, consider reaching out for further assistance by joining our [Discord community](https://coolify.io/discord) and sharing your app logs, coolify proxy logs, configuration screenshots, and details of the troubleshooting steps you’ve already tried.
+If these steps don’t solve the issue, join our [Discord community](https://coolify.io/discord) and provide:
+
+- App logs
+- Coolify proxy logs
+- Configuration screenshots
+- Steps you’ve already tried

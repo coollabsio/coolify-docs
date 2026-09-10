@@ -1,0 +1,120 @@
+---
+title: Wildcard Certificates
+description: Request and use a Traefik certificate that covers an apex domain and its subdomains.
+---
+
+# Wildcard certificates
+
+A wildcard certificate for `*.example.com` covers first-level subdomains such as `app.example.com` and `api.example.com`. It does not cover the apex `example.com` or deeper names such as `www.app.example.com` unless those names are included separately.
+
+Traefik can request wildcard certificates only through the DNS challenge.
+
+## What you need
+
+- [Traefik DNS Challenge](/core/networking/proxy/traefik/dns-challenge) configured and working
+- an apex DNS record for `example.com` when the apex should resolve
+- a wildcard DNS record such as `*.example.com` pointing to the server or upstream traffic endpoint
+
+## Request the certificate
+
+Open **Servers > your server > Proxy > Dynamic Configurations** and create `wildcard-example-com.yaml`:
+
+```yaml
+http:
+  routers:
+    wildcard-example-com:
+      rule: 'HostRegexp(`[a-z0-9-]+\.example\.com`)'
+      entryPoints:
+        - https
+      priority: 1
+      service: wildcard-placeholder
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: example.com
+            sans:
+              - '*.example.com'
+
+  services:
+    wildcard-placeholder:
+      loadBalancer:
+        servers: []
+```
+
+Replace `example.com`, then save the file. The low-priority router requests the certificate and allows resource-specific routers to handle matching application traffic.
+
+Restarting Traefik is normally not required for this dynamic file. Inspect **Servers > your server > Proxy > Logs** until the ACME request succeeds.
+
+## Use the wildcard certificate
+
+Choose whether each subdomain belongs to its own resource or one application handles every subdomain.
+
+<Tabs id="traefik-wildcard-routing" items={['Individual resource domains', 'One application for every subdomain']}>
+<Tab value="Individual resource domains">
+
+Set a normal HTTPS domain such as `https://app.example.com` on each application or service. Coolify generates the resource router, and Traefik selects the matching wildcard certificate from its certificate store.
+
+<ZoomImage src="/docs/images/core/networking/proxy/traefik/wildcard-certificates/application-domain.webp" alt="Domain field for a Coolify application" />
+
+<ZoomImage src="/docs/images/core/networking/proxy/traefik/wildcard-certificates/service-domain.webp" alt="Domain field for a Coolify service" className="mt-5" />
+
+Redeploy each changed resource and verify the certificate presented by the domain.
+
+</Tab>
+<Tab value="One application for every subdomain">
+
+Use this only when one application handles arbitrary tenant subdomains.
+
+1. Keep the wildcard DNS record and certificate configuration above.
+2. Disable **Readonly labels** for the application.
+3. Use the configuration that matches the Traefik image version shown in **Servers > your server > Proxy > Configuration**.
+
+New Coolify proxy configurations use Traefik v3.6. Keep the Traefik v2 rule syntax only when the server still runs a v2 image.
+
+<Tabs id="traefik-wildcard-version" items={['Traefik v3', 'Traefik v2']}>
+<Tab value="Traefik v3">
+
+```ini
+traefik.http.routers.tenant-http.rule=Host(`app.example.com`) # [!code --][!code focus]
+traefik.http.routers.tenant-http.rule=HostRegexp(`[a-z0-9-]+\.example\.com`) # [!code ++][!code focus]
+traefik.http.routers.tenant-http.entryPoints=http
+traefik.http.routers.tenant-http.middlewares=redirect-to-https
+traefik.http.routers.tenant-https.rule=Host(`app.example.com`) # [!code --][!code focus]
+traefik.http.routers.tenant-https.rule=HostRegexp(`[a-z0-9-]+\.example\.com`) # [!code ++][!code focus]
+traefik.http.routers.tenant-https.entryPoints=https
+traefik.http.routers.tenant-https.tls=true
+traefik.http.routers.tenant-https.tls.certresolver=letsencrypt
+traefik.http.routers.tenant-https.service=tenant-service
+traefik.http.services.tenant-service.loadbalancer.server.port=<application-port>
+```
+
+</Tab>
+<Tab value="Traefik v2">
+
+```ini
+traefik.http.routers.tenant-http.rule=Host(`app.example.com`) # [!code --][!code focus]
+traefik.http.routers.tenant-http.rule=HostRegexp(`{subdomain:[a-zA-Z0-9-]+}.example.com`) # [!code ++][!code focus]
+traefik.http.routers.tenant-http.entryPoints=http
+traefik.http.routers.tenant-http.middlewares=redirect-to-https
+traefik.http.routers.tenant-https.rule=Host(`app.example.com`) # [!code --][!code focus]
+traefik.http.routers.tenant-https.rule=HostRegexp(`{subdomain:[a-zA-Z0-9-]+}.example.com`) # [!code ++][!code focus]
+traefik.http.routers.tenant-https.entryPoints=https
+traefik.http.routers.tenant-https.tls=true
+traefik.http.routers.tenant-https.tls.certresolver=letsencrypt
+traefik.http.routers.tenant-https.service=tenant-service
+traefik.http.services.tenant-service.loadbalancer.server.port=<application-port>
+```
+
+</Tab>
+</Tabs>
+
+The `letsencrypt` value must match the certificate resolver name in the proxy configuration. Replace `<application-port>` with the port on which the application listens inside its container.
+
+Redeploy the application and test at least two subdomains.
+
+<Callout type="warning" title="Manual labels are your responsibility">
+After disabling **Readonly labels**, Coolify no longer repairs the application labels automatically. Use **Reset Labels to Defaults** to recover the generated route if the application becomes unreachable.
+</Callout>
+
+</Tab>
+</Tabs>

@@ -1,0 +1,44 @@
+---
+title: Delete a User
+description: "Delete a user account from a self-hosted Coolify instance, with automatic team ownership transfer and resource cleanup rules."
+---
+
+# Delete a user
+
+Deleting a user removes the user account itself from a self-hosted Coolify instance. This is different from [removing a member](/core/team/members/remove-a-member), which only ends a person's membership in the active team while their account stays available.
+
+<Callout type="warning" title="This can delete server resources">
+If Coolify still has a working connection to the user's servers, deleting the user also deletes all resources on those servers, not only the records in Coolify's database.
+</Callout>
+
+## Before you delete a user
+
+- You must belong to the `root` team. Only `root` team members can delete users from the UI.
+- The `root` team and the `root` user cannot be deleted.
+- Confirm which teams the user belongs to and what resources those teams own.
+
+## Delete the user
+
+1. Go to the **Team** page.
+2. Switch to the **Admin View** tab. This lists every user registered in Coolify.
+3. Select **Delete** next to the user you want to remove.
+
+## What happens during deletion
+
+Coolify iterates over every team the user belongs to and applies these rules per team:
+
+### The user is alone in the team
+
+The team and all of its resources are deleted from both the servers and Coolify's database.
+
+### The user is not alone in the team
+
+1. The user is the owner or admin, no other owner or admin exists, and the team **has** other members:
+   - Ownership transfers to the first team member who is not the owner or admin.
+   - The user is removed from the team. No resources are deleted.
+
+2. The user is the owner or admin, no other owner or admin exists, and the team has **no** other members:
+   - The team and all of its resources are deleted from both the servers and Coolify's database.
+
+3. The user is not the owner or admin of the team:
+   - The user is removed from the team. No resources are deleted.

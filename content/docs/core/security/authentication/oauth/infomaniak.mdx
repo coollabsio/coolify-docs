@@ -1,0 +1,86 @@
+---
+title: Infomaniak
+description: Configure Infomaniak OAuth sign-in for Coolify with an Application credential and callback URL.
+---
+
+# Configure Infomaniak OAuth
+
+Create an Infomaniak Application credential so Coolify can request the OpenID, email, and profile information used during sign-in.
+
+<Callout type="warning" title="Example data">
+Replace the example domain while following this guide:
+
+- **Coolify URL:** `https://coolify.shadowarcanist.com`
+- **Redirect URL:** `https://coolify.shadowarcanist.com/auth/infomaniak/callback`
+</Callout>
+
+## Set up Infomaniak OAuth
+
+<Steps>
+<Step>
+
+### Open Infomaniak applications
+
+Sign in to Infomaniak and open [Applications](https://manager.infomaniak.com/v3/ng/profile/user/applications/list) in the user profile settings.
+
+Select the option to create an application credential.
+
+</Step>
+<Step>
+
+### Create the application
+
+Choose **Application** as the application type. Enter a recognizable name such as `Coolify` and use this redirect URL:
+
+```txt
+https://coolify.shadowarcanist.com/auth/infomaniak/callback
+```
+
+Create the application.
+
+</Step>
+<Step>
+
+### Save the Infomaniak credentials
+
+Copy the application client ID and client secret shown by Infomaniak. Store the client secret securely before leaving the credential page.
+
+</Step>
+<Step>
+
+### Configure Infomaniak in Coolify
+
+Open **Settings > OAuth** and find **Infomaniak**.
+
+| Coolify field | Infomaniak value |
+| :--- | :--- |
+| **Client ID** | Infomaniak application client ID |
+| **Client Secret** | Infomaniak application client secret |
+| **Redirect URI** | `https://coolify.shadowarcanist.com/auth/infomaniak/callback` |
+
+Select **Save**, then turn on **Enabled** for Infomaniak.
+
+</Step>
+<Step>
+
+### Verify Infomaniak sign-in
+
+Open the Coolify login page in a private browser window and select **Login with Infomaniak**. Complete authorization, then confirm that Coolify opens the account matching the Infomaniak email address.
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="Infomaniak rejects the redirect URL">
+
+Open the Infomaniak application and confirm its redirect URL exactly matches the public Coolify domain and `/auth/infomaniak/callback` path.
+
+</Accordion>
+<Accordion title="Coolify returns to the login page">
+
+Confirm that the client ID and secret belong to the same Infomaniak application and that the Infomaniak account returns an email address. Create a new secret if the original value was not saved completely.
+
+</Accordion>
+</Accordions>

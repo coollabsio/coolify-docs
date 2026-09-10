@@ -1,0 +1,87 @@
+---
+title: Scheduled Tasks
+description: Run recurring commands inside an application container and verify their execution.
+---
+
+import { CalendarAdd, History, Settings } from 'reicon-react';
+
+# Run scheduled application tasks
+
+Scheduled tasks let Coolify run a command inside an application container on a recurring schedule. Use them for framework schedulers, queue maintenance, cleanup commands, imports, and other work that belongs inside the deployed application.
+
+Coolify runs the command in a shell inside a running container. The schedule uses the timezone configured for the application's deployment server.
+
+<Callout type="info" title="Detailed scheduled-task reference">
+
+This page covers the application workflow. The [Scheduled Tasks section in Core](/core/automation/scheduled-tasks/overview) explains task management, execution history, output downloads, cron behavior, and troubleshooting in more detail.
+
+</Callout>
+
+## Open Scheduled Tasks
+
+<Steps>
+<Step>
+
+### Open the application page
+
+Open the application and select **Configuration > Scheduled Tasks**.
+
+</Step>
+<Step>
+
+### Choose the detailed guide
+
+Select **+ Add** to start a task, or select an existing task to manage it. Follow the Core guide for the complete field-by-field procedure.
+
+</Step>
+<Step>
+
+### Run the first execution
+
+Open the task and select **Execute Now** while the application is running.
+
+Open the new record under **Recent executions**. Confirm that it finishes successfully and that its output or effect matches what the command should produce.
+
+</Step>
+</Steps>
+
+## Application-specific behavior
+
+When the schedule is due, Coolify finds the application's running container and runs the saved command through `sh`.
+
+Before following the detailed guide, check these application-specific requirements:
+
+- Test commands that change or delete data through the application **Terminal** first.
+- Enter the command as it should run inside the container; do not include `docker exec`.
+- Set **Container name** when the application has more than one container.
+- The schedule uses the timezone configured for the application's deployment server.
+- **Timeout (seconds)** accepts `60` to `36000` and defaults to `300`.
+
+An execution fails when no application container is running, the configured container cannot be found, the command exits with an error, or the command exceeds its timeout.
+
+Coolify records the status, timing, and captured output under **Recent executions**. A successful exit does not prove that the command produced the intended application result, so verify the affected records, files, or external system when necessary.
+
+## Use the detailed Core guides
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Create a task',
+      href: '/core/automation/scheduled-tasks/create-a-task',
+      description: 'Review every field, accepted value, and creation step.',
+      icon: CalendarAdd,
+    },
+    {
+      title: 'Manage tasks',
+      href: '/core/automation/scheduled-tasks/manage-tasks',
+      description: 'Update, enable, disable, run, or delete a task.',
+      icon: Settings,
+    },
+    {
+      title: 'Review execution history',
+      href: '/core/automation/scheduled-tasks/execution-history',
+      description: 'Inspect statuses, timing, command output, and logs.',
+      icon: History,
+    },
+  ]}
+/>

@@ -1,0 +1,267 @@
+---
+title: Custom Fluent Bit
+description: Configure Coolify to forward resource container logs with a complete custom Fluent Bit configuration.
+---
+
+import {
+  ArrowsRight,
+  Box2,
+  Globe3,
+  Layers,
+  Server,
+  Settings,
+  Warning22,
+} from 'reicon-react';
+
+# Configure a custom Fluent Bit log drain
+
+Use **Custom FluentBit** when the built-in Axiom and New Relic destinations do not match your logging provider. Coolify runs the configuration as supplied, so you must define the input, filters, parsing, output, authentication, and destination behavior that your provider requires.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Provide a complete Fluent Bit 2.0 configuration that accepts the `forward` protocol on port `24224` and sends records to your destination. Coolify writes the configuration, starts `coolify-log-drain`, and connects opted-in resource containers to it.
+
+</CoolCallout>
+
+<CoolCallout type="warning" icon={Warning22} title="Coolify does not validate Fluent Bit syntax">
+
+Coolify only checks that **Custom FluentBit Configuration** is not empty. An invalid directive, unavailable plugin, or rejected credential can leave `coolify-log-drain` stopped or unable to deliver logs.
+
+</CoolCallout>
+
+---
+
+## Before you start
+
+<CoolIconCardGrid
+  surface
+  cards={[
+    {
+      title: 'Provider requirements',
+      description: 'Collect the endpoint, authentication value, TLS requirements, and payload format.',
+      icon: Globe3,
+    },
+    {
+      title: 'Fluent Bit configuration',
+      description: 'Define the input, filters, parsing, output, retry, and flush behavior your destination needs.',
+      icon: Settings,
+    },
+    {
+      title: 'Validated server',
+      description: 'Confirm the resource server can reach the destination and that no other log drain is enabled.',
+      icon: Server,
+    },
+  ]}
+/>
+
+Read the [Fluent Bit configuration documentation](https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/configuration-file) before writing the configuration.
+
+Treat the configuration as sensitive when it contains credentials. Coolify does not provide a separate custom environment-variable field for provider secrets.
+
+---
+
+## How Coolify runs the configuration
+
+<CoolFlow
+  id="custom-fluent-bit-runtime"
+  icon={Layers}
+  title="From saved configuration to forwarded records"
+  description="Coolify manages the container and file mounts, while your configuration controls Fluent Bit itself."
+  steps={[
+    'Save the main configuration',
+    'Write the server files',
+    'Start Fluent Bit 2.0',
+    'Receive resource records',
+    'Send records to the destination',
+  ]}
+  list={[
+    <>Coolify saves <strong>Custom FluentBit Configuration</strong> and the optional <strong>Custom Parser Configuration</strong>.</>,
+    'It writes the managed files under `/data/coolify/log-drains` on the resource server.',
+    'The `coolify-log-drain` container starts from `cr.fluentbit.io/fluent/fluent-bit:2.0` with `-c /fluent-bit.conf`.',
+    'Opted-in resources send Docker log records to `tcp://127.0.0.1:24224` through the Fluentd driver.',
+    'Your filters, parsers, and outputs transform and deliver those records.',
+  ]}
+  endnote="Your main configuration must listen for the Fluent Bit forward protocol on port 24224."
+/>
+
+By default, Coolify writes these files on the resource server:
+
+| File | Purpose |
+| :--- | :--- |
+| `/data/coolify/log-drains/fluent-bit.conf` | The complete value from **Custom FluentBit Configuration** |
+| `/data/coolify/log-drains/parsers.conf` | The optional value from **Custom Parser Configuration** |
+| `/data/coolify/log-drains/docker-compose.yml` | The Coolify-managed Fluent Bit service |
+
+The container mounts the two configuration files at `/fluent-bit.conf` and `/parsers.conf`.
+
+---
+
+## Write the main configuration
+
+This skeleton shows the required input and an example HTTPS output. Replace the host, URI, authentication, and output options with values supported by your provider:
+
+```ini
+[SERVICE]
+    Flush        5
+    Daemon       off
+    Log_Level    info
+    Parsers_File parsers.conf
+
+[INPUT]
+    Name              forward
+    Listen            0.0.0.0
+    Port              24224
+    Buffer_Chunk_Size 1M
+    Buffer_Max_Size   6M
+
+[OUTPUT]
+    Name   http
+    Match  *
+    Host   logs.example.com
+    Port   443
+    URI    /ingest
+    format json
+    tls    On
+```
+
+The example is not a complete configuration for a specific provider. Add the provider's required header, token, payload, retry, and TLS options before enabling the drain.
+
+Use only input, filter, parser, and output plugins included in the Fluent Bit 2.0 image used by Coolify.
+
+---
+
+## Add parser definitions
+
+**Custom Parser Configuration** is optional. It becomes `parsers.conf`, but adding a parser definition does not apply it automatically. The main configuration must reference the parser.
+
+For example, add this parser definition to **Custom Parser Configuration**:
+
+```ini
+[PARSER]
+    Name   app_json
+    Format json
+```
+
+Then add a parser filter to **Custom FluentBit Configuration**:
+
+```ini
+[FILTER]
+    Name         parser
+    Match        *
+    Key_Name     log
+    Parser       app_json
+    Reserve_Data On
+```
+
+This example parses JSON stored in the incoming `log` field and preserves the other record fields.
+
+---
+
+## Configure Coolify
+
+1. Open **Servers** and select the server that runs the resources.
+2. Open **Configuration > Log Drains**.
+3. In **Custom FluentBit**, keep **Enabled** off.
+4. Paste the complete main configuration into **Custom FluentBit Configuration**.
+5. If needed, paste parser definitions into **Custom Parser Configuration**.
+6. Select **Save** in the custom section.
+7. Turn on **Enabled**. Coolify writes the files and starts `coolify-log-drain`.
+
+---
+
+## Enable a resource
+
+Follow [Enable log draining for a resource](/core/observability/log-drains/overview#enable-log-draining-for-a-resource), then restart or redeploy the resource.
+
+Your custom configuration receives the Docker log record as delivered by the local Fluentd driver.
+
+<CoolCompare
+  id="custom-and-built-in-log-fields"
+  className="not-prose"
+  icon={Box2}
+  title="Record enrichment"
+  description="Custom drains receive the Docker record but do not inherit the filters and record modifiers from the built-in destinations."
+>
+<CoolCompareColumn
+  title="Built-in Axiom and New Relic"
+  items={[
+    'Add `coolify.server_name` automatically',
+    'Rename `COOLIFY_APP_NAME` to `coolify.app_name`',
+    'Exclude messages containing `127.0.0.1`',
+  ]}
+/>
+<CoolCompareColumn
+  title="Custom Fluent Bit"
+  items={[
+    'Uses the record delivered by the local Fluentd driver',
+    'Must add or rename identifying fields in your configuration',
+    'Applies only the filters you define',
+  ]}
+/>
+</CoolCompare>
+
+---
+
+## Verify delivery
+
+1. Cause the opted-in resource to write a recognizable message to `stdout` or `stderr`.
+2. Wait for the **Flush** interval in your configuration.
+3. Confirm the message appears in the external destination.
+4. Confirm the Fluent Bit container remains running:
+
+```sh
+docker ps --filter name=coolify-log-drain
+docker logs --tail 100 coolify-log-drain
+```
+
+Run these commands in Coolify's server terminal or over SSH on the server that hosts the resource.
+
+---
+
+## Update the configuration
+
+The configuration fields are read-only while the drain is enabled.
+
+1. Turn off **Enabled** to stop `coolify-log-drain`.
+2. Update the main or parser configuration.
+3. Select **Save**.
+4. Turn on **Enabled** again.
+5. Generate a new resource log and verify the result externally.
+
+---
+
+## Fix a failed custom drain
+
+- Confirm the main configuration has a `forward` input listening on port `24224`.
+- Read `docker logs --tail 100 coolify-log-drain` for syntax, plugin, DNS, TLS, and authentication errors.
+- Confirm every parser referenced by the main configuration exists in **Custom Parser Configuration**.
+- Confirm the selected plugins and options are available in Fluent Bit 2.0.
+- Confirm the resource's **Drain Logs** setting is enabled and that the resource was restarted afterward.
+- Confirm the resource server can reach the configured output host and port.
+
+---
+
+## Continue with log drains
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Log drains overview',
+      href: '/core/observability/log-drains/overview',
+      description: 'Review the server-level pipeline, resource setup, and delivery checks.',
+      icon: Server,
+    },
+    {
+      title: 'Use Axiom',
+      href: '/core/observability/log-drains/axiom',
+      description: 'Use the built-in destination for an existing Axiom dataset.',
+      icon: Globe3,
+    },
+    {
+      title: 'Use New Relic',
+      href: '/core/observability/log-drains/new-relic',
+      description: 'Use the built-in destination for the New Relic Log API.',
+      icon: Settings,
+    },
+  ]}
+/>

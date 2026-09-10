@@ -1,0 +1,35 @@
+---
+title: "Database update"
+description: "Update a database in a service"
+---
+
+# Database update
+
+Update a database in a service
+
+## Usage
+
+```sh
+coolify service database update <service-uuid> <database-uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--description` | `string` | No | — | Description |
+| `--exclude-from-status` | `boolean` | No | `false` | Exclude from service status |
+| `--human-name` | `string` | No | — | Human-readable name |
+| `--image` | `string` | No | — | Container image |
+| `--log-drain-enabled` | `boolean` | No | `false` | Enable log drain |
+| `--public` | `boolean` | No | `false` | Expose the database publicly |
+| `--public-port` | `integer` | No | `0` | Public database port |
+| `--public-port-timeout` | `integer` | No | `0` | Public proxy timeout in seconds |
+
+## Get current help
+
+```sh
+coolify service database update --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

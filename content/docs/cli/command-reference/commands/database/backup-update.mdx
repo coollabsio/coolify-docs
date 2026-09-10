@@ -1,0 +1,39 @@
+---
+title: "Backup update"
+description: "Update a backup configuration settings (frequency, retention, S3, etc.). First UUID is the database, second is the specific backup configuration."
+---
+
+# Backup update
+
+Update a backup configuration settings (frequency, retention, S3, etc.). First UUID is the database, second is the specific backup configuration.
+
+## Usage
+
+```sh
+coolify database backup update <database_uuid> <backup_uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--databases-to-backup` | `string` | No | — | Comma-separated list of databases to backup |
+| `--dump-all` | `boolean` | No | `false` | Dump all databases |
+| `--enabled` | `boolean` | No | `false` | Enable or disable backup |
+| `--frequency` | `string` | No | — | Backup frequency (cron expression) |
+| `--retention-amount-locally` | `integer` | No | `0` | Number of backups to retain locally |
+| `--retention-amount-s3` | `integer` | No | `0` | Number of backups to retain in S3 |
+| `--retention-days-locally` | `integer` | No | `0` | Days to retain backups locally |
+| `--retention-days-s3` | `integer` | No | `0` | Days to retain backups in S3 |
+| `--retention-max-storage-locally` | `float64` | No | `0` | Max storage for local backups (GB) |
+| `--retention-max-storage-s3` | `float64` | No | `0` | Max storage for S3 backups (GB) |
+| `--s3-storage-uuid` | `string` | No | — | S3 storage UUID |
+| `--save-s3` | `boolean` | No | `false` | Save backups to S3 |
+
+## Get current help
+
+```sh
+coolify database backup update --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

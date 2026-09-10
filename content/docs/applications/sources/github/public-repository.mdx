@@ -1,0 +1,79 @@
+---
+title: Deploy a Public GitHub Repository
+description: Deploy an application by giving Coolify the URL of a public GitHub repository.
+---
+
+# Deploy a public GitHub repository
+
+You can deploy any public GitHub repository without creating a GitHub App or deploy key.
+
+<Steps>
+<Step>
+
+### Create a resource
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/public-repository/1.webp" alt="Coolify project page with the New button" />
+
+1. Open the required project and environment.
+2. Select **+ New**.
+
+</Step>
+<Step>
+
+### Select Public Repository
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/public-repository/2.webp" alt="Public Repository resource type in Coolify" />
+
+Select **Public Repository**.
+
+</Step>
+<Step>
+
+### Choose the server
+
+<Callout type="info" title="Self-hosted Coolify includes localhost">
+
+A self-hosted installation starts with a **localhost** server. Coolify selects it automatically when no other deployment server is available.
+
+</Callout>
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/public-repository/3.webp" alt="Server selection for a public repository application" />
+
+Choose the server where the application should run.
+
+</Step>
+<Step>
+
+### Enter the repository URL
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/public-repository/4.webp" alt="Public Git repository URL field in Coolify" />
+
+Paste the public GitHub repository URL.
+
+<Callout type="success" title="Select a branch through the URL">
+
+Coolify selects `main` for: `https://github.com/coollabsio/coolify-examples`
+
+Coolify selects `nodejs-fastify` for: `https://github.com/coollabsio/coolify-examples/tree/nodejs-fastify`
+
+</Callout>
+
+</Step>
+<Step>
+
+### Configure and deploy
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/public-repository/5.webp" alt="Build configuration after checking a public repository" />
+
+1. Select **Check Repository**.
+2. Choose the **Build Pack**, internal port, base directory, and other required settings.
+3. Continue to the application configuration.
+4. Configure a domain and required variables.
+5. Deploy the application.
+
+Read [Build applications](/applications/builds/overview) when you need help choosing the build method.
+
+Open **Deployments** and confirm the repository, branch, and commit in the deployment log.
+
+</Step>
+</Steps>

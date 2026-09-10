@@ -1,0 +1,29 @@
+---
+title: "Application start"
+description: "Start or redeploy an application in a service"
+---
+
+# Application start
+
+Start or redeploy an application in a service
+
+## Usage
+
+```sh
+coolify service application start <service-uuid> <application-uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--force` | `boolean` | No | `false` | Rebuild the application |
+| `--latest` | `boolean` | No | `false` | Pull the latest image |
+
+## Get current help
+
+```sh
+coolify service application start --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

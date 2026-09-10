@@ -1,0 +1,10 @@
+{
+  "title": "Backup and Recovery",
+  "pages": [
+    "instance-backup",
+    "instance-restore",
+    "reset-root-password",
+    "change-root-email",
+    "reset-2fa"
+  ]
+}

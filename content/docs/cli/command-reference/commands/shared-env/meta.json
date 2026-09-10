@@ -1,0 +1,21 @@
+{
+  "title": "Shared Env",
+  "pages": [
+    "environment-create",
+    "environment-delete",
+    "environment-list",
+    "environment-update",
+    "project-create",
+    "project-delete",
+    "project-list",
+    "project-update",
+    "server-create",
+    "server-delete",
+    "server-list",
+    "server-update",
+    "team-create",
+    "team-delete",
+    "team-list",
+    "team-update"
+  ]
+}

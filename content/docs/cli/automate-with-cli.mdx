@@ -1,0 +1,100 @@
+---
+title: Automate with the CLI
+description: Use Coolify CLI contexts, JSON output, batch deployments, and exit statuses in scripts and CI jobs.
+---
+
+# Automate with the Coolify CLI
+
+The CLI supports multiple Coolify instances, structured output, and nonzero exit statuses for failed commands. These features let scripts and CI jobs inspect resources and start deployments without parsing human-readable tables.
+
+<Steps>
+<Step>
+
+### Configure separate contexts
+
+Save a context for each Coolify instance:
+
+```sh
+coolify context add production https://coolify.example.com <production-token>
+coolify context add staging https://staging-coolify.example.com <staging-token>
+coolify context use production
+```
+
+Use another context for one command without changing the default:
+
+```sh
+coolify --context staging resource list
+```
+
+Verify every context before using it in automation:
+
+```sh
+coolify --context production context verify
+coolify --context staging context verify
+```
+
+</Step>
+<Step>
+
+### Request structured output
+
+Use compact JSON for scripts:
+
+```sh
+coolify --format json resource list
+```
+
+Use formatted JSON while developing or debugging a script:
+
+```sh
+coolify --format pretty deploy list
+```
+
+`table` is the default for interactive terminal use. Do not parse table columns in automation because their display can change.
+
+</Step>
+<Step>
+
+### Deploy several resources
+
+Start a batch deployment with comma-separated resource names:
+
+```sh
+coolify --context production deploy batch api,worker,frontend
+```
+
+Add `--force` only when every named resource must deploy without detected changes:
+
+```sh
+coolify --context production deploy batch api,worker,frontend --force
+```
+
+Verify the resulting deployments:
+
+```sh
+coolify --context production --format json deploy list
+```
+
+</Step>
+<Step>
+
+### Handle failures safely
+
+A failed CLI command returns a nonzero exit status, so shell scripts and CI jobs can stop immediately:
+
+```sh
+set -e
+
+coolify --context production context verify
+coolify --context production deploy name api
+```
+
+Keep these restrictions in automated environments:
+
+- Store API tokens in the CI secret manager, not in repository files or command arguments.
+- Do not use `--show-sensitive` in shared logs.
+- Use `--debug` only during diagnosis because it adds operational details to output.
+- Give the context token only the permissions required by the job.
+
+</Step>
+</Steps>

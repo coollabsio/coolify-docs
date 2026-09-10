@@ -4,6 +4,7 @@
 @import 'fumadocs-openapi/css/preset.css';
 
 :root {
+  --color-fd-background: hsl(0, 0%, 98%);
   --color-fd-primary: #6b16ed;
   --color-fd-primary-foreground: #fafafa;
   --color-fd-ring: #6b16ed;
@@ -12,11 +13,31 @@
 }
 
 .dark {
-  --color-fd-primary: #c084fc;
+  --color-fd-background: hsl(0, 0%, 3.5%);
+  --color-fd-card: hsl(0, 0%, 5.5%);
+  --color-fd-popover: hsl(0, 0%, 6.5%);
+  --color-fd-muted: hsl(0, 0%, 8%);
+  --color-fd-secondary: hsl(0, 0%, 9.5%);
+  --color-fd-border: hsla(0, 0%, 45%, 0.18);
+  --color-fd-primary: #a78bfa;
   --color-fd-primary-foreground: #fafafa;
-  --color-fd-ring: #c084fc;
-  --color-fd-accent: rgb(192 132 252 / 0.22);
-  --color-fd-accent-foreground: #fbf7ff;
+  --color-fd-ring: #a78bfa;
+  --color-fd-accent: rgb(124 58 237 / 0.18);
+  --color-fd-accent-foreground: #faf7ff;
+}
+
+.dark #nd-sidebar {
+  --color-fd-muted: hsl(0, 0%, 7%);
+  --color-fd-secondary: hsl(0, 0%, 9%);
+  --color-fd-muted-foreground: hsl(0, 0%, 70%);
+}
+
+.dark [data-radix-popper-content-wrapper] [role='dialog'].bg-fd-popover\/60 {
+  background-color: hsl(0, 0%, 8%);
+  border-color: rgba(180, 180, 180, 0.18);
+  box-shadow:
+    0 18px 48px rgb(0 0 0 / 0.48),
+    0 0 0 1px rgb(255 255 255 / 0.035);
 }
 
 html {
@@ -30,6 +51,831 @@ html > body[data-scroll-locked] {
 
 body {
   text-wrap: pretty;
+}
+
+.carbon-ads {
+  margin-top: 1rem;
+  min-height: 7.5rem;
+  color: var(--color-fd-muted-foreground);
+}
+
+.carbon-ads:empty {
+  display: none;
+}
+
+.carbon-ads [id^='carbonads'] {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.75rem;
+  background: color-mix(in oklab, var(--color-fd-muted) 48%, transparent);
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.carbon-ads [data-carbon-fallback] {
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.75rem;
+  background: color-mix(in oklab, var(--color-fd-muted) 48%, transparent);
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.carbon-ads [data-carbon-fallback] p {
+  margin: 0;
+  color: var(--color-fd-foreground);
+  font-weight: 600;
+}
+
+.carbon-ads [data-carbon-fallback] span {
+  display: block;
+  margin-top: 0.375rem;
+  color: var(--color-fd-muted-foreground);
+}
+
+.carbon-ads [data-carbon-fallback] code {
+  border-radius: 0.25rem;
+  background: var(--color-fd-muted);
+  color: var(--color-fd-foreground);
+  font-size: 0.6875rem;
+  padding: 0.0625rem 0.25rem;
+}
+
+.carbon-ads .carbon-wrap {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.carbon-ads .carbon-img {
+  display: block;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background: var(--color-fd-background);
+}
+
+.carbon-ads .carbon-img img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.carbon-ads [id^='carbonads'] .carbon-text {
+  display: -webkit-box !important;
+  max-height: calc(1.45em * 3);
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  color: var(--color-fd-foreground);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.carbon-ads .carbon-poweredby {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.6875rem;
+  text-decoration: none;
+}
+
+/* Below md the sidebar/toc columns collapse to 0 and the notebook grid's
+   flexible outer gutters shrink the main column to its min-content, centering
+   content in a narrow band. Force the main column to fill the viewport. */
+@media (max-width: 767px) {
+  #nd-notebook-layout {
+    grid-template-columns:
+      0 var(--fd-sidebar-col) minmax(0, 1fr) var(--fd-toc-width) 0 !important;
+  }
+}
+
+/* Reserve the table-of-contents column at desktop even when a page has no
+   ToC. Otherwise the ToC column collapses to 0, the flexible outer gutters
+   recenter the main content, and it shifts horizontally when navigating
+   between pages with and without a ToC. */
+@media (min-width: 1280px) {
+  #nd-notebook-layout {
+    --fd-toc-width: 268px;
+  }
+}
+
+@media (max-width: 1279px) {
+  div[class*='[grid-area:toc-popover]'] ~ article[class*='[grid-area:main]'] {
+    transition: filter 150ms ease;
+  }
+
+  div[class*='[grid-area:toc-popover]']:has(button[data-state='open'][aria-expanded='true'])
+    ~ article[class*='[grid-area:main]'] {
+    filter: blur(4px);
+  }
+}
+
+#nd-sidebar {
+  background-color: hsl(0 0% 96%);
+  border-inline-end: 1px solid hsl(0 0% 90% / 0.65);
+}
+
+html:not(.dark) #nd-subnav {
+  background-color: hsl(0 0% 96% / 0.86);
+}
+
+#nd-subnav {
+  grid-column: 1 / -1;
+}
+
+#nd-subnav > [data-header-body],
+#nd-subnav > [data-header-tabs] {
+  width: min(100%, var(--fd-layout-width, 97rem));
+  margin-inline: auto;
+}
+
+#nd-sidebar-mobile {
+  z-index: 60;
+}
+
+.dark #nd-sidebar {
+  background-color: hsl(0 0% 5%);
+  border-inline-end: 1px solid hsl(0 0% 100% / 0.06);
+}
+
+#nd-sidebar > div:first-child,
+#nd-sidebar-mobile > div:first-child {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#nd-sidebar > div:first-child > button:not([data-theme-toggle]) {
+  min-width: 0;
+  flex: 1 1 auto;
+  padding-inline: 0.75rem 0.5rem;
+}
+
+#nd-sidebar [data-theme-toggle],
+#nd-sidebar-mobile [data-theme-toggle] {
+  margin-inline-start: 0;
+  flex: 0 0 auto;
+}
+
+#nd-sidebar-mobile [data-theme-toggle] {
+  height: 2.8125rem;
+  width: 2.8125rem;
+}
+
+#nd-sidebar-mobile [data-mobile-sidebar-toggle] {
+  height: 2.8125rem;
+  width: 2.8125rem;
+}
+
+#nd-sidebar [data-mobile-sidebar-toggle] {
+  display: none;
+}
+
+#nd-sidebar-mobile > div:first-child {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  padding-bottom: 0.75rem;
+}
+
+#nd-sidebar-mobile > div:first-child > button[aria-label='Open Sidebar']:not([data-mobile-sidebar-toggle]) {
+  display: none;
+}
+
+#nd-sidebar-mobile > div:first-child > button:not([data-theme-toggle], [aria-label='Open Sidebar']) {
+  height: 2.8125rem;
+  min-width: 0;
+  padding-block: 0;
+  padding-inline: 0.75rem 0.5rem;
+}
+
+#nd-sidebar-mobile > div:first-child > button:not([data-theme-toggle], [aria-label='Open Sidebar']) > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+#nd-sidebar p[class*='mb-1.5'][class*='mt-6'],
+#nd-sidebar-mobile p[class*='mb-1.5'][class*='mt-6'] {
+  margin-top: 1.25rem;
+  margin-bottom: 0.375rem;
+  border-top: 1px solid hsl(0 0% 0% / 0.04);
+  padding-top: 0.875rem;
+  color: hsl(0 0% 20%);
+  font-weight: 700;
+}
+
+#nd-sidebar p[class*='mb-1.5'][class*='mt-6']:first-of-type,
+#nd-sidebar-mobile p[class*='mb-1.5'][class*='mt-6']:first-of-type {
+  margin-top: 0;
+  border-top: 0;
+  padding-top: 0;
+}
+
+.dark #nd-sidebar p[class*='mb-1.5'][class*='mt-6'],
+.dark #nd-sidebar-mobile p[class*='mb-1.5'][class*='mt-6'] {
+  border-top-color: hsl(0 0% 100% / 0.055);
+  color: hsl(0 0% 90%);
+}
+
+#nd-sidebar :is(a, button):has(> .fd-page-tree-item-name),
+#nd-sidebar-mobile :is(a, button):has(> .fd-page-tree-item-name) {
+  margin-inline-start: 0.375rem;
+  width: calc(100% - 0.375rem);
+}
+
+#nd-sidebar-mobile > div:last-child {
+  min-height: 5.25rem;
+  align-items: center;
+  gap: 0.625rem;
+  padding-block: 0.875rem 1rem;
+  overflow-x: auto;
+}
+
+[role='dialog'][class*='w-(--radix-popover-trigger-width)'][class*='fd-scroll-container'] {
+  min-width: var(--radix-popover-trigger-width);
+}
+
+[data-radix-popper-content-wrapper]:has(
+  [role='dialog'][class*='w-(--radix-popover-trigger-width)'][class*='fd-scroll-container']
+) {
+  z-index: 70 !important;
+}
+
+[role='dialog'][class*='w-(--radix-popover-trigger-width)'][class*='fd-scroll-container'] a[aria-current='page'] {
+  background-color: color-mix(in oklab, var(--color-fd-primary) 10%, transparent);
+  color: var(--color-fd-primary);
+  font-weight: 600;
+}
+
+[role='dialog'][class*='w-(--radix-popover-trigger-width)'][class*='fd-scroll-container'] a {
+  flex-direction: row !important;
+  align-items: center;
+}
+
+[role='dialog'][class*='w-(--radix-popover-trigger-width)'][class*='fd-scroll-container'] a > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[role='dialog'][class*='w-(--radix-popover-trigger-width)'][class*='fd-scroll-container'] a[aria-current='page'] svg {
+  color: currentColor;
+}
+
+@media (min-width: 768px) {
+  button[aria-label='Collapse Sidebar'] {
+    display: none;
+  }
+}
+
+a[aria-label='GitHub'] {
+  height: 2.25rem;
+  width: auto;
+  gap: 0.5rem;
+  border: 2px solid rgb(0 0 0 / 0.24);
+  border-radius: 9999px;
+  background: rgb(0 0 0 / 0.04);
+  padding-inline: 0.75rem;
+  color: rgb(39 39 42);
+  box-shadow:
+    0 2px 8px rgb(0 0 0 / 0.05);
+}
+
+a[aria-label='GitHub'] svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+a[aria-label='GitHub']:hover {
+  border-color: rgb(0 0 0 / 0.34);
+  background: rgb(0 0 0 / 0.065);
+  color: rgb(0 0 0);
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .method-card,
+:where([data-cool-docs], [data-self-hosted-start]) .requirement-card,
+:where([data-cool-docs], [data-self-hosted-start]) .safety-card {
+  background-clip: padding-box;
+  text-decoration: none;
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .requirement-card:hover {
+  border-color: transparent;
+  background:
+    linear-gradient(rgb(10 10 10 / 0.94), rgb(10 10 10 / 0.94)) padding-box,
+    linear-gradient(135deg, #9a86ff 0%, #7a5cf0 48%, #6643dd 100%) border-box;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 0 0 1px rgb(139 115 255 / 0.14),
+    0 12px 28px rgb(94 62 216 / 0.2),
+    0 2px 14px rgb(255 255 255 / 0.035);
+}
+
+html:not(.dark) :where([data-cool-docs], [data-self-hosted-start]) .requirement-card:hover {
+  background:
+    linear-gradient(rgb(255 255 255 / 0.96), rgb(255 255 255 / 0.96)) padding-box,
+    linear-gradient(135deg, #9a86ff 0%, #7a5cf0 48%, #6643dd 100%) border-box;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.75),
+    0 0 0 1px rgb(139 115 255 / 0.12),
+    0 12px 28px rgb(94 62 216 / 0.14),
+    0 2px 10px rgb(0 0 0 / 0.05);
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .method-card-secondary:hover {
+  border-color: transparent;
+  background:
+    linear-gradient(rgb(10 10 10 / 0.94), rgb(10 10 10 / 0.94)) padding-box,
+    linear-gradient(135deg, #7b8cff 0%, #5865f2 52%, #4652d9 100%) border-box;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 0 0 1px rgb(88 101 242 / 0.14),
+    0 12px 28px rgb(88 101 242 / 0.2),
+    0 2px 14px rgb(255 255 255 / 0.035);
+}
+
+html:not(.dark) :where([data-cool-docs], [data-self-hosted-start]) .method-card-secondary:hover {
+  background:
+    linear-gradient(rgb(255 255 255 / 0.96), rgb(255 255 255 / 0.96)) padding-box,
+    linear-gradient(135deg, #7b8cff 0%, #5865f2 52%, #4652d9 100%) border-box;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.75),
+    0 0 0 1px rgb(88 101 242 / 0.12),
+    0 12px 28px rgb(88 101 242 / 0.14),
+    0 2px 10px rgb(0 0 0 / 0.05);
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .method-card-primary:hover {
+  border-color: transparent;
+  background:
+    linear-gradient(rgb(10 10 10 / 0.94), rgb(10 10 10 / 0.94)) padding-box,
+    linear-gradient(135deg, #9a86ff 0%, #7a5cf0 48%, #6643dd 100%) border-box;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 0 0 1px rgb(139 115 255 / 0.14),
+    0 12px 28px rgb(94 62 216 / 0.2),
+    0 2px 14px rgb(255 255 255 / 0.035);
+}
+
+html:not(.dark) :where([data-cool-docs], [data-self-hosted-start]) .method-card-primary:hover {
+  background:
+    linear-gradient(rgb(255 255 255 / 0.96), rgb(255 255 255 / 0.96)) padding-box,
+    linear-gradient(135deg, #9a86ff 0%, #7a5cf0 48%, #6643dd 100%) border-box;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.75),
+    0 0 0 1px rgb(139 115 255 / 0.12),
+    0 12px 28px rgb(94 62 216 / 0.14),
+    0 2px 10px rgb(0 0 0 / 0.05);
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .method-card-tertiary:hover {
+  border-color: transparent;
+  background:
+    linear-gradient(rgb(10 10 10 / 0.94), rgb(10 10 10 / 0.94)) padding-box,
+    linear-gradient(135deg, #71717a 0%, #52525b 52%, #3f3f46 100%) border-box;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 0 0 1px rgb(82 82 91 / 0.16),
+    0 12px 28px rgb(63 63 70 / 0.2),
+    0 2px 14px rgb(255 255 255 / 0.035);
+}
+
+html:not(.dark) :where([data-cool-docs], [data-self-hosted-start]) .method-card-tertiary:hover {
+  background:
+    linear-gradient(rgb(255 255 255 / 0.96), rgb(255 255 255 / 0.96)) padding-box,
+    linear-gradient(135deg, #71717a 0%, #52525b 52%, #3f3f46 100%) border-box;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.75),
+    0 0 0 1px rgb(82 82 91 / 0.14),
+    0 12px 28px rgb(63 63 70 / 0.13),
+    0 2px 10px rgb(0 0 0 / 0.05);
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .section-header,
+:where([data-cool-docs], [data-self-hosted-start]) .comparison-header,
+.prose :where(thead tr) {
+  background: rgb(255 255 255 / 0.035);
+}
+
+html:not(.dark) :where([data-cool-docs], [data-self-hosted-start]) .section-header,
+html:not(.dark) :where([data-cool-docs], [data-self-hosted-start]) .comparison-header,
+html:not(.dark) .prose :where(thead tr) {
+  background: rgb(0 0 0 / 0.045);
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .comparison-table,
+.prose table {
+  border-collapse: separate;
+  border-spacing: 0;
+  display: table;
+  width: 100%;
+}
+
+[data-mdx-tabs] [data-tab-value] table {
+  margin-block: 0;
+}
+
+[data-mdx-tabs] .mdx-tab-active {
+  border-color: #6f50e8;
+  background: linear-gradient(135deg, #8b73ff 0%, #6f50e8 48%, #5c38d5 100%);
+  color: white;
+  box-shadow: 0 5px 12px rgb(94 62 216 / 0.2);
+}
+
+.dark [data-mdx-tabs] .mdx-tab-active {
+  background: linear-gradient(135deg, #8b73ff 0%, #6f50e8 48%, #5c38d5 100%);
+  box-shadow: 0 5px 12px rgb(94 62 216 / 0.22);
+}
+
+[data-mdx-tabs] [data-tab-value] :where(p):has(+ table),
+[data-mdx-tabs] [data-tab-value] :where(p):has(+ div table) {
+  margin-bottom: 0.375rem;
+}
+
+[data-mdx-tabs] [data-tab-value] :where(p) + :where(div):has(table) {
+  margin-top: 0.375rem !important;
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .comparison-table th,
+:where([data-cool-docs], [data-self-hosted-start]) .comparison-table td,
+.prose table th,
+.prose table td {
+  border-inline-start: 1px solid var(--color-fd-border);
+  border-bottom: 1px solid var(--color-fd-border);
+  padding: 1rem;
+  text-align: start;
+  vertical-align: top;
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .comparison-table th:first-child,
+:where([data-cool-docs], [data-self-hosted-start]) .comparison-table td:first-child,
+.prose table th:first-child,
+.prose table td:first-child {
+  border-inline-start: 0;
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .comparison-table tbody tr:last-child td,
+.prose table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .comparison-table code,
+.prose table code {
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.375rem;
+  background: var(--color-fd-muted);
+  color: var(--color-fd-foreground);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.375rem;
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .comparison-table strong,
+.prose table strong {
+  color: var(--color-fd-foreground);
+  font-weight: 700;
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .method-button {
+  border-color: transparent;
+  border-radius: 0.625rem;
+  color: white;
+  transition:
+    transform 150ms ease,
+    filter 150ms ease,
+    box-shadow 150ms ease,
+    background 150ms ease;
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .method-button-secondary {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.15), rgb(255 255 255 / 0.03) 46%, rgb(0 0 0 / 0.1)),
+    linear-gradient(135deg, #7b8cff 0%, #5865f2 52%, #4652d9 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    inset 0 -1px 0 rgb(0 0 0 / 0.14),
+    0 5px 12px rgb(88 101 242 / 0.2);
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .method-button-primary {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.02) 44%, rgb(0 0 0 / 0.1)),
+    linear-gradient(135deg, #8b73ff 0%, #6f50e8 48%, #5c38d5 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    inset 0 -1px 0 rgb(0 0 0 / 0.16),
+    0 5px 12px rgb(94 62 216 / 0.2);
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .method-button-tertiary {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0.03) 46%, rgb(0 0 0 / 0.12)),
+    linear-gradient(135deg, #71717a 0%, #52525b 52%, #3f3f46 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.16),
+    inset 0 -1px 0 rgb(0 0 0 / 0.16),
+    0 5px 12px rgb(63 63 70 / 0.18);
+}
+
+.dark :where([data-cool-docs], [data-self-hosted-start]) .method-button {
+  border: 0 !important;
+}
+
+.dark :where([data-cool-docs], [data-self-hosted-start]) .method-button-secondary {
+  background: linear-gradient(135deg, #7b8cff 0%, #5865f2 52%, #4652d9 100%);
+  box-shadow: 0 5px 12px rgb(88 101 242 / 0.22);
+}
+
+.dark :where([data-cool-docs], [data-self-hosted-start]) .method-button-primary {
+  background: linear-gradient(135deg, #8b73ff 0%, #6f50e8 48%, #5c38d5 100%);
+  box-shadow: 0 5px 12px rgb(94 62 216 / 0.22);
+}
+
+.dark :where([data-cool-docs], [data-self-hosted-start]) .method-button-tertiary {
+  background: linear-gradient(135deg, #71717a 0%, #52525b 52%, #3f3f46 100%);
+  box-shadow: 0 5px 12px rgb(63 63 70 / 0.22);
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .method-button:hover,
+:where([data-cool-docs], [data-self-hosted-start]) .method-button:focus-visible {
+  filter: brightness(1.08) saturate(1.06);
+  transform: translateY(-1px) scale(1.015);
+}
+
+.api-server-primary-button {
+  border: 0;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.02) 44%, rgb(0 0 0 / 0.1)),
+    linear-gradient(135deg, #8b73ff 0%, #6f50e8 48%, #5c38d5 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    inset 0 -1px 0 rgb(0 0 0 / 0.16),
+    0 5px 12px rgb(94 62 216 / 0.2);
+  transition:
+    transform 150ms ease,
+    filter 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.api-server-primary-button:hover,
+.api-server-primary-button:focus-visible {
+  filter: brightness(1.08) saturate(1.06);
+  transform: translateY(-1px) scale(1.015);
+}
+
+.api-server-primary-button:focus-visible {
+  outline: 2px solid var(--color-fd-primary) !important;
+  outline-offset: 2px;
+}
+
+.api-playground-shell form button[type='submit'] {
+  border: 0;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.02) 44%, rgb(0 0 0 / 0.1)),
+    linear-gradient(135deg, #8b73ff 0%, #6f50e8 48%, #5c38d5 100%);
+  color: white;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    inset 0 -1px 0 rgb(0 0 0 / 0.16),
+    0 5px 12px rgb(94 62 216 / 0.2);
+}
+
+.api-playground-shell form button[type='submit']:hover,
+.api-playground-shell form button[type='submit']:focus-visible {
+  filter: brightness(1.08) saturate(1.06);
+}
+
+.api-server-option-selected {
+  border-color: transparent;
+  background:
+    linear-gradient(rgb(10 10 10 / 0.94), rgb(10 10 10 / 0.94)) padding-box,
+    linear-gradient(135deg, #9a86ff 0%, #7a5cf0 48%, #6643dd 100%) border-box;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 0 0 1px rgb(139 115 255 / 0.14),
+    0 12px 28px rgb(94 62 216 / 0.2),
+    0 2px 14px rgb(255 255 255 / 0.035);
+}
+
+html:not(.dark) .api-server-option-selected {
+  background:
+    linear-gradient(rgb(255 255 255 / 0.96), rgb(255 255 255 / 0.96)) padding-box,
+    linear-gradient(135deg, #9a86ff 0%, #7a5cf0 48%, #6643dd 100%) border-box;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.75),
+    0 0 0 1px rgb(139 115 255 / 0.12),
+    0 12px 28px rgb(94 62 216 / 0.14),
+    0 2px 10px rgb(0 0 0 / 0.05);
+}
+
+:where([data-cool-docs], [data-self-hosted-start]) .method-button:focus-visible {
+  outline: 2px solid var(--color-fd-primary);
+  outline-offset: 2px;
+}
+
+html:not(.dark) :where([data-cool-docs], [data-self-hosted-start]) .method-button-primary:hover,
+html:not(.dark) :where([data-cool-docs], [data-self-hosted-start]) .method-button-primary:focus-visible {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0.04) 44%, rgb(0 0 0 / 0.08)),
+    linear-gradient(135deg, #9a86ff 0%, #7a5cf0 48%, #6643dd 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.22),
+    inset 0 -1px 0 rgb(0 0 0 / 0.14),
+    0 6px 14px rgb(104 72 226 / 0.24);
+}
+
+html:not(.dark) :where([data-cool-docs], [data-self-hosted-start]) .method-button-secondary:hover,
+html:not(.dark) :where([data-cool-docs], [data-self-hosted-start]) .method-button-secondary:focus-visible {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0.05) 46%, rgb(0 0 0 / 0.08)),
+    linear-gradient(135deg, #96a3ff 0%, #6774ff 52%, #5865f2 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.22),
+    inset 0 -1px 0 rgb(0 0 0 / 0.12),
+    0 6px 14px rgb(88 101 242 / 0.28);
+}
+
+html:not(.dark) :where([data-cool-docs], [data-self-hosted-start]) .method-button-tertiary:hover,
+html:not(.dark) :where([data-cool-docs], [data-self-hosted-start]) .method-button-tertiary:focus-visible {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.18), rgb(255 255 255 / 0.04) 46%, rgb(0 0 0 / 0.1)),
+    linear-gradient(135deg, #8b8b95 0%, #696973 52%, #52525b 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.2),
+    inset 0 -1px 0 rgb(0 0 0 / 0.14),
+    0 6px 14px rgb(63 63 70 / 0.24);
+}
+
+.dark :where([data-cool-docs], [data-self-hosted-start]) .method-button-primary:hover,
+.dark :where([data-cool-docs], [data-self-hosted-start]) .method-button-primary:focus-visible {
+  background: linear-gradient(135deg, #9a86ff 0%, #7a5cf0 48%, #6643dd 100%);
+  box-shadow: 0 6px 14px rgb(104 72 226 / 0.28);
+}
+
+.dark :where([data-cool-docs], [data-self-hosted-start]) .method-button-secondary:hover,
+.dark :where([data-cool-docs], [data-self-hosted-start]) .method-button-secondary:focus-visible {
+  background: linear-gradient(135deg, #96a3ff 0%, #6774ff 52%, #5865f2 100%);
+  box-shadow: 0 6px 14px rgb(88 101 242 / 0.3);
+}
+
+.dark :where([data-cool-docs], [data-self-hosted-start]) .method-button-tertiary:hover,
+.dark :where([data-cool-docs], [data-self-hosted-start]) .method-button-tertiary:focus-visible {
+  background: linear-gradient(135deg, #8b8b95 0%, #696973 52%, #52525b 100%);
+  box-shadow: 0 6px 14px rgb(63 63 70 / 0.26);
+}
+
+.dark a[aria-label='GitHub'] {
+  border-color: rgb(255 255 255 / 0.3);
+  background: rgb(255 255 255 / 0.045);
+  color: rgb(245 245 245);
+  box-shadow:
+    0 0 8px rgb(255 255 255 / 0.055);
+}
+
+.dark a[aria-label='GitHub']:hover {
+  border-color: rgb(255 255 255 / 0.42);
+  background: rgb(255 255 255 / 0.065);
+  color: white;
+}
+
+a[aria-label='Discord'] {
+  height: 2.25rem;
+  width: auto;
+  gap: 0.5rem;
+  border: 2px solid rgb(88 101 242 / 0.32);
+  border-radius: 9999px;
+  background: rgb(88 101 242 / 0.16);
+  padding-inline: 0.875rem;
+  color: #4652d9;
+  box-shadow:
+    0 2px 8px rgb(88 101 242 / 0.12);
+}
+
+a[aria-label='Discord']:hover {
+  border-color: rgb(88 101 242 / 0.42);
+  background: rgb(88 101 242 / 0.22);
+  color: #3540bf;
+  box-shadow:
+    0 3px 10px rgb(88 101 242 / 0.16);
+}
+
+.dark a[aria-label='Discord'] {
+  border-color: rgb(123 140 255 / 0.56);
+  background: rgb(88 101 242 / 0.16);
+  color: rgb(236 238 255);
+  box-shadow:
+    0 0 0 1px rgb(88 101 242 / 0.16),
+    0 0 12px rgb(88 101 242 / 0.28);
+}
+
+.dark a[aria-label='Discord']:hover {
+  border-color: rgb(164 174 255 / 0.72);
+  background: rgb(88 101 242 / 0.2);
+  color: white;
+  box-shadow:
+    0 0 0 1px rgb(88 101 242 / 0.22),
+    0 0 16px rgb(88 101 242 / 0.36);
+}
+
+a[aria-label='Coolify Cloud'] {
+  height: 2.25rem;
+  width: auto;
+  gap: 0.5rem;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 9999px;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.02) 44%, rgb(0 0 0 / 0.1)),
+    linear-gradient(135deg, #8b73ff 0%, #6f50e8 48%, #5c38d5 100%);
+  padding-inline: 1rem;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 700;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    inset 0 -1px 0 rgb(0 0 0 / 0.16),
+    0 5px 12px rgb(94 62 216 / 0.2);
+}
+
+a[aria-label='Coolify Cloud']:hover {
+  border-color: rgb(255 255 255 / 0.18);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0.04) 44%, rgb(0 0 0 / 0.08)),
+    linear-gradient(135deg, #9a86ff 0%, #7a5cf0 48%, #6643dd 100%);
+  color: white;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.22),
+    inset 0 -1px 0 rgb(0 0 0 / 0.14),
+    0 6px 14px rgb(104 72 226 / 0.24);
+}
+
+.dark a[aria-label='Coolify Cloud'] {
+  border-color: rgb(139 115 255 / 0.14);
+  border-bottom-color: transparent;
+  background-clip: padding-box;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 4px 10px rgb(72 50 190 / 0.16);
+}
+
+.dark a[aria-label='Coolify Cloud']:hover {
+  border-color: rgb(154 134 255 / 0.18);
+  border-bottom-color: transparent;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    0 5px 12px rgb(82 58 210 / 0.18);
+}
+
+.prose :where(h1, h2):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  margin-bottom: 0.45em;
+}
+
+.prose :where(h3, h4):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  margin-bottom: 0.35em;
+}
+
+:where(h2, h3, h4):has([data-hidden-heading]) {
+  height: 0;
+  margin: 0 !important;
+  overflow: hidden;
+  padding: 0 !important;
+  pointer-events: none;
+}
+
+.prose :where(ul):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  padding-inline-start: 1.5rem;
+}
+
+.prose :where(ol):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  padding-inline-start: 1.75rem;
+}
+
+figure.shiki.border {
+  border-width: 2px;
+  border-color: rgba(150, 150, 150, 0.12);
+}
+
+.dark figure.shiki.border {
+  border-color: rgba(180, 180, 180, 0.09);
+}
+
+[data-accordion-value] {
+  font-size: 0.9375rem;
+  line-height: 1.5rem;
+}
+
+[data-accordion-value] + [data-state] > div {
+  border-top: 1px solid var(--color-fd-border);
+  background-color: rgb(0 0 0 / 0.018);
+  padding-block: 0.875rem 1rem;
+  padding-inline-start: 2.25rem;
+}
+
+.dark [data-accordion-value] + [data-state] > div {
+  background-color: rgb(255 255 255 / 0.025);
 }
 
 .prose :where(img) {
@@ -46,24 +892,47 @@ body {
   margin: 0 !important;
 }
 
-[data-media-card] [data-rmiz] {
-  display: block;
-  margin: 0 !important;
-  line-height: 0;
+/* Animated purple gradient border shimmer for the section switcher while the
+   onboarding guide is active. A conic gradient is spun via an animatable
+   --angle custom property (registered with @property so it interpolates
+   smoothly with no jump at the loop boundary) and masked to reveal only the
+   padding, leaving a rotating gradient border. */
+@property --coolify-switcher-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
 }
 
-[data-media-card] img {
-  display: block;
-  width: 100%;
-  height: auto;
-  margin: 0 !important;
+@keyframes coolify-switcher-shimmer {
+  to {
+    --coolify-switcher-angle: 360deg;
+  }
 }
 
-[data-media-card] p {
-  margin: 0 !important;
+[data-page-switcher-shimmer] {
+  padding: 2px;
+  background: conic-gradient(
+    from var(--coolify-switcher-angle),
+    #4a2bc4,
+    #8b73ff,
+    #5c38d5,
+    #7a5ce9,
+    #4020a8,
+    #4a2bc4
+  );
+  animation: coolify-switcher-shimmer 2.5s linear infinite;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
 }
 
-[data-docs-index] [data-sidebar-placeholder],
-[data-docs-index] [data-sidebar-panel] {
-  display: none;
+@media (prefers-reduced-motion: reduce) {
+  [data-page-switcher-shimmer] {
+    animation: none;
+  }
 }

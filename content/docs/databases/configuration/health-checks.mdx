@@ -1,0 +1,43 @@
+---
+title: Health Checks
+description: Configure the Docker health check used to report whether a standalone database is healthy.
+---
+
+# Health checks
+
+Coolify configures a Docker health check for each standalone database. The engine-specific probe runs inside the database container and reports whether the configured check succeeds.
+
+Open the database resource, then select **Configuration > Healthcheck**.
+
+## Configure the check
+
+| Setting | Default | Accepted value |
+| :--- | :---: | :--- |
+| **Interval (s)** | `15` | Whole number `1` or greater. |
+| **Timeout (s)** | `5` | Whole number `1` or greater. |
+| **Retries** | `5` | Whole number `1` or greater. |
+| **Start Period (s)** | `5` | Whole number `0` or greater. |
+
+The database image supplies the probe command. The settings above control when Docker runs it and when Docker marks the container unhealthy; they do not change the database's authentication, storage, or connection URL.
+
+## Enable or disable the check
+
+The health check is enabled by default. Select **Disable Healthcheck** only when the image or custom configuration cannot support the generated probe. When disabled, Docker runs no health probe and Coolify cannot report a healthy or unhealthy state for the database.
+
+Select **Save**, then restart the database to apply the generated health-check configuration.
+
+## Verify a health check
+
+After the database restarts:
+
+1. Open the database status and confirm it reports healthy.
+2. Open **Logs** and check that the database completed startup.
+3. Connect with the **Internal URL** from an application on the same destination network.
+
+A passing health check confirms only that the configured probe passed. It does not validate application queries, backup integrity, replication, or available disk space.
+
+<Callout type="warning" title="Allow enough startup time">
+
+Set **Start Period (s)** high enough for the database to initialize on the selected server and storage. A short start period can mark a slow first startup unhealthy even when the database would become ready later.
+
+</Callout>

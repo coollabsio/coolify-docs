@@ -1,0 +1,59 @@
+---
+title: Delete Destination
+description: Safely remove a destination and its Docker network after reviewing every attached resource.
+---
+
+# Delete a destination
+
+Deleting a standalone Docker destination removes the destination from Coolify and removes its Docker network from the server. The default `coolify` destination cannot be deleted from the dashboard.
+
+## Before you delete
+
+Open the destination and select **Resources**. Review every application, database, and service listed on the page.
+
+For each resource you want to keep:
+
+- back up its database and persistent-storage data
+- recreate or clone the resource to another destination
+- restore or migrate its data separately because cloning copies configuration only
+
+<Callout type="error" title="Remove every resource first">
+Deleting a Docker network can interrupt containers that still use it. Continue only after **Resources** shows **No resources are using this destination**.
+</Callout>
+
+## Delete the destination
+
+<Steps>
+<Step>
+
+### Open the destination
+
+1. Select **Destinations** in the Coolify sidebar.
+2. Select the destination you want to delete.
+3. Open **General**.
+
+</Step>
+<Step>
+
+### Confirm the deletion
+
+1. Select **Delete Destination**.
+2. Review the deletion action.
+3. Enter the destination name exactly as shown.
+4. Select **Permanently Delete**.
+
+Coolify disconnects the Coolify Proxy from the network, removes the Docker network from the server, and removes the destination from Coolify.
+
+</Step>
+<Step>
+
+### Verify the deletion
+
+Open the global or server-specific **Destinations** page and confirm that the deleted destination no longer appears.
+
+</Step>
+</Steps>
+
+## If you need the destination again
+
+There is no restore action for a deleted destination. Follow [Create a Destination](/core/networking/destinations/create), then redeploy or restore each resource separately.

@@ -1,0 +1,31 @@
+---
+title: "Logs"
+description: "Get application logs"
+---
+
+# Logs
+
+Get application logs
+
+## Usage
+
+```sh
+coolify app logs <uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--follow (-f)` | `boolean` | No | `false` | Follow log output (like tail -f) |
+| `--lines (-n)` | `integer` | No | `100` | Number of log lines to retrieve |
+| `--service` | `string` | No | — | Docker Compose service name (selects one container in multi-service apps) |
+| `--show-timestamps` | `boolean` | No | `false` | Show timestamps in log output |
+
+## Get current help
+
+```sh
+coolify app logs --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

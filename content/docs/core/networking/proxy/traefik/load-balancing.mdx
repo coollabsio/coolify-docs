@@ -1,0 +1,102 @@
+---
+title: Load Balancing
+description: Route one Traefik domain to multiple reachable upstream servers or containers.
+---
+
+# Load balancing
+
+A Traefik load-balancer service distributes requests for one domain across multiple upstream URLs. The upstreams can be containers on the same server or services on other servers, as long as the `coolify-proxy` container can reach every URL.
+
+
+## Prepare the upstreams
+
+Before creating the route:
+
+- deploy at least two healthy upstream instances
+- expose each upstream on an address and port reachable from the Traefik container
+- point the public domain to the server running this Traefik proxy
+- decide whether Traefik should terminate HTTPS for the public domain
+- remove any other resource route that uses the same hostname and path
+
+Do not use `localhost` for an upstream unless the service runs inside the Traefik container. For a host service, use `host.docker.internal:<port>`. For a container on a shared Docker network, use its container or service name and internal port.
+
+## Add the load-balancer route
+
+Open **Servers > your server > Proxy > Dynamic Configurations**, select **Add**, and create `app-load-balancer.yaml`.
+
+<Tabs items={['HTTPS', 'HTTP only']}>
+<Tab value="HTTPS">
+
+```yaml
+http:
+  middlewares:
+    load-balancer-https-redirect:
+      redirectScheme:
+        scheme: https
+
+  routers:
+    app-load-balancer-http:
+      rule: 'Host(`app.example.com`)'
+      entryPoints:
+        - http
+      middlewares:
+        - load-balancer-https-redirect
+      service: app-load-balancer
+
+    app-load-balancer-https:
+      rule: 'Host(`app.example.com`)'
+      entryPoints:
+        - https
+      service: app-load-balancer
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    app-load-balancer:
+      loadBalancer:
+        healthCheck:
+          path: /health
+          interval: 10s
+          timeout: 3s
+        servers:
+          - url: 'http://192.168.1.23:3000'
+          - url: 'http://192.168.1.65:3000'
+```
+
+Replace the domain, health-check path, and upstream URLs. Remove `healthCheck` if the application does not provide an endpoint that returns a successful status.
+
+</Tab>
+<Tab value="HTTP only">
+
+```yaml
+http:
+  routers:
+    app-load-balancer:
+      rule: 'Host(`app.example.com`)'
+      entryPoints:
+        - http
+      service: app-load-balancer
+
+  services:
+    app-load-balancer:
+      loadBalancer:
+        servers:
+          - url: 'http://192.168.1.23:3000'
+          - url: 'http://192.168.1.65:3000'
+```
+
+Use HTTP-only public routing only when TLS terminates at another trusted proxy or load balancer before traffic reaches Traefik.
+
+</Tab>
+</Tabs>
+
+## Verify traffic distribution
+
+Save the dynamic configuration, then:
+
+1. Open the public domain and confirm it responds.
+2. Check **Servers > your server > Proxy > Logs** for connection or configuration errors.
+3. Stop one upstream and confirm requests continue through a healthy upstream.
+4. Restore the upstream and confirm it returns to service.
+
+If every request returns a gateway error, test each upstream URL from the proxy network and confirm the service listens on the documented internal port.

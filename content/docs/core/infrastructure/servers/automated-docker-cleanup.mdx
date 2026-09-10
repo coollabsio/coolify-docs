@@ -1,0 +1,97 @@
+---
+title: Automated Docker Cleanup
+description: Configure scheduled Docker cleanup and safely remove unused images, volumes, and networks from a server.
+---
+
+# Automated Docker cleanup
+
+Docker stores images and build files on the server. Over time, unused files can fill the disk and prevent deployments from completing.
+
+Coolify can clean the server automatically on a schedule or when disk usage reaches a limit.
+
+<Callout type="warning" title="Docker cleanup can use significant CPU">
+Docker cleanup can be CPU-intensive while it scans and removes unused data. If the server has limited CPU resources, schedule cleanup less frequently and run it when applications receive less traffic.
+</Callout>
+
+---
+
+## Configure Docker cleanup
+
+<Steps>
+<Step>
+
+### Open Docker Cleanup
+
+1. Open **Servers** in the Coolify sidebar.
+2. Select the server you want to clean.
+3. Select **Docker Cleanup** in the server menu.
+
+The page shows the cleanup settings and recent cleanup executions.
+
+</Step>
+<Step>
+
+### Choose when cleanup runs
+
+Start with these settings:
+
+- Keep **Docker cleanup frequency** at `0 0 * * *` to check once each day at midnight.
+- Keep **Force Docker Cleanup** enabled if you want cleanup to run every time the schedule is due.
+- Disable **Force Docker Cleanup** if cleanup should run only after disk usage reaches **Docker cleanup threshold (%)**.
+- Keep the threshold at `80` unless you need cleanup to start sooner.
+
+Select **Save** after changing the schedule or threshold.
+
+<Callout type="info" title="A safe starting configuration">
+Keep volume and network deletion disabled. Leave application image retention enabled. This removes common unused Docker data without deliberately pruning persistent volumes or every rollback image.
+</Callout>
+
+</Step>
+<Step>
+
+### Choose what Coolify may delete
+
+The advanced cleanup options are disabled by default:
+
+| Setting | What happens when enabled |
+| :--- | :--- |
+| **Delete Unused Volumes** | Deletes every Docker volume that is not currently attached to a container. |
+| **Delete Unused Networks** | Deletes every Docker network that is not currently used by a container. |
+| **Disable Application Image Retention** | Removes old application images instead of keeping the configured number for rollback. |
+
+<Callout type="error" title="Unused volumes can still contain important data">
+A stopped or removed container can leave an unused volume containing application or database data. Back up important data and identify every volume before enabling **Delete Unused Volumes**.
+</Callout>
+
+Leave these settings disabled unless you have confirmed the unused objects can be deleted.
+
+</Step>
+<Step>
+
+### Run a manual cleanup
+
+Use a manual cleanup to confirm the settings before relying on the schedule:
+
+1. Review the three advanced cleanup options.
+2. Select **Trigger Manual Cleanup**.
+3. Wait for the execution to finish.
+
+A manual cleanup starts immediately. It does not wait for the schedule or disk threshold.
+
+</Step>
+<Step>
+
+### Review the result
+
+Open **Recent executions** and select the latest cleanup.
+
+Confirm that:
+
+1. the execution completed successfully
+2. the command output does not show an unexpected error
+3. disk usage decreased when unused data was available
+4. important applications and databases still work
+5. the application rollback images you expect are still available
+
+</Step>
+</Steps>

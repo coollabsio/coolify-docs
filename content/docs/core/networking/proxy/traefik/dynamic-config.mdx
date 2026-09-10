@@ -1,0 +1,66 @@
+---
+title: Dynamic Configuration
+description: Add file-based Traefik routers, services, middleware, and TLS settings through Coolify.
+---
+
+# Dynamic configuration
+
+Traefik separates its startup configuration from dynamic routing configuration. Coolify stores file-based dynamic configuration under `/data/coolify/proxy/dynamic/` on the selected server and mounts it at `/traefik/dynamic/` inside the proxy container.
+
+Traefik watches that directory, so valid file changes can take effect without restarting the proxy.
+
+## Add a configuration file
+
+<Steps>
+<Step>
+
+### Open Dynamic Configurations
+
+Open **Servers > your server > Proxy > Dynamic Configurations**.
+
+</Step>
+<Step>
+
+### Create the file
+
+Select **Add**, enter a filename and valid Traefik YAML, then save it.
+
+If the filename has no `.yaml` or `.yml` extension, Coolify adds `.yaml`. Filenames may contain letters, numbers, dots, dashes, and underscores, but cannot contain path separators or start with a dot.
+
+</Step>
+<Step>
+
+### Verify Traefik loaded it
+
+Reload the **Dynamic Configurations** page and confirm the file appears. Then check the behavior the file defines and inspect **Servers > your server > Proxy > Logs** for parsing or provider errors.
+
+</Step>
+</Steps>
+
+The following example defines a reusable response-header middleware:
+
+```yaml
+http:
+  middlewares:
+    security-headers:
+      headers:
+        contentTypeNosniff: true
+        frameDeny: true
+        referrerPolicy: no-referrer
+```
+
+Reference it as `security-headers@file` from a Traefik router.
+
+<Callout type="info" title="Coolify-generated files are read-only">
+Coolify shows generated files such as `coolify.yaml` and `default_redirect_503.yaml`, but does not provide edit or delete controls for them. Change the corresponding Coolify setting instead of replacing generated files.
+</Callout>
+
+## Edit or remove a custom file
+
+Open the custom file from **Dynamic Configurations**, change its YAML, and save. Delete a file only after removing every router reference to the middleware, service, or TLS option it defines.
+
+A YAML syntax error or a missing referenced object can leave affected routes unavailable even though Traefik itself continues running. Restore the last working file content and check the proxy logs when a change fails.
+
+## When to restart the proxy
+
+Dynamic files are watched and normally do not require a restart. Restart the proxy when you change the main `/data/coolify/proxy/docker-compose.yml`, including Traefik command flags, environment variables, ports, volumes, or the proxy image.

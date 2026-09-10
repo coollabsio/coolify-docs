@@ -1,0 +1,165 @@
+---
+title: Automatic Deployments
+description: Deploy automatically with a Git provider webhook or an authenticated deployment request from external CI.
+---
+
+import { BranchUp, Code, Globe3 } from 'reicon-react';
+
+# Automatic deployments
+
+Coolify can start a deployment when a Git provider reports a repository change or when an external workflow sends an authenticated deployment request.
+
+Choose the trigger that matches how the application source is connected:
+
+<Tabs id="automatic-deployment-methods" items={['Git integration', 'Repository webhook', 'External workflow']}>
+<Tab value="Git integration" icon={BranchUp}>
+
+Use this method when the application was created by selecting a repository through a [GitHub App](/applications/sources/github/app) or [GitLab source integration](/applications/sources/gitlab).
+
+The integration receives provider events for Coolify, so you do not need to copy a manual Git webhook URL.
+
+<Steps>
+<Step>
+
+### Enable automatic deployments
+
+Open the application, select **Configuration > Advanced > Deployment & Git**, then enable **Auto Deploy**.
+
+</Step>
+<Step>
+
+### Push to the configured branch
+
+Push a commit to the branch selected for the application. A push to another branch does not update the production application unless that branch is configured for a preview or another application.
+
+</Step>
+<Step>
+
+### Verify the deployment
+
+Open **Deployments** and confirm a webhook deployment appears for the pushed commit.
+
+If no deployment appears, inspect the provider integration and confirm the application still has access to the repository.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Repository webhook" icon={Globe3}>
+
+Use this method for an application created from a public repository URL or **Private Repository (with deploy key)**.
+
+These source types can clone the repository but do not automatically configure provider events. Add a manual Git webhook so the provider can notify Coolify.
+
+<Steps>
+<Step>
+
+### Copy the provider webhook URL
+
+Open the application, select **Configuration > Webhooks**, then copy the URL for the repository provider under **Manual Git Webhooks**.
+
+</Step>
+<Step>
+
+### Configure the secret
+
+Enter a long random value in the matching **Webhook Secret** field and select **Save**.
+
+Create the webhook in the repository provider with the copied Coolify URL and the same secret. Do not reuse an account password, API token, or deploy key.
+
+</Step>
+<Step>
+
+### Select repository events
+
+Enable the provider's push event. Add pull-request or merge-request events only when the application also uses preview deployments.
+
+Follow [Manual Git webhooks](/applications/deployments/manual-webhooks) for provider-specific event names and delivery settings.
+
+</Step>
+<Step>
+
+### Enable and verify automatic deployments
+
+Open **Configuration > Advanced > Deployment & Git**, enable **Auto Deploy**, then push a commit to the configured branch.
+
+Open **Deployments** and confirm a webhook deployment appears.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="External workflow" icon={Code}>
+
+Use this method when CI should run tests, approvals, or an external image build before it tells Coolify to deploy.
+
+The authenticated **Deploy Webhook** starts a deployment directly. **Auto Deploy** does not need to be enabled for this method.
+
+<Steps>
+<Step>
+
+### Create an API token
+
+Create a Coolify [API token](/core/security/credentials/api-tokens) with permission to deploy the application.
+
+</Step>
+<Step>
+
+### Copy the deploy webhook
+
+Open the application, select **Configuration > Webhooks**, then copy **Deploy Webhook (auth required)**.
+
+Store the webhook URL and API token as secrets in the external CI system.
+
+</Step>
+<Step>
+
+### Call Coolify after CI succeeds
+
+Add the request after the workflow's tests, build, or approval steps:
+
+```sh
+curl --fail --request GET "$COOLIFY_WEBHOOK" \
+  --header "Authorization: Bearer $COOLIFY_TOKEN"
+```
+
+The [GitHub Actions workflow](/applications/sources/github/actions#add-the-github-actions-workflow) shows the same authentication pattern in a complete example.
+
+</Step>
+<Step>
+
+### Verify the deployment
+
+Run the workflow, then open **Deployments** and confirm Coolify received the authenticated request.
+
+If the request fails, inspect the CI response and confirm that the webhook URL and token were stored without extra whitespace.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+## Limit deployments by changed paths
+
+Use **Watch Paths** under **Configuration > General > Build** when a monorepo should deploy only after matching files change.
+
+Patterns are evaluated in order and support `*`, `**`, `?`, and negation with `!`. The last matching pattern wins.
+
+For example:
+
+```sh
+apps/api/**
+packages/shared/**
+!apps/api/**/*.md
+```
+
+Watch paths filter Git provider webhook events that include changed-file information. They do not block deployments started manually from the dashboard or through the authenticated **Deploy Webhook**.
+
+Test the patterns with a documentation-only commit before relying on them for production automation.
+
+## Disable automatic Git deployments
+
+Turn off **Configuration > Advanced > Deployment & Git > Auto Deploy** to keep the source connection while ignoring automatic commit deployments from Git provider events.
+
+You can still select **Deploy** or **Redeploy**, or call the authenticated **Deploy Webhook** from an external workflow.

@@ -1,94 +1,110 @@
 ---
 title: ClickHouse
-description: Deploy ClickHouse on Coolify with column-oriented OLAP database, real-time analytics, S3 backups, and exceptional query performance.
+description: Deploy and operate ClickHouse on Coolify for analytical workloads with persistent storage, scheduled backups, and health checks.
 ---
 
-# Clickhouse
+# ClickHouse
 
- <ZoomImage src="/docs/images/database-logos/clickhouse.webp" alt="Coolify clickhouse" />
+Coolify deploys ClickHouse as a standalone analytical database on the selected server and destination. A new resource gets a generated administrator password, a persistent volume at `/var/lib/clickhouse`, an internal connection URL, and a health check.
 
-## What is ClickHouse
+ClickHouse is a column-oriented database for analytical queries and online analytical processing (OLAP).
 
-ClickHouse is an open-source column-oriented database management system designed for online analytical processing (OLAP).
+## Create a ClickHouse database
 
-It's known for its exceptional query performance on large datasets, making it ideal for real-time analytics and data warehousing applications.
+<Steps>
+<Step>
 
-ClickHouse uses a column-oriented storage format and employs various optimizations like vectorized query execution to achieve high performance.
+### Open New Resource
 
-It supports SQL with extensions and can handle both batch and stream data ingestion, making it versatile for various analytical workloads.
+Open the project and environment where the database should live, then select **New Resource**.
 
-## To connect
+</Step>
+<Step>
 
-Map the port `8123:8123` for the HTTP interface.
+### Select ClickHouse
 
-In DBeaver, connect to `http://__ip_address__:8123` and use the `default` username plus the password in the UI.
+Under **Databases**, select **ClickHouse**. You can also search for **ClickHouse** by name.
 
-If you also want the native TCP protocol (used by [clickhouse-client](https://clickhouse.com/docs/interfaces/cli) CLI), publish `9000:9000` as well.
+</Step>
+<Step>
 
-## Backup and Restore Guide
+### Select a server
 
-Currently, Coolify does not support modifying ClickHouse configurations, which means certain native backup options (e.g., backing up to a local Disk or using `ALTER TABLE ... FREEZE PARTITION ...`) are not possible. Instead, the recommended approach is to use S3 for backups.
+Select the server that should run ClickHouse. Build servers cannot be selected because they do not host running database resources.
 
-### How to Backup ClickHouse
+</Step>
+<Step>
 
-To backup a table or an entire database, use the following SQL command:
+### Select a destination
 
-- **Backup a Table:**
+Select the Docker network destination that ClickHouse should join.
 
-```sql
-BACKUP TABLE <table_name> TO S3('<your_s3_endpoint_com>/<unique_folder_for_table_backup>', '<s3_access_key>', '<s3_secret_key>')
+</Step>
+<Step>
+
+### Review the generated configuration
+
+Coolify creates the resource and opens **Configuration > General**. Review the image, administrator username, generated password, native port, and connection URL. Keep the default private networking unless an external client requires access.
+
+</Step>
+<Step>
+
+### Start ClickHouse
+
+Select **Start** and follow the startup output. Wait until ClickHouse is running and healthy, then copy the **Internal URL** into clients on the same destination network.
+
+</Step>
+</Steps>
+
+## Default configuration
+
+| Setting | Default or behavior |
+| :--- | :--- |
+| Native internal port | `9000` |
+| Default image | `clickhouse/clickhouse-server:25.11` |
+| HTTP interface | `8123` inside the container |
+| Administrator username | `default` |
+| Database | `default` when no other database is configured |
+| Data mount | `/var/lib/clickhouse` |
+| Scheduled backups | Supported |
+| SSL | Not available in the standalone database interface |
+
+
+Coolify's generated **Internal URL** uses the native protocol and port `9000`:
+
+```sh
+clickhouse://<username>:<password>@<database-container>:9000/<database>
 ```
 
-- **Backup a Database:**
-  Replace `TABLE` with `DATABASE` to backup the whole database:
+If an HTTP client or GUI needs the HTTP interface, map the container's `8123` port with **Ports Mappings**. When **Make it publicly available** is enabled, use the generated **Public URL** for the native protocol; configure an HTTP mapping separately when the client requires HTTP.
 
-```sql
-BACKUP DATABASE <database_name> TO S3('<your_s3_endpoint_com>/<unique_folder_for_database_backup>', '<s3_access_key>', '<s3_secret_key>')
-```
+For example, map `8123:8123` and connect an HTTP client to `http://<server-ip>:8123` with the ClickHouse administrator username and password. Map `9000:9000` when a client uses the native TCP protocol, such as `clickhouse-client`.
 
-### How to Restore ClickHouse
+## Configure ClickHouse
 
-To restore a table or database from an S3 backup, use the corresponding RESTORE command:
+Open **Configuration > General** to change the image, administrator credentials, **Ports Mappings**, public proxy, and supported custom Docker options. The current standalone ClickHouse form does not expose a database-name field; the generated URL uses the resource's configured database value, which defaults to `default`. Coolify creates a persistent volume at `/var/lib/clickhouse` when it creates the resource.
 
-- **Restore a Table:**
+ClickHouse does not expose a custom configuration editor or SSL selector in the standalone database interface. Use a Docker Compose deployment when you need to manage a custom ClickHouse topology or configuration files directly.
 
-```sql
-RESTORE TABLE <table_name> FROM S3('<your_s3_endpoint_com>/<unique_folder_from_table_backup>', '<s3_access_key>', '<s3_secret_key>')
-```
+## Back up and restore ClickHouse
 
-- **Restore a Database:**
-  Replace `TABLE` with `DATABASE` to restore the whole database:
+Coolify supports scheduled ClickHouse backups. Configure a schedule under **Backups**, enter one or more comma-separated database names, and configure local or S3 retention. Coolify creates a ClickHouse backup archive and removes expired copies according to the schedule's retention rules.
 
-```sql
-RESTORE DATABASE <database_name> FROM S3('<your_s3_endpoint_com>/<unique_folder_from_database_backup>', '<s3_access_key>', '<s3_secret_key>')
-```
+Use the database's **Terminal** or an approved ClickHouse client to verify the restored tables. Coolify's built-in [Import Backup workflow](/databases/restore#restore-support) does not support ClickHouse.
 
-### What Doesn't Work
+<Callout type="warning" title="Verify ClickHouse backups separately">
 
-- **Disk Backups:**
+The backup archive is created through ClickHouse's backup workflow. Test an archive against a disposable ClickHouse resource before relying on it for recovery.
 
-```sql
-BACKUP TABLE test.table TO Disk('backups', '1.zip')
-```
+</Callout>
 
-Does not work due to Coolify not allowing modifications to ClickHouse configurations.
+## Health checks
 
-- **Native Partition Freezes:**
+Coolify's default health check runs `clickhouse-client` inside the container and executes a simple query. Configure the interval, timeout, retries, and start period under **Configuration > Healthcheck**, then restart ClickHouse after saving.
 
-```sql
-ALTER TABLE ... FREEZE PARTITION ...
-```
+## Official ClickHouse resources
 
-May not work because of limitations in the Docker/Coolify file structure.
-
-- **clickhouse-backup Tool:**
-  External tools like [clickhouse-backup](https://github.com/Altinity/clickhouse-backup?utm_source=coolify.io) might not function properly within the Docker/Coolify setup due to similar configuration restrictions.
-
-### Performance Notes
-
-A community member shared that backing up a 145GB database took around 12 minutes, while restoring it took roughly 17 minutes.
-
-## Links
-
-- [The official website](https://clickhouse.com/?utm_source=coolify.io)
-- [GitHub](https://github.com/ClickHouse/ClickHouse?utm_source=coolify.io)
+- [ClickHouse documentation](https://clickhouse.com/docs)
+- [ClickHouse source](https://github.com/ClickHouse/ClickHouse)
+- [ClickHouse Docker image](https://hub.docker.com/r/clickhouse/clickhouse-server)
+- [ClickHouse backup and restore](https://clickhouse.com/docs/operations/backup)

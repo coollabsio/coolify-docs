@@ -1,0 +1,34 @@
+---
+title: Other Git Providers
+description: Deploy from another Git-compatible provider with public HTTPS access or an SSH deploy key.
+---
+
+# Other Git providers
+
+Coolify can deploy from another Git-compatible provider, including Forgejo, Gogs, and self-hosted Git servers.
+
+Use:
+
+- [Public Repository](/applications/sources/public-repositories) with an unauthenticated HTTPS clone URL
+- [Private Repository (with deploy key)](/applications/sources/deploy-keys) with an SSH clone URL
+
+The deployment server must be able to resolve and reach the Git host.
+
+## Automatic deployments
+
+The manual provider webhooks in Coolify have provider-specific payload and signature handling for GitHub, GitLab, Bitbucket, and Gitea.
+
+For another provider, use its CI or workflow system to call **Deploy Webhook (auth required)** after the required checks pass:
+
+```bash
+curl --fail --request GET "$COOLIFY_WEBHOOK" \
+  --header "Authorization: Bearer $COOLIFY_TOKEN"
+```
+
+Store the webhook URL and API token as protected CI secrets.
+
+## Preview deployments
+
+Automatic pull-request previews require a supported provider event format. If the provider is not supported, use the Coolify API or a deployment webhook from CI to implement the required preview workflow, or deploy previews manually.
+
+Test the clone, one manual deployment, and one automated deployment before depending on the integration for production releases.

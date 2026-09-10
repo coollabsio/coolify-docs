@@ -1,0 +1,7 @@
+{
+  "title": "Observability",
+  "pages": [
+    "monitoring",
+    "log-drains"
+  ]
+}

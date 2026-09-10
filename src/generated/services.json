@@ -16,7 +16,7 @@
   {
     "name": "Affine",
     "slug": "affine",
-    "icon": "/docs/images/services/affine-logo.webp",
+    "icon": "/docs/images/services/affine-logo.svg",
     "description": "Open-source knowledge base and workspace combining docs, whiteboards, and databases.",
     "category": "Productivity"
   },
@@ -107,14 +107,14 @@
   {
     "name": "Beszel",
     "slug": "beszel",
-    "icon": "/docs/images/services/beszel-logo.svg",
+    "icon": "/docs/images/services/beszel-logo.webp",
     "description": "Lightweight server monitoring hub with historical data, docker stats, and alerts.",
     "category": "Monitoring"
   },
   {
     "name": "Bitcoin Core",
     "slug": "bitcoin-core",
-    "icon": "/docs/images/services/bitcoin-logo.svg",
+    "icon": "/docs/images/services/bitcoin.svg",
     "description": "Bitcoin Core full node software.",
     "category": "Crypto"
   },
@@ -275,6 +275,13 @@
     "category": "Development"
   },
   {
+    "name": "Cloudflare DDNS",
+    "slug": "cloudflare-ddns",
+    "icon": "/docs/images/services/cloudflare-ddns.svg",
+    "description": "Cloudflare DNS updater for dynamic public IP addresses.",
+    "category": "Automation"
+  },
+  {
     "name": "Cloudflared",
     "slug": "cloudflared",
     "icon": "/docs/images/services/cloudflared-logo.svg",
@@ -340,7 +347,7 @@
   {
     "name": "Dashboard",
     "slug": "dashboard",
-    "icon": "/docs/images/services/dashboard-logo.svg",
+    "icon": "",
     "description": "A simple dashboard for your server.",
     "category": "Administration",
     "disabled": true
@@ -355,7 +362,7 @@
   {
     "name": "Databasus",
     "slug": "databasus",
-    "icon": "/docs/images/services/databasus-logo.webp",
+    "icon": "/docs/images/services/databasus-logo.svg",
     "description": "A free, open source and self-hosted tool to backup PostgreSQL, MySQL and MongoDB with multiple storage backends.",
     "category": "Backup"
   },
@@ -481,7 +488,7 @@
   {
     "name": "Emby Stat",
     "slug": "embystat",
-    "icon": "/docs/images/services/embystat-logo.svg",
+    "icon": "/docs/images/services/embystat-logo.png",
     "description": "A simple and easy-to-use Emby statistics dashboard.",
     "category": "Media"
   },
@@ -621,7 +628,7 @@
   {
     "name": "Freshrss",
     "slug": "freshrss",
-    "icon": "/docs/images/services/freshrss-logo.png",
+    "icon": "/docs/images/services/FreshRSS-logo.png",
     "description": "Free, self-hostable RSS feed aggregator.",
     "category": "RSS"
   },
@@ -759,6 +766,13 @@
     "category": "Development"
   },
   {
+    "name": "Healthchecks",
+    "slug": "healthchecks",
+    "icon": "/docs/images/services/healthchecks.webp",
+    "description": "Open-source cron job and background task monitoring service.",
+    "category": "Monitoring"
+  },
+  {
     "name": "Heimdall",
     "slug": "heimdall",
     "icon": "/docs/images/services/heimdall-logo.svg",
@@ -768,7 +782,7 @@
   {
     "name": "Hermes Agent",
     "slug": "hermes-agent",
-    "icon": "",
+    "icon": "/docs/images/services/hermes-agent-logo.png",
     "description": "Autonomous AI agent with persistent memory and scheduling, plus a self-hosted web chat UI.",
     "category": "AI"
   },
@@ -844,6 +858,20 @@
     "category": "Security"
   },
   {
+    "name": "InfluxDB",
+    "slug": "influxdb",
+    "icon": "/docs/images/services/influxdb.svg",
+    "description": "Open-source time series database for metrics, events, and IoT data.",
+    "category": "Database"
+  },
+  {
+    "name": "Inngest",
+    "slug": "inngest",
+    "icon": "/docs/images/services/inngest-logo.svg",
+    "description": "Durable workflow engine for background jobs, queues, and event-driven systems.",
+    "category": "Automation"
+  },
+  {
     "name": "Invoice Ninja",
     "slug": "invoice-ninja",
     "icon": "/docs/images/services/invoiceninja-logo.png",
@@ -874,7 +902,7 @@
   {
     "name": "Joomla",
     "slug": "joomla",
-    "icon": "/docs/images/services/joomla-logo.svg",
+    "icon": "/docs/images/services/Joomla-Logo.svg",
     "description": "Open-source content management system.",
     "category": "CMS"
   },
@@ -1022,7 +1050,7 @@
   {
     "name": "Logto",
     "slug": "logto",
-    "icon": "/docs/images/services/logto-logo.svg",
+    "icon": "/docs/images/services/logto-logo.png",
     "description": "Logto is an Auth0 alternative designed for modern apps and SaaS products.",
     "category": "Security"
   },
@@ -1050,14 +1078,14 @@
   {
     "name": "Marimo",
     "slug": "marimo",
-    "icon": "/docs/images/services/marimo.svg",
+    "icon": "/docs/images/services/marimo-logo.svg",
     "description": "Open-source reactive notebook for Python.",
     "category": "Development"
   },
   {
     "name": "Martin",
     "slug": "martin",
-    "icon": "/docs/images/services/martin-logo.png",
+    "icon": "/docs/images/services/martin.png",
     "description": "PostGIS vector tile server.",
     "category": "Development"
   },
@@ -1136,14 +1164,14 @@
   {
     "name": "Metube",
     "slug": "metube",
-    "icon": "/docs/images/services/metube-logo.svg",
+    "icon": "/docs/images/services/metube-logo.png",
     "description": "A self-hosted video sharing platform.",
     "category": "Media"
   },
   {
     "name": "Mindsdb",
     "slug": "mindsdb",
-    "icon": "/docs/images/services/mindsdb-logo.svg",
+    "icon": "/docs/images/services/mindsdb.svg",
     "description": "Machine learning platform that brings AI to databases.",
     "category": "AI"
   },
@@ -1157,7 +1185,7 @@
   {
     "name": "Miniflux",
     "slug": "miniflux",
-    "icon": "/docs/images/services/miniflux-logo.svg",
+    "icon": "/docs/images/services/miniflux.svg",
     "description": "Minimalist and opinionated feed reader.",
     "category": "RSS"
   },
@@ -1243,7 +1271,7 @@
   {
     "name": "Next Image Transformation",
     "slug": "next-image-transformation",
-    "icon": "/docs/images/services/nextimage-logo.svg",
+    "icon": "/docs/images/services/next-image-transformation-logo.svg",
     "description": "Image transformation service for Next.js.",
     "category": "Development"
   },
@@ -1327,7 +1355,7 @@
   {
     "name": "Onetime Secret",
     "slug": "onetimesecret",
-    "icon": "/docs/images/services/onetimesecret-logo.svg",
+    "icon": "/docs/images/services/onetimesecret.svg",
     "description": "Share secrets securely with self-destructing links that can only be viewed once.",
     "category": "Security"
   },
@@ -1359,6 +1387,13 @@
     "icon": "/docs/images/services/openclaw-logo.svg",
     "description": "AI-powered coding assistant with multi-provider support and browser automation.",
     "category": "AI"
+  },
+  {
+    "name": "OpenObserve",
+    "slug": "openobserve",
+    "icon": "/docs/images/services/openobserve-logo.svg",
+    "description": "Observability platform for logs, metrics, traces, RUM, and session replays.",
+    "category": "Monitoring"
   },
   {
     "name": "OpenPanel",
@@ -1398,7 +1433,7 @@
   {
     "name": "Outline",
     "slug": "getoutline",
-    "icon": "/docs/images/services/outline-logo.svg",
+    "icon": "/docs/images/services/getoutline-logo.jpeg",
     "description": "Open-source collaboration tool.",
     "category": "Productivity"
   },
@@ -1426,7 +1461,7 @@
   {
     "name": "Palworld",
     "slug": "palworld",
-    "icon": "/docs/images/services/palworld-logo.webp",
+    "icon": "/docs/images/services/palworld-logo.svg",
     "description": "Dedicated server for Palworld multiplayer survival game with creature collection and base building.",
     "category": "Gaming"
   },
@@ -1590,7 +1625,7 @@
   {
     "name": "Pterodactyl Panel",
     "slug": "pterodactyl",
-    "icon": "/docs/images/services/pterodactyl_logo_transparent.png",
+    "icon": "/docs/images/services/pterodactyl-logo.png",
     "description": "Game server management panel with Wings daemon for hosting Minecraft, CS:GO, ARK and more.",
     "category": "Gaming",
     "disabled": true
@@ -1703,7 +1738,7 @@
   {
     "name": "Satisfactory",
     "slug": "satisfactory",
-    "icon": "",
+    "icon": "/docs/images/services/satisfactory-logo.png",
     "description": "Game server for Satisfactory open-world factory building game with a dash of exploration and combat.",
     "category": "Gaming"
   },
@@ -1787,7 +1822,7 @@
   {
     "name": "Snapdrop",
     "slug": "snapdrop",
-    "icon": "/docs/images/services/snapdrop-logo.svg",
+    "icon": "/docs/images/services/snapdrop-logo.png",
     "description": "Local file sharing in your browser.",
     "category": "File Sharing"
   },
@@ -1808,7 +1843,7 @@
   {
     "name": "Soketi App Manager",
     "slug": "soketi-app-manager",
-    "icon": "/docs/images/services/soketi-app-manager-logo.webp",
+    "icon": "/docs/images/services/soketi-app-manager-logo.svg",
     "description": "Manage Soketi apps with application configuration and WebSocket server administration interface.",
     "category": "Development"
   },
@@ -1832,6 +1867,13 @@
     "icon": "/docs/images/services/sparkyfitness.webp",
     "description": "A comprehensive fitness app that helps users track nutrition, exercise, and body metrics.",
     "category": "Health"
+  },
+  {
+    "name": "Stalwart",
+    "slug": "stalwart",
+    "icon": "/docs/images/services/stalwart-logo.svg",
+    "description": "All-in-one mail server with SMTP, IMAP, POP3, JMAP, Sieve, built-in anti-spam, and a web admin interface.",
+    "category": "Email"
   },
   {
     "name": "Statusnook",
@@ -1983,7 +2025,7 @@
   {
     "name": "Unleash",
     "slug": "unleash",
-    "icon": "/docs/images/services/unleash-logo.svg",
+    "icon": "/docs/images/services/unleash.svg",
     "description": "Open-source feature management platform.",
     "category": "Development"
   },
@@ -2088,7 +2130,7 @@
   {
     "name": "Wings",
     "slug": "wings",
-    "icon": "/docs/images/services/pterodactyl_logo_transparent.png",
+    "icon": "/docs/images/services/pterodactyl-logo.png",
     "description": "Pterodactyl server control daemon for standalone game server node deployments.",
     "category": "Gaming"
   },
@@ -2116,7 +2158,7 @@
   {
     "name": "Zipline",
     "slug": "zipline",
-    "icon": "/docs/images/services/zipline-logo.svg",
+    "icon": "/docs/images/services/zipline-logo.png",
     "description": "Next generation ShareX / File upload server",
     "category": "File Management"
   }

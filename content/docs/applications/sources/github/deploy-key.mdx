@@ -1,0 +1,156 @@
+---
+title: GitHub Deploy Key
+description: Give Coolify read-only access to one private GitHub repository.
+---
+
+# GitHub Deploy Key
+
+A deploy key gives Coolify read-only SSH access to one private GitHub repository without using a personal access token or an account-level SSH key.
+
+Use a deploy key when:
+
+- Coolify should access only one private repository
+- you cannot install a GitHub App in the organization
+- repository-specific read-only access is preferred
+
+Use a [GitHub App](/applications/sources/github/app) when Coolify needs integrated access to several repositories.
+
+<Callout type="info" title="Example values">
+
+This guide uses:
+
+- **Repository owner:** `ShadowArcanist`
+- **Repository name:** `coolify-dev`
+- **Key name:** `Deploy Key Tutorial`
+- **SSH URL:** `git@github.com:ShadowArcanist/coolify-dev.git`
+
+</Callout>
+
+<Steps>
+<Step>
+
+### Create a private key in Coolify
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/deploy-key/1.webp" alt="Private Keys page in Coolify" />
+
+1. Open **Keys & Tokens**.
+2. Select **Private Keys**.
+3. Select **+ Add**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/deploy-key/2.webp" alt="Generate SSH key actions in Coolify" />
+
+4. Select **Generate new RSA SSH Key** or **Generate new ED25519 SSH Key**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/deploy-key/3.webp" alt="Generated SSH public key in Coolify" />
+
+5. Copy the public key.
+6. Select **Continue** to save the key pair.
+
+<Callout type="success" title="You can generate the key outside Coolify">
+
+Run:
+
+```bash
+ssh-keygen -t rsa -b 4096 -C "coolify-deploy-key"
+```
+
+Paste the generated private key into Coolify and use the matching `.pub` file on GitHub.
+
+</Callout>
+
+</Step>
+<Step>
+
+### Add the deploy key on GitHub
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/deploy-key/4.webp" alt="Deploy keys page in GitHub repository settings" />
+
+1. Open the repository settings.
+2. Select **Deploy keys**.
+3. Select **Add deploy key**.
+
+The direct URL has this form:
+
+```txt
+https://github.com/OWNER/REPOSITORY/settings/keys
+```
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/deploy-key/5.webp" alt="New deploy key form on GitHub" />
+
+4. Enter a descriptive title.
+5. Paste the public key copied from Coolify.
+6. Keep **Allow write access** disabled.
+7. Select **Add key**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/deploy-key/6.webp" alt="Saved read-only deploy key on GitHub" />
+
+</Step>
+<Step>
+
+### Copy the repository SSH URL
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/deploy-key/7.webp" alt="SSH clone URL in the GitHub Code menu" />
+
+1. Open the GitHub repository.
+2. Select **Code > Local > SSH**.
+3. Copy the SSH URL, such as `git@github.com:ShadowArcanist/coolify-dev.git`.
+
+</Step>
+<Step>
+
+### Create a resource
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/deploy-key/8.webp" alt="Coolify project page with the New button" />
+
+Open the required project and environment, then select **+ New**.
+
+</Step>
+<Step>
+
+### Select the deploy-key resource type
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/deploy-key/9.webp" alt="Private Repository with Deploy Key resource type" />
+
+Select **Private Repository (with Deploy Key)**.
+
+</Step>
+<Step>
+
+### Choose the server
+
+<Callout type="info" title="Self-hosted Coolify includes localhost">
+
+A self-hosted installation starts with a **localhost** server. Coolify selects it automatically when no other deployment server is available.
+
+</Callout>
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/deploy-key/10.webp" alt="Server selection for a deploy-key application" />
+
+Choose the server where the application should run.
+
+</Step>
+<Step>
+
+### Choose the deploy key
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/deploy-key/11.webp" alt="Private-key selection for a deploy-key application" />
+
+Select the private key created in Coolify.
+
+</Step>
+<Step>
+
+### Configure and deploy
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/deploy-key/12.webp" alt="SSH repository and build configuration for a deploy-key application" />
+
+1. Paste the GitHub SSH URL.
+2. Choose the branch, **Build Pack**, internal port, and other required settings.
+3. Continue to the application configuration and deploy it.
+
+Open **Deployments** and confirm that Coolify clones the private repository and requested commit.
+
+Follow [GitHub Auto Deploy](/applications/sources/github/auto-deploy) to deploy new commits through a repository webhook.
+
+</Step>
+</Steps>

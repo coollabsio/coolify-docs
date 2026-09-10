@@ -1,0 +1,61 @@
+---
+title: Switch GitHub Apps
+description: Move an existing application to another GitHub App source.
+---
+
+# Switch GitHub Apps
+
+Switch the GitHub App used by an application when a repository moves to another account or organization, or when you want a different access policy.
+
+The replacement GitHub App must have access to the repository before Coolify can clone from it.
+
+## 1. Move the repository when needed
+
+Transfer the repository on GitHub when it is moving to another account or organization.
+
+Skip this step when the repository stays in the same location and only its GitHub App access changes.
+
+## 2. Add the replacement GitHub App
+
+Follow [Set up a GitHub App](/applications/sources/github/app) and install it for the required repository.
+
+Keep the existing GitHub App installed until the application has deployed successfully through the replacement.
+
+## 3. Confirm repository access
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/switch-apps/1.webp" alt="GitHub App source with the Update Repositories action in Coolify" />
+
+1. Open **Sources** and select the replacement GitHub App.
+2. Select **Update Repositories**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/switch-apps/2.webp" alt="Repository access settings for the GitHub App installation" />
+
+3. Under **Repository access** on GitHub, confirm that the application repository is selected.
+4. Return to Coolify and refresh the repository list.
+
+## 4. Change the application source
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/switch-apps/3.webp" alt="Change Git Source control in an application configuration" />
+
+1. Open the application.
+2. Select **Configuration > Git Source**.
+3. Under **Change Git Source**, select the replacement GitHub App.
+4. Confirm the change.
+
+## 5. Update the repository name when needed
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/switch-apps/4.webp" alt="Repository field after changing an application's GitHub App" />
+
+If the repository moved to another account or organization, update **Repository** from the previous `owner/repository` value to its new location.
+
+Skip this step when the repository owner and name did not change.
+
+## 6. Redeploy and verify
+
+1. Save the source configuration.
+2. Select **Redeploy**.
+3. Open **Deployments** and confirm that Coolify clones the expected repository and commit.
+4. Push a test commit to the configured branch.
+5. Confirm that the replacement GitHub App delivers the webhook and Coolify starts a webhook deployment.
+
+Remove the previous GitHub App only after every application that uses it has been switched and verified.

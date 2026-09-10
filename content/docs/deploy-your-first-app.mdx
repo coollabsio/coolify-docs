@@ -1,0 +1,545 @@
+---
+title: Deploy your first app
+description: Deploy your first application on Coolify using the Docker Image option with a simple nginx example.
+---
+
+import {
+  ArrowsRight,
+  Box2,
+  Camera,
+  Database,
+  Globe3,
+  Rocket2,
+  Server,
+  Settings,
+  SignalStream,
+  Warning22,
+  WindowPointer,
+} from 'reicon-react';
+
+# Deploy your first app
+
+Deploying your first app in Coolify is the quickest way to confirm your setup is working end-to-end.
+
+In this guide, you will deploy an **Nginx** app using the **Docker Image** option.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+You will create a project, create a Docker Image resource, use `nginx:alpine`, expose port `80`, deploy it, and open the generated application URL.
+
+This path is ideal for a first deployment because you do not need a Git repository or build configuration.
+
+</CoolCallout>
+
+---
+
+
+## Before you start
+
+Make sure these things are ready before you deploy the app.
+
+<CoolActionCardGrid
+  data-first-app
+  className="not-prose my-5"
+  surface
+  cards={[
+    {
+      title: 'Dashboard access',
+      description: 'You can sign in to Coolify and see the main dashboard.',
+      bullets: ['You can access Coolify in your browser', 'Dashboard loads without errors'],
+      icon: WindowPointer,
+    },
+    {
+      title: 'Server is connected',
+      description: 'Coolify has at least one server listed on the Servers page.',
+      bullets: ['Open Servers from the sidebar', 'For self-hosted installs, localhost is fine'],
+      icon: Server,
+    },
+    {
+      title: 'Proxy is running',
+      description: 'Open the server page in Coolify and check the proxy status.',
+      bullets: ['Status says Proxy is running', 'If it is stopped, click Start Proxy'],
+      icon: SignalStream,
+    },
+  ]}
+/>
+
+If Coolify is not ready yet, first follow [Start with Self-hosted](/start-with-self-hosted) or [Start with Coolify Cloud](/start-with-cloud).
+
+---
+
+
+## Deployment overview
+
+<section data-first-app className="not-prose my-5">
+<CoolFlow
+  id="first-app-deployment-flow"
+  icon={Rocket2}
+  title="First app deployment flow"
+  description="This first deployment uses a pre-built Docker image, so you can check that Coolify can create an app, start it, and give you a URL without adding Git or build settings."
+  steps={[
+    'Create or open a project',
+    'Choose Docker Image',
+    'Enter nginx:alpine',
+    'Set port 80',
+    'Deploy and open the URL',
+  ]}
+  list={[
+    'Create or open the project where the app will live.',
+    'Use the Docker Image resource type so no repository or build setup is required.',
+    'Deploy nginx:alpine and expose port 80.',
+    'Use the generated sslip.io domain for the first test.',
+    'Open the generated URL and confirm the Nginx welcome page loads.',
+  ]}
+  endnote="You should end with a running nginx container, a generated application URL, and a visible Nginx welcome page."
+/>
+</section>
+
+<CoolCallout icon={Box2} title="Apps run as containers">
+
+Coolify deploys applications as containers. A container packages the app with what it needs to run, so Coolify can start it, stop it, restart it, and route traffic to it.
+
+In this guide, `nginx:alpine` is the container image Coolify will run.
+
+</CoolCallout>
+
+---
+
+
+## Deploy your first nginx app
+
+Choose the deployment method you want to use. Each tab reaches the same first-deployment outcome.
+
+<Tabs items={['Dashboard', 'API', 'CLI', 'MCP']}>
+<Tab value="Dashboard">
+
+<Steps>
+<Step>
+
+### Create your first project
+
+On the Coolify dashboard:
+
+- click **New Project**
+- enter a project name, for example `my-first-project`
+- click **Continue**
+
+
+<Callout type="success" title="Tip">
+
+If you already have a project, skip this step and continue to Step 2.
+
+</Callout>
+
+</Step>
+<Step>
+
+### Create a new resource
+
+Open your project and click **Create New Resource**.
+
+
+A resource is something Coolify will run for you, such as an app, database, or service. In this guide, the resource will be a small Nginx app.
+
+</Step>
+<Step>
+
+### Choose deployment type
+
+From the deployment options, choose **Docker Image**.
+
+
+Choose this option because the app already exists as a ready-to-run container image. Coolify only needs to pull the image and start it.
+
+</Step>
+<Step>
+
+### Enter the image reference
+
+In the image field, enter:
+
+```js
+nginx:alpine
+```
+
+Then continue to the configuration screen.
+
+
+This image starts a simple web server that shows the default Nginx welcome page. That makes it a safe first deployment test.
+
+</Step>
+<Step>
+
+### Configure network settings
+
+Set:
+
+- **Ports Exposes**: `80`
+
+
+Nginx listens on port `80`, so Coolify needs to know that it should send web traffic to port `80` inside the app.
+
+By default, Coolify generates a testing domain like `http://<uuid>.<server-ip>.sslip.io`.
+
+<CoolCompare
+  data-first-app
+  className="my-5"
+  id="first-app-network"
+  icon={Globe3}
+  title="Generated URL or your own domain"
+>
+<CoolCompareColumn
+  title="Fastest first test"
+  code="http://<uuid>.<server-ip>.sslip.io"
+  items={[
+    'Keep the generated sslip.io URL.',
+    'Deploy immediately without DNS setup.',
+    'Use this only to confirm routing works.',
+  ]}
+/>
+<CoolCompareColumn
+  title="Production-style test"
+  code="https://shadowarcanist.com"
+  items={[
+    'Point DNS to your server IP address.',
+    'Replace the generated domain in Coolify.',
+    'Use https:// so TLS certificates can be issued.',
+  ]}
+/>
+</CoolCompare>
+
+<Callout type="info" title="Note">
+
+For your first deployment test, using the generated `sslip.io` domain is the fastest path.
+
+</Callout>
+
+</Step>
+<Step>
+
+### Deploy
+
+Click the **Deploy** button.
+
+
+During deployment, Coolify will:
+
+- pull `nginx:alpine`
+- create and start the container
+- connect it to the proxy so the generated URL can reach it
+
+Wait until the deployment finishes before opening the app link.
+
+</Step>
+<Step>
+
+### Visit application link
+
+After deployment completes:
+
+- open the application URL shown in Coolify
+- confirm that the default Nginx welcome page loads
+
+
+<CoolCallout icon={Camera} title="What success looks like">
+
+If you can see the default Nginx welcome page in your browser, your first Coolify application deployment worked.
+
+</CoolCallout>
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="API">
+
+<Callout type="info" title="API requirements">
+
+Create a `root` API token for this tutorial. Coolify Cloud already has API access enabled, so Cloud users only need to create the token. On self-hosted Coolify, an administrator must also [enable API access](/api/ip-allowlist#api-access-controls). See [API authorization](/api/authorization) before sending these requests.
+
+Set your base URL and token in the terminal where you will run cURL:
+
+```sh
+export COOLIFY_URL="https://<your-coolify-domain>"
+export COOLIFY_TOKEN="<api-token>"
+```
+
+Coolify Cloud users should set `COOLIFY_URL` to `https://app.coolify.io`.
+
+</Callout>
+
+<Callout type="warning" title="Use least-privilege tokens in production">
+
+This tutorial uses a `root` token so the same credential works across every read, write, deployment, and sensitive-data request. A `root` token has more access than most integrations need. For production, create a separate token with only the permissions required by that workflow, and revoke the tutorial token when you finish.
+
+</Callout>
+
+<Steps>
+<Step>
+
+### Create a project and find a server
+
+Create the project:
+
+```sh
+curl --fail-with-body --request POST \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --data '{"name":"my-first-project"}' \
+  "$COOLIFY_URL/api/v1/projects"
+```
+
+Copy the `uuid` from the response and set it as `PROJECT_UUID`. Then list your servers and copy the UUID of the server that will run Nginx:
+
+```sh
+export PROJECT_UUID="<project-uuid>"
+
+curl --fail-with-body \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Accept: application/json" \
+  "$COOLIFY_URL/api/v1/servers"
+
+export SERVER_UUID="<server-uuid>"
+```
+
+If you already have a project, use `GET /api/v1/projects` instead of creating another one.
+
+</Step>
+<Step>
+
+### Create and deploy the application
+
+Create the Docker Image application in the project's `production` environment. `instant_deploy` queues the first deployment, while `autogenerate_domain` gives the application a test URL:
+
+```sh
+curl --fail-with-body --request POST \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --data "{"project_uuid":"$PROJECT_UUID","server_uuid":"$SERVER_UUID","environment_name":"production","docker_registry_image_name":"nginx","docker_registry_image_tag":"alpine","ports_exposes":"80","name":"my-first-nginx","autogenerate_domain":true,"instant_deploy":true}" \
+  "$COOLIFY_URL/api/v1/applications/dockerimage"
+```
+
+Copy the returned application `uuid`:
+
+```sh
+export APPLICATION_UUID="<application-uuid>"
+```
+
+</Step>
+<Step>
+
+### Verify the application
+
+Read the application until its status is `running`:
+
+```sh
+curl --fail-with-body \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Accept: application/json" \
+  "$COOLIFY_URL/api/v1/applications/$APPLICATION_UUID"
+```
+
+Open the domain returned for the application. The default Nginx welcome page confirms the deployment worked. See the [API reference](/api/overview) for response schemas and error handling.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="CLI">
+
+<Callout type="info" title="CLI requirements">
+
+[Install the Coolify CLI](/cli/installation), then create a `root` API token for the team that will own the resource.
+
+**Coolify Cloud:** API access is already enabled. Save the token in the preconfigured `cloud` context, select it, and verify authentication:
+
+```sh
+coolify context set-token cloud <api-token>
+coolify context use cloud
+coolify context verify
+```
+
+**Self-hosted Coolify:** An administrator must [enable API access](/api/ip-allowlist#api-access-controls) first. Add a context using the full instance URL without `/api/v1`, then verify authentication:
+
+```sh
+coolify context add --default production https://coolify.example.com <api-token>
+coolify context verify
+```
+
+A successful verification reports that the connection and authentication are valid. See [CLI authentication](/cli/authentication) for token safety, IP allowlists, and troubleshooting.
+
+</Callout>
+
+<Callout type="warning" title="Use least-privilege tokens in production">
+
+This tutorial uses a `root` token so the same credential works across every read, write, deployment, and sensitive-data request. A `root` token has more access than most integrations need. For production, create a separate token with only the permissions required by that workflow, and revoke the tutorial token when you finish.
+
+</Callout>
+
+<Steps>
+<Step>
+
+### Create a project and find a server
+
+```sh
+coolify project create --name my-first-project
+coolify server list
+```
+
+Copy the project and server UUIDs from the output. If the project already exists, run `coolify project list` instead.
+
+</Step>
+<Step>
+
+### Create and deploy the application
+
+```sh
+coolify app create dockerimage \
+  --project-uuid <project-uuid> \
+  --server-uuid <server-uuid> \
+  --environment-name production \
+  --name my-first-nginx \
+  --docker-registry-image-name nginx \
+  --docker-registry-image-tag alpine \
+  --ports-exposes 80 \
+  --instant-deploy
+```
+
+Copy the application UUID from the response.
+
+</Step>
+<Step>
+
+### Verify the application
+
+```sh
+coolify app get <application-uuid>
+coolify app logs <application-uuid> --lines 100
+```
+
+Wait for the application status to become `running`, then open its generated domain. For every available flag, see [`coolify app create dockerimage`](/cli/command-reference/commands/app/create-dockerimage).
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="MCP">
+
+<Callout type="warning" title="Creation is not available through MCP yet">
+
+Coolify MCP can inspect and start existing resources, but its current tools cannot create applications, databases, services, or projects. Create the resource with the Dashboard, API, or CLI tab first. You can then use the prompts below to start and verify it without returning to the dashboard.
+
+</Callout>
+
+After [setting up Coolify MCP](/mcp/setup), create a `root` token for this end-to-end workflow, then give your MCP client the application UUID or its exact name. The prompts need to inspect the application, start it, and inspect it again. A `deploy` token cannot perform the read operations because selecting `deploy` creates a deploy-only token.
+
+<Callout type="warning" title="Revoke the root token after this tutorial">
+
+A `root` token bypasses the `read`, `write`, and `deploy` endpoint checks and can return supported sensitive data. It remains limited to the active team, but it grants more access than routine MCP use requires. Revoke it when you finish this first deployment.
+
+</Callout>
+
+<Steps>
+<Step>
+
+### Find the application
+
+```txt
+Find the application named my-first-nginx in my-first-project. Show me its UUID, current status, and domain. Do not change anything yet.
+```
+
+Confirm that the returned application is the one you created.
+
+</Step>
+<Step>
+
+### Start and verify the application
+
+```txt
+Start the Coolify application with UUID <application-uuid>. Then check its status and tell me when it is running. Show me the domain I should open, and do not stop or restart any other resource.
+```
+
+Open the returned domain and confirm that the default Nginx welcome page loads. The client uses the MCP `control` tool to start the resource and application inspection tools to verify it.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+---
+
+## Common first-deploy issues
+
+Use these checks when the deployment finishes but the application link does not behave as expected.
+
+
+<Tabs id="first-app-issues" items={['No Available Server', "Link doesn't open", 'Site not secure']}>
+<Tab value="No Available Server" icon={Warning22}>
+
+Usually caused by wrong port settings.
+
+Check:
+
+- **Ports Exposes** is set to `80`
+- the image is `nginx:alpine`
+
+</Tab>
+<Tab value="Link doesn't open" icon={SignalStream}>
+
+Usually means the server or proxy is not reachable from your browser.
+
+Check:
+
+- Coolify proxy says **Proxy is running**
+- your server firewall allows ports `80` and `443`
+- if using your own domain, DNS points to your server IP address
+
+</Tab>
+<Tab value="Site not secure" icon={Globe3}>
+
+Browsers show a site-not-secure warning when you open the app with `http://`.
+To make the warning go away, open the app with `https://`.
+For `https://` to work, Coolify needs a TLS certificate from Let's Encrypt.
+Let's Encrypt can rate-limit shared testing domains like `sslip.io`, so use a real domain.
+
+If you are using your own domain, make sure:
+
+- DNS is pointed correctly to your server IP
+- the domain is added in Coolify with `https://`, for example `https://shadowarcanist.com`
+- restart the app after changing the domain
+
+</Tab>
+</Tabs>
+
+---
+
+## What to do next
+
+Your first app confirms that Coolify can create and run an application. From here, you can deploy a database, deploy a service, or learn how Git-based app builds work.
+
+<CoolNextSteps
+  data-first-app
+  cards={[
+    {
+      title: 'Deploy a database',
+      description: 'Deploy a database when your app needs persistent data.',
+      href: '/deploy-your-first-database',
+      icon: Database,
+    },
+    {
+      title: 'Deploy a service',
+      description: 'Deploy a ready-made service from the Coolify catalog.',
+      href: '/deploy-your-first-service',
+      icon: Settings,
+    },
+    {
+      title: 'Learn build packs',
+      description: 'Move from pre-built images to Git-based application deployments.',
+      href: '/applications/builds/overview',
+      icon: Box2,
+    },
+  ]}
+/>

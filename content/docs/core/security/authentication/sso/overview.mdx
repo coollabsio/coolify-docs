@@ -1,0 +1,53 @@
+---
+title: Overview
+description: Configure centralized Coolify sign-in with Authentik, Clerk, or Zitadel.
+---
+
+# SSO overview
+
+Single sign-on (SSO) lets an organization use its identity provider as the sign-in authority for a self-hosted Coolify instance. Coolify provides named integrations for Authentik, Clerk, and Zitadel under **Settings > OAuth**.
+
+<Callout type="warning" title="SSO requires Coolify v4.3.0">
+The Authentik, Clerk, and Zitadel integrations are available in Coolify v4.3.0 or above
+</Callout>
+
+<Callout type="info" title="SSO configuration is for self-hosted Coolify">
+Coolify Cloud manages its own authentication. A root team administrator or owner can configure SSO providers for a self-hosted instance.
+</Callout>
+
+## Choose an SSO provider
+
+| Provider | What you create | Guide |
+| :--- | :--- | :--- |
+| Authentik | OAuth2/OpenID Connect provider and application | [Configure Authentik SSO](/core/security/authentication/sso/authentik) |
+| Clerk | OAuth application with profile and email scopes | [Configure Clerk SSO](/core/security/authentication/sso/clerk) |
+| Zitadel | Confidential web application using the authorization code flow | [Configure Zitadel SSO](/core/security/authentication/sso/zitadel) |
+
+<Callout type="warning" title="Generic OpenID Connect configuration is not available">
+The current v4.x settings do not provide a generic OIDC card with arbitrary issuer, discovery URL, scopes, or claim mappings. Use one of the named providers Coolify supports.
+</Callout>
+
+## How Coolify handles SSO accounts
+
+Coolify matches the email address returned by the provider to a Coolify account. It does not map provider groups, organization membership, or roles to Coolify teams and roles.
+
+Use both systems to control access:
+
+1. Restrict the Coolify application to approved people or groups at the provider.
+2. Require multi-factor authentication at the provider.
+3. Assign each account to the required Coolify teams with the lowest suitable role.
+4. Turn off **Settings > Configuration > Advanced > Registration Allowed** after approved users have Coolify accounts.
+
+With registration disabled, an existing matching account can still sign in. A provider email address without a matching Coolify account is rejected.
+
+Removing access at the provider prevents the next provider sign-in, but it does not remove the person's Coolify account, active sessions, team membership, password, or API tokens. Complete those actions in Coolify during offboarding.
+
+## Test before relying on SSO
+
+Use a private browser window and verify that:
+
+- an assigned user reaches the expected Coolify account and team
+- an unassigned provider user cannot authenticate
+- a new email address cannot create an account when registration is disabled
+- provider multi-factor authentication is enforced
+- at least one administrator retains a tested recovery sign-in path

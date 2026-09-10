@@ -1,4 +1,3 @@
-
 {
   "name": "Coolify Docs",
   "contentDir": "content/docs",
@@ -6,7 +5,11 @@
   "publicDir": "public",
   "mediaDir": "public/images",
   "templateDir": "templates",
-  "previewUrl": "http://localhost:3000",
+  "previewUrl": "http://localhost:7788",
   "previewCommand": "bun install && bun run dev",
-  "redirectBasePath": "/docs"
+  "redirectBasePath": "/docs",
+  "previewAutoStart": false,
+  "previewAutoRestart": false,
+  "previewHealthPath": "",
+  "previewEnv": {}
 }

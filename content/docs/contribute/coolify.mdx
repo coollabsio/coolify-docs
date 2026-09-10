@@ -1,0 +1,310 @@
+---
+title: Contributing to Core
+description: Set up the Coolify core development environment, run the local stack, and prepare pull requests for review.
+---
+
+import {
+  ArrowsRight,
+  BranchUp,
+  BrowserTerminal,
+  Checklist2,
+  Clipboard,
+  Database,
+  DocumentText2,
+  Key,
+  Monitor,
+  Package,
+  Rocket,
+  Settings,
+  Warning22,
+} from 'reicon-react';
+
+# Contributing to Coolify
+
+Set up the local Coolify development environment and prepare code contributions for the core repository.
+
+<CoolDocsPage hideToc>
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Set up Docker, Spin, and a local fork of [coollabsio/coolify](https://github.com/coollabsio/coolify). Start the stack with `spin up`, test at **http://localhost:8000**, and open pull requests against the `next` branch.
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={Monitor} title="Setup development environment" contentClassName="!p-0">
+<CoolAccordions>
+<Accordion title="Windows">
+
+Use WSL2 with Docker CE for the closest Linux development experience.
+
+- Install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install?ref=coolify) with a Linux distribution such as Ubuntu.
+- Install [Docker Engine](https://docs.docker.com/engine/install/?ref=coolify) inside WSL2, or use [Docker Desktop](https://docs.docker.com/desktop/install/windows-install/?ref=coolify) with the WSL2 backend enabled.
+- Install [Spin for Windows](https://serversideup.net/open-source/spin/docs/installation/install-windows#download-and-install-spin-into-wsl2?ref=coolify).
+
+</Accordion>
+<Accordion title="macOS">
+
+OrbStack is recommended because it is lighter than Docker Desktop for local development.
+
+- Install [OrbStack](https://docs.orbstack.dev/quick-start#installation?ref=coolify) or [Docker Desktop for Mac](https://docs.docker.com/desktop/install/mac-install/?ref=coolify).
+- Install [Spin for macOS](https://serversideup.net/open-source/spin/docs/installation/install-macos/#download-and-install-spin?ref=coolify).
+- If permission errors appear when starting the stack, try running Spin with sudo.
+
+</Accordion>
+<Accordion title="Linux">
+
+Docker Engine is recommended because it avoids the extra VM layer.
+
+- Install [Docker Engine](https://docs.docker.com/engine/install/?ref=coolify) for your distribution, or use [Docker Desktop for Linux](https://docs.docker.com/desktop/install/linux-install/?ref=coolify) if you want a GUI.
+- Install [Spin for Linux](https://serversideup.net/open-source/spin/docs/installation/install-linux#configure-docker-permissions?ref=coolify).
+- Make sure your user can run Docker commands without restarting the setup flow repeatedly.
+
+</Accordion>
+</CoolAccordions>
+</CoolCallout>
+
+---
+
+<CoolCallout icon={Checklist2} title="Verify installation">
+
+After installing Docker or OrbStack and Spin, confirm both commands are available.
+
+```bash
+docker --version
+spin --version
+```
+
+</CoolCallout>
+
+---
+
+<CoolFlow
+  id="local-repository"
+  icon={BranchUp}
+  title="Fork and setup local repository"
+  description="Work from your own fork, then open a pull request back to Coolify when the change is ready."
+  steps={[
+    'Fork the [Coolify repository](https://github.com/coollabsio/coolify)',
+    'Clone your fork locally',
+    'Open the repository in your code editor',
+    'Keep each change focused on one issue or feature',
+  ]}
+  list={[
+    'You can clone with Git, or use [GitHub Desktop](https://desktop.github.com/?ref=coolify).',
+    'Editors that work well include [VS Code](https://code.visualstudio.com/download?ref=coolify), [Cursor](https://www.cursor.com/?ref=coolify), and [Zed](https://zed.dev/download?ref=coolify).',
+    'Use a branch name that describes the change you are making.',
+  ]}
+/>
+
+---
+
+<CoolFlow
+  id="environment-variables"
+  icon={Key}
+  title="Set up environment variables"
+  description="Coolify ships a development environment example file. Copy it before starting the stack."
+  steps={[
+    'Find `.env.development.example` in the repository root',
+    'Duplicate it and rename the copy to `.env`',
+    'Review the values and adjust them for your machine',
+    'Save the file before starting Spin',
+  ]}
+  list={[
+    'Keep local secrets in `.env` and do not commit that file.',
+    'Review the example values before starting the stack.',
+    'Restart Spin after changing environment variables.',
+  ]}
+/>
+
+---
+
+<CoolCallout icon={Rocket} title="Start Coolify">
+
+Open a terminal in the local Coolify repository and leave the process running.
+
+```bash
+spin up
+```
+
+If you hit permission errors, especially on macOS, run:
+
+```bash
+sudo spin up
+```
+
+</CoolCallout>
+
+<CoolCallout icon={Warning22} title="Startup note" type="warn">
+
+You may see some errors during startup. That can be expected while the development stack is booting.
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={BrowserTerminal} title="Start development" contentClassName="!p-0">
+<CoolPanel>
+
+Use the seeded development account to sign in locally.
+
+<CoolValueGrid>
+  <CoolValueCard label="URL">http://localhost:8000</CoolValueCard>
+  <CoolValueCard label="Username">test@example.com</CoolValueCard>
+  <CoolValueCard label="Password">password</CoolValueCard>
+</CoolValueGrid>
+
+</CoolPanel>
+<CoolPanel withDivider>
+
+| Tool | URL | Note |
+| :--- | :--- | :--- |
+| Coolify app | http://localhost:8000 | Use test@example.com and password. |
+| Laravel Horizon | http://localhost:8000/horizon | Only available when logged in as the root user. |
+| Mailpit | http://localhost:8025 | Catch local development emails. |
+| Telescope | http://localhost:8000/telescope | Disabled by default; enable it with TELESCOPE_ENABLED=true. |
+
+</CoolPanel>
+</CoolCallout>
+
+---
+
+<CoolCallout icon={Settings} title="Enable Telescope">
+
+Telescope is disabled by default. Add this to your `.env` file when you need the debugging dashboard.
+
+```bash
+TELESCOPE_ENABLED=true
+```
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={Clipboard} title="Create a pull request">
+
+- Commit and push your changes to your fork.
+- Open the pull request against the Coolify repository.
+- Set the base branch to `next`, not `v4.x`.
+- Manually test the changed flow in the local app, not only through test files.
+- Fill in the pull request template with the details maintainers need.
+- Move the pull request out of draft as soon as it is ready for review.
+
+</CoolCallout>
+
+<CoolCallout icon={Warning22} title="Draft pull requests" type="warn">
+
+Pull requests that stay in draft for a long time may be closed by maintainers.
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={Database} title="Development notes">
+
+Run migrations after switching branches, pulling updates, or changing database structure.
+
+```bash
+docker exec -it coolify php artisan migrate
+```
+
+To reset the development database with default seed data, run:
+
+```bash
+docker exec -it coolify php artisan migrate:fresh --seed
+```
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={Warning22} title="Reset development environment" type="warn">
+
+If the local stack or database is broken, remove the development containers and volumes, then start from a clean slate.
+
+<Steps>
+<Step>
+
+**Stop the running Spin process**
+
+Press Ctrl+C in the terminal where Spin is running.
+
+</Step>
+<Step>
+
+**Remove development containers**
+
+```bash
+docker rm coolify coolify-db coolify-redis coolify-realtime coolify-testing-host coolify-minio coolify-vite-1 coolify-mail
+```
+
+</Step>
+<Step>
+
+**Remove development volumes**
+
+```bash
+docker volume rm coolify_dev_backups_data coolify_dev_postgres_data coolify_dev_coolify_data coolify_dev_minio_data
+```
+
+If your volume names do not use the `coolify` prefix, remove the prefix from the volume command before running it.
+
+</Step>
+<Step>
+
+**Remove unused images**
+
+```bash
+docker image prune -a
+```
+
+</Step>
+<Step>
+
+**Start Coolify again**
+
+```bash
+spin up
+```
+
+</Step>
+<Step>
+
+**Run migrations and seeders**
+
+```bash
+docker exec -it coolify php artisan migrate:fresh --seed
+```
+
+</Step>
+</Steps>
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={DocumentText2} title="Development guides">
+<CoolActionCardGrid>
+<CoolActionCard
+  href="/docs/contribute/service"
+  icon={Package}
+  title="Service Templates"
+  type="secondary"
+  description="Add one-click service templates with the expected structure and verification."
+  bullets={['Template structure', 'Metadata rules', 'Testing checklist']}
+  btn-cta="View service guide"
+/>
+<CoolActionCard
+  href="/docs/contribute/documentation"
+  icon={DocumentText2}
+  title="Documentation"
+  type="secondary"
+  description="Improve these docs while keeping the existing writing style and component patterns."
+  bullets={['MDX patterns', 'Docs structure', 'Review expectations']}
+  btn-cta="View docs guide"
+/>
+</CoolActionCardGrid>
+</CoolCallout>
+
+</CoolDocsPage>

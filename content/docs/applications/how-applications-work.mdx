@@ -1,0 +1,64 @@
+---
+title: How Applications Work
+description: Follow how Coolify turns application source or an existing image into running Docker containers.
+---
+
+# How applications work
+
+Coolify combines an application definition stored in the control plane with Docker resources on a connected server.
+
+The application definition contains the source or image reference, build method, runtime settings, deployment destination, and operational settings. Docker stores the prepared images and runs containers created from them.
+
+## From source to a running application
+
+1. A deployment starts from the dashboard, a Git webhook, a deploy webhook, or an API request.
+2. Coolify queues the deployment.
+3. Coolify checks out source code, reads Docker configuration, or resolves the saved image reference.
+4. Docker builds or pulls the required images.
+5. Coolify applies environment variables, networks, storage, ports, domains, and health-check settings.
+6. Docker starts the application containers, including containers for Compose services.
+7. The Coolify proxy routes configured domains to healthy HTTP containers.
+
+Read [Build and deployment model](/core/build-deployment-model) for the complete lifecycle and replacement paths.
+
+## Control plane and workload server
+
+The Coolify instance is the control plane. It provides the dashboard, stores configuration, and coordinates deployments.
+
+The connected server is the workload machine. It stores the application's Docker resources and runs its containers. Those resources include:
+
+- Docker images
+- application containers
+- Docker networks
+- volumes and bind-mounted files
+- proxy configuration and certificate data
+
+If the Coolify instance becomes unavailable, already-running containers can continue serving traffic while Docker, the proxy, the server, and the network remain healthy. You cannot start new Coolify operations until the control plane is available again.
+
+## Containers are replaceable
+
+A deployment can replace the current container with another container created from a new image or configuration.
+
+Data written only to the container filesystem can disappear when Docker removes that container. Store required data in a [persistent storage mount](/core/persistent-storage/storage-mounts/overview) or an external data service.
+
+<Callout type="warning" title="Persistent storage is not a backup">
+
+A volume or bind mount survives normal container replacement, but it does not protect against deletion, disk failure, corruption, or server loss. Configure [storage mount backups](/core/persistent-storage/storage-mounts/backups) when the application stores important files locally.
+
+</Callout>
+
+## Networking
+
+For an HTTP application, the configured domain points to the server. The Coolify proxy receives the request and forwards it to the application port inside the container.
+
+A host port mapping bypasses this domain-based proxy path and publishes a container port directly on the server. Host port mappings also prevent Coolify from using its normal [rolling replacement path](/applications/deployments/rolling-updates) because two containers cannot bind the same host port at the same time.
+
+Read [Networking in Coolify](/core/networking-in-coolify) for domains, proxy routing, Docker networks, and communication between resources.
+
+## Builds and deployments are different
+
+A build creates an image. A deployment prepares the required images and runtime configuration, then creates or updates the application containers.
+
+[Nixpacks](/applications/builds/nixpacks/overview), [Railpack](/applications/builds/railpack), [Static](/applications/builds/static), [Dockerfile](/applications/builds/dockerfile), and [Docker Compose](/applications/builds/docker-compose) can build images from source. [Docker Image applications](/applications/deployments/docker-image) skip the source build and pull an existing image.
+
+The same image can be redeployed with different runtime variables or container settings. A build-time change requires another image build.

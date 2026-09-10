@@ -1,0 +1,40 @@
+---
+title: "Create"
+description: "Create a GitHub App integration"
+---
+
+# Create
+
+Create a GitHub App integration
+
+## Usage
+
+```sh
+coolify github create
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--api-url` | `string` | No | — | GitHub API URL (derived from --html-url when omitted) |
+| `--app-id` | `integer` | Yes | `0` | GitHub App ID (required) |
+| `--client-id` | `string` | Yes | — | GitHub OAuth Client ID (required) |
+| `--client-secret` | `string` | Yes | — | GitHub OAuth Client Secret (required) |
+| `--custom-port` | `integer` | No | `0` | Custom port for SSH (default: 22) |
+| `--custom-user` | `string` | No | — | Custom user for SSH (default: git) |
+| `--html-url` | `string` | Yes | — | GitHub HTML URL (required, e.g., https://github.com) |
+| `--installation-id` | `integer` | Yes | `0` | GitHub Installation ID (required) |
+| `--name` | `string` | Yes | — | GitHub App name (required) |
+| `--organization` | `string` | No | — | GitHub organization |
+| `--private-key-uuid` | `string` | Yes | — | UUID of existing private key (required) |
+| `--system-wide` | `boolean` | No | `false` | Is this app system-wide (cloud only) |
+| `--webhook-secret` | `string` | No | — | GitHub Webhook Secret |
+
+## Get current help
+
+```sh
+coolify github create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.
