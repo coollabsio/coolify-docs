@@ -1,23 +1,330 @@
 ---
-title: Hermes Agent
-description: "Autonomous AI agent with persistent memory and scheduling, plus a self-hosted web chat UI."
+title: "Hermes Agent"
+description: "Autonomous AI agent from Nous Research with persistent memory, scheduling, and a web interface. Available as a two-container WebUI stack or a single-container dashboard."
 og:
-  description: "Deploy Hermes Agent on Coolify: an autonomous AI agent with persistent memory, scheduled jobs, and a self-hosted browser chat UI, powered by your own LLM provider keys."
+  description: "Self-host Hermes Agent on Coolify - Nous Research's autonomous AI agent runtime with persistent memory, a kanban task board, cron scheduling, Firecrawl web search, 20+ messaging platform integrations, and an extensible plugin and skill system. Two deployment options: the full WebUI stack or the single-container dashboard build."
 category: "AI"
+icon: "/docs/images/services/hermes-agent-logo.png"
 ---
 
 # Hermes Agent
 
+<ZoomImage src="/docs/images/services/hermes-agent-logo.png" alt="Hermes Agent" />
+
 ## What is Hermes Agent?
 
-Hermes Agent is an autonomous AI agent that runs on your own server with persistent memory, a self-improving skills system, and self-hosted scheduled jobs.
+Hermes Agent is an open-source autonomous AI agent runtime built by [Nous Research](https://nousresearch.com?utm_source=coolify.io). It runs persistently as a gateway process - always available to receive messages, execute scheduled tasks, and reason over its accumulated memory and task history.
 
-This one-click template deploys the agent gateway together with Hermes WebUI, a browser chat interface, in a two-container stack. Both containers share the same configuration, sessions, skills, and memory through named volumes. Hermes uses an embedded SQLite store, so no external database service is required, and it supports multiple LLM providers (OpenRouter, Anthropic, OpenAI, Google) configured through editable environment variables.
+Unlike stateless chat interfaces, Hermes Agent retains a persistent world model: memory is stored and searchable across sessions, tasks are tracked on a built-in kanban board, and cron jobs fire on schedule regardless of whether a browser is open. It connects to 20+ messaging platforms (Telegram, Discord, Slack, Teams, and more) through a unified gateway, integrates with 60+ built-in tools, and supports Model Context Protocol (MCP) for extending capabilities further.
 
-The WebUI is the public-facing service and is protected by an auto-generated password; the agent gateway stays internal.
+Hermes Agent works with any major LLM provider - OpenRouter, Anthropic, OpenAI, or Google. Nous Portal subscribers can use `hermes setup --portal` for one-shot authentication that also opts into the Tool Gateway. At least one provider API key is required.
+
+Coolify offers two deployment templates suited to different use cases. See [Deployment Variants](#deployment-variants) below to choose the right one.
+
+## Deploy on Coolify
+
+Both templates use the same `nousresearch/hermes-agent` image and store all agent state in persistent volumes. The difference is how the web interface is delivered: as a separate companion container (WebUI), or built into the agent process itself (Dashboard).
+
+<Callout type="info">
+Neither template exposes the raw gateway port externally. Coolify's reverse proxy routes only the web interface port - 8787 for the WebUI variant, 9119 for the Dashboard variant. The gateway process itself is inaccessible from outside the Docker network.
+</Callout>
+
+### Hermes Agent (with WebUI)
+
+Deploys two containers:
+
+| Container | Image | Purpose |
+|---|---|---|
+| `hermes-agent` | `nousresearch/hermes-agent` | Gateway process and agent runtime |
+| `hermes-webui` | `ghcr.io/nesquena/hermes-webui` | Web chat interface (port 8787) |
+
+Coolify auto-generates the following - no manual configuration needed:
+- `SERVICE_USER_HERMESWEBUI` - WebUI login username
+- `SERVICE_PASSWORD_HERMESWEBUI` - WebUI login password
+- `SERVICE_URL_HERMESWEBUI_8787` - Public URL for the chat interface
+
+Uses four named volumes: `hermes-home`, `hermes-skills`, `hermes-agent-src`, `hermes-workspace`. The WebUI shares the `hermes-home` and `hermes-workspace` volumes with the agent for direct access to memory and the workspace directory.
+
+### Hermes Agent (Dashboard)
+
+Deploys a single container with the built-in dashboard activated:
+
+| Container | Image | Purpose |
+|---|---|---|
+| `hermes-agent` | `nousresearch/hermes-agent` | Agent runtime + built-in dashboard (port 9119) |
+
+Coolify auto-generates the following - no manual configuration needed:
+- `SERVICE_USER_HERMESAGENT` - Dashboard login username
+- `SERVICE_PASSWORD_HERMESAGENT` - Dashboard login password
+- `SERVICE_BASE64_64_HERMESAGENT` - Session signing secret (64-character random string)
+- `SERVICE_URL_HERMESAGENT_9119` - Public URL for the dashboard
+
+Uses a single named volume (`hermes-home`) that covers all persistent state: agent config, API keys, auth tokens, memory, kanban board, profiles, cron jobs, logs, hooks, plans, skins, skills, workspace files, SSH keys, and pip-installed packages.
+
+## Deployment Variants
+
+| | Hermes Agent (with WebUI) | Hermes Agent (Dashboard) |
+|---|---|---|
+| **Containers** | 2 (agent + webui) | 1 |
+| **Web interface** | hermes-webui (separate image) | Built-in dashboard |
+| **Port** | 8787 | 9119 |
+| **Volumes** | 4 | 1 |
+| **Min agent version** | Any | v0.16.0+ |
+
+**Choose Hermes Agent (with WebUI)** when you want a dedicated web chat interface. The `hermes-webui` container provides a chat-first experience and releases independently from the agent, so you can update the UI without touching the agent process.
+
+**Choose Hermes Agent (Dashboard)** when you want the simplest possible deployment, or when running the agent that manages your Coolify setup. All state is in one volume, there are no inter-container dependencies to manage, and the dashboard surfaces memory, the task board, cron jobs, and installed skills in one place. This is the recommended option for self-hosting Hermes as a Coolify automation agent.
+
+## Environment Variables
+
+### LLM Providers
+
+At least one provider key is required for the agent to function. The agent selects the active provider from your config at runtime.
+
+| Variable | Default | Description |
+|---|---|---|
+| `OPENROUTER_API_KEY` | *(empty)* | [OpenRouter](https://openrouter.ai?utm_source=coolify.io) - single key access to hundreds of models. Recommended if you want to switch models without redeploying. |
+| `ANTHROPIC_API_KEY` | *(empty)* | API key from [console.anthropic.com](https://console.anthropic.com?utm_source=coolify.io). |
+| `OPENAI_API_KEY` | *(empty)* | API key from [platform.openai.com](https://platform.openai.com?utm_source=coolify.io). |
+| `GOOGLE_API_KEY` | *(empty)* | API key for Google Gemini models. |
+
+### Web Search (Optional)
+
+| Variable | Default | Description |
+|---|---|---|
+| `FIRECRAWL_API_KEY` | *(empty)* | Enables web search and full-page extraction via the `web` tool. Free tier: 500 pages/month at [firecrawl.dev](https://firecrawl.dev?utm_source=coolify.io). Leave blank to disable. |
+| `FIRECRAWL_API_URL` | `https://api.firecrawl.dev` | Override to point at your self-hosted Firecrawl instance. Requires `HERMES_ALLOW_PRIVATE_URLS=true` if the instance is on a Docker-internal or Tailscale address. |
+
+### Agent Behavior
+
+| Variable | Default | Description |
+|---|---|---|
+| `HERMES_ENABLE_PROJECT_PLUGINS` | `true` | Loads plugins from the `plugins/` subdirectory inside the data volume. Set to `false` to disable auto-loading. |
+| `HERMES_ALLOW_PRIVATE_URLS` | `true` | Allows the agent to fetch Docker-internal URLs and Tailscale addresses (e.g., a self-hosted Firecrawl or a local Ollama instance). Set to `false` to restrict to public URLs only. |
+| `HERMES_REDACT_SECRETS` | `true` | Prevents API keys and secrets from appearing in logs and tool output. Recommended: leave enabled. |
+| `GATEWAY_ALLOW_ALL_USERS` | `true` | Allows any user to message the gateway. Safe for personal deployments where the gateway port is not mapped externally. If you connect messaging platforms (Telegram, Slack, Discord), set to `false` and configure per-platform allowed-user lists instead (e.g., `TELEGRAM_ALLOWED_USER_IDS`). |
+| `HERMES_UID` / `HERMES_GID` | `1000` | The UID/GID the agent drops to after chowning the volume on first start. Matches Coolify's default host UID so volume-mounted files have sensible ownership. |
+
+### WebUI Variant - Additional Variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `HERMES_OPTIONAL_SKILLS` | *(empty)* | Comma-separated list of official skills to auto-install on first run (e.g., `official/communication/one-three-one-rule`). Leave blank to skip. |
+| `SERVICE_USER_HERMESWEBUI` | *(auto-generated)* | WebUI login username. Find it in the **Environment Variables** tab after deploying. |
+| `SERVICE_PASSWORD_HERMESWEBUI` | *(auto-generated)* | WebUI login password. Find it in the **Environment Variables** tab after deploying. |
+
+### Dashboard Variant - Additional Variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `HERMES_DASHBOARD` | `1` | Activates the built-in dashboard. Do not change this value. |
+| `HERMES_DASHBOARD_HOST` | `0.0.0.0` | Dashboard bind address. Binding to `0.0.0.0` is correct - Coolify's reverse proxy handles TLS termination and the auth gate protects the endpoint. |
+| `HERMES_DASHBOARD_PORT` | `9119` | Dashboard listen port. |
+| `SERVICE_USER_HERMESAGENT` | *(auto-generated)* | Dashboard login username. Find it in the **Environment Variables** tab after deploying. |
+| `SERVICE_PASSWORD_HERMESAGENT` | *(auto-generated)* | Dashboard login password. Find it in the **Environment Variables** tab after deploying. |
+| `SERVICE_BASE64_64_HERMESAGENT` | *(auto-generated)* | Session signing secret. Managed by Coolify - do not set this manually. |
+
+<Callout type="danger">
+Do not add `HERMES_DASHBOARD_INSECURE=1` to the environment. That flag disables all dashboard authentication regardless of the credentials above. It is a break-glass override and has no place in an internet-facing deployment.
+</Callout>
+
+## What to do after deploying
+
+Coolify deploys the containers, but the agent still needs a one-time configuration step before it can respond to messages. You run this from the container terminal in Coolify.
+
+<Callout type="info">
+For the WebUI variant, open the terminal for the **`hermes-agent`** container - not `hermes-webui`. For the Dashboard variant, open the terminal for the single `hermes-agent` container.
+</Callout>
+
+### Step 1 - Open the web interface
+
+Click **Open** in Coolify to open the interface. For the WebUI variant this is the hermes-webui chat interface on port 8787; for the Dashboard variant it is the built-in dashboard on port 9119.
+
+Log in with the auto-generated credentials from the **Environment Variables** tab:
+- WebUI: `SERVICE_USER_HERMESWEBUI` and `SERVICE_PASSWORD_HERMESWEBUI`
+- Dashboard: `SERVICE_USER_HERMESAGENT` and `SERVICE_PASSWORD_HERMESAGENT`
+
+### Step 2 - Run the setup wizard
+
+Open a terminal into the `hermes-agent` container from Coolify's **Terminal** tab and run:
+
+```bash
+hermes setup
+```
+
+The wizard walks you through selecting an LLM provider and model, configuring optional tools, and setting up messaging platform integrations. This is the recommended starting point for every fresh deploy.
+
+<Callout type="warn">
+**OpenRouter model format:** If you use OpenRouter, models must be specified as `provider/model-name` (e.g., `anthropic/claude-sonnet-4-5`, `moonshotai/kimi-k2.6`). Using a bare model name causes HTTP 404 errors from OpenRouter.
+</Callout>
+
+If you are a Nous Portal subscriber, you can skip the individual provider prompts entirely:
+
+```bash
+hermes setup --portal
+```
+
+This authenticates via OAuth, sets Nous as the inference provider, and opts into the Tool Gateway in a single step.
+
+After any setup command, **restart the `hermes-agent` container** - the gateway reads `config.yaml` only at startup.
+
+### Step 3 - Run the doctor check
+
+```bash
+hermes doctor --fix
+```
+
+This auto-repairs common configuration issues. Two warnings are expected in a Docker environment and can be ignored:
+- *"Add ~/.local/bin to your PATH"* - the symlink is created but the PATH fix does not persist across container restarts. The `hermes` command still works.
+- *"Run hermes setup to configure missing API keys"* - fires if any optional tool keys (EXA, Tavily) are unset. If Firecrawl is configured, web search is fully functional.
+
+### Step 4 - Enable Firecrawl web search (optional)
+
+Firecrawl gives Hermes the ability to search the web and extract full page content from URLs, including JavaScript-rendered pages. Without it, the `web` tool is unavailable.
+
+1. Sign up at [firecrawl.dev](https://firecrawl.dev?utm_source=coolify.io) - the free tier includes 500 pages/month.
+2. Add `FIRECRAWL_API_KEY` to the **Environment Variables** tab in Coolify and redeploy, or configure it interactively from the terminal:
+   ```bash
+   hermes setup tools
+   ```
+
+To use a self-hosted Firecrawl instance on your Docker network, set `FIRECRAWL_API_URL` to `http://<service-name>:3002` and ensure `HERMES_ALLOW_PRIVATE_URLS=true`.
+
+### Step 5 - Connect a messaging platform (optional)
+
+Hermes connects to Telegram, Discord, Slack, Microsoft Teams, and more. To configure any messaging integration, run the gateway setup wizard from the container terminal:
+
+```bash
+hermes gateway setup
+```
+
+The wizard prompts you for the platform-specific credentials and configures the integration. For Telegram specifically, you will need:
+
+1. A bot token from **@BotFather** on Telegram - send `/newbot`, follow the prompts, copy the token.
+2. Your Telegram user ID from **@userinfobot** - send any message to it and it returns a plain number like `987654321`.
+
+After running `hermes gateway setup`, add your user ID restriction to Coolify's **Environment Variables** tab:
+
+| Variable | Value |
+|---|---|
+| `TELEGRAM_ALLOWED_USER_IDS` | Your user ID (e.g., `987654321`) - restricts the bot to authorized users |
+
+Then redeploy. Your Telegram bot token is stored in the persistent volume by the setup wizard - it does not need to go in Coolify's environment variables.
+
+<Callout type="warn">
+Telegram webhooks require a publicly accessible HTTPS URL. If your Coolify server is on a private network (e.g., Tailscale-only), use Tailscale Funnel (`tailscale funnel 8787` for WebUI, `tailscale funnel 9119` for Dashboard) or a Cloudflare Tunnel to expose it.
+</Callout>
+
+## Plugins
+
+Hermes ships with opt-in bundled plugins. Nothing loads until you explicitly enable it. Manage plugins from the container terminal:
+
+```bash
+hermes plugins         # interactive UI - toggle with SPACE, confirm with ENTER
+hermes plugins list    # show all plugins and their current state
+hermes plugins enable <plugin-name>
+hermes plugins disable <plugin-name>
+```
+
+Notable bundled plugins:
+
+| Plugin | What it does |
+|---|---|
+| `disk-cleanup` | Auto-tracks ephemeral files (test scripts, temp outputs) and removes them at session end. Adds `/disk-cleanup` slash command for manual control. Recommended for all deployments. |
+| `security-guidance` | Pattern-matches dangerous code patterns during file writes and surfaces a guidance note. |
+| `hermes-achievements` | Steam-style collectible badges generated from session history. |
+| `kanban/dashboard` | Kanban board UI tab for multi-agent task management (Dashboard variant). |
+| `observability/langfuse` | Traces turns and LLM calls to a Langfuse observability instance. |
+
+Enable disk-cleanup:
+
+```bash
+hermes plugins enable disk-cleanup
+```
+
+Plugin settings are written to the persistent volume and survive container restarts.
+
+## Persistent Memory (optional)
+
+Hermes supports external memory providers that build a cross-session user model and inject it at the start of each conversation. Several providers are available: Honcho, mem0, Hindsight, and others. Configure any provider from the terminal:
+
+```bash
+hermes memory setup    # interactive provider selection and configuration
+hermes memory status   # show active provider and connection status
+```
+
+See the [memory providers documentation](https://hermes-agent.nousresearch.com/docs?utm_source=coolify.io) for provider-specific setup guides.
+
+## Troubleshooting
+
+**The agent starts but never responds to messages**
+The agent requires `hermes setup` to be run at least once to configure an LLM provider and model. Open a terminal in the `hermes-agent` container and run `hermes setup`. Restart the container after completing the wizard.
+
+**HTTP 404 errors from OpenRouter**
+The model name is in the wrong format. OpenRouter requires `provider/model-name` (e.g., `anthropic/claude-sonnet-4-5`, `moonshotai/kimi-k2.6`). Run `hermes model` in the container terminal to update the model selection, then restart.
+
+**`config.yaml` changes not persisting / "Permission denied" errors**
+Coolify's container terminal opens a root shell. If you run `hermes` commands without the agent being accessible as the correct user, config files may be written as root and become unreadable by the agent process. Run this to fix ownership, then restart:
+```bash
+chown -R 1000:1000 /home/hermes/.hermes   # WebUI variant
+# or
+chown -R 1000:1000 /opt/data              # Dashboard variant
+```
+
+**API keys returning 401 after setting them in Coolify**
+A stale `.env` file on the volume may be overriding Coolify's environment variables. Check for and remove stale values:
+```bash
+cat /home/hermes/.hermes/.env    # WebUI variant
+# or
+cat /opt/data/.env               # Dashboard variant
+```
+Remove any API key lines that conflict with what Coolify is injecting.
+
+**The `hermes-webui` container exits immediately (WebUI variant)**
+The webui depends on `hermes-agent` passing its healthcheck (verifying the agent home directory exists). On first boot this takes 10-30 seconds. Docker restarts it automatically - this is normal. If it keeps failing, check the `hermes-agent` logs for startup errors.
+
+**Dashboard login fails / 401 errors (Dashboard variant)**
+Retrieve your credentials from the **Environment Variables** tab - `SERVICE_USER_HERMESAGENT` and `SERVICE_PASSWORD_HERMESAGENT`. If `SERVICE_BASE64_64_HERMESAGENT` is missing or was deleted, let Coolify regenerate it and redeploy.
+
+**CSP violation warnings in logs when using Cloudflare Tunnel (WebUI variant)**
+Cloudflare Tunnel injects an analytics beacon script that the hermes-webui Content Security Policy blocks. This is harmless - `disposition: report` means the interface is still fully functional - but the logs fill up. To stop it, disable Cloudflare Web Analytics injection for the Hermes WebUI hostname in your Cloudflare Zero Trust dashboard under **Networks - Tunnels - [your tunnel] - Additional application settings**.
+
+**Compression threshold warning in logs**
+Open `/home/hermes/.hermes/config.yaml` (or `/opt/data/config.yaml` for the Dashboard variant) in the container terminal and add:
+```yaml
+compression:
+  threshold: 0.20
+```
+Restart the container.
+
+**"Skills Hub not initialized" warning**
+Run once to initialize:
+```bash
+hermes skills list
+```
+
+**The "Open" button in Coolify leads to an error page**
+The **Open** button resolves to the first exposed URL. For the WebUI variant that is port 8787; for the Dashboard variant it is port 9119. Wait for the healthcheck on that port's container to pass, then refresh.
+
+**Firecrawl requests fail with connection errors**
+If pointing `FIRECRAWL_API_URL` at a self-hosted Firecrawl on a Docker-internal hostname or Tailscale address, ensure `HERMES_ALLOW_PRIVATE_URLS=true` is set.
+
+## Key Files (inside the container)
+
+| Path (WebUI variant) | Path (Dashboard variant) | Purpose |
+|---|---|---|
+| `/home/hermes/.hermes/config.yaml` | `/opt/data/config.yaml` | Main config - model, provider, settings |
+| `/home/hermes/.hermes/.env` | `/opt/data/.env` | Legacy env overrides - can shadow Coolify env vars |
+| `/home/hermes/.hermes/wiki/` | `/opt/data/wiki/` | Agent knowledge base (markdown files) |
+| `/home/hermes/.hermes/honcho.json` | `/opt/data/honcho.json` | Memory provider config (created by `hermes memory setup`) |
+
+Config changes require a container restart to take effect.
 
 ## Links
 
-- [Official website](https://hermes-agent.nousresearch.com?utm_source=coolify.io)
-- [Hermes WebUI on GitHub](https://github.com/nesquena/hermes-webui?utm_source=coolify.io)
-- [Hermes Agent on GitHub](https://github.com/NousResearch/hermes-agent?utm_source=coolify.io)
+- [GitHub - Hermes Agent](https://github.com/NousResearch/hermes-agent?utm_source=coolify.io)
+- [GitHub - Hermes WebUI](https://github.com/nesquena/hermes-webui?utm_source=coolify.io)
+- [Documentation](https://hermes-agent.nousresearch.com/docs?utm_source=coolify.io)
+- [Nous Research](https://nousresearch.com?utm_source=coolify.io)
+- [Firecrawl](https://firecrawl.dev?utm_source=coolify.io)
+- [OpenRouter](https://openrouter.ai?utm_source=coolify.io)
