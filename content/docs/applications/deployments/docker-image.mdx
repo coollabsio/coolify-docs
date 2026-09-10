@@ -1,0 +1,121 @@
+---
+title: Docker Image
+description: Deploy an existing Docker image without connecting a Git repository or building source code.
+---
+
+# Deploy a Docker image
+
+Use **Docker Image** when a registry already contains the application image you want to deploy.
+
+Coolify pulls the selected image on the deployment server, applies the application's runtime configuration, and starts the container. It does not clone a repository or build an image for this deployment type.
+
+## When to use Docker Image
+
+Choose Docker Image when:
+
+- a CI system already builds and publishes the application image
+- you want to deploy a public image from Docker Hub or another registry
+- you have a versioned image from which Coolify should create the application container
+- you want to deploy by tag or immutable SHA256 digest
+
+Use [Dockerfile](/applications/builds/dockerfile) when Coolify should build an image from instructions you control. Use [Docker Compose](/applications/builds/docker-compose) when one definition must manage several services.
+
+## Before you start
+
+Make sure you have:
+
+- the complete image name, such as `ghcr.io/example/api`
+- a tag or SHA256 digest from the registry or image publisher
+- the internal port where the image's process listens
+- registry credentials on the deployment server when the image is private
+
+Follow [Docker registry authentication](/applications/builds/docker-registries#authenticate-a-private-registry) before deploying a private image. Authenticate every server that must pull the image.
+
+## Choose a tag or digest
+
+| Reference | Example | Use it when |
+| :--- | :--- | :--- |
+| Tag | `ghcr.io/example/api:1.4.0` | The registry publishes recognizable release versions. |
+| Mutable tag | `ghcr.io/example/api:latest` | You accept that another image can later replace the content behind the same tag. |
+| SHA256 digest | `ghcr.io/example/api@sha256:<64-character-digest>` | The deployment must identify fixed image content. |
+
+<Callout type="warning" title="Prefer a version tag or digest for production">
+
+If you leave both **Tag** and **SHA256 Digest** empty, Coolify uses `latest`. A mutable tag can resolve to different image content during a later deployment.
+
+Use a version tag when your registry does not rewrite release tags. Use a digest when the deployment must always pull the same image content.
+
+</Callout>
+
+## Deploy a Docker image
+
+<Steps>
+<Step>
+
+### Select Docker Image
+
+Open a project and environment, select **+ New**, then select **Docker Image**.
+
+</Step>
+<Step>
+
+### Enter the image reference
+
+Enter the image repository under **Image Name**. You can paste a complete reference such as:
+
+```sh
+ghcr.io/example/api:1.4.0
+```
+
+Coolify separates a pasted tag or digest into the matching field.
+
+Alternatively, enter the repository name and complete either **Tag (optional)** or **SHA256 Digest (optional)**. Do not enter both. When using the separate digest field, enter only the 64-character hexadecimal value without the `sha256:` prefix.
+
+Select **Save** to create the application.
+
+</Step>
+<Step>
+
+### Configure the runtime
+
+Open **Configuration > General** and set **Ports Exposes** to the internal port where the image's process listens. Docker Image applications start with port `80`; replace it when the image listens on another port.
+
+Add the required domain, runtime environment variables, persistent storage, health check, and resource limits. These settings apply when Coolify starts the container; they do not change the image.
+
+</Step>
+<Step>
+
+### Deploy and verify
+
+Select **Deploy**, then open **Deployments** and inspect the operation log.
+
+Confirm that Coolify pulls the intended image reference, starts the container, and reports a successful deployment. Open the application logs and configured domain to verify that the process listens on the expected port.
+
+</Step>
+</Steps>
+
+## Change the deployed image
+
+Open **Configuration > General > Docker Registry**.
+
+- **Docker Image** contains the registry and repository name.
+- **Docker Image Tag or Hash** contains the selected tag or a digest stored as `sha256-<64-character-digest>`.
+
+Save the new value, then select **Redeploy**. Coolify pulls the selected image before applying the replacement.
+
+Redeploying the same mutable tag pulls the image currently published under that tag. A digest continues to identify the same image content.
+
+**Restart** also pulls the saved image reference again. If the application uses a mutable tag, a restart can deploy different image content even when only runtime configuration changed.
+
+## What Docker Image skips
+
+A Docker Image application does not use:
+
+- a Git source or deploy key
+- Nixpacks, Railpack, Static, Dockerfile, or Docker Compose builds
+- install, build, or start command detection
+- automatic Git deployments
+
+The image supplies its filesystem and default process. Coolify still manages runtime environment variables, storage, networks, domains, health checks, logs, deployment history, previews created from image tags, and supported replacement behavior.
+
+Continue with [Docker registries](/applications/builds/docker-registries) for private registry access, [Preview deployments](/applications/deployments/preview-deployments) for tag-based previews, and [Rolling updates](/applications/deployments/rolling-updates) for replacement requirements.

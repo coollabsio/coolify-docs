@@ -1,0 +1,74 @@
+---
+title: Public Repositories
+description: Deploy a public Git repository without creating a Git source or deploy key.
+---
+
+# Public repositories
+
+Use **Public Repository** when the repository can be cloned over HTTPS without authentication.
+
+## Create the application
+
+<Steps>
+<Step>
+
+### Copy the HTTPS URL
+
+Copy the repository's clone URL:
+
+```sh
+https://github.com/coollabsio/coolify-examples.git
+```
+
+Do not use an SSH URL for this source type.
+
+</Step>
+<Step>
+
+### Select Public Repository
+
+Open a project, select **+ New**, then select **Public Repository**.
+
+Choose the deployment server when Coolify asks for one.
+
+</Step>
+<Step>
+
+### Check the repository
+
+Paste the HTTPS URL and select **Check Repository**.
+
+Coolify loads the repository and branch information. If the URL contains a GitHub branch path (for example, `https://github.com/ShadowArcanist/netviz/tree/v2`), Coolify preselects that branch. Otherwise, review the selected branch before continuing.
+
+</Step>
+<Step>
+
+### Configure and deploy
+
+Choose the [**Build Pack**](/applications/builds/overview), base directory, and required build settings. Configure the internal port and a domain when the application should be public.
+
+Select **Deploy** and inspect the deployment log.
+
+</Step>
+</Steps>
+
+## Enable automatic deployments
+
+Connecting a public repository by URL does not configure automatic deployments. Use a repository webhook or an external workflow to deploy new commits automatically.
+
+<Tabs id="public-repository-automatic-deployment" items={['Repository webhook', 'External workflow']}>
+<Tab value="Repository webhook">
+
+Add a [manual Git webhook](/applications/deployments/manual-webhooks), then enable **Configuration > Advanced > Auto Deploy**. The provider can then notify Coolify when the configured branch changes.
+
+Use a [GitHub App](/applications/sources/github/app) instead when you want GitHub repository selection and webhook configuration through one integration.
+
+</Tab>
+<Tab value="External workflow">
+
+Call the authenticated **Deploy Webhook** from GitHub Actions or another CI system after its checks pass.
+
+The deployment step in the [GitHub Actions example](/applications/sources/github/actions#example-workflow) shows the authentication pattern.
+
+</Tab>
+</Tabs>

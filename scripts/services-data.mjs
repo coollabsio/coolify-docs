@@ -9,8 +9,10 @@ export const imagesDir = path.join(root, 'public/images/services')
 
 const ignoredServiceFiles = new Set([
   'all.mdx',
-  'introduction.mdx',
+  'how-services-work.mdx',
+  'index.mdx',
   'overview.mdx',
+  'what-is-a-service.mdx',
 ])
 
 const imageExtensions = new Set(['.svg', '.png', '.webp', '.jpg', '.jpeg'])

@@ -1,0 +1,119 @@
+---
+title: Downgrade Coolify
+description: Return a self-hosted Coolify instance to an earlier release from the terminal, with backup and recovery safeguards.
+---
+
+# Downgrade Coolify
+
+Downgrading Coolify replaces the version of the self-hosted Coolify control plane. It does not roll back your applications, databases, services, managed servers, or their data.
+
+<Callout type="warn" title="Self-hosted instances only">
+The Coolify team manages instance versions for Coolify Cloud. You must wait for the Coolify team to downgrade the instance if the latest version causes a serious issue.
+</Callout>
+
+The dashboard and automatic updates only install newer releases. To downgrade, use the terminal; the **Upgrade** action does not install older versions.
+
+## Before you downgrade
+
+- [Create an instance backup](/core/backup-and-recovery/instance-backup).
+- Review the [release notes](https://github.com/coollabsio/coolify/releases) for the current and target versions.
+- Choose a maintenance window: the dashboard will be unavailable while Coolify restarts, but your apps keep running.
+- Check for active deployments and let them finish before continuing.
+
+<Callout type="danger" title="Plan for recovery">
+An older Coolify release may not work with database changes made by a newer release.
+
+Changing the version does not restore the earlier database state. If the downgrade breaks your Coolify instance, restore the known-good instance backup instead of downgrading through multiple older releases.
+</Callout>
+
+## Perform the downgrade
+
+<Steps>
+<Step>
+
+### Disable automatic updates
+
+Prevent Coolify from returning to the newest release after the downgrade.
+
+Open **Settings** in the left sidebar, choose **Configuration**, then select **Updates**. Under **Auto Update**, turn off **Enabled**.
+
+If you cannot change **Enabled**, Coolify reads the automatic-update setting from `/data/coolify/source/.env`. On the Coolify server, open that file and set `AUTOUPDATE` to `false`:
+
+The installer saves a timestamped copy of the existing `.env` file before changing it during the downgrade. Keep your separate backup for recovery.
+
+</Step>
+
+<Step>
+
+### Install the target version
+
+Connect to the Coolify server over SSH:
+
+```sh
+ssh root@<server-ip>
+```
+
+Replace `<server-ip>` with your server's IP address. If you normally sign in with a non-root account, use that account and run the installer command with `sudo`.
+
+Run the installer with the exact target version:
+
+```sh
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash -s <version>
+```
+
+Replace `<version>` with the version from the release you selected, for example `4.1.2`.
+
+The installer downloads the current Coolify configuration files, pulls the target Coolify image, then restarts the Coolify containers in the background. Wait for the restart confirmation before closing the SSH session.
+
+<Callout type="info" title="Do not use the dashboard upgrade action">
+The dashboard **Upgrade** action and scheduled updater compare the target with the running version and prevent a lower version from being installed. They cannot be used to perform downgrades.
+</Callout>
+
+</Step>
+
+<Step>
+
+### Verify the downgrade
+
+After the installer completes, wait for the dashboard to be available again, then confirm:
+
+- the dashboard opens and shows the expected Coolify version
+- you can see your projects and resources
+- managed servers still connect
+
+The installer writes a timestamped log such as `/data/coolify/source/upgrade-2026-07-11-12-00-00.log`. Review the newest `upgrade-*.log` file if the dashboard is still unavailable or a container fails to start.
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="Coolify upgrades again after the downgrade">
+
+Return to **Settings > Configuration > Updates** and confirm **Auto Update > Enabled** is off.
+
+If the control is unavailable because `AUTOUPDATE` is set in `/data/coolify/source/.env`, change it to `AUTOUPDATE=false` and rerun the target-version command.
+
+</Accordion>
+
+<Accordion title="The Coolify dashboard stays unavailable">
+
+Review the newest `/data/coolify/source/upgrade-*.log` file first.
+
+Check that the `coolify`, `coolify-db`, `coolify-redis`, and `coolify-realtime` containers are running and healthy. Then make sure your firewall still allows access to the dashboard.
+
+</Accordion>
+
+<Accordion title="The target version does not work with the existing data">
+
+Stop here if the target version cannot use the existing database or the dashboard remains unavailable. Do not keep downgrading to older releases.
+
+Use the backup created before the change and follow [Restore a Coolify instance](/core/backup-and-recovery/instance-restore).
+
+Restore uses the backup database together with the matching `.env` file so Coolify retains the encryption key required to read encrypted values.
+
+</Accordion>
+
+</Accordions>

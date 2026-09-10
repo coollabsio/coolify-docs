@@ -1,0 +1,52 @@
+---
+title: How MCP works
+description: Understand how Coolify authenticates MCP clients, scopes data, and exposes tools, resources, and prompts.
+---
+
+# How MCP works
+
+Coolify exposes an MCP server at `/mcp`. An MCP-compatible client sends Streamable HTTP requests to that endpoint with a Coolify API token.
+
+## Connection flow
+
+1. Enable MCP for the Coolify instance.
+2. Keep MCP enabled for the team the token belongs to.
+3. Create an API token for that team.
+4. Configure the client with the endpoint and Bearer token.
+5. The client negotiates MCP capabilities and calls tools, reads resources, or uses prompts.
+
+## Authentication and scope
+
+The client sends the complete token as a Bearer credential:
+
+```http
+Authorization: Bearer 67|abcthisisa123dummytoken
+```
+
+The token is bound to one Coolify team. MCP only returns resources owned by that team. Create one token per team when a client needs access to multiple teams.
+
+The instance MCP setting must be enabled before `/mcp` responds. Team owners can disable MCP for individual teams. A disabled instance returns `404`; a disabled team returns `403`.
+
+## MCP primitives
+
+<Tabs items={['Tools', 'Resources', 'Prompts']}>
+<Tab value="Tools">
+
+Tools perform Coolify queries and operations. Read tools need `read`. Deployment and lifecycle tools need `deploy`. [MCP capabilities](/mcp/capabilities/overview) groups tools by task.
+
+</Tab>
+<Tab value="Resources">
+
+Resources are read-only addresses that an MCP client can request directly. Coolify currently exposes an infrastructure overview and application summary resources.
+
+</Tab>
+<Tab value="Prompts">
+
+Prompts give clients guided workflows. Coolify provides prompts for troubleshooting applications and explaining failed deployments.
+
+</Tab>
+</Tabs>
+
+## Response boundaries
+
+Coolify returns structured responses with `data` and may include `_pagination`, `_actions`, or failure details. Environment values, configuration snapshots, and full deployment logs are not returned. Log summaries are capped and best-effort redacted.

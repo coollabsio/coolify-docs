@@ -1,0 +1,163 @@
+---
+title: Restore a Database
+description: Restore a PostgreSQL, MySQL, MariaDB, or MongoDB backup from a server file, upload, or S3-compatible storage.
+---
+
+import { Box2, Refresh23, Server } from 'reicon-react';
+
+# Restore a database
+
+Coolify's **Configuration > Import Backup** page can restore PostgreSQL, MySQL, MariaDB, and MongoDB backups into a running database. The restore form copies the selected backup into the database container and runs the engine-specific import command.
+
+<Callout type="danger" title="A restore replaces existing data">
+
+Stop application writes before restoring. Verify the target database, engine, backup format, and version compatibility. Keep a separate copy of any data that must not be lost.
+
+</Callout>
+
+## Restore support
+
+| Database | Built-in Import Backup | Restore behavior |
+| :--- | :---: | :--- |
+| PostgreSQL | Yes | Uses `pg_restore` for the default selected-database workflow. You can edit the custom import command or mark the backup as containing all databases. |
+| MySQL | Yes | Uses the MySQL client. You can edit the custom import command or mark the backup as containing all databases. |
+| MariaDB | Yes | Uses the MariaDB client. You can edit the custom import command or mark the backup as containing all databases. |
+| MongoDB | Yes | Uses `mongorestore` with the configured root credentials and a gzip archive. |
+| Redis, Dragonfly, KeyDB, ClickHouse | No | Coolify displays **Database restore is not supported.** Use an engine-specific, controlled restore workflow instead. |
+
+The target database must be running. Otherwise, Coolify displays **Database must be running to restore a backup.**
+
+## Before restoring
+
+- Confirm that the backup belongs to the same database engine and is compatible with the target version.
+- Stop application writes, workers, and scheduled jobs that can modify the target database.
+- Take a separate backup of the current target data when it may need to be recovered.
+- Confirm that the target server has enough space for the backup file and restore operation.
+- Keep the target database private while validating the restored data.
+
+## Restore from a file or S3
+
+<Tabs id="database-restore-source" items={['File or upload', 'S3']}>
+<Tab value="File or upload">
+
+Use this method when the backup already exists on the database server or when you want to upload it from your computer.
+
+<Steps>
+<Step>
+
+### Open Import Backup
+
+Open the running database, then select **Configuration > Import Backup**.
+
+</Step>
+<Step>
+
+### Review the import command
+
+For PostgreSQL, MySQL, or MariaDB, review **Custom Import Command**. Enable **Backup includes all databases** only when the file contains an all-database dump. MongoDB uses its generated `mongorestore` command.
+
+</Step>
+<Step>
+
+### Select the backup file
+
+Choose **Restore from File**. Either enter the absolute **Location of the backup file on the server** and select **Check File**, or use **Select or drop a backup file here** to upload a file.
+
+An uploaded file displays its file information when the upload completes; it does not use the **Check File** button.
+
+</Step>
+<Step>
+
+### Confirm the restore
+
+After Coolify displays **File Information**, select **Restore Database from File**. Review the destructive-action confirmation, then confirm the restore.
+
+</Step>
+<Step>
+
+### Follow the restore output
+
+Coolify opens **Database Restore Output**. Wait for the import command to finish and review its output before reconnecting applications.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="S3">
+
+The **Restore from S3** option appears only when an S3-compatible storage is available to the team.
+
+<Steps>
+<Step>
+
+### Open Import Backup
+
+Open the running database, then select **Configuration > Import Backup**.
+
+</Step>
+<Step>
+
+### Review the import command
+
+For PostgreSQL, MySQL, or MariaDB, review **Custom Import Command** and the **Backup includes all databases** setting before selecting the backup.
+
+</Step>
+<Step>
+
+### Select the S3 backup
+
+Choose **Restore from S3**, select **S3 Storage**, and enter the **S3 File Path (within bucket)**. Select **Check File**.
+
+</Step>
+<Step>
+
+### Confirm the restore
+
+After Coolify displays **File Information**, select **Restore Database from S3**. Coolify downloads the backup, copies it into the database container, and executes the restore command after confirmation.
+
+</Step>
+<Step>
+
+### Follow the restore output
+
+Review **Database Restore Output** and wait for the operation to finish before reconnecting applications.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+## Verify the restored database
+
+1. Confirm that the database remains running and healthy.
+2. Review **Logs** for startup, storage, authentication, or import errors.
+3. Connect with a controlled client and verify the expected databases, tables or collections, and representative records.
+4. Run application migrations only when the restored schema requires them.
+5. Reconnect application writes after the data and schema are verified.
+6. Create a new backup from the restored database and verify its execution.
+
+## Related guides
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Database backups',
+      href: '/databases/backups',
+      description: 'Schedule and retain the backup files used for recovery.',
+      icon: Box2,
+    },
+    {
+      title: 'S3 storage',
+      href: '/core/s3-storage/overview',
+      description: 'Configure an S3-compatible source for off-server backups.',
+      icon: Server,
+    },
+    {
+      title: 'Operate databases',
+      href: '/databases/operations/overview',
+      description: 'Review database status, logs, metrics, and lifecycle actions.',
+      icon: Refresh23,
+    },
+  ]}
+/>

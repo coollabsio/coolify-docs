@@ -1,0 +1,129 @@
+---
+title: Manage Server
+description: Update a connected server's connection, domain, timezone, build role, and cloud-provider link.
+---
+
+# Manage a server
+
+Open **Servers**, select a server, then open **Configuration > General** to manage its identity, SSH connection, domain defaults, and role.
+
+<Callout type="warning" title="Connection changes can make the server unreachable">
+Before changing the IP address, domain, SSH user, port, or connection timeout, confirm that the new connection works from the Coolify machine.
+</Callout>
+
+## General settings
+
+| Setting | What it controls |
+| :--- | :--- |
+| **Name** | The name shown for the server in Coolify. |
+| **Description** | Optional notes about the server or its purpose. |
+| **Wildcard Domain** | The base domain Coolify can use when suggesting domains for new resources. |
+| **IP Address/Domain** | The address Coolify uses for SSH and server communication. |
+| **User** | The account Coolify uses for SSH. |
+| **Port** | The SSH port. |
+| **SSH Connection Timeout (s)** | How long Coolify waits for the SSH connection, from 1 to 300 seconds. |
+| **Server Timezone** | The timezone used for scheduled operations such as backups and cron jobs. |
+| **Use it as a build server?** | Makes the server available for application builds and prevents resources from being deployed to it. |
+
+Select **Save** after changing fields that do not save automatically. If you changed the connection, run the server validation again to confirm Coolify can still reach it.
+
+The build-server setting is unavailable while the server has managed resources. Move or delete those resources first. Read [Build Servers](/core/infrastructure/servers/build-servers) before changing the role.
+
+### Wildcard domain
+
+For example, setting **Wildcard Domain** to `https://example.com` lets Coolify suggest a domain such as `https://<application-id>.example.com` for a new resource.
+
+Create a DNS record for `*.example.com` that points to this server. Changing the setting does not create DNS records or update domains already assigned to resources.
+
+---
+
+## Server details
+
+After successful validation, the **General** page displays detected information such as:
+
+- operating system
+- CPU architecture and core count
+- memory
+- kernel version
+- Docker versions
+
+Coolify refreshes this information when it validates or checks the server. Use it to confirm that the connected machine and its available resources match what you expect.
+
+---
+
+## Link an existing server to a cloud provider
+
+If you added a Hetzner, DigitalOcean, or Vultr server manually, you can link its Coolify record to the matching provider machine.
+
+Linking lets Coolify read provider status and display provider-backed actions such as **Power On** when the machine is stopped. It does not create a new machine.
+
+<Steps>
+<Step>
+
+### Add the provider token
+
+Follow [Cloud Tokens](/core/security/credentials/cloud-tokens) to add a token for the account containing the server.
+
+</Step>
+<Step>
+
+### Open the linking flow
+
+1. Open **Servers** and select the server.
+2. Open **Configuration > General**.
+3. Select **Link Cloud Provider**.
+4. Choose **Hetzner**, **DigitalOcean**, or **Vultr**.
+5. Select the matching provider token.
+
+</Step>
+<Step>
+
+### Find the provider machine
+
+Search using the provider's server ID or the server IP address.
+
+Confirm that **Match Found** shows the intended machine, then select **Link This Server**.
+
+</Step>
+<Step>
+
+### Confirm the link
+
+Return to the server page and confirm that provider status is shown. If the status is stale, refresh it before taking a provider-backed action.
+
+</Step>
+</Steps>
+
+<Callout type="warning" title="Match the server carefully">
+Link only the provider machine represented by this Coolify server record. Provider-backed actions and deletion options apply to the linked machine.
+</Callout>
+
+---
+
+## Revalidate after connection changes
+
+Run validation again after changing:
+
+- IP address or domain
+- SSH user or port
+- network routing, firewall rules, or tunnel configuration
+
+If the connection fails, restore the previous settings or use the provider console to correct SSH access. Follow [OpenSSH](/core/infrastructure/servers/openssh) and [Firewall](/core/infrastructure/servers/firewall) for the common checks.
+
+---
+
+## Build and deployment limits
+
+Open **Configuration > Advanced** to control how many deployments a server runs at once and how long each deployment may run.
+
+| Setting | What it controls | Default |
+| :--- | :--- | :--- |
+| **Number of concurrent builds** | How many build and deployment processes run at the same time on this server. Raise it to deploy more resources in parallel; lower it to protect a small server from resource exhaustion during builds. | `2` |
+| **Deployment timeout (sec)** | The maximum time a single deployment may run before Coolify cancels it. Increase it for large images or slow builds that legitimately exceed the limit. | `3600` |
+| **Deployment queue limit** | The maximum number of deployments allowed to wait in the queue. When the limit is reached, Coolify rejects new deployments with an HTTP `429` response. | — |
+
+Select **Save** after changing these values.
+
+<Callout type="info" title="Limits are per server">
+The concurrent-build count and queue limit apply to each server independently. A dedicated [build server](/core/infrastructure/servers/build-servers) has its own limits, so raising them there does not affect deployments on other servers.
+</Callout>

@@ -1,0 +1,94 @@
+---
+title: Rate Limits
+description: Understand Coolify API request limits, response headers, reset times, and safe retry behavior.
+---
+
+# API rate limits
+
+Coolify limits API request frequency to protect the instance from excessive traffic. Clients should read the rate-limit response headers instead of assuming that every instance uses the default.
+
+## Default limits
+
+| Requests | Default limit | Window |
+| :--- | :--- | :--- |
+| General API requests | 200 requests | 1 minute |
+| `/api/health` | 1,000 requests | 1 minute |
+
+Coolify Cloud uses these default limits. Self-hosted instances use the same defaults unless an administrator changes the general limit with `API_RATE_LIMIT`. The health endpoint keeps its separate 1,000-request limit.
+
+Coolify identifies a rate-limit bucket by the authenticated user when one is available. Requests without an authenticated user are grouped by source IP address.
+
+---
+
+## Rate-limit headers
+
+API responses include headers that describe the current request bucket:
+
+| Header | When present | Meaning |
+| :--- | :--- | :--- |
+| `X-RateLimit-Limit` | API responses | Maximum requests allowed in the current window. |
+| `X-RateLimit-Remaining` | API responses | Requests remaining in the current window after the current request. |
+| `Retry-After` | A rate-limited response | Seconds to wait before trying again. |
+| `X-RateLimit-Reset` | A rate-limited response | Unix timestamp in seconds when another request can be attempted. |
+
+Inspect the headers without downloading the response body:
+
+```sh
+export COOLIFY_URL="https://coolify.shadowarcanist.com"
+export COOLIFY_TOKEN="67|abcthisisa123dummytoken"
+
+curl --head \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  "$COOLIFY_URL/api/v1/teams/current"
+```
+
+Some endpoints can also return `429 Too Many Requests` because a deployment queue or an upstream cloud provider is busy. Use `Retry-After` whenever the response provides it, even when `X-RateLimit-Remaining` shows capacity in Coolify's general API limit.
+
+---
+
+## Handle a 429 response
+
+When Coolify returns `429 Too Many Requests`:
+
+1. Stop sending requests for the affected operation.
+2. Read `Retry-After` as a number of seconds.
+3. Wait for that interval before retrying.
+4. Add exponential backoff and random jitter if repeated attempts still fail.
+5. Avoid retrying unsafe write requests unless the endpoint and client can prevent duplicate changes.
+
+Do not send parallel retries for the same failed request. Parallel retries consume the remaining capacity faster and can repeat a write operation.
+
+---
+
+## Change the instance-wide rate limit
+
+<Tabs items={['Self-hosted', 'Coolify Cloud']}>
+<Tab value="Self-hosted">
+
+Set `API_RATE_LIMIT` in `/data/coolify/source/.env` to change the number of general API requests allowed per minute:
+
+```dotenv
+API_RATE_LIMIT=400
+```
+
+The running container does not pick up this change from a normal restart. Run the Coolify installation script to recreate the Coolify containers with the updated environment:
+
+```sh
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+```
+
+The installation script also updates Coolify to the latest release. Follow [Update Coolify](/core/instance-management/update#run-the-installer-over-ssh) if you need to install a specific version.
+
+After the containers are recreated, make a request and confirm that `X-RateLimit-Limit` reports the new limit.
+
+Increasing this value does not increase the capacity of the Coolify instance, deployment queues, or upstream providers. Prefer client-side caching, request batching, and backoff before raising it.
+
+</Tab>
+<Tab value="Coolify Cloud">
+
+Coolify Cloud users cannot change the instance environment. To request a higher limit, [contact Coolify support](/support) and explain why the integration needs more than 200 general API requests per minute. Include the endpoints being called and the expected sustained and peak request rates so the request can be evaluated.
+
+</Tab>
+</Tabs>
+
+See [API errors](/api/errors) for the difference between a general rate-limit response and other API failures.

@@ -1,0 +1,83 @@
+---
+title: Multi-server Deployments
+description: Deploy one Coolify application to multiple standalone servers by using a shared Docker image and registry.
+---
+
+# Multi-server deployments
+
+Coolify can deploy the same application to a primary server and one or more additional standalone servers. This gives each server its own running instance of the application.
+
+Adding deployment servers does not distribute traffic by itself. After the application is running on every server, configure a [cloud load balancer](/core/infrastructure/scaling/cloud-load-balancing) or another external traffic layer in front of them.
+
+<Callout type="warning" title="Current application limits">
+The application's **Servers** page does not support Docker Compose applications. Coolify also prevents you from adding another server when the application has persistent storage configured.
+</Callout>
+
+## Before you begin
+
+Prepare the application and servers before attaching another deployment destination.
+
+- Add and validate every server in Coolify. Follow [Add Server](/core/infrastructure/servers/add-server) for each new server.
+- Use servers with the same CPU architecture, such as AMD64 or ARM64, so every server can run the same image.
+- Make application state available outside the containers. Use shared or external services for databases, sessions, queues, caches, and uploaded files.
+- Create a Docker registry repository that the primary server, any build server, and every additional server can access.
+- Authenticate the SSH user configured in Coolify to that registry on every server that must push or pull the image. See [Docker registries](/applications/builds/docker-registries#authenticate-a-private-registry).
+
+## Configure the application image
+
+1. Open the application in Coolify.
+2. Select **Configuration**, then **General**.
+3. In the Docker registry settings, enter the full registry repository in **Docker Image**. For example:
+
+   ```text
+   ghcr.io/example/acme-web
+   ```
+
+4. Save the application settings.
+
+Coolify requires **Docker Image** before it can deploy an application to additional servers. During a deployment, the primary server or configured build server builds the image and pushes it to the registry. The additional servers then pull the same image.
+
+## Add deployment servers
+
+1. Open **Configuration** for the application.
+2. Select **Servers**.
+3. Under **Add another server**, select the server and network you want to attach.
+4. Repeat the selection for each additional server.
+
+The server originally selected for the application remains the **Primary Server**. Each attached server appears under **Additional Server(s)**.
+
+If no server is available to attach, confirm that the candidate server is validated, usable, belongs to the same team, and has a standalone Docker destination. A server already attached to the application is not shown again.
+
+## Deploy and verify
+
+Deploy the application after attaching all required servers.
+
+1. Select **Deploy** from the application page.
+2. Follow the deployment logs. Confirm that Coolify pushes the built image to the configured registry and starts a deployment for each attached server.
+3. Open **Configuration** > **Servers** and confirm that the primary and additional servers show a running status.
+4. Test every server through the origin path you plan to use before adding it to a load balancer.
+
+If an additional server cannot pull the image, sign in to the registry on that server with the same SSH user configured for the server in Coolify, then deploy again.
+
+## Manage deployment servers
+
+The **Servers** page provides actions for each attached server:
+
+- **Deploy** deploys the application to only that server.
+- **Stop** stops the application on that server.
+- **Promote to Primary** makes an additional server the primary deployment destination. The former primary server becomes an additional server.
+- **Remove from server** stops the application on that server and removes the deployment destination after you confirm the server name.
+
+Normal application-wide deploy, restart, and stop actions include the primary and additional servers. A pull request preview is not deployed to the additional destinations.
+
+## What multi-server deployment does not provide
+
+Attaching servers gives you multiple application instances, but it does not create a complete highly available system. You must still configure:
+
+- a load balancer with health checks
+- DNS for the public domain
+- firewall or security-group rules for the application servers
+- shared data and session storage
+- monitoring for the application and every server
+
+Continue with [Cloud Load Balancing](/core/infrastructure/scaling/cloud-load-balancing) to route traffic across the deployed instances.

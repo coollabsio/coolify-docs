@@ -1,0 +1,344 @@
+---
+title: "Add a new service template to Coolify"
+description: Add new service templates to Coolify using Docker Compose with magic environment variables, storage handling, and one-click deployment features.
+---
+
+import {
+  ArrowsRight,
+  Checklist2,
+  Clipboard,
+  Database,
+  DocumentText2,
+  Image,
+  MessageQuestion2,
+  Package,
+  Rocket,
+  StarSparkle,
+  Warning22,
+} from 'reicon-react';
+
+# Adding a new service template to Coolify
+
+Services in Coolify are templates made from normal Docker Compose files with Coolify metadata, magic environment variables, storage handling, and one-click deployment behavior.
+
+<CoolDocsPage hideToc>
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Add the compose file and logo, test it through **Docker Compose Empty**, open the template pull request against `next`, and open the matching service docs pull request before the template can be merged.
+
+</CoolCallout>
+
+<CoolCallout icon={Warning22} title="Eligibility" type="warn">
+
+The service repository must have at least **1,000 GitHub stars** before it can be added to Coolify as a one-click service.
+
+</CoolCallout>
+
+---
+
+<CoolFlow
+  id="template-flow"
+  icon={Package}
+  title="Add the service template"
+  description="Start with a normal Docker Compose file, then add the metadata and Coolify-specific variables that make it work as a one-click service."
+  steps={[
+    'Add metadata at the top of the compose file',
+    'Write the Docker Compose services',
+    'Use required variables for critical configuration',
+    'Add the service logo in the Coolify repository',
+    'Test with Docker Compose Empty',
+    'Open the template pull request to Coolify',
+    'Open the required service docs pull request',
+  ]}
+  list={[
+    'Read the [Docker Compose environment variables guide](/docs/applications/builds/docker-compose#environment-variables).',
+    'Use generated variables and storage handling where possible.',
+    'Keep the template focused on a working default deployment.',
+    'Document anything the user must configure before deployment.',
+  ]}
+/>
+
+---
+
+<CoolCallout icon={Checklist2} title="Metadata" contentClassName="!p-0">
+<CoolPanel>
+
+Add metadata as comments at the top of the compose file.
+
+```yaml
+# documentation: https://docs.example.com/
+# slogan: A brief description of your service
+# category: One word, broad app type
+# tags: tag1,tag2,tag3
+# logo: svgs/your-service.svg
+# port: 1234
+```
+
+</CoolPanel>
+<CoolPanel withDivider>
+
+| Field | Expectation |
+| :--- | :--- |
+| documentation | Link to the official service documentation. |
+| slogan | Short description shown in Coolify. |
+| category | One broad app type, written as a single word. |
+| tags | Comma-separated search terms. |
+| logo | Path to the service logo, for example svgs/example.svg. |
+| port | Main entrypoint port for the service. |
+
+</CoolPanel>
+</CoolCallout>
+
+<CoolCallout icon={Warning22} title="Port note" type="warn">
+
+Always specify a port. Caddy proxy cannot automatically determine every service port.
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={Database} title="Docker Compose" contentClassName="!p-0">
+<CoolPanel>
+
+Use Coolify magic variables for generated values, storage, and user-provided configuration.
+
+```yaml
+services:
+  app:
+    image: your-service-image:tag
+    environment:
+      - DATABASE_URL=${COOLIFY_DATABASE_URL}
+    volumes:
+      - ${COOLIFY_VOLUME_APP}:/data
+```
+
+</CoolPanel>
+<CoolPanel withDivider>
+
+Mark critical configuration as required so users understand what must be set before deployment.
+
+```yaml
+services:
+  app:
+    image: your-service:1.2.3
+    environment:
+      # Required - must be set by the user
+      - DATABASE_URL=${DATABASE_URL:?}
+      - API_KEY=${API_KEY:?}
+
+      # Required with sensible defaults
+      - PORT=${PORT:?8080}
+      - LOG_LEVEL=${LOG_LEVEL:?info}
+
+      # Optional with fallback values
+      - DEBUG=${DEBUG:-false}
+      - CACHE_TTL=${CACHE_TTL:-3600}
+```
+
+Do not use <CoolInlineValue>latest</CoolInlineValue> or other floating tags. Pin the image to a specific version.
+
+</CoolPanel>
+</CoolCallout>
+
+---
+
+<CoolCallout icon={Image} title="Logo and testing" contentClassName="!p-0">
+<CoolPanel>
+
+Put the logo in the Coolify repository and reference it from the compose metadata, then test the compose file before opening the pull request.
+
+</CoolPanel>
+<CoolPanel withDivider>
+
+- Example: a service named <CoolInlineValue>wordpress</CoolInlineValue> should use <CoolInlineValue>templates/compose/wordpress.yaml</CoolInlineValue>, <CoolInlineValue>svgs/wordpress.svg</CoolInlineValue>, and <CoolInlineValue># logo: svgs/wordpress.svg</CoolInlineValue>.
+- Prefer SVG logos. Use WebP or PNG only when SVG is unavailable.
+- Avoid low-quality JPG logos.
+- Test from a fresh Docker Compose Empty resource, not only an already-running local container.
+- Confirm the service starts and the exposed port works.
+
+</CoolPanel>
+</CoolCallout>
+
+---
+
+<CoolCallout icon={Clipboard} title="Pull request checklist">
+
+- Open the template pull request against the Coolify repository's `next` branch.
+- Add `templates/compose/<service>.yaml`.
+- Add `svgs/<service>.svg` and reference that same path in the compose metadata.
+- Test the template through the Docker Compose Empty deployment flow.
+- Open the matching service docs pull request in this repository; it is required before the template PR can be merged.
+- Link the docs pull request from the template pull request so reviewers can check both together.
+
+</CoolCallout>
+
+<CoolCallout icon={Rocket} title="Generated template data">
+
+Coolify deploys from <CoolInlineValue>templates/service-templates.json</CoolInlineValue>, a parsed list generated from the compose templates in the Coolify repository. You do not need to edit that JSON file directly.
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={DocumentText2} title="Add service documentation" contentClassName="!p-0">
+<CoolPanel>
+
+Open a matching docs page pull request in this repository before the service template pull request is merged.
+
+</CoolPanel>
+<CoolPanel withDivider>
+
+- Add the service logo under `public/images/services`.
+- Create `content/docs/services/<service-slug>.mdx`.
+- Use lowercase kebab-case for the slug and filename.
+- Run the service generators or let dev/build run them for you.
+- Verify the service card, category filter, and all-services entry.
+
+</CoolPanel>
+<CoolPanel withDivider>
+
+Start the docs page with this frontmatter. Keep the description short so cards and search results stay readable.
+
+```yaml
+---
+title: "Service Name"
+description: "Short service description for cards and search."
+og:
+  description: "SEO/social-card description."
+category: "Analytics"
+icon: "/images/services/service-name-logo.svg"
+---
+```
+
+</CoolPanel>
+<CoolPanel withDivider>
+
+| Field | Required | Notes |
+| :--- | :--- | :--- |
+| title | yes | Display name shown on the service card. |
+| description | yes | Short description used on cards and search results. |
+| category | yes | Category used by the overview and generated all-services page. |
+| icon | optional | Only set this if automatic logo resolution cannot find the logo. |
+| og.description | optional | Longer social and SEO description. |
+| disabled | optional | Set true to hide the service from listings while keeping the page reachable. |
+
+</CoolPanel>
+<CoolPanel withDivider>
+
+To hide a service from generated listings while keeping the page reachable, include the disabled field in the service page frontmatter:
+
+```yaml
+---
+title: "Service Name"
+description: "Short service description for cards and search."
+category: "Analytics"
+disabled: true
+---
+```
+
+</CoolPanel>
+</CoolCallout>
+
+---
+
+<CoolCallout icon={DocumentText2} title="Service docs starter">
+
+Use this as a small starting point for the service page body.
+
+```markdown
+# Service Name
+
+![Service Name](/images/services/service-name-logo.svg)
+
+## What is Service Name?
+
+Brief description and use cases.
+
+## Links
+
+- [Official website](https://example.com?utm_source=coolify.io)
+- [GitHub](https://github.com/example/repo?utm_source=coolify.io)
+```
+
+Add screenshots with the zoomable image component when the image benefits from a larger view:
+
+```tsx
+<ZoomableImage src="/images/services/service-name-dashboard.webp" alt="Service dashboard" />
+```
+
+Do not use <CoolInlineValue>ZoomableImage</CoolInlineValue> for the logo.
+
+</CoolCallout>
+
+<CoolCallout icon={Rocket} title="Regenerate listings">
+
+The services overview and all-services directory are generated from service frontmatter. The generators run during dev and build, but you can run them directly when checking a service page.
+
+```bash
+bun run generate:services
+```
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={MessageQuestion2} title="Request a new service">
+
+If you want a service template but are not submitting it yourself, search the [service template requests](https://github.com/coollabsio/coolify/discussions/categories/service-template-requests) first. Upvote an existing request, or create a new one if it does not exist.
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={MessageQuestion2} title="FAQ" contentClassName="!p-0">
+<CoolAccordions>
+<Accordion title="Can any service be added?">
+
+No. The upstream service repository must have at least 1,000 GitHub stars before it can be added as a one-click service.
+
+</Accordion>
+<Accordion title="Why is the port required?">
+
+Caddy cannot always detect the correct service port automatically. The metadata port tells Coolify what to expose.
+
+</Accordion>
+<Accordion title="Should I edit generated service-list files manually?">
+
+No. Service listings are generated from service docs frontmatter and refreshed by the generator scripts.
+
+</Accordion>
+<Accordion title="Where do I request a service instead of adding one?">
+
+Use the service template request category in GitHub Discussions. Search first, then upvote an existing request or create a new one.
+
+</Accordion>
+</CoolAccordions>
+</CoolCallout>
+
+---
+
+<CoolCallout icon={DocumentText2} title="Development guides">
+<CoolActionCardGrid>
+<CoolActionCard
+  href="/docs/contribute/coolify"
+  icon={StarSparkle}
+  title="Coolify Core"
+  type="secondary"
+  description="Set up local development and prepare code contributions for the main Coolify repository."
+  bullets={['Local stack setup', 'Development tools', 'Pull request expectations']}
+  btn-cta="View core guide"
+/>
+<CoolActionCard
+  href="/docs/contribute/documentation"
+  icon={DocumentText2}
+  title="Documentation"
+  type="secondary"
+  description="Add or improve docs pages while following the existing MDX and component patterns."
+  bullets={['Docs setup', 'Image paths', 'Review expectations']}
+  btn-cta="View docs guide"
+/>
+</CoolActionCardGrid>
+</CoolCallout>
+
+</CoolDocsPage>

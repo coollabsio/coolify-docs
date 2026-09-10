@@ -1,0 +1,39 @@
+---
+title: "Create"
+description: "Create a new one-click service"
+---
+
+# Create
+
+Create a new one-click service
+
+## Usage
+
+```sh
+coolify service create <type>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--description` | `string` | No | — | Service description |
+| `--destination-uuid` | `string` | No | — | Destination UUID if server has multiple destinations |
+| `--docker-compose` | `string` | No | — | Custom Docker Compose content (for advanced customization) |
+| `--environment-name` | `string` | No | — | Environment name |
+| `--environment-uuid` | `string` | No | — | Environment UUID |
+| `--instant-deploy` | `boolean` | No | `false` | Deploy immediately after creation |
+| `--list-types` | `boolean` | No | `false` | List all available service types |
+| `--name` | `string` | No | — | Service name |
+| `--project-uuid` | `string` | Yes | — | Project UUID (required) |
+| `--server-uuid` | `string` | Yes | — | Server UUID (required) |
+| `--tag` | `stringArray` | No | — | Tag to assign (repeatable) |
+| `--tags` | `stringSlice` | No | — | Comma-separated tags to assign |
+
+## Get current help
+
+```sh
+coolify service create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

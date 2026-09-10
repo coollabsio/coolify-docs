@@ -1,0 +1,7 @@
+{
+  "title": "Notification",
+  "pages": [
+    "get",
+    "update"
+  ]
+}

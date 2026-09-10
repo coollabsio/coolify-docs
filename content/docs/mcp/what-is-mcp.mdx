@@ -1,0 +1,50 @@
+---
+title: What is MCP?
+description: Understand Coolify's Model Context Protocol server and how AI clients access your Coolify resources.
+---
+
+import { LaptopCode, Settings, Sparkles } from 'reicon-react';
+
+# What is MCP?
+
+Coolify's Model Context Protocol (MCP) server lets compatible AI clients inspect and operate resources in a Coolify team through a standard HTTP connection.
+
+MCP gives an AI client structured access to Coolify data. The client can ask about infrastructure, find resources, inspect deployments, read supported logs, and run lifecycle operations allowed by its API token.
+
+## What MCP provides
+
+| Capability | Purpose |
+| :--- | :--- |
+| Tools | Let an AI client call Coolify operations such as listing applications or starting a resource. |
+| Resources | Provide addressable read-only data such as an infrastructure overview or application summary. |
+| Prompts | Provide guided workflows for tasks such as troubleshooting an application or explaining a failed deployment. |
+| Streamable HTTP | Connects an MCP client to Coolify at `/mcp` without a local MCP process. |
+
+## What MCP does not do
+
+MCP does not bypass Coolify authentication, team scope, API access, token permissions, or sensitive-value redaction. Every request uses an API token and every resource belongs to the team bound to that token.
+
+## Continue learning
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'How MCP works',
+      href: '/mcp/how-mcp-works',
+      description: 'Understand connection, authentication, team scope, and response boundaries.',
+      icon: LaptopCode,
+    },
+    {
+      title: 'Set up MCP',
+      href: '/mcp/setup',
+      description: 'Enable MCP, create a scoped token, and connect an AI client.',
+      icon: Settings,
+    },
+    {
+      title: 'MCP capabilities',
+      href: '/mcp/capabilities/overview',
+      description: 'Find tools, resources, and prompts by Coolify task.',
+      icon: Sparkles,
+    },
+  ]}
+/>

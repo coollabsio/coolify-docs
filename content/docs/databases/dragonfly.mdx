@@ -1,33 +1,103 @@
 ---
-title: DragonFly
-description: Deploy DragonFly in-memory datastore on Coolify with Redis compatibility, multi-threaded architecture, and enhanced scalability features.
+title: Dragonfly
+description: Deploy and operate Dragonfly on Coolify with Redis-compatible connections, persistent storage, TLS, and health checks.
 ---
 
-# DragonFly
+# Dragonfly
 
-<ZoomImage src="/docs/images/database-logos/dragonfly-dark.svg" alt="dragonfly" />
+Coolify deploys Dragonfly as a standalone Redis-compatible datastore on the selected server and destination. A new resource gets a generated password, a persistent volume at `/data`, an internal connection URL, and a health check.
 
-## What is DragonFly
+Dragonfly is a Redis-compatible datastore designed for in-memory workloads and multithreaded execution.
 
-DragonFly is a modern in-memory datastore, designed as a Redis alternative with better scalability and resource efficiency. It offers a Redis-compatible API while providing improved performance on multi-core systems. DragonFly is built to handle high-throughput scenarios and large datasets more efficiently than traditional in-memory datastores.
+## Create a Dragonfly database
 
-With its multi-threaded architecture and advanced data structures, DragonFly aims to provide enhanced scalability and performance for applications that require Redis-like functionality on modern hardware.
+<Steps>
+<Step>
 
-## Data Persistence
+### Open New Resource
 
-By default, Dragonfly DB does not save data to disk. To enable persistence, set up snapshots manually.
+Open the project and environment where the database should live, then select **New Resource**.
 
-For example, configure the service with:
+</Step>
+<Step>
 
-```yaml
-services:
-  dragonfly:
-    command: 'dragonfly --requirepass XXXXXXXX --dir /data --dbfilename dragonfly-snapshot-{timestamp} --snapshot_cron "*/5 * * * *"'
+### Select Dragonfly
+
+Under **Databases**, select **Dragonfly**. You can also search for **Dragonfly** by name.
+
+</Step>
+<Step>
+
+### Select a server
+
+Select the server that should run Dragonfly. Build servers cannot be selected because they do not host running database resources.
+
+</Step>
+<Step>
+
+### Select a destination
+
+Select the Docker network destination that Dragonfly should join.
+
+</Step>
+<Step>
+
+### Review the generated configuration
+
+Coolify creates the resource and opens **Configuration > General**. Review the image, generated password, SSL settings, and connection URLs. Keep the default private networking unless an external client requires access.
+
+</Step>
+<Step>
+
+### Start Dragonfly
+
+Select **Start** and follow the startup output. Wait until Dragonfly is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+
+</Step>
+</Steps>
+
+## Default configuration
+
+| Setting | Default or behavior |
+| :--- | :--- |
+| Internal port | `6379`; TLS uses `6380` |
+| Default image | `docker.dragonflydb.io/dragonflydb/dragonfly` |
+| Authentication | Generated password |
+| Data mount | `/data` |
+| Scheduled database backups | Not supported by Coolify |
+| SSL | Supported with **Enable SSL** |
+
+Dragonfly uses the Redis protocol for its connection URL. It does not expose a username field in the Coolify database form.
+
+
+## Connect to Dragonfly
+
+Use the **Internal URL** for an application on the same Coolify destination network:
+
+```sh
+redis://:<password>@<database-container>:6379/0
 ```
 
-You can also trigger manual saves using the SDK's `SAVE` command.
+With SSL enabled, use the generated `rediss` URL and TLS port `6380`. When **Make it publicly available** is enabled, use the generated **Public URL**.
 
-## Links
+## Configure Dragonfly
 
-- [The official website](https://dragonflydb.io/?utm_source=coolify.io)
-- [GitHub](https://github.com/dragonflydb/dragonfly?utm_source=coolify.io)
+Open **Configuration > General** to change the image, password, **Ports Mappings**, public proxy, and supported custom Docker options. Open **Configuration > Persistent Storage** to manage the `/data` volume.
+
+Dragonfly's image and command options control persistence behavior. Review the image's documentation before changing the startup options or assuming that in-memory data has been written to disk.
+
+## Backups and persistence
+
+Coolify does not create scheduled database backups for Dragonfly. Keep the `/data` persistent volume and configure Dragonfly's supported snapshot or persistence features when you need recovery copies. Test restores independently.
+
+## SSL and health checks
+
+Dragonfly exposes **Enable SSL** without an SSL mode selector. See [Database SSL](/databases/ssl) for the CA certificate mount and TLS connection workflow.
+
+Configure the Docker health check under **Configuration > Healthcheck** and restart Dragonfly after saving.
+
+## Official Dragonfly resources
+
+- [Dragonfly documentation](https://www.dragonflydb.io/docs)
+- [Dragonfly source](https://github.com/dragonflydb/dragonfly)
+- [Dragonfly Docker image](https://hub.docker.com/r/dragonflydb/dragonfly)

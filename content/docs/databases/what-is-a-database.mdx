@@ -1,0 +1,79 @@
+---
+title: What is a database
+description: Understand standalone databases, generated connection details, and persistent data in Coolify.
+---
+
+import { Box2, BranchUp, Rocket2 } from 'reicon-react';
+
+# What is a database
+
+A database stores and organizes data for an application. In Coolify, a standalone database is a database engine that Coolify deploys and manages as a Docker container on a selected server and destination.
+
+Coolify currently provides one-click resources for PostgreSQL, MySQL, MariaDB, MongoDB, Redis, Dragonfly, KeyDB, and ClickHouse.
+
+## What is a one-click database?
+
+A one-click database is a standalone database resource that Coolify creates from the **New Resource > Databases** list. You choose a supported engine, and Coolify creates the database resource with an engine-specific image, generated credentials, connection details, persistent storage, and the configuration needed to deploy it.
+
+One-click means that Coolify supplies the initial resource configuration. It does not mean that the database is a managed cluster or that Coolify provides replication, automatic failover, or a multi-node topology. The result is one database resource that runs as a Docker container on the server and destination you select.
+
+Read [How databases work](/databases/how-databases-work#how-a-one-click-database-works-in-coolify) for the creation and deployment lifecycle.
+
+Use a [Service](/services) instead when you need a Docker Compose topology, multiple database containers, an unsupported engine, or configuration that the one-click database form does not expose.
+
+## What a database resource includes
+
+When Coolify creates a one-click database, it creates and stores:
+
+| Part | Purpose |
+| :--- | :--- |
+| Database container | Runs the selected database engine on the server and destination you choose. |
+| Generated credentials | Provides the initial username, password, and database name used by the connection details. |
+| Persistent storage | Keeps database files outside the replaceable container. |
+| Internal URL | Gives applications on the same destination network a connection string. |
+| Configuration and operations | Lets you manage networking, health checks, backups where supported, logs, terminal access, and lifecycle actions. |
+
+The exact connection format, storage path, SSL behavior, and backup support depend on the database engine. Read the engine guide before changing a production database.
+
+## Standalone databases and applications
+
+An application uses a database; it does not contain the database's data. Keep the resources separate so you can deploy the application without replacing the database container.
+
+For an application on the same Coolify destination, use the database's **Internal URL**. Coolify uses the database container name and internal port in that URL. Do not replace the container name with a server IP for an internal connection.
+
+If a client runs outside the destination network, configure [network access](/databases#network-access) only when necessary. A public database endpoint exposes a database protocol, so restrict the port with your firewall and enable SSL when the engine supports it.
+
+## What a standalone database is not
+
+A standalone database is not an application and is not a managed database service. Coolify manages the resource configuration and container lifecycle, but the database engine is still responsible for its own data integrity, replication, clustering, and upgrade procedures.
+
+<Callout type="warning" title="Persistent storage is not a backup">
+
+The persistent volume protects data during normal container replacement. It does not protect against volume deletion, disk failure, corruption, or server loss. Configure [database backups](/databases/backups) for supported engines and test [restoring one](/databases/restore) before relying on it.
+
+</Callout>
+
+## Continue learning
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'How databases work',
+      href: '/databases/how-databases-work',
+      description: 'Follow the container, volume, network, and connection lifecycle.',
+      icon: Box2,
+    },
+    {
+      title: 'Choose a database',
+      href: '/databases/choose-a-database',
+      description: 'Compare the supported engines and choose the right deployment method.',
+      icon: BranchUp,
+    },
+    {
+      title: 'Deploy your first database',
+      href: '/deploy-your-first-database',
+      description: 'Create, start, and connect to your first Redis database.',
+      icon: Rocket2,
+    },
+  ]}
+/>

@@ -19,6 +19,31 @@ It includes OpenWebUI, a web-based interface for interacting with the models.
 
 <ZoomImage src="/docs/images/services/ollama.gif" alt="Ollama dashboard" />
 
+## Run Ollama with an NVIDIA GPU
+
+To accelerate model inference with an NVIDIA GPU, prepare the host and enable GPU passthrough in the Compose configuration.
+
+1. **Hardware requirements**
+   - A server with an NVIDIA GPU (tested with an RTX 3060 12 GB)
+   - At least 32 GB RAM recommended
+   - Enough disk space for the models you plan to run
+
+2. **Host software setup**
+   - Install the NVIDIA drivers
+   - Install the NVIDIA Container Toolkit
+   - Configure Docker to use the NVIDIA runtime
+
+3. **Coolify configuration**
+   - Deploy Ollama with the one-click installer
+   - Edit the Compose configuration to add GPU support (a `deploy.resources.reservations.devices` entry with the `nvidia` driver)
+   - Add any environment variables your models need for GPU acceleration
+
+4. **Model management**
+   - Pull and manage your preferred models
+   - Monitor GPU usage and adjust model parameters as needed
+
+For a full step-by-step walkthrough, see this [community guide](https://geek.sg/blog/how-i-self-hosted-llama-32-with-coolify-on-my-home-server-a-step-by-step-guide?ref=coolify.io).
+
 ## Links
 
 - [The official website](https://ollama.com/?utm_source=coolify.io)

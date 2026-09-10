@@ -1,0 +1,175 @@
+---
+title: Add Server
+description: Connect an existing Linux server to Coolify with SSH and prepare it for deployments.
+---
+
+# Add a server manually
+
+Use the **Manual** server flow when you already have a Linux server. Coolify connects to it through SSH and prepares it to run applications, databases, and services.
+
+To purchase and create a server from the Coolify dashboard instead, follow [Provision a Cloud Server](/core/infrastructure/servers/provision-cloud-server).
+
+## What you need
+
+Before you start, make sure you have:
+
+- a Linux server with an IP address or hostname that Coolify can reach
+- console or password access to the server
+- an open SSH port, usually port `22`
+- access to the Coolify dashboard
+
+This guide uses the `root` account. To connect with another account, complete the [Non-root User](/core/infrastructure/servers/non-root-user) setup first.
+
+If the server does not have a public IP address, or you do not want to expose SSH publicly, connect it through [Server SSH Access via Cloudflare Tunnels](/integrations/networking/cloudflare/tunnels/server-ssh).
+
+<Callout type="warning" title="Use a fresh server when possible">
+Server validation can install Docker and restart the Docker service. Existing containers may be temporarily unavailable.
+</Callout>
+
+---
+
+## Create and authorize an SSH key
+
+Coolify must have a private key whose public key is authorized for the server account.
+
+<Steps>
+<Step>
+
+### Create the key in Coolify
+
+1. Open **Keys & Tokens > Private Keys**.
+2. Select **+ Add**.
+3. Select **Generate new ED25519 SSH Key**.
+4. Enter a recognizable name.
+5. Copy the complete **Public Key**.
+6. Select **Continue**.
+
+Do not add a passphrase. Coolify must use the private key without an interactive prompt.
+
+</Step>
+<Step>
+
+### Authorize the public key on the server
+
+Connect to the server:
+
+```sh
+ssh root@<server-ip>
+```
+
+If SSH uses a port other than `22`, run:
+
+```sh
+ssh -p <ssh-port> root@<server-ip>
+```
+
+Create the SSH directory and open the authorized-keys file:
+
+```sh
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+nano ~/.ssh/authorized_keys
+```
+
+Paste the complete public key on a new line, save the file, then run:
+
+```sh
+chmod 600 ~/.ssh/authorized_keys
+```
+
+</Step>
+</Steps>
+
+You can also generate or import a private key from the **+ Add** menu beside **Private Key** in the server form. The matching public key must still be present in the server user's `~/.ssh/authorized_keys` file before validation.
+
+---
+
+## Connect the server
+
+<Steps>
+<Step>
+
+### Open the Manual server form
+
+1. Select **Servers** in the Coolify sidebar.
+2. Select **+ Add**.
+3. Select **Manual**.
+
+</Step>
+<Step>
+
+### Enter the connection details
+
+| Field | What to enter |
+| :--- | :--- |
+| **Name** | A name you will recognize, such as `production-server`. |
+| **Description** | Optional information about the server's purpose. |
+| **IP Address/Domain** | A reachable IP address or hostname. Do not include `http://` or `https://`. |
+| **Port** | The SSH port, usually `22`. |
+| **User** | Enter `root` for this guide. |
+| **Private Key** | Select the key whose public key you authorized on the server. |
+
+Leave **Use it as a build server?** disabled for a server that will run applications, databases, or services.
+
+Select **Continue**. Coolify creates the server record and opens its **General** page.
+
+</Step>
+<Step>
+
+### Validate the server
+
+Select **Validate Server & Install Docker Engine**. Depending on the server state, the button may be labeled **Validate Server**.
+
+During validation, Coolify:
+
+1. tests the SSH connection
+2. checks the operating system and required tools
+3. installs or verifies Docker Engine and Docker Compose
+4. records server information
+5. starts the Coolify proxy
+
+The process can take several minutes on a new server.
+
+</Step>
+<Step>
+
+### Confirm the server is ready
+
+Wait until the **General** page reports that the server is reachable and validated. The server can then be selected as a deployment destination.
+
+If validation reports an SSH error:
+
+- confirm the IP address or domain, port, and user
+- confirm the selected private key matches the public key in the user's `~/.ssh/authorized_keys` file
+- confirm the SSH port is open in the [firewall](/core/infrastructure/servers/firewall)
+- follow [OpenSSH](/core/infrastructure/servers/openssh) to check the SSH service
+
+</Step>
+</Steps>
+
+---
+
+## Set a wildcard domain
+
+After validation, you can set **Wildcard Domain** under **Configuration > General**.
+
+For example, `https://example.com` lets Coolify suggest a domain such as `https://<application-id>.example.com` for a new resource. Create a DNS record for `*.example.com` that points to this server before using the generated domains.
+
+The setting does not change existing resource domains, update DNS, or change how Coolify connects to the server.
+
+---
+
+## Oracle Cloud (free ARM) notes
+
+Oracle Cloud free ARM servers need a few extra steps before Coolify can use them, whether as the Coolify host or as a remote server.
+
+**Use the root user.** Oracle images disable root login by default. To enable it:
+
+1. Switch to root: `sudo su -`
+2. In `/etc/ssh/sshd_config`, set `PermitRootLogin` to `without-password`.
+3. Restart SSH: `service sshd restart`
+4. Add the public key of the [SSH key configured in Coolify](#create-and-authorize-an-ssh-key) to `/root/.ssh/authorized_keys`.
+
+**Or use a non-root user.** A non-root user works with passwordless `sudo` (experimental). Add the Coolify SSH key to the user's `~/.ssh/authorized_keys`, then follow [Non-root User](/core/infrastructure/servers/non-root-user).
+
+**Open the firewall.** Oracle ARM servers enable a firewall by default. If you self-host Coolify on the server, open the required ports — see [Firewall](/core/infrastructure/servers/firewall).

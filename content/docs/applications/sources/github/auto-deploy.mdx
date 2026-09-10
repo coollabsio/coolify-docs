@@ -1,0 +1,99 @@
+---
+title: GitHub Auto Deploy
+description: Automatically deploy applications from GitHub with a GitHub App, GitHub Actions, or a repository webhook.
+---
+
+# GitHub Auto Deploy
+
+Coolify can deploy a new version of your application whenever you push changes to its GitHub repository.
+
+Choose how GitHub starts the deployment.
+
+<Tabs id="github-auto-deploy-method" items={['GitHub App', 'GitHub Actions', 'Repository webhook']}>
+<Tab value="GitHub App">
+
+### Deploy through a GitHub App
+
+Follow [Set up a GitHub App](/applications/sources/github/app) first.
+
+Coolify enables **Auto Deploy** for applications created through a GitHub App. If it is disabled:
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/auto-deploy/github-app/1.webp" alt="Auto Deploy setting for a GitHub App application" />
+
+1. Open the application.
+2. Select **Configuration > Advanced**.
+3. Enable **Auto Deploy**.
+4. Push a commit to the configured branch and confirm that a deployment appears.
+
+</Tab>
+<Tab value="GitHub Actions">
+
+### Deploy through GitHub Actions
+
+Use [GitHub Actions](/applications/sources/github/actions) when a workflow should run tests, build and publish an image, and then request a Coolify deployment.
+
+</Tab>
+<Tab value="Repository webhook">
+
+### Deploy through a repository webhook
+
+Use this path for a public repository or a private repository connected through a deploy key.
+
+<Steps>
+<Step>
+
+### Enable Auto Deploy
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/auto-deploy/webhooks/1.webp" alt="Auto Deploy setting under Application Advanced configuration" />
+
+1. Open the application.
+2. Select **Configuration > Advanced**.
+3. Enable **Auto Deploy**.
+
+</Step>
+<Step>
+
+### Configure the GitHub webhook secret
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/auto-deploy/webhooks/2.webp" alt="GitHub manual webhook URL and secret fields in Coolify" />
+
+1. Open **Configuration > Webhooks**.
+2. Enter a random **GitHub Webhook Secret**.
+3. Save the application.
+4. Copy the GitHub URL under **Manual Git Webhooks**.
+
+<Callout type="warning" title="Protect the webhook secret">
+
+The secret authenticates webhook deliveries. Store it like a password and use the same value in Coolify and GitHub.
+
+</Callout>
+
+</Step>
+<Step>
+
+### Add the webhook on GitHub
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/auto-deploy/webhooks/3.webp" alt="Webhooks page in GitHub repository settings" />
+
+1. Open the GitHub repository settings.
+2. Select **Webhooks**.
+3. Select **Add webhook**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/auto-deploy/webhooks/4.webp" alt="New GitHub webhook form for Coolify" />
+
+4. Paste the Coolify webhook URL into **Payload URL**.
+5. Enter the same secret in **Secret**.
+6. Keep **Enable SSL verification** selected.
+7. Select **Just the push event**.
+8. Keep **Active** selected.
+9. Select **Add webhook**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/auto-deploy/webhooks/5.webp" alt="Active Coolify webhook in GitHub" />
+
+Push a commit to the configured branch. Confirm that GitHub records a successful webhook delivery and Coolify starts a deployment.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>

@@ -1,0 +1,43 @@
+---
+title: "Update"
+description: "Update a server"
+---
+
+# Update
+
+Update a server
+
+## Usage
+
+```sh
+coolify server update <uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--concurrent-builds` | `integer` | No | `0` | Max concurrent builds |
+| `--connection-timeout` | `integer` | No | `0` | SSH connection timeout in seconds |
+| `--deployment-queue-limit` | `integer` | No | `0` | Deployment queue limit |
+| `--description` | `string` | No | — | Server description |
+| `--disk-usage-check-frequency` | `string` | No | — | Disk usage check frequency (cron) |
+| `--disk-usage-notification-threshold` | `integer` | No | `0` | Disk usage notification threshold percent |
+| `--dynamic-timeout` | `integer` | No | `0` | Dynamic timeout |
+| `--instant-validate` | `boolean` | No | `false` | Validate server after update |
+| `--ip` | `string` | No | — | Server IP address |
+| `--is-build-server` | `boolean` | No | `false` | Mark as build server |
+| `--is-terminal-enabled` | `boolean` | No | `false` | Enable terminal access |
+| `--name` | `string` | No | — | Server name |
+| `--port` | `integer` | No | `22` | SSH port |
+| `--private-key-uuid` | `string` | No | — | Private key UUID |
+| `--proxy-type` | `string` | No | — | Proxy type (e.g. TRAEFIK, CADDY, NGINX) |
+| `--user` | `string` | No | — | SSH user |
+
+## Get current help
+
+```sh
+coolify server update --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

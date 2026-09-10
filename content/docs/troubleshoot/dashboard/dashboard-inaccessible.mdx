@@ -7,14 +7,20 @@ description: Fix Coolify dashboard access issues by checking proxy status, conta
 
 Having trouble accessing your Coolify dashboard? follow these steps to diagnose and resolve the issue.
 
-## 1. Determine Your Access Method
+<Steps>
+<Step>
+
+### Determine Your Access Method
 
 First, ask yourself: **How are you trying to access the dashboard?**
 
 - **Custom Domain:** If you’re using the domain you set up for your Coolify dashboard, the problem might be with the Coolify proxy.
 - **Direct Server IP:** If you’re using your server’s IP address, the issue could be related to your server or container status.
 
-## 2. Test with Your Server’s IP Address
+</Step>
+<Step>
+
+### Test with Your Server’s IP Address
 
 ### A. Open Your Firewall Port
 
@@ -25,10 +31,13 @@ First, ask yourself: **How are you trying to access the dashboard?**
 
 - **Step:** Open your web browser and go to: `http://203.0.113.1:8000` _(Replace `203.0.113.1` with your actual server IP address)_
 - **Observation:**
-  - If you see the login page, the dashboard is working fine without proxy (skip to [step 4](#_4-addressing-proxy-related-issues)).
+  - If you see the login page, the dashboard is working fine without proxy (skip to [step 4](#addressing-proxy-related-issues)).
   - If you don't see the login page, the issue might be with your server or coolify docker containers.
 
-## 3. Check the Coolify Container
+</Step>
+<Step>
+
+### Check the Coolify Container
 
 If the dashboard isn’t accessible via the IP address, then follow these steps:
 
@@ -53,7 +62,7 @@ If the dashboard isn’t accessible via the IP address, then follow these steps:
   docker restart NAME
   ```
   _(Replace `NAME` with your actual container name)_
-- **Test:** After restarting, try accessing `http://203.0.113.1:8000` _(Replace `203.0.113.1` with your actual server IP address)_ again. If this doesn't work, skip to [step 5](#_5-getting-further-assistance)
+- **Test:** After restarting, try accessing `http://203.0.113.1:8000` _(Replace `203.0.113.1` with your actual server IP address)_ again. If this doesn't work, skip to [step 5](#getting-further-assistance)
 
 ### C. Conflict Coolify-Related Containers Port
 
@@ -74,7 +83,10 @@ Sometimes, the issue occurs if a non-Coolify container is using the same port (e
 
 - **Next:** Check your containers for the same port as your Coolify instance through the Coolify dashboard and change the port accordingly (don't forget to verify firewall rules) 
 
-## 4. Addressing Proxy-Related Issues
+</Step>
+<Step>
+
+### Addressing Proxy-Related Issues
 
 If the dashboard is accessible via the server IP but not through your custom domain, then follow these steps:
 
@@ -105,12 +117,18 @@ If the dashboard is accessible via the server IP but not through your custom dom
 
 - **Next:** If you see errors, they may hint at what needs to be fixed (skip to next step).
 
-## 5. Getting Further Assistance
+</Step>
+<Step>
+
+### Getting Further Assistance
 
 If none of the above steps work, then follow this:
 
 - **Community Help:** Join our [Discord community](https://coolify.io/discord) and create a post in the support forum channel.
 - **What to Share:** Include the exact error messages you’re seeing and a description of the steps you’ve already tried.
+
+</Step>
+</Steps>
 
 ## Summary of Common Issues
 

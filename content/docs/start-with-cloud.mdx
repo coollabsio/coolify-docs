@@ -1,0 +1,474 @@
+---
+title: Start with Coolify Cloud
+description: Start with Coolify Cloud using your own servers while the Coolify team manages the Coolify instance for you.
+---
+
+import {
+  ArrowsRight,
+  Database,
+  Flash12,
+  Key2,
+  LaptopCode,
+  Plus,
+  Rocket2,
+  Screencast2,
+  Server,
+  ServerCloud,
+  ServerUpdate,
+  Settings,
+  SecuritySafe2,
+  ShieldSecurity2,
+  SignalStream,
+  StarSparkle,
+  Warning22,
+  WindowPointer,
+} from 'reicon-react';
+
+# Start with Coolify Cloud
+
+Using Coolify Cloud means the Coolify team runs the Coolify instance, while you run workloads on servers you control.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Create a Cloud account at [app.coolify.io/register](https://app.coolify.io/register), choose your subscription, add an SSH key, validate your server, then deploy your first resource.
+
+Cloud manages the Coolify control plane. You still manage your own servers and workloads.
+
+</CoolCallout>
+
+If you are still deciding between Cloud and self-hosted, read [Choose your path](/choose-your-path) first.
+
+
+## Before you begin
+
+Check these requirements first so Cloud onboarding can validate your server without SSH, firewall, or plan-limit issues.
+
+| Section | Check |
+| :--- | :--- |
+| [1. How Cloud works](#1-how-cloud-works) | See where the Cloud instance runs and how it connects to your servers. |
+| [2. Shared responsibility model](#2-shared-responsibility-model) | Confirm who is responsible for the control plane, servers, workloads, and backups. |
+| [3. Your own server is required](#3-your-own-server-is-required) | Confirm you have server infrastructure for workloads. |
+| [4. Server resources for your projects](#4-server-resources-for-your-projects) | Confirm your servers have enough CPU, memory, and storage for your workloads. |
+| [5. Subscription and server limits](#5-subscription-and-server-limits) | Confirm your plan supports the number of servers you want to connect. |
+| [6. Server access requirements](#6-server-access-requirements) | Confirm SSH access, Docker support, and firewall rules are ready. |
+
+---
+
+### 1. How Cloud works
+
+In Coolify Cloud, the Coolify instance, dashboard, control plane, and related services run on infrastructure managed by the Coolify team.
+
+You **do not** get direct access to that managed infrastructure.
+
+Coolify Cloud infrastructure runs on Hetzner infrastructure in Falkenstein, Germany. It connects to your servers over SSH from the documented [IPv4 addresses](https://coolify.io/ipv4.txt) and [IPv6 addresses](https://coolify.io/ipv6.txt).
+
+<CoolCallout icon={StarSparkle} title="Managed control plane">
+
+Cloud keeps the Coolify control plane hosted, updated, maintained, and backed up. Your applications, databases, services, domains, secrets, and workload data remain on the servers you connect.
+
+</CoolCallout>
+
+---
+
+### 2. Shared responsibility model
+
+Coolify Cloud manages the Coolify control plane. You manage the servers and workloads you connect to it.
+
+| Area | Managed by Cloud | Managed by you | Notes |
+| :--- | :--- | :--- | :--- |
+| Coolify control plane hosting | Yes | No | Provided at app.coolify.io |
+| Control plane updates and maintenance | Yes | No | Handled by the Coolify team |
+| Control plane backups | Yes | No | Covers Cloud instance data |
+| Server OS updates and hardening | No | Yes | Applies to every server you connect |
+| Application and database runtime/data | No | Yes | Runs on your infrastructure |
+| Application backups and restore | No | Yes | Configure backups for your workloads |
+
+<CoolCallout icon={ShieldSecurity2} title="You still secure your servers">
+
+Coolify Cloud manages the Coolify instance. You still manage server operating system updates, firewall policy, application data, database data, and backups for workloads running on your infrastructure.
+
+</CoolCallout>
+
+---
+
+### 3. Your own server is required
+
+Coolify Cloud does **not** provide workload servers. You must bring your own server infrastructure for apps, databases, and services.
+
+Your server can be:
+
+<CoolIconCardGrid
+  surface
+  cards={[
+    {
+      title: 'VPS',
+      description: 'A Virtual Private Server from any provider.',
+      icon: ServerCloud,
+    },
+    {
+      title: 'Dedicated server',
+      description: 'A full physical server that you control.',
+      icon: Server,
+    },
+    {
+      title: 'Virtual machine',
+      description: 'A Linux VM running on your own infrastructure.',
+      icon: Screencast2,
+    },
+    {
+      title: 'Raspberry Pi',
+      description: 'A 64bit supported Raspberry Pi setup.',
+      icon: ServerUpdate,
+    },
+    {
+      title: 'Laptop',
+      description: 'An old or spare Linux laptop with SSH access.',
+      icon: LaptopCode,
+    },
+    {
+      title: 'Any Linux device',
+      description: 'Any device that runs Linux with SSH access.',
+      icon: Flash12,
+    },
+  ]}
+/>
+
+<CoolCallout icon={ServerCloud} title="Server provider">
+
+If you haven’t picked a server provider yet, consider using [Hetzner](https://coolify.io/hetzner).
+You can even use our [referral link](https://coolify.io/hetzner) to support the project.
+
+</CoolCallout>
+
+---
+
+### 4. Server resources for your projects
+
+The resources you need depend on your projects. If you host multiple services or larger applications, choose a server with higher CPU, memory, and storage.
+
+<CoolResourceShowcase
+  icon={ServerCloud}
+  title="Example production setup"
+  description="ShadowArcanist runs a mixed production workload on one server with the resources below. Use this as a rough reference point, not a fixed recommendation."
+  profile={[
+    {
+      label: 'Hosting provider',
+      value: 'Hetzner',
+    },
+    {
+      label: 'Server type',
+      value: 'CAX11',
+    },
+  ]}
+  resources={[
+    {
+      label: 'Memory',
+      value: '4 GB',
+      description: 'Average usage: 2.8 GB',
+    },
+    {
+      label: 'CPU',
+      value: '2 cores',
+      description: 'Average usage: 60-80%',
+    },
+    {
+      label: 'Storage',
+      value: '40 GB',
+      description: 'Average usage: 30 GB',
+    },
+  ]}
+  supports={[
+    '16 Static Sites',
+    '9 Rust API services',
+    '5 Rust Apps (full stack)',
+    '4 Rust Discord bots',
+    '7 Rust workers',
+    '2 Valkey databases',
+    '2 PostgreSQL databases',
+    'Umami Analytics',
+    'Beszel',
+  ]}
+/>
+
+---
+
+### 5. Subscription and server limits
+
+Coolify Cloud is a pay-as-you-go service. 
+
+Pricing starts at **$5/month** and scales with the number of servers you want to connect (**$3/month** per additional server). 
+
+Your subscription is based on connected server count, so choose the number of servers you need and complete payment before adding more servers.
+
+<CoolCallout icon={ServerCloud} title="Included server slots">
+
+The base **$5/month** subscription includes **2 server slots**, so you can connect up to 2 servers without paying for additional server slots.
+
+If you need to connect a third server or more, each additional server slot costs **$3/month**.
+
+</CoolCallout>
+
+<CoolCallout icon={Warning22} title="Server limit errors" type="warn">
+
+If Cloud says you exceeded the connected server limit for your current plan, remove an existing connected server or upgrade your plan. If the issue persists, email **[hi@coollabs.io](mailto:hi@coollabs.io)** and describe the problem.
+
+</CoolCallout>
+
+---
+
+### 6. Server access requirements
+
+For connecting servers to Coolify Cloud, make sure:
+
+<CoolActionCardGrid
+  data-cloud-start
+  surface
+  cards={[
+    {
+      title: 'SSH access',
+      href: '/core/infrastructure/servers/openssh',
+      description: 'Configure OpenSSH so Coolify can connect to your server.',
+      bullets: [
+        'Confirm SSH works from your machine',
+        'Use root or a sudo-capable user',
+      ],
+      icon: SecuritySafe2,
+      'btn-cta': 'Configure SSH',
+      type: 'secondary',
+    },
+    {
+      title: 'Firewall ports',
+      href: '/core/infrastructure/servers/firewall',
+      description: 'Open the required ports on firewall.',
+      bullets: [
+        'Allow SSH access',
+        'Open Coolify and application ports',
+      ],
+      icon: SignalStream,
+      'btn-cta': 'Configure Firewall',
+      type: 'primary',
+    },
+  ]}
+/>
+
+---
+
+
+## Get started with Coolify Cloud
+
+<section data-cloud-start className="not-prose my-5">
+<CoolFlow
+  id="cloud-onboarding-flow"
+  icon={Rocket2}
+  title="Cloud onboarding flow"
+  description="Cloud onboarding connects the managed Coolify control plane to the servers you bring for apps, databases, and services."
+  steps={[
+    'Create Cloud account',
+    'Choose subscription',
+    'Add SSH private key',
+    'Add and validate server',
+    'Deploy first resource',
+  ]}
+  list={[
+    'Create your Cloud account with the email you want to use for support.',
+    'Choose the number of servers you want to connect.',
+    'Add or create the SSH key used for server access.',
+    'Validate your first server and install Docker Engine.',
+    'Deploy your first app, database, or service.',
+  ]}
+  endnote="You should end with a Cloud account, an active subscription, one validated server, and a first deploy target."
+/>
+</section>
+
+---
+
+### 1. Create your Cloud account
+
+Visit [app.coolify.io/register](https://app.coolify.io/register) and create your account using your email address.
+
+This email is tied to your Cloud account. If you need account or payment help later, contact the Coolify team using the same email address.
+
+---
+
+### 2. Choose your subscription plan
+
+Choose the number of servers you want to connect and complete payment.
+
+After this step, Cloud onboarding starts automatically.
+
+---
+
+### 3. Add an SSH private key
+
+This is the first onboarding step in Coolify Cloud.
+
+You can use an existing SSH key or create a new one from Cloud onboarding.
+
+<Tabs items={['Existing key', 'Create new key']}>
+<Tab value="Existing key" icon={Key2}>
+
+Choose **Existing key**, then paste the private SSH key that Cloud should use to connect to your server.
+
+Make sure the matching public key already exists in `~/.ssh/authorized_keys` on the server user you plan to select in the next step.
+
+{/* <ZoomableImage src="shadow-to-do" alt="Add private key in Coolify Cloud" /> */}
+
+</Tab>
+
+<Tab value="Create new key" icon={Plus}>
+
+Choose **Create new key**, copy the generated public key, then add it to `~/.ssh/authorized_keys` on your server.
+
+Use this option when you do not already have a key prepared for Cloud onboarding.
+
+{/* <ZoomableImage src="shadow-to-do" alt="Private key setup in Coolify Cloud" /> */}
+
+</Tab>
+</Tabs>
+
+---
+
+### 4. Add your server
+
+Now add the server you want to deploy to:
+
+- give your server a name
+- enter your server public IP address
+- select SSH port
+- select server user account
+
+{/* <ZoomableImage src="shadow-to-do" alt="Add server in Coolify Cloud" /> */}
+<br />
+{/* <ZoomableImage src="shadow-to-do" alt="Server connection form in Coolify Cloud" /> */}
+
+Then click **Validate Server & Install Docker Engine**.
+
+Coolify Cloud will validate the SSH connection and install the required components on your server.
+
+{/* <ZoomableImage src="shadow-to-do" alt="Validate server and install Docker Engine action" /> */}
+
+After validation succeeds, you will see the server status update in onboarding.
+
+{/* <ZoomableImage src="shadow-to-do" alt="Server status after validation" /> */}
+
+---
+
+### 5. Deploy your first application
+
+Once your server is validated, deploy your first resource by following one of these guides:
+
+<CoolNextSteps
+  data-cloud-start
+  cards={[
+    {
+      title: 'Deploy an application',
+      href: '/deploy-your-first-app',
+      description: 'Start with an app deployment once your server is connected.',
+      icon: WindowPointer,
+    },
+    {
+      title: 'Deploy a database',
+      href: '/deploy-your-first-database',
+      description: 'Add a database when your first app needs persistent data.',
+      icon: Database,
+    },
+    {
+      title: 'Deploy a service',
+      href: '/deploy-your-first-service',
+      description: 'Launch a one-click service from the service catalog.',
+      icon: Settings,
+    },
+  ]}
+/>
+
+
+## Quick answers
+
+<Accordions type="multiple">
+
+<Accordion title="Do I get Cloud-only features?">
+
+No. Cloud and self-hosted share the same core feature set.
+
+</Accordion>
+
+<Accordion title="Does the base $5/month plan include server slots?">
+
+Yes. The base $5/month plan includes 2 server slots.
+
+</Accordion>
+
+<Accordion title="Do I pay for unused additional server slots?">
+
+Yes. If your subscription includes additional server slots, you pay for those slots even if you are not actively using all of them. Only increase your subscription when you need more server capacity.
+
+</Accordion>
+
+<Accordion title="Do you offer discount codes?">
+
+No. We do not offer discount codes for Coolify Cloud.
+
+</Accordion>
+
+<Accordion title="Does Cloud back up my application data?">
+
+No. Cloud backs up the Coolify Cloud instance data. Your application data backups remain your responsibility.
+
+</Accordion>
+
+<Accordion title="Can I use my own domain for the Cloud dashboard?">
+
+No. The Cloud dashboard is provided at `app.coolify.io`.
+
+</Accordion>
+
+<Accordion title="Will my apps stop if my Cloud subscription is paused?">
+
+Your apps keep running on your own servers. Coolify dashboard access will be restricted, but your running workloads remain on your infrastructure.
+
+</Accordion>
+
+<Accordion title="Do I need to whitelist Cloud IPs?">
+
+For some environments, yes. Allow `SSH` port access to the Cloud IPs: [IPv4](https://coolify.io/ipv4.txt) and [IPv6](https://coolify.io/ipv6.txt).
+
+</Accordion>
+
+</Accordions>
+
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="SSH key is not working">
+
+If authentication fails:
+
+- make sure the correct public key is in `~/.ssh/authorized_keys` on your server
+- make sure key and file permissions are correct on the server
+- verify you are using the correct SSH user, IP address, and port
+- confirm the key has no passphrase
+- confirm your firewall allows Cloud to reach the SSH port
+
+</Accordion>
+
+<Accordion title="Server validation fails because of plan limits">
+
+If Cloud says you exceeded allowed connected servers for your current plan:
+
+- remove an existing connected server
+- upgrade your plan to support more connected servers
+- email **[hi@coollabs.io](mailto:hi@coollabs.io)** if the issue still persists
+
+</Accordion>
+
+<Accordion title="Where should I ask for help?">
+
+For general setup questions, join the [Discord community](https://coolify.io/discord) and ask in the **support-forum** channel.
+
+For account or payment issues, email **[hi@coollabs.io](mailto:hi@coollabs.io)** from the Cloud account email address.
+
+</Accordion>
+
+</Accordions>

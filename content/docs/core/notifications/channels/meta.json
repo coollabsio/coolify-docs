@@ -1,0 +1,11 @@
+{
+  "title": "Notification Channels",
+  "pages": [
+    "email",
+    "discord",
+    "telegram",
+    "slack-mattermost",
+    "pushover",
+    "webhook"
+  ]
+}

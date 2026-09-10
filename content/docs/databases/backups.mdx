@@ -1,77 +1,169 @@
 ---
-title: "Backups"
-description: Configure scheduled database backups for PostgreSQL, MySQL, MariaDB, and MongoDB with cron expressions and S3 storage integration.
+title: Backups
+description: Schedule, retain, and store PostgreSQL, MySQL, MariaDB, MongoDB, and ClickHouse database backups in Coolify.
 ---
+
+import { BranchUp, Refresh23, Server } from 'reicon-react';
 
 # Backups
 
-Scheduled database backups could be configured for PostgreSQL and for Coolify itself.
+Coolify can create scheduled, engine-aware database backups for PostgreSQL, MySQL, MariaDB, MongoDB, and ClickHouse. Each backup schedule creates a backup on the database's server, and can upload a copy to an S3-compatible storage provider.
 
-This schedules are based on cron expressions, so you can configure them to run as often as you want.
+Redis, Dragonfly, and KeyDB do not support this scheduled database backup workflow. Use the engine's persistence and backup tools for those databases, or deploy a backup-capable service separately.
 
-You can also use simple cron expressions like:
+<Callout type="warning" title="A backup is not a restore test">
 
-```js
-const VALID_CRON_STRINGS = [
-    'every_minute' => '* * * * *',
-    'hourly' => '0 * * * *',
-    'daily' => '0 0 * * *',
-    'weekly' => '0 0 * * 0',
-    'monthly' => '0 0 1 * *',
-    'yearly' => '0 0 1 1 *',
-];
-```
-
-## PostgreSQL
-
-Coolify creates a full backup of your PostgreSQL databases. You can specify which database to backup, with a comma separated list.
-
-
-<Callout type="info" title="Tip">
-
-Coolify's own database is also backed up using this method.
+A successful backup only proves that Coolify created a file. [Restore a copy](/databases/restore) into a disposable database and verify the application can read it before treating the backup as recoverable.
 
 </Callout>
 
+## Create a backup schedule
 
-### Backup command
+1. Open a supported database.
+2. Select **Backups** in the resource navigation.
+3. Select **+ Add** next to **Scheduled Backups**.
+4. Enter a cron expression or a supported human-readable frequency.
+5. Select **Save**.
 
-```bash
-pg_dump --format=custom --no-acl --no-owner --username <username> <databaseName>
+The schedule runs on the server where the database is deployed. The **Timezone** field is read-only: it uses the server timezone when one is configured, otherwise the Coolify instance timezone.
+
+A backup job runs only while the database is running. If the database is stopped when the schedule fires, Coolify skips that execution.
+
+## Back up a database inside a service
+
+A database component deployed inside a Service uses credentials from the environment of its running container. This differs from a standalone database resource, whose connection values are stored directly by Coolify.
+
+Coolify reads the resolved container variables listed below. These names do not need to match the variable names shown on the parent Service's **Environment Variables** page. A one-click Service commonly maps a generated value such as `SERVICE_PASSWORD_POSTGRES` to `POSTGRES_PASSWORD` in its Compose definition.
+
+| Database | Variables used by Coolify | Fallback behavior |
+| :--- | :--- | :--- |
+| PostgreSQL | `POSTGRES_PASSWORD`, `POSTGRES_USER`, `POSTGRES_DB` | `POSTGRES_USER` defaults to `postgres`. `POSTGRES_DB` defaults to the resolved username. When `POSTGRES_PASSWORD` is absent, Coolify runs the dump without setting `PGPASSWORD`; password-authenticated databases require this value. |
+| MySQL | `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE` | `MYSQL_DATABASE` has no fallback. Without it, the backup stops before running `mysqldump`. A standard password-authenticated database also requires `MYSQL_ROOT_PASSWORD`. |
+| MariaDB | `MARIADB_ROOT_PASSWORD` or `MYSQL_ROOT_PASSWORD`; `MARIADB_DATABASE` or `MYSQL_DATABASE` | Coolify checks the `MARIADB_*` name first, then its `MYSQL_*` fallback. At least one password variable and one database variable are needed for a standard password-authenticated backup. |
+| MongoDB | `MONGO_INITDB_ROOT_USERNAME`, `MONGO_INITDB_ROOT_PASSWORD` | Coolify uses both values to construct the service database connection URL. The backup fails when either value is unavailable. |
+
+For example, a PostgreSQL component can map Service variables to the names Coolify reads:
+
+```yaml
+services:
+  postgres:
+    environment:
+      POSTGRES_USER: ${SERVICE_USER_POSTGRES}
+      POSTGRES_PASSWORD: ${SERVICE_PASSWORD_POSTGRES}
+      POSTGRES_DB: ${POSTGRES_DB:-app}
 ```
 
-### Restore command
+Variable names inside the database container are case-sensitive. Do not add duplicate `POSTGRES_*`, `MYSQL_*`, `MARIADB_*`, or `MONGO_INITDB_*` entries to **Environment Variables** when the Compose definition already maps generated Service variables to those names.
 
-The backup has custom format, so you can restore it using the following command (or with any equivalent tool):
+To verify or correct the configuration:
 
-```bash
-pg_restore --verbose --clean -h localhost -U postgres -d postgres pg-dump-postgres-1697207547.dmp
+1. Open the parent Service and select **Edit Compose File**.
+2. Find the database component and inspect its `environment` entries.
+3. Confirm that the required container-variable names in the table are present and mapped to the intended Service variables or values.
+4. To change a referenced value such as `SERVICE_PASSWORD_POSTGRES`, open **Configuration > Environment Variables**. Change a hard-coded value in the Compose file instead.
+5. Restart or deploy the Service so Coolify recreates the database container with the updated environment.
+6. Confirm that the database component is running, then open its backup schedule and select **Backup Now**.
+7. Inspect the execution status and message.
+
+Read [Service environment variables](/services/configuration/environment-variables) for details about generated, referenced, and hard-coded Compose values.
+
+A missing MySQL or MariaDB database-name variable can stop the job before Coolify creates a normal execution entry. If **Backup Now** produces no execution, confirm that the database is running and recheck the variables in the table.
+
+## Set the backup scope
+
+Open a schedule to configure the databases included in each execution.
+
+| Database | Scope controls | Backup created by Coolify |
+| :--- | :--- | :--- |
+| PostgreSQL | **Backup All Databases** or **Databases To Backup** | `pg_dump` custom format for selected databases; `pg_dumpall` gzip output when all databases are selected. |
+| MySQL | **Backup All Databases** or **Databases To Backup** | `mysqldump` output; all-database dumps use gzip compression. |
+| MariaDB | **Backup All Databases** or **Databases To Backup** | `mariadb-dump` output; all-database dumps pass the command's `--compress` option but are not piped through `gzip` by Coolify. |
+| MongoDB | **Databases To Include** | `mongodump` gzip archive. Empty includes all databases and collections. |
+| ClickHouse | **Databases To Backup** | A ClickHouse backup archive created with the database's backup command. |
+
+For PostgreSQL, MySQL, MariaDB, and ClickHouse, enter multiple database names as a comma-separated list. An empty field uses the database configured in the resource.
+
+For MongoDB, use `database:collection1,collection2|database2` to exclude collections from each database. For example:
+
+```sh
+app:events,logs|analytics
 ```
 
-## MySQL
+This includes all collections in `app` except `events` and `logs`, and all collections in `analytics`. Leave the field empty to include all databases and collections.
 
-```bash
-mysqldump -u root -p <password> <datatabaseName>
-```
+## Choose a frequency
 
-## MariaDB
+Coolify accepts standard five-field cron expressions and these named schedules:
 
-```bash
-mariadb-dump -u root -p <password> <datatabaseName>
-```
+| Name | Cron expression |
+| :--- | :--- |
+| `every_minute` | `* * * * *` |
+| `hourly` | `0 * * * *` |
+| `daily` | `0 0 * * *` |
+| `weekly` | `0 0 * * 0` |
+| `monthly` | `0 0 1 * *` |
+| `yearly` | `0 0 1 1 *` |
 
-## MongoDB
+Use a **Timeout** of at least `60` seconds when a database dump needs more time. The timeout applies to the backup job and defaults to `3600` seconds in the job when no value is set.
 
-```bash
-mongodump --authenticationDatabase=admin --uri=<uri> --gzip --archive=<archive>
-```
+## Store backups locally
 
-Or if you exclude some collections:
+Coolify writes local database backups under `/data/coolify/backups` on the deployment server. The exact subdirectory includes the team, database, and execution name; use the **Executions** page to inspect the result instead of relying on a manually reconstructed path.
 
-```bash
-mongodump --authenticationDatabase=admin --uri=<uri> --gzip --archive=<archive> --excludeCollection=<collectionName> --excludeCollection=<collectionName>
-```
+Local retention can remove successful backup files after an execution completes. In **Retention**, set any of these values to `0` for no limit:
 
-## S3 Backups
+- **Number of backups to keep**
+- **Days to keep backups**
+- **Maximum storage (GB)**
 
-You can also define your own [S3 compatible](/knowledge-base/s3/introduction) storage to store your backups.
+The limits work independently. Coolify deletes a backup when any configured limit is reached, keeping the most recent backups first.
+
+## Upload backups to S3
+
+1. Configure and validate an S3-compatible storage under [S3 storage](/core/s3-storage/overview).
+2. Open the database schedule and select the **S3** section.
+3. Enable S3, select the validated storage, and select **Save**.
+4. Optionally enable **Disable Local Backup**.
+
+Coolify uploads the local backup file to the selected S3 storage after the local dump succeeds. If the upload fails, the local backup can still remain available and the execution reports the S3 warning.
+
+**Disable Local Backup** removes the local file after a successful S3 upload. It does not remove the S3 copy. Set S3 retention separately; local and S3 retention rules are independent.
+
+## Run and verify a backup
+
+Open a schedule and select **Backup Now** while the database is running. Coolify queues the backup job and shows the execution in the schedule.
+
+Open the execution to verify:
+
+- status is **Success**
+- the database names match the intended scope
+- the file size is greater than zero
+- S3 upload status is successful when S3 is enabled
+- the local copy still exists unless **Disable Local Backup** was enabled
+
+A failed S3 upload does not necessarily mean the local database dump failed. Read the execution message and notification to identify which copy is available.
+
+## Related guides
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Restore a database',
+      href: '/databases/restore',
+      description: 'Import a compatible file or S3 backup into a supported database.',
+      icon: Refresh23,
+    },
+    {
+      title: 'S3 storage',
+      href: '/core/s3-storage/overview',
+      description: 'Configure an S3-compatible destination for off-server backup copies.',
+      icon: Server,
+    },
+    {
+      title: 'Persistent storage',
+      href: '/core/persistent-storage/storage-mounts/overview',
+      description: 'Understand the live storage attached to database containers.',
+      icon: BranchUp,
+    },
+  ]}
+/>

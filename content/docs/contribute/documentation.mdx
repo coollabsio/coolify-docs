@@ -1,0 +1,200 @@
+---
+title: "Contributing to Documentation"
+description: Contribute to Coolify docs with this guide covering repository setup, local development with Bun, image guidelines, and pull request workflow.
+---
+
+import {
+  ArrowsRight,
+  BranchUp,
+  BrowserTerminal,
+  Clipboard,
+  DocumentText2,
+  Image,
+  MessageQuestion2,
+  Package,
+  Rocket,
+  StarSparkle,
+  Warning22,
+} from 'reicon-react';
+
+# Coolify Docs Contribution Guide
+
+Contribute updates and fixes to the Coolify documentation with the same workflow and review expectations as other Coolify contributions.
+
+<CoolDocsPage hideToc>
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Fork [coollabsio/coolify-docs](https://github.com/coollabsio/coolify-docs), work from the `next` branch, run the docs locally with Bun, and open focused pull requests back to `next`.
+
+</CoolCallout>
+
+---
+
+<CoolFlow
+  id="repository-workflow"
+  icon={BranchUp}
+  title="Repository workflow"
+  description="The docs follow the same branch model as Coolify: production lives on main, while new work lands in next first."
+  steps={[
+    'Fork the docs repository to your GitHub account',
+    'Clone your fork from the `next` branch',
+    'Create a small branch for your documentation change',
+    'Open the pull request back to `next`',
+  ]}
+  list={[
+    'Do not open pull requests against `main`.',
+    'Keep each branch focused on one docs fix, guide, or cleanup.',
+    'Check nearby pages before changing structure or component patterns.',
+  ]}
+/>
+
+---
+
+<CoolCallout icon={BrowserTerminal} title="Local development">
+
+Install dependencies and start the documentation site from the repository root.
+
+```bash
+bun install
+bun run dev
+```
+
+The development server starts at [http://localhost:5173/docs/](http://localhost:5173/docs/).
+
+</CoolCallout>
+
+<CoolCallout icon={Warning22} title="Package manager note" type="warn">
+
+Bun is the expected package manager. If you use another tool locally, do not commit its lockfile or configuration files.
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={DocumentText2} title="Writing and structure">
+
+- Use clear, simple English for readers who may not be native English speakers.
+- Break guides into small steps that a new self-hoster can follow without guessing.
+- Add screenshots when they help explain a screen, setting, or expected result.
+- Use existing docs components and nearby pages as the pattern before creating anything new.
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={Image} title="Images and screenshots" contentClassName="!p-0">
+<CoolPanel>
+
+Screenshots should make a step easier to follow, not decorate the page.
+
+</CoolPanel>
+<CoolPanel withDivider>
+
+| Rule | Expectation |
+| :--- | :--- |
+| Format | Use .webp images for documentation screenshots and illustrations. |
+| Location | Place image files in `public/images/...`, then reference them from MDX as `/images/...`. |
+| Component | Use the zoomable image component to add images to docs. |
+
+</CoolPanel>
+<CoolPanel withDivider>
+
+Use this component for docs screenshots:
+
+```tsx
+<ZoomableImage src="/images/path-to-the-image.webp" alt="Describe the image" />
+```
+
+Example:
+
+```tsx
+<ZoomableImage src="/images/applications/domain.webp" alt="Application domain settings" />
+```
+
+</CoolPanel>
+</CoolCallout>
+
+---
+
+<CoolFlow
+  id="pull-request-flow"
+  icon={Clipboard}
+  title="Submit your contribution"
+  description="Make the review easy: show what changed, why it changed, and how you checked it."
+  steps={[
+    'Commit and push your changes to your fork',
+    'Open a pull request to `coollabsio/coolify-docs`',
+    'Set the base branch to `next`',
+    'Describe the update and add screenshots when useful',
+  ]}
+  list={[
+    'Open the pull request against the `next` branch.',
+    'Explain what page or flow changed and why.',
+    'Include screenshots when the change affects visible layout or user steps.',
+    'Do not commit lockfiles or package-manager files from tools other than Bun.',
+    'Keep one pull request focused on one documentation change.',
+  ]}
+/>
+
+---
+
+<CoolCallout icon={Rocket} title="Current docs note">
+
+The docs are actively being rewritten for better structure and clarity. Contributions that improve accuracy, reduce confusion, or follow the existing page patterns are especially helpful.
+
+</CoolCallout>
+
+---
+
+<CoolCallout icon={MessageQuestion2} title="FAQ" contentClassName="!p-0">
+<CoolAccordions>
+<Accordion title="Can I fix a typo directly?">
+
+Yes. Small, obvious documentation fixes can be opened as a pull request without prior discussion.
+
+</Accordion>
+<Accordion title="Should I target main or next?">
+
+Target next. The main branch represents production, while next is the development branch.
+
+</Accordion>
+<Accordion title="Can I use npm, pnpm, or yarn locally?">
+
+You can use a different package manager locally, but do not include its generated files in your commit.
+
+</Accordion>
+<Accordion title="Where should I ask questions?">
+
+Open an issue for repository-specific problems, or ask in the contribute channel on Discord.
+
+</Accordion>
+</CoolAccordions>
+</CoolCallout>
+
+---
+
+<CoolCallout icon={DocumentText2} title="Development guides">
+<CoolActionCardGrid>
+<CoolActionCard
+  href="/docs/contribute/coolify"
+  icon={StarSparkle}
+  title="Coolify Core"
+  type="secondary"
+  description="Set up local development and prepare code contributions for the main Coolify repository."
+  bullets={['Local stack setup', 'Development tools', 'Reset steps']}
+  btn-cta="View core guide"
+/>
+<CoolActionCard
+  href="/docs/contribute/service"
+  icon={Package}
+  title="Service Templates"
+  type="secondary"
+  description="Add one-click service templates with the expected structure and verification."
+  bullets={['Template structure', 'Metadata rules', 'Testing checklist']}
+  btn-cta="View service guide"
+/>
+</CoolActionCardGrid>
+</CoolCallout>
+
+</CoolDocsPage>

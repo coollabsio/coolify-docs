@@ -1,0 +1,9 @@
+{
+  "title": "Scheduled Tasks",
+  "pages": [
+    "overview",
+    "create-a-task",
+    "manage-tasks",
+    "execution-history"
+  ]
+}

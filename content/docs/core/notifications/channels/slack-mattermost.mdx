@@ -1,0 +1,114 @@
+---
+title: "Slack & Mattermost"
+description: Send Coolify notifications to Slack or Mattermost through a Slack-compatible incoming webhook.
+---
+
+import { HashtagChat, Messages2 } from 'reicon-react';
+
+# Slack & Mattermost
+
+Coolify's **Slack** notification channel accepts a Slack incoming webhook URL. Mattermost incoming webhooks use a compatible message format, so you configure Mattermost on the same Coolify page.
+
+## Configure a provider
+
+Choose the provider that should receive Coolify notifications.
+
+<Tabs id="slack-compatible-provider" items={['Slack', 'Mattermost']}>
+<Tab value="Slack" icon={HashtagChat}>
+
+Create an incoming webhook for the Slack channel that should receive notifications.
+
+<Steps>
+<Step>
+
+### Create a Slack app
+
+1. Open the [Slack API apps page](https://api.slack.com/apps).
+2. Select **Create New App > From scratch**.
+3. Enter a name such as `Coolify Notifications` and select the workspace that owns the destination channel.
+4. Select **Create App**.
+
+You need permission to install or authorize apps in the workspace. If approval is required, ask a workspace administrator to complete it.
+
+</Step>
+<Step>
+
+### Create the incoming webhook
+
+1. Open **Incoming Webhooks** in the app settings.
+2. Turn on **Activate Incoming Webhooks**.
+3. Select **Add New Webhook to Workspace**.
+4. Choose the channel that should receive Coolify notifications and authorize the app.
+5. Copy the webhook URL shown under **Webhook URLs for Your Workspace**.
+
+</Step>
+<Step>
+
+### Add the webhook to Coolify
+
+Open **Notifications > Slack**, paste the URL into **Webhook**, and select **Save**. Then turn on **Enabled**.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Mattermost" icon={Messages2}>
+
+Create a Mattermost incoming webhook, then enter it on Coolify's **Slack** page.
+
+<Steps>
+<Step>
+
+### Confirm that integrations are available
+
+Sign in to the Mattermost team that owns the destination channel. Your Mattermost administrator must allow incoming webhooks, and your account must have permission to create one. If **Integrations** or **Incoming Webhooks** is missing, contact the administrator.
+
+</Step>
+<Step>
+
+### Create the incoming webhook
+
+1. Open **Product Menu > Integrations > Incoming Webhooks**.
+2. Select **Add Incoming Webhook**.
+3. Enter a recognizable title and description, then choose the destination channel.
+4. Save the webhook and copy the generated URL. It normally resembles `https://mattermost.example.com/hooks/...`.
+
+Mattermost displays the complete URL after creation. Copy it then, because it grants permission to post through the integration.
+
+</Step>
+<Step>
+
+### Add the webhook to Coolify
+
+Open **Notifications > Slack** in Coolify, paste the Mattermost URL into **Webhook**, and select **Save**. Then turn on **Enabled**.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+<Callout type="warning" title="Protect the webhook URL">
+The webhook URL authorizes posts to its destination channel. Store it as a secret and replace it in the provider and Coolify if it is exposed.
+</Callout>
+
+---
+
+## Choose events and verify delivery
+
+Under **Notification Settings**, select the events to send through this channel. See [Notification events](/core/notifications/events) for each trigger.
+
+Select **Send Test Notification** and confirm that the message arrives in the Slack or Mattermost channel. If it does not, verify that the incoming webhook remains enabled and still targets a channel the integration can access.
+
+---
+
+## Troubleshoot Slack or Mattermost delivery
+
+If the test does not arrive:
+
+1. Confirm that the saved URL belongs to the provider and workspace or server you are checking.
+2. Confirm that the webhook still exists and still targets an accessible channel.
+3. If the app or webhook was reinstalled or recreated, copy the new URL into Coolify and save it.
+4. In Slack, confirm that the app remains authorized for the workspace and channel.
+5. In Mattermost, confirm that incoming webhooks remain enabled in the server's integration settings.
+6. Send another test before enabling production events.

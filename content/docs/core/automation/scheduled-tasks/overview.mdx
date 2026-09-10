@@ -1,0 +1,69 @@
+---
+title: Overview
+description: Understand how Coolify runs scheduled commands inside application and service containers.
+---
+
+import { ArrowsRight, CalendarAdd, History, Settings } from 'reicon-react';
+
+# Scheduled tasks overview
+
+Scheduled tasks let Coolify run a command inside an application or service container on a recurring schedule. Use them for work such as framework schedulers, queue maintenance, cache cleanup, and recurring imports.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Add a task from an application's or service's **Configuration > Scheduled Tasks** page. Choose the command, schedule, timeout, and target container. Coolify records the result and output of each run.
+
+</CoolCallout>
+
+---
+
+## What a scheduled task contains
+
+Each task has five main settings:
+
+- **Name** identifies the task in Coolify.
+- **Command** is the exact command Coolify runs inside the container.
+- **Frequency** controls when the command runs. It accepts a five-field cron expression or a supported named schedule.
+- **Timeout** limits how long one execution may run.
+- **Container name** selects where the command runs when the resource has more than one container.
+
+Read [Cron Syntax](/core/automation/cron-syntax) for supported fields, named schedules, and examples.
+
+---
+
+## How a task runs
+
+Coolify evaluates the schedule in the timezone configured for the server that runs the resource. When the task is due, Coolify runs the command in a shell inside the selected running container.
+
+A scheduled execution is skipped when the task is disabled, the application or service is not running, or the connected server is not functional. A task with multiple containers also needs the correct container or service name.
+
+After Coolify starts a command, **Recent executions** shows its status, start and end times, duration, and captured output.
+
+---
+
+## Choose the next task
+
+<CoolIconCardGrid
+  columns={3}
+  surface
+  cards={[
+    {
+      title: 'Create a task',
+      description: 'Configure a command, schedule, timeout, and target container.',
+      href: '/core/automation/scheduled-tasks/create-a-task',
+      icon: CalendarAdd,
+    },
+    {
+      title: 'Manage tasks',
+      description: 'Edit, enable, disable, run, or permanently delete a task.',
+      href: '/core/automation/scheduled-tasks/manage-tasks',
+      icon: Settings,
+    },
+    {
+      title: 'Review execution history',
+      description: 'Check task status, timing, command output, and downloadable logs.',
+      href: '/core/automation/scheduled-tasks/execution-history',
+      icon: History,
+    },
+  ]}
+/>

@@ -1,0 +1,87 @@
+---
+title: Overview
+description: Compare how Coolify prepares Docker images for Applications created from Git source.
+---
+
+import { Box2, BrowserCode, Layers, Package } from 'reicon-react';
+
+# Build applications
+
+Every application container starts from a Docker image. For Git source, the selected **Build Pack** determines how Coolify prepares the required images. Nixpacks, Railpack, Static, and Dockerfile build one application image; Docker Compose can build or pull an image for each service.
+
+[Docker Image applications](/applications/deployments/docker-image) skip this build stage because the image already exists in a registry.
+
+<CoolCallout icon={Package} title="The short version">
+
+Use Nixpacks or Railpack for automatic detection, Static for files that are already built, Dockerfile for one custom image, and Docker Compose for a multi-service definition.
+
+</CoolCallout>
+
+---
+
+## Compare build methods
+
+Coolify labels these choices **Build Pack** in the Application configuration. Nixpacks, Railpack, Static, and Dockerfile each produce one application image. Docker Compose is broader: each service can build an image from source or pull an image from a registry.
+
+| Method | Use it when | Guide |
+| :--- | :--- | :--- |
+| Nixpacks | The codebase follows a supported language or framework convention. Configure it through detection, command overrides, or `nixpacks.toml`. | [Deploy with Nixpacks](/applications/builds/nixpacks/deploy) |
+| Railpack (Beta) | The repository is supported by Railway's newer automatic build system. Configure it through detection, command overrides, or `railpack.json`. | [Configure Railpack](/applications/builds/railpack) |
+| Static | The repository contains the finished website files. Configure their directory and optional web-server settings in Coolify. | [Configure a static build](/applications/builds/static) |
+| Dockerfile | The repository contains one custom image definition used with Coolify runtime settings. | [Use a Dockerfile](/applications/builds/dockerfile) |
+| Docker Compose | The application needs a Compose definition with one or more services. | [Use Docker Compose](/applications/builds/docker-compose) |
+
+Choose [Nixpacks](/applications/builds/nixpacks/overview) or [Railpack](/applications/builds/railpack) when automatic detection is sufficient. Choose [Dockerfile](/applications/builds/dockerfile) or [Docker Compose](/applications/builds/docker-compose) when the repository must define the image or service topology explicitly.
+
+## Where builds run
+
+Coolify runs image builds on the deployment server by default.
+
+A [build server](/core/infrastructure/servers/build-servers) separates build CPU, memory, and disk use from the server running the application. A build server cannot run deployed resources. The completed image must be available to the deployment server through the configured registry path.
+
+## Build and runtime configuration
+
+Build-time variables and commands affect the image. Runtime variables, domains, storage, and container settings affect the container created from that image.
+
+A runtime-only change can reuse an existing image. Changes to the Dockerfile, Compose build definition, source commit, build command, or build-time variables can require another build.
+
+## Build cache
+
+Docker reuses unchanged build layers when caching is available. Under **Configuration > Advanced**, **Disable Build Cache** forces every build step to run again.
+
+Coolify excludes `SOURCE_COMMIT` from the build by default so different commits can reuse unchanged layers. Enable **Include Source Commit in Build** only when the build itself requires the commit value.
+
+Use **Force deploy (without cache)** for one deployment that must run a Coolify-generated build without cached layers. A custom Docker Compose build command controls its own cache flags.
+
+## Push built images to a registry
+
+Configure **Docker Image** and **Docker Image Tag** under **Configuration > General** when a built image must be pushed to a registry.
+
+Read [Docker registries](/applications/builds/docker-registries) for image names, tags, authentication, and build-server requirements.
+
+---
+
+## Choose the next build guide
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Use automatic detection',
+      href: '/applications/builds/nixpacks/deploy',
+      description: 'Create an image from a conventional application repository with Nixpacks.',
+      icon: Package,
+    },
+    {
+      title: 'Use a Dockerfile',
+      href: '/applications/builds/dockerfile',
+      description: 'Control one application image with repository-owned Docker instructions.',
+      icon: BrowserCode,
+    },
+    {
+      title: 'Use Docker Compose',
+      href: '/applications/builds/docker-compose',
+      description: 'Deploy one definition containing multiple services, networks, and volumes.',
+      icon: Layers,
+    },
+  ]}
+/>

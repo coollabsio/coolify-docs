@@ -1,0 +1,73 @@
+---
+title: Overview
+description: Monitor, maintain, and protect a running standalone database.
+---
+
+import { BrowserTerminal, Refresh23 } from 'reicon-react';
+
+# Operate databases
+
+After a database is deployed, Coolify provides separate views for configuration, backups, logs, terminal access, and runtime metrics. Use the page that matches the task you need to perform.
+
+## Know where to look
+
+| Page | Use it to |
+| :--- | :--- |
+| **Configuration** | Change the image, credentials, networking, storage, health check, environment variables, and resource limits. |
+| **Backups** | Schedule and inspect engine-specific backups for PostgreSQL, MySQL, MariaDB, MongoDB, and ClickHouse. |
+| **Logs** | Read output from the database container. |
+| **Terminal** | Run a command inside the running database container when your team and server allow terminal access. |
+| **Metrics** | View CPU and memory usage when Sentinel & Metrics is enabled on the server and the container is running. |
+| **Resource Operations** | Clone the database to another server or destination, or move it to another project or environment. |
+| **Danger Zone** | Delete the database resource and optionally remove related Docker resources. |
+
+Redis, Dragonfly, and KeyDB do not show the **Backups** page because Coolify does not provide their standalone scheduled database backup workflow. Their persistent volumes still protect data during normal container replacement; persistent storage is not a backup.
+
+## Choose a lifecycle action
+
+The database header shows actions based on its current status:
+
+| Action | What it does |
+| :--- | :--- |
+| **Start** | Starts a stopped database container. |
+| **Restart** | Restarts the database. The database is unavailable during the restart. |
+| **Stop** | Stops the database and removes non-persistent container data. The resource and persistent data remain so you can start it again. |
+
+Stop or restart a database only when clients can tolerate the interruption. A write in progress or a client that does not retry can fail while the database is unavailable.
+
+Use the deployment controls on the resource page when you first deploy a database or apply a configuration that requires a new deployment. After changing SSL, health checks, storage, ports, images, or engine settings, follow the page's status and activity messages and verify that the database is running before reconnecting applications.
+
+## Protect database state
+
+<Callout type="warning" title="Persistent storage is not a backup">
+
+A persistent volume keeps database files across normal container replacement. It does not protect against deleting the volume, disk failure, corruption, or losing the server. Configure an engine-specific backup for supported engines and test a restore before relying on it.
+
+</Callout>
+
+Keep at least one verified backup outside the database server. For Redis, Dragonfly, and KeyDB, use the engine's own persistence or backup tooling, a Compose service, or an external backup solution because the standalone Coolify backup workflow is not available.
+
+## Continue operating the database
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Clone or move a database',
+      href: '/databases/operations/resource-operations',
+      description: 'Change the destination or project without confusing a clone with a data migration.',
+      icon: Refresh23,
+    },
+    {
+      title: 'Monitor database metrics',
+      href: '/core/observability/monitoring/metrics',
+      description: 'Inspect CPU and memory usage for a running database container.',
+      icon: Refresh23,
+    },
+    {
+      title: 'Open the database terminal',
+      href: '/databases/how-databases-work#how-applications-connect',
+      description: 'Use the running container and its internal network for checks.',
+      icon: BrowserTerminal,
+    },
+  ]}
+/>

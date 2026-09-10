@@ -1,0 +1,88 @@
+---
+title: Manage Tags
+description: Create, assign, reuse, and remove tags from Coolify applications and services.
+---
+
+# Manage tags
+
+Manage tags from the application or service that should belong to the group. Coolify creates a new team tag when the name does not exist and reuses an existing tag when it does.
+
+## Add tags to a resource
+
+<Steps>
+<Step>
+
+### Open the resource
+
+Open the application or service you want to tag, then select **Configuration > Tags**.
+
+</Step>
+<Step>
+
+### Enter one or more names
+
+In **Create new or assign existing tags**, enter a tag name. To add several tags at once, separate the names with spaces:
+
+```txt
+production storefront eu
+```
+
+Each name must contain at least two characters. Coolify removes HTML and stores the name in lowercase.
+
+</Step>
+<Step>
+
+### Add the tags
+
+Click **Add**. Newly created and reused tags appear under **Assigned Tags**.
+
+</Step>
+</Steps>
+
+Open **Tags** in the main sidebar and select one of the assigned names. The resource should appear in that tag's details.
+
+---
+
+## Assign an existing tag
+
+Tags from the active team that are not assigned to the resource appear under **Existing Tags**. Click a name to assign it without entering the name again.
+
+The same tag can be assigned to applications and services in different projects or environments within the team.
+
+---
+
+## Remove a tag
+
+Under **Assigned Tags**, click the remove icon beside the tag name. Coolify removes the tag from this resource immediately.
+
+Removing a tag does not stop, restart, or redeploy the resource.
+
+---
+
+## How unused tags are removed
+
+Coolify removes a tag from the team after it is detached from its last application or service. There is no separate delete action on the main **Tags** page.
+
+If you want to keep a grouping, leave the tag assigned to at least one application or service.
+
+---
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="Coolify reports an invalid tag">
+
+Use a name with at least two characters. Separate multiple names with spaces instead of commas.
+
+</Accordion>
+<Accordion title="Coolify reports a duplicate tag">
+
+The resource already has that tag. Check **Assigned Tags** instead of adding the same name again.
+
+</Accordion>
+<Accordion title="The Tags page is read-only">
+
+You need permission to update the resource before you can assign or remove tags. Ask a team administrator to update your role or make the change for you.
+
+</Accordion>
+</Accordions>

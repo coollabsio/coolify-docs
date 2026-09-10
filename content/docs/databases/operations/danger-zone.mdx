@@ -1,0 +1,50 @@
+---
+title: Danger Zone
+description: Permanently delete a standalone database and choose which related Docker resources Coolify removes.
+---
+
+# Delete a database
+
+Open the database and select **Configuration > Danger Zone** to permanently remove the database resource. Deletion cannot be undone from Coolify.
+
+<Callout type="danger" title="Back up the database before deleting it">
+
+Deleting a database can remove its containers, configuration, volumes, and network resources. Take a verified database backup and record the connection settings before continuing. A persistent volume is not a substitute for a backup.
+
+</Callout>
+
+## Before deletion
+
+- Confirm that no application still needs the database.
+- Export or back up all required databases and test the restore path.
+- Record the database image, credentials, storage mounts, environment variables, ports, SSL settings, and backup settings if you may recreate it.
+- Confirm that you have permission to delete the resource.
+- Check the optional deletion actions in the confirmation dialog rather than accepting them automatically.
+
+## Deletion actions
+
+The confirmation dialog can select these actions. They are selected by default in the current interface:
+
+| Action | Effect |
+| :--- | :--- |
+| **Permanently delete all volumes associated with this resource.** | Deletes the database's Docker volumes and their stored data. |
+| **Permanently delete all non-predefined networks associated with this resource.** | Deletes non-predefined Docker networks associated with the resource. |
+| **Permanently delete all configuration files from the server.** | Deletes Coolify-generated configuration files for the resource from the server. |
+| **Run Docker Cleanup (remove unused images and builder cache).** | Runs Docker cleanup on the resource's server after deletion. |
+
+Clear **volumes** only when you deliberately want to preserve the volume for a separate recovery or manual cleanup process. Keeping a volume does not keep the Coolify database resource or make the data available to a newly created resource automatically.
+
+## Confirm deletion
+
+Select **Delete** in the confirmation dialog. Depending on the instance's confirmation settings, Coolify asks you to enter the exact database name and your Coolify account password. Coolify removes the resource record and queues cleanup of the selected Docker resources.
+
+The database may remain visible briefly while the deletion job finishes. Do not recreate a database with the same storage or public port until you have confirmed that the old resource and its containers are gone.
+
+## After deletion
+
+1. Confirm that the database no longer appears in the project environment.
+2. Confirm that its container is no longer running on the server.
+3. Remove or update application connection variables and public DNS or firewall rules that pointed to it.
+4. If you recreate the database, use a supported image and restore the verified backup before reconnecting applications.
+
+Coolify does not manage DNS records at your DNS provider. Remove obsolete DNS records separately.

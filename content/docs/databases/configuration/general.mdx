@@ -1,0 +1,55 @@
+---
+title: General
+description: Configure a database image, credentials, engine settings, ports, and public access.
+---
+
+# General settings
+
+Open a database resource, then select **Configuration > General**. The page contains common resource settings and controls specific to the selected database engine.
+
+## Common settings
+
+| Setting | What it controls |
+| :--- | :--- |
+| **Name** | The database name shown throughout Coolify. |
+| **Description** | Optional information about the database or its owner. |
+| **Image** | The Docker image and tag used to run the database. |
+| **Credentials and initial database** | The account and database values used by the engine's entrypoint and Coolify's connection details. The labels vary by engine. |
+| **Ports Mappings** | Docker host-to-container mappings such as `15432:5432`. |
+| **Make it publicly available** | Starts a separate TCP proxy for external clients. |
+| **Public Port** | The server port used by the public TCP proxy. |
+| **Proxy Timeout (seconds)** | How long the public proxy keeps an idle connection open. The default is `3600`; the minimum is `1`. |
+| **Custom engine configuration** | Optional configuration text mounted or passed to the selected database image. |
+
+Coolify does not expose a public database endpoint by default. Prefer the **Internal URL** for applications on the same destination network. Read [Network access](/databases#network-access) before enabling public access.
+
+## Engine-specific settings
+
+The available controls change with the selected engine:
+
+| Engine | Additional settings |
+| :--- | :--- |
+| [PostgreSQL](/databases/postgresql) | Initial database arguments, host authentication method, custom PostgreSQL configuration, and initialization scripts. |
+| [MySQL](/databases/mysql) | Root and normal-user credentials, initial database, and custom MySQL configuration. |
+| [MariaDB](/databases/mariadb) | Root and normal-user credentials, initial database, and custom MariaDB configuration. |
+| [MongoDB](/databases/mongodb) | Initial root credentials, initial database, and custom MongoDB configuration. |
+| [Redis](/databases/redis) | Username, password, and custom Redis configuration. |
+| [Dragonfly](/databases/dragonfly) | Password and supported custom Docker options. |
+| [KeyDB](/databases/keydb) | Password and custom KeyDB configuration. |
+| [ClickHouse](/databases/clickhouse) | Initial administrator credentials and the native database port. |
+
+## Keep credentials synchronized
+
+Coolify uses the values saved in **General** to build connection URLs and run database automation. If you change a username, password, or initial database directly inside the database, update the matching value in Coolify as well.
+
+Redis, Dragonfly, and KeyDB apply authentication through container configuration or environment variables. Follow the engine guide when changing those values so the running database and Coolify use the same credentials.
+
+## Apply changes
+
+Select **Save**, then restart or redeploy the database when Coolify marks the configuration as changed. Confirm the database starts successfully and copy the updated **Internal URL** from the resource after changing connection values.
+
+<Callout type="warning" title="Do not change a production image without a migration plan">
+
+Changing the Docker image can change the database major version or available configuration. Take a verified backup, check the engine upgrade procedure, and confirm the persistent data path before deploying the new image.
+
+</Callout>

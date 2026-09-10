@@ -1,0 +1,79 @@
+---
+title: Overview
+description: Understand how Coolify uses Docker network destinations to deploy resources on your servers.
+---
+
+import { ArrowsRight, Settings, Warning22 } from 'reicon-react';
+
+# Destinations overview
+
+A destination represents a Docker network on one of your servers. Selecting a destination tells Coolify which server and Docker network to use for an application, database, or service.
+
+Each destination belongs to one server. A server can have more than one destination, and a destination can be used by multiple resources.
+
+<Callout type="info" title="Start with the default destination">
+Coolify creates a destination named `coolify` during installation. Applications use this destination by default. Docker Compose applications are the exception: they use their own resource-specific network unless you enable **Connect To Predefined Network**.
+</Callout>
+
+## What a destination controls
+
+A destination combines three pieces of information:
+
+| Property | Purpose |
+| :--- | :--- |
+| **Name** | Identifies the destination in the Coolify dashboard. |
+| **Server** | Identifies the machine where the resource will run. |
+| **Docker Network** | Identifies the Docker network the resource can join on that server. |
+
+Resources on the same Docker network can communicate through container or service names and internal ports. Resources on separate networks remain isolated unless you connect them to a shared network.
+
+A destination does not move traffic between servers. It also does not replace DNS, firewall, or proxy configuration. Read [Networking in Coolify](/core/networking-in-coolify) for the complete path between a public domain, the Coolify Proxy, Docker networks, and resource containers.
+
+## The default destination
+
+The default `coolify` destination represents the `coolify` Docker network on the server.
+
+When you create a resource, Coolify first asks you to select a server. If the server has only one destination, Coolify selects it automatically. If the server has multiple destinations, you choose the Docker network for the new resource.
+
+The default `coolify` destination cannot be deleted from the dashboard.
+
+## When to create another destination
+
+Most deployments only need the default `coolify` destination. Create another destination when selected applications need to use a separate Docker network instead of the default network.
+
+Creating more destinations does not create more servers. Every destination still belongs to one connected server.
+
+## Destination behavior for Docker Compose
+
+Docker Compose applications and service stacks use a resource-specific Docker network by default. They do not join their selected Coolify destination automatically.
+
+Enable **Connect To Predefined Network** when a Docker Compose resource must communicate with other resources through its Coolify destination. Review [Docker Compose networking](/applications/builds/docker-compose#application-networking) before enabling the setting.
+
+<Callout type="warning" title="Docker Swarm destinations are deprecated">
+Existing Coolify v4 Docker Swarm destinations may still appear with a **Deprecated** badge. Do not create a new Swarm deployment. Read [Docker Swarm (Deprecated)](/core/infrastructure/scaling/docker-swarm) when maintaining an existing deployment.
+</Callout>
+
+## Continue with destinations
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Create a Destination',
+      href: '/core/networking/destinations/create',
+      description: 'Create another Docker network for deployments or scan a network that already exists on the server.',
+      icon: ArrowsRight,
+    },
+    {
+      title: 'Manage Destinations',
+      href: '/core/networking/destinations/manage',
+      description: 'Review resources, rename a destination, choose a deployment network, or clone a resource.',
+      icon: Settings,
+    },
+    {
+      title: 'Delete Destination',
+      href: '/core/networking/destinations/delete',
+      description: 'Review attached resources and safely remove a destination and its Docker network.',
+      icon: Warning22,
+    },
+  ]}
+/>

@@ -1,0 +1,102 @@
+---
+title: 2FA
+description: Configure two-factor authentication, save recovery codes, and manage 2FA for a Coolify account.
+---
+
+# Two-factor authentication
+
+Two-factor authentication (2FA) adds an authenticator-code challenge after a successful email-and-password sign-in. Each Coolify user configures 2FA for their own account from the profile page.
+
+<Callout type="info" title="OAuth sign-in uses the provider's security controls">
+Coolify's 2FA challenge applies to email-and-password sign-ins. When you sign in through OAuth or SSO, require multi-factor authentication at the external identity provider.
+</Callout>
+
+## Configure 2FA
+
+Before you start, install an authenticator application that supports time-based one-time passwords (TOTP).
+
+<Steps>
+<Step>
+
+### Open your profile
+
+In Coolify, open the user menu and select **Profile**. Find **Two-factor Authentication**, then select **Configure**.
+
+Confirm your password if Coolify requests it.
+
+</Step>
+<Step>
+
+### Add Coolify to the authenticator
+
+Scan the QR code with the authenticator application.
+
+If you cannot scan it, select **Show Secret Key and OTP URL** and copy the secret or OTP URL into the authenticator application. Treat the secret as a password because anyone with it can generate valid codes.
+
+</Step>
+<Step>
+
+### Confirm the authenticator code
+
+Enter the six-digit code from the authenticator application in **One time (OTP) code**, then select **Validate 2FA**.
+
+Coolify enables 2FA only after the code is accepted.
+
+</Step>
+<Step>
+
+### Save the recovery codes
+
+Copy every recovery code shown after confirmation and store them outside Coolify in a password manager or another secure location.
+
+Do not keep the only copy in the browser, on the Coolify server, or on the same device as the authenticator application.
+
+</Step>
+</Steps>
+
+---
+
+## Sign in with 2FA
+
+After Coolify accepts your email and password, enter the current six-digit code from the authenticator application.
+
+To use a recovery code instead, select **Use Recovery Code Instead**, enter a saved recovery code, and continue. Return to an authenticator code with **Use Authenticator Code Instead**.
+
+If correct authenticator codes are rejected, check that the device running the authenticator and the Coolify server have accurate time. Follow [2FA stopped working](/troubleshoot/server/two-factor-stopped-working) for the self-hosted server time checks.
+
+---
+
+## Manage recovery codes
+
+Open **Profile > Two-factor Authentication**, then select **Regenerate Recovery Codes** when:
+
+- a recovery code may have been exposed
+- you no longer have the saved set
+- your recovery storage has changed
+
+Coolify displays the replacement set after regeneration. Replace every previously saved copy with the new codes.
+
+---
+
+## Disable 2FA
+
+Open **Profile > Two-factor Authentication** and select **Disable**. Confirm your password if requested.
+
+Disabling 2FA removes the authenticator setup and its recovery codes from the account. It does not change the account password or disable OAuth providers.
+
+---
+
+## Regain access without a working code
+
+Try the least destructive recovery path first:
+
+1. Check the authenticator device time and the self-hosted Coolify server time.
+2. Use one of the recovery codes saved during setup.
+3. If neither works, use the recovery path for your Coolify deployment.
+
+| Deployment | Recovery path |
+| :--- | :--- |
+| Self-hosted Coolify | A server administrator can follow [Reset 2FA](/core/backup-and-recovery/reset-2fa). The procedure clears the authenticator secret and recovery codes for the selected account. |
+| Coolify Cloud | [Contact the Coolify team](/support). Coolify Cloud users cannot access the container required for the self-hosted reset procedure. |
+
+After access is restored, configure 2FA again and save the new recovery codes.

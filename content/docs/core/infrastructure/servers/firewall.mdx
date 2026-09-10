@@ -1,0 +1,295 @@
+---
+title: Firewall
+description: Open the firewall ports required by Coolify, its proxy, connected servers, and dashboard features.
+---
+
+# Firewall
+
+Coolify needs inbound ports for SSH connections, web traffic, dashboard updates, and the web terminal.
+
+The required ports depend on whether you use self-hosted Coolify or Coolify Cloud. Self-hosted users must also choose whether they are configuring the Coolify server or a remote server.
+
+<Callout type="warning" title="Keep SSH access open">
+Do not remove the SSH rule while configuring the firewall. A wrong SSH rule can lock you out of the server.
+</Callout>
+
+## Choose the correct ports
+
+<Tabs id="firewall-coolify-type" items={['Self-hosted', 'Coolify Cloud']}>
+<Tab value="Self-hosted">
+
+<Tabs id="firewall-self-hosted-server-type" items={['Coolify server', 'Remote server']}>
+<Tab value="Coolify server">
+
+### Server running Coolify
+
+Use these ports on the server where the self-hosted Coolify instance is installed.
+
+| <span className="inline-block min-w-28">Port</span> | Used for |
+| :--- | :--- |
+| `8000/tcp` | Direct access to the Coolify dashboard at `http://<server-ip>:8000` |
+| `6001/tcp` | Real-time dashboard updates when using direct IP access |
+| `6002/tcp` | Coolify web terminal when using direct IP access |
+| `22/tcp` | SSH access, unless you configured a different SSH port |
+| `80/tcp` | HTTP traffic and certificate generation through the Coolify proxy |
+| `443/tcp` | HTTPS traffic through the Coolify proxy |
+
+<Callout type="info" title="Using a domain for the Coolify dashboard?">
+After the dashboard works through a domain using the Coolify proxy, you can close public access to ports `8000`, `6001`, and `6002`. The dashboard, real-time connection, and terminal will use ports `80` and `443` through the proxy.
+</Callout>
+
+</Tab>
+<Tab value="Remote server">
+
+### Remote server connected to self-hosted Coolify
+
+Use these ports on a remote server managed by your self-hosted Coolify instance.
+
+| <span className="inline-block min-w-28">Port</span> | Used for |
+| :--- | :--- |
+| `22/tcp` | SSH connection from the server running Coolify, unless you use a different SSH port |
+| `80/tcp` | Public HTTP traffic and certificate generation |
+| `443/tcp` | Public HTTPS traffic |
+
+Restrict the SSH rule to the public IP address of the server running Coolify when possible.
+
+Ports `80` and `443` are only needed when this server runs applications or services that receive public web traffic.
+
+</Tab>
+</Tabs>
+
+</Tab>
+<Tab value="Coolify Cloud">
+
+### Remote server connected to Coolify Cloud
+
+Use these ports on a server managed from Coolify Cloud.
+
+| <span className="inline-block min-w-28">Port</span> | Used for |
+| :--- | :--- |
+| `22/tcp` | SSH connection from Coolify Cloud, unless you use a different SSH port |
+| `80/tcp` | Public HTTP traffic and certificate generation |
+| `443/tcp` | Public HTTPS traffic |
+
+Restrict the SSH rule to the published Coolify Cloud source addresses:
+
+- [Coolify Cloud IPv4 addresses](https://coolify.io/ipv4.txt)
+- [Coolify Cloud IPv6 addresses](https://coolify.io/ipv6.txt)
+
+Ports `80` and `443` are only needed when this server runs applications or services that receive public web traffic.
+
+</Tab>
+</Tabs>
+
+Do not open ports that your server does not use.
+
+---
+
+## Configure the firewall
+
+<Tabs id="firewall-method" items={['Hosting provider firewall', 'ufw-docker', 'Compose override']}>
+<Tab value="Hosting provider firewall">
+
+### Use the hosting provider firewall
+
+Most hosting providers include a network firewall in their dashboard. Use that firewall when it is available because it blocks unwanted traffic before the traffic reaches your server.
+
+1. Open the firewall, security group, or inbound-rule settings in the hosting provider dashboard.
+2. Add the TCP rules from the section above.
+3. Attach the firewall to the correct server.
+4. Restrict the SSH rule to the Coolify source address whenever possible.
+5. Allow ports `80` and `443` from `0.0.0.0/0` and `::/0` only when the server receives public web traffic.
+
+</Tab>
+<Tab value="ufw-docker">
+
+### Use ufw-docker when no provider firewall is available
+
+Docker adds NAT and iptables rules for published container ports. These rules can bypass the normal rules created by UFW.
+
+<Callout type="warning" title="Do not use UFW by itself">
+Blocking a port with UFW does not guarantee that a Docker-published port is blocked. Do not rely on plain UFW to protect resources.
+</Callout>
+
+Use [ufw-docker](https://github.com/chaifeng/ufw-docker) when the hosting provider does not offer a firewall. It is a community-maintained tool that makes UFW rules apply to Docker-published ports.
+
+Follow the installation and rule instructions in the ufw-docker repository. Keep the current SSH session open while changing firewall rules, then check the result from another machine before closing the session.
+
+### Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="Coolify is inaccessible after an update, server patch, or reboot">
+
+Check whether a rule created with ufw-docker uses the IP address of the `coolify` container. A container can receive a different IP address when it is recreated during a Coolify update, [server patch](/core/infrastructure/servers/server-patching), or reboot. The rule then continues pointing to the old IP address and blocks access to Coolify.
+
+Remove the rule that uses the old container IP address. Replace it with a rule for the required destination port so the rule continues working when the container IP changes.
+
+</Accordion>
+
+<Accordion title="Applications are inaccessible after a restart or deployment">
+
+Check whether the firewall rule uses the IP address of an application container. An application container can receive a different IP address when it is restarted or redeployed.
+
+For applications accessed through a domain, allow ports `80` and `443` for the Coolify proxy instead of creating rules for individual application container IP addresses. If the application uses a public port mapping, create the ufw-docker rule for that destination port without using a fixed container IP address.
+
+</Accordion>
+
+</Accordions>
+
+</Tab>
+<Tab value="Compose override">
+
+### Restrict Coolify ports with a Compose override
+
+This option is only for the server running a self-hosted Coolify instance. It changes how ports `8000`, `6001`, and `6002` are published by Coolify's own containers.
+
+The Compose files for Coolify are stored in `/data/coolify/source` on the server running Coolify. Create the override as `/data/coolify/source/docker-compose.custom.yml`.
+
+This does not replace the firewall rules required for SSH, applications, databases, or services.
+
+<Callout type="warning" title="Make sure your Coolify domain works first">
+Complete these steps only after the Coolify dashboard, real-time updates, and web terminal work through your configured domain. Removing the public port bindings before the domain works can lock you out of Coolify.
+</Callout>
+
+<Callout type="warning" title="Do not edit the base Compose files">
+Coolify updates replace `/data/coolify/source/docker-compose.yml` and `/data/coolify/source/docker-compose.prod.yml`. Changes made directly to those files will be reset during an update. The `docker-compose.custom.yml` file is loaded automatically and is not replaced by a Coolify update.
+</Callout>
+
+<Steps>
+<Step>
+
+### Connect to the Coolify server
+
+Connect through SSH to the server where self-hosted Coolify is installed.
+
+</Step>
+<Step>
+
+### Open the Coolify source directory
+
+```sh
+cd /data/coolify/source
+```
+
+This directory contains the base Compose files used to run Coolify.
+
+</Step>
+<Step>
+
+### Create the custom Compose file
+
+```sh
+nano docker-compose.custom.yml
+```
+
+Choose one of the following examples and paste it into the file.
+
+<Tabs id="firewall-compose-override-example" items={['Bind ports to localhost', 'Remove port bindings']}>
+<Tab value="Bind ports to localhost">
+
+Use this example to keep the direct-access ports available from the Coolify server while preventing other machines from connecting to them.
+
+```yaml
+services:
+  coolify:
+    ports: !override
+      - "127.0.0.1:${APP_PORT:-8000}:8080"
+  soketi:
+    ports: !override
+      - "127.0.0.1:${SOKETI_PORT:-6001}:6001"
+      - "127.0.0.1:6002:6002"
+```
+
+</Tab>
+<Tab value="Remove port bindings">
+
+Use this example when the Coolify proxy is configured for the dashboard and you do not need direct access through ports `8000`, `6001`, or `6002`.
+
+```yaml
+services:
+  coolify:
+    ports: !override []
+  soketi:
+    ports: !override []
+```
+
+</Tab>
+</Tabs>
+
+Save the file by pressing <kbd>Ctrl</kbd> + <kbd>X</kbd>, then <kbd>Y</kbd>, and then <kbd>Enter</kbd>.
+
+</Step>
+<Step>
+
+### Validate the Compose file
+
+```sh
+docker compose --env-file .env \
+  -f docker-compose.yml \
+  -f docker-compose.prod.yml \
+  -f docker-compose.custom.yml \
+  config
+```
+
+Continue only when the command prints the merged configuration without an error.
+
+</Step>
+<Step>
+
+### Apply the Compose override
+
+```sh
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+```
+
+The installation script detects `docker-compose.custom.yml` and includes it when starting Coolify. Open the Coolify dashboard using its domain and confirm that real-time updates and the web terminal still work.
+
+</Step>
+</Steps>
+
+For other changes and more examples, see [Compose overrides](/start-with-self-hosted#_4-compose-overrides).
+
+</Tab>
+</Tabs>
+
+---
+
+## Confirm the firewall works
+
+After saving the rules:
+
+- For self-hosted Coolify, open the dashboard using port `8000` or its configured domain.
+- Validate a connected server from **Servers > your server > General**.
+- Open an application domain and confirm it loads through HTTPS.
+- Open the [Web Terminal](/core/infrastructure/servers/web-terminal) if you use it.
+
+If server validation times out, check the SSH port and allowed source address first. If validation succeeds but an application does not load, check ports `80` and `443` and confirm the domain points to the correct server.
+
+---
+
+## Open additional ports only when needed
+
+The standard port tables cover normal Coolify access. Open another port only when a resource or integration requires it.
+
+<Accordions type="multiple">
+
+<Accordion title="Application or database uses a public port mapping">
+
+Applications behind a domain receive traffic through the Coolify proxy on ports `80` and `443`. You do not need to open their internal container ports.
+
+If you add a public port mapping, open that exact port in the firewall. For example, a PostgreSQL mapping on `5432` requires an inbound TCP rule for port `5432`.
+
+Restrict database and administration ports to the client IP addresses that need them. Do not expose these ports to `0.0.0.0/0` or `::/0` unless another security layer protects them.
+
+</Accordion>
+
+<Accordion title="GitHub webhooks cannot reach Coolify">
+
+GitHub sends webhook requests to the Coolify dashboard when a connected repository changes. If the dashboard uses a domain through the Coolify proxy, ports `80` and `443` must remain open.
+
+To restrict webhook traffic by source address, use the current ranges under `hooks` in the [GitHub API metadata](https://api.github.com/meta). GitHub can change these ranges, so review them regularly.
+
+</Accordion>
+
+</Accordions>

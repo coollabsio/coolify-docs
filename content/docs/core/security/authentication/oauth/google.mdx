@@ -1,0 +1,94 @@
+---
+title: Google
+description: Configure Google OAuth sign-in for Coolify with a web OAuth client and the Coolify callback URL.
+---
+
+# Configure Google OAuth
+
+Create a Google OAuth client for a web application so Google can return the user's OpenID profile and email address to Coolify.
+
+<Callout type="warning" title="Example data">
+Replace the example domain while following this guide:
+
+- **Coolify URL:** `https://coolify.shadowarcanist.com`
+- **Authorized redirect URI:** `https://coolify.shadowarcanist.com/auth/google/callback`
+- **Hosted domain hint:** `shadowarcanist.com` (optional)
+</Callout>
+
+## Set up Google OAuth
+
+<Steps>
+<Step>
+
+### Select a Google Cloud project
+
+Open the [Google Auth Platform](https://console.cloud.google.com/auth/overview) and select or create the Google Cloud project that will own the OAuth client.
+
+If Google asks you to configure the consent screen, complete **Branding**, choose the appropriate **Audience**, and add contact information. For an external app in testing, add every person who will test Coolify as a test user.
+
+</Step>
+<Step>
+
+### Create a web OAuth client
+
+Open **Clients**, select **Create client**, and choose **Web application** as the application type.
+
+Enter a name such as `Coolify`. Under **Authorized redirect URIs**, add:
+
+```txt
+https://coolify.shadowarcanist.com/auth/google/callback
+```
+
+Create the client.
+
+</Step>
+<Step>
+
+### Save the Google credentials
+
+Copy the generated **Client ID** and **Client secret**. You can also download the client JSON, but Coolify only needs these two values.
+
+</Step>
+<Step>
+
+### Configure Google in Coolify
+
+Open **Settings > OAuth** and find **Google**.
+
+| Coolify field | Google value |
+| :--- | :--- |
+| **Client ID** | The Google web client ID. |
+| **Client Secret** | The Google client secret. |
+| **Redirect URI** | `https://coolify.shadowarcanist.com/auth/google/callback` |
+| **Tenant** | Optional hosted-domain hint, such as `shadowarcanist.com`. |
+
+Select **Save**, then turn on **Enabled** for Google.
+
+<Callout type="warning" title="Tenant is a login hint, not an access rule">
+The Google **Tenant** value supplies the OAuth `hd` parameter. It can guide the account chooser, but Coolify does not use it to enforce that the returned email belongs to that domain. Restrict users in Google and in Coolify.
+</Callout>
+
+</Step>
+<Step>
+
+### Verify Google sign-in
+
+Open the Coolify login page in a private browser window and select **Login with Google**. Complete consent if requested, then confirm that Coolify opens the account matching the Google email address.
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="Google reports `redirect_uri_mismatch`">
+
+Open the web client in Google Auth Platform and compare **Authorized redirect URIs** with the Coolify **Redirect URI**. Google requires an exact match.
+
+</Accordion>
+<Accordion title="Google says the app is not available to the user">
+
+If the consent screen is in testing, add the Google account under **Audience > Test users**. For an internal app, confirm that the account belongs to the selected Google Workspace organization.
+
+</Accordion>
+</Accordions>

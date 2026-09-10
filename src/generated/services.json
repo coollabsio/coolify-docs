@@ -169,6 +169,13 @@
     "category": "Development"
   },
   {
+    "name": "Buzz",
+    "slug": "buzz",
+    "icon": "/docs/images/services/buzz-logo.svg",
+    "description": "Workspace where humans and AI agents collaborate on a self-hosted Nostr relay.",
+    "category": "Messaging"
+  },
+  {
     "name": "Calcom",
     "slug": "calcom",
     "icon": "/docs/images/services/calcom-logo.svg",
@@ -268,6 +275,13 @@
     "category": "Development"
   },
   {
+    "name": "Cloudflare DDNS",
+    "slug": "cloudflare-ddns",
+    "icon": "/docs/images/services/cloudflare-ddns.svg",
+    "description": "Cloudflare DNS updater for dynamic public IP addresses.",
+    "category": "Automation"
+  },
+  {
     "name": "Cloudflared",
     "slug": "cloudflared",
     "icon": "/docs/images/services/cloudflared-logo.svg",
@@ -285,8 +299,8 @@
     "name": "Cockpit",
     "slug": "cockpit",
     "icon": "/docs/images/services/cockpit-logo.svg",
-    "description": "Web-based server administration interface.",
-    "category": "Administration"
+    "description": "Headless CMS with REST & GraphQL APIs.",
+    "category": "CMS"
   },
   {
     "name": "Code Server",
@@ -752,6 +766,13 @@
     "category": "Development"
   },
   {
+    "name": "Healthchecks",
+    "slug": "healthchecks",
+    "icon": "/docs/images/services/healthchecks.webp",
+    "description": "Open-source cron job and background task monitoring service.",
+    "category": "Monitoring"
+  },
+  {
     "name": "Heimdall",
     "slug": "heimdall",
     "icon": "/docs/images/services/heimdall-logo.svg",
@@ -835,6 +856,13 @@
     "icon": "/docs/images/services/infisical-logo.svg",
     "description": "Open source secret management platform.",
     "category": "Security"
+  },
+  {
+    "name": "Inngest",
+    "slug": "inngest",
+    "icon": "/docs/images/services/inngest-logo.svg",
+    "description": "Durable workflow engine for background jobs, queues, and event-driven systems.",
+    "category": "Automation"
   },
   {
     "name": "Invoice Ninja",
@@ -1352,6 +1380,13 @@
     "icon": "/docs/images/services/openclaw-logo.svg",
     "description": "AI-powered coding assistant with multi-provider support and browser automation.",
     "category": "AI"
+  },
+  {
+    "name": "OpenObserve",
+    "slug": "openobserve",
+    "icon": "/docs/images/services/openobserve-logo.svg",
+    "description": "Observability platform for logs, metrics, traces, RUM, and session replays.",
+    "category": "Monitoring"
   },
   {
     "name": "OpenPanel",

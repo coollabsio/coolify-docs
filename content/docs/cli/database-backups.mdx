@@ -1,0 +1,104 @@
+---
+title: Manage Database Backups
+description: Configure, run, and verify scheduled database backups with the Coolify CLI.
+---
+
+# Manage database backups with the CLI
+
+This workflow creates a backup configuration for an existing database, runs it immediately, and verifies the execution.
+
+## Before you begin
+
+You need:
+
+- a verified CLI context with permission to manage the database
+- the database UUID
+- an S3 storage UUID when the backup should also be uploaded to S3-compatible storage
+- a cron expression and retention policy
+
+Find the database and available S3 destinations:
+
+```sh
+coolify context verify
+coolify database list
+coolify s3 list
+```
+
+<Steps>
+<Step>
+
+### Create a backup configuration
+
+The following example runs every day at 02:00, keeps local backups for seven days, and uploads a copy to S3:
+
+```sh
+coolify database backup create <database-uuid> \
+  --frequency "0 2 * * *" \
+  --enabled \
+  --save-s3 \
+  --s3-storage-uuid <s3-storage-uuid> \
+  --retention-days-locally 7
+```
+
+Use [Backup create](/cli/command-reference/commands/database/backup-create) for amount, age, storage-size, timeout, database-selection, and S3 retention options.
+
+The response contains the backup configuration UUID. Save it for updates, manual runs, and execution history.
+
+</Step>
+<Step>
+
+### Run the backup immediately
+
+Trigger the new configuration instead of waiting for its next scheduled time:
+
+```sh
+coolify database backup trigger <database-uuid> <backup-uuid>
+```
+
+Triggering a backup does not change its schedule.
+
+</Step>
+<Step>
+
+### Verify the execution
+
+List execution records for the configuration:
+
+```sh
+coolify database backup executions <database-uuid> <backup-uuid>
+```
+
+Confirm that the latest execution completed successfully. When S3 storage is enabled, also confirm that the expected backup appears in the configured bucket.
+
+</Step>
+<Step>
+
+### Change retention or scheduling
+
+Update the existing configuration:
+
+```sh
+coolify database backup update <database-uuid> <backup-uuid> \
+  --frequency "0 3 * * *" \
+  --retention-days-locally 14
+```
+
+The command changes only the flags you supply. It returns an error when no update flags are present.
+
+</Step>
+<Step>
+
+### Remove a backup configuration
+
+```sh
+coolify database backup delete <database-uuid> <backup-uuid>
+```
+
+After deletion, list backup configurations and confirm that the removed UUID is absent:
+
+```sh
+coolify database backup list <database-uuid>
+```
+
+</Step>
+</Steps>

@@ -1,0 +1,65 @@
+---
+title: Offers
+description: Offers, credits, and partner resources for Coolify users.
+---
+
+import {
+  ReceiptDiscount2,
+  SecuritySafe2,
+} from 'reicon-react';
+
+# Offers
+
+Our partners offer special discounts to the Coolify community to get started. You can find all discounts and offers from all of our partners on this page.
+
+---
+
+## Hetzner
+
+<CoolDocsPage data-offers-page hideToc spacing="none">
+
+<CoolCallout icon={ReceiptDiscount2} title="Promo code" contentClassName="!p-0">
+<CoolPanelGrid>
+<CoolPanel>
+
+Use the Coolify promo code below to get **€20** in Hetzner account credit valid for 3 months.
+
+<CoolCopyCode label="Promo code" value="C00L1FYLM40" />
+
+</CoolPanel>
+<CoolPanel>
+
+**Credit comparison**
+
+<CoolValueGrid columns={1}>
+<CoolValueCard layout="split" label="Coolify code" description="Valid for 3 months for new Hetzner users.">€20</CoolValueCard>
+<CoolValueCard layout="split" label="Hetzner sign-up code" description="Valid for 1 month for new Hetzner users.">€50</CoolValueCard>
+</CoolValueGrid>
+
+</CoolPanel>
+</CoolPanelGrid>
+</CoolCallout>
+
+<Callout type="warning" title="New Hetzner users only">
+
+The Coolify promo code is only available for new Hetzner users.
+
+</Callout>
+
+<CoolFlow
+  id="activate-promo-code"
+  icon={SecuritySafe2}
+  title="Activate the promo code"
+  description="Redeem the code from a new Hetzner account before creating any resources."
+  steps={[
+    'Create a [Hetzner account](https://accounts.hetzner.com/signUp)',
+    'Open [User Account](https://accounts.hetzner.com/user) -> [Promo Codes](https://accounts.hetzner.com/user/promoCodes)',
+    'Enter the Coolify promo code',
+  ]}
+  list={[
+    'The credit applies to future invoices automatically.',
+    'The Coolify promo code gives you 3 months to use the credit.',
+  ]}
+/>
+
+</CoolDocsPage>

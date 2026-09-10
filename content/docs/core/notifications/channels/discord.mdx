@@ -1,0 +1,66 @@
+---
+title: Discord
+description: Send Coolify notifications to a Discord channel through an incoming webhook.
+---
+
+# Discord
+
+Coolify sends Discord notifications through an incoming webhook created for a Discord text channel.
+
+## Create a Discord webhook
+
+<Steps>
+<Step>
+
+### Choose the destination
+
+Open the Discord server that should receive Coolify notifications. Create a text channel, such as `coolify-notifications`, or select an existing one.
+
+You need permission to manage webhooks in that server.
+
+</Step>
+<Step>
+
+### Create the webhook
+
+1. Open **Server Settings > Integrations > Webhooks**.
+2. Select **New Webhook**.
+3. Give the webhook a recognizable name, such as `Coolify`.
+4. Select the text channel that should receive its messages.
+5. Select **Copy Webhook URL**.
+
+</Step>
+</Steps>
+
+See [Discord's webhook documentation](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) for provider-specific details.
+
+<Callout type="warning" title="Protect the webhook URL">
+Anyone with the URL can post to the Discord channel. Store it as a secret and replace the webhook if the URL is exposed.
+</Callout>
+
+---
+
+## Configure Coolify
+
+1. Open **Notifications > Discord**.
+2. Paste the URL into **Webhook** and select **Save**.
+3. Turn on **Enabled**.
+4. Optional: turn on **Ping Enabled** to add `@here` to critical event notifications. Discord notifies only members who are online and can access the channel.
+5. Under **Notification Settings**, select the events to send to Discord.
+6. Select **Send Test Notification**.
+
+Confirm that the test appears in the selected Discord channel before selecting additional events.
+
+---
+
+## Troubleshoot Discord delivery
+
+If the test does not appear:
+
+1. Return to **Server Settings > Integrations > Webhooks** and confirm that the webhook still exists.
+2. Confirm that it targets the channel you are checking. A webhook can be moved to another channel without changing the workflow in Coolify.
+3. Copy the URL again and replace the saved value in Coolify if the webhook was recreated or its token changed.
+4. Confirm that the destination channel still exists and that the webhook can post to it.
+5. Save the URL before turning on **Enabled**, then send another test.
+
+See [Notification events](/core/notifications/events) for the trigger behind each event setting.

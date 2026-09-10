@@ -1,0 +1,220 @@
+---
+title: GitHub Actions
+description: Build and publish an application image in GitHub Actions, then trigger a Coolify deployment.
+---
+
+# GitHub Actions
+
+GitHub Actions can run checks, build your application as a Docker image, publish it to a container registry, and trigger Coolify only after the preceding steps pass.
+
+For a working reference, review the [`github-actions-with-coolify`](https://github.com/andrasbacsai/github-actions-with-coolify) repository and its [workflow file](https://github.com/andrasbacsai/github-actions-with-coolify/blob/main/.github/workflows/build.yaml).
+
+## Build and deploy
+
+<Callout type="info" title="Example values">
+
+This guide uses:
+
+- **Docker image:** `ghcr.io/shadowarcanist/tasklytics:latest`
+- **Registry:** `ghcr.io`
+- **Branch:** `main`
+
+Replace these values with your registry and image.
+
+</Callout>
+
+<Steps>
+<Step>
+
+### Choose the deployment type
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/actions/1.webp" alt="Docker-based application choices in Coolify" />
+
+GitHub Actions builds the image, so Coolify must deploy the published image instead of rebuilding the same source.
+
+Choose one:
+
+- Create a [Docker Image application](/applications/deployments/docker-image) for one image.
+- Use [Docker Compose](/applications/builds/docker-compose) when the deployment contains multiple services. Reference the published image with `image:` instead of `build:`.
+
+```yaml
+services:
+  web:
+    image: ghcr.io/shadowarcanist/tasklytics:latest
+```
+
+Authenticate the deployment server before using a private image.
+
+</Step>
+<Step>
+
+### Enable Coolify API access
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/actions/2.webp" alt="API Access setting under Coolify Advanced configuration" />
+
+On a self-hosted Coolify instance:
+
+1. Open **Settings**.
+2. Select **Configuration > Advanced**.
+3. Enable **API Access**.
+4. Save the setting.
+
+<Callout type="info" title="Coolify Cloud">
+
+Coolify Cloud has API access enabled by default. Cloud users cannot access the self-hosted **API Access** settings, so skip this step.
+
+</Callout>
+
+</Step>
+<Step>
+
+### Create a Coolify API token
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/actions/3.webp" alt="New Coolify API token with Deploy permission" />
+
+1. Open **Keys & Tokens > API Tokens**.
+2. Select **+ Add**.
+3. Give the token a descriptive name.
+4. Enable the deployment permission required by the authenticated deploy webhook.
+5. Create the token.
+6. Copy the token immediately.
+
+Store it in a password manager until it has been added to GitHub.
+
+</Step>
+<Step>
+
+### Copy the deploy webhook
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/actions/4.webp" alt="Authenticated Deploy Webhook in an application configuration" />
+
+1. Open the application.
+2. Select **Configuration > Webhooks**.
+3. Copy **Deploy Webhook (auth required)**.
+
+The URL identifies the application. The API token authorizes the request.
+
+</Step>
+<Step>
+
+### Add GitHub repository secrets
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/actions/5.webp" alt="Actions repository secrets page on GitHub" />
+
+1. Open the GitHub repository settings.
+2. Select **Secrets and variables > Actions**.
+3. Select **New repository secret**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/actions/6.webp" alt="COOLIFY_WEBHOOK repository secret" />
+
+4. Create `COOLIFY_WEBHOOK` with the authenticated deploy webhook URL.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/actions/7.webp" alt="New repository secret action after saving the webhook" />
+
+5. Select **New repository secret** again.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/actions/8.webp" alt="COOLIFY_TOKEN repository secret" />
+
+6. Create `COOLIFY_TOKEN` with the Coolify API token.
+
+Do not commit either value to the workflow file.
+
+</Step>
+<Step>
+
+### Add the GitHub Actions workflow
+
+Create `.github/workflows/build.yaml`:
+
+```yaml
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: shadowarcanist/tasklytics
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Trigger Coolify deployment
+        run: |
+          curl --fail --request GET '${{ secrets.COOLIFY_WEBHOOK }}' \
+            --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
+```
+
+The workflow builds and publishes the image before asking Coolify to deploy it.
+
+<Callout type="warning" title="Deploy only after every required check passes">
+
+Keep the Coolify request after tests, security checks, the image build, and the registry push. Otherwise, Coolify can pull the previous image or deploy a release that has not passed validation.
+
+</Callout>
+
+For immutable releases, publish a commit-specific tag and update the deployed image reference as part of the release process instead of relying only on `latest`.
+
+</Step>
+<Step>
+
+### Authenticate the deployment server
+
+For a private registry, connect to every deployment server that must pull the image and authenticate Docker as the server user configured in Coolify.
+
+<Tabs id="github-actions-registry-login" items={['GitHub Container Registry', 'Docker Hub']}>
+<Tab value="GitHub Container Registry">
+
+Create a GitHub token that can read packages, then run:
+
+```bash
+echo "$GH_TOKEN" | docker login ghcr.io --username "$GITHUB_USERNAME" --password-stdin
+```
+
+</Tab>
+<Tab value="Docker Hub">
+
+Run:
+
+```bash
+docker login
+```
+
+Use a Docker Hub access token instead of the account password when possible.
+
+</Tab>
+</Tabs>
+
+Trigger the workflow and confirm:
+
+1. GitHub Actions publishes the expected image.
+2. The Coolify request succeeds.
+3. Coolify pulls the new image.
+4. The application container starts and becomes healthy.
+
+</Step>
+</Steps>
