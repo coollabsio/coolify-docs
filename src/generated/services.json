@@ -169,6 +169,13 @@
     "category": "Development"
   },
   {
+    "name": "Buzz",
+    "slug": "buzz",
+    "icon": "/docs/images/services/buzz-logo.svg",
+    "description": "Workspace where humans and AI agents collaborate on a self-hosted Nostr relay.",
+    "category": "Messaging"
+  },
+  {
     "name": "Calcom",
     "slug": "calcom",
     "icon": "/docs/images/services/calcom-logo.svg",
