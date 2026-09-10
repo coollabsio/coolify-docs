@@ -29,6 +29,46 @@ The schedule runs on the server where the database is deployed. The **Timezone**
 
 A backup job runs only while the database is running. If the database is stopped when the schedule fires, Coolify skips that execution.
 
+## Back up a database inside a service
+
+A database component deployed inside a Service uses credentials from the environment of its running container. This differs from a standalone database resource, whose connection values are stored directly by Coolify.
+
+Coolify reads the resolved container variables listed below. These names do not need to match the variable names shown on the parent Service's **Environment Variables** page. A one-click Service commonly maps a generated value such as `SERVICE_PASSWORD_POSTGRES` to `POSTGRES_PASSWORD` in its Compose definition.
+
+| Database | Variables used by Coolify | Fallback behavior |
+| :--- | :--- | :--- |
+| PostgreSQL | `POSTGRES_PASSWORD`, `POSTGRES_USER`, `POSTGRES_DB` | `POSTGRES_USER` defaults to `postgres`. `POSTGRES_DB` defaults to the resolved username. When `POSTGRES_PASSWORD` is absent, Coolify runs the dump without setting `PGPASSWORD`; password-authenticated databases require this value. |
+| MySQL | `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE` | `MYSQL_DATABASE` has no fallback. Without it, the backup stops before running `mysqldump`. A standard password-authenticated database also requires `MYSQL_ROOT_PASSWORD`. |
+| MariaDB | `MARIADB_ROOT_PASSWORD` or `MYSQL_ROOT_PASSWORD`; `MARIADB_DATABASE` or `MYSQL_DATABASE` | Coolify checks the `MARIADB_*` name first, then its `MYSQL_*` fallback. At least one password variable and one database variable are needed for a standard password-authenticated backup. |
+| MongoDB | `MONGO_INITDB_ROOT_USERNAME`, `MONGO_INITDB_ROOT_PASSWORD` | Coolify uses both values to construct the service database connection URL. The backup fails when either value is unavailable. |
+
+For example, a PostgreSQL component can map Service variables to the names Coolify reads:
+
+```yaml
+services:
+  postgres:
+    environment:
+      POSTGRES_USER: ${SERVICE_USER_POSTGRES}
+      POSTGRES_PASSWORD: ${SERVICE_PASSWORD_POSTGRES}
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+```
+
+Variable names inside the database container are case-sensitive. Do not add duplicate `POSTGRES_*`, `MYSQL_*`, `MARIADB_*`, or `MONGO_INITDB_*` entries to **Environment Variables** when the Compose definition already maps generated Service variables to those names.
+
+To verify or correct the configuration:
+
+1. Open the parent Service and select **Edit Compose File**.
+2. Find the database component and inspect its `environment` entries.
+3. Confirm that the required container-variable names in the table are present and mapped to the intended Service variables or values.
+4. To change a referenced value such as `SERVICE_PASSWORD_POSTGRES`, open **Configuration > Environment Variables**. Change a hard-coded value in the Compose file instead.
+5. Restart or deploy the Service so Coolify recreates the database container with the updated environment.
+6. Confirm that the database component is running, then open its backup schedule and select **Backup Now**.
+7. Inspect the execution status and message.
+
+Read [Service environment variables](/services/configuration/environment-variables) for details about generated, referenced, and hard-coded Compose values.
+
+A missing MySQL or MariaDB database-name variable can stop the job before Coolify creates a normal execution entry. If **Backup Now** produces no execution, confirm that the database is running and recheck the variables in the table.
+
 ## Set the backup scope
 
 Open a schedule to configure the databases included in each execution.

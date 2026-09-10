@@ -4,6 +4,7 @@
     "overview",
     "public-repositories",
     "deploy-keys",
+    "cursor-origin",
     "github",
     "gitlab",
     "bitbucket",

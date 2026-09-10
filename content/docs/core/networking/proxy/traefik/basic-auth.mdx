@@ -18,19 +18,21 @@ Choose the path that matches how the resource is deployed.
 <Tabs id="traefik-basic-auth-resource-type" items={['Standard application', 'Docker Compose or service']}>
 <Tab value="Standard application">
 
+### Automatic
+
 Coolify hashes the password and generates the Traefik middleware when you enable the built-in setting.
 
 <Steps>
 <Step>
 
-### Open the application settings
+#### Open the application settings
 
 Open the application, select **Configuration > General**, then find **HTTP Basic Authentication**.
 
 </Step>
 <Step>
 
-### Add the credentials
+#### Add the credentials
 
 Enable **HTTP Basic Authentication**, then enter a **Username** and **Password**. Save the application settings.
 
@@ -39,12 +41,63 @@ Keep **Readonly labels** enabled so Coolify continues to generate the proxy labe
 </Step>
 <Step>
 
-### Redeploy and verify
+#### Redeploy and verify
 
 Redeploy the application. Open its domain in a private browser window and confirm that the browser requests the new credentials before loading the application.
 
 </Step>
 </Steps>
+
+### Manual
+
+<Steps>
+<Step>
+
+#### Generate credentials
+
+Generate a bcrypt credential with `htpasswd`. On Debian or Ubuntu, the command is provided by the `apache2-utils` package:
+
+```bash
+htpasswd -nbB <username> '<password>'
+```
+
+</Step>
+<Step>
+#### Add the labels
+    Open the application **General** page, find **Container Labels**, then disable **Readonly labels**. Basic authentication takes two labels: one that **defines** the middleware and one that **attaches** it to the HTTPS router.
+
+    ```ini
+    traefik.enable=true
+    traefik.http.middlewares.http-basic-auth.basicauth.users=<username>:<bcrypt-hash> # [!code ++][!code focus]
+    traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+    traefik.http.routers.http-0-<uuid>.entryPoints=http
+    traefik.http.routers.http-0-<uuid>.middlewares=redirect-to-https
+    traefik.http.routers.http-0-<uuid>.rule=Host(`domain.com`) && PathPrefix(`/`)
+    traefik.http.routers.http-0-<uuid>.service=http-0-<uuid>
+    traefik.http.routers.https-0-<uuid>.entryPoints=https
+    traefik.http.routers.https-0-<uuid>.middlewares=http-basic-auth # [!code ++][!code focus]
+    traefik.http.routers.https-0-<uuid>.rule=Host(`domain.com`) && PathPrefix(`/`) # [!code focus]
+    traefik.http.routers.https-0-<uuid>.service=https-0-<uuid>
+    traefik.http.routers.https-0-<uuid>.tls.certresolver=letsencrypt
+    traefik.http.routers.https-0-<uuid>.tls=true
+    traefik.http.services.http-0-<uuid>.loadbalancer.server.port=3000
+    traefik.http.services.https-0-<uuid>.loadbalancer.server.port=3000
+    ```
+    If the HTTPS router already lists middleware such as `gzip`, append `,http-basic-auth` to the existing comma-separated value instead of replacing it.
+
+    See [Custom middlewares](/core/networking/proxy/traefik/custom-middlewares) for what disabling **Readonly labels** makes you responsible for.
+</Step>
+<Step>
+
+    #### Redeploy and verify
+
+    Redeploy the application. Open its domain in a private browser window and confirm that the browser requests the new credentials before loading the application.
+
+</Step>
+</Steps>
+<Callout type="warning" title="Do not store the plaintext password in labels">
+    Use only the `htpasswd` output in the Traefik label. Store the plaintext password in a password manager and rotate it by replacing the hash and redeploying the resource.
+</Callout>
 
 </Tab>
 <Tab value="Docker Compose or service">

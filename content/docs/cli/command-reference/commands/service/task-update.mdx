@@ -1,0 +1,33 @@
+---
+title: "Task update"
+description: "Update a service scheduled task"
+---
+
+# Task update
+
+Update a service scheduled task
+
+## Usage
+
+```sh
+coolify service task update <service_uuid> <task_uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--command` | `string` | No | — | Command to run |
+| `--container` | `string` | No | — | Container name to run the command in |
+| `--enabled` | `boolean` | No | `true` | Whether the task is enabled |
+| `--frequency` | `string` | No | — | Cron expression or frequency |
+| `--name` | `string` | No | — | Task name |
+| `--timeout` | `integer` | No | `300` | Timeout in seconds |
+
+## Get current help
+
+```sh
+coolify service task update --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

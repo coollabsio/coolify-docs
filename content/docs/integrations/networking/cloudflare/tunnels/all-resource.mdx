@@ -26,7 +26,8 @@ To follow this guide, you'll need:
 ## Before We Start
 
 - We assume you have Coolify running on your server.
-- If your app requires HTTPS for functionality like cookies or login, then you need to follow the [Full TLS HTTPS guide](/integrations/networking/cloudflare/tunnels/full-tls) after following this guide. This is because in this guide, Cloudflare will manage HTTPS externally, while your app will run over HTTP within Coolify.
+- This guide uses HTTPS between visitors and Cloudflare, and HTTP between Cloudflare Tunnel and the Coolify proxy.
+- For HTTPS on both connections, follow the [Full TLS HTTPS guide](/integrations/networking/cloudflare/tunnels/full-tls) instead.
 
 ## How It Works?
 
@@ -97,22 +98,7 @@ Click on continue button to create the tunnel.
 2. Select the server where your application is running, and check if the proxy is showing as running.
 
 
-## 4. Set Up TLS Encryption
-To make Cloudflare use stricter encryption when connecting to your server, configure your TLS encryption in Cloudflare:
-
-<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/all-resource/13.webp" />
-
-1. Go to **SSL/TLS** in Cloudflare.
-2. Select **Overview**.
-3. Click **Configure** button
-
-<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/all-resource/14.webp" />
-
-1. Choose **Full (Strict)** as the encryption mode.
-2. Click **Save** button
-
-
-## 5. Configure tunnel routes
+## 4. Configure tunnel routes
 
 <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/all-resource/8.webp" />
 
@@ -145,9 +131,9 @@ To make Cloudflare use stricter encryption when connecting to your server, confi
 </Callout>
 
 
-## 6. Configure your resource domain
+## 5. Configure your resource domain
 
-Enter the domain you want to use for your resource on Coolify and deploy your resource.
+Enter the domain you want to use for your resource in Coolify as HTTPS, for example `https://app.shadowarcanist.com`, and deploy your resource.
 
 <Tabs items={['Services', 'Application']}>
 
@@ -163,11 +149,15 @@ Enter the domain you want to use for your resource on Coolify and deploy your re
 </Tab>
 </Tabs>
 
-<Callout type="warn" title="HEADS UP!">
+<Callout type="warn" title="Disable Coolify's HTTPS redirect">
 
- You should enter the domain as **HTTP** because Cloudflare handles **HTTPS** and TLS terminations. If you use **HTTPS** for your resource, you may encounter a **TOO_MANY_REDIRECTS** error.
+On the resource's **Domains** page, set **Redirect HTTP to HTTPS** to **Disabled**.
 
-If your app requires **HTTPS** for features like cookies or login, follow the [Full TLS HTTPS Guide](/integrations/networking/cloudflare/tunnels/full-tls) after completing this guide.  
+This is required because the tunnel connects to Coolify using `http://localhost:80`. Cloudflare provides HTTPS to visitors, while Coolify receives HTTP from the tunnel. Leaving the redirect enabled can cause a **TOO_MANY_REDIRECTS** error.
+
+Keep the redirect enabled for normal Cloudflare orange-cloud proxying when Cloudflare connects to Coolify over HTTPS using **Full** or **Full (Strict)** SSL.
+
+To also use HTTPS between Cloudflare Tunnel and Coolify, follow the [Full TLS HTTPS guide](/integrations/networking/cloudflare/tunnels/full-tls) and configure the tunnel with an HTTPS service URL.
 
 </Callout>
 
@@ -187,7 +177,7 @@ You don't need to create new tunnels for each domain, just create a new routes w
 
 ## Known issues and Solutions
 
-When you create a new routes in [Step 5](/integrations/networking/cloudflare/tunnels/all-resource#5-configure-tunnel-routes), Cloudflare will create a DNS record for the hostname.
+When you create a new route in [Step 4](/integrations/networking/cloudflare/tunnels/all-resource#4-configure-tunnel-routes), Cloudflare will create a DNS record for the hostname.
 
 However, if a DNS record for the hostname already exists, Cloudflare won’t update existing record.
 

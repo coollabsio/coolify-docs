@@ -47,6 +47,15 @@ const teamMembers: TeamMember[] = [
     ],
   },
   {
+    name: 'Cynthia Ebert',
+    role: 'Developer, Community Moderator',
+    image: '/docs/images/team/cinzya.webp',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/Cinzya' },
+      { label: 'Website', href: 'https://cinzya.gg/' },
+    ],
+  },
+  {
     name: 'Aditya Tripathi',
     role: 'Developer, Community Moderator',
     image: '/docs/images/team/aditya.webp',

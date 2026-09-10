@@ -2,7 +2,9 @@
   "title": "Private Key",
   "pages": [
     "add",
+    "get",
     "list",
-    "remove"
+    "remove",
+    "update"
   ]
 }

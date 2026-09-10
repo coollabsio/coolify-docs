@@ -41,6 +41,12 @@
     "tag-add",
     "tag-list",
     "tag-remove",
+    "task-create",
+    "task-delete",
+    "task-execute",
+    "task-executions",
+    "task-list",
+    "task-update",
     "update"
   ]
 }

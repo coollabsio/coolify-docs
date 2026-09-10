@@ -1,6 +1,6 @@
 ---
 title: Domains
-description: Configure domains, HTTPS, target ports, paths, redirects, and generated domains for Coolify applications and services.
+description: Configure domains, HTTPS, target ports, paths, redirects, search engine indexing, and generated domains for Coolify applications and services.
 ---
 
 import { ArrowsRight, Globe3, Lock2, Route, ShieldSecurity2 } from 'reicon-react';
@@ -174,6 +174,42 @@ For a non-Docker Compose application, add both hostnames to **Domains** and crea
 | **Redirect to non-www** | Redirect the `www` hostname to the configured non-www hostname. |
 
 Coolify will not enable **Redirect to www** unless a `www` URL is present in **Domains**. The corresponding `www` DNS record must also resolve to the resource server.
+
+---
+
+## Control search engine indexing
+
+Coolify can mark individual application and service domains as **Noindex** without changing application code. The integrated Traefik or Caddy proxy then adds this response header for that domain:
+
+```http
+X-Robots-Tag: noindex, nofollow
+```
+
+A resource with several domains can keep its production domain indexable while marking a staging or temporary domain as noindex.
+
+1. Open the application or Service and select **Configuration > Domains**.
+2. Find the domain under **Search engine indexing**.
+3. Select **Noindex**. Select **Indexable** to remove the header.
+4. Redeploy the resource to apply the updated proxy configuration.
+5. Check the response header:
+
+```sh
+curl -sI https://staging.example.com | grep -i x-robots-tag
+```
+
+A noindex domain returns:
+
+```http
+x-robots-tag: noindex, nofollow
+```
+
+Preview deployment domains are always served as noindex. Removing a domain also removes its stored indexing selection; renaming a domain preserves the selection for the renamed domain.
+
+<Callout type="warning" title="Noindex does not make a domain private">
+Search crawlers can choose whether to honor this header, and anyone who knows the URL can still open it. Use authentication or network restrictions when access must be limited.
+</Callout>
+
+For applications, the selector is available while **Readonly Container Labels** is enabled. When you disable that setting and manage container labels yourself, add the equivalent `X-Robots-Tag` response header in your custom proxy labels.
 
 ---
 

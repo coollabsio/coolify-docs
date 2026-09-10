@@ -21,9 +21,11 @@
     "teams",
     "private-key",
     "tag",
+    "mcp",
     "completion",
     "config",
     "version",
-    "update"
+    "update",
+    "settings"
   ]
 }

@@ -17,13 +17,14 @@
   "private": true,
   "scripts": {
     "generate:cli-reference": "node scripts/generate-cli-command-reference.mjs",
+    "generate:openapi": "node scripts/fetch-openapi.mjs",
     "generate:services:data": "node scripts/generate-service-list.mjs",
     "generate:services:page": "node scripts/generate-services-page.mjs",
     "generate:services": "node scripts/generate-service-list.mjs && node scripts/generate-services-page.mjs",
     "generate:content": "node scripts/generate-fumadocs-content.mjs",
-    "dev": "bun run generate:cli-reference && bun run generate:services && vite dev",
+    "dev": "bun run generate:cli-reference && bun run generate:openapi && bun run generate:services && vite dev",
     "dev:atlas": "atlas --root .",
-    "build": "NODE_ENV=production bun run generate:cli-reference && NODE_ENV=production bun run generate:services && NODE_ENV=production vite build && NODE_ENV=production bun run scripts/postbuild.ts",
+    "build": "NODE_ENV=production bun run generate:cli-reference && NODE_ENV=production bun run generate:openapi && NODE_ENV=production bun run generate:services && NODE_ENV=production vite build && NODE_ENV=production bun run scripts/postbuild.ts",
     "preview": "vite preview",
     "types:check": "bun run generate:services && bunx fumadocs-mdx && tsc --noEmit"
   },

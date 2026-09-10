@@ -18,17 +18,18 @@ Choose the path that matches how the resource is deployed.
 <Tabs id="caddy-basic-auth-resource-type" items={['Standard application', 'Docker Compose or service']}>
 <Tab value="Standard application">
 
+### Automatic
 <Steps>
 <Step>
 
-### Open the application settings
+#### Open the application settings
 
 Open the application, select **Configuration > General**, then find **HTTP Basic Authentication**.
 
 </Step>
 <Step>
 
-### Add the credentials
+#### Add the credentials
 
 Enable **HTTP Basic Authentication**, then enter a **Username** and **Password**. Save the application settings.
 
@@ -37,17 +38,49 @@ Coolify hashes the password and adds a `caddy_<index>.basicauth.<username>` labe
 </Step>
 <Step>
 
-### Redeploy and verify
+#### Redeploy and verify
 
 Redeploy the application. Open its domain in a private browser window and confirm that the browser requests the new credentials before loading the application.
+
+</Step>
+</Steps>
+### Manual
+
+<Steps>
+<Step>
+#### Generate credentials
+    Generate a bcrypt hash with the Caddy CLI:
+
+    ```bash
+    caddy hash-password --plaintext '<password>'
+    ```
+</Step>
+<Step>
+#### Add the label
+Open the application **General** page, find **Container Labels**, then disable **Readonly labels**. Add one `basicauth` label matching the index Coolify already generated for you domain:
+
+```ini
+caddy_0.basicauth.<username>="<bcrypt-hash>" # [!code ++][!code focus]
+caddy_0.encode=zstd gzip
+caddy_0.handle.0_reverse_proxy={{upstreams 3000}}
+caddy_0.handle=/*
+caddy_0.header=-Server
+caddy_0.try_files={path} /index.html /index.php
+caddy_0=https://domain.com # [!code focus]
+caddy_ingress_network=coolify
+```
+</Step>
+<Step>
+
+    #### Redeploy and verify
+
+    Redeploy the application. Open its domain in a private browser window and confirm that the browser requests the new credentials before loading the application.
 
 </Step>
 </Steps>
 
 </Tab>
 <Tab value="Docker Compose or service">
-
-Add Caddy basic authentication manually when the resource does not expose the built-in setting.
 
 Generate a bcrypt hash with the Caddy CLI:
 
