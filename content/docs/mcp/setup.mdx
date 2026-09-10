@@ -20,12 +20,12 @@ An MCP client can use every operation allowed by its token. Store the token in t
 
 ## Example values
 
-Use your own instance URL and token when following this guide:
+This guide uses Coolify Cloud in its examples. If you use a self-hosted Coolify instance, replace `app.coolify.io` with your instance's domain in every URL, and use your own token:
 
 <Callout type="info" title="Example data">
 
-- **Coolify URL:** `https://coolify.shadowarcanist.com`
-- **MCP endpoint:** `https://coolify.shadowarcanist.com/mcp`
+- **Coolify URL:** `https://app.coolify.io`
+- **MCP endpoint:** `https://app.coolify.io/mcp`
 - **API token:** `67|abcthisisa123dummytoken`
 
 </Callout>
@@ -54,10 +54,10 @@ MCP must also be enabled in the current team's settings. Open team settings and 
 </Tab>
 <Tab value="API">
 
-Use a `root` API token to enable or disable the instance endpoint:
+On a self-hosted instance, use a `root` API token to enable or disable the instance endpoint. Replace the example URL with your instance's domain:
 
 ```sh
-export COOLIFY_URL="https://coolify.shadowarcanist.com"
+export COOLIFY_URL="https://coolify.example.com"
 export COOLIFY_ROOT_TOKEN="67|abcthisisa123dummytoken"
 
 curl --fail-with-body --request POST \
@@ -89,7 +89,7 @@ Coolify displays the complete token only once. Copy it into the client's secret 
 MCP endpoint URL:
 
 ```txt
-https://coolify.shadowarcanist.com/mcp
+https://app.coolify.io/mcp
 ```
 
 </Step>
@@ -99,7 +99,7 @@ https://coolify.shadowarcanist.com/mcp
 
 Configure the client with:
 
-- **URL:** `https://coolify.shadowarcanist.com/mcp`
+- **URL:** `https://app.coolify.io/mcp`
 - **Transport:** Streamable HTTP
 - **Authorization:** `Bearer 67|abcthisisa123dummytoken`
 
