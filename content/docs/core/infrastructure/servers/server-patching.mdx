@@ -107,4 +107,16 @@ The weekly check only reports available updates. It does not install them.
 
 ## Supported package managers
 
-Server Patching currently supports APK, APT, DNF, Zypper, and Pacman.
+Server Patching currently supports APK, APT, DNF, Pacman, and Zypper. Coolify reads `/etc/os-release` on the server to pick the package manager.
+
+| Package manager | Operating systems |
+| --- | --- |
+| APK | Alpine Linux |
+| APT | Ubuntu, Debian, Raspberry Pi OS, Pop!_OS, Linux Mint, Zorin OS |
+| DNF | Fedora, CentOS, RHEL, Rocky Linux, AlmaLinux, Oracle Linux, Amazon Linux |
+| Pacman | Arch Linux, Manjaro, EndeavourOS |
+| Zypper | SLES, openSUSE Leap, openSUSE Tumbleweed |
+
+<Callout type="warning" title="Alpine Linux needs a newer Coolify version">
+APK support is not included in Coolify v4.3.19 or earlier. On those versions, **Check for Updates** on an Alpine Linux server shows an **Unsupported package manager** error.
+</Callout>
