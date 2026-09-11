@@ -102,26 +102,26 @@ This skeleton shows the required input and an example HTTPS output. Replace the 
 
 ```ini
 [SERVICE]
-    Flush        5
-    Daemon       off
-    Log_Level    info
-    Parsers_File parsers.conf
+  Flush        5
+  Daemon       off
+  Log_Level    info
+  Parsers_File parsers.conf
 
 [INPUT]
-    Name              forward
-    Listen            0.0.0.0
-    Port              24224
-    Buffer_Chunk_Size 1M
-    Buffer_Max_Size   6M
+  Name              forward
+  Listen            0.0.0.0
+  Port              24224
+  Buffer_Chunk_Size 1M
+  Buffer_Max_Size   6M
 
 [OUTPUT]
-    Name   http
-    Match  *
-    Host   logs.example.com
-    Port   443
-    URI    /ingest
-    format json
-    tls    On
+  Name   http
+  Match  *
+  Host   logs.example.com
+  Port   443
+  URI    /ingest
+  format json
+  tls    On
 ```
 
 The example is not a complete configuration for a specific provider. Add the provider's required header, token, payload, retry, and TLS options before enabling the drain.
@@ -138,19 +138,19 @@ For example, add this parser definition to **Custom Parser Configuration**:
 
 ```ini
 [PARSER]
-    Name   app_json
-    Format json
+  Name   app_json
+  Format json
 ```
 
 Then add a parser filter to **Custom FluentBit Configuration**:
 
 ```ini
 [FILTER]
-    Name         parser
-    Match        *
-    Key_Name     log
-    Parser       app_json
-    Reserve_Data On
+  Name         parser
+  Match        *
+  Key_Name     log
+  Parser       app_json
+  Reserve_Data On
 ```
 
 This example parses JSON stored in the incoming `log` field and preserves the other record fields.
