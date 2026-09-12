@@ -1367,6 +1367,13 @@
     "category": "Email"
   },
   {
+    "name": "Open Mercato",
+    "slug": "open-mercato",
+    "icon": "/docs/images/services/open-mercato-logo.svg",
+    "description": "Modular business platform with CRM, sales, and commerce.",
+    "category": "Business"
+  },
+  {
     "name": "Open Webui",
     "slug": "open-webui",
     "icon": "/docs/images/services/openwebui-logo.svg",
