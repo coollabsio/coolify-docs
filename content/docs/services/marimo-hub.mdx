@@ -1,0 +1,126 @@
+---
+title: "Marimo Hub"
+description: "Collaborative Marimo notebooks with isolated Docker compute and SeaweedFS object storage."
+og:
+  description: "Deploy Marimo Hub on Coolify with OIDC authentication, isolated notebook sandboxes, durable SeaweedFS storage, managed AI, integrations, and an authenticated storage dashboard."
+category: "Development"
+icon: "/docs/images/services/marimo-logo.svg"
+---
+
+<ZoomImage src="/docs/images/services/marimo-logo.svg" alt="Marimo logo" />
+
+## What is Marimo Hub?
+
+Marimo Hub stores, runs, and shares [Marimo](https://marimo.io/) notebooks for a team. The Coolify service includes the Hub, OIDC authentication, one isolated Docker container per notebook session, durable S3-compatible storage, and an authenticated storage dashboard.
+
+<ZoomImage src="/docs/images/services/marimo-hub-dashboard.webp" alt="Marimo Hub notebook editor with the file browser and a Python cell result" />
+
+## Deployment architecture
+
+The template creates two public URLs:
+
+- **Marimo Hub URL** serves the dashboard, OIDC callback, notebook editor, and authenticated kernel proxy.
+- **Storage Admin URL** serves the SeaweedFS administration interface.
+
+Notebook state is stored in a SeaweedFS S3 bucket. Notebook kernels run inside a dedicated Docker-in-Docker engine with TLS. The host Docker socket and kernel ports stay private.
+
+The Docker engine component runs privileged because nested Docker requires it. Deploy this service on an AMD64 server with enough CPU, memory, and disk for the configured notebook profiles.
+
+## First login
+
+Open **Environment Variables** in Coolify and copy these generated values:
+
+| Variable | Use |
+| --- | --- |
+| `ADMIN_EMAIL` | Built-in Dex administrator email |
+| `SERVICE_PASSWORD_ADMIN` | Built-in Dex administrator password |
+| `SERVICE_USER_STORAGEADMIN` | SeaweedFS Admin username |
+| `SERVICE_PASSWORD_STORAGEADMIN` | SeaweedFS Admin password |
+
+The built-in Dex identity provider creates one local Marimo Hub administrator. Restart the service after changing an administrator credential.
+
+For team access, connect an external OIDC provider and configure:
+
+```dotenv
+MARIMOHUB_AUTH_OIDC_ISSUER=https://accounts.example.com
+MARIMOHUB_OIDC_CLIENT_ID=marimohub
+SERVICE_PASSWORD_64_OIDC=<oidc-client-secret>
+MARIMOHUB_AUTH_ALLOWED_EMAIL_DOMAINS=example.com
+```
+
+Register this callback URL with the provider:
+
+```text
+https://<your-marimo-hub-domain>/api/auth/callback
+```
+
+## Access and session policy
+
+The template starts with membership-gated projects and static viewer output:
+
+| Variable | Default | Behavior |
+| --- | --- | --- |
+| `MARIMOHUB_DEFAULT_ROLE` | `none` | Users see projects they own or explicitly belong to. |
+| `MARIMOHUB_VIEWER_MODE` | `static` | Viewers receive the latest captured HTML without a kernel. |
+| `MARIMOHUB_EDITOR_SANDBOX_SHARING` | `shared` | Project editors share one persistent sandbox per notebook. |
+| `MARIMOHUB_PERSIST_WORKSPACE` | `source` | Sessions persist `notebook.py` and `pyproject.toml`. Use `workspace` to persist runtime files too. |
+| `MARIMOHUB_MAX_SESSIONS_PER_USER` | `5` | Caps concurrent sessions per user. |
+| `MARIMOHUB_SESSION_IDLE_TIMEOUT_SECONDS` | `1800` | Saves and stops an idle session after 30 minutes. |
+| `MARIMOHUB_SESSION_SNAPSHOT_INTERVAL_SECONDS` | `120` | Saves changed live sessions every two minutes. |
+
+`MARIMOHUB_COMPUTE_PROFILES` controls the CPU and memory choices shown when a notebook is created. The default value provides `standard` with 1 CPU and 2 GiB, plus `large` with 2 CPUs and 4 GiB.
+
+## Optional features
+
+### Managed AI
+
+Set the following variables to provide Marimo AI features through an OpenAI-compatible endpoint. The provider key stays in the Hub and each sandbox receives a short-lived session token.
+
+```dotenv
+MARIMOHUB_AI_BACKEND=openai-compatible
+MARIMOHUB_AI_UPSTREAM_BASE_URL=https://api.openai.com/v1
+MARIMOHUB_AI_UPSTREAM_API_KEY=<provider-key>
+MARIMOHUB_AI_MODEL=<model-id>
+```
+
+Use `MARIMOHUB_AI_ALLOWED_MODELS`, `MARIMOHUB_AI_MAX_TOKENS`, `MARIMOHUB_AI_RULES`, and `MARIMOHUB_AI_TOKEN_TTL_SECONDS` to constrain the notebook assistant.
+
+### Data integrations
+
+Integrations and the data browser are enabled with guarded network access. `MARIMOHUB_INTEGRATIONS_PROBE=guarded` permits public destinations and rejects private network ranges. Use `private` for operator-controlled services on a private network.
+
+The template generates `MARIMOHUB_SECRETS_KEK`, which encrypts inline integration secrets in object storage. Preserve this value in backups because existing secrets cannot be decrypted after it is lost.
+
+### GitHub source control
+
+Set `MARIMOHUB_SOURCE_CONTROL_GITHUB_APP_ID` and `MARIMOHUB_SOURCE_CONTROL_GITHUB_APP_PRIVATE_KEY` to enable repository sync and draft pull request publishing. The private key accepts PEM or single-line base64.
+
+### Notifications
+
+`MARIMOHUB_NOTIFY_BACKENDS` accepts `smtp`, `slack`, and `webhook`. Configure the matching `MARIMOHUB_NOTIFY_SMTP_*`, `MARIMOHUB_NOTIFY_SLACK_*`, or `MARIMOHUB_NOTIFY_WEBHOOK_*` variables before enabling a backend.
+
+## Operations
+
+After signing in, open `/api/health?deep=true` on the Marimo Hub URL. A healthy response checks object storage conditional writes, OIDC discovery, Docker compute, sandbox configuration, secret handling, and the data preview runtime.
+
+Back up these persistent volumes and the Coolify environment variables:
+
+- `marimohub-seaweedfs-data`
+- `marimohub-dex-data`
+- `marimohub-seaweedfs-admin-data`
+
+The Docker data volume caches sandbox images and can be rebuilt from the pinned image.
+
+When a notebook changes its own `marimo` dependency, stop and restart that sandbox before reopening editor panels. Set `MARIMOHUB_COMPUTE_IMAGE` to a compatible sandbox image when the deployment standardizes on another Marimo version.
+
+## Security
+
+The template uses authenticated proxy exposure because Coolify provides one public Hub hostname. Notebook-authored JavaScript therefore runs on the Hub origin. Use this deployment model for trusted teams and review [Marimo Hub's kernel exposure guidance](https://github.com/marimo-team/marimohub/blob/main/docs/security.md#kernel-exposure) before widening viewer access.
+
+## Links
+
+- [Marimo Hub documentation](https://github.com/marimo-team/marimohub/tree/main/docs)
+- [Configuration reference](https://github.com/marimo-team/marimohub/blob/main/docs/configuration.md)
+- [GitHub repository](https://github.com/marimo-team/marimohub)
+- [Marimo documentation](https://docs.marimo.io/)
+- [SeaweedFS documentation](https://github.com/seaweedfs/seaweedfs/wiki)
