@@ -1325,6 +1325,13 @@
     "category": "Monitoring"
   },
   {
+    "name": "Obsidian",
+    "slug": "obsidian",
+    "icon": "/docs/images/services/obsidian-logo.svg",
+    "description": "A note-taking app that lets you create, link, and organize your notes with hundreds of plugins and themes.",
+    "category": "Productivity"
+  },
+  {
     "name": "Odoo",
     "slug": "odoo",
     "icon": "/docs/images/services/odoo-logo.svg",
