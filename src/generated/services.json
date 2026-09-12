@@ -21,6 +21,13 @@
     "category": "Productivity"
   },
   {
+    "name": "Airbyte",
+    "slug": "airbyte",
+    "icon": "/docs/images/services/airbyte-logo.svg",
+    "description": "Open-source data movement for ELT pipelines and AI agents.",
+    "category": "Analytics"
+  },
+  {
     "name": "Alexandrie",
     "slug": "alexandrie",
     "icon": "/docs/images/services/alexandrie-logo.svg",
