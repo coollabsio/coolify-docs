@@ -103,7 +103,7 @@ const supportWorkflows = [
 
 export function SupportPage() {
   return (
-    <CoolDocsPage data-support-page hideToc>
+    <CoolDocsPage data-support-page>
       <CoolCallout icon={ArrowsRight} title="The short version">
         <p>
           Start with the Discord support forum for most questions. If you use Coolify Cloud or need
