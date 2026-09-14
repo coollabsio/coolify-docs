@@ -1,0 +1,87 @@
+---
+title: "Stalwart"
+description: "All-in-one mail server with SMTP, IMAP, POP3, JMAP, Sieve, built-in anti-spam, and a web admin interface."
+og:
+  description: "Deploy Stalwart mail server on Coolify for a complete email solution with SMTP, IMAP, POP3, JMAP, built-in spam filtering, DKIM signing, and web administration."
+category: "Email"
+icon: "/docs/images/services/stalwart-logo.svg"
+---
+
+# Stalwart
+
+<ZoomImage src="/docs/images/services/stalwart-logo.svg" alt="Stalwart logo" />
+
+## What is Stalwart
+
+Stalwart is an all-in-one mail and collaboration server written in Rust. It replaces the traditional stack of separate components (MTA, IMAP server, spam filter, calendar server) with a single platform that supports SMTP, IMAP, POP3, JMAP, CalDAV, CardDAV, and WebDAV.
+
+## Configuring Stalwart
+
+The following steps will guide you through the configuration of Stalwart once you have created the service in Coolify.
+
+### Initial setup
+
+1. Coolify auto-generates a service URL for the admin interface (from `SERVICE_URL_STALWART_8080`). You can access the admin panel immediately. However, for sending and receiving email you will need your own domain — see the DNS records section below.
+2. Open `/admin` on the service URL and log in with username `admin`. On first start, Stalwart runs in bootstrap mode and prints a temporary administrator password to the container logs (it is only shown once). To retrieve it:
+   - Open the **Logs** of the Stalwart service in Coolify, or
+   - SSH into your server and run `docker logs <container-name>`.
+
+   To use a fixed password instead, add `STALWART_RECOVERY_ADMIN=admin:<your-password>` to the service environment variables before the first deployment. Remove it once setup is complete.
+3. Follow the setup wizard to add your domain and create your first mailbox.
+4. Create additional mailboxes under **Accounts** > **Mailboxes**.
+
+### DNS records
+
+For Stalwart to send and receive email, configure these DNS records at your domain registrar:
+
+| Record | Type | Value |
+|--------|------|-------|
+| MX | MX | `mail.yourdomain.com` (priority 10) |
+| SPF | TXT | `v=spf1 mx ~all` |
+| DKIM | TXT | Generated in Stalwart under **Settings** > **MTA** > **DKIM** |
+| DMARC | TXT | `v=DMARC1; p=quarantine; rua=mailto:admin@yourdomain.com` |
+
+For PTR (reverse DNS), set it through your VPS provider's control panel so your server's IP resolves to your mail server hostname. See your provider's guide:
+
+- [Hetzner: Reverse DNS](https://docs.hetzner.com/de/networking/dns/technical-concepts/architecture/#reverse-dns-rdns)
+- [Contabo: How to set Reverse DNS](https://contabo.com/blog/contabo-dns-rdns-management-setup-guide/)
+
+### Troubleshooting
+
+If you get a **502 Bad Gateway** error when accessing the admin interface, Stalwart is likely rate-limiting your reverse proxy (Traefik). Since Traefik proxies many connections through a single IP, it can trigger Stalwart's port scanning protection.
+
+#### Find your reverse proxy network
+
+SSH into your server or use the Coolify terminal and run:
+
+```bash
+docker inspect coolify-proxy | grep -A 5 "Networks"
+```
+
+Look for `IPv4Address` in the output. If it shows `10.0.1.6/24`, your network is `10.0.1.0/24`.
+
+#### Recover access
+
+If you are already locked out:
+
+1. Add `STALWART_RECOVERY_MODE=1` and `STALWART_RECOVERY_ADMIN=admin:<your-password>` to your environment variables and redeploy. Remove both once you have regained access.
+2. Go to **Settings** > **Security** > **Blocked IPs** and remove the blocked IP.
+
+<ZoomImage src="/docs/images/services/stalwart-blocked-ips.webp" alt="Stalwart blocked IPs page" />
+
+#### Whitelist your reverse proxy network
+
+1. Go to **Security** > **IP Allowlist** in the Stalwart admin panel.
+2. Add your Traefik network (e.g., `10.0.1.0/24`). Alternatively, add `10.0.0.0/8` to trust all Docker networks.
+3. Set the reason to whatever you want (e.g. Traefik reverse proxy).
+
+<ZoomImage src="/docs/images/services/stalwart-allowed-ips.webp" alt="Stalwart allowed IPs page" />
+
+4. Go to **Settings** > **Network** > **Services** > **HTTP** > **General** and enable **Obtain remote IP from Forwarded header**.
+
+<ZoomImage src="/docs/images/services/stalwart-forwarded-header.webp" alt="Stalwart forwarded header setting" />
+
+## Links
+
+- [GitHub](https://github.com/stalwartlabs/stalwart?utm_source=coolify.io)
+- [Documentation](https://stalw.art/docs/install/platform/docker?utm_source=coolify.io)

@@ -11,6 +11,7 @@
     "sources/overview",
     "sources/public-repositories",
     "sources/deploy-keys",
+    "sources/cursor-origin",
     "sources/github",
     "sources/gitlab",
     "sources/bitbucket",
