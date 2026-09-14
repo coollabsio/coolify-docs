@@ -1,0 +1,40 @@
+---
+title: "Casdoor"
+description: "An open-source Identity and Access Management (IAM) and single sign-on (SSO) platform with a web UI."
+og:
+  description: "Run Casdoor on Coolify as a self-hosted identity provider with OAuth 2.0, OIDC, SAML, CAS, LDAP, SCIM, WebAuthn and MFA support."
+category: "Security"
+icon: "/docs/images/services/casdoor-logo.png"
+---
+
+<ZoomImage src="https://cdn.casbin.org/img/casdoor.png" alt="Casdoor" />
+
+## What is Casdoor?
+
+Casdoor is an open-source identity and access management platform built by the Casbin community. It is a complete identity provider rather than an authentication proxy or an embedded library: it stores your users, issues the tokens, and ships with an admin console, so your applications can delegate login entirely and never handle a password themselves.
+
+- **One server, many protocols.** The same user directory is reachable over OAuth 2.0, OIDC, SAML 2.0, CAS, LDAP and SCIM 2.0, so a modern SPA and a legacy CAS-only application can share one set of accounts.
+- **Sign-in methods.** Password, email and SMS codes, WebAuthn/passkeys, TOTP and MFA, plus social and enterprise identity providers such as Google, GitHub and Microsoft Entra ID.
+- **Multi-tenancy.** Independent organizations, each with their own users and branding.
+- **Policy-based authorization.** Access rules are expressed with [Casbin](https://casbin.org/) — ACL, RBAC, ABAC and custom models.
+- **Everything is editable in the UI.** Organizations, applications, providers, sign-in methods, email and SMS templates and login-page branding are configured in the web console instead of in files you have to redeploy.
+
+Casdoor is written in Go and React and released under the Apache License 2.0. It is listed in the [CNCF Cloud Native Landscape](https://landscape.cncf.io/?item=provisioning--security-compliance--casdoor) under Provisioning → Security & Compliance.
+
+## After deployment
+
+The service starts with the built-in demo credentials, so the first thing to do is change them:
+
+| Field        | Value      |
+| ------------ | ---------- |
+| Organization | `built-in` |
+| Username     | `admin`    |
+| Password     | `123`      |
+
+Sign in, change the `admin` password, then create an Application in the console and point your app's OAuth/OIDC client at Casdoor.
+
+## Links
+
+- [The official website](https://casdoor.ai)
+- [Documentation](https://casdoor.ai/docs/overview)
+- [GitHub](https://github.com/casdoor/casdoor)
