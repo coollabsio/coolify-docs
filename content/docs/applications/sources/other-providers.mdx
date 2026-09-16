@@ -21,7 +21,7 @@ The manual provider webhooks in Coolify have provider-specific payload and signa
 For another provider, use its CI or workflow system to call **Deploy Webhook (auth required)** after the required checks pass:
 
 ```bash
-curl --fail --request GET "$COOLIFY_WEBHOOK" \
+curl --fail --request POST "$COOLIFY_WEBHOOK" \
   --header "Authorization: Bearer $COOLIFY_TOKEN"
 ```
 

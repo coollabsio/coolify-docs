@@ -107,7 +107,7 @@ The URL identifies the application. The API token authorizes the request.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/actions/6.webp" alt="COOLIFY_WEBHOOK repository secret" />
 
-4. Create `COOLIFY_WEBHOOK` with the authenticated deploy webhook URL.
+1. Create `COOLIFY_WEBHOOK` with the authenticated deploy webhook URL.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/actions/7.webp" alt="New repository secret action after saving the webhook" />
 
@@ -165,7 +165,7 @@ jobs:
 
       - name: Trigger Coolify deployment
         run: |
-          curl --fail --request GET '${{ secrets.COOLIFY_WEBHOOK }}' \
+          curl --fail --request POST '${{ secrets.COOLIFY_WEBHOOK }}' \
             --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
 ```
 
