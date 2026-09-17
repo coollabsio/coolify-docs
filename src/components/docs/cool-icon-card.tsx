@@ -1,4 +1,5 @@
 import type React from 'react';
+import Link from 'fumadocs-core/link';
 import { cn } from '@/lib/ui/cn';
 import type { CoolIcon } from './cool-types';
 
@@ -64,12 +65,12 @@ export function CoolIconCard({ description, href, icon: Icon, title }: CoolIconC
 
   if (href) {
     return (
-      <a
+      <Link
         href={href}
         className="group flex gap-3 rounded-lg border border-fd-border bg-fd-background/70 p-4 shadow-sm transition hover:bg-fd-muted/35"
       >
         {content}
-      </a>
+      </Link>
     );
   }
 
