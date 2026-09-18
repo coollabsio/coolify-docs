@@ -1,15 +1,8 @@
 import type React from 'react';
+import { CoolLink } from './cool-link';
 
 const inlineTokenPattern = /(`([^`]+)`)|\[([^\]]+)\]\(([^)\s]+)\)/g;
 const urlPattern = /^https?:\/\/[^\s]+$/;
-
-function linkProps(href: string) {
-  if (href.startsWith('http://') || href.startsWith('https://')) {
-    return { href, rel: 'noreferrer noopener', target: '_blank' };
-  }
-
-  return { href };
-}
 
 export function renderCoolInlineContent(content: React.ReactNode): React.ReactNode {
   if (typeof content !== 'string') {
@@ -35,9 +28,9 @@ export function renderCoolInlineContent(content: React.ReactNode): React.ReactNo
       );
     } else if (label && href) {
       parts.push(
-        <a key={`${href}-${match.index}`} {...linkProps(href)}>
+        <CoolLink key={`${href}-${match.index}`} href={href}>
           {label}
-        </a>,
+        </CoolLink>,
       );
     }
 
@@ -53,7 +46,7 @@ export function renderCoolInlineContent(content: React.ReactNode): React.ReactNo
 
 export function renderCoolLinkValue(content: React.ReactNode): React.ReactNode {
   if (typeof content === 'string' && urlPattern.test(content)) {
-    return <a {...linkProps(content)}>{content}</a>;
+    return <CoolLink href={content}>{content}</CoolLink>;
   }
 
   return renderCoolInlineContent(content);
