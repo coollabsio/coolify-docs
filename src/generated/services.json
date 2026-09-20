@@ -1041,6 +1041,13 @@
     "disabled": true
   },
   {
+    "name": "LiveKit",
+    "slug": "livekit",
+    "icon": "/docs/images/services/livekit.png",
+    "description": "Self-host a LiveKit real-time audio and video server.",
+    "category": "Communication"
+  },
+  {
     "name": "LobeChat",
     "slug": "lobe-chat",
     "icon": "/docs/images/services/lobechat-logo.webp",
