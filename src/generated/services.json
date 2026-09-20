@@ -1043,7 +1043,7 @@
   {
     "name": "LiveKit",
     "slug": "livekit",
-    "icon": "/docs/images/services/livekit.png",
+    "icon": "/docs/images/services/livekit.svg",
     "description": "Self-host a LiveKit real-time audio and video server.",
     "category": "Communication"
   },
