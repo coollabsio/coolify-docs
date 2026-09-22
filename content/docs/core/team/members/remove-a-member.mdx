@@ -1,0 +1,71 @@
+---
+title: Remove a Member
+description: Remove a person from a Coolify team without deleting their account or the team's resources.
+---
+
+# Remove a member
+
+Removing a member ends their membership in the active team. Their Coolify account and any other team memberships remain available.
+
+## Before you remove a member
+
+You must be an **Owner** or **Admin** in the active team.
+
+The role hierarchy limits who you can remove:
+
+- Owners can remove any other team member, including another Owner.
+- Admins can remove Admins and Members, but not Owners.
+- You cannot remove yourself from the **Members** page.
+
+Confirm that the person no longer needs access to the team's projects, servers, credentials, shared variables, or other resources.
+
+---
+
+## Remove the member
+
+<Callout type="warning" title="Removal takes effect immediately">
+The **Remove** action does not open a confirmation step. Confirm the person's name, email address, and role before selecting it.
+</Callout>
+
+<Steps>
+<Step>
+
+### Open the member list
+
+1. Confirm that the intended team is active.
+2. Select **Teams** in the Coolify sidebar.
+3. Select **Members**.
+
+</Step>
+<Step>
+
+### Select Remove
+
+Find the person by name and email address, then select **Remove** in their row.
+
+Coolify removes the team membership and revokes API tokens that belong to that user and team.
+
+</Step>
+<Step>
+
+### Confirm the removal
+
+Verify that the person's row no longer appears in the member list.
+
+The removed person can no longer work in that team. If they are signed in, Coolify clears the unavailable active-team selection when their next request checks membership.
+
+</Step>
+</Steps>
+
+---
+
+## What removal changes
+
+Removing a member does not:
+
+- delete their Coolify account
+- remove them from other teams
+- delete projects, servers, applications, databases, services, or settings owned by this team
+- transfer team resources to another person
+
+To restore access later, [invite the person again](/core/team/members/add-a-member) and select the role they should receive.

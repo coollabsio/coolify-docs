@@ -1,7 +1,7 @@
 [
   {
-    "name": "API Reference - Authorization",
-    "link": "https://coolify.io/docs/api-reference/authorization"
+    "name": "API Reference - Overview",
+    "link": "https://coolify.io/docs/api/overview"
   },
   {
     "name": "Docker Compose Build Packs",
@@ -101,27 +101,27 @@
   },
   {
     "name": "Cloudflare - Cloudflare DDoS Protection",
-    "link": "https://coolify.io/docs/integrations/cloudflare/ddos-protection"
+    "link": "https://coolify.io/docs/integrations/security/cloudflare/ddos-protection"
   },
   {
     "name": "Cloudflare - Access All Resource via Cloudflare Tunnels",
-    "link": "https://coolify.io/docs/integrations/cloudflare/tunnels/all-resource"
+    "link": "https://coolify.io/docs/integrations/networking/cloudflare/tunnels/all-resource"
   },
   {
     "name": "Cloudflare - Full HTTPS/TLS Setup for All Resources",
-    "link": "https://coolify.io/docs/integrations/cloudflare/tunnels/full-tls"
+    "link": "https://coolify.io/docs/integrations/networking/cloudflare/tunnels/full-tls"
   },
   {
     "name": "Cloudflare - Cloudflare Tunnels",
-    "link": "https://coolify.io/docs/integrations/cloudflare/tunnels"
+    "link": "https://coolify.io/docs/integrations/networking/cloudflare/tunnels"
   },
   {
     "name": "Cloudflare - Server SSH Access via Cloudflare Tunnels",
-    "link": "https://coolify.io/docs/integrations/cloudflare/tunnels/server-ssh"
+    "link": "https://coolify.io/docs/integrations/networking/cloudflare/tunnels/server-ssh"
   },
   {
     "name": "Cloudflare - Access Single Resource via Cloudflare Tunnels",
-    "link": "https://coolify.io/docs/integrations/cloudflare/tunnels/single-resource"
+    "link": "https://coolify.io/docs/integrations/networking/cloudflare/tunnels/single-resource"
   },
   {
     "name": "Integrations - MCP Server",
@@ -160,20 +160,24 @@
     "link": "https://coolify.io/docs/knowledge-base/delete-user"
   },
   {
-    "name": "Destinations - Creating Destinations",
-    "link": "https://coolify.io/docs/knowledge-base/destinations/create"
+    "name": "Destinations - Create a Destination",
+    "link": "https://coolify.io/docs/core/networking/destinations/create"
   },
   {
-    "name": "Destinations - Introduction",
-    "link": "https://coolify.io/docs/knowledge-base/destinations"
+    "name": "Destinations - Overview",
+    "link": "https://coolify.io/docs/core/networking/destinations/overview"
   },
   {
-    "name": "Destinations - Managing Destinations",
-    "link": "https://coolify.io/docs/knowledge-base/destinations/manage"
+    "name": "Destinations - Manage Destinations",
+    "link": "https://coolify.io/docs/core/networking/destinations/manage"
+  },
+  {
+    "name": "Destinations - Delete Destination",
+    "link": "https://coolify.io/docs/core/networking/destinations/delete"
   },
   {
     "name": "Knowledge Base - DNS Configuration",
-    "link": "https://coolify.io/docs/knowledge-base/dns-configuration"
+    "link": "https://coolify.io/docs/core/networking/dns"
   },
   {
     "name": "Docker - Docker Compose",
@@ -193,7 +197,7 @@
   },
   {
     "name": "Knowledge Base - Domains",
-    "link": "https://coolify.io/docs/knowledge-base/domains"
+    "link": "https://coolify.io/docs/core/networking/domains"
   },
   {
     "name": "Knowledge Base - Drain Logs",
@@ -264,16 +268,16 @@
     "link": "https://coolify.io/docs/knowledge-base/nodejs-multi-core-scaling"
   },
   {
-    "name": "Knowledge Base - Notifications",
-    "link": "https://coolify.io/docs/knowledge-base/notifications"
+    "name": "Notifications - Overview",
+    "link": "https://coolify.io/docs/core/notifications/overview"
   },
   {
-    "name": "Knowledge Base - OAuth",
-    "link": "https://coolify.io/docs/knowledge-base/oauth"
+    "name": "Authentication - OAuth",
+    "link": "https://coolify.io/docs/core/security/authentication/oauth/overview"
   },
   {
-    "name": "Knowledge Base - Persistent Storage",
-    "link": "https://coolify.io/docs/knowledge-base/persistent-storage"
+    "name": "Storage Mounts - Overview",
+    "link": "https://coolify.io/docs/core/persistent-storage/storage-mounts/overview"
   },
   {
     "name": "Proxy Caddy - Caddy Basic Auth",
@@ -404,8 +408,8 @@
     "link": "https://coolify.io/docs/knowledge-base/server/terminal-access"
   },
   {
-    "name": "Knowledge Base - Webhook Payloads",
-    "link": "https://coolify.io/docs/knowledge-base/webhook-payloads"
+    "name": "Notifications - Webhook Payload Reference",
+    "link": "https://coolify.io/docs/core/notifications/channels/webhook/payload-reference"
   },
   {
     "name": "Troubleshoot - Bad Gateway Error",

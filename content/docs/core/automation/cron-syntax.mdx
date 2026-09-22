@@ -1,0 +1,90 @@
+---
+title: Cron Syntax
+description: Write five-field cron expressions and use Coolify's supported named schedules.
+---
+
+# Cron syntax
+
+Coolify uses cron expressions to schedule tasks, backups, updates, Docker cleanup, and other recurring work. Most schedule fields accept a standard five-field expression. Some also accept Coolify's named schedules.
+
+## Five-field format
+
+A cron expression contains five space-separated fields:
+
+```txt
+┌───────────── minute (0-59)
+│ ┌───────────── hour (0-23)
+│ │ ┌───────────── day of month (1-31)
+│ │ │ ┌───────────── month (1-12)
+│ │ │ │ ┌───────────── day of week (0-7, Sunday is 0 or 7)
+│ │ │ │ │
+* * * * *
+```
+
+### Common operators
+
+| Character | Meaning | Example |
+| --- | --- | --- |
+| `*` | Every valid value | `* * * * *` runs every minute. |
+| `,` | A list of values | `0 8,16 * * *` runs at 08:00 and 16:00. |
+| `-` | An inclusive range | `0 9 * * 1-5` runs at 09:00 Monday through Friday. |
+| `/` | A step interval | `*/15 * * * *` runs every 15 minutes. |
+
+### Field-specific values
+
+| <span className="inline-block min-w-32 whitespace-nowrap">Value</span> | Field | Meaning | Example |
+| --- | --- | --- | --- |
+| <span className="whitespace-nowrap">`JAN`-`DEC`</span> | Month | A three-letter month name | `0 0 1 JAN *` runs on January 1. |
+| <span className="whitespace-nowrap">`SUN`-`SAT`</span> | Day of week | A three-letter weekday name | `0 9 * * MON-FRI` runs at 09:00 on weekdays. |
+| <span className="whitespace-nowrap">`?`</span> | Day of month or day of week | No specific value for that field | `0 9 ? * MON` runs at 09:00 every Monday. |
+| <span className="whitespace-nowrap">`L`</span> | Day of month | The last day of the month | `0 0 L * *` runs at 00:00 on the last day of each month. |
+| <span className="whitespace-nowrap">`W`</span> | Day of month | The weekday nearest the specified date | `0 9 15W * *` runs at 09:00 on the weekday nearest the 15th. |
+| <span className="whitespace-nowrap">`L`</span> | Day of week | The last specified weekday of the month | `0 9 * * 5L` runs at 09:00 on the last Friday. |
+| <span className="whitespace-nowrap">`#`</span> | Day of week | The numbered occurrence of a weekday in the month | `0 9 * * 5#2` runs at 09:00 on the second Friday. |
+
+---
+
+## Named schedules
+
+Coolify recognizes these exact values and translates them to five-field expressions:
+
+| Named schedule | Equivalent expression | Runs |
+| --- | --- | --- |
+| `every_minute` | `* * * * *` | Every minute |
+| `hourly` or `@hourly` | `0 * * * *` | At minute 0 of every hour |
+| `daily`, `@daily`, or `@midnight` | `0 0 * * *` | Every day at 00:00 |
+| `weekly` or `@weekly` | `0 0 * * 0` | Every Sunday at 00:00 |
+| `monthly` or `@monthly` | `0 0 1 * *` | On the first day of every month at 00:00 |
+| `yearly`, `@yearly`, or `@annually` | `0 0 1 1 *` | Every January 1 at 00:00 |
+
+`@every_minute` is not supported. Use `every_minute` or `* * * * *` instead.
+
+---
+
+## Common examples
+
+| Schedule | Expression |
+| --- | --- |
+| Every five minutes | `*/5 * * * *` |
+| Every day at 02:30 | `30 2 * * *` |
+| Monday through Friday at 09:00 | `0 9 * * 1-5` |
+| Every Sunday at 03:00 | `0 3 * * 0` |
+| First day of every month at 00:00 | `0 0 1 * *` |
+
+---
+
+## Timezone
+
+The schedule runs in the timezone used by the feature that owns it.
+
+Scheduled tasks use the timezone configured for the server that runs the application or service. Other scheduled features can use an instance or server timezone described on their own settings page.
+
+When an exact local time matters, confirm the relevant timezone before saving the schedule.
+
+---
+
+## Validate a schedule
+
+Enter the expression in the schedule's **Frequency** field and save the setting. Coolify rejects values that its cron parser cannot evaluate.
+
+For a scheduled task, use **Execute Now** to verify the command and container separately. Manual execution tests the command immediately; it does not prove that a different cron expression represents the time you intended.

@@ -1,0 +1,10 @@
+{
+  "title": "Operations",
+  "pages": [
+    "overview",
+    "scheduled-tasks",
+    "resource-operations",
+    "migrate-between-instances",
+    "danger-zone"
+  ]
+}

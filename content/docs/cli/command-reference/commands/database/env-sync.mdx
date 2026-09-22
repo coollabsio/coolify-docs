@@ -1,0 +1,29 @@
+---
+title: "Env sync"
+description: "Sync environment variables from a .env file"
+---
+
+# Env sync
+
+Sync environment variables from a .env file
+
+## Usage
+
+```sh
+coolify database env sync <database_uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--file (-f)` | `string` | Yes | — | Path to .env file (required) |
+| `--is-literal` | `boolean` | No | `false` | Treat all values as literal (don't interpolate variables) |
+
+## Get current help
+
+```sh
+coolify database env sync --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

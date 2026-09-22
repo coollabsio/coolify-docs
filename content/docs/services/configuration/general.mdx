@@ -1,0 +1,146 @@
+---
+title: General
+description: Configure a Service stack, edit its Compose definition, and manage application and database components.
+---
+
+# General settings
+
+Open a Service and select **Configuration > General**. This page combines settings for the complete stack with cards for every application and database component detected in the Compose definition.
+
+## Service Stack
+
+Use the tab that matches the setting you need to change.
+
+<Tabs id="service-stack-configuration" items={['Details', 'Network', 'Template values', 'Compose']}>
+<Tab value="Details">
+
+### Resource details
+
+**Service Name** identifies the resource in its project and environment. Changing the display name does not rename the Compose services or their running containers.
+
+Use **Description** to record the stack's purpose, owner, or environment. It does not affect the deployment.
+
+</Tab>
+<Tab value="Network">
+
+### Predefined network
+
+By default, the Service components use only the stack's resource-specific network. Enable **Connect To Predefined Network** when they must also communicate through the predefined network selected for the Service. On the default destination, this is the shared Docker network named `coolify`.
+
+Coolify attaches each Service component to that network and adds an alias based on its Compose service name and Service UUID. Components inside the same stack should continue to use the Compose service name and internal port.
+
+Do not enable this setting merely to expose an HTTP component. Configure a domain on the component and let the Coolify Proxy route public traffic.
+
+Read [Service networking](/services/configuration/networking) for the `coolify` network, custom destination networks, cross-server communication, domains, and published ports.
+
+</Tab>
+<Tab value="Template values">
+
+### Service Specific Configuration
+
+Some one-click templates place generated credentials or application-specific values under **Service Specific Configuration**.
+
+Review each field's helper text and the individual Service guide before changing it. Coolify saves the value in the Service environment and reparses the Compose definition.
+
+</Tab>
+<Tab value="Compose">
+
+### Compose editor
+
+Select **Edit Compose File** to open the definition stored on the Service.
+
+| Control | Purpose |
+| :--- | :--- |
+| **Show Source Compose** | Returns to the editable Compose definition. |
+| **Show Deployable Compose** | Shows the generated definition Coolify sends to Docker Compose. |
+| **Validate** | Checks a user-defined Service created with **Docker Compose Empty**. |
+| **Escape special characters in labels?** | Controls whether label characters such as `$` are escaped. |
+
+Read [Docker Compose](/services/configuration/docker-compose) before changing images, volumes, environment references, networks, or proxy-related values.
+
+</Tab>
+</Tabs>
+
+## Service components
+
+Each component card represents one entry parsed from the Compose `services:` map. Use the tab that matches the component or action you need.
+
+<Tabs id="service-component-configuration" items={['Overview', 'Application', 'Database', 'Classification']}>
+<Tab value="Overview">
+
+### Component cards
+
+A card shows the component name, image, status, and configured domain when applicable.
+
+| Action | Purpose |
+| :--- | :--- |
+| **Settings** | Opens the component-specific General and Advanced pages. |
+| **Restart** | Restarts only that running component container. |
+| **Backups** | Opens backup controls for a recognized database component when supported. |
+
+Restart one component only when its dependencies can tolerate the interruption. Deploy or restart the complete Service when a Compose or shared environment change affects several components.
+
+</Tab>
+<Tab value="Application">
+
+### General
+
+| Setting | Behavior |
+| :--- | :--- |
+| **Name** | Sets a human-readable component name without changing its Compose service name. |
+| **Description** | Records component-specific context. |
+| **Domains** | Routes one or more HTTP URLs through the Coolify Proxy. Add the internal port when the process does not listen on port `80`. |
+| **Image** | Changes the image reference written to the generated Compose definition. Review the upstream upgrade path before changing it. |
+
+For example, use `https://app.example.com:3000` when the component listens on port `3000`. Visitors still use normal HTTPS; the suffix selects the port inside the container.
+
+### Advanced
+
+The **Advanced** page can configure:
+
+- **Enable Gzip Compression**
+- **Strip Prefixes**
+- **Exclude from service status**
+- **Drain Logs**, when a log drain is enabled on the server
+
+</Tab>
+<Tab value="Database">
+
+### General
+
+The General page can change the database component's human-readable name, description, and image. It can also enable **Make it publicly available** and select a **Public Port** for the database TCP proxy.
+
+<Callout type="warning" title="Keep database components private by default">
+
+Expose a database only when a client outside the Service networks must connect. Restrict the public port with the server or provider firewall, use engine-supported encryption, and do not reuse a generated credential outside its intended environment.
+
+</Callout>
+
+### Advanced and data operations
+
+The **Advanced** page can exclude the component from the Service's aggregate status and enable a server log drain. Recognized database components can also show **Backups** and **Import Backup** pages when the underlying engine is supported.
+
+Changing a database image tag is not a database upgrade procedure. Create and verify a compatible backup before changing a production image.
+
+</Tab>
+<Tab value="Classification">
+
+### Convert a component
+
+Use **Convert to Database** or **Convert to Application** only when Coolify classified the Compose service incorrectly.
+
+Conversion preserves the Compose service entry and image while changing the component controls shown by Coolify. After conversion, review domains, public ports, storage, backups, health status, and log settings before redeploying.
+
+</Tab>
+</Tabs>
+
+## Save and verify changes
+
+1. Save the stack or component setting.
+2. Review **Show Deployable Compose** when the change affects generated Compose.
+3. Restart or deploy the Service.
+4. Follow the deployment output.
+5. Confirm that every required component is running and healthy.
+6. Open configured domains and test internal dependencies.
+
+If one component fails, inspect **Logs** for that container and compare the source and deployable Compose definitions.

@@ -1,0 +1,62 @@
+---
+title: Docker Swarm (Deprecated)
+description: Understand the Docker Swarm deprecation in Coolify and the requirements for maintaining an existing Coolify v4 deployment.
+---
+
+# Docker Swarm (deprecated)
+
+<Callout type="warning" title="Experimental and deprecated">
+Coolify added Docker Swarm support as an experimental feature, and some parts of the integration were never fully implemented. Docker Swarm will be removed in Coolify v5. Existing Swarm deployments continue to work on Coolify v4, but you should not create a new Swarm deployment.
+</Callout>
+
+Coolify v5 will replace Docker Swarm support with native Docker Compose replicas and Coolify's own scaling solution. Until that replacement is available, use [multi-server deployments](/core/infrastructure/scaling/multi-server-deployments) with an external load balancer for new infrastructure that must run across servers.
+
+## Existing Coolify v4 deployments
+
+Coolify v4 keeps the existing Swarm controls so you can operate a deployment while planning its replacement.
+
+On a server's **Swarm** page, Coolify identifies the server as either a Swarm manager or a Swarm worker. A node cannot be marked as both roles in the Coolify interface.
+
+For an application deployed to a Swarm destination, **Swarm Configuration** includes:
+
+- **Replicas** for the number of application tasks
+- **Only Start on Worker nodes** to prevent tasks from starting on manager nodes
+- **Custom Placement Constraints** for Docker Swarm placement rules
+
+These settings do not create the Swarm cluster. The manager and worker nodes must already belong to a working Docker Swarm.
+
+## Registry and storage requirements
+
+An application deployed to a Swarm destination must have **Docker Image** configured. The manager pushes the built image to that registry, and every node that may run the application must be able to pull it.
+
+Authenticate the configured server user to the registry on the manager and worker nodes. See [Docker registries](/applications/builds/docker-registries#authenticate-a-private-registry).
+
+Local Docker volumes belong to one node. If a Swarm task can move between workers, use storage that is available from every eligible node, such as a shared network filesystem or an external storage service supported by the application.
+
+## Check an existing cluster
+
+Run the following command on a manager node:
+
+```bash
+docker node ls
+```
+
+Confirm that:
+
+- one manager reports `Leader` in **MANAGER STATUS**
+- every required manager and worker reports `Ready` in **STATUS**
+- each node that may run the application reports `Active` in **AVAILABILITY**
+
+Then deploy the application from Coolify and verify the desired task count on a manager node:
+
+```bash
+docker service ls
+```
+
+The value under **REPLICAS** should reach the configured replica count. Inspect the service with `docker service ps <service-name>` when a task does not start.
+
+## Move away from Docker Swarm
+
+Plan the replacement before upgrading to Coolify v5. Record the application's image, environment variables, domains, health check, storage, networks, and placement requirements. Then deploy the application to standalone servers and place a load balancer in front of them.
+
+Test the replacement through its public domain before removing the Swarm service. Keep the existing Coolify v4 deployment available until the new setup passes application, data, and failover checks.

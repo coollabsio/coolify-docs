@@ -1,0 +1,294 @@
+---
+title: Domains
+description: Configure domains, HTTPS, target ports, paths, redirects, search engine indexing, and generated domains for Coolify applications and services.
+---
+
+import { ArrowsRight, Globe3, Lock2, Route, ShieldSecurity2 } from 'reicon-react';
+
+# Domains
+
+Coolify uses domains to route public HTTP and HTTPS traffic through the proxy to an application or a web-facing service container.
+
+The domain's DNS record points to the server running the resource. The Coolify proxy then matches the hostname and path and forwards the request to the correct container port.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Complete the [DNS setup](/core/networking/dns), enter the complete `http://` or `https://` URL in **Domains**, and redeploy the resource.
+
+Use `https://` for automatic TLS. Add a port to target a specific port inside the container, or add a path to share one hostname between resources.
+
+</CoolCallout>
+
+---
+
+## Choose a domain option
+
+Choose the option that matches how you plan to use the resource.
+
+<CoolCompare
+  id="domain-options"
+  className="not-prose"
+  columns={3}
+  icon={Globe3}
+  title="Domain options"
+  description="All three options route traffic through the integrated Coolify proxy."
+>
+<CoolCompareColumn
+  title="Your own domain"
+  items={[
+    'Recommended for production applications and services',
+    'Requires a DNS record that points to the resource server',
+    'Supports automatic TLS, paths, target ports, and redirects',
+  ]}
+/>
+<CoolCompareColumn
+  title="Wildcard-generated domain"
+  items={[
+    'Uses a domain you own with a wildcard DNS record',
+    'Lets Coolify generate a subdomain for each application',
+    'Useful when you create many applications on one server',
+  ]}
+/>
+<CoolCompareColumn
+  title="sslip.io testing domain"
+  items={[
+    'Generated from the server IP address without manual DNS setup',
+    'Useful for checking a first deployment or proxy route',
+    'Intended for temporary testing rather than production traffic',
+  ]}
+/>
+</CoolCompare>
+
+A domain does not expose a standalone database. Use the database's public port when an external client must connect.
+
+These instructions assume the server uses the integrated Traefik or Caddy proxy. With **Custom (None)**, you must configure routing and TLS in your own proxy. See [Proxy overview](/core/networking/proxy/overview) before continuing.
+
+---
+
+## Add a custom domain
+
+Before starting, [point the domain to the resource server and verify its DNS records](/core/networking/dns#point-a-domain-to-the-server). Inbound TCP ports `80` and `443` must be open on the resource server, and the application must listen on the container port that Coolify will target.
+
+<Steps>
+<Step>
+
+### Enter the domain in Coolify
+
+Open the application or the web-facing application inside a service, then open its **General** configuration.
+
+Enter the complete URL in **Domains**, including `http://` or `https://`. For example, enter `https://app.shadowarcanist.com`.
+
+For a Docker Compose application, Coolify shows a separate **Domains for `<service-name>`** field for each non-database service. Add the domain to the service that receives the request.
+
+Select **Save**.
+
+</Step>
+<Step>
+
+### Redeploy and verify the domain
+
+Redeploy the resource so the proxy uses the new configuration.
+
+After the deployment completes:
+
+1. Confirm the hostname resolves to the expected server or CDN.
+2. Open the configured URL in a browser.
+3. Confirm it loads the intended application.
+4. For an `https://` URL, confirm the browser shows the expected certificate.
+
+If DNS was changed recently, you may need to wait for the previous record's TTL to expire.
+
+</Step>
+</Steps>
+
+### Supported domain formats
+
+The **Domains** field accepts one or more complete URLs.
+
+| Goal | Value in **Domains** |
+| :--- | :--- |
+| Route one hostname | `https://app.example.com` |
+| Route multiple hostnames | `https://app.example.com,https://www.example.com` |
+| Target container port `3000` | `https://app.example.com:3000` |
+| Route a path to container port `80` | `https://app.example.com/api` |
+| Route a path to container port `8080` | `https://app.example.com:8080/api` |
+
+When a domain value does not include a port, Coolify routes traffic to port `80` inside the container. Add the container port to the URL when the application listens on a different port.
+
+Separate multiple URLs with commas. Coolify converts application domains to lowercase and removes duplicate entries when you save them.
+
+When a value contains both a port and a path, put the port before the path:
+
+- Correct: `https://app.shadowarcanist.com:8080/api`
+- Incorrect: `https://app.shadowarcanist.com/api:8080`
+
+---
+
+## Route to a port or path
+
+The port in a domain value selects the port inside the container. It does not create a public host-port mapping. Visitors still reach an `https://` domain through the proxy on port `443`.
+
+| Domain value | Proxy behavior |
+| :--- | :--- |
+| `https://app.shadowarcanist.com` | Send requests for the hostname to port `80` inside the container. |
+| `https://app.shadowarcanist.com:3000` | Send requests for the hostname to port `3000` inside the container. |
+| `https://shadowarcanist.com/api` | Send requests beginning with `/api` to port `80` inside the container. |
+| `https://shadowarcanist.com:8080/api` | Send requests beginning with `/api` to port `8080` inside the container. |
+
+Path-based routes let several resources share one hostname. For example, one application can use `https://shadowarcanist.com`, while another uses `https://shadowarcanist.com/api`.
+
+Coolify creates a path-prefix route from the value. More specific paths take priority over the root route in the proxy's routing model.
+
+### Control prefix stripping
+
+By default, Coolify strips the configured prefix before forwarding the request. A request to `https://shadowarcanist.com/api/users` reaches the application as `/users`.
+
+Disable **Strip Prefixes** in the resource's advanced settings when the application expects to receive `/api/users` instead.
+
+<Callout type="warning" title="Do not depend on the root route as a fallback">
+Keep every resource serving a shared hostname running and healthy. If a path route is unavailable, the result depends on the remaining proxy routes and application responses.
+</Callout>
+
+---
+
+## Configure HTTPS and redirects
+
+Use an `https://` URL when you want the integrated proxy to configure TLS. Coolify generates the route, and Traefik or Caddy requests and renews the certificate.
+
+An `http://` value creates an HTTP route. Other resource or proxy settings can still redirect that route to HTTPS.
+
+<Callout type="warning" title="Certificate issuance needs a public route">
+The hostname must resolve through the resource server or a correctly configured CDN, ports `80` and `443` must reach the Coolify proxy, and the domain must be present in the resource configuration.
+</Callout>
+
+If the browser shows a certificate warning, follow [Let's Encrypt not working](/troubleshoot/dns-and-domains/lets-encrypt-not-working). For wildcard certificates, follow the guide for [Traefik](/core/networking/proxy/traefik/wildcard-certs) or the [Caddy DNS challenge](/core/networking/proxy/caddy/dns-challenge).
+
+### Redirect www and non-www
+
+For a non-Docker Compose application, add both hostnames to **Domains** and create DNS records for both. Then use **Direction** to choose the canonical hostname.
+
+| **Direction** | Behavior |
+| :--- | :--- |
+| **Allow www & non-www** | Serve both configured hostnames without a Coolify-managed redirect. |
+| **Redirect to www** | Redirect the non-www hostname to the configured `www` hostname. |
+| **Redirect to non-www** | Redirect the `www` hostname to the configured non-www hostname. |
+
+Coolify will not enable **Redirect to www** unless a `www` URL is present in **Domains**. The corresponding `www` DNS record must also resolve to the resource server.
+
+---
+
+## Control search engine indexing
+
+Coolify can mark individual application and service domains as **Noindex** without changing application code. The integrated Traefik or Caddy proxy then adds this response header for that domain:
+
+```http
+X-Robots-Tag: noindex, nofollow
+```
+
+A resource with several domains can keep its production domain indexable while marking a staging or temporary domain as noindex.
+
+1. Open the application or Service and select **Configuration > Domains**.
+2. Find the domain under **Search engine indexing**.
+3. Select **Noindex**. Select **Indexable** to remove the header.
+4. Redeploy the resource to apply the updated proxy configuration.
+5. Check the response header:
+
+```sh
+curl -sI https://staging.example.com | grep -i x-robots-tag
+```
+
+A noindex domain returns:
+
+```http
+x-robots-tag: noindex, nofollow
+```
+
+Preview deployment domains are always served as noindex. Removing a domain also removes its stored indexing selection; renaming a domain preserves the selection for the renamed domain.
+
+<Callout type="warning" title="Noindex does not make a domain private">
+Search crawlers can choose whether to honor this header, and anyone who knows the URL can still open it. Use authentication or network restrictions when access must be limited.
+</Callout>
+
+For applications, the selector is available while **Readonly Container Labels** is enabled. When you disable that setting and manage container labels yourself, add the equivalent `X-Robots-Tag` response header in your custom proxy labels.
+
+---
+
+## Use generated domains
+
+Coolify can generate an application domain from the server's **Wildcard Domain** setting.
+
+Before configuring generated domains, [create and verify a wildcard DNS record](/core/networking/dns#configure-wildcard-dns) for the server.
+
+<Steps>
+<Step>
+
+### Configure the server wildcard domain
+
+In Coolify, open **Servers**, select the server, and open **General**. Enter `https://shadowarcanist.com` in **Wildcard Domain**, then save the server.
+
+</Step>
+<Step>
+
+### Generate an application domain
+
+Open an application on that server and select **Generate Domain** beside **Domains**.
+
+Coolify generates a hostname such as `https://<application-id>.shadowarcanist.com`. Open the generated URL after redeploying the application to confirm it works.
+
+</Step>
+</Steps>
+
+The wildcard setting affects generated domains; it does not change domains already assigned to resources.
+
+When **Wildcard Domain** is empty, Coolify can generate an `sslip.io` domain from the server IP address. Use that URL to verify a deployment or proxy route before configuring your own domain.
+
+---
+
+## Resolve domain conflicts
+
+Coolify warns when the same complete domain is already assigned to another application, service, or the Coolify dashboard in the same team.
+
+<Callout type="warning" title="Do not reuse a domain across resources">
+Reusing a domain can make routing unpredictable and can prevent the correct TLS certificate from being served. Only one resource can receive the traffic reliably.
+</Callout>
+
+Open the resource linked in the conflict message and remove or change its domain. Override the warning only when you are deliberately replacing that route.
+
+---
+
+## Set the Coolify dashboard domain
+
+Self-hosted users can assign a domain to the Coolify dashboard from **Settings > Configuration > General**.
+
+Set **URL** to a complete value such as `https://coolify.shadowarcanist.com` only after you [point its DNS record to the server running Coolify](/core/networking/dns#point-a-domain-to-the-server). Do not reuse an application or service domain for the dashboard.
+
+Read [Instance settings](/core/instance-management/instance-settings#url) for the complete setting reference.
+
+---
+
+## Continue with domain routing
+
+Use these guides to prepare the public route or investigate a domain that does not work as expected.
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Configure the firewall',
+      href: '/core/infrastructure/servers/firewall',
+      description: 'Open the ports required for HTTP, HTTPS, and certificate issuance on the resource server.',
+      icon: ShieldSecurity2,
+    },
+    {
+      title: 'Troubleshoot certificates',
+      href: '/troubleshoot/dns-and-domains/lets-encrypt-not-working',
+      description: 'Check DNS, proxy reachability, rate limits, and certificate resolver errors.',
+      icon: Lock2,
+    },
+    {
+      title: 'Troubleshoot proxy routing',
+      href: '/troubleshoot/applications/bad-gateway',
+      description: 'Trace a failed route from the proxy to the application container and its target port.',
+      icon: Route,
+    },
+  ]}
+/>

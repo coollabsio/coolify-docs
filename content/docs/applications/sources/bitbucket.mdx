@@ -1,0 +1,28 @@
+---
+title: Bitbucket
+description: Deploy Bitbucket repositories and configure repository and pull-request webhooks.
+---
+
+# Bitbucket
+
+Use an HTTPS URL for a [public repository](/applications/sources/public-repositories) or an SSH URL for a [private repository with a deploy key](/applications/sources/deploy-keys).
+
+```sh
+https://bitbucket.org/example/application.git
+git@bitbucket.org:example/application.git
+```
+
+Add the deploy key's public key under the repository's access-key settings.
+
+## Configure automatic deployments
+
+1. Open **Configuration > Webhooks** in the Coolify application.
+2. Copy the **Bitbucket** URL.
+3. Enter and save **Bitbucket Webhook Secret**.
+4. In Bitbucket, open the repository webhook settings.
+5. Enter the URL and configure the same secret when supported by the provider flow.
+6. Enable **Repository push**.
+7. For previews, enable pull request **Created**, **Updated**, **Merged**, and **Declined**.
+8. Enable **Configuration > Advanced > Auto Deploy** in Coolify.
+
+Push to the configured branch and inspect **Deployments**. Open or update a pull request to verify preview events separately.

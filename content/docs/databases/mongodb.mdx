@@ -1,19 +1,115 @@
 ---
 title: MongoDB
-description: Deploy MongoDB NoSQL databases on Coolify with flexible document storage, horizontal scalability, and automated backup solutions.
+description: Deploy and operate MongoDB on Coolify with generated credentials, persistent storage, SSL, health checks, and scheduled dumps.
 ---
 
 # MongoDB
 
-<ZoomImage src="/docs/images/database-logos/mongodb.webp" alt="MongoDB" />
+Coolify deploys MongoDB as a standalone container on the selected server and destination. A new resource gets a generated root password, a persistent data volume, an internal connection URL, and a health check.
 
-## What is MongoDB
+MongoDB is a document database that stores JSON-like documents instead of rows in fixed relational tables.
 
-MongoDB is a popular, open-source document-oriented NoSQL database designed for scalability and flexibility. It stores data in flexible, JSON-like documents, meaning fields can vary from document to document and data structure can be changed over time.
+## Create a MongoDB database
 
-MongoDB is known for its horizontal scalability, powerful query language, and ability to handle large volumes of unstructured or semi-structured data. It's widely used in modern web applications, content management systems, and other scenarios where flexible data models and scalability are crucial.
+<Steps>
+<Step>
 
-## Links
+### Open New Resource
 
-- [The official website](https://www.mongodb.com/)
-- [GitHub](https://github.com/mongodb/mongo)
+Open the project and environment where the database should live, then select **New Resource**.
+
+</Step>
+<Step>
+
+### Select MongoDB
+
+Under **Databases**, select **MongoDB**. You can also search for **MongoDB** by name.
+
+</Step>
+<Step>
+
+### Select a server
+
+Select the server that should run MongoDB. Build servers cannot be selected because they do not host running database resources.
+
+</Step>
+<Step>
+
+### Select a destination
+
+Select the Docker network destination that MongoDB should join.
+
+</Step>
+<Step>
+
+### Review the generated configuration
+
+Coolify creates the resource and opens **Configuration > General**. Review the image, root username, generated password, initial database, SSL settings, and connection URLs. Keep the default private networking unless an external client requires access.
+
+</Step>
+<Step>
+
+### Start MongoDB
+
+Select **Start** and follow the startup output. Wait until MongoDB is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+
+</Step>
+</Steps>
+
+## Default configuration
+
+| Setting | Default or behavior |
+| :--- | :--- |
+| Internal port | `27017` |
+| Default image | `mongo:7` |
+| Root username | `root` |
+| Initial database | `default` |
+| Data mounts | `/data/db` and `/data/configdb` |
+| Scheduled backups | Supported |
+| SSL | Supported with MongoDB SSL modes |
+
+If you change the root username, password, or initial database inside MongoDB, update the matching values in **Configuration > General** so the generated URLs and automated backups use current credentials.
+
+
+## Connect to MongoDB
+
+Use the **Internal URL** for an application on the same Coolify destination network:
+
+```sh
+mongodb://<username>:<password>@<database-container>:27017/?directConnection=true
+```
+
+Coolify's generated internal URL includes `/?directConnection=true` after the port. Copy the generated URL when possible instead of rebuilding it manually. SSL adds `tls=true` and the CA path; `verify-full` also adds the server certificate path. See [Database SSL](/databases/ssl) for those paths.
+
+Coolify shows a **Public URL** only after **Make it publicly available** and **Public Port** are configured. Keep MongoDB private unless an external client requires direct access.
+
+## Configure MongoDB
+
+Open **Configuration > General** to change the image, root credentials, **Ports Mappings**, public proxy, custom Docker options, and **Custom Mongo Configuration**. Restart the resource after changing generated container configuration.
+
+## Back up MongoDB
+
+Coolify uses `mongodump` and stores a gzip-compressed archive. An empty **Databases To Include** field includes all databases and collections.
+
+To exclude collections, use this format:
+
+```sh
+app:events,logs|analytics
+```
+
+This includes all collections in `app` except `events` and `logs`, and all collections in `analytics`. Configure the schedule, retention, and S3 copy in [Database backups](/databases/backups).
+
+The built-in **Import Backup** form accepts MongoDB archives while the database is running. Follow [Restore a database](/databases/restore), then verify the restored collections from a controlled client workflow.
+
+## SSL and health checks
+
+MongoDB supports `allow`, `prefer`, `require`, and `verify-full`. `verify-full` requires the client to trust the Coolify CA certificate. See [Database SSL](/databases/ssl).
+
+Configure the Docker health check under **Configuration > Healthcheck** and restart MongoDB after saving.
+
+## Official MongoDB resources
+
+- [MongoDB documentation](https://www.mongodb.com/docs/)
+- [MongoDB source](https://github.com/mongodb/mongo)
+- [MongoDB Docker image](https://hub.docker.com/_/mongo)
+- [`mongodump` documentation](https://www.mongodb.com/docs/database-tools/mongodump/)

@@ -9,7 +9,7 @@ const ignoredDirs = new Set(['public'])
 const folderIndexAliases = new Map([
   ['applications/build-packs/overview', 'applications/build-packs/index.mdx'],
   ['applications/ci-cd/introduction', 'applications/ci-cd/index.mdx'],
-  ['integrations/cloudflare/tunnels/overview', 'integrations/cloudflare/tunnels/index.mdx'],
+  ['integrations/networking/cloudflare/tunnels/overview', 'integrations/networking/cloudflare/tunnels/index.mdx'],
   ['knowledge-base/overview', 'knowledge-base/index.mdx'],
   ['knowledge-base/proxy/traefik/overview', 'knowledge-base/proxy/traefik/index.mdx'],
   ['knowledge-base/proxy/caddy/overview', 'knowledge-base/proxy/caddy/index.mdx'],
@@ -24,46 +24,66 @@ const sidebarMetas = {
   '': {
     pages: [
       'index',
-      'get-started',
+      '---Get Started---',
+      'choose-your-path',
+      'start-with-self-hosted',
+      'start-with-cloud',
+      'deploy-your-first-app',
+      'deploy-your-first-database',
+      'deploy-your-first-service',
+      'internal-postgresql-upgrade',
+      '---Resources---',
+      'usage',
+      'concepts',
+      'screenshots',
+      'videos',
+      'sponsors',
+      'support',
+      'team',
+      '---Contribute---',
+      'contribute',
+      'core',
       'applications',
       'services',
       'databases',
       'integrations',
       'knowledge-base',
-      'api-reference',
+      'api',
       'troubleshoot',
     ],
   },
-  'get-started': {
-    title: 'Get Started',
-    pages: [
-      '---Setup---',
-      'introduction',
-      'installation',
-      'upgrade',
-      'internal-postgresql-upgrade',
-      'downgrade',
-      'uninstallation',
-      'cloud',
-      '---Learn---',
-      'usage',
-      'concepts',
-      'screenshots',
-      'videos',
-      '---Community---',
-      'team',
-      'support',
-      'sponsors',
-      '---Contribute---',
-      'contribute',
-    ],
-  },
-  'get-started/contribute': {
+  contribute: {
     title: 'Contribute',
     pages: ['coolify', 'service', 'documentation'],
   },
+  core: {
+    title: 'Core',
+    root: true,
+    pages: [
+      '---Understand Coolify---',
+      'what-is-coolify',
+      'how-coolify-works',
+      'selfhosted-cloud-comparison',
+      'build-deployment-model',
+      'docker-and-containers',
+      'networking-in-coolify',
+      'security-model',
+      '---Manage Coolify---',
+      'instance-management',
+      'backup-and-recovery',
+    ],
+  },
+  'core/instance-management': {
+    title: 'Instance Management',
+    pages: ['instance-settings', 'update', 'downgrade', 'uninstallation'],
+  },
+  'core/backup-and-recovery': {
+    title: 'Backup and Recovery',
+    pages: ['instance-backup', 'instance-restore'],
+  },
   applications: {
     title: 'Applications',
+    root: true,
     pages: [
       '---Frameworks---',
       'django',
@@ -110,26 +130,48 @@ const sidebarMetas = {
   },
   services: {
     title: 'Services',
+    root: true,
     pages: ['overview', 'all'],
   },
   databases: {
     title: 'Databases',
+    root: true,
     pages: ['ssl', 'backups', 'mysql', 'mariadb', 'postgresql', 'mongodb', 'redis', 'dragonfly', 'keydb', 'clickhouse'],
   },
   integrations: {
     title: 'Integrations',
-    pages: ['cloudflare', 'external:[Crowdsec](https://www.crowdsec.net/blog/securing-automated-app-deployment-crowdsec-and-coolify)'],
+    root: true,
+    pages: [
+      '---Networking---',
+      'networking/cloudflare/tunnels',
+      '---Security---',
+      'security/cloudflare/ddos-protection',
+      'external:[Crowdsec](https://www.crowdsec.net/blog/securing-automated-app-deployment-crowdsec-and-coolify)',
+    ],
   },
-  'integrations/cloudflare': {
+  'integrations/networking': {
+    title: 'Networking',
+    pages: ['cloudflare'],
+  },
+  'integrations/networking/cloudflare': {
     title: 'Cloudflare',
-    pages: ['tunnels', 'ddos-protection'],
+    pages: ['tunnels'],
   },
-  'integrations/cloudflare/tunnels': {
-    title: 'Tunnels',
-    pages: ['all-resource', 'single-resource', 'server-ssh', 'full-tls'],
+  'integrations/networking/cloudflare/tunnels': {
+    title: 'Cloudflare Tunnel',
+    pages: ['index', 'all-resource', 'single-resource', 'server-ssh', 'full-tls'],
+  },
+  'integrations/security': {
+    title: 'Security',
+    pages: ['cloudflare'],
+  },
+  'integrations/security/cloudflare': {
+    title: 'Cloudflare',
+    pages: ['ddos-protection'],
   },
   'knowledge-base': {
     title: 'Knowledge Base',
+    root: true,
     pages: [
       '---Internal---',
       'internal',
@@ -141,6 +183,7 @@ const sidebarMetas = {
       'commands',
       'delete-user',
       'oauth',
+      'sso',
       'create-root-user-with-env',
       'define-custom-docker-network-with-env',
       'custom-docker-registry',
@@ -246,12 +289,27 @@ const sidebarMetas = {
     title: 'Caddy',
     pages: ['basic-auth', 'dns-challenge'],
   },
-  'api-reference': {
+  'api': {
     title: 'API Reference',
-    pages: ['authorization', 'api'],
+    root: true,
+    pages: [
+      '---Get Started---',
+      'overview',
+      'making-requests',
+      '---Access & Security---',
+      'authorization',
+      'permissions',
+      'ip-allowlist',
+      '---Requests & Responses---',
+      'rate-limits',
+      'errors',
+      '---Endpoint Reference---',
+      '...endpoints',
+    ],
   },
   troubleshoot: {
     title: 'Troubleshoot',
+    root: true,
     pages: ['installation', 'applications', 'dashboard', 'docker', 'server', 'dns-and-domains'],
   },
   'troubleshoot/installation': {
@@ -293,7 +351,7 @@ async function walk(dir) {
 
     const fullPath = path.join(dir, entry.name)
     const relativeDir = toPosix(path.relative(sourceDir, fullPath))
-    if (entry.isDirectory() && relativeDir === 'api-reference/api') {
+    if (entry.isDirectory() && relativeDir === 'api/endpoints') {
       continue
     }
 
@@ -477,12 +535,67 @@ function convertHomePage(markdown) {
   }
 
   return `---
-title: Coolify
-description: Coolify is an open-source Platform as a Service (PaaS) for self-hosting databases, services, and applications with free SSL, backups, and Git integration.
-full: true
+title: Home
+description: Welcome to Coolify Documentation
 ---
 
-<CoolifyHome />
+# Build & deploy with Coolify
+Your handbook to owning and operating your infrastructure with Coolify.
+
+## Get started
+Set up Coolify and deploy your first app in minutes.
+
+<MediaCardGroup>
+  <MediaCard title="Quick start" imageSrc="/docs/images/home/quick-start.webp" href="/choose-your-path" />
+  <MediaCard title="Deploy your first application" imageSrc="/docs/images/home/deploy-first-application.webp" href="/deploy-your-first-app" />
+  <MediaCard title="API" imageSrc="/docs/images/home/api.webp" href="/api/overview" />
+  <MediaCard title="CLI" imageSrc="/docs/images/home/cli.webp" href="/knowledge-base/commands" />
+</MediaCardGroup>
+
+## Deploy any language. Any framework.
+If it runs in Docker, you can deploy it with Coolify.
+
+<MediaCardGroup>
+  <MediaCard title="Laravel" imageSrc="/docs/images/home/laravel.webp" href="/applications/laravel" />
+  <MediaCard title="Next.js" imageSrc="/docs/images/home/nextjs.webp" href="/applications/nextjs" />
+  <MediaCard title="Django" imageSrc="/docs/images/home/django.webp" href="/applications/django" />
+  <MediaCard title="Ruby on Rails" imageSrc="/docs/images/home/rails.webp" href="/applications/rails" />
+</MediaCardGroup>
+
+[View all language and framework guides](/applications)
+
+## Deploy any database
+If it runs in Docker, you can deploy it with Coolify.
+
+<MediaCardGroup>
+  <MediaCard title="PostgreSQL" imageSrc="/docs/images/home/postgres.webp" href="/databases/postgresql" />
+  <MediaCard title="MySQL" imageSrc="/docs/images/home/mysql.webp" href="/databases/mysql" />
+  <MediaCard title="Redis" imageSrc="/docs/images/home/redis.webp" href="/databases/redis" />
+  <MediaCard title="MongoDB" imageSrc="/docs/images/home/mongodb.webp" href="/databases/mongodb" />
+</MediaCardGroup>
+
+[View all database guides](/databases)
+
+## Deploy any service
+Run **300+** open-source software with our **single click** service templates.
+
+<MediaCardGroup>
+  <MediaCard title="n8n" imageSrc="/docs/images/home/n8n.webp" href="/services/n8n" />
+  <MediaCard title="Strapi" imageSrc="/docs/images/home/strapi.webp" href="/services/strapi" />
+  <MediaCard title="Convex" imageSrc="/docs/images/home/convex.webp" href="/services/convex" />
+  <MediaCard title="WordPress" imageSrc="/docs/images/home/wordpress.webp" href="/services/wordpress" />
+</MediaCardGroup>
+
+[View all service templates](/services/all)
+
+## Help & Support
+Get help from the community and the Coolify team.
+
+<MediaCardGroup>
+  <MediaCard title="Discord community" imageSrc="/docs/images/home/discord-community.webp" href="/support" />
+  <MediaCard title="Github discussions" imageSrc="/docs/images/home/github-discussions.webp" href="https://github.com/coollabsio/coolify/discussions" />
+  <MediaCard title="Email" imageSrc="/docs/images/home/email.webp" href="/support" />
+</MediaCardGroup>
 `
 }
 

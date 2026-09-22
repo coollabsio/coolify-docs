@@ -1,0 +1,195 @@
+---
+title: Axiom
+description: Send Coolify application, database, and service container logs to an Axiom dataset.
+---
+
+import {
+  ArrowsRight,
+  Box2,
+  Database,
+  Globe3,
+  Server,
+  Settings,
+} from 'reicon-react';
+
+# Send logs to Axiom
+
+Coolify's built-in Axiom log drain sends opted-in resource logs to an existing Axiom dataset over HTTPS.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Create an Axiom dataset and ingest-capable API token, save both values on the server's **Log Drains** page, enable the Axiom drain, then enable **Drain Logs** and restart each resource you want to forward.
+
+</CoolCallout>
+
+---
+
+## Before you start
+
+<CoolIconCardGrid
+  surface
+  cards={[
+    {
+      title: 'Axiom dataset',
+      description: 'Create the dataset that will receive the forwarded workload records.',
+      icon: Database,
+    },
+    {
+      title: 'API token',
+      description: 'Create a token that can ingest events into the selected dataset.',
+      icon: Settings,
+    },
+    {
+      title: 'Validated server',
+      description: 'Use the server that runs the resources and confirm it can reach api.axiom.co on port 443.',
+      icon: Server,
+    },
+  ]}
+/>
+
+Create the dataset and token in [Axiom](https://axiom.co/docs), then copy their exact values before opening Coolify. Coolify accepts letters, numbers, underscores, hyphens, and periods in both Axiom fields.
+
+The built-in integration sends data to `api.axiom.co` on port `443`. This endpoint is not configurable from the Axiom section in Coolify.
+
+---
+
+## Configure Axiom in Coolify
+
+<CoolFlow
+  id="configure-axiom-log-drain"
+  icon={Database}
+  title="Connect the server to Axiom"
+  description="Keep the drain disabled while editing its fields, then enable it after the values are saved."
+  steps={[
+    'Open the server Log Drains page',
+    'Enter the API key',
+    'Enter the dataset name',
+    'Save the Axiom settings',
+    'Enable the drain',
+  ]}
+  list={[
+    <>Open <strong>Servers</strong>, select the server that runs the resources, then open <strong>Configuration &gt; Log Drains</strong>.</>,
+    <>In <strong>Axiom</strong>, leave <strong>Enabled</strong> off and paste the Axiom token into <strong>API Key</strong>.</>,
+    <>Enter the exact dataset name in <strong>Dataset Name</strong>.</>,
+    <>Select <strong>Save</strong> in the Axiom section.</>,
+    <>Turn on <strong>Enabled</strong>. Coolify starts the server's <code>coolify-log-drain</code> container.</>,
+  ]}
+  endnote="Only one server-level log drain can be enabled at a time. Disable another active destination before enabling Axiom."
+/>
+
+<CoolCallout type="info" title="Enabling the drain is not an ingestion test">
+
+Coolify checks that both fields are present and use accepted characters. It does not verify the token, dataset permissions, or Axiom ingestion before showing the drain as enabled.
+
+</CoolCallout>
+
+---
+
+## Enable a resource
+
+Follow [Enable log draining for a resource](/core/observability/log-drains/overview#enable-log-draining-for-a-resource), then restart or redeploy the resource.
+
+The Axiom configuration sends logs as gzip-compressed JSON, writes the event time to `_time` in ISO 8601 format, and flushes every five seconds.
+
+---
+
+## Identify logs
+
+The built-in configuration adds fields that help you filter records.
+
+<CoolCompare
+  id="axiom-log-fields"
+  className="not-prose"
+  icon={Box2}
+  title="Built-in log identification"
+  description="The server label is automatic. The resource label is added only when the resource provides COOLIFY_APP_NAME."
+>
+<CoolCompareColumn
+  title="Server label"
+  code="coolify.server_name"
+  items={[
+    'Added automatically to every record',
+    'Identifies the Coolify server that forwarded the record',
+  ]}
+/>
+<CoolCompareColumn
+  title="Resource label"
+  code="coolify.app_name"
+  items={[
+    'Created from the resource environment variable `COOLIFY_APP_NAME`',
+    'Available after you save the variable and restart the resource',
+  ]}
+/>
+</CoolCompare>
+
+For example, add this environment variable to the resource:
+
+```dotenv
+COOLIFY_APP_NAME=web
+```
+
+The built-in filter excludes log records whose message contains `127.0.0.1`. Local health-check requests may therefore be absent from the dataset.
+
+---
+
+## Verify delivery
+
+1. Cause the resource to write a recognizable message to `stdout` or `stderr`.
+2. Wait at least five seconds.
+3. Open the Axiom dataset and search recent events for the message, `coolify.server_name`, or `coolify.app_name`.
+
+Verification in Axiom is required because Coolify does not perform a provider connection test.
+
+---
+
+## Update the dataset or token
+
+1. Turn off **Enabled** in the Axiom section.
+2. Update **API Key** or **Dataset Name**.
+3. Select **Save**.
+4. Turn on **Enabled** again.
+5. Generate a new resource log and confirm that it arrives in the expected dataset.
+
+---
+
+## Fix missing logs
+
+1. Confirm Axiom is the enabled server drain and the resource's **Drain Logs** setting is on.
+2. Confirm you restarted or redeployed the resource after enabling the setting.
+3. Confirm the token can ingest into the exact dataset name entered in Coolify.
+4. Confirm the server can reach `api.axiom.co:443`.
+5. Inspect the Fluent Bit container on the resource server:
+
+```sh
+docker ps --filter name=coolify-log-drain
+docker logs --tail 100 coolify-log-drain
+```
+
+Authentication, dataset, and network errors appear in the Fluent Bit output.
+
+---
+
+## Continue with log drains
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Log drains overview',
+      href: '/core/observability/log-drains/overview',
+      description: 'Review the server-level pipeline, resource setup, and delivery checks.',
+      icon: Server,
+    },
+    {
+      title: 'Use New Relic',
+      href: '/core/observability/log-drains/new-relic',
+      description: 'Send opted-in workload logs to the regional New Relic Log API.',
+      icon: Globe3,
+    },
+    {
+      title: 'Use custom Fluent Bit',
+      href: '/core/observability/log-drains/custom-fluent-bit',
+      description: 'Supply a complete Fluent Bit configuration for another destination.',
+      icon: Settings,
+    },
+  ]}
+/>

@@ -1,0 +1,278 @@
+---
+title: "Single resource"
+description: "Securely access individual Coolify applications through Cloudflare Tunnels with port mapping, domain configuration, and multi-resource tunneling support."
+---
+
+# Access Single Resource via Cloudflare Tunnels
+
+Accessing an Resource deployed on Coolify using a Cloudflare Tunnel allows you to securely reach your app without exposing your server’s IP address or without having a Public IP address for the server.
+
+## Who this is for?
+
+This setup is ideal for people who:
+
+- Don't have a public IP for their server (could be a laptop, raspberry pi etc..).
+- Are unable to port forward (e.g., using home internet or on a private network).
+- Want to keep their server’s IP address private and avoid exposing it to the public internet.
+- Have an app already deployed on Coolify and need an external method to access it securely.
+
+## Setup Requirements
+
+To follow this guide, you'll need:
+
+- A free [Cloudflare](https://cloudflare.com) account.
+- You need a domain that has it's **DNS managed by Cloudflare**.
+- Your Resource has to be deployed and managed with Coolify.
+
+## Before We Start
+
+- We assume you have Coolify running and an app already deployed.
+- If your app requires HTTPS for functionality like cookies or login, then you need to follow the [Full TLS HTTPS guide](/integrations/networking/cloudflare/tunnels/full-tls) after following this guide. This is because in this guide, Cloudflare will manage HTTPS externally, while your app will run over HTTP within Coolify.
+
+## How It Works?
+
+A simple high-level overview diagram to give you a visual idea of how this works:
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/high-level-diagram.webp" />
+
+---
+
+
+<Callout type="warn" title="Example Data">
+
+The following data is used as an example in this guide. Please replace it with your actual data when following the steps:
+
+- **Domain Name:** shadowarcanist.com
+- **Ports Exposes:** 80
+- **Ports Mapping:** 4477:80
+
+</Callout>
+
+
+---
+
+## 1. Setup your app for tunneling
+
+To setup your app for tunneling, follow these steps:
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/0.webp" />
+
+1. Remove all domains from the **Domains** field.
+2. Set the correct port in **Ports Exposed** (the port your app uses).
+3. Set the correct ports in **Port Mappings** (left is the host port, right is the app port).
+4. Deploy your app by clicking the **Deploy** button.
+
+## 2. Create a Cloudflare Tunnel
+
+To create a Cloudflare Tunnel, first log in to your [Cloudflare dashboard](https://dash.cloudflare.com/)
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/1.webp" />
+
+1. Go to **Networking** in the sidebar.
+2. Click on **Tunnels**
+3. Click on **Create tunnel** button
+
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/2.webp" />
+
+You will be prompted to enter a tunnel name. Enter a name that you prefer and click on **Create tunnel** button.
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/3.webp" />
+
+1. Select the **Docker** option
+2. Copy the docker run command, which contains the token for your tunnel (token starts with "`eyJ`"). Make sure to save only the token, removing the command part before it, and store it in a safe place, as we need it later.
+
+
+## 3. Deploy cloudflared on Coolify
+
+Go to your project on Coolify dashboard and click the `+ New` button to create a new resource.
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/4.webp" />
+
+Search for `Cloudflared` and click on it.
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/5.webp" />
+
+Go to the **Environment Variables** page, enter your tunnel token, and deploy the Cloudflared app.
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/6.webp" />
+
+Once cloudflared starts running you will be able to see it's status on Cloudflare dashboard
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/7.webp" />
+
+Click on continue button to create the tunnel.
+
+## 4. Set Up TLS Encryption
+To make Cloudflare use stricter encryption when connecting to your server, configure your TLS encryption in Cloudflare:
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/8.webp" />
+
+1. Go to **SSL/TLS** in Cloudflare.
+2. Select **Overview**.
+3. Click **Configure** button
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/9.webp" />
+
+1. Choose **Full (Strict)** as the encryption mode.
+2. Click **Save** button
+
+
+## 5. Configure tunnel routes
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/10.webp" />
+
+1. Click on your tunnel 
+2. Click on **Configure** option
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/11.webp" />
+
+1. Select **Routes**.
+2. Click **Add route** button
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/12.webp" />
+
+3. Select **Published Application** as the route type
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/13.webp" />
+
+1. **Subdomain** - (Optional) You can make your resource accessible on any subdomain/domain. For this guide, we are using the `helixa` subdomain.
+2. **Domain** - Choose the domain you want to use for the tunnel.
+3. **Path** - Leave this field empty.
+4. **Service URL** - Enter **http://localhost:4477** (this is very important). The port 4477 is the one we mapped to the host system in [Step 1](/integrations/networking/cloudflare/tunnels/single-resource#1-setup-your-app-for-tunneling).
+6. After filling in the details, click the **Add route** button.
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/14.webp" />
+
+
+**Congratulations**! You've successfully set up a resource that can be accessed by anyone on the internet on your domain.
+
+---
+
+## Tunnel Multiple Resources
+
+The easiest way to tunnel multiple resources is by following our [Tunnel All Resources](/integrations/networking/cloudflare/tunnels/single-resource) guide, which uses Coolify's built-in proxy. 
+
+However, if you prefer not to use the proxy, there are two alternative methods:
+
+
+<Tabs items={['Tunnel Multiple Single Resources', 'Tunnel Coolify']}>
+
+<Tab value="Tunnel Multiple Single Resources">
+
+If you want to expose different apps individually, you can follow our [Tunnel All Resources](/integrations/networking/cloudflare/tunnels/single-resource), or take an alternate approach:
+
+1. Follow [Step 1](/integrations/networking/cloudflare/tunnels/single-resource#1-setup-your-app-for-tunneling) for your new resource.
+
+2. Create a new route on Cloudflare Tunnel as described in [Step 5](/integrations/networking/cloudflare/tunnels/single-resource#5-configure-tunnel-routes).
+
+There’s no need to create a separate tunnel for each resources, simply create a new route and point it to the port your app is listening on.
+
+</Tab>
+
+<Tab value="Tunnel Coolify">
+
+Tunneling Coolify itself to make it accessible over a domain requires a bit more manual configuration. Here's how you can set it up:
+
+### 1. Create routes in Cloudflare Tunnel [!toc]
+
+Follow [Step 5](/integrations/networking/cloudflare/tunnels/single-resource#5-configure-tunnel-routes) to create routes for each service Coolify exposes. Use the following mapping:
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/15.webp" />
+
+| Domain / Path                              | Service            | Purpose              |
+|--------------------------------------------|-------------------|----------------------|
+| `coolify.shadowarcanist.com/terminal/ws`     | `http://localhost:6002`    | WebSocket terminal   |
+| `coolify-realtime.shadowarcanist.com`        | `http://localhost:6001`    | Realtime server      |
+| `coolify.shadowarcanist.com`                 | `http://localhost:8000`    | Coolify dashboard    |
+
+
+<Callout type="warn" title="HEADS UP!">
+
+The order of the routes matters! Be sure to match it exactly as shown above.
+
+</Callout>
+
+
+---
+
+### 2. Update Coolify’s `.env` File [!toc]
+
+After creating public hostnames, update the `.env` file in your Coolify instance located at `/data/coolify/source` to enable connections to the realtime server. Add the following lines:
+
+```bash
+APP_ID=<random string>
+APP_KEY=<random string>
+APP_NAME=Coolify
+DB_PASSWORD=<random string>
+PUSHER_APP_ID=<random string>
+PUSHER_APP_KEY=<random string>
+PUSHER_APP_SECRET=<random string>
+REDIS_PASSWORD=<random string>
+
+###########
+# Add these lines
+PUSHER_HOST=coolify-realtime.shadowarcanist.com
+PUSHER_PORT=443
+###########
+```
+
+This ensures that Coolify uses the Cloudflare Tunnel for its realtime server.
+
+### 3. Restart Coolify [!toc]
+
+Run the following command to restart Coolify and apply the changes:
+
+```bash
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+```
+
+### 4. Verify the Setup [!toc]
+
+1. Access your Coolify dashboard at `https://coolify.shadowarcanist.com`.
+2. Test the realtime functionality by visiting `https://coolify.shadowarcanist.com/realtime` in another browser tab. You should see a notification about a test event.
+3. If you know what are you doing, you can check the network tab as well. Search for a websocket connection.
+
+
+<Callout type="warn" title="HEADS UP!">
+
+If you use a firewall, ensure that the required ports (e.g., `8000`, `6001`, `6002`) are open for internal communication but not exposed to the public internet.  
+
+</Callout>
+
+</Tab>
+</Tabs>
+
+
+---
+
+
+## Known issues and Solutions
+
+When you create a new routes in [Step 5](/integrations/networking/cloudflare/tunnels/single-resource#5-configure-tunnel-routes), Cloudflare will create a DNS record for the hostname.
+
+However, if a DNS record for the hostname already exists, Cloudflare won’t update existing record.
+
+In this case, your app won’t work. To fix this issue, follow the steps below:
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/all-resource/8.webp" />
+
+1. Click on your tunnel 
+2. Click on **Configure** option
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/all-resource/18.webp" />
+
+3. Copy your tunnel ID from the Tunnels details section.
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/all-resource/19.webp" />
+
+Create a new DNS record with the following details:
+
+1. In the Cloudflare dashboard, go to **DNS**.
+2. Select **Records**.
+3. Add a **CNAME** record.
+4. Enter the name as `*` or the name of your subdomain (this should match the hostname you have for your app on the tunnel).
+5. For the **Target**, enter the tunnel ID followed by `.cfargotunnel.com`
+6. Set the proxy status to **Proxied**.
+
+Now, visit the domain of your application, and it should be accessible there.

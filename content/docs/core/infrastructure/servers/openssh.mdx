@@ -1,0 +1,640 @@
+---
+title: OpenSSH
+description: Configure OpenSSH for the localhost server or a remote server connected to Coolify.
+---
+
+# Configure OpenSSH
+
+Coolify uses SSH to manage the servers connected to it.
+
+Choose **Localhost** when configuring the server where a self-hosted Coolify instance is installed. Choose **Remote server** when preparing another Linux server for Coolify Cloud or self-hosted Coolify.
+
+---
+
+## Choose the server
+
+<Tabs id="openssh-server-type" items={['Localhost', 'Remote server']}>
+<Tab value="Localhost">
+
+The official Coolify installation script normally installs OpenSSH and creates the **localhost** SSH connection. Choose **Semi-automatic** to configure OpenSSH before installing Coolify, or **Manual** if the localhost connection is missing or broken.
+
+<Callout type="warning" title="Keep your current server session open">
+Do not close your current SSH or console session until the **localhost** server connects successfully. You will need this session to correct the configuration if SSH access stops working.
+</Callout>
+
+<Tabs id="openssh-localhost-method" items={['Semi-automatic', 'Manual']}>
+<Tab value="Semi-automatic">
+
+### Configure OpenSSH before installing Coolify
+
+Use this method when you want to install and configure OpenSSH yourself, but want the Coolify installation script to create the **localhost** SSH key and dashboard connection.
+
+<Steps>
+<Step>
+
+### Log in to the server
+
+Login as `root` user using SSH or use the console provided by your hosting provider.
+
+</Step>
+<Step>
+
+### Install OpenSSH
+
+Run the commands below based on your server's operating system.
+
+<Tabs id="openssh-semi-automatic-install" items={['Ubuntu or Debian', 'RHEL compatible', 'SUSE', 'Arch Linux', 'Alpine Linux']}>
+<Tab value="Ubuntu or Debian">
+
+```sh
+apt-get update
+apt-get install -y openssh-server
+systemctl enable --now ssh
+```
+
+</Tab>
+<Tab value="RHEL compatible">
+
+Use this for CentOS, RHEL, Rocky Linux, AlmaLinux, Fedora, Amazon Linux, Oracle Linux, or TencentOS.
+
+```sh
+dnf install -y openssh-server
+systemctl enable --now sshd
+```
+
+</Tab>
+<Tab value="SUSE">
+
+```sh
+zypper refresh
+zypper install -y openssh
+systemctl enable --now sshd
+```
+
+</Tab>
+<Tab value="Arch Linux">
+
+```sh
+pacman -Sy --noconfirm openssh
+systemctl enable --now sshd
+```
+
+</Tab>
+<Tab value="Alpine Linux">
+
+```sh
+apk add openssh
+rc-update add sshd default
+service sshd start
+```
+
+</Tab>
+</Tabs>
+
+</Step>
+<Step>
+
+### Configure key-based SSH access
+
+Open the OpenSSH configuration file:
+
+```sh
+nano /etc/ssh/sshd_config
+```
+
+Find these settings and change them to the values below. Add them at the bottom if they are missing.
+
+```ini
+PubkeyAuthentication yes
+PermitRootLogin prohibit-password
+```
+
+`PermitRootLogin prohibit-password` allows `root` to connect with an SSH key but prevents password-based SSH login.
+
+<Callout type="warning" title="Confirm your current SSH key works">
+Before restarting OpenSSH, make sure the public key used for your current `root` login is already in `/root/.ssh/authorized_keys`. Otherwise, keep the console open so you can restore access.
+</Callout>
+
+</Step>
+<Step>
+
+### Check and restart OpenSSH
+
+Check the configuration:
+
+```sh
+sshd -t
+```
+
+The command should return no output. If it reports an error, correct the file before continuing.
+
+Restart OpenSSH with the command for the server's operating system:
+
+<Tabs id="openssh-semi-automatic-restart" items={['Ubuntu or Debian', 'RHEL, SUSE, or Arch', 'Alpine Linux']}>
+<Tab value="Ubuntu or Debian">
+
+```sh
+systemctl restart ssh
+```
+
+</Tab>
+<Tab value="RHEL, SUSE, or Arch">
+
+```sh
+systemctl restart sshd
+```
+
+</Tab>
+<Tab value="Alpine Linux">
+
+```sh
+service sshd restart
+```
+
+</Tab>
+</Tabs>
+
+</Step>
+<Step>
+
+### Run the Coolify installation script
+
+```sh
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+```
+
+The script uses the OpenSSH service you configured, creates the **localhost** SSH key, authorizes it, and adds the **localhost** server to Coolify.
+
+</Step>
+<Step>
+
+### Confirm the localhost server is ready
+
+1. Open the Coolify dashboard.
+2. Select **Servers**.
+3. Open **localhost**.
+4. Confirm that the **General** page says **Server is reachable and validated**.
+
+If **localhost** is not reachable, use the **Manual** tab.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Manual">
+
+### Configure OpenSSH and the localhost connection manually
+
+Use these steps when the automatic setup did not complete or the existing **localhost** connection is broken.
+
+<Steps>
+<Step>
+
+### Log in to the server
+
+Log in as `root` through SSH or use the console provided by your hosting provider.
+
+</Step>
+<Step>
+
+### Install OpenSSH
+
+Run the commands below based on your server's operating system.
+
+<Tabs id="openssh-install-operating-system" items={['Ubuntu or Debian', 'RHEL compatible', 'SUSE', 'Arch Linux', 'Alpine Linux']}>
+<Tab value="Ubuntu or Debian">
+
+```sh
+apt-get update
+apt-get install -y openssh-server
+systemctl enable --now ssh
+```
+
+</Tab>
+<Tab value="RHEL compatible">
+
+Use this for CentOS, RHEL, Rocky Linux, AlmaLinux, Fedora, Amazon Linux, Oracle Linux, or TencentOS.
+
+```sh
+dnf install -y openssh-server
+systemctl enable --now sshd
+```
+
+</Tab>
+<Tab value="SUSE">
+
+```sh
+zypper refresh
+zypper install -y openssh
+systemctl enable --now sshd
+```
+
+</Tab>
+<Tab value="Arch Linux">
+
+```sh
+pacman -Sy --noconfirm openssh
+systemctl enable --now sshd
+```
+
+</Tab>
+<Tab value="Alpine Linux">
+
+```sh
+apk add openssh
+rc-update add sshd default
+service sshd start
+```
+
+</Tab>
+</Tabs>
+
+OpenSSH is installed and configured to start when the server boots.
+
+</Step>
+<Step>
+
+### Configure key-based SSH access
+
+Open the OpenSSH configuration file:
+
+```sh
+nano /etc/ssh/sshd_config
+```
+
+Find these settings and change them to the values below. Add them at the bottom of the file if they are missing.
+
+```ini
+PubkeyAuthentication yes
+PermitRootLogin prohibit-password
+```
+
+`PermitRootLogin prohibit-password` allows `root` to connect with an SSH key but prevents password-based SSH login.
+
+<Callout type="warning" title="Do not restart OpenSSH yet">
+Keep this server session open. Do not restart OpenSSH until the localhost public key has been added to `/root/.ssh/authorized_keys`, or you may lose SSH access.
+</Callout>
+
+</Step>
+<Step>
+
+### Generate the localhost SSH key
+
+Create the directories used by Coolify:
+
+```sh
+mkdir -p /data/coolify/ssh/keys
+mkdir -p /root/.ssh
+chmod 700 /root/.ssh
+```
+
+Generate a new key without a passphrase:
+
+```sh
+ssh-keygen -t ed25519 -a 100 \
+  -f /data/coolify/ssh/keys/id.root@host.docker.internal \
+  -q -N "" -C coolify
+```
+
+If the command asks whether to overwrite an existing key, enter `y`. The remaining steps add the replacement private key to Coolify.
+
+</Step>
+<Step>
+
+### Authorize the localhost SSH key
+
+Add the generated public key to the `root` account:
+
+```sh
+cat /data/coolify/ssh/keys/id.root@host.docker.internal.pub \
+  >> /root/.ssh/authorized_keys
+chmod 600 /root/.ssh/authorized_keys
+chown 9999:root /data/coolify/ssh/keys/id.root@host.docker.internal
+```
+
+The key must not have a passphrase. Coolify cannot answer an interactive passphrase or two-factor authentication prompt when it connects.
+
+</Step>
+<Step>
+
+### Check and restart OpenSSH
+
+Check the configuration before restarting the service:
+
+```sh
+sshd -t
+```
+
+The command should return no output. If it reports an error, correct the file before continuing.
+
+Restart OpenSSH with the command for the server's operating system:
+
+<Tabs id="openssh-restart-operating-system" items={['Ubuntu or Debian', 'RHEL, SUSE, or Arch', 'Alpine Linux']}>
+<Tab value="Ubuntu or Debian">
+
+```sh
+systemctl restart ssh
+```
+
+</Tab>
+<Tab value="RHEL, SUSE, or Arch">
+
+```sh
+systemctl restart sshd
+```
+
+</Tab>
+<Tab value="Alpine Linux">
+
+```sh
+service sshd restart
+```
+
+</Tab>
+</Tabs>
+
+Keep the current session open and use a second terminal to confirm that key-based SSH access still works before closing it.
+
+</Step>
+<Step>
+
+### Copy the localhost private key
+
+Display the private key in the server terminal:
+
+```sh
+cat /data/coolify/ssh/keys/id.root@host.docker.internal
+```
+
+Copy the complete output, including the `BEGIN` and `END` lines.
+
+</Step>
+<Step>
+
+### Open the Keys and Tokens page on dashboard
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/private-keys/private-keys-page.webp" alt="Private Keys page with the Add button in Coolify" />
+
+1. Open **Keys & Tokens** in the Coolify sidebar.
+2. Select **Private Keys**.
+3. Select **+ Add**.
+
+</Step>
+<Step>
+
+### Add the localhost private key
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/private-keys/new-private-key-form.webp" alt="New Private Key form in Coolify" />
+
+1. Enter a name such as `localhost key`.
+2. Paste the value copied in the previous step into **Private Key**.
+3. Select **Continue**.
+
+Do not paste the private key into **Public Key** or `/root/.ssh/authorized_keys`.
+
+</Step>
+<Step>
+
+### Open the localhost server
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/openssh/localhost-server.webp" alt="Servers page with the localhost server in Coolify" />
+
+1. Open **Servers** in the Coolify sidebar.
+2. Select **localhost**.
+
+</Step>
+<Step>
+
+### Select the private key
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/openssh/localhost-private-key.webp" alt="Private Key page for the localhost server in Coolify" />
+
+1. Select **Private Key** in the server sidebar.
+2. Find the key you added in the previous step.
+3. Select **Use this key**.
+
+Coolify checks the connection before saving the new key.
+
+</Step>
+<Step>
+
+### Validate the localhost server
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/add-server/validate-server.webp" alt="Validate Server button on the localhost General page" />
+
+1. Open **General** for the **localhost** server.
+2. Select **Validate Server**.
+3. Wait for validation to finish.
+
+The setup is complete when the page says **Server is reachable and validated**.
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/add-server/validated-server.webp" alt="Validated localhost server in Coolify" />
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+</Tab>
+<Tab value="Remote server">
+
+### Configure OpenSSH on a remote server
+
+Most Linux servers already have OpenSSH installed. Use these steps to install it when needed and confirm that public-key authentication is enabled.
+
+<Steps>
+<Step>
+
+### Log in to the server
+
+Log in as `root` through SSH or use the server console.
+
+</Step>
+<Step>
+
+### Install OpenSSH
+
+If OpenSSH is missing, run the commands below based on your server's operating system.
+
+<Tabs id="openssh-remote-install" items={['Ubuntu or Debian', 'RHEL compatible', 'SUSE', 'Arch Linux', 'Alpine Linux']}>
+<Tab value="Ubuntu or Debian">
+
+```sh
+apt-get update
+apt-get install -y openssh-server
+systemctl enable --now ssh
+```
+
+</Tab>
+<Tab value="RHEL compatible">
+
+Use this for CentOS, RHEL, Rocky Linux, AlmaLinux, Fedora, Amazon Linux, Oracle Linux, or TencentOS.
+
+```sh
+dnf install -y openssh-server
+systemctl enable --now sshd
+```
+
+</Tab>
+<Tab value="SUSE">
+
+```sh
+zypper refresh
+zypper install -y openssh
+systemctl enable --now sshd
+```
+
+</Tab>
+<Tab value="Arch Linux">
+
+```sh
+pacman -Sy --noconfirm openssh
+systemctl enable --now sshd
+```
+
+</Tab>
+<Tab value="Alpine Linux">
+
+```sh
+apk add openssh
+rc-update add sshd default
+service sshd start
+```
+
+</Tab>
+</Tabs>
+
+</Step>
+<Step>
+
+### Make sure the root SSH key is authorized
+
+Before disabling password-based root login, make sure the public key used for the `root` account is already in `/root/.ssh/authorized_keys`.
+
+If you have not added a key yet, complete [Create and authorize an SSH key](/core/infrastructure/servers/add-server#create-and-authorize-an-ssh-key), then return to this step.
+
+</Step>
+<Step>
+
+### Update the OpenSSH configuration
+
+Open the configuration file:
+
+```sh
+nano /etc/ssh/sshd_config
+```
+
+Find these settings and change them to the values below. Add them at the bottom if they are missing.
+
+```ini
+PubkeyAuthentication yes
+PermitRootLogin prohibit-password
+```
+
+`PermitRootLogin prohibit-password` allows `root` to connect with an SSH key but prevents password-based SSH login.
+
+<Callout type="warning" title="Keep the current session open">
+Do not close the current SSH or console session until you confirm that the public key works. This session lets you correct the configuration if the new connection fails.
+</Callout>
+
+</Step>
+<Step>
+
+### Check and restart OpenSSH
+
+Check the configuration:
+
+```sh
+sshd -t
+```
+
+The command should return no output. If it reports an error, correct the file before restarting OpenSSH.
+
+Restart OpenSSH with the command for the server's operating system:
+
+<Tabs id="openssh-remote-restart" items={['Ubuntu or Debian', 'RHEL, SUSE, or Arch', 'Alpine Linux']}>
+<Tab value="Ubuntu or Debian">
+
+```sh
+systemctl restart ssh
+```
+
+</Tab>
+<Tab value="RHEL, SUSE, or Arch">
+
+```sh
+systemctl restart sshd
+```
+
+</Tab>
+<Tab value="Alpine Linux">
+
+```sh
+service sshd restart
+```
+
+</Tab>
+</Tabs>
+
+</Step>
+<Step>
+
+### Confirm the SSH connection
+
+Open a second terminal and connect with the authorized key:
+
+```sh
+ssh root@<server-ip>
+```
+
+If OpenSSH uses a port other than `22`, run:
+
+```sh
+ssh -p <ssh-port> root@<server-ip>
+```
+
+Keep the original server session open until this connection succeeds.
+
+</Step>
+<Step>
+
+### Connect the server to Coolify
+
+Finish the [Connect the server](/core/infrastructure/servers/add-server#connect-the-server) steps and validate the server.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+---
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="Why does validation show Permission denied (publickey)?">
+
+The private key selected for the server does not match a public key in the SSH user's `authorized_keys` file.
+
+For **localhost**, repeat the **Authorize the localhost SSH key** and **Select the private key** steps in the **Manual** tab.
+
+For a remote server, repeat the SSH key steps in [Add Server](/core/infrastructure/servers/add-server#create-and-authorize-an-ssh-key).
+
+</Accordion>
+
+<Accordion title="Why does validation time out?">
+
+Confirm that the server IP address and SSH port are correct. Then confirm that the [firewall](/core/infrastructure/servers/firewall) allows the SSH connection from Coolify.
+
+</Accordion>
+
+<Accordion title="Why is the SSH connection refused?">
+
+OpenSSH is not running or is listening on a different port. Start the OpenSSH service, then confirm that the port in **Servers > your server > General** matches the port used by OpenSSH.
+
+</Accordion>
+
+</Accordions>

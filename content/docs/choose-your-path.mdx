@@ -1,0 +1,86 @@
+---
+title: Choose your path
+description: Decide between self-hosted Coolify and Coolify Cloud based on your goals, responsibilities, and operational comfort level.
+---
+
+import {
+  ArrowsRight,
+  Checklist2,
+  Cloud,
+  Server,
+  Warning22,
+} from 'reicon-react';
+
+# Choose your path
+
+Coolify can be used in two ways: self-hosted, where you run and maintain the Coolify instance yourself, or Coolify Cloud, where the Coolify team runs and maintains the Coolify instance for you.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Self-hosted and Cloud use the same Coolify features. The choice is only who operates the Coolify instance: you manage it yourself, or Coolify manages it for you.
+
+</CoolCallout>
+
+| Area | Self-hosted | Coolify Cloud |
+| :--- | :--- | :--- |
+| Coolify instance | You install, update, backup, monitor, and restore the Coolify instance. | The Coolify team runs, updates, backs up, monitors, and restores the Coolify instance. |
+| Your servers | You provide the servers and secure the operating system, SSH access, firewall, and network. | You still provide the servers and secure the operating system, SSH access, firewall, and network. |
+| Your workloads | Your apps, databases, volumes, secrets, and runtime security remain your responsibility. | Your apps, databases, volumes, secrets, and runtime security remain your responsibility. |
+| Coolify updates | You decide when to update Coolify and how to handle maintenance windows. | Coolify team applies control-plane updates for you. |
+| Cost model | No Coolify license fee. You pay for your own infrastructure and operations time. | Paid managed service for the Coolify instance. You still pay for your own servers. |
+| Feature set | All Coolify features. | Same as self-hosted. No Cloud-only feature paywall. |
+
+<CoolDocsPage>
+
+<CoolActionCardGrid
+  cards={[
+    {
+      title: 'Self-hosted Coolify',
+      href: '/start-with-self-hosted',
+      icon: Server,
+      type: 'secondary',
+      description: 'Choose this if control, auditability, and self-managed operations matter more than the fastest setup.',
+      bullets: [
+        'You manage installation and upgrades',
+        'You own instance backup and restore planning',
+        'You control maintenance and operational standards',
+        'Keep all platform data under your control',
+        'No recurring platform subscription costs',
+      ],
+      'btn-cta': 'Choose Self-hosted',
+    },
+    {
+      title: 'Coolify Cloud',
+      href: '/start-with-cloud',
+      icon: Cloud,
+      type: 'primary',
+      description: 'Choose this if you want the quickest route to production and less control-plane maintenance.',
+      bullets: [
+        'Coolify team manages the control plane',
+        'Coolify team handles platform updates',
+        'You still keep ownership of your servers and workloads',
+        'Built-in high availability for the control plane',
+        'No platform maintenance required',
+      ],
+      'btn-cta': 'Choose Cloud',
+    },
+  ]}
+/>
+
+<CoolCallout icon={Checklist2} title="Why this choice matters">
+
+Both paths give you the same core product experience, but they differ in who is responsible for operating and maintaining the Coolify instance.
+
+Coolify Cloud includes a monthly subscription for the managed instance, while self-hosted lets you run it yourself without recurring platform fees.
+
+</CoolCallout>
+
+<CoolCallout icon={Warning22} title="Still unsure?" type="warn">
+
+**Start with Self-hosted if you are comfortable operating the control plane.**
+
+Self-hosted gives you the clearest ownership model from day one. Choose Cloud when you want the Coolify team to handle the instance maintenance for you.
+
+</CoolCallout>
+
+</CoolDocsPage>

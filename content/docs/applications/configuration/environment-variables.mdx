@@ -1,0 +1,128 @@
+---
+title: Environment Variables
+description: Configure application values for the build phase, the running container, and preview deployments.
+---
+
+# Environment variables
+
+Application environment variables pass configuration to the image build, the running container, or both.
+
+Open the application, then select **Configuration > Environment Variables**.
+
+<Callout type="info" title="Preview deployments have separate values">
+
+Use the preview environment-variable view for values that should differ from the production application, such as a preview database or callback URL.
+
+</Callout>
+
+<span id="developer-view" />
+
+## Add variables
+
+Use **Normal view** to configure one variable at a time. Each entry can control whether the value is available during the build and at runtime, and whether it is multiline or literal.
+
+Use **Developer view** to paste or edit multiple values in `.env` format:
+
+```dotenv
+NODE_ENV=production
+LOG_LEVEL=info
+API_URL=https://api.example.com
+```
+
+Lines beginning with `#` are ignored. Saving Developer view creates, updates, and removes entries to match its contents.
+
+Locked secrets and multiline values cannot be edited in Developer view. Change those entries in Normal view.
+
+## Build and runtime scope
+
+**Build Variable** and **Runtime Variable** are independent. Both are enabled for a new variable by default.
+
+| Setting | Image build | Running container |
+| :--- | :---: | :---: |
+| Build and runtime | Available | Available |
+| Build only | Available | Not available |
+| Runtime only | Not available | Available |
+
+Disable **Build Variable** for a secret that the application only reads after the container starts.
+
+<Callout type="warning" title="Build arguments can remain visible">
+
+Traditional Docker build arguments can appear in image metadata. Use **Use Docker Build Secrets** for sensitive build-time values when the build server supports Docker BuildKit. If BuildKit is unavailable, Coolify falls back to build arguments.
+
+</Callout>
+
+### Example: private npm registry
+
+Authenticate to a private npm registry during the build with a build variable instead of committing a token to the repository.
+
+1. Add an `.npmrc` file to your project root:
+
+   ```ini
+   //registry.npmjs.org/:_authToken=${NPM_TOKEN}
+   ```
+
+2. Add `NPM_TOKEN` with **Build Variable** enabled (the token is only needed during `npm install`), and set its value to your registry token.
+
+3. Deploy the application. The build reads `NPM_TOKEN` and authenticates to the registry.
+
+## Multiline and literal values
+
+Enable **Multiline** when a value contains line breaks, such as a private key, certificate, or configuration file.
+
+Enable **Literal** when characters such as `$` must remain unchanged. Without it, Coolify can expand references contained in the value. Multiline values are already treated literally.
+
+## Shared variables
+
+Reference a team, project, environment, or server variable instead of copying the same value into every resource:
+
+```sh
+{{environment.DATABASE_URL}}
+```
+
+Follow [Shared variables](/core/team/shared-variables) to create a value at the correct scope and assign it to an application variable.
+
+## Predefined application variables
+
+Coolify makes deployment information available through predefined values.
+
+| Variable | Value |
+| :--- | :--- |
+| `COOLIFY_FQDN` | Application domain names. |
+| `COOLIFY_URL` | Application URLs. |
+| `COOLIFY_BRANCH` | Selected Git branch. |
+| `COOLIFY_RESOURCE_UUID` | Coolify resource identifier. |
+| `COOLIFY_CONTAINER_NAME` | Generated container name. |
+| `SOURCE_COMMIT` | Deployed Git commit. |
+| `PORT` | First exposed port when `PORT` is not already set. |
+| `HOST` | `0.0.0.0` when `HOST` is not already set. |
+
+Coolify excludes `SOURCE_COMMIT` from Docker builds by default to preserve cache reuse. Enable **Configuration > Advanced > Include Source Commit in Build** when the build needs it.
+
+Assign a predefined value to your own key when the application expects another name:
+
+```dotenv
+APP_REVISION=$SOURCE_COMMIT
+```
+
+## Docker Compose variables
+
+Coolify detects variable references in a Compose definition and displays them as application variables:
+
+```yaml
+services:
+  api:
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      API_KEY: ${API_KEY:?}
+```
+
+`${API_KEY:?}` marks the variable as required. Coolify blocks deployment while its value is empty.
+
+For generated stack values such as URLs, users, passwords, and random strings, read [Docker Compose](/applications/builds/docker-compose).
+
+## Apply changes
+
+Save the variables, then redeploy or restart the application so Coolify recreates the runtime environment.
+
+Use a new deployment when build-time values changed. Use **Restart** when only runtime values changed. Source-based paths reuse an existing image when eligible; Docker Image pulls the saved image reference again.

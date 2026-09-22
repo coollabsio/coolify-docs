@@ -1,0 +1,139 @@
+---
+title: Telegram
+description: Configure a Telegram bot, chat, and optional topic IDs for Coolify notifications.
+---
+
+# Telegram
+
+Coolify sends Telegram notifications through a bot. You need the bot API token and the ID of the group, channel, or chat that should receive notifications.
+
+## Create the bot and destination
+
+<Steps>
+<Step>
+
+### Create a Telegram bot
+
+1. Open [BotFather](https://t.me/botfather) in Telegram and confirm that the account is the official `@BotFather` account.
+2. Send `/newbot`.
+3. Follow the prompts to choose a display name and a unique username for the bot.
+4. Copy the bot API token that BotFather returns.
+
+</Step>
+<Step>
+
+### Create or choose the destination
+
+Create a group, channel, or direct chat for the notifications, or use an existing destination. A dedicated group keeps deployment and server alerts separate from general conversation.
+
+Add the bot by searching for the username you created. For a channel, promote the bot to an administrator with permission to post messages. For a group, make sure its permissions allow the bot to send messages; promote it if the group's restrictions require it.
+
+</Step>
+<Step>
+
+### Optional: create topics
+
+To route different events into separate threads, use a Telegram group with **Topics** enabled:
+
+1. Open the group's settings and edit the group.
+2. Enable **Topics**.
+3. Create the topics you want to use, such as `Deployments`, `Backups`, and `Servers`.
+4. Send a message inside each topic whose ID you need.
+
+Telegram shows the Topics option only for groups that support forum topics.
+
+</Step>
+<Step>
+
+### Generate an update for the bot
+
+Send a new message in the destination. If you use topics, send the message inside the relevant topic. Telegram must deliver an update to the bot before its API response contains the chat or thread ID.
+
+</Step>
+</Steps>
+
+<Callout type="warning" title="Protect the bot token">
+Anyone with the bot token can use the bot API. Store the token as a secret. If it is exposed, use BotFather to revoke it and create a replacement.
+</Callout>
+
+---
+
+## Find the chat and topic IDs
+
+1. Open `https://api.telegram.org/bot<BOT_TOKEN>/getUpdates` in a browser after replacing the entire `<BOT_TOKEN>` placeholder with the token from BotFather.
+2. Find the newest `message` object in the JSON response.
+3. Copy `message.chat.id` for the **Chat ID**. Group and channel IDs are often negative; include the leading `-`.
+4. If the message was sent inside a topic, copy `message.message_thread_id` for that topic.
+
+For example, the relevant part of a response can look like this:
+
+```json
+{
+  "message": {
+    "message_thread_id": 42,
+    "chat": {
+      "id": -1001234567890
+    }
+  }
+}
+```
+
+If the response does not include the destination, send another message in the group or topic and request `getUpdates` again.
+
+---
+
+## Configure Coolify
+
+<Steps>
+<Step>
+
+### Save the bot and chat
+
+Open **Notifications > Telegram**. Enter the **Bot API Token** and **Chat ID** exactly as returned by Telegram, including a leading `-` in the chat ID, then select **Save**.
+
+</Step>
+<Step>
+
+### Enable the channel
+
+Turn on **Enabled**. If Coolify does not keep the channel enabled, recheck that both required values were saved.
+
+</Step>
+<Step>
+
+### Choose events and topics
+
+Under **Notification Settings**, select the events to send to Telegram.
+
+To route a supported event into a topic, enter that topic's numeric ID in **Custom Telegram Thread ID** beside the event. Leave it empty to send the event to the main chat.
+
+</Step>
+<Step>
+
+### Send a test
+
+Select **Send Test Notification** and confirm that it arrives in the configured chat. The general test uses the main chat configuration, not a custom thread ID.
+
+</Step>
+</Steps>
+
+<Callout type="info" title="Custom thread ID limitations">
+Custom thread IDs currently apply to deployment success and failure, application and container stopped or restarted events, backup success and failure, scheduled tasks, Docker cleanup, disk usage, server reachability, and server patching.
+
+Restart-limit alerts, backup S3 upload warnings, Traefik proxy outdated alerts, and test notifications use the main chat without a custom thread ID.
+</Callout>
+
+---
+
+## Troubleshoot Telegram delivery
+
+If the test does not arrive:
+
+1. Confirm that the BotFather token was copied without spaces and that the full `<BOT_TOKEN>` placeholder was replaced in the `getUpdates` URL.
+2. Send a new message in the destination and load `getUpdates` again if the response is empty or does not show the chat.
+3. Include the leading minus sign in a negative group or channel ID.
+4. Confirm that the bot is still a member of the destination and has permission to post. Channels normally require the bot to be an administrator.
+5. If only a topic-routed event fails, confirm that the thread ID belongs to the same group as the saved chat ID and that the event supports custom thread IDs.
+6. If the token was revoked in BotFather, save the replacement token in Coolify and test again.
+
+See [Notification events](/core/notifications/events) for the trigger behind each event setting.

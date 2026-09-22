@@ -1,0 +1,35 @@
+---
+title: "Storage create"
+description: "Create a storage for a service"
+---
+
+# Storage create
+
+Create a storage for a service
+
+## Usage
+
+```sh
+coolify service storage create <service_uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--content` | `string` | No | — | File content (file only) |
+| `--fs-path` | `string` | No | — | Host directory path (file only, required when --is-directory is set) |
+| `--host-path` | `string` | No | — | Host path (persistent only) |
+| `--is-directory` | `boolean` | No | `false` | Whether this is a directory mount (file only) |
+| `--mount-path` | `string` | Yes | — | Mount path inside the container (required) |
+| `--name` | `string` | No | — | Volume name (persistent only) |
+| `--resource-uuid` | `string` | Yes | — | UUID of the service sub-resource (required) |
+| `--type` | `string` | Yes | — | Storage type: 'persistent' or 'file' (required) |
+
+## Get current help
+
+```sh
+coolify service storage create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

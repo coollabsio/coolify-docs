@@ -1,0 +1,29 @@
+---
+title: "Database start"
+description: "Start or redeploy a database in a service"
+---
+
+# Database start
+
+Start or redeploy a database in a service
+
+## Usage
+
+```sh
+coolify service database start <service-uuid> <database-uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--force` | `boolean` | No | `false` | Rebuild the database container |
+| `--latest` | `boolean` | No | `false` | Pull the latest image |
+
+## Get current help
+
+```sh
+coolify service database start --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

@@ -1,0 +1,16 @@
+---
+title: Deployments
+description: Use Coolify MCP to inspect, queue, control, and cancel deployments.
+---
+
+# Deployments
+
+| Tool | Permission | Purpose |
+| :--- | :--- | :--- |
+| `list_deployments` | `read` | List queued, in-progress, or application deployment history. |
+| `get_deployment` | `read` | Inspect one deployment; build logs are not returned. |
+| `deploy` | `deploy` | Queue an application deployment by UUID. Supports force rebuild and preview IDs. |
+| `cancel_deployment` | `deploy` | Cancel a queued or in-progress deployment. |
+| `control` | `deploy` | Start, stop, or restart an application, database, or service. `stop` requires `confirm=true`. |
+
+Follow [Security](/mcp/security) before granting `deploy`.

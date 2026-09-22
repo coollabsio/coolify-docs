@@ -1,0 +1,111 @@
+---
+title: Authentik
+description: Configure Authentik SSO for Coolify with an OAuth2/OpenID Connect provider, application, and base URL.
+---
+
+# Configure Authentik SSO
+
+Create an OAuth2/OpenID Connect provider and application in Authentik, then connect the provider to Coolify with a confidential client ID and secret.
+
+<Callout type="warning" title="Requires Coolify v4.3.0">
+  Authentik SSO is available in Coolify v4.3.0 or above
+</Callout>
+
+<Callout type="warning" title="Example data">
+Replace these values while following the guide:
+
+- **Coolify callback:** `https://coolify.shadowarcanist.com/auth/authentik/callback`
+- **Authentik Base URL:** `https://auth.shadowarcanist.com`
+- **Application name:** `Coolify`
+</Callout>
+
+## Set up Authentik SSO
+
+<Steps>
+<Step>
+
+### Start an Authentik application
+
+Sign in to the Authentik administration interface and open **Applications > Applications**.
+
+Select **Create with Provider**, enter a name such as `Coolify`, and choose a slug. Continue with **OAuth2/OpenID Connect** as the provider type.
+
+If your Authentik version creates providers separately, open **Applications > Providers**, create an **OAuth2/OpenID Provider**, then attach it to a new application.
+
+See Authentik's [OAuth2/OpenID provider documentation](https://docs.goauthentik.io/add-secure-apps/providers/oauth2/) if the navigation or field names differ in your installed version.
+
+</Step>
+<Step>
+
+### Configure the OAuth2/OpenID provider
+
+Configure the provider as a confidential authorization-code client:
+
+| Authentik setting | Value |
+| :--- | :--- |
+| **Client type** | **Confidential** |
+| **Redirect URIs/Origins** | Strict URI `https://coolify.shadowarcanist.com/auth/authentik/callback` |
+| **Scopes** | Include `openid`, `profile`, and `email`. Coolify also requests Authentik's `goauthentik.io/api` scope. |
+| **Authorization flow** | Select the flow your users should complete. |
+| **Signing key** | Use the signing key required by your Authentik policy. |
+
+Save the provider and application.
+
+Use Authentik policies, groups, or application bindings to restrict who may access the Coolify application.
+
+</Step>
+<Step>
+
+### Save the Authentik credentials
+
+Copy the provider **Client ID** and **Client Secret**. Store the secret securely.
+
+The **Base URL** for Coolify is the Authentik instance origin, such as `https://auth.shadowarcanist.com`. Do not append `/application/o/authorize/` or the application slug.
+
+</Step>
+<Step>
+
+### Configure Authentik in Coolify
+
+Open **Settings > OAuth** and find **Authentik**.
+
+| Coolify field | Authentik value |
+| :--- | :--- |
+| **Client ID** | Authentik provider client ID |
+| **Client Secret** | Authentik provider client secret |
+| **Redirect URI** | `https://coolify.shadowarcanist.com/auth/authentik/callback` |
+| **Base URL** | Authentik origin, such as `https://auth.shadowarcanist.com` |
+
+Select **Save**, then turn on **Enabled** for Authentik.
+
+</Step>
+<Step>
+
+### Verify Authentik sign-in
+
+Open the Coolify login page in a private browser window and select **Login with Authentik**. Complete the assigned Authentik flow, then confirm that Coolify opens the account matching the Authentik email address.
+
+Also test an Authentik user who is not allowed by the application policy and confirm that Authentik blocks access.
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="Authentik reports an invalid redirect URI">
+
+Open the Authentik OAuth2/OpenID provider and compare its strict redirect URI with the Coolify **Redirect URI**. Do not use a regex unless your Authentik policy requires one.
+
+</Accordion>
+<Accordion title="Coolify cannot reach Authentik">
+
+Confirm that **Base URL** contains only the public Authentik origin and is reachable from the Coolify server. Authentik exposes authorization, token, and user information below `/application/o/`.
+
+</Accordion>
+<Accordion title="Coolify returns to the login page">
+
+Confirm that the provider includes the `email` scope and returns an email address for the user. Also check that the application policy permits that user.
+
+</Accordion>
+</Accordions>

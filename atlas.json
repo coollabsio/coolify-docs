@@ -1,0 +1,15 @@
+{
+  "name": "Coolify Docs",
+  "contentDir": "content/docs",
+  "redirectsFile": "nginx/redirects.conf",
+  "publicDir": "public",
+  "mediaDir": "public/images",
+  "templateDir": "templates",
+  "previewUrl": "http://localhost:7788",
+  "previewCommand": "bun install && bun run dev",
+  "redirectBasePath": "/docs",
+  "previewAutoStart": false,
+  "previewAutoRestart": false,
+  "previewHealthPath": "",
+  "previewEnv": {}
+}

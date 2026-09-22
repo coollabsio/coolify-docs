@@ -1,0 +1,33 @@
+---
+title: "OpenObserve"
+description: "Observability platform for logs, metrics, traces, RUM, and session replays."
+og:
+  description: "Deploy OpenObserve on Coolify for log aggregation, metrics, distributed tracing, real user monitoring, and session replays."
+category: "Monitoring"
+icon: "/docs/images/services/openobserve-logo.svg"
+---
+
+# OpenObserve
+
+<ZoomImage src="/docs/images/services/openobserve-logo.svg" alt="OpenObserve logo" />
+
+## What is OpenObserve?
+
+OpenObserve is an open-source observability platform for logs, metrics, traces, real user monitoring, and session replays.
+
+## Coolify deployment
+
+The Coolify template runs OpenObserve in single-node mode on port `5080`. It stores its data under `/data` in the `openobserve-data` volume and does not require an external database for this deployment mode.
+
+## Default credentials
+
+The default root email is `root@example.com`. Change `ZO_ROOT_USER_EMAIL` before the first deployment when you need another address.
+
+Coolify generates the root password as `SERVICE_PASSWORD_OPENOBSERVE`. Find its generated value in the service environment variables.
+
+## Links
+
+- [Official website](https://openobserve.ai/)
+- [Documentation](https://openobserve.ai/docs/)
+- [Environment variables](https://openobserve.ai/docs/environment-variables/)
+- [GitHub repository](https://github.com/openobserve/openobserve)

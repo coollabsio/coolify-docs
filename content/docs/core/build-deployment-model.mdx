@@ -1,0 +1,193 @@
+---
+title: Build and Deployment Model
+description: How Coolify builds or pulls application images and replaces running containers on connected servers.
+---
+
+import {
+  ArrowsRight,
+  Box2,
+  BranchUp,
+  BrowserCode,
+  Layers,
+  Package,
+  Refresh23,
+} from 'reicon-react';
+
+# Build and deployment model
+
+Coolify turns source code, Docker configuration, or an existing image into running containers on a connected server.
+
+The exact path depends on whether Coolify builds an image, pulls one from a registry, or applies a Docker Compose definition. Coolify coordinates the deployment while Docker builds and runs the workload on your infrastructure.
+
+This page focuses on applications. Databases and one-click services use their own Docker lifecycle and do not follow every build path described here.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Each deployment is a queued operation. Coolify resolves the requested source or image, prepares the runtime configuration, starts the required containers, and updates the running application according to the available replacement path.
+
+The result is a set of standard Docker resources on the connected server. Coolify is the open source control plane for deploying and managing them.
+
+</CoolCallout>
+
+---
+
+## What starts a deployment
+
+An application deployment combines configuration saved in Coolify with a trigger such as **Deploy**, **Redeploy**, a Git webhook, or an API request.
+
+The application source determines whether a build is required before Coolify can start containers.
+
+<CoolIconCardGrid
+  surface
+  cards={[
+    {
+      title: 'Git repository',
+      description: 'Use a selected branch and commit, then create an image with Nixpacks, Railpack (Beta), Static, Dockerfile, or Docker Compose.',
+      icon: BranchUp,
+    },
+    {
+      title: 'Dockerfile without Git',
+      description: 'Store a Dockerfile in Coolify and build an image without connecting a repository.',
+      icon: BrowserCode,
+    },
+    {
+      title: 'Docker Compose',
+      description: 'Use a Compose definition from a repository or enter one directly in Coolify for a multi-container application.',
+      icon: Layers,
+    },
+    {
+      title: 'Existing Docker image',
+      description: 'Deploy an image tag or SHA256 digest from a container registry without building source code.',
+      icon: Box2,
+    },
+  ]}
+/>
+
+---
+
+## From configuration to running containers
+
+Coolify follows the same broad lifecycle even when the source and replacement paths differ.
+
+<CoolFlow
+  id="application-deployment-flow"
+  icon={Layers}
+  title="From deployment trigger to running containers"
+  description="A deployment moves one requested application version through a queue, image preparation, runtime configuration, and container update."
+  steps={[
+    'Queue the deployment',
+    'Resolve the source and version',
+    'Build or pull the required images',
+    'Apply runtime configuration',
+    'Start and route containers',
+  ]}
+  list={[
+    'Coolify records the deployment. Its status changes from queued to in progress when a queue slot opens and Coolify dispatches the job.',
+    'For Git sources, Coolify checks out the requested commit. Other paths use the saved Dockerfile, Compose definition, or image reference.',
+    'Docker builds with the selected method, or pulls an existing image from its registry.',
+    'Coolify writes environment configuration and attaches the configured networks, persistent storage, and proxy labels.',
+    'Docker starts the containers. For HTTP applications, the proxy on the deployment server routes configured domains to them.',
+  ]}
+  endnote="Coolify stores the deployment status and logs. Docker runs the resulting containers, while the images, networks, and storage remain on the connected server."
+/>
+
+---
+
+## How Coolify prepares an image
+
+Every application container starts from a Docker image. Coolify can create that image from application source or use an image that already exists in a registry.
+
+<CoolCompare
+  id="image-preparation-paths"
+  className="not-prose"
+  icon={Package}
+  title="Build or pull an image"
+  description="Source-based applications create an image during deployment. Docker Image applications use one that already exists, while Docker Compose can combine both methods across its services."
+>
+<CoolCompareColumn
+  title="Build from source"
+  items={[
+    'Git applications can use Nixpacks, Railpack (Beta), Static, Dockerfile, or Docker Compose.',
+    'Coolify builds on the deployment server by default.',
+    'Nixpacks, Railpack, Static, and Dockerfile builds can run on a dedicated build server and deliver the image through a registry.',
+    'Images built with Nixpacks, Railpack, Static, or Dockerfile can remain on the deployment server or be pushed to a configured registry.',
+  ]}
+/>
+<CoolCompareColumn
+  title="Use an existing image"
+  items={[
+    'A Docker Image application accepts an image name with a tag or SHA256 digest.',
+    'Coolify pulls the image during deployment instead of cloning and building source code.',
+    'Runtime environment variables, storage, networks, domains, and health checks still apply.',
+    'If a registry publishes a different image under a mutable tag such as `latest`, the next deployment can pull that image without a source change.',
+  ]}
+/>
+</CoolCompare>
+
+For Git deployments that use Nixpacks, Railpack, Static, or Dockerfile, Coolify looks for an image tagged with the requested commit. If the image exists locally or in the configured registry and no build configuration changed, Coolify skips the build and reuses that image.
+
+Use **Force deploy (without cache)** when you need Coolify to rebuild the image without Docker's build cache.
+
+A dedicated build server separates build load from the deployment server. Using a build server requires a registry image name so the deployment server can pull the completed image. Read [Build Server](/core/infrastructure/servers/build-servers) for the server and registry requirements.
+
+---
+
+## How Coolify replaces running containers
+
+For source-based applications, Coolify completes the image build before changing the running containers. A failed source build leaves the current application version running.
+
+After the build finishes, or after Coolify prepares the existing image reference and runtime configuration, the replacement behavior depends on the application type and configuration.
+
+<CoolCompare
+  id="container-replacement-paths"
+  className="not-prose"
+  columns={3}
+  icon={Refresh23}
+  title="Container replacement paths"
+  description="The selected path determines when the current container stops and what happens if the new version does not become ready."
+>
+<CoolCompareColumn
+  title="Rolling update"
+  items={[
+    'Used for Nixpacks, Railpack, Static, Dockerfile, and Docker Image applications when the container and network settings allow Coolify to start a second container.',
+    'Starts the new container while the current container keeps running.',
+    'With a health check, waits for the new container to become healthy before removing the current one.',
+    'If the health check fails, removes the new container and keeps the current container running.',
+  ]}
+/>
+<CoolCompareColumn
+  title="Stop then start"
+  items={[
+    'Used when host port mappings, a fixed or custom container name, preview deployments, or a custom IP prevent a rolling update.',
+    'Stops the current container before starting the new container.',
+    'Can cause a service interruption while the new container starts.',
+    'A source build still completes before Coolify stops the current container.',
+  ]}
+/>
+<CoolCompareColumn
+  title="Compose or Swarm update"
+  items={[
+    'Docker Compose builds or pulls the required service images, then reconciles the stack with `docker compose up`.',
+    'Compose deployments do not use Coolify\'s application-level rolling replacement path.',
+    'For Nixpacks, Railpack, Static, Dockerfile, and Docker Image applications targeting Docker Swarm, Coolify uses `docker stack deploy`, and Swarm controls the service update.',
+    'Availability depends on the Compose or Swarm service definition and readiness configuration.',
+  ]}
+/>
+</CoolCompare>
+
+Configure a [health check](/applications/configuration/health-checks) when a rolling update must verify that the new container is ready. Without a configured or image-provided health check, Coolify cannot test application readiness before treating the new container as available.
+
+Open **Deployments** on the application to inspect each deployment status and its logs. After the application is running, use **Logs**, **Terminal** on non-Swarm servers, and the application lifecycle actions to operate the containers.
+
+---
+
+## What persists between deployments
+
+Containers are replaceable. Persistent data must live outside the container's writable filesystem so a new container can use the same data.
+
+- **Build-time configuration** affects the image and can require a new build.
+- **Runtime configuration** is applied when the container starts, so Coolify can reuse the same image when only runtime settings change.
+- **Persistent volumes and mounted files** remain outside the replaceable container filesystem and are attached to the new container definition.
+- **Unmounted container data** is not persistent and can be lost when Coolify replaces or removes the container.
+
+Read [Docker and containers](/core/docker-and-containers) for the relationship between images, containers, volumes, and networks.

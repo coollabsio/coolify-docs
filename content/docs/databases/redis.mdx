@@ -1,17 +1,103 @@
 ---
 title: Redis
-description: Deploy Redis in-memory databases on Coolify with caching, vector database, document storage, streaming, and message broker capabilities.
+description: Deploy and operate Redis on Coolify with generated credentials, persistent storage, TLS, health checks, and private or public connection URLs.
 ---
 
 # Redis
 
-<ZoomImage src="/docs/images/database-logos/redis.svg" alt="Redis" />
+Coolify deploys Redis as a standalone in-memory datastore on the selected server and destination. A new resource gets a generated password, a persistent volume at `/data`, an internal connection URL, and a health check.
 
-## What is Redis
+Redis is a key-value datastore commonly used for caching, queues, streams, and short-lived application state.
 
-Redis is an in-memory data store used by millions of developers as a cache, vector database, document database, streaming engine, and message broker. Redis has built-in replication and different levels of on-disk persistence. It supports complex data types (for example, strings, hashes, lists, sets, sorted sets, and JSON), with atomic operations defined on those data types.
+## Create a Redis database
 
-## Links
+<Steps>
+<Step>
 
-- [The official website](https://redis.io/)
-- [GitHub](https://github.com/redis/redis)
+### Open New Resource
+
+Open the project and environment where the database should live, then select **New Resource**.
+
+</Step>
+<Step>
+
+### Select Redis
+
+Under **Databases**, select **Redis**. You can also search for **Redis** by name.
+
+</Step>
+<Step>
+
+### Select a server
+
+Select the server that should run Redis. Build servers cannot be selected because they do not host running database resources.
+
+</Step>
+<Step>
+
+### Select a destination
+
+Select the Docker network destination that Redis should join.
+
+</Step>
+<Step>
+
+### Review the generated configuration
+
+Coolify creates the resource and opens **Configuration > General**. Review the image, username, generated password, SSL settings, and connection URLs. Keep the default private networking unless an external client requires access.
+
+</Step>
+<Step>
+
+### Start Redis
+
+Select **Start** and follow the startup output. Wait until Redis is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+
+</Step>
+</Steps>
+
+## Default configuration
+
+| Setting | Default or behavior |
+| :--- | :--- |
+| Internal port | `6379`; TLS uses `6380` |
+| Default image | `redis:7.2` |
+| Username | `default` |
+| Data mount | `/data` |
+| Scheduled database backups | Not supported by Coolify |
+| SSL | Supported with **Enable SSL** |
+
+Coolify stores the Redis username and password as runtime environment variables. If you change `REDIS_USERNAME` or `REDIS_PASSWORD` in Redis or under **Configuration > Environment Variables**, keep the values synchronized with the credentials shown in the resource configuration.
+
+
+## Connect to Redis
+
+Use the **Internal URL** for an application on the same Coolify destination network:
+
+```sh
+redis://:<password>@<database-container>:6379/0
+```
+
+When SSL is enabled, Coolify uses the `rediss` scheme and TLS port `6380`. When **Make it publicly available** is enabled, copy the generated **Public URL** instead of changing the host manually.
+
+## Configure Redis
+
+Open **Configuration > General** to change the image, credentials, **Ports Mappings**, public proxy, **Custom Redis Configuration**, and supported custom Docker options. When **Custom Redis Configuration** is set, Coolify writes it as the Redis configuration file and starts Redis with that file. Include persistence and authentication directives you need; Coolify adds the password only when the file does not already define `requirepass`.
+
+Open **Configuration > Persistent Storage** to manage the `/data` volume. Persistent storage keeps Redis data across container recreation, but it is not a scheduled backup.
+
+## Backups and persistence
+
+Redis, Dragonfly, and KeyDB do not support Coolify's scheduled database backup page. Configure persistence and use Redis-compatible snapshot or append-only-file tools when you need recovery copies. Test the restore workflow separately from the running resource.
+
+## SSL and health checks
+
+Redis exposes **Enable SSL** without an SSL mode selector. The generated TLS URL uses the `rediss` scheme and port `6380`; configure CA verification in the client library when required. See [Database SSL](/databases/ssl) before connecting an application with TLS.
+
+Configure the Docker health check under **Configuration > Healthcheck** and restart Redis after saving.
+
+## Official Redis resources
+
+- [Redis documentation](https://redis.io/docs/)
+- [Redis source](https://github.com/redis/redis)
+- [Redis Docker image](https://hub.docker.com/_/redis)
