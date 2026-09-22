@@ -325,6 +325,19 @@ php_admin_value[post_max_size] = 256M
 '''
 ```
 
+### Using pnpm
+
+If your project uses `pnpm` as the package manager, you may encounter a license collision during the Nix build, since `pnpm` and `composer` both pull in overlapping packages. To resolve this, give `composer` a higher priority in `nixPkgs` using `lib.hiPrio`, matching the PHP version your project uses:
+
+```toml
+[phases.setup]
+nixPkgs = ["...", "python311Packages.supervisor", "(lib.hiPrio php84Packages.composer)"]
+```
+
+<Callout type="info" title="Note">
+Swap `php84Packages` for the package set that matches your project's PHP version (e.g. `php81Packages`, `php82Packages`, `php83Packages`, `php84Packages`) so it stays consistent with the rest of your `nixpacks.toml` configuration.
+</Callout>
+
 ## Deploy with Dockerfile and Nginx Unit
 
 ### Prerequisites
