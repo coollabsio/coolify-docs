@@ -100,7 +100,7 @@ At least one provider key is required for the agent to function. The agent selec
 | Variable | Default | Description |
 |---|---|---|
 | `HERMES_ENABLE_PROJECT_PLUGINS` | `true` | Loads plugins from the `plugins/` subdirectory inside the data volume. Set to `false` to disable auto-loading. |
-| `HERMES_ALLOW_PRIVATE_URLS` | `true` | Allows the agent to fetch Docker-internal URLs and Tailscale addresses (e.g., a self-hosted Firecrawl or a local Ollama instance). Set to `false` to restrict to public URLs only. |
+| `HERMES_ALLOW_PRIVATE_URLS` | `false` | Allows the agent to fetch Docker-internal URLs and Tailscale addresses (e.g., a self-hosted Firecrawl or a local Ollama instance). Set to `false` to restrict to public URLs only. |
 | `HERMES_REDACT_SECRETS` | `true` | Prevents API keys and secrets from appearing in logs and tool output. Recommended: leave enabled. |
 | `GATEWAY_ALLOW_ALL_USERS` | `true` | Allows any user to message the gateway. Safe for personal deployments where the gateway port is not mapped externally. If you connect messaging platforms (Telegram, Slack, Discord), set to `false` and configure per-platform allowed-user lists instead (e.g., `TELEGRAM_ALLOWED_USER_IDS`). |
 | `HERMES_UID` / `HERMES_GID` | `1000` | The UID/GID the agent drops to after chowning the volume on first start. Matches Coolify's default host UID so volume-mounted files have sensible ownership. |
