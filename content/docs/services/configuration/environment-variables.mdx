@@ -1,0 +1,101 @@
+---
+title: Environment Variables
+description: Configure values referenced by a Service's Docker Compose definition.
+---
+
+# Environment variables
+
+Service environment variables supply values used when Coolify renders the stack's `.env` file and deployable Compose definition.
+
+Open the Service, then select **Configuration > Environment Variables**.
+
+## Understand the source of a variable
+
+| Source | Where to change it |
+| :--- | :--- |
+| `${VARIABLE}` reference in Compose | **Environment Variables** |
+| Hard-coded value in a Compose `environment:` entry | **Edit Compose File** |
+| `SERVICE_URL_*`, `SERVICE_FQDN_*`, or `SERVICE_NAME_*` | The matching domain or Compose service; Coolify manages these variables. |
+| Generated credential such as `SERVICE_PASSWORD_*` | **Environment Variables**, unless the field is locked by the template or your role. |
+| Shared-variable reference | The shared-variable scope and the Service variable that references it. |
+
+Coolify shows hard-coded Compose values separately and filters generated URL, FQDN, and service-name values from that list.
+
+## Add and edit values
+
+Use **Normal view** to manage one variable at a time. Service variables can be multiline or literal:
+
+- enable **Is Multiline?** for a certificate, private key, or configuration value with line breaks
+- enable **Is Literal?** when a `$` reference must remain text instead of being expanded
+
+Use **Developer view** to edit several entries in `.env` format:
+
+```dotenv
+APP_ENV=production
+DATABASE_URL=postgresql://app:password@database:5432/app
+LOG_LEVEL=info
+```
+
+Saving Developer view creates, updates, and removes managed variables to match the text. Locked secrets and multiline values cannot be changed from Developer view.
+
+## Required values and defaults
+
+The Compose expression determines the initial requirement:
+
+| Syntax | Coolify behavior |
+| :--- | :--- |
+| `${VARIABLE}` | Creates an editable value that can be empty. |
+| `${VARIABLE:-default}` | Creates the variable with the fallback as its initial value. |
+| `${VARIABLE:?}` | Marks the variable as required and blocks deployment while it is empty. |
+
+For example:
+
+```yaml
+services:
+  app:
+    environment:
+      APP_SECRET: ${APP_SECRET:?}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+```
+
+After saving the Compose definition, enter **APP_SECRET** before deploying.
+
+## Reuse values across components
+
+Reference one variable from every component that needs it:
+
+```yaml
+services:
+  api:
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?}
+  worker:
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?}
+```
+
+Coolify stores one **DATABASE_URL** value for the Service and writes it into the `.env` file used by Docker Compose.
+
+Use a shared variable when several Coolify resources need the same value:
+
+```dotenv
+DATABASE_URL={{environment.DATABASE_URL}}
+```
+
+Read [Shared variables](/core/team/shared-variables) for team, project, environment, and server scopes.
+
+## Generated domains and credentials
+
+Variables that start with `SERVICE_` can instruct Coolify to generate a value. URL and FQDN variables are tied to the matching Compose service and its domain configuration. Password, username, and random-value variables persist with the Service so components can share them.
+
+Read [Docker Compose generated Service values](/services/configuration/docker-compose#generated-service-values) before renaming or deleting one. Coolify prevents deleting a managed variable while the Compose definition still uses it; remove the reference from Compose first.
+
+## Apply and verify changes
+
+1. Save the variable.
+2. Confirm every required value is filled.
+3. Restart or deploy the Service so Coolify rewrites `.env` and recreates the containers.
+4. Inspect the deployment output and component logs.
+5. Verify the behavior that consumes the value.
+
+Do not paste production secrets into support messages or screenshots. Team members can have restricted access to secret values even when they can view the Service.

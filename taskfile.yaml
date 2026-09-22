@@ -27,7 +27,7 @@ tasks:
           bun run dev --port 2222 --host 0.0.0.0 &
 
           # Give server a moment to start
-          sleep 1
+          sleep 3
           # Open docs in browser automatically
           task _open-browser -- 2222
 
@@ -117,7 +117,7 @@ tasks:
       - |
         bash -c '
           PORT="$1"
-          URL="http://localhost:${PORT}/docs/get-started/introduction"
+          URL="http://localhost:${PORT}/docs/"
           if command -v open >/dev/null 2>&1; then
             open "$URL"
           elif command -v xdg-open >/dev/null 2>&1; then

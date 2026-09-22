@@ -1,0 +1,1016 @@
+---
+title: Instance settings
+description: Configure self-hosted Coolify instance settings for URL, access, updates, backups, email, OAuth, and scheduled jobs.
+---
+
+import {
+  Calendar,
+  Checklist2,
+  CloudStorage,
+  Database,
+  Globe3,
+  Mailbox,
+  Refresh23,
+  Rocket2,
+  ServerCloud,
+  Settings,
+  Setting2,
+  SignalStream,
+  Warning22,
+} from 'reicon-react';
+
+# Instance settings
+
+Instance settings control the Coolify control plane itself. These settings change the Coolify instance itself, not a project, application, database, service, or server.
+
+<Callout type="warn" title="Coolify Cloud">
+If you use **Coolify Cloud**, the Coolify team manages the Coolify instance for you. Coolify Cloud users cannot access or edit these settings.
+</Callout>
+
+<Callout type="info" title="Example Data">
+
+The following data is used as an example in this guide. Please replace it with your actual data when following the steps:
+
+- **Domain Name:** `shadowarcanist.com`
+- **Coolify Dashboard:** `https://coolify.shadowarcanist.com`
+
+</Callout>
+
+Open the page from **Settings** in the left sidebar, or visit:
+
+```bash
+https://coolify.shadowarcanist.com/settings
+```
+
+{/* <ZoomableImage src="shadow-to-do" alt="Coolify instance settings page" /> */}
+
+You can configure your Coolify instance from the Settings page. The Settings area is split into Configuration, Backup, Transactional Email, OAuth, and Scheduled Jobs pages. Each page and its options are explained below.
+
+## Configuration
+
+{/* <ZoomableImage src="shadow-to-do" alt="Coolify configuration settings page" /> */}
+
+<Tabs id="instance-settings-configuration" items={['General', 'Advanced', 'Updates']}>
+<Tab value="General" icon={Settings}>
+
+Use General for the basics of the Coolify instance: the dashboard URL people open, the instance label, the timezone for instance-level schedules, and the public IPs Coolify should use when auto-detection is wrong.
+
+### URL
+
+{/* <ZoomableImage src="shadow-to-do" alt="URL setting screenshot" /> */}
+
+This is the address you use to open the Coolify dashboard. Coolify also uses it when it needs to generate links back to the instance. If you want the dashboard to use HTTPS, the value must start with `https://`.
+
+Enter the full dashboard URL in **URL** and click **Save**. Before changing it, make sure DNS for the domain points to the server where Coolify is running. If DNS validation is enabled, Coolify checks the domain. Coolify also warns you when the instance URL is already used by another resource.
+
+**Accepted values:**
+- A full URL with a protocol, for example `https://coolify.shadowarcanist.com`.
+- Use `https://` when the dashboard should be served over HTTPS.
+- A root domain or subdomain.
+
+**Notes:**
+- Path-based URLs such as `https://shadowarcanist.com/coolify` are not supported.
+- Do not reuse an application or service domain for the dashboard. If the instance URL conflicts with a resource domain, SSL certificates and routing can become unpredictable.
+
+---
+
+### Name
+
+{/* <ZoomableImage src="shadow-to-do" alt="Name setting screenshot" /> */}
+
+This is the human-readable label for the Coolify instance. It is useful when you manage more than one Coolify install and need to quickly recognize which dashboard you are using.
+
+Update **Name** and click **Save**.
+
+**Accepted values:**
+
+- Any text value up to 255 characters.
+- Leave it empty to keep the default Coolify instance name.
+
+---
+
+### Instance Timezone
+
+{/* <ZoomableImage src="shadow-to-do" alt="Instance Timezone setting screenshot" /> */}
+
+This timezone is used by instance-level schedules, including update checks and automatic updates. It does not change the timezone inside your applications or databases.
+
+Search for the timezone in **Instance Timezone**, select it from the list, and save.
+
+**Accepted values:**
+
+- A valid timezone identifier from the dashboard list, for example `UTC`, `Europe/Berlin`, or `Asia/Colombo`.
+
+**Notes:**
+
+- Database backup schedules can use the server timezone when the server has one configured. Otherwise, they fall back to the instance timezone.
+
+---
+
+### Instance's Public IPv4
+
+{/* <ZoomableImage src="shadow-to-do" alt="Instance's Public IPv4 setting screenshot" /> */}
+
+Coolify normally detects the public IPv4 address of the server that runs the instance. Use this field only when the detected address is wrong, usually on servers with multiple public IPs.
+
+Enter the IPv4 address Coolify should use and click **Save**.
+
+**Accepted values:**
+
+- Leave it empty to let Coolify use the detected address.
+- A valid IPv4 address, for example `203.0.113.10`.
+
+---
+
+### Instance's Public IPv6
+
+{/* <ZoomableImage src="shadow-to-do" alt="Instance's Public IPv6 setting screenshot" /> */}
+
+Coolify normally detects the public IPv6 address of the server that runs the instance. Use this field only when Coolify picks the wrong IPv6 address or cannot detect it.
+
+Enter the IPv6 address Coolify should use and click **Save**.
+
+**Accepted values:**
+
+- Leave it empty to let Coolify use the detected address.
+- A valid IPv6 address, for example `2001:db8::1`.
+
+</Tab>
+
+<Tab value="Advanced" icon={Setting2}>
+
+Advanced contains instance-wide security, API, DNS, MCP, UI, and confirmation controls.
+
+### Registration Allowed
+
+{/* <ZoomableImage src="shadow-to-do" alt="Registration Allowed setting screenshot" /> */}
+
+Controls whether users can create their own accounts from the registration page.
+
+If registration is disabled, click **Enable** and complete the confirmation modal. If it is enabled, use the toggle and save.
+
+**Accepted values:**
+
+- Enabled: anyone who can reach the registration page can create an account.
+- Disabled: only administrators can create accounts.
+
+**Notes:**
+
+- Keep this disabled unless you intentionally want public self-registration.
+
+---
+
+### Do Not Track
+
+{/* <ZoomableImage src="shadow-to-do" alt="Do Not Track setting screenshot" /> */}
+
+Opts this instance out of anonymous installation counting and error reports sent to Coolify.
+
+Toggle **Do Not Track**, then save.
+
+**Accepted values:**
+
+- Enabled: do not send anonymous usage tracking or error reports.
+- Disabled: allow anonymous installation count and error reporting.
+
+---
+
+### DNS Validation
+
+{/* <ZoomableImage src="shadow-to-do" alt="DNS Validation setting screenshot" /> */}
+
+Checks whether custom domains point to the right server before Coolify saves or deploys resources.
+
+Toggle **DNS Validation**, then save.
+
+**Accepted values:**
+
+- Enabled: validate DNS before deployment to reduce domain misconfiguration failures.
+- Disabled: skip DNS validation when saving domains.
+
+---
+
+### Custom DNS Servers
+
+{/* <ZoomableImage src="shadow-to-do" alt="Custom DNS Servers setting screenshot" /> */}
+
+Changes which DNS resolvers Coolify uses for domain validation.
+
+Enter the resolver IPs in **Custom DNS Servers**, then save.
+
+**Accepted values:**
+
+- Empty to use the system default DNS resolvers.
+- A comma-separated list of valid IPv4 or IPv6 addresses, for example `1.1.1.1,8.8.8.8`.
+
+---
+
+### API Access
+
+{/* <ZoomableImage src="shadow-to-do" alt="API Access setting screenshot" /> */}
+
+Controls whether authenticated requests to the Coolify REST API are allowed.
+
+Toggle **API Access**, then save. Create API tokens from **Keys & Tokens > API Tokens**.
+
+**Accepted values:**
+
+- Enabled: authenticated API requests are accepted.
+- Disabled: API requests are blocked.
+
+For the detailed guide, follow [API tokens](/core/security/credentials/api-tokens).
+
+---
+
+### Allowed IPs for API Access
+
+{/* <ZoomableImage src="shadow-to-do" alt="Allowed IPs for API Access setting screenshot" /> */}
+
+Restricts which source IP addresses can call the Coolify API.
+
+Enter one or more IPs or CIDR ranges, then save.
+
+**Accepted values:**
+
+- Empty or `0.0.0.0` allows API access from anywhere.
+- Single IPv4 or IPv6 addresses, for example `192.168.1.100` or `2001:db8::10`.
+- CIDR ranges, for example `10.0.0.0/8` or `203.0.113.0/24`.
+- Use commas to separate multiple entries.
+
+**Notes:**
+
+- Allowing access from anywhere is not recommended for production instances.
+
+---
+
+### Enable MCP Server
+
+{/* <ZoomableImage src="shadow-to-do" alt="Enable MCP Server setting screenshot" /> */}
+
+Exposes the instance MCP endpoint at `/mcp` for AI clients that authenticate with Coolify API tokens.
+
+Enable **API Access** first, create a token in **Keys & Tokens > API Tokens**, then enable **MCP Server**.
+
+**Accepted values:**
+
+- Enabled: `https://coolify.shadowarcanist.com/mcp` is available to authenticated MCP clients.
+- Disabled: the instance-wide MCP endpoint is unavailable.
+
+For the detailed guide, follow [MCP integration](/mcp/what-is-mcp).
+
+---
+
+### SPA Navigation
+
+{/* <ZoomableImage src="shadow-to-do" alt="SPA Navigation setting screenshot" /> */}
+
+Enables Livewire SPA-style navigation and prefetching for smoother dashboard page transitions.
+
+Toggle **SPA Navigation**, then save.
+
+**Accepted values:**
+
+- Enabled: dashboard links can prefetch and move between pages without full reloads.
+- Disabled: dashboard navigation uses full page loads.
+
+**Notes:**
+
+- Disable it if the dashboard has navigation issues after a browser or Livewire change.
+
+---
+
+### Show Sponsorship Popup
+
+{/* <ZoomableImage src="shadow-to-do" alt="Show Sponsorship Popup setting screenshot" /> */}
+
+Controls whether Coolify shows monthly sponsorship reminders.
+
+Toggle **Show Sponsorship Popup**, then save.
+
+**Accepted values:**
+
+- Enabled: monthly sponsorship reminders can be shown.
+- Disabled: sponsorship reminders are hidden permanently for the instance.
+
+---
+
+### Disable Two Step Confirmation
+
+{/* <ZoomableImage src="shadow-to-do" alt="Disable Two Step Confirmation setting screenshot" /> */}
+
+Removes the extra text and password confirmation step from destructive or sensitive actions.
+
+Click **Disable**, read the warning, then enter the confirmation text shown by Coolify.
+
+**Accepted values:**
+
+- Enabled: destructive actions no longer require the extra confirmation step.
+- Disabled: destructive actions still require text and password confirmation.
+
+**Notes:**
+
+- Coolify marks this as dangerous because it increases the chance of accidental deletions or unwanted changes.
+
+</Tab>
+
+<Tab value="Updates" icon={Refresh23}>
+
+Updates controls version checks and automatic self-updates.
+
+### Update Check Frequency
+
+{/* <ZoomableImage src="shadow-to-do" alt="Update Check Frequency setting screenshot" /> */}
+
+Sets how often Coolify checks for new Coolify versions and pulls new service templates from the CDN.
+
+Set **Update Check Frequency**, then click **Save**. Use **Check Manually** when you want to run the check immediately.
+
+**Accepted values:**
+
+- `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, `yearly`, or a valid cron expression.
+- The default is `0 * * * *`, which checks every hour.
+
+For the detailed guide, follow [Update Coolify](/core/instance-management/update).
+
+---
+
+### Auto Update Enabled
+
+{/* <ZoomableImage src="shadow-to-do" alt="Auto Update Enabled setting screenshot" /> */}
+
+Controls whether Coolify updates itself automatically.
+
+Toggle **Enabled** under **Auto Update**. If `AUTOUPDATE` is set in `/data/coolify/source/.env`, the dashboard toggle is disabled and you must change the environment value instead.
+
+**Accepted values:**
+
+- Enabled: Coolify can update itself on the configured schedule.
+- Disabled: Coolify only updates when you update it manually.
+
+---
+
+### Auto Update Frequency
+
+{/* <ZoomableImage src="shadow-to-do" alt="Auto Update Frequency setting screenshot" /> */}
+
+Sets the schedule Coolify uses when automatic updates are enabled.
+
+Enable **Auto Update**, set **Frequency**, then click **Save**.
+
+**Accepted values:**
+
+- `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, `yearly`, or a valid cron expression.
+- The default is `0 0 * * *`, which runs every day at `00:00`.
+
+</Tab>
+</Tabs>
+
+---
+
+## Backup
+
+{/* <ZoomableImage src="shadow-to-do" alt="Coolify instance backup settings page" /> */}
+
+<Tabs id="instance-settings-backup" items={['Instance Database', 'Scheduled Backup', 'S3 Storage']}>
+<Tab value="Instance Database" icon={Database}>
+
+The Backup page is for the internal Coolify database. It does not back up every application volume or every external database.
+
+### Configure Backup
+
+{/* <ZoomableImage src="shadow-to-do" alt="Configure Backup setting screenshot" /> */}
+
+Creates the Coolify database resource and scheduled backup configuration needed for instance backups.
+
+If Coolify shows **Configure Backup**, click it first. If the localhost server is not validated, validate the server before configuring backups.
+
+**Accepted values:**
+
+- Available only when the localhost server is functional.
+- Creates or reveals the internal `coolify-db` backup configuration.
+
+For the detailed guide, follow [Instance backup](/core/backup-and-recovery/instance-backup).
+
+---
+
+### Description
+
+{/* <ZoomableImage src="shadow-to-do" alt="Description setting screenshot" /> */}
+
+Stores a short note for the internal Coolify database resource shown on the Backup page.
+
+Update **Description**, then click **Save**.
+
+**Accepted values:**
+
+- Any text value, or empty if you do not need a description.
+
+---
+
+### UUID, Name, User, Password
+
+{/* <ZoomableImage src="shadow-to-do" alt="UUID, Name, User, Password setting screenshot" /> */}
+
+Shows the internal database identity and credentials Coolify uses for its own database backup resource.
+
+These fields are read-only on the Backup page. Change backup behavior from the Scheduled Backup section instead.
+
+**Accepted values:**
+
+- Read-only values generated and managed by Coolify.
+
+</Tab>
+
+<Tab value="Scheduled Backup" icon={Calendar}>
+
+Scheduled Backup controls when the internal Coolify database backup runs and how long backup files are kept.
+
+### Backup Enabled
+
+{/* <ZoomableImage src="shadow-to-do" alt="Backup Enabled setting screenshot" /> */}
+
+Controls whether the scheduled backup job is active.
+
+Toggle **Backup Enabled** in **Scheduled Backup**, then save.
+
+**Accepted values:**
+
+- Enabled: the backup schedule can run.
+- Disabled: the backup schedule is kept but does not run.
+
+---
+
+### Backup Now
+
+{/* <ZoomableImage src="shadow-to-do" alt="Backup Now setting screenshot" /> */}
+
+Queues an immediate backup run without waiting for the next scheduled time.
+
+Click **Backup Now**. Coolify shows this action when the database resource is running.
+
+**Accepted values:**
+
+- A manual action; it does not change the saved schedule.
+
+---
+
+### Frequency
+
+{/* <ZoomableImage src="shadow-to-do" alt="Frequency setting screenshot" /> */}
+
+Sets how often the instance database backup runs.
+
+Update **Frequency** in **Scheduled Backup**, then save.
+
+**Accepted values:**
+
+- `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, `yearly`, or a valid cron expression.
+- For example, `0 0 * * *` or `daily`.
+
+---
+
+### Timezone
+
+{/* <ZoomableImage src="shadow-to-do" alt="Timezone setting screenshot" /> */}
+
+Shows the timezone used for the backup schedule.
+
+This field is read-only on the backup schedule. Change the server timezone on the server settings page, or let Coolify use the instance timezone.
+
+**Accepted values:**
+
+- The server timezone when configured.
+- The instance timezone when the server does not define one.
+
+---
+
+### Timeout
+
+{/* <ZoomableImage src="shadow-to-do" alt="Timeout setting screenshot" /> */}
+
+Sets the maximum time a backup job can run before Coolify treats it as timed out.
+
+Update **Timeout** in seconds, then save.
+
+**Accepted values:**
+
+- Any integer from 60 to 36000 seconds.
+
+---
+
+### Local Backup Retention
+
+{/* <ZoomableImage src="shadow-to-do" alt="Local Backup Retention setting screenshot" /> */}
+
+Controls how many local backup files Coolify keeps on the server.
+
+Update the local retention limits, then save.
+
+**Accepted values:**
+
+- Number of backups to keep: integer `0` or greater.
+- Days to keep backups: integer `0` or greater.
+- Maximum storage in GB: number `0` or greater; decimals are accepted.
+- A value of `0` means unlimited for that specific limit.
+
+</Tab>
+
+<Tab value="S3 Storage" icon={CloudStorage}>
+
+S3 settings copy instance backup files to a validated S3-compatible storage target.
+
+### S3 Enabled
+
+{/* <ZoomableImage src="shadow-to-do" alt="S3 Enabled setting screenshot" /> */}
+
+Controls whether backup files are uploaded to S3-compatible storage.
+
+Toggle **S3 Enabled**, choose a storage target, then save.
+
+**Accepted values:**
+
+- Enabled: upload backups to the selected S3 storage.
+- Disabled: keep backups local only unless **Disable Local Backup** was already reset.
+
+For the detailed guide, follow [S3 backups](/core/backup-and-recovery/instance-backup).
+
+---
+
+### S3 Storage
+
+{/* <ZoomableImage src="shadow-to-do" alt="S3 Storage setting screenshot" /> */}
+
+Selects the validated S3 storage record used for instance backup uploads.
+
+Create and validate an S3 storage entry first, then select it from the **S3 Storage** field.
+
+**Accepted values:**
+
+- One of the current team S3 storage entries.
+- Unavailable when no S3 storage exists.
+
+---
+
+### Disable Local Backup
+
+{/* <ZoomableImage src="shadow-to-do" alt="Disable Local Backup setting screenshot" /> */}
+
+Deletes the local backup file after Coolify uploads it to S3.
+
+Enable S3 backups first, then toggle **Disable Local Backup** and save.
+
+**Accepted values:**
+
+- Enabled: remove the local file after successful S3 upload.
+- Disabled: keep local backup files according to local retention rules.
+
+---
+
+### S3 Storage Retention
+
+{/* <ZoomableImage src="shadow-to-do" alt="S3 Storage Retention setting screenshot" /> */}
+
+Controls how many S3 backup files Coolify keeps in the selected S3 storage.
+
+Enable **S3**, update the S3 retention limits, then save.
+
+**Accepted values:**
+
+- Number of backups to keep: integer `0` or greater.
+- Days to keep backups: integer `0` or greater.
+- Maximum storage in GB: number `0` or greater; decimals are accepted.
+- A value of `0` means unlimited for that specific limit.
+
+</Tab>
+</Tabs>
+
+---
+
+## Transactional Email
+
+{/* <ZoomableImage src="shadow-to-do" alt="Coolify transactional email settings page" /> */}
+
+<Tabs id="instance-settings-email" items={['Sender', 'SMTP Server', 'Resend']}>
+<Tab value="Sender" icon={Mailbox}>
+
+Sender settings are shared by SMTP and Resend.
+
+### From Name
+
+{/* <ZoomableImage src="shadow-to-do" alt="From Name setting screenshot" /> */}
+
+Sets the display name used in Coolify emails such as password resets and invitations.
+
+Enter **From Name**, then save.
+
+**Accepted values:**
+
+- A required text value, for example `Coolify`.
+
+---
+
+### From Address
+
+{/* <ZoomableImage src="shadow-to-do" alt="From Address setting screenshot" /> */}
+
+Sets the email address used as the sender for Coolify emails.
+
+Enter **From Address**, then save.
+
+**Accepted values:**
+
+- A required valid email address, for example `noreply@shadowarcanist.com`.
+
+---
+
+### Send Test Email
+
+{/* <ZoomableImage src="shadow-to-do" alt="Send Test Email setting screenshot" /> */}
+
+Sends a test message using the currently enabled transactional email provider.
+
+After SMTP or Resend is enabled and saved, click **Send Test Email**, enter a recipient, and send it.
+
+**Accepted values:**
+
+- A valid recipient email address.
+
+</Tab>
+
+<Tab value="SMTP Server" icon={ServerCloud}>
+
+SMTP Server connects Coolify to any SMTP-compatible email provider.
+
+### SMTP Enabled
+
+{/* <ZoomableImage src="shadow-to-do" alt="SMTP Enabled setting screenshot" /> */}
+
+Controls whether Coolify sends transactional email through SMTP.
+
+Enable **SMTP Server**, complete the SMTP fields, then save.
+
+**Accepted values:**
+
+- Enabled: SMTP is used and Resend is disabled.
+- Disabled: SMTP is not used.
+
+---
+
+### Host
+
+{/* <ZoomableImage src="shadow-to-do" alt="Host setting screenshot" /> */}
+
+Sets the SMTP server hostname Coolify connects to.
+
+Enter the provider host in the SMTP Server section, then save.
+
+**Accepted values:**
+
+- A required hostname, for example `smtp.mailgun.org`.
+
+---
+
+### Port
+
+{/* <ZoomableImage src="shadow-to-do" alt="Port setting screenshot" /> */}
+
+Sets the SMTP server port.
+
+Enter the provider port in the SMTP Server section, then save.
+
+**Accepted values:**
+
+- A required number from 1 to 65535, commonly 587, 465, or 25.
+
+---
+
+### Encryption
+
+{/* <ZoomableImage src="shadow-to-do" alt="Encryption setting screenshot" /> */}
+
+Sets how Coolify secures the SMTP connection.
+
+Choose **Encryption** in the SMTP Server section, then save.
+
+**Accepted values:**
+
+- `starttls`
+- `tls`
+- `none`
+
+---
+
+### SMTP Username
+
+{/* <ZoomableImage src="shadow-to-do" alt="SMTP Username setting screenshot" /> */}
+
+Sets the username Coolify uses to authenticate to the SMTP server.
+
+Enter the username from your email provider in the SMTP Server section, then save.
+
+**Accepted values:**
+
+- Any string, or empty when the SMTP provider does not require a username.
+
+---
+
+### SMTP Password
+
+{/* <ZoomableImage src="shadow-to-do" alt="SMTP Password setting screenshot" /> */}
+
+Sets the password or token Coolify uses to authenticate to the SMTP server.
+
+Enter the password from your email provider in the SMTP Server section, then save.
+
+**Accepted values:**
+
+- Any string, or empty when the SMTP provider does not require a password.
+
+---
+
+### Timeout
+
+{/* <ZoomableImage src="shadow-to-do" alt="Timeout setting screenshot" /> */}
+
+Sets how long Coolify waits when sending SMTP email.
+
+Enter the timeout value in the SMTP Server section, then save.
+
+**Accepted values:**
+
+- A numeric timeout value, or empty to use the provider/default mailer behavior.
+
+</Tab>
+
+<Tab value="Resend" icon={Rocket2}>
+
+Resend connects Coolify to Resend instead of SMTP.
+
+### Resend Enabled
+
+{/* <ZoomableImage src="shadow-to-do" alt="Resend Enabled setting screenshot" /> */}
+
+Controls whether Coolify sends transactional email through Resend.
+
+Enable **Resend**, enter the API key, then save.
+
+**Accepted values:**
+
+- Enabled: Resend is used and SMTP is disabled.
+- Disabled: Resend is not used.
+
+---
+
+### API Key
+
+{/* <ZoomableImage src="shadow-to-do" alt="API Key setting screenshot" /> */}
+
+Stores the Resend API key used to send Coolify transactional email.
+
+Create an API key in Resend, paste it into **API Key**, then save.
+
+**Accepted values:**
+
+- A required Resend API key string when Resend is enabled.
+
+</Tab>
+</Tabs>
+
+---
+
+## OAuth
+
+{/* <ZoomableImage src="shadow-to-do" alt="Coolify OAuth settings page" /> */}
+
+<Tabs id="instance-settings-oauth" items={['Provider Settings', 'Provider Fields']}>
+<Tab value="Provider Settings" icon={Globe3}>
+
+Each provider card has its own enabled state, credentials, and redirect URI.
+
+### Provider
+
+{/* <ZoomableImage src="shadow-to-do" alt="Provider setting screenshot" /> */}
+
+Selects which external identity provider users can use to sign in to Coolify.
+
+Configure the provider card for the provider you want to enable.
+
+**Accepted values:**
+
+- `azure`, `bitbucket`, `clerk`, `discord`, `github`, `gitlab`, `google`, `authentik`, `infomaniak`, or `zitadel`.
+
+For the detailed guide, follow [OAuth setup](/core/security/authentication/oauth/overview).
+
+---
+
+### Enabled
+
+{/* <ZoomableImage src="shadow-to-do" alt="Enabled setting screenshot" /> */}
+
+Controls whether a specific OAuth provider can be used on the Coolify sign-in page.
+
+Fill the required provider fields, then toggle **Enabled** for that provider.
+
+**Accepted values:**
+
+- Enabled: the provider can be used if required fields are complete.
+- Disabled: the provider is hidden or unavailable for sign-in.
+
+---
+
+### Client ID
+
+{/* <ZoomableImage src="shadow-to-do" alt="Client ID setting screenshot" /> */}
+
+Stores the OAuth application client ID from the identity provider.
+
+Create an OAuth application with the provider, copy its client ID, paste it into **Client ID**, then save.
+
+**Accepted values:**
+
+- Any provider-issued client ID string required by the provider.
+
+---
+
+### Client Secret
+
+{/* <ZoomableImage src="shadow-to-do" alt="Client Secret setting screenshot" /> */}
+
+Stores the OAuth application secret from the identity provider.
+
+Copy the provider client secret, paste it into **Client Secret**, then save.
+
+**Accepted values:**
+
+- Any provider-issued client secret string required by the provider.
+
+---
+
+### Redirect URI
+
+{/* <ZoomableImage src="shadow-to-do" alt="Redirect URI setting screenshot" /> */}
+
+Defines the callback URL the identity provider redirects back to after authorization.
+
+Copy the **Redirect URI** shown by Coolify into the OAuth application at the provider, then save the same value in Coolify if you override it.
+
+**Accepted values:**
+
+- A full URL matching the provider callback, usually `https://coolify.shadowarcanist.com/auth/<provider>/callback`.
+
+</Tab>
+
+<Tab value="Provider Fields" icon={Checklist2}>
+
+Some providers need one extra field before Coolify can enable them.
+
+### Tenant
+
+{/* <ZoomableImage src="shadow-to-do" alt="Tenant setting screenshot" /> */}
+
+Stores tenant information for providers that support or require tenant scoping.
+
+For Azure, enter the required tenant value. For Google, optionally enter a hosted domain to show a login hint.
+
+**Accepted values:**
+
+- Azure: required tenant value.
+- Google: optional hosted domain value, for example `shadowarcanist.com`.
+- Other providers: leave empty unless the provider card shows the field.
+
+---
+
+### Base URL
+
+{/* <ZoomableImage src="shadow-to-do" alt="Base URL setting screenshot" /> */}
+
+Stores the provider base URL for self-hosted or issuer-based OAuth providers.
+
+Enter the provider base URL on provider cards that show **Base URL**, then save.
+
+**Accepted values:**
+
+- Required by Authentik and Clerk before enabling the provider.
+- Shown for Authentik, Clerk, GitLab, and Zitadel provider cards.
+- Use a full URL from the provider, for example `https://auth.shadowarcanist.com`.
+
+</Tab>
+</Tabs>
+
+---
+
+## Scheduled Jobs
+
+{/* <ZoomableImage src="shadow-to-do" alt="Coolify scheduled job issues page" /> */}
+
+<Tabs id="instance-settings-scheduled-jobs" items={['Failures', 'Scheduler Runs', 'Skipped Jobs']}>
+<Tab value="Failures" icon={Warning22}>
+
+Failures shows scheduled backup, task, and cleanup executions that did not finish successfully.
+
+### Type Filter
+
+{/* <ZoomableImage src="shadow-to-do" alt="Type Filter setting screenshot" /> */}
+
+Filters the failures list by the kind of scheduled work that failed.
+
+Select a value from **Type** and review the filtered list.
+
+**Accepted values:**
+
+- `all`, `backup`, `task`, or `cleanup`.
+
+---
+
+### Time Range Filter
+
+{/* <ZoomableImage src="shadow-to-do" alt="Time Range Filter setting screenshot" /> */}
+
+Filters failures by when they happened.
+
+Select a value from **Time Range** and review the filtered list.
+
+**Accepted values:**
+
+- `last_24h`, `last_7d`, `last_30d`, or `all`.
+
+---
+
+### Failure Table
+
+{/* <ZoomableImage src="shadow-to-do" alt="Failure Table setting screenshot" /> */}
+
+Shows the failed job type, resource, server, start time, duration, and error message.
+
+Use **Refresh** to reload the page data after you fix a failed backup, task, or cleanup job.
+
+**Accepted values:**
+
+- Read-only execution rows generated from failed scheduled work.
+
+</Tab>
+
+<Tab value="Scheduler Runs" icon={SignalStream}>
+
+Scheduler Runs shows when the ScheduledJobManager executed and whether it dispatched or skipped jobs.
+
+### Run History
+
+{/* <ZoomableImage src="shadow-to-do" alt="Run History setting screenshot" /> */}
+
+Shows the scheduler event time, message, duration, dispatched count, and skipped count.
+
+Switch to **Scheduler Runs**. Use **Refresh** to reload the newest run data.
+
+**Accepted values:**
+
+- Read-only scheduler run rows generated by Coolify.
+
+---
+
+### Gaps
+
+{/* <ZoomableImage src="shadow-to-do" alt="Gaps setting screenshot" /> */}
+
+Helps identify missed scheduler runs or lock conflicts when there are unexpected gaps between entries.
+
+Compare the scheduler run times with the schedule you expected for backups, tasks, or cleanup jobs.
+
+**Accepted values:**
+
+- Read-only timing evidence; large gaps usually need scheduler or worker investigation.
+
+</Tab>
+
+<Tab value="Skipped Jobs" icon={Checklist2}>
+
+Skipped Jobs shows scheduled work that Coolify intentionally did not dispatch because a condition was not met.
+
+### Skipped Jobs Table
+
+{/* <ZoomableImage src="shadow-to-do" alt="Skipped Jobs Table setting screenshot" /> */}
+
+Shows the skipped job time, type, resource, and reason.
+
+Switch to **Skipped Jobs**. Use **Refresh** after fixing the reason.
+
+**Accepted values:**
+
+- Read-only skip rows generated by scheduled job checks.
+
+---
+
+### Skip Reasons
+
+{/* <ZoomableImage src="shadow-to-do" alt="Skip Reasons setting screenshot" /> */}
+
+Explains why Coolify skipped a scheduled job before dispatching it.
+
+Read the **Reason** column, fix the related server, subscription, resource, application, or service state, then refresh.
+
+**Accepted values:**
+
+- `server_not_functional`, `subscription_unpaid`, `database_deleted`, `server_deleted`, `resource_deleted`, `application_not_running`, `service_not_running`, or another internal reason label.
+
+</Tab>
+</Tabs>

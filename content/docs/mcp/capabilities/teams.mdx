@@ -1,0 +1,15 @@
+---
+title: Teams
+description: Use Coolify MCP to inspect the authenticated team and its members.
+---
+
+# Teams
+
+Team tools identify the team bound to the API token and list its members.
+
+| Tool | Purpose |
+| :--- | :--- |
+| `get_current_team` | Return the team associated with the token, including MCP status. |
+| `list_team_members` | List members of that team. |
+
+MCP never switches teams during a request. Create a separate token for each team a client must access.

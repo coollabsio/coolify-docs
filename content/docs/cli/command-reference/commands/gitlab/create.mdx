@@ -1,0 +1,38 @@
+---
+title: "Create"
+description: "Create a GitLab App integration"
+---
+
+# Create
+
+Create a GitLab App integration
+
+## Usage
+
+```sh
+coolify gitlab create
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--api-url` | `string` | No | — | GitLab API URL (defaults to &#123;html-url&#125;/api/v4) |
+| `--client-id` | `string` | No | — | GitLab OAuth Application ID |
+| `--client-secret` | `string` | No | — | GitLab OAuth Application Secret |
+| `--custom-port` | `integer` | No | `0` | Custom SSH port (default: 22) |
+| `--custom-user` | `string` | No | — | Custom SSH user (default: git) |
+| `--group-name` | `string` | No | — | Optional comma-separated group filter |
+| `--html-url` | `string` | Yes | — | GitLab instance URL (required, e.g. https://gitlab.com) |
+| `--name` | `string` | Yes | — | GitLab App name (required) |
+| `--redirect-uri` | `string` | No | — | OAuth redirect URI registered in GitLab |
+| `--system-wide` | `boolean` | No | `false` | Make this app system-wide (non-cloud instances only) |
+| `--webhook-token` | `string` | No | — | Webhook secret token (auto-generated when omitted) |
+
+## Get current help
+
+```sh
+coolify gitlab create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

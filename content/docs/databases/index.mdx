@@ -1,69 +1,144 @@
 ---
 title: Introduction
-description: Deploy databases on Coolify with one-click setup for PostgreSQL, MySQL, MariaDB, MongoDB, Redis, KeyDB, DragonFly, and ClickHouse.
+description: Deploy and operate standalone PostgreSQL, MySQL, MariaDB, MongoDB, Redis, Dragonfly, KeyDB, and ClickHouse databases on Coolify.
 ---
 
-# Databases you can host with Coolify
+import { Box2, BranchUp, Settings } from 'reicon-react';
 
-Coolify supports a variety of databases to suit different application needs. Even if you don't see your favorite database here, you can still host it with Coolify, using Docker.
+# Databases
 
-Coolify offers one-click setup for the following databases:
+Coolify deploys standalone databases as containers on the server and network you select. Each database resource includes generated credentials, a persistent data volume, an internal connection URL, and controls for networking, health checks, storage, and resource limits.
 
-- [PostgreSQL](/databases/postgresql)
-- [Redis](/databases/redis)
-- [DragonFly](/databases/dragonfly)
-- [KeyDB](/databases/keydb)
-- [Clickhouse](/databases/clickhouse)
-- [MongoDB](/databases/mongodb)
-- [MySQL](/databases/mysql)
-- [MariaDB](/databases/mariadb)
+Use the one-click database list when you want Coolify to create the container configuration for a supported engine. You can also deploy a database with Docker Compose when you need an engine or topology that is not in this list.
 
-Each database has its own strengths and use cases. Click on a database to learn more about it.
+If you are new to Coolify databases, start with [What is a database](/databases/what-is-a-database), [How databases work](/databases/how-databases-work), and [Choose a database](/databases/choose-a-database). Then follow [Deploy your first database](/deploy-your-first-database).
 
-# Deploy a database
+## Choose a database
 
-When selecting a New Resource, you can select a database from the list.
+| Database | Best suited for | Built-in scheduled backups | Default internal port |
+| :--- | :--- | :---: | :---: |
+| [PostgreSQL](/databases/postgresql) | Relational data, extensions, and transactional workloads | Yes | `5432` |
+| [MySQL](/databases/mysql) | Relational applications and broad ecosystem support | Yes | `3306` |
+| [MariaDB](/databases/mariadb) | MySQL-compatible relational workloads | Yes | `3306` |
+| [MongoDB](/databases/mongodb) | Document-oriented data and flexible schemas | Yes | `27017` |
+| [Redis](/databases/redis) | Caching, queues, streams, and key-value data | No | `6379` |
+| [Dragonfly](/databases/dragonfly) | Redis-compatible workloads on a multithreaded datastore | No | `6379` |
+| [KeyDB](/databases/keydb) | Redis-compatible workloads with multithreading | No | `6379` |
+| [ClickHouse](/databases/clickhouse) | Analytical and column-oriented workloads | Yes | `9000` |
 
-<ZoomImage src="/docs/images/screenshots/How-to-add-a-database.webp" alt="New Resource" />
+Scheduled backup support means that Coolify can run an engine-specific dump job from the database's **Backups** page. Redis, Dragonfly, and KeyDB still have persistent storage, but they do not expose Coolify's scheduled database backup workflow.
 
-You can configure a database with a simple click. Coolify supports the following databases:
+## Deploy a database
 
-- PostgreSQL
-- MySQL
-- MariaDB
-- MongoDB
-- Redis
-- DragonFly
-- KeyDB
-- Clickhouse
+1. Open a project and select **Create New Resource**.
+2. Select a database from the database list.
+3. Select the server and destination where the database should run.
+4. Review the generated credentials and settings under **Configuration > General**.
+5. Select **Start**.
 
-## Ports Mapping vs Public Port
+Coolify creates the database container on the selected destination. The database does not receive a public network endpoint by default.
 
-### Ports Mapping
+For a complete first-deployment walkthrough, read [Deploy your first database](/deploy-your-first-database).
 
-Ports mapping is using the Docker [port mapping](https:/.docker.com/network/#published-ports) feature. It is used to map the container port to the host port. For example, if you set the port mapping to `8080:80`, the container port `80` will be mapped to the host port `8080`.
+## Connect an application
 
-### Public Port
+When an application runs on the same Coolify destination network as the database, use the database's **Internal URL**. Coolify builds this URL with the database container name, internal port, credentials, and selected database.
 
-Public port is used to expose the container port to the internet, by starting an Nginx TCP proxy.
+Copy the URL from the database's **General** configuration and add it to the application's environment variables. Do not replace the container name with a server IP for an internal connection.
 
-### Which one should I use?
+If the application runs on another server or network, use a public connection only when the database must accept external traffic. See [Network access](#network-access) for the two public access methods.
 
-- Port mappings makes the connection/port permanent (you need to restart your database to change it).
-- The public port makes the connection/port dynamic (you can change it without restarting the database, Coolify will restart the Nginx TCP proxy for you).
+<span id="ports-mapping-vs-public-port" />
 
-## Proxy Timeout
+## Network access
 
-When using a public port, Coolify starts an Nginx TCP proxy to expose your database. By default, the proxy timeout is set to **3600 seconds** (1 hour).
+Coolify provides two ways to expose a database port:
 
-You can configure this in the database settings under **Proxy Timeout (seconds)**. This controls how long idle connections are kept open before Nginx closes them.
+| Method | What it does | When to use it |
+| :--- | :--- | :--- |
+| **Ports Mappings** | Adds a Docker host-to-container port mapping to the database container. | A fixed host port or a client that connects directly to the server. |
+| **Make it publicly available** | Runs a separate Nginx TCP proxy on the selected **Public Port**. | A public connection that you want to change without changing the database container's port mappings. |
 
-- The minimum value is **1 second**.
-- Set a higher value if you have long-running queries or connections that stay idle for extended periods.
+A port mapping uses the format `host-port:container-port`, for example `15432:5432`. You can enter multiple comma-separated mappings. The database container is recreated when its generated configuration changes.
 
-## Access database during builds
+The public TCP proxy requires the database to be running and a **Public Port** between `1` and `65535`. **Proxy Timeout (seconds)** defaults to `3600` and must be at least `1`. The proxy is separate from the database container, so changes to the public port or timeout update the proxy rather than the database process.
 
-If you are using `Nixpacks` build pack, you have two ways to access your database during builds:
+<Callout type="warning" title="Keep database ports private by default">
 
-1. Database & your application are `in the same network`: You can reach it using the `internal URL` provided by Coolify.
-2. Database & your application `are not in the same network`: You need to set your database to be `Accessible over the internet` and use the `public URL` provided by Coolify.
+A public database port exposes a database protocol to the network. Use private networking whenever possible. If an external client must connect, restrict the port with your server or provider firewall and use SSL where the engine supports it.
+
+</Callout>
+
+When a database is public, Coolify displays a **Public URL** next to the internal URL. Use that generated URL instead of assembling a connection string by hand.
+
+## Persistent data
+
+Coolify creates a named Docker volume when it creates a standalone database. The volume remains separate from the database container so redeploying or recreating the container does not remove the database data.
+
+| Database | Container data path |
+| :--- | :--- |
+| PostgreSQL before version 18 | `/var/lib/postgresql/data` |
+| PostgreSQL 18 and later | `/var/lib/postgresql` |
+| MySQL and MariaDB | `/var/lib/mysql` |
+| MongoDB | `/data/db` and `/data/configdb` |
+| Redis, Dragonfly, and KeyDB | `/data` |
+| ClickHouse | `/var/lib/clickhouse` |
+
+Persistent storage is not a database-aware backup. Use [database backups](/databases/backups) for supported engines and test [restoring a database](/databases/restore) before relying on it.
+
+Open **Configuration > Persistent Storage** to add or change storage mounts. Changing or removing a mount can make existing data unavailable to the container, so verify the source and destination before saving.
+
+## Database health
+
+Coolify can attach a Docker health check to every standalone database. Open **Configuration > Healthcheck** to configure:
+
+- **Interval (s)**: time between checks; minimum `1`.
+- **Timeout (s)**: maximum time for one check; minimum `1`.
+- **Retries**: failed checks before Docker marks the container unhealthy; minimum `1`.
+- **Start Period (s)**: startup time before failed checks count; minimum `0`.
+
+Health checks are enabled by default in current Coolify versions. Save the settings, enable or disable the check, then restart the database to apply the generated container configuration.
+
+## Database resource navigation
+
+The database resource navigation separates configuration from day-to-day operations:
+
+| Area | Use it to | Guide |
+| :--- | :--- | :--- |
+| **General** | Change engine credentials, image, ports, proxy, and engine-specific configuration. | [General settings](/databases/configuration/general) |
+| **Environment Variables** | Manage runtime variables passed to the database container. | [Environment variables](/databases/configuration/environment-variables) |
+| **Servers** | Review or change the selected server and destination. | [Configure multi-server deployments](/core/infrastructure/scaling/multi-server-deployments) |
+| **Persistent Storage** | Manage the named volumes and mounts that keep database data across container recreation. | [Persistent storage](/databases/configuration/persistent-storage) |
+| **Import Backup** | Restore a supported PostgreSQL, MySQL, MariaDB, or MongoDB backup while the database is running. | [Restore a database](/databases/restore) |
+| **Webhooks** | Create authenticated requests for database operations from external automation. | [Deploy webhooks](/core/automation/deploy-webhooks) |
+| **Healthcheck** | Configure the Docker readiness and liveness probe. | [Health checks](/databases/configuration/health-checks) |
+| **Resource Limits** | Set CPU and memory limits for the database container. | [Resource limits](/databases/configuration/resource-limits) |
+| **Resource Operations** | Clone the database to another destination or move it between projects and environments. | [Clone or move a database](/databases/operations/resource-operations) |
+| **Metrics** | View CPU and memory usage for the database container. | [Monitor resource metrics](/core/observability/monitoring/metrics) |
+| **Tags** | Organize the resource and use it with tag-based automation. | [Organize resources with tags](/core/automation/tags/overview) |
+| **Danger Zone** | Delete the database resource and choose which related Docker resources to remove. | [Delete a database](/databases/operations/danger-zone) |
+
+## Continue with a database guide
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Choose a database',
+      href: '/databases/choose-a-database',
+      description: 'Compare one-click engines, versions, backup support, and Services.',
+      icon: BranchUp,
+    },
+    {
+      title: 'Configure backups',
+      href: '/databases/backups',
+      description: 'Schedule and retain engine-aware database backups.',
+      icon: Box2,
+    },
+    {
+      title: 'Secure connections with SSL',
+      href: '/databases/ssl',
+      description: 'Enable SSL and choose the verification mode supported by the engine.',
+      icon: Settings,
+    },
+  ]}
+/>

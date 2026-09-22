@@ -1,0 +1,61 @@
+---
+title: "Create"
+description: "Create a new database"
+---
+
+# Create
+
+Create a new database
+
+## Usage
+
+```sh
+coolify database create <type>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--clickhouse-admin-password` | `string` | No | — | Clickhouse admin password |
+| `--clickhouse-admin-user` | `string` | No | — | Clickhouse admin user |
+| `--description` | `string` | No | — | Database description |
+| `--destination-uuid` | `string` | No | — | Destination UUID if server has multiple destinations |
+| `--dragonfly-password` | `string` | No | — | Dragonfly password |
+| `--environment-name` | `string` | No | — | Environment name |
+| `--environment-uuid` | `string` | No | — | Environment UUID |
+| `--image` | `string` | No | — | Docker image |
+| `--instant-deploy` | `boolean` | No | `false` | Deploy immediately after creation |
+| `--is-public` | `boolean` | No | `false` | Make database publicly accessible |
+| `--keydb-password` | `string` | No | — | KeyDB password |
+| `--limits-cpus` | `string` | No | — | CPU limit (e.g., '0.5', '2') |
+| `--limits-memory` | `string` | No | — | Memory limit (e.g., '512m', '2g') |
+| `--mariadb-database` | `string` | No | — | MariaDB database name |
+| `--mariadb-password` | `string` | No | — | MariaDB password |
+| `--mariadb-root-password` | `string` | No | — | MariaDB root password |
+| `--mariadb-user` | `string` | No | — | MariaDB user |
+| `--mongo-database` | `string` | No | — | MongoDB database name |
+| `--mongo-root-password` | `string` | No | — | MongoDB root password |
+| `--mongo-root-username` | `string` | No | — | MongoDB root username |
+| `--mysql-database` | `string` | No | — | MySQL database name |
+| `--mysql-password` | `string` | No | — | MySQL password |
+| `--mysql-root-password` | `string` | No | — | MySQL root password |
+| `--mysql-user` | `string` | No | — | MySQL user |
+| `--name` | `string` | No | — | Database name |
+| `--postgres-db` | `string` | No | — | PostgreSQL database name |
+| `--postgres-password` | `string` | No | — | PostgreSQL password |
+| `--postgres-user` | `string` | No | — | PostgreSQL user |
+| `--project-uuid` | `string` | Yes | — | Project UUID (required) |
+| `--public-port` | `integer` | No | `0` | Public port |
+| `--redis-password` | `string` | No | — | Redis password |
+| `--server-uuid` | `string` | Yes | — | Server UUID (required) |
+| `--tag` | `stringArray` | No | — | Tag to assign (repeatable) |
+| `--tags` | `stringSlice` | No | — | Comma-separated tags to assign |
+
+## Get current help
+
+```sh
+coolify database create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

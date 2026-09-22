@@ -1,0 +1,194 @@
+---
+title: Update Coolify
+description: Update a self-hosted Coolify instance from the dashboard or terminal, and configure automatic updates.
+---
+
+import { Autobrightness2, BrowserTerminal, Refresh23 } from 'reicon-react';
+
+# Update Coolify
+
+Updating Coolify changes the self-hosted Coolify control plane. It does not update the applications, databases, services, or servers you manage with Coolify.
+
+<Callout type="warn" title="Coolify Cloud">
+If you use **Coolify Cloud**, the Coolify team manages instance updates. You must wait for the Coolify team to update the instance.
+</Callout>
+
+For a self-hosted instance, open **Settings** in the left sidebar, choose **Configuration**, then select **Updates**.
+
+{/* <ZoomableImage src="shadow-to-do" alt="Updates page in Coolify instance settings" /> */}
+
+## Before you update
+
+- [Create an instance backup](/core/backup-and-recovery/instance-backup).
+- Review the [release notes](https://github.com/coollabsio/coolify/releases) for the version you plan to install.
+- Check for active deployments; they can fail during the update process.
+
+---
+
+## Choose an update path
+
+<Tabs id="coolify-update-path" items={['Automatic', 'Dashboard', 'Terminal']}>
+<Tab value="Automatic" icon={Autobrightness2}>
+
+### Configure automatic updates
+
+The **Updates** page controls when Coolify checks for new releases and whether it installs them automatically.
+
+These schedules use the instance timezone configured in **Settings > Configuration > General**.
+
+### Update check frequency
+
+{/* <ZoomableImage src="shadow-to-do" alt="Update Check Frequency setting in Coolify Updates" /> */}
+
+Controls how often Coolify checks the [CDN](https://cdn.coollabs.io/coolify/versions.json) for a newer Coolify version and pulls updated service templates.
+
+Set **Update Check Frequency**, then click **Save**.
+
+Click **Check Manually** to run the check immediately.
+
+**Accepted values:**
+
+- `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, or `yearly`.
+- A valid cron expression.
+- The default is `0 * * * *`, which checks every hour.
+
+---
+
+### Auto update
+
+{/* <ZoomableImage src="shadow-to-do" alt="Auto Update Enabled setting in Coolify Updates" /> */}
+
+Controls whether Coolify installs an available newer release on the automatic-update schedule.
+
+Under **Auto Update**, change **Enabled** and click **Save**.
+
+**Accepted values:**
+
+- Enabled: Coolify checks for a newer release when the automatic-update schedule runs and installs it when a new version is available.
+- Disabled: Coolify does not install releases automatically. You can still update from the dashboard or terminal.
+
+**Notes:**
+
+- When `AUTOUPDATE` is set in `/data/coolify/source/.env`, Coolify disables the dashboard control for automatic updates. Change the environment value in that file instead.
+
+---
+
+### Auto update frequency
+
+{/* <ZoomableImage src="shadow-to-do" alt="Auto Update Frequency setting in Coolify Updates" /> */}
+
+Sets when Coolify runs automatic updates. Enable **Auto Update**, set **Frequency (cron expression)**, then click **Save**.
+
+**Accepted values:**
+
+- `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, or `yearly`.
+- A valid cron expression.
+- The default is `0 0 * * *`, which runs every day at 00:00.
+
+**Notes:**
+
+- This setting is unavailable while automatic updates are disabled or controlled with `AUTOUPDATE` in `/data/coolify/source/.env`.
+
+</Tab>
+
+<Tab value="Dashboard" icon={Refresh23}>
+
+### Apply an available update
+
+Use the dashboard when Coolify has found a newer version and you want to choose when to install it.
+
+The **Upgrade** action appears in the sidebar only after Coolify has found a newer version.
+
+Use **Check Manually** in **Settings > Configuration > Updates** to refresh that status first.
+
+<Steps>
+<Step>
+
+**Choose a clear deployment window**
+
+Confirm there are no active deployments before continuing.
+
+</Step>
+<Step>
+
+**Open the upgrade dialog**
+
+Click **Upgrade** in the left sidebar. Review the current and available version, then click **Upgrade Now**.
+
+</Step>
+<Step>
+
+**Wait for Coolify to restart**
+
+Keep the page open while Coolify shows progress.
+
+The dashboard may briefly be unavailable while its services restart.
+
+If the dashboard has not automatically reloaded after three minutes, refresh the page.
+
+</Step>
+<Step>
+
+**Confirm the running version**
+
+When the dashboard returns, confirm that the expected version is shown.
+
+</Step>
+</Steps>
+
+</Tab>
+
+<Tab value="Terminal" icon={BrowserTerminal}>
+
+### Run the installer over SSH
+
+Use the installation script when you need to update over SSH or choose a specific version.
+
+<Steps>
+<Step>
+
+**Connect to the Coolify server**
+
+Connect to the server that runs the Coolify instance over SSH.
+
+</Step>
+<Step>
+
+**Run the update command**
+
+Use the latest-release command, or provide a version argument for a specific release.
+
+Update to the latest release:
+
+```sh
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+```
+
+Update to a specific release:
+
+```sh
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash -s <version>
+```
+
+Replace `<version>` with the Coolify version you want to install, for example `4.1.2`.
+
+</Step>
+<Step>
+
+**Visit the dashboard**
+
+Wait for the script to finish, then open the dashboard and confirm everything is working.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+---
+
+## Verify the update
+
+After an update, confirm that the dashboard is reachable, the expected Coolify version is shown, and your resources are running.
+
+If the dashboard does not return, review the update logs on the Coolify server. Coolify writes update logs under `/data/coolify/source/` with names such as `upgrade-2026-07-11-12-00-00.log`.

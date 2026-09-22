@@ -1,0 +1,38 @@
+---
+title: "Update"
+description: "Update an existing GitLab App integration. Provide the app ID or UUID and the fields you want to update."
+---
+
+# Update
+
+Update an existing GitLab App integration. Provide the app ID or UUID and the fields you want to update.
+
+## Usage
+
+```sh
+coolify gitlab update <app_id_or_uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--api-url` | `string` | No | — | GitLab API URL |
+| `--client-id` | `string` | No | — | GitLab OAuth Application ID |
+| `--client-secret` | `string` | No | — | GitLab OAuth Application Secret |
+| `--custom-port` | `integer` | No | `0` | Custom SSH port |
+| `--custom-user` | `string` | No | — | Custom SSH user |
+| `--group-name` | `string` | No | — | Optional comma-separated group filter |
+| `--html-url` | `string` | No | — | GitLab instance URL |
+| `--name` | `string` | No | — | GitLab App name |
+| `--redirect-uri` | `string` | No | — | OAuth redirect URI |
+| `--system-wide` | `boolean` | No | `false` | Is this app system-wide |
+| `--webhook-token` | `string` | No | — | Webhook secret token |
+
+## Get current help
+
+```sh
+coolify gitlab update --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

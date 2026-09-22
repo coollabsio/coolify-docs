@@ -17,7 +17,7 @@ If the Coolify installation script completes but you cannot access Coolify, or i
 
 <Callout type="warn" title="Important">
 
-Before following this guide, make sure you read the [Installation Prerequisites](/get-started/installation#before-you-begin) to ensure your system meets all requirements.
+Before following this guide, make sure you read the [self-hosted setup guide](/start-with-self-hosted) to ensure your system meets all requirements.
 
 </Callout>
 
@@ -45,11 +45,15 @@ Verbose mode is extremely helpful for identifying exactly where the installation
 </Callout>
 
 
-## Step 1: Check Installation Logs
+## Diagnostic Steps
+
+<Steps>
+
+<Step>
+
+### Check Installation Logs
 
 The installation script creates log files that contain valuable information about what happened during installation.
-
-### Finding Your Logs
 
 The installation process creates two log files in `/data/coolify/source/`:
 
@@ -63,8 +67,6 @@ The installation script calls the upgrade script internally, so both logs are cr
 
 </Callout>
 
-
-### View Your Logs
 
 Find your most recent log files:
 
@@ -93,8 +95,6 @@ tail -100 /data/coolify/source/upgrade-YYYY-MM-DD-HH-MM-SS.log
 cat /data/coolify/source/upgrade-YYYY-MM-DD-HH-MM-SS.log
 ```
 
-### What to Look For
-
 Look for error messages containing:
 
 - `ERROR:`
@@ -104,7 +104,11 @@ Look for error messages containing:
 - `Permission denied`
 - `No such file or directory`
 
-## Step 2: Verify Docker Installation
+</Step>
+
+<Step>
+
+### Verify Docker Installation
 
 Check if Docker is properly installed and running:
 
@@ -151,12 +155,13 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
 
 </Callout>
 
+</Step>
 
-## Step 3: Check Port Availability
+<Step>
+
+### Check Port Availability
 
 Coolify requires specific ports to be available. The most critical port for initial installation is **port 8000**.
-
-### Check Port 8000 (Coolify Web Interface)
 
 
 <Callout type="error" title="Critical Port">
@@ -166,23 +171,31 @@ Port 8000 must be available for Coolify's web interface. If something else is us
 </Callout>
 
 
-**On Linux with `ss` (recommended):**
+Check port 8000 using one of these tools:
+
+<Tabs items={['ss', 'lsof', 'netstat']}>
+<Tab value="ss">
 
 ```bash
 sudo ss -tulpn | grep :8000
 ```
 
-**On Linux with `lsof`:**
+</Tab>
+<Tab value="lsof">
 
 ```bash
 sudo lsof -i :8000
 ```
 
-**On Linux with `netstat`:**
+</Tab>
+<Tab value="netstat">
 
 ```bash
 sudo netstat -tulpn | grep :8000
 ```
+
+</Tab>
+</Tabs>
 
 If these commands return **no output**, the port is free ✓
 
@@ -192,7 +205,7 @@ If they show output, **something is using port 8000**. Example:
 tcp   LISTEN  0  4096  *:8000  *:*  users:(("some-app",pid=1234,fd=3))
 ```
 
-### Check Other Coolify Ports
+You can check the other Coolify ports the same way:
 
 ```bash
 # Port 6001 (Soketi/Real-time)
@@ -205,11 +218,10 @@ sudo ss -tulpn | grep :5432
 sudo ss -tulpn | grep :6379
 ```
 
-### Fix Port Conflicts
-
 If port 8000 is in use, you have two options:
 
-**Option 1: Stop the conflicting service**
+<Tabs items={['Stop the conflicting service', 'Change Coolify port']}>
+<Tab value="Stop the conflicting service">
 
 ```bash
 # Find the process ID (PID) from the ss/lsof output
@@ -219,11 +231,19 @@ sudo kill <PID>
 sudo systemctl stop <service-name>
 ```
 
-**Option 2: Change Coolify's port** (Advanced)
+</Tab>
+<Tab value="Change Coolify port">
 
 Modify `/data/coolify/source/.env` and change the `APP_PORT` variable, then re-run the installation script.
 
-## Step 4: Validate Docker Containers
+</Tab>
+</Tabs>
+
+</Step>
+
+<Step>
+
+### Validate Docker Containers
 
 Check if all Coolify containers are running:
 
@@ -234,8 +254,6 @@ docker ps -a
 # Filter for Coolify containers only
 docker ps -a --filter "name=coolify"
 ```
-
-### Expected Containers
 
 You should see these containers:
 
@@ -254,8 +272,6 @@ The `coolify-proxy` container is NOT created during installation. It's created l
 </Callout>
 
 
-### Check Container Status
-
 If containers are **stopped** or **exited**, check their logs:
 
 ```bash
@@ -269,8 +285,6 @@ docker logs coolify-redis
 docker logs -f coolify
 ```
 
-### Restart Stopped Containers
-
 If containers are stopped, try starting them:
 
 ```bash
@@ -279,7 +293,11 @@ cd /data/coolify/source
 docker compose --env-file .env -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
-## Step 5: Verify Docker Images
+</Step>
+
+<Step>
+
+### Verify Docker Images
 
 Check if all required Docker images were pulled successfully:
 
@@ -289,15 +307,11 @@ docker images | grep coolify
 docker images | grep ghcr.io/coollabsio
 ```
 
-### Expected Images
-
 You should see at least:
 
 - `ghcr.io/coollabsio/coolify` (or your custom registry)
 - `ghcr.io/coollabsio/coolify-helper`
 - `ghcr.io/coollabsio/coolify-realtime`
-
-### Missing Images
 
 If images are missing, there may have been a network issue during installation. Try pulling them manually:
 
@@ -319,8 +333,11 @@ If you're using a custom Docker registry that requires authentication, you may n
 
 </Callout>
 
+</Step>
 
-## Step 6: Check Docker Networks
+<Step>
+
+### Check Docker Networks
 
 Verify that the Coolify Docker network exists:
 
@@ -345,7 +362,11 @@ docker network create --attachable --ipv6 coolify
 docker network create --attachable coolify
 ```
 
-## Step 7: Verify Disk Space
+</Step>
+
+<Step>
+
+### Verify Disk Space
 
 Check available disk space:
 
@@ -369,10 +390,15 @@ If you have less than the required space, the installation may complete but fail
 
 </Callout>
 
+</Step>
+
+</Steps>
 
 ## Common Issues & Solutions
 
-### Issue: Script Completes But No Access URL Shown
+<Accordions type="multiple">
+
+<Accordion title="Script completes but no access URL shown">
 
 **Symptoms:**
 
@@ -400,7 +426,9 @@ cd /data/coolify/source
 bash upgrade.sh latest latest ghcr.io false
 ```
 
-### Issue: Port 8000 Already in Use
+</Accordion>
+
+<Accordion title="Port 8000 already in use">
 
 **Symptoms:**
 
@@ -410,9 +438,11 @@ bash upgrade.sh latest latest ghcr.io false
 
 **Solution:**
 
-See [Step 3: Check Port Availability](#step-3-check-port-availability) above.
+See [Check Port Availability](#check-port-availability) above.
 
-### Issue: Docker Image Pull Failures
+</Accordion>
+
+<Accordion title="Docker image pull failures">
 
 **Symptoms:**
 
@@ -443,7 +473,9 @@ docker pull ghcr.io/coollabsio/coolify:latest
 docker login your-registry.com
 ```
 
-### Issue: Insufficient Permissions
+</Accordion>
+
+<Accordion title="Insufficient permissions">
 
 **Symptoms:**
 
@@ -460,7 +492,9 @@ The installation script must be run as **root** or with **sudo**:
 curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
 ```
 
-### Issue: SSH Configuration Problems
+</Accordion>
+
+<Accordion title="SSH configuration problems">
 
 **Symptoms:**
 
@@ -488,7 +522,11 @@ Should show:
 - `permitrootlogin prohibit-password`, or
 - `permitrootlogin without-password`
 
-If it shows `permitrootlogin no`, see the [OpenSSH Configuration Guide](/knowledge-base/server/openssh).
+If it shows `permitrootlogin no`, see the [OpenSSH Configuration Guide](/core/infrastructure/servers/openssh).
+
+</Accordion>
+
+</Accordions>
 
 ## Manual Verification Checklist
 
@@ -540,7 +578,20 @@ Copy the output of this diagnostic script when asking for help.
 
 ## Recovery Steps
 
-### Clean Re-installation
+<Tabs items={['Retry without reset', 'Clean re-installation', 'Manual installation']}>
+<Tab value="Retry without reset">
+
+If you just want to retry without losing data:
+
+```bash
+# Re-run the installation script
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
+```
+
+The script is designed to be **idempotent** (safe to run multiple times).
+
+</Tab>
+<Tab value="Clean re-installation">
 
 If you want to completely uninstall and start fresh:
 
@@ -552,26 +603,19 @@ This will remove all Coolify data including applications, databases, and setting
 </Callout>
 
 
-Follow the [Uninstallation Guide](/get-started/uninstallation) to properly remove Coolify, then re-run the installation script:
+Follow the [Uninstallation Guide](/core/instance-management/uninstallation) to properly remove Coolify, then re-run the installation script:
 
 ```bash
 curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
 ```
 
-### Retry Installation Without Full Reset
+</Tab>
+<Tab value="Manual installation">
 
-If you just want to retry without losing data:
+If the automated script continues to fail, try the [manual installation](/start-with-self-hosted#manual-installation) method.
 
-```bash
-# Re-run the installation script
-curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
-```
-
-The script is designed to be **idempotent** (safe to run multiple times).
-
-### Use Manual Installation
-
-If the automated script continues to fail, try the [Manual Installation](/get-started/installation#manual-installation) method.
+</Tab>
+</Tabs>
 
 ## Getting Help
 
@@ -610,9 +654,8 @@ This information will help the community diagnose your problem much faster!
 
 ## Related Documentation
 
-- [Installation Guide](/get-started/installation)
-- [Manual Installation](/get-started/installation#manual-installation)
-- [Firewall Configuration](/knowledge-base/server/firewall)
-- [OpenSSH Configuration](/knowledge-base/server/openssh)
-- [Raspberry Pi OS Setup](/knowledge-base/how-to/raspberry-pi-os)
+- [Self-hosted setup guide](/start-with-self-hosted)
+- [Manual Installation](/start-with-self-hosted#manual-installation)
+- [Firewall Configuration](/core/infrastructure/servers/firewall)
+- [OpenSSH Configuration](/core/infrastructure/servers/openssh)
 - [Docker Installation Failed](/troubleshoot/installation/docker-install-failed)

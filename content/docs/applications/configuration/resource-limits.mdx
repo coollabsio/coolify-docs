@@ -1,0 +1,54 @@
+---
+title: Resource Limits
+description: Limit the CPU and memory available to an application container.
+---
+
+# Resource limits
+
+Open an application, then select **Configuration > Resource Limits** to restrict the CPU and memory available to its containers.
+
+**Number of CPUs** and the memory-limit fields use `0` for no configured limit. Other fields have their own defaults. Start with measured application usage rather than choosing the lowest possible value.
+
+## CPU limits
+
+| Setting | Accepted value | Default | Behavior |
+| :--- | :--- | :--- | :--- |
+| **Number of CPUs** | A whole or decimal number, such as `2` or `0.5`. | `0` | Sets the maximum CPU capacity. `0` allows the container to use all CPUs. |
+| **CPU sets to use** | CPU numbers or ranges, such as `0-2` or `0,1,3`. | Empty | Restricts the container to selected CPU cores. Empty allows all CPU cores. |
+| **CPU Weight** | A whole number of `0` or greater. | `1024` | Sets the container's relative CPU priority when containers compete for CPU time. |
+
+**CPU Weight** does not reserve CPU capacity. It changes how Docker shares available CPU time during contention.
+
+## Memory limits
+
+Memory fields accept `0` or a whole number followed by `b`, `k`, `m`, or `g`. The unit is case-insensitive:
+
+```plaintext
+256m
+1g
+```
+
+| Setting | Accepted value | Default | Behavior |
+| :--- | :--- | :--- | :--- |
+| **Soft Memory Limit** | A memory value. | `0` | Sets the memory reservation Docker considers when the server is under memory pressure. |
+| **Swappiness** | A whole number from `0` to `100`. | `60` | Controls how readily the container's anonymous memory pages can be swapped. |
+| **Maximum Memory Limit** | A memory value. | `0` | Sets the hard memory limit for the container. |
+| **Maximum Swap Limit** | A memory value. | `0` | Sets the total memory and swap available to the container. |
+
+<Callout type="warning" title="Low limits can stop the application">
+
+A hard memory limit that is lower than the application's working set can cause Docker to terminate the process for running out of memory. A low CPU limit can make health checks time out during load.
+
+</Callout>
+
+## Apply and verify
+
+Select **Save**, then redeploy or restart the application so Coolify recreates its containers with the new limits.
+
+After the application starts:
+
+1. Open **Metrics** and confirm CPU and memory usage stays below the configured limits.
+2. Open **Logs** and check for out-of-memory exits, repeated restarts, or health-check failures.
+3. Send representative traffic to the application and confirm response times remain acceptable.
+
+Read [Resource metrics](/core/observability/monitoring/metrics) to enable and inspect container metrics.

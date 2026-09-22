@@ -1,0 +1,82 @@
+---
+title: Deploy by Tag
+description: Redeploy a group of Coolify applications and services from the dashboard or a tag webhook.
+---
+
+# Deploy resources by tag
+
+Deploy by tag when several applications and services should be started or redeployed as one group. Coolify acts on every resource assigned to the selected tag in the active team.
+
+## Before deploying
+
+Open **Tags** in the main sidebar and select the tag. Review every application and service shown under **Tag Details**.
+
+If a resource does not belong in the deployment group, remove the tag from that resource before continuing.
+
+<Callout type="warn" title="The action affects every resource with the tag">
+**Redeploy All** starts work for the full group. Resources can be temporarily unavailable while their deployment or restart is in progress.
+</Callout>
+
+---
+
+## Redeploy from the dashboard
+
+<Steps>
+<Step>
+
+### Select the tag
+
+Open **Tags** in the main sidebar, then select the tag you want to deploy.
+
+</Step>
+<Step>
+
+### Review the group
+
+Check the applications and services listed under **Tag Details**. Select any resource card if you need to inspect its current configuration first.
+
+</Step>
+<Step>
+
+### Start the deployment
+
+Click **Redeploy All**. Enter the tag name in the confirmation dialog, then click **Redeploy All** again.
+
+Coolify queues a deployment for each application and starts each service assigned to the tag.
+
+</Step>
+<Step>
+
+### Verify the resources
+
+Watch **Deployments** on the tag page for queued and in-progress application deployments. Open each application deployment to inspect its logs.
+
+For services, open the service page and confirm that its components are running.
+
+</Step>
+</Steps>
+
+---
+
+## Automate deployment with a webhook
+
+The selected tag's **Deploy Webhook URL** calls the same team-scoped deployment API. Use it from CI or another automation system when you do not want to open the dashboard.
+
+Follow [Deploy Webhooks](/core/automation/deploy-webhooks) to create a token with `deploy` permission, call the URL, and verify the response.
+
+---
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="A resource is missing from the tag page">
+
+Open the resource's **Configuration > Tags** page and confirm that the same tag is assigned. Also confirm that you are using the team where the tag was created.
+
+</Accordion>
+<Accordion title="No deployments appear after Redeploy All">
+
+Confirm that the tag still has applications or services assigned. Application deployments appear in the tag's **Deployments** list; services must be checked from their resource pages.
+
+</Accordion>
+</Accordions>

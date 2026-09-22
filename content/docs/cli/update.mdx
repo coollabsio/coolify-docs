@@ -1,0 +1,104 @@
+---
+title: Update
+description: Update the Coolify CLI with its built-in command or the package method used for installation.
+---
+
+import { Code, Computer, Package, Refresh23, TerminalSquare } from 'reicon-react';
+
+# Update the Coolify CLI
+
+The CLI checks GitHub for newer releases when it starts. When an update is available, it prints the available version and the `coolify update` command to standard error.
+
+## Choose an update method
+
+Use the package or installation method that owns the binary when you want it to continue managing future updates.
+
+<Tabs id="cli-update-method" items={['Built-in updater', 'Install script', 'Homebrew', 'Windows', 'Go']}>
+<Tab value="Built-in updater" icon={Refresh23}>
+
+### Update the current binary
+
+The built-in updater downloads the latest release for your operating system and architecture, then replaces the running CLI binary:
+
+```sh
+coolify update
+```
+
+If the binary is installed in a system directory such as `/usr/local/bin` or `%ProgramFiles%\Coolify`, run the command with the administrator permissions required to replace that file.
+
+</Tab>
+
+<Tab value="Install script" icon={TerminalSquare}>
+
+### Rerun the Linux or macOS installer
+
+For a global installation:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/coollabsio/coolify-cli/main/scripts/install.sh | bash
+```
+
+For an installation in `~/.local/bin`:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/coollabsio/coolify-cli/main/scripts/install.sh | bash -s -- --user
+```
+
+The installer displays the installed version and asks before replacing an existing binary.
+
+</Tab>
+
+<Tab value="Homebrew" icon={Package}>
+
+### Upgrade with Homebrew
+
+```sh
+brew update
+brew upgrade coolify-cli
+```
+
+</Tab>
+
+<Tab value="Windows" icon={Computer}>
+
+### Rerun the PowerShell installer
+
+For an administrator installation:
+
+```powershell
+irm https://raw.githubusercontent.com/coollabsio/coolify-cli/main/scripts/install.ps1 | iex
+```
+
+For a user installation:
+
+```powershell
+$env:COOLIFY_USER_INSTALL=1; irm https://raw.githubusercontent.com/coollabsio/coolify-cli/main/scripts/install.ps1 | iex
+```
+
+The installer displays the installed version and asks before replacing an existing binary.
+
+</Tab>
+
+<Tab value="Go" icon={Code}>
+
+### Reinstall with Go
+
+```sh
+go install github.com/coollabsio/coolify-cli/coolify@latest
+```
+
+Go replaces the binary in `GOBIN`, or `GOPATH/bin` when `GOBIN` is unset.
+
+</Tab>
+</Tabs>
+
+## Verify the update
+
+```sh
+coolify version
+coolify context verify
+```
+
+Confirm that `coolify version` shows the expected CLI release. A successful context verification confirms that the updated CLI can still connect and authenticate to the selected Coolify instance.
+
+Updating the CLI does not change its configuration file or saved contexts.

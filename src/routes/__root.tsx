@@ -1,8 +1,9 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from '@tanstack/react-router';
 import { RootProvider } from 'fumadocs-ui/provider/tanstack';
 import * as React from 'react';
-import SearchDialog from '@/components/search';
-import { absoluteUrl, publicAssetFallbackPath, site } from '@/lib/site';
+import { DocsLink } from '@/components/docs-link';
+import SearchDialog from '@/components/layout/search';
+import { absoluteUrl, publicAssetFallbackPath, site } from '@/lib/config/site';
 import '@/styles/app.css';
 
 export const Route = createRootRoute({
@@ -116,7 +117,7 @@ function RootComponent() {
         ) : null}
       </head>
       <body className="flex min-h-screen flex-col">
-        <RootProvider search={{ SearchDialog }}>
+        <RootProvider components={{ Link: DocsLink }} search={{ SearchDialog }}>
           <Outlet />
         </RootProvider>
         <Scripts />

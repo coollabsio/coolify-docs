@@ -1,0 +1,94 @@
+---
+title: Discord
+description: Configure Discord OAuth sign-in for Coolify with a Discord application and registered redirect URI.
+---
+
+# Configure Discord OAuth
+
+Create a Discord application so Coolify can request the `identify` and `email` scopes during sign-in.
+
+<Callout type="warning" title="Example data">
+Replace the example domain while following this guide:
+
+- **Coolify URL:** `https://coolify.shadowarcanist.com`
+- **Redirect:** `https://coolify.shadowarcanist.com/auth/discord/callback`
+</Callout>
+
+## Set up Discord OAuth
+
+<Steps>
+<Step>
+
+### Create a Discord application
+
+Open the [Discord Developer Portal](https://discord.com/developers/applications), select **New Application**, enter a name such as `Coolify`, and create the application.
+
+The application does not need a bot for Coolify sign-in.
+
+</Step>
+<Step>
+
+### Register the Coolify redirect
+
+Open **OAuth2** for the Discord application. Under **Redirects**, select **Add Redirect** and enter:
+
+```txt
+https://coolify.shadowarcanist.com/auth/discord/callback
+```
+
+Save the changes.
+
+Coolify supplies the `identify` and `email` scopes when it starts authorization. You do not need to generate or copy an OAuth URL from Discord.
+
+</Step>
+<Step>
+
+### Copy the Discord credentials
+
+On the **OAuth2** or **General Information** page, copy **Client ID**.
+
+Copy or reset the **Client Secret**, then store the complete value securely. Resetting the secret invalidates the previous value.
+
+</Step>
+<Step>
+
+### Configure Discord in Coolify
+
+Open **Settings > OAuth** and find **Discord**.
+
+| Coolify field | Discord value |
+| :--- | :--- |
+| **Client ID** | Discord application **Client ID** |
+| **Client Secret** | Discord application **Client Secret** |
+| **Redirect URI** | `https://coolify.shadowarcanist.com/auth/discord/callback` |
+
+Select **Save**, then turn on **Enabled** for Discord.
+
+</Step>
+<Step>
+
+### Verify Discord sign-in
+
+Coolify identifies an existing user by email address. The email address on the Discord account must match the email address on the Coolify account. Matching is case-insensitive.
+
+Open the Coolify login page in a private browser window and select **Login with Discord**. Authorize the application, then confirm that Coolify opens the account with the matching email address.
+
+If the email addresses do not match and **Registration Allowed** is enabled, Coolify creates a new user with the email address returned by Discord instead of signing in to the existing account. If registration is disabled, Coolify rejects the sign-in.
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="Discord reports an invalid redirect URI">
+
+Confirm that the exact Coolify callback appears under the Discord application's **OAuth2 > Redirects** list and has been saved.
+
+</Accordion>
+<Accordion title="Coolify returns to the login page">
+
+Confirm that the Discord account has an email address and that it matches the email address on the existing Coolify account. Also confirm that the authorization screen includes both `identify` and `email` access. If the client secret was reset, update **Client Secret** in Coolify.
+
+</Accordion>
+</Accordions>

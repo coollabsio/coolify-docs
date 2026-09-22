@@ -1,0 +1,25 @@
+---
+title: Claude Code
+description: Configure Claude Code to connect to Coolify's Streamable HTTP MCP server.
+---
+
+# Connect Claude Code to MCP
+
+Claude Code can connect directly to Coolify's Streamable HTTP MCP endpoint.
+
+## Add the Coolify server
+
+Run this command from a terminal. Replace the URL and token:
+
+```sh
+claude mcp add --transport http coolify https://app.coolify.io/mcp \
+  --header "Authorization: Bearer 67|abcthisisa123dummytoken"
+```
+
+Use a token with `read` for inspection. Add `deploy` only when Claude Code must run deployment or lifecycle operations.
+
+## Verify the connection
+
+Start Claude Code and ask it to call `get_current_team` or `get_infrastructure_overview`. Confirm the result contains only the expected team's resources.
+
+Read [Set up MCP](/mcp/setup) for instance and team enablement, token permissions, and security requirements.

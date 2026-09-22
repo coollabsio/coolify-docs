@@ -1,0 +1,150 @@
+---
+title: Update a Service
+description: Safely update image versions, Compose configuration, and environment variables for an existing Service.
+---
+
+import { BranchUp, Refresh23, Warning22 } from 'reicon-react';
+
+# Update a Service
+
+An existing Service keeps its own saved Compose definition. Changes to Coolify's one-click template catalog affect newly created Services; Coolify does not merge those changes into a Service you already deployed.
+
+Updating can require more than changing an image tag. Review upstream release notes for new environment variables, removed components, Compose changes, migrations, and compatibility requirements before changing production.
+
+<Callout type="warning" title="Test the update in a separate Service">
+
+Clone the Service or create another instance of the same one-click template, then test the target version there. Cloning copies configuration, not volume contents, bind-mounted files, database records, or external-service data. Restore representative data separately when the update includes a state migration.
+
+</Callout>
+
+## Choose the update path
+
+| Current configuration | Update path |
+| :--- | :--- |
+| Image uses a pinned version tag | Change the tag and any required Compose settings deliberately. |
+| Image uses a mutable tag such as `latest` | Use **Pull Latest Images & Restart** only when pulling the current image behind that tag is intentional. |
+| New release changes services, variables, mounts, commands, or migrations | Compare the complete upstream or one-click template and merge every required change into **Source Compose**. |
+
+## Prepare the update
+
+1. Identify the exact current and target versions for every component being changed.
+2. Read the upstream changelog and migration guide for each version between them.
+3. Check for added or removed environment variables, components, volumes, ports, commands, health checks, and proxy requirements.
+4. Save a copy of **Source Compose** and record the current domains, environment variables, storage, scheduled tasks, and component settings.
+5. Back up every stateful component with a method you have tested restoring.
+6. Prepare a separate Service for the trial update and restore representative data when compatibility depends on existing state.
+
+Do not rely on a Docker volume as the only backup. A failed migration can change data inside a volume while leaving the volume itself intact.
+
+## Apply the update
+
+<Tabs id="service-update-path" items={['Pinned version', 'Mutable tag', 'Template changes']}>
+<Tab value="Pinned version">
+
+### Change the version deliberately
+
+1. Open **Configuration > General > Edit Compose File**.
+2. Change the required image tag in **Source Compose**.
+3. Apply every accompanying Compose or configuration change required by the upstream release.
+4. Select **Save**.
+5. Review the reparsed component cards, **Environment Variables**, **Persistent Storages**, and **Show Deployable Compose**.
+6. Fill new required variables and confirm that removed references are no longer needed.
+7. Deploy the trial Service and follow its deployment output.
+
+Saving Compose reparses referenced environment variables. Review the resulting Environment Variables page rather than assuming that a newly added reference has the correct production value.
+
+</Tab>
+<Tab value="Mutable tag">
+
+### Pull the saved tag again
+
+Select **Advanced > Pull Latest Images & Restart** to run a Compose pull for the image tags already stored in the Service, then recreate the stack.
+
+This action does not replace the saved Compose definition with a newer one-click template. It also does not add variables, components, mounts, commands, or migration steps introduced by the upstream release.
+
+<Callout type="warning" title="A mutable tag hides the target version">
+
+Confirm the image version that the tag currently resolves to before using it in production. Prefer a versioned tag when the upstream project publishes one.
+
+</Callout>
+
+</Tab>
+<Tab value="Template changes">
+
+### Compare the complete template
+
+Create a temporary Service from the current one-click template or obtain the updated Compose definition from the upstream project. Compare it with the existing Service's **Source Compose**.
+
+Review changes to:
+
+- image tags and component names
+- environment-variable references and defaults
+- volumes, bind mounts, and file content
+- ports, domains, labels, and networks
+- commands, dependencies, and health checks
+- added, replaced, or removed components
+
+Merge the required structural changes while preserving the existing Service's intended domains, credentials, storage, and local customizations. Save the definition, review the newly parsed configuration, and deploy the trial Service.
+
+Generated credentials in a newly created comparison Service are not replacements for the credentials used by the existing production Service.
+
+</Tab>
+</Tabs>
+
+## Verify the trial update
+
+Confirm that:
+
+1. every required component remains running and healthy
+2. component logs show the expected application versions
+3. migrations and initialization steps completed successfully
+4. public domains reach the intended components
+5. database, cache, queue, worker, and internal API connections succeed
+6. existing persistent data is present and writable
+7. scheduled tasks and background jobs complete normally
+8. logs contain no repeated compatibility, permission, or startup errors
+
+Exercise the workflows that matter to the application, not only its landing page. Keep the production Service unchanged until the trial update and restore procedure are verified.
+
+## Update production
+
+1. Schedule maintenance when the update can interrupt traffic or modify persistent state.
+2. Create a fresh production backup and confirm its completion.
+3. Apply the Compose and environment changes already tested in the trial Service.
+4. Deploy or use the verified image-pull action.
+5. Follow the deployment output and repeat the trial verification checks against production.
+
+Do not delete the backups, previous Compose definition, or recorded image versions immediately after deployment. Keep them for the recovery period required by your application and data-retention policy.
+
+## Roll back safely
+
+If the release changed only container images and did not perform an incompatible data migration, restore the previous Compose definition and pinned image tags, then deploy again.
+
+If the update changed database schemas, files, or other persistent state, changing the image tag back might not restore compatibility. Follow the upstream downgrade procedure or restore the verified pre-update backup into the matching previous application version.
+
+Use [Service troubleshooting](/services/operations/troubleshooting) when a deployment, component, connection, or domain fails during verification.
+
+## Related guides
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Edit Docker Compose',
+      href: '/services/configuration/docker-compose',
+      description: 'Review source Compose, generated values, and the deployable definition.',
+      icon: BranchUp,
+    },
+    {
+      title: 'Clone a Service',
+      href: '/services/operations/resource-operations',
+      description: 'Create a separate Service configuration for update testing.',
+      icon: Refresh23,
+    },
+    {
+      title: 'Troubleshoot the update',
+      href: '/services/operations/troubleshooting',
+      description: 'Diagnose a failed deployment or unhealthy component.',
+      icon: Warning22,
+    },
+  ]}
+/>

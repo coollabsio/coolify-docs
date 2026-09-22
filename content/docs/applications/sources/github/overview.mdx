@@ -1,0 +1,21 @@
+---
+title: Overview
+description: Choose a GitHub source method for public and private application repositories.
+---
+
+# GitHub
+
+Coolify can deploy a GitHub repository through a public HTTPS URL, a repository deploy key, or a GitHub App.
+
+| Method | Best for | Guide |
+| :--- | :--- | :--- |
+| Public repository | Public source that needs no authentication. | [Deploy a public GitHub repository](/applications/sources/github/public-repository) |
+| Deploy key | One private repository or an organization where you cannot install an app. | [Use a GitHub deploy key](/applications/sources/github/deploy-key) |
+| GitHub App | Selected public or private repositories with integrated push and pull-request events. | [Set up a GitHub App](/applications/sources/github/app) |
+| GitHub Actions | Build and publish an image in GitHub before Coolify deploys it. | [Build and deploy with GitHub Actions](/applications/sources/github/actions) |
+
+Use a [GitHub App](/applications/sources/github/app) for the most complete integration. Its repository installation controls which repositories Coolify can list and clone.
+
+Continue with [GitHub Auto Deploy](/applications/sources/github/auto-deploy) for push-triggered deployments or [GitHub Preview Deployments](/applications/sources/github/preview-deploy) for pull requests.
+
+GitHub Container Registry is independent from repository access. Read [Docker registries](/applications/builds/docker-registries) when the deployment pulls or pushes `ghcr.io` images.

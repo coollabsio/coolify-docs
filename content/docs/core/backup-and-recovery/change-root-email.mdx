@@ -1,0 +1,140 @@
+---
+title: Change Root Email
+description: Recover access to a self-hosted Coolify instance by changing the root account login email from the server terminal.
+---
+
+# Change Root Email
+
+Change the root email from the server terminal when the address is incorrect, inaccessible, or cannot receive Coolify's verification email.
+
+<Callout type="warning" title="Self-hosted instances only">
+Coolify Cloud users cannot access the container that runs this command. To change a Coolify Cloud account email when you cannot use the dashboard, [contact the Coolify team](/support).
+</Callout>
+
+## Choose the right method
+
+If you are signed in and your self-hosted instance can send transactional email, use the dashboard:
+
+1. Open **Profile > General**.
+2. Select **Change Email**.
+3. Enter the new address and select **Send Verification Code**.
+4. Enter the six-digit code sent to the new address, then select **Verify & Update Email**.
+
+Use the terminal procedure below when you cannot sign in, cannot access the current address, or have not configured transactional email. The terminal command changes the login email immediately and does not send a verification message.
+
+## Before you change the email
+
+Make sure you have:
+
+- SSH access to the server that runs the self-hosted Coolify instance
+- permission to run Docker commands on that server
+- the root account's current password, or a plan to [reset the root password](/core/backup-and-recovery/reset-root-password) after changing the email
+- a correctly spelled email address that is not used by another account on the same Coolify instance
+
+<Callout type="warning" title="The terminal command does not validate the address">
+The command does not check the email format or whether the mailbox can receive messages. Coolify saves the address in lowercase, and the instance database rejects an address already used by another Coolify account. Check the complete address before submitting it.
+</Callout>
+
+## Change the root email
+
+<Steps>
+<Step>
+
+### Connect to the Coolify server
+
+Connect over SSH to the machine that runs the Coolify control plane:
+
+```sh
+ssh root@<server-ip>
+```
+
+Replace `<server-ip>` with the server's IP address. If you connect as a non-root user, that account must have permission to run Docker commands. Add `sudo` before the Docker commands below when your server requires it.
+
+</Step>
+<Step>
+
+### Confirm that the Coolify container is running
+
+```sh
+docker inspect --format '{{.State.Status}}' coolify
+```
+
+The command should print `running`. If Docker reports that the `coolify` container does not exist or is not running, [update or repair the Coolify installation](/core/instance-management/update) before continuing.
+
+</Step>
+<Step>
+
+### Run the email-change command
+
+```sh
+docker exec -it coolify php artisan root:change-email
+```
+
+Coolify displays this interactive prompt:
+
+```console
+You are about to change the root user's email.
+Give me a new email for root user:
+```
+
+Enter the complete new email address. When Coolify saves it, the command prints:
+
+```console
+Updating root email...
+Root user's email updated successfully.
+```
+
+The command updates only the root account's active login email. The current password, 2FA configuration, browser sessions, and API tokens remain unchanged. Coolify does not restart, and deployed applications, databases, and services continue running.
+
+</Step>
+</Steps>
+
+## Verify the new login email
+
+Keep the current dashboard session open, if one is available. Open the Coolify login page in a private browser window and sign in with:
+
+- the new email address
+- the existing root password
+- the root account's two-factor authentication code, if 2FA is enabled
+
+You should be able to sign in to the root account with the new email address. You should no longer be able to sign in with the email address used before the command.
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="Correct a wrong email">
+
+If the command saved a misspelled or unintended address, do not edit the Coolify database directly. Run the same command again from the Coolify server:
+
+```sh
+docker exec -it coolify php artisan root:change-email
+```
+
+Enter the correct address, wait for `Root user's email updated successfully.`, then repeat the private-window login check with the corrected address and existing password.
+
+</Accordion>
+
+<Accordion title="Failed to update root user's email">
+
+First confirm that no other Coolify account already uses the new address. The `users` table requires every account email to be unique, but the command reports a generic failure when the database rejects a duplicate.
+
+Then confirm that the `coolify-db` container is running:
+
+```sh
+docker inspect --format '{{.State.Status}}' coolify-db
+```
+
+If the command does not print `running`, repair the Coolify installation before retrying. If the database is running and the address is unique, keep the command output and [contact support](/support).
+
+</Accordion>
+
+<Accordion title="The command succeeded but login still fails">
+
+Enter the new address in lowercase and use the root account's existing password. If the password is also unknown, follow [Reset Root Password](/core/backup-and-recovery/reset-root-password).
+
+If 2FA blocks the login after the email and password are accepted, follow [Reset 2FA](/core/backup-and-recovery/reset-2fa).
+
+</Accordion>
+
+</Accordions>

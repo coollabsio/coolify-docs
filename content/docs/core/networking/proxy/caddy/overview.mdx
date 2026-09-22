@@ -1,0 +1,60 @@
+---
+title: Caddy Overview
+description: Understand Coolify's Caddy integration and when to choose it instead of Traefik.
+---
+
+import { ArrowsRight, Key2, ShieldSecurity2 } from 'reicon-react';
+
+# Caddy overview
+
+Caddy is an integrated proxy alternative to Traefik. Coolify runs `lucaslorentz/caddy-docker-proxy`, generates Caddy labels for resource domains, and stores Caddy configuration and certificate data on the selected server.
+
+<Callout type="warning" title="Caddy support in Coolify">
+Caddy is supported, but Traefik is the default and the proxy used by the Coolify core team in production. As a result, Traefik has broader documentation and support coverage. Choose Caddy if you are familiar with it or need a Caddy-specific feature.
+</Callout>
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Coolify can generate normal Caddy routes and automatic HTTPS settings. Advanced Caddy features may require changes to the proxy Docker Compose configuration, a custom Caddy image, or files under `/data/coolify/proxy/caddy/dynamic/`.
+
+</CoolCallout>
+
+---
+
+## What Coolify manages
+
+For a server using Caddy, Coolify:
+
+- runs the proxy as the `coolify-proxy` container
+- listens on ports `80` and `443`, including HTTP/3 on UDP port `443`
+- generates Caddy Docker labels for application and service domains
+- stores the main configuration at `/data/coolify/proxy/caddy/docker-compose.yml`
+- stores dynamic Caddy snippets under `/data/coolify/proxy/caddy/dynamic/`
+- reloads Caddy after dynamic configuration changes made in the dashboard
+
+The proxy imports `*.caddy` files from its dynamic directory. Coolify-generated files such as `Caddyfile`, `coolify.caddy`, and the default request handler are shown as read-only in the dashboard.
+
+<Callout type="warning" title="Caddy and Traefik configuration are not interchangeable">
+Switching proxies replaces the proxy type and default configuration. Recreate custom routing in Caddy syntax and redeploy resources so their Caddy labels are applied.
+</Callout>
+
+---
+
+## Configure Caddy
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Basic authentication',
+      href: '/core/networking/proxy/caddy/basic-auth',
+      description: 'Protect an application with Coolify-managed credentials or Caddy labels.',
+      icon: Key2,
+    },
+    {
+      title: 'DNS challenge',
+      href: '/core/networking/proxy/caddy/dns-challenge',
+      description: 'Build a Caddy image with a DNS provider module and configure DNS-based certificate validation.',
+      icon: ShieldSecurity2,
+    },
+  ]}
+/>

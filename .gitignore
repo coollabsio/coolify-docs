@@ -18,10 +18,12 @@ examples-temp
 node_modules
 pnpm-global
 TODOs.md
+.ai/todo.md
 *.timestamp-*.mjs
 
 .env
 
 package-lock.json
-
+pnpm-lock.yaml
+pnpm-workspace.yaml
 ui-sample

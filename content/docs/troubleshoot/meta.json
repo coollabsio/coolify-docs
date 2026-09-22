@@ -1,5 +1,6 @@
 {
   "title": "Troubleshoot",
+  "root": true,
   "pages": [
     "installation",
     "applications",

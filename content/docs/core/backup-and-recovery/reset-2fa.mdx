@@ -1,0 +1,222 @@
+---
+title: Reset 2FA
+description: Recover access to a self-hosted Coolify account by clearing its two-factor authentication setup from the server terminal.
+---
+
+import { ShieldSecurity2, UserTick2 } from 'reicon-react';
+
+# Reset 2FA
+
+Reset two-factor authentication (2FA) from the server terminal when an account cannot complete the 2FA challenge and has no usable recovery codes. The reset removes the account's current authenticator setup and recovery codes. It does not change the account password.
+
+<Callout type="warning" title="Self-hosted instances only">
+Coolify Cloud users cannot access the container required for this procedure. If you cannot complete the 2FA challenge for a Coolify Cloud account, [contact the Coolify team](/support).
+</Callout>
+
+## Choose the right recovery method
+
+Use the first method that is available:
+
+1. Enter a current code from the account's authenticator app.
+2. Enter one of the recovery codes saved when 2FA was configured.
+3. If authenticator codes are rejected even though the correct account is selected in the app, check [2FA time synchronization](/troubleshoot/server/two-factor-stopped-working) before clearing the setup.
+4. Use the terminal procedure below when the authenticator and recovery codes are unavailable.
+
+## Before you reset 2FA
+
+Make sure you have:
+
+- SSH access to the server that runs the self-hosted Coolify instance
+- permission to run Docker commands on that server
+- the email address of the affected account, unless you are resetting the root account
+- the account password required for the login check after the reset
+
+If you are resetting the root account and do not know its password, follow [Reset Root Password](/core/backup-and-recovery/reset-root-password) before verifying access.
+
+<Callout type="warning" title="The current 2FA setup will be removed">
+This procedure clears the selected account's authenticator secret and recovery codes. The existing authenticator entry and every recovery code for that account will stop working. Configure 2FA again after access is restored.
+</Callout>
+
+## Reset 2FA from the server
+
+<Steps>
+<Step>
+
+### Connect to the Coolify server
+
+Connect over SSH to the machine that runs the Coolify control plane:
+
+```sh
+ssh root@<server-ip>
+```
+
+Replace `<server-ip>` with the server's IP address. If you connect as a non-root user, that account must have permission to run Docker commands. Add `sudo` before the Docker commands below when your server requires it.
+
+</Step>
+<Step>
+
+### Confirm that the Coolify container is running
+
+```sh
+docker inspect --format '{{.State.Status}}' coolify
+```
+
+The command should print `running`. If it does not, [update or repair the Coolify installation](/core/instance-management/update) before continuing.
+
+</Step>
+<Step>
+
+### Open Laravel Tinker
+
+Run Tinker inside the `coolify` container:
+
+```sh
+docker exec -it coolify php artisan tinker
+```
+
+Wait for the `>` prompt before entering the PHP commands in the following steps.
+
+</Step>
+<Step>
+
+### Select the affected account
+
+<Tabs id="reset-2fa-account" items={['Root account', 'Another account']}>
+<Tab value="Root account" icon={ShieldSecurity2}>
+
+Select the root account by user ID `0`:
+
+```php
+$user = App\Models\User::find(0);
+```
+
+</Tab>
+<Tab value="Another account" icon={UserTick2}>
+
+Replace `user@example.com` with the account's complete email address:
+
+```php
+$user = App\Models\User::where('email', strtolower('user@example.com'))->first();
+```
+
+</Tab>
+</Tabs>
+
+</Step>
+<Step>
+
+### Verify the selected account
+
+```php
+$user?->only(['id', 'email', 'two_factor_confirmed_at']);
+```
+
+Tinker should print the expected user ID and email address. `two_factor_confirmed_at` normally contains a timestamp when 2FA is enabled.
+
+If Tinker prints `null` or shows a different account, do not continue. Select the correct account first.
+
+</Step>
+<Step>
+
+### Clear the 2FA setup
+
+```php
+$user->two_factor_secret = null;
+$user->two_factor_recovery_codes = null;
+$user->two_factor_confirmed_at = null;
+$user->save();
+```
+
+The final command should return `true`. These assignments update only the selected account's 2FA fields.
+
+</Step>
+<Step>
+
+### Verify the database update
+
+```php
+$user->refresh()->only([
+    'two_factor_secret',
+    'two_factor_recovery_codes',
+    'two_factor_confirmed_at',
+]);
+```
+
+Tinker should report `null` for all three fields:
+
+```console
+[
+  "two_factor_secret" => null,
+  "two_factor_recovery_codes" => null,
+  "two_factor_confirmed_at" => null,
+]
+```
+
+Exit Tinker:
+
+```php
+exit;
+```
+
+Coolify does not need to restart after this update. Deployed applications, databases, and services are not affected.
+
+</Step>
+</Steps>
+
+## Verify account access
+
+Open the Coolify login page in a private browser window. Sign in with the affected account's email address and password.
+
+You should be able to sign in without seeing the 2FA challenge. If the account is the root account and its email address is also unavailable, follow [Change Root Email](/core/backup-and-recovery/change-root-email).
+
+## Configure 2FA again
+
+After signing in:
+
+1. Open **Profile > General**.
+2. Under **Two-factor Authentication**, select **Configure**.
+3. Add the new setup to your authenticator app and validate it with a current code.
+4. Store the new recovery codes in a secure location outside the Coolify server.
+5. Sign in through a private browser window again and confirm that the new authenticator code works.
+
+The authenticator secret and recovery codes cleared during the reset cannot be reused.
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="The account lookup returns null">
+
+For the root account, confirm that you used `App\Models\User::find(0)`. For another account, check the complete email address and run the lowercase email lookup again.
+
+Do not clear any fields until `$user?->only(...)` prints the account you intend to reset.
+
+</Accordion>
+
+<Accordion title="Saving the 2FA reset fails">
+
+Leave Tinker and confirm that the internal database container is running:
+
+```sh
+docker inspect --format '{{.State.Status}}' coolify-db
+```
+
+The command should print `running`. If the database is running, reopen Tinker, select the account again, and repeat the update. If saving still fails, keep the error output and [contact support](/support).
+
+</Accordion>
+
+<Accordion title="The login page still asks for a 2FA code">
+
+Reopen Tinker, select the same account, and repeat the database verification command. All three 2FA fields must report `null`.
+
+Then open a new private browser window and sign in again. A page that was already displaying the 2FA challenge may still show the previous login attempt.
+
+</Accordion>
+
+<Accordion title="The password is rejected after the 2FA reset">
+
+Resetting 2FA does not change the account password. For the root account, follow [Reset Root Password](/core/backup-and-recovery/reset-root-password). For another account, use **Forgot Password** when the instance can send transactional email.
+
+</Accordion>
+
+</Accordions>

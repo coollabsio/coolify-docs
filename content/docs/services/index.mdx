@@ -1,0 +1,85 @@
+---
+title: Services
+description: Understand, deploy, configure, and operate Docker Compose services with Coolify.
+---
+
+import { Box2, BranchUp, Settings } from 'reicon-react';
+
+# Services
+
+Coolify deploys a Service as a Docker Compose stack on one connected server and network destination. Start from a ready-made one-click template, or select **Docker Compose Empty** and provide your own Compose definition.
+
+Each Service can contain several application and database containers. Coolify parses the Compose definition, creates controls for the detected components, generates required values, configures domains and storage, and runs the stack with Docker Compose.
+
+<Callout type="info" title="Choose the right resource type">
+
+Use an [Application](/applications) when the deployment should follow source code in a Git repository or use one existing Docker image. Use a [standalone Database](/databases) when you need Coolify's engine-specific database defaults. Use a Service for a multi-container stack or a Compose definition stored directly in Coolify.
+
+</Callout>
+
+## Find the right section
+
+| If you want to | Start here |
+| :--- | :--- |
+| Learn what a Service contains and when to use one | [What is a service](/services/what-is-a-service) |
+| Follow the path from a template or Compose definition to running containers | [How services work](/services/how-services-work) |
+| Browse ready-made templates | [One-click service catalog](/services/overview) |
+| Configure the stack, its components, domains, variables, and storage | [Configuration](/services/configuration/overview) |
+| Edit and understand the stored Compose definition | [Docker Compose](/services/configuration/docker-compose) |
+| Inspect logs, update images, schedule commands, clone, move, or delete a Service | [Operations](/services/operations/overview) |
+
+## Deploy a Service
+
+1. Open a project and environment, then select **Create New Resource**.
+2. Select a one-click Service, or select **Docker Compose Empty**.
+3. Choose the server and network destination where the stack should run.
+4. For **Docker Compose Empty**, paste the Compose definition and save it.
+5. Review **Configuration > General**, **Environment Variables**, and **Persistent Storages**.
+6. Fill every required environment variable, then select **Deploy**.
+7. Follow the deployment output and verify every required component is running and healthy.
+
+For a complete first deployment, follow [Deploy your first service](/deploy-your-first-service).
+
+## Understand one-click Services
+
+A one-click Service starts from a Compose template maintained in Coolify's service library. Coolify copies the template into the new resource and generates its initial values.
+
+The deployed Service keeps its own Compose definition. Later library changes do not rewrite that definition. **Pull Latest Images & Restart** pulls images for the tags currently saved in the Service; it does not replace the stored template with a newer version.
+
+Open the [searchable catalog](/services/overview) to find a Service, then read its individual guide for service-specific setup, credentials, or limitations.
+
+## Service resource navigation
+
+| Area | Use it to | Guide |
+| :--- | :--- | :--- |
+| **Configuration** | Change the stack, components, variables, storage, automation, and organization. | [Configuration overview](/services/configuration/overview) |
+| **Logs** | Read stdout and stderr from the Service's containers. | [Operate services](/services/operations/overview) |
+| **Terminal** | Open a shell in a selected running container when terminal access is allowed. | [Operate services](/services/operations/overview) |
+| **Scheduled Tasks** | Run a recurring command inside one component container. | [Scheduled tasks](/services/operations/scheduled-tasks) |
+| **Resource Operations** | Clone the Service to another destination or move it between projects and environments. | [Clone or move a Service](/services/operations/resource-operations) |
+| **Danger Zone** | Permanently delete the Service and choose which related Docker resources to remove. | [Delete a Service](/services/operations/danger-zone) |
+
+## Continue with Services
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Understand Services',
+      href: '/services/what-is-a-service',
+      description: 'Learn how a Service differs from an Application or standalone Database.',
+      icon: Box2,
+    },
+    {
+      title: 'Browse one-click Services',
+      href: '/services/overview',
+      description: 'Search the templates available for new Service resources.',
+      icon: BranchUp,
+    },
+    {
+      title: 'Configure a Service',
+      href: '/services/configuration/overview',
+      description: 'Find stack, component, variable, storage, and operation settings.',
+      icon: Settings,
+    },
+  ]}
+/>
