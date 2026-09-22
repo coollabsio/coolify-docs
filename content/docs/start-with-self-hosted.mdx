@@ -793,7 +793,7 @@ Test advanced changes on a non-production server first. If you manage production
 ---
 
 <Tabs id="advanced-install-option-tabs" items={['Root user', 'Custom Docker network', 'Custom registry source', 'Compose overrides']}>
-<Tab value="Root user" icon={ShieldSecurity2}>
+<Tab value="Root user" id="_1-root-user" icon={ShieldSecurity2}>
 
 ### 1. Root user
 Use this when you want to pre-create the root account during installation, so the registration page is never exposed.
@@ -852,7 +852,7 @@ docker compose --env-file /data/coolify/source/.env -f /data/coolify/source/dock
 
 </Tab>
 
-<Tab value="Custom Docker network" icon={Globe3}>
+<Tab value="Custom Docker network" id="_2-custom-docker-network" icon={Globe3}>
 
 ### 2. Custom Docker network
 Use this when you need a custom Docker address pool because of network overlap or infrastructure policy.
@@ -910,7 +910,7 @@ docker compose --env-file /data/coolify/source/.env -f /data/coolify/source/dock
 
 </Tab>
 
-<Tab value="Custom registry source" icon={Box2}>
+<Tab value="Custom registry source" id="_3-custom-registry-source" icon={Box2}>
 
 ### 3. Custom registry source
 Use this when you want Coolify images pulled from a different registry source.
@@ -964,7 +964,7 @@ docker compose --env-file /data/coolify/source/.env -f /data/coolify/source/dock
 
 </Tab>
 
-<Tab value="Compose overrides" icon={PenNib}>
+<Tab value="Compose overrides" id="_4-compose-overrides" icon={PenNib}>
 
 ### 4. Compose overrides
 Use this when you need persistent customization of Coolify containers (ports, labels, resources, command overrides).
