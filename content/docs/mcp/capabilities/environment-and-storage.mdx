@@ -1,0 +1,14 @@
+---
+title: Environment and storage
+description: Use Coolify MCP to inspect environment-variable names and storage mounts without returning file contents.
+---
+
+# Environment and storage
+
+| Tool | Permission | Purpose |
+| :--- | :--- | :--- |
+| `list_env_keys` | `read` | List environment-variable key names for an application, database, or service. Never returns values. |
+| `list_shared_env_keys` | `read` | List shared key names at project or environment scope. Never returns values. |
+| `list_storages` | `read` | List persistent and file storage mounts. Never returns file contents. |
+
+Task command bodies and supported sensitive fields require `read:sensitive`. Environment values are not returned by these tools.

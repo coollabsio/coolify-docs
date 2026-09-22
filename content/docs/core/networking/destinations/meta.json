@@ -1,0 +1,9 @@
+{
+  "title": "Destinations",
+  "pages": [
+    "overview",
+    "create",
+    "manage",
+    "delete"
+  ]
+}

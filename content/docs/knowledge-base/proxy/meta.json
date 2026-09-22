@@ -1,7 +1,0 @@
-{
-  "title": "Proxy",
-  "pages": [
-    "traefik",
-    "caddy"
-  ]
-}

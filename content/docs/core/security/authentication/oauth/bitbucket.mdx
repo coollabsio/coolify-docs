@@ -1,0 +1,92 @@
+---
+title: Bitbucket
+description: Configure Bitbucket Cloud OAuth sign-in for Coolify with an OAuth consumer and email permission.
+---
+
+# Configure Bitbucket OAuth
+
+Create a Bitbucket Cloud OAuth consumer so Coolify can read the signed-in user's profile and confirmed primary email address.
+
+<Callout type="warning" title="Example data">
+Replace the example domain while following this guide:
+
+- **Coolify URL:** `https://coolify.shadowarcanist.com`
+- **Callback URL:** `https://coolify.shadowarcanist.com/auth/bitbucket/callback`
+</Callout>
+
+## Set up Bitbucket OAuth
+
+<Steps>
+<Step>
+
+### Open OAuth consumers
+
+Open Bitbucket Cloud, select the workspace that will own the integration, then go to **Workspace settings > OAuth consumers**.
+
+You need permission to manage settings for the workspace. See Atlassian's [Bitbucket OAuth documentation](https://support.atlassian.com/bitbucket-cloud/docs/use-oauth-on-bitbucket-cloud/) when the workspace navigation differs.
+
+</Step>
+<Step>
+
+### Add an OAuth consumer
+
+Select **Add consumer** and enter:
+
+| Bitbucket field | Value |
+| :--- | :--- |
+| **Name** | A recognizable name such as `Coolify`. |
+| **Website** | `https://coolify.shadowarcanist.com` |
+| **Callback URL** | `https://coolify.shadowarcanist.com/auth/bitbucket/callback` |
+
+Under permissions, grant read access to the account and email address. Coolify requests the `email` scope and uses the confirmed primary email returned by Bitbucket.
+
+Save the consumer.
+
+</Step>
+<Step>
+
+### Save the Bitbucket credentials
+
+Expand the created consumer and copy its **Key** and **Secret**.
+
+The Bitbucket **Key** is the OAuth client ID. Store the secret securely.
+
+</Step>
+<Step>
+
+### Configure Bitbucket in Coolify
+
+Open **Settings > OAuth** and find **Bitbucket**.
+
+| Coolify field | Bitbucket value |
+| :--- | :--- |
+| **Client ID** | OAuth consumer **Key** |
+| **Client Secret** | OAuth consumer **Secret** |
+| **Redirect URI** | `https://coolify.shadowarcanist.com/auth/bitbucket/callback` |
+
+Select **Save**, then turn on **Enabled** for Bitbucket.
+
+</Step>
+<Step>
+
+### Verify Bitbucket sign-in
+
+Open the Coolify login page in a private browser window and select **Login with Bitbucket**. Approve the consumer if requested, then confirm that Coolify opens the account matching the confirmed primary Bitbucket email.
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="Bitbucket rejects the callback URL">
+
+Compare the consumer **Callback URL** with **Redirect URI** in Coolify. Both must use the same HTTPS domain and `/auth/bitbucket/callback` path.
+
+</Accordion>
+<Accordion title="Coolify does not receive an email address">
+
+Confirm that the consumer has email read permission and that the Bitbucket account has a confirmed primary email address.
+
+</Accordion>
+</Accordions>

@@ -1,0 +1,212 @@
+---
+title: Build Servers
+description: Add a dedicated build server and configure an application to use it for Docker image builds.
+---
+
+# Build servers
+
+A build server builds application images on a separate machine. The completed image is pushed to a container registry, then the deployment server pulls and runs it.
+
+By default, Coolify builds an application on the same server where the application will be deployed. Add a build server when builds use too much CPU, memory, or disk space on the deployment server.
+
+## What you need
+
+Before you start, make sure you have:
+
+- a fresh remote server that is not running applications, databases, or services
+- Docker Engine on the build server, or permission for Coolify to install it
+- a container registry where Coolify can push the completed image
+- the registry repository for the application, such as `ghcr.io/example/my-app`
+- access to the application's source repository
+
+The build server should use the same CPU architecture as the deployment server.
+
+<Callout type="warning" title="Build servers cannot run resources">
+A server marked as a build server cannot be selected as a deployment destination. Do not enable this setting on a server that runs applications, databases, or services.
+</Callout>
+
+---
+
+## Configure a build server
+
+Choose whether you are adding a new server or using a server that is already connected to Coolify.
+
+<Tabs id="configure-build-server" items={['Add a new server', 'Use an existing server']}>
+<Tab value="Add a new server">
+
+<Steps>
+<Step>
+
+### Prepare the SSH key
+
+Complete [Create and authorize an SSH key](/core/infrastructure/servers/add-server#create-and-authorize-an-ssh-key) before opening the server form.
+
+</Step>
+<Step>
+
+### Open the Servers page
+
+1. Open the Coolify dashboard.
+2. Select **Servers** in the sidebar.
+3. Select **+ Add**.
+4. Select **Manual**.
+
+</Step>
+<Step>
+
+### Add the build server
+
+1. Enter the server name, IP address or domain, SSH port, user, and private key.
+2. Enable **Use it as a build server?**.
+3. Select **Continue**.
+
+Coolify adds the server and opens its **General** page.
+
+</Step>
+<Step>
+
+### Validate the build server
+
+1. Select **Validate Server & Install Docker Engine**.
+2. Keep the page open while Coolify validates the SSH connection and prepares Docker.
+3. Wait for the page to show **Server is reachable and validated**.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Use an existing server">
+
+<Steps>
+<Step>
+
+### Confirm that the server has no resources
+
+1. Open **Servers** in the Coolify sidebar.
+2. Select the server you want to use.
+3. Open **Resources > Managed**.
+4. Confirm that the page says **No managed resources found**.
+
+If the server has managed resources, move or delete them before continuing. Coolify disables the build-server setting while resources are connected to the server.
+
+</Step>
+<Step>
+
+### Enable the build-server role
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/build-servers/existing-server-build-setting.webp" alt="Build server setting on an existing server General page" />
+
+1. Open **Configuration > General** for the server.
+2. Enable **Use it as a build server?**.
+
+The setting saves immediately. The server can no longer be selected as a deployment destination while it remains a build server.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+<Callout type="info" title="Using multiple build servers?">
+When more than one usable build server is available, Coolify selects one at random for each build.
+</Callout>
+
+---
+
+## Sign in to the container registry
+
+<Steps>
+<Step>
+
+### Connect to the build server
+
+Connect with the same SSH user configured on the server's **General** page:
+
+```sh
+ssh <user>@<build-server-ip>
+```
+
+Replace `<user>` and `<build-server-ip>` with the values used by your server.
+
+If the server uses an SSH port other than `22`, run:
+
+```sh
+ssh -p <ssh-port> <user>@<build-server-ip>
+```
+
+</Step>
+<Step>
+
+### Log in to the registry
+
+```sh
+docker login <registry-domain>
+```
+
+Replace `<registry-domain>` with the registry hostname, such as `ghcr.io`. Enter the registry username and access token when prompted.
+
+The login creates `~/.docker/config.json` for the current SSH user. Coolify requires this file on the build server.
+
+If the registry repository is private, log in to the registry on the deployment server as well so it can pull the completed image.
+
+</Step>
+</Steps>
+
+---
+
+## Configure an application to use the build server
+
+<Steps>
+<Step>
+
+### Open the application General page
+
+1. Open **Projects** in the Coolify sidebar.
+2. Select the project and environment.
+3. Select the application that should use the build server.
+4. Open **General**.
+
+</Step>
+<Step>
+
+### Enter the Docker image
+
+Enter the full registry repository in **Docker Image**, for example `ghcr.io/example/my-app`.
+
+Select **Save** after entering the image. Coolify cannot deploy with a build server until **Docker Image** is set.
+
+</Step>
+<Step>
+
+### Enable the build server
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/build-servers/application-build-server-setting.webp" alt="Use a Build Server setting on an application General page" />
+
+1. Find **Use a Build Server?**.
+2. Enable the setting.
+
+The setting saves immediately. It is not available for Docker Compose applications.
+
+</Step>
+<Step>
+
+### Deploy the application
+
+Start a new deployment and open the deployment logs.
+
+When Coolify selects a build server, the log shows:
+
+```console
+Found a suitable build server (<server-name>).
+```
+
+Wait for the deployment to finish, then confirm:
+
+1. the completed image appears in the container registry
+2. the application runs on its deployment server
+3. the application opens from its configured domain
+
+If no usable build server is available, Coolify reports **No suitable build server found. Using the deployment server.** and performs the build on the deployment server.
+
+</Step>
+</Steps>

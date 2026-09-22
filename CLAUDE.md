@@ -10,14 +10,15 @@ The Coolify application source can be found at https://github.com/coollabsio/coo
 
 ## Branch Strategy
 
-- **main**: Production branch, deployed to https://coolify.io/docs/
-- **next**: Development branch, deployed to https://next.coolify.io/docs/
-- Pull requests must target `next`, not `main`.
+- **main**: Production branch, deployed to https://coolify.io/docs/ by `.github/workflows/production-build.yml`
+- **next**: Development branch, deployed to https://next.coolify.io/docs/ by `.github/workflows/staging-build.yml`
+- Pull requests must target `next`, not `main`. `enforce-pr-standards.yml` retargets non-maintainer PRs to `next` automatically.
 - Weekly release cycle merges `next` into `main`.
 
 ## Technology Stack
 
 - **Fumadocs MDX/UI/Core** - Documentation content, layout, search, and MDX pipeline
+- **Fumadocs OpenAPI** - API reference rendered from `config/openapi.json`
 - **TanStack Start / React 19** - Application runtime and prerendering
 - **Vite** - Development server and production build
 - **Tailwind CSS 4** - Styling
@@ -31,9 +32,14 @@ The Coolify application source can be found at https://github.com/coollabsio/coo
 # Install dependencies
 bun install
 
-# Generate services and Fumadocs content
+# Regenerate the service catalog (src/generated/services.json + content/docs/services/all.mdx)
 bun run generate:services
-bun run generate:content
+
+# Regenerate the CLI command reference from github.com/coollabsio/coolify-cli
+bun run generate:cli-reference
+
+# Refresh config/openapi.json from the Coolify repository
+bun run generate:openapi
 
 # Run development server
 bun run dev
@@ -41,60 +47,90 @@ bun run dev
 # Build static production output
 bun run build
 
-# Type-check the generated Fumadocs source and app
+# Type-check the Fumadocs source and app
 bun run types:check
 
 # Preview production build
 bun run preview
 ```
 
-`bun run dev`, `bun run build`, and `bun run types:check` generate service data and Fumadocs content before starting their primary work.
+`bun run dev` and `bun run build` run `generate:cli-reference`, `generate:openapi`, and `generate:services` before starting Vite. `bun run types:check` runs `generate:services`, `fumadocs-mdx`, and `tsc --noEmit`.
+
+`generate:openapi` rewrites `config/openapi.json` on every dev or build run. Only commit that file when you intend to update the API reference.
+
+Do not run `bun run generate:content`. `scripts/generate-fumadocs-content.mjs` is the one-time migration script from the old VitePress `docs/` folder, which no longer exists.
 
 ## Directory Structure
 
 ```text
-docs/                       # Author-edited source markdown and images
-content/docs/               # Generated Fumadocs MDX content
+content/docs/               # Documentation source: MDX pages and meta.json sidebar files
+content/docs/services/      # One-click service pages; all.mdx is generated
+content/docs/cli/command-reference/commands/  # Generated CLI reference
+public/                     # Public assets served under the /docs base path
+public/images/              # Documentation images, grouped by section
+templates/                  # Page templates (blank, guide, service, troubleshooting)
 src/                        # React/TanStack Start application
-src/components/             # Shared MDX and UI components
+src/components/docs/        # MDX components (registered in mdx.tsx)
+src/routes/                 # App routes, including llms.txt, llms-full.txt and search
 src/generated/services.json # Generated service directory data
 config/site.shared.ts       # Shared site metadata and docs base path
-scripts/                    # Content, services, and postbuild scripts
-public/                     # Public assets copied into the /docs base path
+config/openapi.json         # Coolify OpenAPI spec for the API reference
+scripts/                    # Generators, link checker, and postbuild script
 nginx/                      # Nginx config and redirects
+atlas.json                  # Atlas devkit config (bun run dev:atlas)
 ```
 
-`docs/` remains the source of truth for documentation authoring. `scripts/generate-fumadocs-content.mjs` converts that content into `content/docs/` for Fumadocs.
+`content/docs/` is the source of truth for documentation. Edit MDX files there directly.
 
 ## Content Guidelines
 
+### Pages and Navigation
+
+- Pages are `.mdx` files in `content/docs/`. Start new pages from the matching file in `templates/`.
+- Sidebar order and section separators come from the `meta.json` file in each folder. Add new pages to the relevant `meta.json`.
+
 ### Images
 
-- Store images in `docs/public/images/[section]/`.
-- Use `/docs/images/...` paths in rendered output.
-- Prefer the `ZoomableImage` MDX component for documentation screenshots.
+- Store images in `public/images/[section]/`.
+- Reference them as `/docs/images/...` in content.
+- Use the `ZoomImage` MDX component for screenshots and logos. `ZoomableImage` is a legacy alias for the same component.
 - Keep meaningful alt text for screenshots and diagrams.
 
 ### Markdown and MDX
 
 - Frontmatter should include `title` and usually `description`.
-- Existing VitePress containers are converted into Fumadocs callouts during content generation.
-- Internal links should point to stable docs paths, for example `/applications` or `/services/postgresql`; generated output rewrites these under `/docs`.
-- Avoid raw HTML unless it is already supported by the conversion script and MDX runtime.
+- Use the `<Callout type="...">` component for callouts. Supported types are `info`, `warning`, `error`, `success`, and `idea`. VitePress `:::` containers are no longer supported.
+- Other available components include `Steps`/`Step`, `Tabs`/`Tab`, `ScreenshotTabs`, `Cards`, `Accordions`, and the `Cool*` components in `src/components/docs/`.
+- Internal links should point to stable docs paths without the base path, for example `/applications` or `/services/postgresql`.
+- Avoid raw HTML unless it is already supported by the MDX runtime.
 
 ## Service Documentation
 
-Service files live in `docs/services/`. The services directory data is generated by `scripts/generate-service-list.mjs` into `src/generated/services.json`.
+Service pages live in `content/docs/services/`. `scripts/generate-service-list.mjs` reads their frontmatter into `src/generated/services.json`, and `scripts/generate-services-page.mjs` writes `content/docs/services/all.mdx`. Both files are generated: run `bun run generate:services` and commit the result instead of editing them by hand.
+
+Service frontmatter:
+
+```yaml
+---
+title: "Buzz"
+description: "Short description shown in the service catalog."
+og:
+  description: "Longer description for social previews."
+category: "Messaging"
+icon: "/docs/images/services/buzz-logo.svg"
+# disabled: true   # hide from the catalog but keep the page
+---
+```
 
 When adding, renaming, or disabling services, update:
 
 | File | Purpose |
 |------|---------|
-| `docs/services/{name}.md` | Service documentation |
-| `docs/public/images/services/` | Service logo |
+| `content/docs/services/{slug}.mdx` | Service documentation |
+| `public/images/services/` | Service logo and screenshots |
 | `nginx/redirects.conf` | Redirects for renamed or removed paths |
 
-Service filenames should use kebab-case lowercase and match the service slug.
+Service filenames should use kebab-case lowercase and match the service slug. Use a category that already exists in `all.mdx` so the catalog doesn't get duplicate headings.
 
 ## Environment Variables
 
@@ -104,33 +140,34 @@ VITE_ANALYTICS_DOMAIN=coolify.io/docs
 VITE_PLAUSIBLE_SCRIPT_URL=https://analytics.coollabs.io/js/script.tagged-events.js
 ```
 
+Optional: `VITE_PLAUSIBLE_DOMAIN` and `VITE_PLAUSIBLE_API_HOST` override the Plausible domain and API host, and `COOLIFY_OPENAPI_URL` changes the source of `generate:openapi`.
+
 ## Build and Deployment
 
 The Dockerfile builds the Fumadocs/TanStack app with Bun and copies `.output/public` into the Nginx image. Nginx serves the static site from `/usr/share/nginx/html`, preserving `/docs/...` URLs.
 
-Postbuild output includes:
+Build output includes:
 
-- `.output/public/docs-manifest.json`
-- `.output/public/sitemap.xml`
-- `.output/public/robots.txt`
-- `.output/public/llms.txt`
-- `.output/public/llms-full.txt`
-- `.output/public/docs/images/`
-- `.output/public/docs/brand/`
+- `.output/public/docs-manifest.json`, `sitemap.xml`, and `robots.txt` (written by `scripts/postbuild.ts`)
+- `.output/public/docs/llms.txt` and `llms-full.txt` (prerendered from `src/routes/`)
+- `.output/public/docs/images/`, `docs/brand/`, and `docs/site.webmanifest` (copied by `scripts/postbuild.ts`)
+- Open Graph images for every page (rendered by `scripts/postbuild.ts`)
 
 Custom Nginx config lives in [nginx/nginx.conf](nginx/nginx.conf) and redirect rules live in [nginx/redirects.conf](nginx/redirects.conf).
+
+Production and next.coolify.io strip the `/docs` prefix before the request reaches Nginx, so write every redirect as `location ~ ^(?:/docs)?/old/path/?$ { return 301 "/docs/new/path"; }`. Run `bun run check:redirects -- --base origin/next` before opening a PR that renames or removes pages. It fails when a page that exists on `next` has no redirect, when a legacy URL in `scripts/fixtures/legacy-urls.txt` dead-ends, or when a rule loops or shadows a real page. The `Check redirects` workflow runs the same check on pull requests.
 
 ## Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
-| Build fails in MDX | Run `bun run generate:content` and inspect the generated file named in the error |
-| Service not listed | Run `bun run generate:services` and verify the file exists in `docs/services/` |
-| Image missing | Check source asset in `docs/public/images/` and rendered `/docs/images/...` path |
-| Broken renamed page | Update `nginx/redirects.conf` and any source markdown links |
+| Build fails in MDX | Open the `content/docs/` file named in the error and check its frontmatter and component syntax |
+| Service not listed | Check the page's frontmatter in `content/docs/services/`, then run `bun run generate:services` |
+| Image missing | Check the asset in `public/images/` and the `/docs/images/...` path in the page |
+| Broken renamed page | Add a redirect in `nginx/redirects.conf`, update links in `content/docs/`, and run `bun run check:redirects -- --base origin/next`. Run `node scripts/check-links.js <docs-url>` against a running site to find broken links |
 
 ## Important Notes
 
 - The documentation can lag behind Coolify releases; check the Coolify source for behavior-sensitive claims.
-- Generated folders are part of the build workflow. Regenerate them after changing source docs or service files.
+- `src/generated/services.json`, `content/docs/services/all.mdx`, and the CLI command reference are generated. Regenerate them rather than editing them by hand.
 - Keep redirects stable because existing docs URLs are indexed and linked externally.

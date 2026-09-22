@@ -1,0 +1,54 @@
+---
+title: Overview
+description: Understand OAuth sign-in behavior in Coolify and choose a provider-specific setup guide.
+---
+
+# OAuth overview
+
+OAuth lets people sign in to a self-hosted Coolify instance through a supported external provider instead of entering their Coolify password.
+
+<Callout type="info" title="OAuth configuration is for self-hosted Coolify">
+Coolify Cloud manages its own sign-in providers. On a self-hosted instance, a root team administrator or owner can configure providers under **Settings > OAuth**.
+</Callout>
+
+## How OAuth sign-in works
+
+After the provider authenticates a person, it returns an email address to Coolify.
+
+- If a Coolify account already uses that email address, Coolify signs in to that account.
+- If no account uses that email address and **Registration Allowed** is enabled, Coolify creates an account.
+- If no account uses that email address and registration is disabled, Coolify rejects the sign-in.
+
+Email matching is case-insensitive. Coolify does not maintain a separate provider-to-account link in this flow, so only enable providers you trust to return the correct account email address.
+
+<Callout type="warning" title="Require multi-factor authentication at the provider">
+Coolify's 2FA challenge applies to email-and-password sign-ins. OAuth callbacks authenticate through the external provider, so require multi-factor authentication and appropriate access policies at that provider.
+</Callout>
+
+## Choose an OAuth provider
+
+Each guide creates the external provider application, registers the exact Coolify callback URL, adds the provider credentials to Coolify, and verifies sign-in.
+
+| Provider | What you create | Guide |
+| :--- | :--- | :--- |
+| GitHub | OAuth App with `user:email` access | [Configure GitHub OAuth](/core/security/authentication/oauth/github) |
+| GitLab | OAuth application with `read_user` access | [Configure GitLab OAuth](/core/security/authentication/oauth/gitlab) |
+| Google | Web OAuth client with OpenID, profile, and email access | [Configure Google OAuth](/core/security/authentication/oauth/google) |
+| Azure | Microsoft Entra app registration with `User.Read` | [Configure Azure OAuth](/core/security/authentication/oauth/azure) |
+| Bitbucket | OAuth consumer with email access | [Configure Bitbucket OAuth](/core/security/authentication/oauth/bitbucket) |
+| Discord | Discord application using `identify` and `email` | [Configure Discord OAuth](/core/security/authentication/oauth/discord) |
+| Infomaniak | Infomaniak Application credential | [Configure Infomaniak OAuth](/core/security/authentication/oauth/infomaniak) |
+
+For Authentik, Clerk, and Zitadel, use the [SSO guides](/core/security/authentication/sso/overview).
+
+## Control account creation
+
+On a self-hosted instance, open **Settings > Configuration > Advanced** and use **Registration Allowed** to control whether a first-time OAuth sign-in may create a Coolify account.
+
+Turning registration off does not prevent an existing matching account from signing in through an enabled provider. It prevents a provider email address with no matching Coolify account from creating one.
+
+OAuth does not map provider groups or claims to Coolify teams and roles. Manage team membership and roles in Coolify after the account exists.
+
+## Test safely
+
+Configure and test one provider at a time. Use a non-root account first, and keep a working administrator password until provider sign-in has been verified from a private browser window.

@@ -1,0 +1,54 @@
+---
+title: Overview
+description: Understand how Coolify sends team notifications through email, Discord, Telegram, Slack, Mattermost, Pushover, and webhooks.
+---
+
+# Notifications overview
+
+Coolify sends team notifications when selected deployment, backup, scheduled task, container, and server events occur. Each notification channel has its own connection details and event selections, so you can send urgent alerts to one destination and routine updates to another.
+
+## How notifications work
+
+A notification requires both parts of the configuration:
+
+1. An enabled channel with valid connection details.
+2. The event selected under that channel's **Notification Settings**.
+
+Coolify stores notification settings for the current team. Team members with permission to update notification settings can change a channel, while sending a test notification requires the corresponding permission.
+
+---
+
+## Choose a channel
+
+| Channel | What you need | Guide |
+| :--- | :--- | :--- |
+| Email | Hosted email, system-wide transactional email, SMTP, or a Resend API key | [Email](/core/notifications/channels/email) |
+| Discord | A Discord webhook URL | [Discord](/core/notifications/channels/discord) |
+| Telegram | A bot API token and chat ID | [Telegram](/core/notifications/channels/telegram) |
+| Slack or Mattermost | A Slack-compatible incoming webhook URL | [Slack & Mattermost](/core/notifications/channels/slack-mattermost) |
+| Pushover | A Pushover user key and application API token | [Pushover](/core/notifications/channels/pushover) |
+| Webhook | An HTTP or HTTPS endpoint that accepts JSON `POST` requests | [Webhook notifications](/core/notifications/channels/webhook/setup) |
+
+You can enable more than one channel. Event selections are independent for each channel.
+
+---
+
+## Configure notifications
+
+The exact fields differ by channel, but the main flow is the same:
+
+1. Open **Notifications** in the Coolify sidebar.
+2. Select a channel.
+3. Enter and save the channel's connection details.
+4. Turn on **Enabled**.
+5. Under **Notification Settings**, select the events to send through this channel.
+6. Send a test notification and confirm that it arrives at the destination.
+
+If the test does not arrive, keep the channel enabled while you check its credentials, destination permissions, and provider logs.
+
+---
+
+## What to read next
+
+- [Notification events](/core/notifications/events) explains every selectable event and its trigger.
+- [Webhook payload reference](/core/notifications/channels/webhook/payload-reference) documents the JSON body for each webhook event.

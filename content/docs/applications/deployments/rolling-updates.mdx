@@ -1,0 +1,102 @@
+---
+title: Rolling Updates
+description: Understand how Coolify replaces an application container and what the application must do to avoid downtime.
+---
+
+# Rolling updates
+
+For Nixpacks, Railpack, Static, Dockerfile, and Docker Image applications, Coolify can start a replacement container while the current container remains running.
+
+**Rolling updates are not supported for Docker Compose applications.** Docker Compose uses its own service reconciliation process instead of Coolify's application-level rolling update sequence.
+
+<Callout type="warning" title="Rolling updates do not guarantee zero downtime">
+
+Coolify can overlap the old and new containers, wait for a health check, and allow time for the old container to stop. The application must still report readiness accurately, handle shutdown gracefully, and remain compatible while both versions run.
+
+If the application does not cooperate with that process, requests can still fail during a rolling update.
+
+We will publish a detailed guide for preparing applications for near-zero-downtime deployments in the near future.
+
+</Callout>
+
+## How a rolling update works
+
+For an eligible application deployment, Coolify:
+
+1. starts the replacement container without stopping the current container
+2. waits for the replacement container's health check to pass, when a health check is configured in Coolify or the image
+3. keeps the current container when the replacement becomes unhealthy
+4. stops and removes the current container after the replacement is considered ready
+
+Without a health check, Coolify treats a successfully started container as ready. It cannot determine whether the application has finished initialization or can serve requests correctly before stopping the current container.
+
+## What the application must handle
+
+Coolify controls the containers, but the application controls whether the transition is safe for users.
+
+| <span className="inline-block min-w-52 whitespace-nowrap">Application responsibility</span> | Why it matters |
+| :--- | :--- |
+| Report readiness accurately | The health check must fail until the application can handle real requests and its required dependencies are available. |
+| Shut down gracefully | Docker asks the old container to stop. The application should stop accepting new requests, finish or safely abandon in-flight requests, and exit within the configured grace period. |
+| Keep releases compatible | The old and new versions run at the same time. Database migrations, APIs, queues, caches, and shared files must work with both versions during that overlap. |
+| Support parallel instances | Sessions and required state should not exist only in one container. Schedulers, queue consumers, and other background work must tolerate two versions running briefly. |
+
+A health check proves only what its command or endpoint tests. For example, an endpoint that always returns `200` can mark the container healthy before the application is actually ready.
+
+Follow [Health checks](/applications/configuration/health-checks) to configure an HTTP or command check that represents application readiness.
+
+## Configure graceful shutdown
+
+Open **Configuration > Advanced > Operations** and set **Stop Grace Period (seconds)** to the maximum time the application should need after receiving its termination signal.
+
+The default is 30 seconds. Coolify accepts values from 1 to 3600 seconds.
+
+Increasing the grace period gives the old container more time to finish in-flight work, but it does not add graceful-shutdown behavior to the application. The application itself must handle the termination signal and exit correctly.
+
+## Settings that prevent a rolling update
+
+The old and replacement containers must be able to run at the same time. Coolify stops the current container first when any of these conditions applies:
+
+| Condition | Why the containers cannot overlap |
+| :--- | :--- |
+| A port is published on the host | Both containers cannot bind the same host port. |
+| **Consistent Container Names** is enabled | Both containers would use the same Docker container name. |
+| A **Custom Container Name** is configured | Both containers would use the same custom name. |
+| `--ip` or `--ip6` assigns a custom IP | Both containers would require the same network address. |
+| The deployment is a pull-request preview | Coolify does not use its application-level rolling update path for preview deployments. |
+
+When Coolify detects one of these conditions, the deployment log explains why rolling updates are not supported. Stopping the current container before starting its replacement causes an interruption while the replacement starts.
+
+## Docker Compose and Docker Swarm
+
+A Docker Compose application does not use Coolify's application-level rolling update sequence. Coolify runs `docker compose up` and Docker Compose reconciles the services defined in the Compose file.
+
+A Docker Swarm application uses `docker stack deploy` with a start-first service update. Docker Swarm controls replica replacement and routing, so its behavior depends on the stack configuration and the application in each replica.
+
+Neither deployment method guarantees zero downtime by itself. The application and its health, shutdown, state, and compatibility behavior still matter.
+
+## Test the complete transition
+
+Test rolling updates with production-like traffic before relying on them for availability:
+
+1. configure a health check that fails during application startup and passes only when the application can serve requests
+2. confirm the application handles its termination signal and finishes requests within **Stop Grace Period (seconds)**
+3. deploy a backward-compatible change while repeatedly requesting a critical application endpoint
+4. open the deployment log and confirm **Rolling update started**, **New container is healthy**, and **Rolling update completed** appear
+5. confirm the test requests succeeded throughout the deployment
+6. verify background jobs, sessions, database writes, and persistent data remained correct
+
+Container overlap is working when the new container becomes healthy before Coolify removes the old one. Zero downtime is confirmed only when user requests and application work also remain successful during the transition.
+
+## Troubleshoot an interrupted update
+
+If the current container stops before its replacement starts, inspect the deployment log for a host port mapping, consistent or custom container name, custom IP, or preview deployment.
+
+If the replacement starts but the deployment fails:
+
+1. inspect the reported health-check status and logs
+2. confirm the health-check command exists inside the image and reaches the correct port or path
+3. confirm the application finishes startup before the health-check retries are exhausted
+4. verify that the old and new versions can use the same database, queues, storage, and external dependencies at the same time
+
+If requests fail after the replacement becomes healthy, make the readiness check stricter and verify the application's graceful-shutdown handling. A passing container health check does not by itself prove a zero-downtime transition.

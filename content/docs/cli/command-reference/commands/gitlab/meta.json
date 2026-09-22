@@ -1,0 +1,10 @@
+{
+  "title": "Gitlab",
+  "pages": [
+    "create",
+    "delete",
+    "get",
+    "list",
+    "update"
+  ]
+}

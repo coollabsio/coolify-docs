@@ -1,0 +1,28 @@
+---
+title: "Backup delete"
+description: "Delete a backup configuration and optionally all its executions from S3. First UUID is the database, second is the specific backup configuration."
+---
+
+# Backup delete
+
+Delete a backup configuration and optionally all its executions from S3. First UUID is the database, second is the specific backup configuration.
+
+## Usage
+
+```sh
+coolify database backup delete <database_uuid> <backup_uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--delete-s3` | `boolean` | No | `false` | Delete backup files from S3 |
+
+## Get current help
+
+```sh
+coolify database backup delete --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

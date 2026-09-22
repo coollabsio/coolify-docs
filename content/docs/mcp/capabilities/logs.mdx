@@ -1,0 +1,15 @@
+---
+title: Logs
+description: Use Coolify MCP to fetch recent container logs with sensitive-data controls.
+---
+
+# Logs
+
+| Tool | Permission | Purpose |
+| :--- | :--- | :--- |
+| `get_logs` | `read:sensitive` | Fetch recent logs for an application, database, service, or service child. |
+| `get_deployment` | `read:sensitive` | Optionally return a capped, best-effort-redacted deployment log summary with `include_log_summary=true`. |
+
+`get_logs` requires a running container on a reachable server. It returns up to 500 lines and may return a structured failure reason with suggested next tools.
+
+Log redaction is best effort, not a guarantee. Do not send unrestricted production logs to an AI client unless required.

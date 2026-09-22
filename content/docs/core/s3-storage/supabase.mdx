@@ -1,0 +1,74 @@
+---
+title: Supabase Storage
+description: Configure Supabase Storage as an S3-compatible backup destination using your project endpoint, bucket, region, and access keys.
+---
+
+# Supabase Storage
+
+Supabase Storage exposes an S3-compatible endpoint that you can use with Coolify backups.
+
+<Callout type="info" title="Supabase-hosted projects">
+This guide uses a Supabase project as a remote S3 storage endpoint for Coolify backups. It is different from self-hosting the [Supabase service](/services/supabase) on Coolify.
+</Callout>
+
+## Configure Supabase Storage
+
+<Steps>
+<Step>
+
+### Create the bucket
+
+In Supabase, create the bucket that will hold the backup files.
+
+</Step>
+<Step>
+
+### Create an access key pair
+
+Open the project and go to **Storage > S3 Configuration**, then create a new access key pair.
+
+<Callout type="success" title="Save both keys">
+Save the **Access Key ID** and **Secret Access Key** somewhere secure.
+</Callout>
+
+</Step>
+<Step>
+
+### Copy the endpoint and region
+
+Copy the S3 endpoint:
+
+- Preferred: `https://<project-ref>.storage.supabase.co/storage/v1/s3`
+- Fallback: `https://<project-ref>.supabase.co/storage/v1/s3`
+
+Also record the project Region shown in the Supabase dashboard.
+
+</Step>
+<Step>
+
+### Add Supabase Storage to Coolify
+
+In Coolify, open **S3 Storages** and select **Add**. Enter:
+
+| Coolify field | Supabase value |
+|---|---|
+| **Endpoint** | The Supabase S3 endpoint. |
+| **Bucket** | The bucket created in Supabase. |
+| **Region** | The Supabase project Region. |
+| **Access Key** | The generated **Access Key ID**. |
+| **Secret Key** | The generated **Secret Access Key**. |
+
+Select **Validate Connection & Continue**.
+
+<Callout type="warning" title="Keep the complete endpoint path">
+Use the endpoint exactly as provided by Supabase and keep the `/storage/v1/s3` suffix. Do not append the bucket name to the endpoint.
+</Callout>
+
+</Step>
+</Steps>
+
+## Verify the connection
+
+Coolify verifies the connection with a `ListObjectsV2` request, so the bucket must already exist before validation.
+
+Supabase Storage is S3-compatible, but it does not support every Amazon S3 feature. For Coolify backups, the endpoint, bucket, Region, and access keys above are the required values.

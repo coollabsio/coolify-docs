@@ -1,0 +1,23 @@
+# Pinned redirect outcomes checked by scripts/check-redirects.mjs, with and without /docs.
+# Columns (tab-separated): legacy URL, expected final page (with #fragment when the redirect adds one).
+# A row whose expected value equals the URL asserts that a real page is not caught by a redirect.
+/docs/support	/docs/support
+/docs/screenshots	/docs/screenshots
+/docs/videos	/docs/videos
+/docs/applications/laravel	/docs/applications/framework-examples/php/laravel
+/docs/applications/laravel/	/docs/applications/framework-examples/php/laravel
+/docs/get-started/introduction	/docs/core/what-is-coolify
+/docs/hetzner	/docs/offers#hetzner
+/docs/troubleshoot/overview	/docs/troubleshoot
+/docs/knowledge-base/docker/Compose-Parsing	/docs/applications/builds/docker-compose
+/docs/integrations/cloudflare/tunnels/overview	/docs/integrations/networking/cloudflare/tunnels
+/docs/knowledge-base/create-root-user-with-env	/docs/start-with-self-hosted#_1-root-user
+/docs/knowledge-base/define-custom-docker-network-with-env	/docs/start-with-self-hosted#_2-custom-docker-network
+/docs/knowledge-base/custom-docker-registry	/docs/start-with-self-hosted#_3-custom-registry-source
+/docs/knowledge-base/custom-compose-overrides	/docs/start-with-self-hosted#_4-compose-overrides
+/docs/knowledge-base/how-to/raspberry-pi-os	/docs/start-with-self-hosted#install-raspberry-pi-os
+/docs/api-reference/api/operations/list-applications	/docs/api/endpoints/applications/list-applications
+/docs/api-reference/api/operations/get-current-team	/docs/api/endpoints/teams/get-token-team
+/docs/api-reference/api/operations/get-current-team-members	/docs/api/endpoints/teams/get-token-team-members
+/docs/api-reference/api/operations/create-dockercompose-application	/docs/api/endpoints/services/create-service
+/docs/api-reference/api/applications/list-applications	/docs/api/endpoints/applications/list-applications

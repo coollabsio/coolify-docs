@@ -1,0 +1,120 @@
+---
+title: Troubleshooting
+description: Diagnose failed deployments, degraded components, configuration differences, connection failures, and domain errors in a Service.
+---
+
+# Troubleshoot a Service
+
+Use this page when a Service does not deploy, one component becomes degraded, the running configuration differs from the saved Compose definition, or clients cannot reach a component.
+
+Start by identifying the failing layer. Do not restart the complete stack or change several settings before collecting evidence from the first failure.
+
+## Identify the failing layer
+
+| Symptom | Start with |
+| :--- | :--- |
+| Deployment stops before the containers start | The first failed command in the deployment output. |
+| One component is exited, restarting, or unhealthy | That component's status and container logs. |
+| Containers run, but one component cannot reach another | The shared Docker network, internal hostname, and internal port. |
+| The application works internally but its domain fails | The component domain, internal listening port, DNS, and Coolify Proxy. |
+| The running container does not match the saved setting | **Source Compose**, **Deployable Compose**, and environment variables. |
+
+## Follow the matching symptom
+
+<Tabs id="service-troubleshooting-symptom" items={['Deployment fails', 'Component degraded', 'Configuration differs', 'Connection fails', 'Domain fails']}>
+<Tab value="Deployment fails">
+
+### Find the first failed deployment command
+
+Open the deployment output for the failed **Deploy**, **Restart**, or image-pull operation. Start with the first command that reports an error; later failures can be consequences of that command.
+
+Use the error to select the next check:
+
+| Evidence | Check next |
+| :--- | :--- |
+| Image not found or registry authorization failed | Confirm the image name, tag, and registry credentials. |
+| Compose validation or interpolation failed | Review **Source Compose** for invalid YAML, unsupported values, or an empty required variable. |
+| Volume or bind-mount permission failed | Confirm the source exists on the Service server and that the container user can access it. |
+| Container starts and immediately exits | Open **Logs** for that component and investigate the first application error. |
+| Dependency is unavailable during startup | Confirm the dependency container is running, healthy, and reachable by its internal hostname and port. |
+
+Apply only the correction supported by the error, then deploy again. Recovery is confirmed when the deployment completes and every required component remains running or healthy.
+
+</Tab>
+<Tab value="Component degraded">
+
+### Identify the component affecting Service status
+
+Open **Configuration > General** and inspect every component card. The aggregate Service status can be degraded while several other components remain healthy.
+
+Open **Logs** for the affected component and look for the first repeated startup, health-check, permission, migration, or dependency error. Correct that cause, then restart only the component when the change does not affect the rest of the stack. Restart or deploy the complete Service after shared Compose, environment, network, or storage changes.
+
+Use **Exclude from service status** only for a genuinely optional or one-time component. Do not exclude a required database, worker, proxy, or application merely to make the aggregate status appear healthy.
+
+Recovery is confirmed when the component remains running, its health check passes when defined, and the Service no longer reports a degraded state caused by that component.
+
+</Tab>
+<Tab value="Configuration differs">
+
+### Compare the stored and generated definitions
+
+Open **Configuration > General > Edit Compose File**.
+
+1. Check **Source Compose** for the value you intended to save.
+2. Open **Show Deployable Compose** and find the generated value sent to Docker Compose.
+3. Review **Environment Variables** when the field uses `${VARIABLE}` interpolation.
+4. Check generated domains, container names, networks, and volume names in the deployable definition.
+5. Save the correct source value, then restart or deploy the Service.
+
+Do not edit a running container as the permanent remedy. Container filesystem or environment changes made through **Terminal** can disappear when Coolify recreates the component.
+
+Recovery is confirmed when **Deployable Compose** contains the expected value and the recreated container reports the same configuration.
+
+</Tab>
+<Tab value="Connection fails">
+
+### Confirm that the containers share a network
+
+For components in the same Service, use the Compose service name and internal port. Do not use `localhost` to reach another component.
+
+For a resource outside the Service, confirm that both resources run on the same server and share a Docker network. Enable **Connect To Predefined Network** only when the Service must join its predefined network, normally `coolify`.
+
+Check the receiving process separately: it must listen on the expected internal port and an address reachable from other containers. Test the dependency from the calling component after correcting the hostname, port, network, or listening address.
+
+Read [Service networking](/services/configuration/networking) for the complete network model and connection paths.
+
+</Tab>
+<Tab value="Domain fails">
+
+### Separate component health from proxy routing
+
+First confirm that the component is running and responds on its internal port. If it does not, troubleshoot the component before changing DNS or proxy settings.
+
+If the component works internally:
+
+1. Confirm that **Domains** contains the intended hostname.
+2. Include the component's internal port in the Coolify domain value when it does not listen on port `80`, for example `https://app.example.com:3000`.
+3. Confirm that DNS points the hostname to the Service server.
+4. Confirm that the Coolify Proxy is running on that server.
+5. Check whether the response is a DNS error, TLS error, `502`, or `504`, then follow the matching troubleshooting guide.
+
+Use [Bad Gateway (502)](/troubleshoot/applications/bad-gateway) when the proxy cannot connect to the component. Use [Gateway Timeout (504)](/troubleshoot/applications/gateway-timeout) when the proxy connects but does not receive a response in time.
+
+Recovery is confirmed when an external HTTPS request reaches the intended component and its logs record the request.
+
+</Tab>
+</Tabs>
+
+## Collect information for support
+
+If the Service still fails, record:
+
+- the Service and affected component names
+- the first failed deployment command and its error
+- the affected component's status and relevant log lines
+- the source and deployable Compose sections involved in the failure
+- whether the problem affects internal traffic, a domain, or both
+- the server and Docker networks shared by the relevant containers
+- the remedies already attempted and their results
+
+Remove passwords, tokens, private keys, and other secret values before sharing Compose or environment-variable output.

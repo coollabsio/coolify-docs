@@ -1,0 +1,8 @@
+{
+  "title": "Proxy",
+  "pages": [
+    "[Overview](/core/networking/proxy/overview)",
+    "traefik",
+    "caddy"
+  ]
+}

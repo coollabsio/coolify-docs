@@ -1,0 +1,83 @@
+---
+title: IP Allowlist
+description: Enable the API on a self-hosted Coolify instance and restrict authenticated requests by source IP address or network.
+---
+
+# API IP allowlist
+
+Self-hosted Coolify administrators can enable API access for the instance and restrict authenticated API endpoints to specific source addresses. Coolify Cloud does not use these self-hosted controls for customer requests.
+
+## API access controls
+
+Open **Settings > Configuration > Advanced**. Under **API Settings**, the page contains:
+
+- **API Access**, which allows or blocks authenticated REST API requests
+- **Allowed IPs for API Access**, which accepts exact IP addresses and networks in CIDR notation
+
+When **API Access** is off, protected API requests return `403 Forbidden` even when the Bearer token is valid.
+
+---
+
+## Restrict API access by IP address
+
+**Allowed IPs for API Access** is an instance-wide allowlist. When the field contains one or more entries, Coolify rejects a request unless its source IP matches an exact address or one of the listed networks.
+
+Before changing the allowlist, identify the source address that Coolify receives from each API client. If a client connects through NAT, add its public outbound IP address rather than its private address.
+
+1. Open **Settings > Configuration > Advanced**.
+2. Under **API Settings**, turn on **API Access**.
+3. Enter exact IPv4 or IPv6 addresses, or networks in CIDR notation, in **Allowed IPs for API Access**.
+4. Separate multiple entries with commas.
+5. Select **Save**.
+
+For example:
+
+```txt
+203.0.113.10,198.51.100.0/24,2001:db8::/32
+```
+
+This example allows one IPv4 address, one IPv4 network, and one IPv6 network.
+
+| Entry | Accepted value |
+| :--- | :--- |
+| Exact address | A valid IPv4 or IPv6 address |
+| IPv4 network | CIDR prefix from `/0` through `/32` |
+| IPv6 network | CIDR prefix from `/0` through `/128` |
+| Multiple entries | Comma-separated addresses or networks |
+
+Leaving the field empty or setting it to `0.0.0.0` allows API requests from any source address. Use a restrictive list for production integrations with stable outbound addresses.
+
+---
+
+## Call the API from the Coolify Docker network
+
+When an API client runs in a container connected to the `coolify` Docker network, send requests directly to the Coolify container:
+
+```txt
+http://coolify:8080/api/v1
+```
+
+Coolify receives the request from the client's container address rather than its public outbound address. Docker may use an IPv6 address for this connection, so add both the IPv4 and IPv6 subnets assigned to the `coolify` network.
+
+List the configured subnets on the Coolify server:
+
+```sh
+docker network inspect coolify \
+  --format '{{range .IPAM.Config}}{{println .Subnet}}{{end}}'
+```
+
+Add every IPv4 and IPv6 subnet returned by the command to **Allowed IPs for API Access**, separated by commas.
+
+<Callout type="warning" title="Allow the network only when required">
+Allowing an entire Docker subnet permits every container on that subnet to pass the IP check. API tokens and their permissions still apply, but you should connect only trusted containers to the `coolify` network.
+</Callout>
+
+---
+
+## Verify the allowlist
+
+After saving, make an authenticated request from every allowed client. Confirm that each request reaches the endpoint successfully.
+
+A request from an address outside the allowlist returns `403 Forbidden` with the message `You are not allowed to access the API.` See [IP allowlist rejections](/api/errors#ip-allowlist-rejections) for the complete response.
+
+If an expected client is rejected, confirm the public source IP address it uses when connecting to Coolify. Add that exact address or its required network, save the setting, and try again.

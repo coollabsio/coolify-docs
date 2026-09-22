@@ -1,0 +1,22 @@
+{
+  "title": "CLI",
+  "root": true,
+  "pages": [
+    "---Overview---",
+    "what-is-the-coolify-cli",
+    "how-cli-works",
+    "---Get started---",
+    "installation",
+    "authentication",
+    "contexts",
+    "---Workflows---",
+    "deploy-applications",
+    "automate-with-cli",
+    "database-backups",
+    "---Maintain the CLI---",
+    "update",
+    "uninstallation",
+    "---Commands---",
+    "...command-reference"
+  ]
+}

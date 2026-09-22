@@ -1,0 +1,82 @@
+---
+title: Overview
+description: Find the Coolify settings used to configure an application after it is created.
+---
+
+import { BranchUp, Pulse, Settings } from 'reicon-react';
+
+# Configure an application
+
+Open an application and select **Configuration** to change how Coolify prepares its images, starts its containers, exposes traffic, and operates the workload.
+
+The available pages depend on the application type and destination. For example, **Git Source** appears only for Git-based applications, **Swarm** appears only for a Docker Swarm destination, and the application **Healthcheck** page is not used for Docker Compose.
+
+<CoolCallout icon={Settings} title="The short version">
+
+Use **General** for the primary source, build, domain, and port settings. Use the remaining configuration pages for environment variables, storage, source authentication, automation, health, limits, and operations.
+
+</CoolCallout>
+
+---
+
+## Configuration pages
+
+| <span className="whitespace-nowrap">Configuration page</span> | What it controls | Guide |
+| :--- | :--- | :--- |
+| **General** | Application identity, build method, domains, image settings, ports, container labels, and deployment commands. | [Review General settings](/applications/configuration/general) |
+| **Advanced** | Build cache, container naming, automatic and preview deployments, Git clone options, proxy behavior, restart limits, log drains, and GPU access. | [Review Advanced settings](/applications/configuration/advanced) |
+| **Swarm** | Docker Swarm service settings for applications deployed to a Swarm destination. | [Configure Docker Swarm](/core/infrastructure/scaling/docker-swarm) |
+| **Environment Variables** | Build-time and runtime values passed to the application. | [Configure environment variables](/applications/configuration/environment-variables) |
+| **Persistent Storage** | Volume, directory, and file mounts attached outside the replaceable container filesystem. | [Configure application persistent storage](/applications/configuration/persistent-storage) |
+| **Git Source** | The connected Git source or deploy key for a Git-based application. | [Configure a source](/applications/sources/overview) |
+| **Servers** | The servers selected to run the application. | [Configure multi-server deployments](/core/infrastructure/scaling/multi-server-deployments) |
+| **Scheduled Tasks** | Commands that Coolify runs inside the application container on a schedule. | [Configure application scheduled tasks](/applications/operations/scheduled-tasks) |
+| **Webhooks** | Authenticated deployment webhooks and manual Git-provider webhooks. | [Use deploy webhooks](/core/automation/deploy-webhooks)<br />[Configure manual Git webhooks](/applications/deployments/manual-webhooks) |
+| **Preview Deployments** | Pull-request or merge-request environments and manual preview deployments. | [Configure preview deployments](/applications/deployments/preview-deployments) |
+| **Healthcheck** | HTTP or command checks used to determine whether a non-Compose application is healthy. | [Configure health checks](/applications/configuration/health-checks) |
+| **Rollback** | Previously built images that are still available for deployment. | [Roll back an application](/applications/deployments/rollbacks) |
+| **Resource Limits** | CPU and memory limits applied to the application containers. | [Configure resource limits](/applications/configuration/resource-limits) |
+| **Resource Operations** | Clone the application to another destination or move it between projects and environments. | [Clone or move an application](/applications/operations/resource-operations) |
+| **Metrics** | Container metrics collection and display. | [Monitor resource metrics](/core/observability/monitoring/metrics) |
+| **Tags** | Team-level labels used to organize resources. | [Organize resources with tags](/core/automation/tags/overview) |
+| **Danger Zone** | Destructive actions, including deleting the application. | [Delete an application](/applications/operations/danger-zone) |
+
+## Apply configuration changes
+
+Saving a setting updates the stored configuration. It does not necessarily replace the running container immediately.
+
+Deploy or restart the application after changing settings that affect its container, including environment variables, storage, health checks, ports, networks, and resource limits. Build configuration changes require a deployment that creates or reuses an image.
+
+Use:
+
+- **Deploy** for the first deployment
+- **Redeploy** to run the deployment flow again
+- **Restart** to recreate the runtime through the deployment queue; source-based paths reuse an existing image when eligible, while Docker Image pulls the saved image reference again
+- **Force deploy (without cache)** to disable cache for a Coolify-generated source build; custom Docker Compose build commands control their own cache flags
+
+Read [Build and deployment model](/core/build-deployment-model) for the difference between image preparation and container replacement.
+
+## Related configuration guides
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Environment variables',
+      href: '/applications/configuration/environment-variables',
+      description: 'Separate build-time, runtime, shared, and preview values.',
+      icon: Settings,
+    },
+    {
+      title: 'Health checks',
+      href: '/applications/configuration/health-checks',
+      description: 'Configure the readiness signal used by routing and rolling updates.',
+      icon: Pulse,
+    },
+    {
+      title: 'Persistent storage',
+      href: '/core/persistent-storage/storage-mounts/overview',
+      description: 'Keep required data outside the replaceable container filesystem.',
+      icon: BranchUp,
+    },
+  ]}
+/>

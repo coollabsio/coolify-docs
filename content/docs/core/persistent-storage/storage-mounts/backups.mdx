@@ -1,0 +1,92 @@
+---
+title: Backup
+description: Schedule local and S3 backups for application volume and directory mounts, set retention, and verify each execution.
+---
+
+# Back up storage mounts
+
+Coolify can create scheduled file-level archives of eligible storage mounts attached to an application. Coolify first creates each compressed `.tar.gz` archive on the application's deployment server. It can then send a copy to S3-compatible storage and, if configured, remove the local archive after a successful upload.
+
+<Callout type="warning" title="A file-level archive can contain inconsistent data">
+If the application changes files while Coolify creates the archive, the backup may be inconsistent or corrupted. This is especially important for databases. Use an application-aware backup when one is available, or stop application writes during the archive step.
+</Callout>
+
+## Check whether the mount is supported
+
+The dashboard backup workflow described on this page is available for application storage mounts.
+
+| Mount workflow | Scheduled storage backup |
+| :--- | :--- |
+| **Volume Mount** without a **Source Path** | Supported |
+| **Volume Mount** with a **Source Path** | Supported |
+| **Directory Mount** | Supported |
+| **File Mount** | Not supported |
+| **Host File Mount** | Not supported |
+
+For a File Mount or Host File Mount, back up the source file through source control or the process that manages the file. For database data, use the database engine's supported backup workflow instead of relying only on a file-level storage archive.
+
+## Create a scheduled backup
+
+The application must already have an eligible mount before you can select it as a backup target.
+
+1. Open the application in its project and environment.
+2. Select **Backups**.
+3. Under **Scheduled Backups**, select **Add**.
+4. Select the volume or directory in **Backup Target**.
+5. Enter `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, `yearly`, or a valid cron expression in **Frequency**.
+6. Select **Save**.
+
+Coolify creates and enables the schedule. Open it to change its settings or select **Backup Now**. The default frequency shown for a new schedule is `daily`.
+
+You can also open **Configuration** > **Persistent Storage**, find the eligible volume or directory, and select **Configure Backup**.
+
+## Reduce interruptions or consistency risk
+
+Under **General**, choose whether Coolify should stop containers that use the selected storage while it creates the archive:
+
+- Leave **Stop containers while creating the archive** off to avoid an intentional interruption. Files may change during the archive.
+- Turn it on for a safer file-level backup. Coolify gracefully stops containers that use the storage, creates the archive, and starts those containers again. The application is unavailable during that archive step.
+
+Set **Timeout** to the maximum backup runtime in seconds. The accepted range is `60` to `36000`, and the default is `3600` seconds. **Timezone** is read-only and follows the server that runs the schedule, or the instance timezone when the server has no timezone configured.
+
+## Choose where backups are stored
+
+Every schedule keeps a local archive on the deployment server by default. Local storage alone does not protect against losing that server.
+
+To create an off-server copy:
+
+1. Configure and validate an [S3-compatible storage destination](/core/s3-storage/overview) for the current team.
+2. Open the storage backup schedule and select **S3**.
+3. Select the **S3 Storage** destination, then select **Enable S3**.
+4. Select **Save**.
+
+Enable **Disable Local Backup** only when S3 should hold the only retained copy. Coolify deletes the local archive after a successful S3 upload. If the S3 upload fails, the execution shows **Success (S3 Warning)** and Coolify keeps the local archive.
+
+## Set retention limits
+
+Under **Retention**, local and S3 archives each have three independent limits:
+
+- **Number of backups to keep**
+- **Days to keep backups**
+- **Maximum storage (GB)**
+
+A value of `0` makes that limit unlimited. When several limits are configured, reaching any one of them triggers cleanup of the oldest successful archives in that location. The default number of local and S3 backups to keep is `7`; the day and storage limits default to `0`.
+
+## Verify and download a backup
+
+Open **Executions** and wait for the run to finish. A usable result shows **Success** and at least one available location under **Backup Availability**.
+
+- **Local Storage** means the archive still exists on the deployment server. Select **Download** to save this local archive to your computer.
+- **S3 Storage** means the archive was uploaded to the selected S3 destination.
+- **Success (S3 Warning)** means the local archive succeeded but its S3 upload failed. Read the execution message and correct the S3 problem before relying on the remote copy.
+- **Failed** means the archive was not completed. Read the execution message before retrying.
+
+<Callout type="warning" title="Coolify does not restore storage archives from this page">
+The storage backup workflow creates, downloads, and deletes archives, but it does not provide a dashboard restore action. Before relying on a schedule, download an archive and test your restore procedure in a separate environment.
+</Callout>
+
+## Delete a backup or schedule
+
+Deleting one execution removes its local archive. When an S3 copy exists, select the S3 deletion option if you also want to remove that copy.
+
+Deleting the scheduled backup is broader: it permanently deletes the schedule and every local and S3 archive created by it. A volume or Directory Mount with a schedule cannot be deleted until you remove the schedule and its archives.

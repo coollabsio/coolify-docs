@@ -43,7 +43,9 @@ Both variants provide equivalent functionality - choose based on your database p
 
 ## FAQ
 
-### How to increase the upload size limit?
+<Accordions type="multiple">
+
+<Accordion title="How to increase the upload size limit?">
 
 You can increase the upload size limit by following these steps:
 
@@ -62,7 +64,9 @@ php_value max_input_time 300
 3. Save and close the file.
 4. Reload the website in your browser. The changes should be applied automatically.
 
-### How to Fix a Redirection Loop in WordPress?
+</Accordion>
+
+<Accordion title="How to fix a redirection loop in WordPress?">
 
 If your WordPress site is stuck in a redirection loop, follow these steps to resolve the issue:
 
@@ -79,3 +83,41 @@ Access the .htaccess file:
 
 3. Save and close the file.
 4. Reload the website in your browser. The changes should be applied automatically.
+
+</Accordion>
+
+<Accordion title="How to set up WordPress Multisite?">
+
+1. **Add WordPress** with the one-click installation.
+
+2. **Persist WordPress files on the host.** In the Compose configuration (edited from the UI), change:
+
+   ```yaml
+   volumes:
+     - "wordpress-files:/var/www/html"
+   ```
+
+   to:
+
+   ```yaml
+   volumes:
+     - "./wordpress:/var/www/html"
+   ```
+
+   This mounts the `wordpress` directory inside the service's configuration directory (`/data/coolify/services/<serviceUuid>/`) to `/var/www/html` in the container, so files you edit on the host are reflected in the container.
+
+3. **Configure WordPress.** Start the service and complete the initial setup.
+
+4. **Disable all plugins.** In the WordPress admin panel, go to **Plugins → Installed Plugins**, select all plugins, and choose **Deactivate**.
+
+5. **Enable Multisite.** Edit `wp-config.php` on the server and add:
+
+   ```php
+   define( 'WP_ALLOW_MULTISITE', true );
+   ```
+
+   Refresh the WordPress panel; a new **Network Setup** item appears under the **Tools** menu.
+
+</Accordion>
+
+</Accordions>

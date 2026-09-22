@@ -1,0 +1,184 @@
+---
+title: Networking
+description: Connect Service components to each other, the Coolify network, other Docker networks, and external clients.
+---
+
+# Configure Service networking
+
+Every Service has a resource-specific Docker network for the components in its Compose definition. Coolify also creates a shared Docker network named `coolify` on each connected server.
+
+By default, Service components use only their resource-specific network. Enable **Connect To Predefined Network** when they must also join the predefined Docker network selected for the Service. On a standard installation, that network is `coolify`.
+
+## Understand the two Service networks
+
+| Network | Purpose |
+| :--- | :--- |
+| Service network | A private network created for one Service stack. Its name is based on the Service UUID. Components in the stack use it automatically. |
+| Coolify network | The shared, attachable network named `coolify` that Coolify creates on the server. Applications, standalone Databases, the Coolify Proxy, and Services that enable **Connect To Predefined Network** can use it. |
+
+The `coolify` network lets separate Coolify resources on the same server communicate without publishing host ports. It does not extend to another server.
+
+<Callout type="info" title="Predefined means the selected Coolify destination network">
+
+The default destination uses the Docker network named `coolify`. If an administrator creates another destination and selects it for the Service, **Connect To Predefined Network** attaches the Service components to that selected network instead. The setting attaches one predefined network; it does not connect the Service to every destination or Docker network on the server.
+
+</Callout>
+
+## Choose the connection target
+
+<Tabs id="service-networking-target" items={['Same Service', 'Coolify network', 'Other network', 'Other server', 'Public access']}>
+<Tab value="Same Service">
+
+Components in one Compose definition communicate over the Service network. Use the Compose `services:` key as the hostname and the port where the dependency listens inside its container:
+
+```yaml
+services:
+  api:
+    image: example/api:1.0
+    environment:
+      DATABASE_URL: postgresql://app:password@database:5432/app
+
+  database:
+    image: postgres:17
+```
+
+In this example, `api` connects to `database:5432`. It must not use `localhost`, a public domain, or a published host port. Inside `api`, `localhost` refers to the `api` container itself.
+
+You do not need `ports:` or a domain for this private connection. A Compose `depends_on` entry can control startup order, but the calling component must still tolerate the dependency taking time to become ready.
+
+</Tab>
+<Tab value="Coolify network">
+
+Use the `coolify` network when the Service must privately reach an Application, standalone Database, or another Service attached to that network on the same server.
+
+1. Confirm that both resources run on the same server.
+2. Confirm that the other resource is attached to the `coolify` network.
+3. Confirm that the Service's predefined destination network is `coolify`.
+4. Open the Service and select **Configuration > General**.
+5. Enable **Connect To Predefined Network**.
+6. Restart or deploy the Service.
+7. Use the other resource's internal hostname and internal port.
+8. Test the connection from the calling Service component.
+
+Coolify attaches every Service component to the predefined network and adds an alias based on the Compose service name and Service UUID. With the default destination, the predefined network is `coolify`. Use the deployed container name or alias shown by Coolify when another resource must call that component. Do not assume that the unsuffixed Compose service name is unique outside its own stack.
+
+For a standalone Database, use the **Internal URL** shown by Coolify. For another Service, identify its deployed component name and the port where that component listens.
+
+<Callout type="info" title="Domains do not require this setting">
+
+The Coolify Proxy joins the Service network when Coolify starts the stack. A component with a configured domain can therefore receive proxied traffic without enabling **Connect To Predefined Network**. Enable the setting for private communication with other resources, not merely to publish a domain.
+
+</Callout>
+
+</Tab>
+<Tab value="Other network">
+
+Resources on separate Docker networks cannot resolve or connect to each other by container name unless they also share a network.
+
+**Connect To Predefined Network** joins the Service only to its predefined destination network, normally `coolify`. It does not join every network on the server.
+
+Choose one of these approaches:
+
+1. **Use one shared network.** This is the simplest option when the resources are intended to communicate privately. For an existing Service, clone it to the required destination and migrate its data separately. [Clone or move a Service](/services/operations/resource-operations) explains the data boundary.
+2. **Use a domain or another routed endpoint.** This preserves network isolation and works well for HTTP APIs. The request travels through the proxy instead of Docker's private DNS.
+3. **Manage an external Docker network in Compose.** Use this only when you own the Compose definition and the network already exists on the same server.
+
+```yaml
+services:
+  api:
+    image: example/api:1.0
+    networks:
+      - shared
+
+networks:
+  shared:
+    external: true
+    name: existing-shared-network
+```
+
+<Callout type="warning" title="External networks are an advanced Compose responsibility">
+
+Coolify does not create or manage an external network declared this way. The network must exist on the selected server, and deleting or renaming it breaks the connection. Declaring an external Compose network also does not change the Service's predefined destination in the dashboard.
+
+</Callout>
+
+</Tab>
+<Tab value="Other server">
+
+A Docker bridge network and its container DNS exist on one Docker host. The `coolify` network on one server does not route traffic to the `coolify` network on another server.
+
+Use a network path that is routable between the servers:
+
+- an HTTP or HTTPS domain routed through the Coolify Proxy
+- private server addresses supplied by your hosting provider
+- a VPN or overlay network such as WireGuard or Tailscale
+- a secured TCP endpoint for a database, queue, or other non-HTTP protocol
+- an application-level API, tunnel, or broker designed for remote communication
+
+The receiving component must listen on an address reachable through that path. Configure firewalls to allow only the required source, destination, and port. Add protocol-level TLS and authentication when traffic leaves a trusted private network.
+
+Do not use a Service component's container name as a cross-server hostname. Container names and Docker network aliases are local to their Docker host.
+
+</Tab>
+<Tab value="Public access">
+
+### HTTP domains
+
+Configure **Domains** on the application component. When the process listens on an internal port other than `80`, include that internal port in the Coolify domain value, for example `https://api.example.com:3000`.
+
+Visitors still connect over standard HTTPS. The `:3000` tells the Coolify Proxy which port to use inside the component container.
+
+You normally do not need a Compose `ports:` mapping for domain-based routing. DNS must point the hostname to the server, and the server proxy must be running and reachable on its public HTTP and HTTPS ports.
+
+Read [Networking in Coolify](/core/networking-in-coolify) for the complete DNS, server, proxy, Docker network, and container path.
+
+### Host ports
+
+A Compose `ports:` entry publishes a component port on a server interface:
+
+```yaml
+services:
+  api:
+    image: example/api:1.0
+    ports:
+      - "8080:3000"
+```
+
+This maps server port `8080` to container port `3000`. Unless the binding specifies a host address, Docker can listen on all server interfaces. The port can bypass domain-based proxy routing and expose the component directly.
+
+Use a published port only when an external client requires direct TCP or UDP access. Restrict it with the hosting-provider and server firewalls, avoid common host-port collisions, and secure the application protocol itself.
+
+To bind only on the server loopback interface, declare the address explicitly:
+
+```yaml
+ports:
+  - "127.0.0.1:8080:3000"
+```
+
+A loopback binding is reachable only from the server itself unless another local process forwards it.
+
+</Tab>
+</Tabs>
+
+## Verify the connection
+
+After changing networking configuration:
+
+1. Save the setting or Compose definition, then restart or deploy the Service.
+2. Review **Show Deployable Compose** and confirm each component has the intended networks and ports.
+3. Open **Terminal** on the calling component and resolve the intended internal hostname using a tool available in that image.
+4. Connect to the dependency's internal port and verify an application-level response, not only DNS resolution.
+5. For a domain, make an HTTPS request from an external client and confirm it reaches the intended component.
+6. For a published port, test from an allowed client and confirm the port is blocked from networks that should not reach it.
+
+If private communication fails, first confirm that both containers run on the same server and share at least one Docker network. Matching project or environment names do not create network connectivity.
+
+## Networking boundaries
+
+- A project or environment organizes resources; it is not a network boundary.
+- Coolify creates a separate `coolify` network on each connected server.
+- A Service uses its resource-specific network even when another resource has the same project or environment.
+- **Connect To Predefined Network** joins the Service to its one predefined destination network, normally `coolify`.
+- Docker service names resolve only on networks shared by the relevant containers.
+- Domains provide routed application access; they do not merge Docker networks.
+- Published ports expose server interfaces and require firewall and protocol security.

@@ -1,0 +1,205 @@
+---
+title: Metrics
+description: Enable and view Coolify CPU and memory metrics for servers, applications, and standalone databases.
+---
+
+import {
+  ArrowsRight,
+  Box2,
+  Database,
+  Layers,
+  Server,
+  Warning22,
+} from 'reicon-react';
+
+# Metrics
+
+Coolify displays CPU and memory history collected by Sentinel. Server charts show total CPU and memory usage, while resource charts show the usage of an individual application or standalone database container.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Enable metrics on an eligible server to collect CPU and memory samples through Sentinel. Sampling and retention are configured per server, and charts show only the history still stored on that server.
+
+</CoolCallout>
+
+<CoolCallout type="warning" icon={Warning22} title="Resource metrics have limitations">
+
+Resource metrics are not available for Docker Compose applications or one-click service deployments. The resource container must also be running before Coolify can display its metrics.
+
+</CoolCallout>
+
+---
+
+## What metrics are available
+
+<CoolIconCardGrid
+  surface
+  cards={[
+    {
+      title: 'Server CPU',
+      description: 'Shows the percentage of total server CPU currently in use over the selected period.',
+      icon: Server,
+    },
+    {
+      title: 'Server memory',
+      description: 'Shows the percentage of total server memory currently in use over the selected period.',
+      icon: Layers,
+    },
+    {
+      title: 'Application containers',
+      description: 'Shows CPU percentage and memory usage in MB for a running, non-Compose application container.',
+      icon: Box2,
+    },
+    {
+      title: 'Standalone databases',
+      description: 'Shows CPU percentage and memory usage in MB for a running standalone database container.',
+      icon: Database,
+    },
+  ]}
+/>
+
+---
+
+## Before you enable metrics
+
+- Use a validated, non-Swarm server that is not configured as a build server.
+- Enable and sync [Sentinel](/core/observability/monitoring/sentinel) on that server.
+- Allow enough disk space on the connected server for the sampling rate and retention period you configure.
+
+---
+
+## Enable metrics
+
+Metrics are enabled at the server level and use the Sentinel container already assigned to that server.
+
+<Steps>
+<Step>
+
+### Select the server
+
+Open **Servers** and select the eligible connected server.
+
+</Step>
+<Step>
+
+### Open the Metrics page
+
+Open **Configuration > Metrics** and select **Enable Metrics**.
+
+</Step>
+<Step>
+
+### Wait for Sentinel to restart
+
+Coolify saves the setting and restarts Sentinel with the metrics collector enabled. The collector then begins storing server samples and samples for supported running resources.
+
+</Step>
+<Step>
+
+### Confirm that metrics are available
+
+Wait for the **CPU Usage** and **Memory Usage** charts to begin showing data.
+
+</Step>
+</Steps>
+
+If Sentinel is disabled, the Metrics page directs you to enable it first. Enabling metrics starts Sentinel when the server is eligible.
+
+---
+
+## View metrics
+
+Server and resource charts use different memory units.
+
+<ZoomableImage
+  src="/docs/images/core/observability/monitoring/metrics/server-metrics.webp"
+  alt="Coolify server Metrics page with an interval selector and CPU and memory charts"
+/>
+
+<Tabs id="server-and-resource-metrics" items={['Server', 'Application and database']}>
+<Tab value="Server" icon={Server}>
+
+### Server metrics
+
+Open **Servers > [server] > Configuration > Metrics**.
+
+- **CPU Usage** is the percentage of total server CPU in use.
+- **Memory Usage** is the percentage of total server memory in use.
+
+</Tab>
+
+<Tab value="Application and database" icon={Box2}>
+
+### Application and database metrics
+
+Open the application or standalone database, then select **Configuration > Metrics**.
+
+- **CPU Usage** is the percentage of CPU used by the resource container.
+- **Memory Usage** is the memory used by the resource container in MB.
+
+</Tab>
+</Tabs>
+
+The Metrics page offers these time ranges:
+
+- 5 minutes and 10 minutes, with live refresh
+- 30 minutes
+- 1 hour
+- 12 hours
+- 1 week
+- 30 days
+
+The live ranges ask Coolify for new chart data every five seconds. The Sentinel sampling rate determines how often a new metric point is available.
+
+---
+
+## Sampling and retention
+
+Open **Servers > [server] > Sentinel > Configuration** to change these values:
+
+- **Metrics rate (seconds)** controls the collection interval. The default is `10`, and the minimum is `1`.
+- **Metrics history (days)** controls local retention. The default is `7`, and the minimum is `1`.
+
+Sentinel stores this history under `/data/coolify/sentinel` on the connected server. A lower collection interval creates more points and uses more disk space.
+
+The chart can offer a longer range than the retained data. For example, a 30-day chart shows only the available history when **Metrics history (days)** remains at its seven-day default.
+
+---
+
+## Disable metrics
+
+Open the server **Metrics** page and select **Disable Metrics**. Coolify restarts Sentinel with the collector disabled.
+
+Disabling metrics does not disable Sentinel itself. Server heartbeats, container state, health information, and disk usage reporting can continue without CPU and memory history.
+
+---
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="Server charts do not show data">
+
+Confirm that the server Metrics page shows metrics as enabled and that Sentinel shows **In Sync**.
+
+If Sentinel is out of sync, follow [Troubleshooting Sentinel](/core/observability/monitoring/sentinel#troubleshooting) before checking the charts again.
+
+</Accordion>
+
+<Accordion title="Application or database charts do not show data">
+
+Confirm that the application or standalone database is running.
+
+Resource metrics are not currently available for Docker Compose applications or one-click service deployments.
+
+</Accordion>
+
+<Accordion title="The selected range has missing history">
+
+Compare the selected chart range with **Metrics history (days)**. Data older than the configured retention period is unavailable.
+
+For example, the 30-day chart shows only seven days of history while the retention setting remains at its seven-day default.
+
+</Accordion>
+
+</Accordions>

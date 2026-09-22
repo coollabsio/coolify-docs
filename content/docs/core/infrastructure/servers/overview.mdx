@@ -1,0 +1,106 @@
+---
+title: Overview
+description: Understand server roles in Coolify and choose the right way to add, provision, and manage a server.
+---
+
+import { BrowserTerminal, HardDrive, Refresh23, Rocket2, Server, ServerCloud, Settings } from 'reicon-react';
+
+# Servers overview
+
+A server is a machine where Coolify runs applications, databases, and services, or builds application images.
+
+Coolify manages a connected server through SSH. The machine and its provider account remain under your control.
+
+<Callout type="info" title="Using Coolify Cloud?">
+Coolify Cloud users must connect or provision a server before deploying a resource. Self-hosted installations start with a **localhost** server.
+</Callout>
+
+## Server roles
+
+<CoolIconCardGrid
+  columns={3}
+  surface
+  cards={[
+    {
+      title: 'Localhost',
+      description: 'The server running a self-hosted Coolify instance. It can also run deployed resources.',
+      icon: Server,
+    },
+    {
+      title: 'Deployment server',
+      description: 'A remote Linux server that runs applications, databases, and services managed by Coolify.',
+      icon: ServerCloud,
+    },
+    {
+      title: 'Build server',
+      description: 'A dedicated server that builds application images but cannot run deployed resources.',
+      icon: Rocket2,
+    },
+  ]}
+/>
+
+### Localhost
+
+A self-hosted installation starts with a server named **localhost**. You can deploy resources to it, but those resources share CPU, memory, and storage with the Coolify dashboard.
+
+For production workloads, consider adding a remote server so application activity does not affect Coolify itself. The localhost server cannot be removed.
+
+### Deployment servers
+
+A deployment server is a Linux server that you own or rent and connect to Coolify. Use one to:
+
+- deploy resources with Coolify Cloud
+- keep workloads separate from the Coolify dashboard
+- deploy resources in another location
+- divide workloads across multiple machines
+
+Coolify needs a working SSH path to the server. The server can use a reachable IP address, hostname, or [Cloudflare Tunnel](/integrations/networking/cloudflare/tunnels/server-ssh).
+
+### Build servers
+
+Applications build on their deployment server by default. A separate build server is optional and is useful when builds need dedicated CPU, memory, or storage.
+
+A server marked as a build server cannot host applications, databases, or services. Read [Build Servers](/core/infrastructure/servers/build-servers) before enabling this role.
+
+---
+
+## Choose how to add a server
+
+| Your situation | Guide |
+| :--- | :--- |
+| You already have a Linux server | [Add a server manually](/core/infrastructure/servers/add-server) |
+| You want Coolify to purchase and create a server at Hetzner, DigitalOcean, or Vultr | [Provision a cloud server](/core/infrastructure/servers/provision-cloud-server) |
+| You need a server used only for application builds | [Configure a build server](/core/infrastructure/servers/build-servers) |
+
+Both manual and provider-created servers must be validated before Coolify can deploy resources to them. During validation, Coolify checks SSH access, verifies the operating system and required tools, and installs or verifies Docker Engine and Docker Compose.
+
+<Callout type="warning" title="Validation can change the server">
+Validation can install Docker and restart the Docker service. Use a fresh server when possible. Existing containers may be temporarily unavailable.
+</Callout>
+
+---
+
+## After connecting a server
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Manage server settings',
+      href: '/core/infrastructure/servers/manage-server',
+      description: 'Update the connection, timezone, wildcard domain, and cloud-provider link.',
+      icon: Settings,
+    },
+    {
+      title: 'Patch server packages',
+      href: '/core/infrastructure/servers/server-patching',
+      description: 'Check for operating-system package updates and choose when to install them.',
+      icon: Refresh23,
+    },
+    {
+      title: 'Configure Docker cleanup',
+      href: '/core/infrastructure/servers/automated-docker-cleanup',
+      description: 'Schedule cleanup and control which unused Docker data Coolify may remove.',
+      icon: HardDrive,
+    },
+  ]}
+/>

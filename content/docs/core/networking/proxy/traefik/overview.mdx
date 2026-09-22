@@ -1,0 +1,88 @@
+---
+title: Traefik Overview
+description: Understand how Coolify uses Traefik and choose the correct guide for common proxy changes.
+---
+
+import { ArrowsRight, ChartSquare, Lock2, Route, ShieldSecurity2 } from 'reicon-react';
+
+# Traefik overview
+
+Traefik is Coolify's default integrated reverse proxy. Coolify generates Traefik routes from resource domains and container ports, connects the proxy to the required Docker networks, and configures automatic TLS certificates for HTTPS domains.
+
+Most deployments do not need to edit Traefik directly. Use the proxy guides only when the generated defaults do not cover your routing, certificate, or authentication requirement.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Set a domain on an application or service and Coolify generates the normal Traefik route. Use dynamic configuration for reusable file-based middleware, custom certificates, dashboards, and load-balancer services.
+
+Changes to the main Traefik Docker Compose configuration require a proxy restart. File-based dynamic configuration is watched and can update without restarting Traefik.
+
+</CoolCallout>
+
+---
+
+## What Coolify manages
+
+Coolify configures:
+
+- the `coolify-proxy` Traefik container on connected servers
+- public `http` and `https` entry points on ports `80` and `443`
+- Docker and file providers for generated routes and dynamic configuration
+- the `letsencrypt` TLS certificate resolver for HTTP challenge
+- resource router, middleware, service, and target-port labels
+- the Docker networks that let Traefik reach routed resources
+
+The main configuration is stored at `/data/coolify/proxy/docker-compose.yml`. Traefik file-provider configuration is stored under `/data/coolify/proxy/dynamic/` and mounted at `/traefik/dynamic/` inside the proxy container.
+
+<Callout type="warning" title="Keep generated routing intact">
+Resetting the proxy configuration removes custom changes from the main Docker Compose file. Editing application labels after disabling **Readonly labels** also makes you responsible for preserving every generated route and middleware label.
+</Callout>
+
+---
+
+## Choose a Traefik guide
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Protect a resource',
+      href: '/core/networking/proxy/traefik/basic-auth',
+      description: 'Add HTTP basic authentication through Coolify or with Traefik labels.',
+      icon: Lock2,
+    },
+    {
+      title: 'Add dynamic configuration',
+      href: '/core/networking/proxy/traefik/dynamic-config',
+      description: 'Create reusable file-based middleware, routers, services, and TLS settings.',
+      icon: Route,
+    },
+    {
+      title: 'Open the dashboard',
+      href: '/core/networking/proxy/traefik/dashboard',
+      description: 'Expose the Traefik dashboard through a dedicated, authenticated domain.',
+      icon: ChartSquare,
+    },
+  ]}
+  groups={[
+    {
+      title: 'Certificates',
+      description: 'Choose how Traefik obtains or loads TLS certificates.',
+      icon: ShieldSecurity2,
+      links: [
+        { title: 'Custom SSL certificates', href: '/core/networking/proxy/traefik/custom-ssl-certs' },
+        { title: 'DNS challenge', href: '/core/networking/proxy/traefik/dns-challenge' },
+        { title: 'Wildcard certificates', href: '/core/networking/proxy/traefik/wildcard-certs' },
+      ],
+    },
+    {
+      title: 'Advanced routing',
+      description: 'Change how Traefik processes and distributes requests.',
+      icon: Route,
+      links: [
+        { title: 'Custom middlewares', href: '/core/networking/proxy/traefik/custom-middlewares' },
+        { title: 'Load balancing', href: '/core/networking/proxy/traefik/load-balancing' },
+        { title: 'Protect with Authentik', href: '/core/networking/proxy/traefik/protect-services-with-authentik' },
+      ],
+    },
+  ]}
+/>

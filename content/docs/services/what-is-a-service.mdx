@@ -1,0 +1,88 @@
+---
+title: What is a service
+description: Understand Docker Compose Services, one-click templates, and user-defined stacks in Coolify.
+---
+
+import { Box2, BranchUp, Settings } from 'reicon-react';
+
+# What is a service
+
+A Service is a Docker Compose stack that Coolify stores and deploys as one resource. The stack can contain one container or several connected application, database, worker, proxy, and supporting containers.
+
+Services are not connected to a Git source. Coolify stores the Compose definition with the resource and uses that saved definition for future deployments.
+
+## Choose a Service type
+
+| Service type | Compose definition | Best suited for |
+| :--- | :--- | :--- |
+| One-click Service | Copied from Coolify's service-template library when the resource is created. | Software that you want to deploy from a ready-made stack. |
+| User-defined Service | Pasted into **Docker Compose Empty** and stored by Coolify. | Your own multi-container stack or software without a one-click template. |
+
+Both paths create the same Coolify resource type and use the same configuration and lifecycle controls after creation.
+
+## What a Service includes
+
+| Part | Purpose |
+| :--- | :--- |
+| Compose definition | Describes images, commands, environment references, dependencies, health checks, networks, and storage. |
+| Service components | Represents each detected Compose service as an application or database component in the Coolify interface. |
+| Generated configuration | Adds container names, labels, networks, domains, environment values, and storage details required by the deployment. |
+| Operations | Provides deployment output, container logs, terminal access, scheduled tasks, webhooks, cloning, moving, and deletion. |
+
+Coolify identifies common database images when it parses the definition. Other entries appear as application components. You can open a component's **Settings** to review its image, domain or public database access, status behavior, and advanced options.
+
+## Services and Applications
+
+Use an [Application](/applications) when Coolify should deploy from a Git repository, a Dockerfile entered without Git, or one existing Docker image. A Git-based Application can also use a Compose file stored in its repository.
+
+Use a Service when the Compose definition should live in Coolify rather than a Git repository. A Service does not provide branch deployments, pull-request previews, or source webhooks.
+
+## Services and standalone Databases
+
+Use a [standalone Database](/databases) when you want Coolify to create an engine-specific resource with generated credentials, a default data volume, connection URLs, health settings, and supported database backup controls.
+
+Use a Service when the database is part of a larger Compose topology, the engine is not available as a standalone Database, or the stack requires supporting containers. A database component inside a Service can expose component settings and backups when Coolify recognizes the image, but it remains part of the Service stack.
+
+## What one-click does and does not mean
+
+One-click means that Coolify provides the initial Compose definition and generated values. It does not make the software a managed service.
+
+You remain responsible for:
+
+- choosing and maintaining image versions
+- reviewing release notes before an upgrade
+- configuring the software after deployment
+- protecting credentials and public endpoints
+- backing up and testing recovery for persistent data
+- monitoring the server and every required container
+
+<Callout type="warning" title="Persistent storage is not a backup">
+
+A Docker volume or bind mount can survive normal container recreation, but it does not protect against deletion, corruption, disk failure, or server loss. Back up each stateful component with a method that can be restored and tested.
+
+</Callout>
+
+## Continue learning
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'How Services work',
+      href: '/services/how-services-work',
+      description: 'Follow how Coolify parses and deploys a Compose stack.',
+      icon: Box2,
+    },
+    {
+      title: 'Browse Services',
+      href: '/services/overview',
+      description: 'Find an available one-click template and its individual guide.',
+      icon: BranchUp,
+    },
+    {
+      title: 'Configure a Service',
+      href: '/services/configuration/overview',
+      description: 'Review stack, component, variable, and storage settings.',
+      icon: Settings,
+    },
+  ]}
+/>

@@ -1,0 +1,30 @@
+---
+title: "Batch"
+description: "Deploy multiple resources by name"
+---
+
+# Batch
+
+Deploy multiple resources by name
+
+## Usage
+
+```sh
+coolify deploy batch <name1,name2,...>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--docker-tag` | `string` | No | — | Docker image tag override for the deployment |
+| `--force` | `boolean` | No | `false` | Force deployment |
+| `--pull-request-id` | `integer` | No | `0` | Pull request ID for preview deployments |
+
+## Get current help
+
+```sh
+coolify deploy batch --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

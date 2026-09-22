@@ -1,0 +1,115 @@
+---
+title: Deploy with Nixpacks
+description: Deploy a server or static application from Git source with Nixpacks.
+---
+
+# Deploy with Nixpacks
+
+Use this guide to connect a Git repository, let Nixpacks detect the application, and deploy the generated image with Coolify.
+
+Read the [Nixpacks overview](/applications/builds/nixpacks/overview) first when you need to decide whether automatic detection fits the codebase.
+
+## Deploy the application
+
+<Steps>
+<Step>
+
+### Create a resource
+
+Open the target project and environment, then select **+ New**.
+
+<ZoomImage src="/docs/images/builds/packs/nixpacks/1.webp" alt="Create New Resource button in a Coolify project" />
+
+</Step>
+<Step>
+
+### Connect the repository
+
+Create an application from a [public repository](/applications/sources/public-repositories), [deploy key](/applications/sources/deploy-keys), or supported Git App.
+
+<ZoomImage src="/docs/images/builds/packs/nixpacks/2.webp" alt="Git repository source options for a Nixpacks application" />
+
+For a public repository, paste its HTTPS URL and select **Check Repository**.
+
+<ZoomImage src="/docs/images/builds/packs/nixpacks/3.webp" alt="Public repository URL field for a Nixpacks application" />
+
+Select the repository and branch.
+
+</Step>
+<Step>
+
+### Select Nixpacks
+
+Choose **Nixpacks** as the **Build Pack**.
+
+<ZoomImage src="/docs/images/builds/packs/nixpacks/4.webp" alt="Nixpacks option in the Build Pack selector" />
+
+Set **Base Directory** to the directory Nixpacks should inspect. Use `/` for the repository root or a path such as `/apps/api` for an application in a monorepo.
+
+</Step>
+<Step>
+
+### Choose the application type
+
+For static output:
+
+- enable **Is it a static site?**
+- enter **Publish Directory**, such as `/dist`
+- keep the generated Nginx port `80`
+
+<ZoomImage src="/docs/images/builds/packs/nixpacks/5.webp" alt="Static site settings for a Nixpacks application" />
+
+For a server application:
+
+- leave **Is it a static site?** disabled
+- enter the internal port where the process listens
+
+<ZoomImage src="/docs/images/builds/packs/nixpacks/8.webp" alt="Server application settings for a Nixpacks build" />
+
+</Step>
+<Step>
+
+### Add environment variables
+
+Continue to the application and open **Configuration > Environment Variables**.
+
+Add the values required by the application. Enable **Build Variable** for values that the build command must read.
+
+<ZoomImage src="/docs/images/builds/packs/nixpacks/9.webp" alt="Environment Variables page for a Nixpacks application" />
+
+</Step>
+<Step>
+
+### Review the detected commands
+
+Open **Configuration > General** and review the detected **Install Command**, **Build Command**, and **Start Command**.
+
+Override a command only when detection is incorrect or the codebase requires a custom command.
+
+<ZoomImage src="/docs/images/builds/packs/nixpacks/10.webp" alt="Install, build, and start command fields for a Nixpacks application" />
+
+</Step>
+<Step>
+
+### Deploy and verify
+
+Configure a domain when the application should be public, then select **Deploy**.
+
+Inspect the deployment log to confirm which providers, packages, and commands Nixpacks selected.
+
+For a server application, open the application logs and confirm the process listens on the configured internal port. For a static application, open the domain and verify the generated assets and a client-side route.
+
+</Step>
+</Steps>
+
+## Configure static output
+
+Coolify uses Nginx to serve a static Nixpacks build.
+
+<ZoomImage src="/docs/images/builds/packs/nixpacks/6.webp" alt="Nginx selected for a static Nixpacks application" />
+
+Use **Configuration > General > Nginx Configuration** only when the site needs behavior such as single-page application fallback, custom headers, or caching rules.
+
+<ZoomImage src="/docs/images/builds/packs/nixpacks/7.webp" alt="Generate button and Nginx configuration editor for a static Nixpacks application" />
+
+Save the change and redeploy the application. Coolify copies the Nginx configuration into the final static image during the image build, so a restart that reuses the existing image cannot apply the change.

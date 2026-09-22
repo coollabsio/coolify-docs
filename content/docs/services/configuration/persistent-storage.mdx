@@ -1,0 +1,100 @@
+---
+title: Persistent Storage
+description: Review Compose-owned volumes, directories, and file mounts used by a Service.
+---
+
+# Configure persistent storage
+
+Service containers are replaceable. Store required files and database data outside the container filesystem with mounts declared in the Service's Docker Compose definition.
+
+Open **Configuration > Persistent Storages** to review parsed mounts grouped by application and database component.
+
+<Callout type="info" title="The Compose definition is the source of truth">
+
+Storage parsed from a Service is read-only on the Persistent Storages page. Add, change, or remove its mount under **Configuration > General > Edit Compose File**, then save and review the parsed result.
+
+</Callout>
+
+## Choose a mount
+
+| Compose mount | Use it when |
+| :--- | :--- |
+| Named volume | Docker should manage the server-side storage location. |
+| Bind-mounted directory | The stack must use a specific directory on the Service server. |
+| Bind-mounted file | A component needs one configuration or data file at an exact path. |
+
+Every mount has a source and a destination inside the container. The destination must match the path where the component actually writes or reads data.
+
+Read [Storage mount types](/core/persistent-storage/storage-mounts/overview#choose-a-storage-mount) before choosing a source path.
+
+## Define a named volume
+
+```yaml
+services:
+  database:
+    image: postgres:17
+    volumes:
+      - database-data:/var/lib/postgresql/data
+
+volumes:
+  database-data:
+```
+
+Coolify prefixes the deployed volume name with a resource identifier to prevent collisions. Review **Show Deployable Compose** or **Persistent Storages** for the actual name used on the server.
+
+## Define a directory or file
+
+A relative bind source is stored under the Service configuration directory. Coolify supports Compose extensions that mark a relative source as a directory or provide managed file content.
+
+```yaml
+services:
+  app:
+    image: example/app:1.0
+    volumes:
+      - type: bind
+        source: ./data
+        target: /app/data
+        is_directory: true
+      - type: bind
+        source: ./config/app.yaml
+        target: /app/config.yaml
+        content: |
+          logLevel: info
+```
+
+Use an absolute source path only when you intend to depend on that exact path on the selected server. The path must exist with permissions suitable for the container user.
+
+## Change a mount safely
+
+<Callout type="warning" title="A mount change can hide existing data">
+
+Changing a source or destination does not move the existing files. The container can start with an empty volume or different directory while the previous data remains elsewhere on the server.
+
+</Callout>
+
+1. Identify the component and the exact container destination that contains required data.
+2. Back up the source and test the restore path.
+3. Stop application writes when changing a database or shared writable mount.
+4. Edit the Compose definition.
+5. Save and review **Show Deployable Compose** and **Persistent Storages**.
+6. Deploy or restart the Service.
+7. Verify the component can read and write the expected files before removing the previous source.
+
+## Back up Service data
+
+Persistent storage survives normal container recreation; it is not a backup.
+
+Use the backup method appropriate for each component:
+
+- use a database-aware dump for database data
+- use [storage mount backups](/core/persistent-storage/storage-mounts/backups) when the parsed mount and interface support them
+- use an external backup tool for a mount without a Coolify backup control
+
+Keep at least one tested copy outside the Service server. A local archive on the same disk does not protect against server or disk loss.
+
+## Important boundaries
+
+- A mount cannot recover data that was written only to a removed container filesystem.
+- A server path is not automatically available on another server when you clone the Service.
+- Sharing one writable mount between components requires application support for concurrency and file locking.
+- Removing a mount from Compose can remove its Coolify storage record; do not treat that record as the only inventory of important data.
