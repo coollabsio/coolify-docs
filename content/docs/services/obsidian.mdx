@@ -1,0 +1,81 @@
+---
+title: "Obsidian"
+description: "A note-taking app that lets you create, link, and organize your notes with hundreds of plugins and themes."
+og:
+  description: "Self-host Obsidian on Coolify - a powerful knowledge base and note-taking app that streams to your browser via a Linux desktop container. Your vault persists in a Docker volume with auto-generated HTTP Basic Auth credentials."
+category: "Productivity"
+icon: "/docs/images/services/obsidian-logo.svg"
+---
+
+# Obsidian
+
+<ZoomImage src="/docs/images/services/obsidian-logo.svg" alt="Obsidian" />
+
+## What is Obsidian?
+
+[Obsidian](https://obsidian.md?utm_source=coolify.io) is a powerful knowledge base and note-taking application built on top of a local folder of plain Markdown files. It lets you create, link, and organize notes into a personal knowledge graph, with a rich plugin ecosystem of 1,000+ community plugins and themes to customize your workflow.
+
+This Coolify template runs Obsidian as a **Linux desktop container** using the [LinuxServer.io](https://linuxserver.io?utm_source=coolify.io) image. The application streams a full graphical desktop to your browser over HTTPS - there is nothing to install on your local machine. Your vault lives in a named Docker volume on your server and persists across container updates.
+
+## System Requirements
+
+Obsidian runs as an Electron/Chromium application inside the container and streams video to your browser. It is more resource-intensive than a typical web app.
+
+| Resource | Minimum | Recommended |
+|---|---|---|
+| CPU | 2 cores | 4 cores |
+| RAM | 2 GB | 4 GB |
+| Disk | 1 GB | 4 GB+ (scales with vault size) |
+| Architecture | x86-64 or arm64 | x86-64 |
+
+<Callout type="info">
+1 GB of the container's RAM is reserved as shared memory (`shm_size`) for Chromium. On a host with less than 2 GB free, the container will crash on startup.
+</Callout>
+
+GPU acceleration (Intel, AMD, or Nvidia) is supported for lower CPU usage and better streaming quality but is not required. See the [LinuxServer documentation](https://docs.linuxserver.io/images/docker-obsidian?utm_source=coolify.io) for GPU setup details.
+
+## Deploying Obsidian
+
+1. In Coolify, go to **Services** and search for **Obsidian**.
+2. Click **Deploy**. Coolify auto-generates a secure username and password - no configuration is required for a basic deployment.
+3. Once the container is running, click the **Open** button to launch Obsidian in your browser.
+4. When prompted by your browser for credentials, use the **`CUSTOM_USER`** and **`PASSWORD`** values shown in the Coolify environment variables panel.
+
+## First-Time Setup
+
+On first launch you will see the Obsidian vault picker screen inside the browser window.
+
+1. Click **Open folder as vault** and navigate to a folder inside `/config` - for example `/config/vault`. This location is inside the persistent Docker volume and will survive container updates.
+2. Obsidian will open your vault. Install plugins and themes as you normally would - everything written to `/config` is persisted.
+
+## Security Notes
+
+<Callout type="warn">
+This container provides privileged access. Do not expose it to the internet without authentication.
+</Callout>
+
+- The GUI includes a built-in terminal with **passwordless `sudo`**. Anyone who can reach the URL has full root control inside the container.
+- Authentication is enabled by default via HTTP Basic Auth (`CUSTOM_USER` / `PASSWORD`). For internet-facing deployments, consider placing an additional authentication layer (such as Authelia or Authentik) in front of the service.
+- The container requires `seccomp=unconfined` on older host kernels. If your host is running a modern Linux kernel (5.15+), you can remove the `security_opt` block from the compose file for a tighter security profile.
+
+## Accessing Your Credentials
+
+Your auto-generated login credentials are stored as Coolify environment variables. To view or change them:
+
+1. Open the service in Coolify and click the **Environment Variables** tab.
+2. Look for `CUSTOM_USER` and `PASSWORD`.
+3. After changing either value, click **Save** and then **Redeploy** for the changes to take effect.
+
+## Updating Obsidian
+
+The LinuxServer image bundles the Obsidian version - to update, pull the latest image and recreate the container. Your vault data in the `obsidian-config` volume is unaffected.
+
+In Coolify, click **Pull Latest Image** and then **Redeploy**.
+
+## Links
+
+- [Obsidian website](https://obsidian.md?utm_source=coolify.io)
+- [Obsidian documentation](https://help.obsidian.md?utm_source=coolify.io)
+- [LinuxServer docker-obsidian image](https://docs.linuxserver.io/images/docker-obsidian?utm_source=coolify.io)
+- [LinuxServer GitHub repository](https://github.com/linuxserver/docker-obsidian?utm_source=coolify.io)
+- [Obsidian community plugins](https://obsidian.md/plugins?utm_source=coolify.io)
