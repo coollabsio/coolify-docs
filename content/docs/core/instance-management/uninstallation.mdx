@@ -1,0 +1,147 @@
+---
+title: Uninstall Coolify
+description: Permanently remove a self-hosted Coolify control plane and its local data from a server.
+---
+
+# Uninstall Coolify
+
+Uninstalling Coolify removes the self-hosted instance, its Docker resources, and `/data/coolify`. Deployed resources remain, but resources using Coolify Proxy will no longer be publicly reachable.
+
+<Callout type="warn" title="Self-hosted instances only">
+Coolify Cloud has no local Coolify control plane for you to uninstall. To stop using Coolify Cloud, manage your subscription from [Billing](https://app.coolify.io/subscription/).
+</Callout>
+
+## Before you uninstall
+
+- [Create an instance backup](/core/backup-and-recovery/instance-backup) and keep a copy outside this server.
+- Save `/data/coolify/source/.env` separately. It contains the encryption key needed to restore the instance backup.
+- Save or migrate the application configuration, deployment files, local backups, and proxy routing you need after removal. These are stored in `/data/coolify`.
+- Plan a replacement proxy before continuing if your resources use Coolify-managed domains or TLS certificates.
+- Confirm that there are no active deployments and that you are connected to the Coolify server over SSH.
+
+<Callout type="danger" title="This cannot be undone">
+Deleting `/data/coolify` permanently removes Coolify's configuration, SSH keys, deployment files, proxy configuration, and locally stored instance backups.
+
+An instance backup contains the Coolify database; it does not back up the applications, databases, services, or volumes you deploy with Coolify.
+</Callout>
+
+## Remove the self-hosted instance
+
+<Steps>
+<Step>
+
+### Connect to the Coolify server
+
+Connect to the server that runs the Coolify instance over SSH:
+
+```sh
+ssh root@<server-ip>
+```
+
+Replace `<server-ip>` with the server's IP address. If you normally use a non-root account, connect with that account and run the following commands with `sudo`.
+
+</Step>
+
+<Step>
+
+### Remove Coolify containers
+
+```sh
+sudo docker rm -f coolify coolify-db coolify-redis coolify-realtime coolify-proxy coolify-sentinel
+```
+
+Application, database, and service containers keep running. Removing **Coolify Proxy** stops the domains and TLS routing it provides.
+
+</Step>
+
+<Step>
+
+### Remove Coolify data volumes
+
+Remove the volumes that store the Coolify database and Redis data:
+
+```sh
+sudo docker volume rm coolify-db coolify-redis
+```
+
+Do not run a broad `docker volume prune` command as part of this process. It can remove unused volumes that belong to other workloads on the server.
+
+</Step>
+
+<Step>
+
+### Remove the Coolify network
+
+Remove the internal network used by the Coolify control plane:
+
+```sh
+sudo docker network rm coolify
+```
+
+If Docker reports that the network is still in use, inspect the attached containers before removing anything else. Do not force-remove the network until you know why a container still uses it.
+
+</Step>
+
+<Step>
+
+### Delete Coolify files
+
+After confirming that your backup and required files are stored elsewhere, delete the Coolify data directory:
+
+```sh
+sudo rm -rf /data/coolify
+```
+
+This is the final destructive step. It removes the instance `.env` file, local instance backups, and the files Coolify used to manage resources on this server.
+
+</Step>
+
+<Step>
+
+### Remove Docker images
+
+Remove the default Coolify images to free disk space:
+
+```sh
+sudo docker rmi ghcr.io/coollabsio/coolify:latest
+sudo docker rmi ghcr.io/coollabsio/coolify-helper:latest
+sudo docker rmi ghcr.io/coollabsio/coolify-realtime:1.0.16
+sudo docker rmi postgres:15-alpine
+sudo docker rmi redis:7-alpine
+```
+
+If you used the default Traefik proxy, remove its image too:
+
+```sh
+sudo docker rmi traefik
+```
+
+If you used Caddy instead:
+
+```sh
+sudo docker rmi lucaslorentz/caddy-docker-proxy
+```
+
+</Step>
+</Steps>
+
+## Verify the removal
+
+Confirm that no Coolify control-plane containers remain:
+
+```sh
+sudo docker ps -a --format '{{.Names}}' | grep -E '^(coolify|coolify-db|coolify-redis|coolify-realtime|coolify-proxy|coolify-sentinel)$' || true
+```
+
+The command should return no container names.
+
+Then confirm that Docker reports the `coolify-db` and `coolify-redis` volumes as missing and that `/data/coolify` no longer exists:
+
+```sh
+sudo docker volume inspect coolify-db coolify-redis
+sudo test ! -d /data/coolify && echo "Coolify data directory removed"
+```
+
+`docker volume inspect` should report that the two volumes do not exist.
+
+If applications or services remain on the server, manage or migrate them directly with Docker and replace any Coolify Proxy routing before exposing them publicly again.

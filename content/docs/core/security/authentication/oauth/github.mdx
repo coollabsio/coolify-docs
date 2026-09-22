@@ -1,0 +1,95 @@
+---
+title: GitHub
+description: Configure GitHub OAuth sign-in for Coolify by creating an OAuth App and registering the Coolify callback URL.
+---
+
+# Configure GitHub OAuth
+
+Create a GitHub OAuth App so GitHub can return a verified primary email address to Coolify after sign-in.
+
+<Callout type="warning" title="Example data">
+Replace the example domain while following this guide:
+
+- **Coolify URL:** `https://coolify.shadowarcanist.com`
+- **Authorization callback URL:** `https://coolify.shadowarcanist.com/auth/github/callback`
+</Callout>
+
+## Set up GitHub OAuth
+
+<Steps>
+<Step>
+
+### Open GitHub OAuth Apps
+
+Open [GitHub Developer settings](https://github.com/settings/developers), select **OAuth Apps**, then select **New OAuth App**.
+
+To let an organization own the credential, open that organization's settings and create the OAuth App there instead. You need permission to manage OAuth Apps for the selected account or organization.
+
+</Step>
+<Step>
+
+### Register the Coolify application
+
+Complete the GitHub form:
+
+| GitHub field | Value |
+| :--- | :--- |
+| **Application name** | A recognizable name such as `Coolify`. |
+| **Homepage URL** | The public Coolify URL, such as `https://coolify.shadowarcanist.com`. |
+| **Application description** | Optional information for people authorizing the app. |
+| **Authorization callback URL** | `https://coolify.shadowarcanist.com/auth/github/callback` |
+
+Select **Register application**.
+
+<Callout type="info" title="Use a separate app for another Coolify domain">
+A GitHub OAuth App has one callback URL. Create another OAuth App when a second Coolify instance uses a different public domain.
+</Callout>
+
+</Step>
+<Step>
+
+### Create the client secret
+
+On the OAuth App page, copy **Client ID**, then select **Generate a new client secret**.
+
+Copy the generated client secret and store it securely. You need the complete secret in Coolify.
+
+</Step>
+<Step>
+
+### Configure GitHub in Coolify
+
+In Coolify, open **Settings > OAuth** and find **GitHub**.
+
+| Coolify field | GitHub value |
+| :--- | :--- |
+| **Client ID** | The GitHub OAuth App client ID. |
+| **Client Secret** | The generated GitHub client secret. |
+| **Redirect URI** | `https://coolify.shadowarcanist.com/auth/github/callback` |
+
+Select **Save**, then turn on **Enabled** for GitHub.
+
+</Step>
+<Step>
+
+### Verify GitHub sign-in
+
+Open the Coolify login page in a private browser window and select **Login with GitHub**. Authorize the OAuth App if GitHub asks, then confirm that Coolify opens the account with the same email address as the verified primary GitHub email.
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="GitHub reports a redirect URI mismatch">
+
+Compare the **Authorization callback URL** in GitHub with **Redirect URI** in Coolify. The scheme, domain, `/auth/github/callback` path, and trailing slash must match.
+
+</Accordion>
+<Accordion title="Coolify returns to the login page">
+
+GitHub must return a verified primary email address. Confirm that the GitHub account has one under **Settings > Emails** and that the OAuth authorization grants the requested `user:email` access.
+
+</Accordion>
+</Accordions>

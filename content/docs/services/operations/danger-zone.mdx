@@ -1,0 +1,76 @@
+---
+title: Danger Zone
+description: Permanently delete a Service and choose which related Docker resources Coolify removes.
+---
+
+# Delete a Service
+
+Open the Service and select **Configuration > Danger Zone** to permanently remove the Service resource. Coolify stops and removes its component containers as part of the deletion job.
+
+Deletion cannot be undone from Coolify.
+
+<Callout type="danger" title="Back up every stateful component before deletion">
+
+Deleting Service volumes permanently removes their data. Back up databases with an engine-compatible method, back up required files, and test each restore path outside the resources you plan to delete.
+
+</Callout>
+
+## Before deletion
+
+- Confirm that no application, user, or external automation still depends on the Service.
+- Record the source Compose definition, environment values, domains, images, mounts, scheduled tasks, and external dependencies required to recreate it.
+- Export or back up every database and stateful component.
+- Move production traffic when the Service must remain available.
+- Confirm that you have permission to delete the resource.
+- Review every optional deletion action instead of accepting it automatically.
+
+## Deletion actions
+
+The confirmation modal selects these actions by default:
+
+| Action | Effect |
+| :--- | :--- |
+| **Permanently delete all volumes associated with this resource.** | Deletes Docker volumes attached to the Service components and their stored data. |
+| **Permanently delete all non-predefined networks associated with this resource.** | Deletes Service networks that are not predefined shared networks. |
+| **Permanently delete all configuration files from the server.** | Deletes the generated Service configuration directory from its server. |
+| **Run Docker Cleanup (remove unused images and builder cache).** | Queues Docker cleanup on the Service server. |
+
+The Service record, component records, scheduled tasks, tags, and containers are removed even when you clear optional Docker-resource actions.
+
+Clearing the volume action preserves the selected Docker volumes; it does not preserve the Coolify Service or reconnect those volumes to a future resource automatically. Record their actual Docker names before deletion if you intend to recover them manually.
+
+## Confirm deletion
+
+1. Select **Delete**.
+2. Review the selected actions.
+3. Enter the exact Service name when Coolify requests it.
+4. Enter your Coolify account password when password confirmation applies.
+5. Confirm the deletion.
+
+Coolify returns to the project environment while the deletion job stops containers and removes the selected resources.
+
+## Verify deletion
+
+Confirm that:
+
+1. The Service no longer appears in the project environment.
+2. Its application and database containers no longer run on the server.
+3. Any volume you intentionally preserved still exists under its recorded Docker name.
+4. Domains that should remain in use now route to their replacement.
+5. Applications and automation no longer use removed database, queue, cache, or webhook endpoints.
+
+Coolify does not remove DNS records at your DNS provider. Remove or update obsolete records separately.
+
+## Force-delete a stuck Service
+
+If a Service cannot be removed from the dashboard, connect over SSH to the server that runs Coolify and run:
+
+```sh
+docker exec -it coolify php artisan services:delete
+```
+
+Select the Service to delete when prompted. Use this only when the dashboard deletion above does not remove the Service.
+
+## Recreate a deleted Service
+
+Coolify cannot restore the deleted Service record from Danger Zone. Create a new one-click or user-defined Service, review its generated values, restore each persistent dependency, and deploy with temporary domains before reconnecting production traffic.

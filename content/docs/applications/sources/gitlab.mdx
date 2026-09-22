@@ -1,0 +1,124 @@
+---
+title: GitLab
+description: Deploy public and private GitLab repositories with a GitLab App, deploy key, or repository URL.
+---
+
+# GitLab
+
+Coolify can deploy GitLab repositories through a public HTTPS URL, an SSH deploy key, or a GitLab App.
+
+| Method | Best for | Repository access |
+| :--- | :--- | :--- |
+| Public repository | Public source that needs no authentication | HTTPS URL |
+| Deploy key | One private repository or a GitLab instance where an OAuth application is unavailable | SSH URL and repository deploy key |
+| GitLab App | Private repositories on GitLab.com or a self-managed GitLab instance | OAuth application with repository browsing |
+
+## Set up a GitLab App
+
+<Callout type="warning" title="GitLab App requires Coolify v4.3.0">
+  GitLab App integration is available in Coolify v4.3.0 or above
+</Callout>
+
+A GitLab App lets Coolify list repositories and branches, clone private source over HTTPS, and receive push and merge-request events.
+
+<Steps>
+<Step>
+
+### Add the source in Coolify
+
+Open **Sources**, select **+ Add**, then select **GitLab**.
+
+Enter a name and the GitLab instance URL. Use `https://gitlab.com` for GitLab.com or the public URL of the self-managed instance. Optionally enter comma-separated group names to limit the repositories Coolify lists.
+
+On a self-hosted Coolify instance, enable **System Wide** only when every team should be able to select this source. Otherwise, keep the source scoped to the active team.
+
+Save the source. Coolify displays the redirect URI required by the OAuth application.
+
+</Step>
+<Step>
+
+### Create the OAuth application in GitLab
+
+In GitLab, open **User Settings > Applications**. A group or instance administrator can create the application at group or instance level when ownership should not belong to one user.
+
+Create an application with:
+
+- the exact redirect URI shown by Coolify
+- `api`, `read_user`, and `read_repository` scopes
+
+Save the application, then copy its **Application ID** and **Secret**.
+
+</Step>
+<Step>
+
+### Connect Coolify to GitLab
+
+Return to the GitLab source in Coolify. Enter the Application ID and Secret, confirm the GitLab and API URLs, then save the credentials.
+
+Select **Connect to GitLab** and authorize the OAuth application. Use **Test Connection** after GitLab redirects back to Coolify.
+
+</Step>
+<Step>
+
+### Configure repository webhooks
+
+Copy the webhook URL and secret token from the connected source.
+
+In each GitLab project that should deploy automatically, open **Settings > Webhooks**, add the URL and matching secret token, then enable:
+
+- **Push events** for branch deployments
+- **Merge request events** for preview deployments
+
+Coolify rejects GitLab webhook requests when the secret token is missing or does not match.
+
+</Step>
+<Step>
+
+### Deploy a repository
+
+Open a Coolify project, select **+ New**, then select **Private Repository (with GitLab App)**.
+
+Choose the server and connected GitLab App, load the repositories, select a repository and branch, then configure and deploy the application.
+
+Verify that the deployment log clones the selected repository and checks out the requested commit.
+
+</Step>
+</Steps>
+
+## Use a deploy key
+
+Use a deploy key when Coolify only needs one private repository or cannot connect to the GitLab instance through OAuth.
+
+1. Add a private key under **Keys & Tokens > Private Keys**.
+2. Add its public key under the GitLab repository's **Settings > Repository > Deploy keys**.
+3. Copy the repository SSH URL, such as `git@gitlab.com:example/application.git`.
+4. In Coolify, create **Private Repository (with deploy key)** and select the stored key.
+
+Read [Deploy keys](/applications/sources/deploy-keys) for the complete setup and security guidance.
+
+## Configure a manual GitLab webhook
+
+For an application created from a public URL or deploy key:
+
+1. Open **Configuration > Webhooks** in the Coolify application.
+2. Copy the **GitLab** webhook URL and save a **GitLab Webhook Secret**.
+3. In GitLab, open **Settings > Webhooks** and enter the same URL and secret.
+4. Enable push events and, when using preview deployments, merge-request events.
+5. Enable **Configuration > Advanced > Auto Deploy** in Coolify.
+
+Test the webhook from GitLab, then push to the configured branch and inspect **Deployments** in Coolify.
+
+## Use GitLab Container Registry
+
+Repository credentials do not authenticate Docker to GitLab Container Registry.
+
+For a private registry, create a GitLab deploy token with `read_registry` and authenticate Docker on every server that pulls the image:
+
+```bash
+echo "$GITLAB_REGISTRY_TOKEN" | \
+  docker login registry.gitlab.com \
+  --username "$GITLAB_REGISTRY_USER" \
+  --password-stdin
+```
+
+Use the complete image reference, including its tag, in a Docker Image or Docker Compose application. Read [Docker registries](/applications/builds/docker-registries) for server authentication and build-server requirements.

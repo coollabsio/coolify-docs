@@ -1,0 +1,153 @@
+---
+title: Proxy Overview
+description: Choose, operate, and switch the proxy that routes public HTTP and HTTPS traffic on a Coolify server.
+---
+
+import { ArrowsRight, Layers, Route, ShieldSecurity2 } from 'reicon-react';
+
+# Proxy overview
+
+Coolify runs one `coolify-proxy` container on each server connected to Coolify. The proxy accepts public HTTP and HTTPS requests, matches each request to a configured domain, and forwards it to the correct resource container over a Docker network.
+
+[Traefik](https://traefik.io/) is the default proxy in Coolify. You can select [Caddy](https://caddyserver.com/) instead, or select **Custom (None)** and operate your own proxy without Coolify-managed routing.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Use Traefik unless you already have a reason to use Caddy. Choose **Custom (None)** only when you are prepared to configure domains, TLS certificates, redirects, and routing outside Coolify.
+
+Switching proxies temporarily interrupts every public route on that server. Prepare the target proxy configurations before you stop the current proxy.
+
+</CoolCallout>
+
+---
+
+## Choose a proxy
+
+<CoolCompare
+  id="proxy-options"
+  className="not-prose"
+  columns={3}
+  icon={Layers}
+  title="Proxy options"
+  description="The selected option applies to public HTTP and HTTPS traffic on one server."
+>
+<CoolCompareColumn
+  title="Traefik"
+  items={[
+    'The default integrated proxy',
+    'Coolify generates routes, middleware labels, and TLS certificate settings',
+    'Best documented path for most Coolify installations',
+  ]}
+/>
+<CoolCompareColumn
+  title="Caddy"
+  items={[
+    'An integrated alternative to Traefik',
+    'Coolify generates Caddy Docker labels and manages automatic HTTPS',
+    'Currently less documented than Traefik in Coolify',
+  ]}
+/>
+<CoolCompareColumn
+  title="Custom (None)"
+  items={[
+    'Does not run the Coolify Proxy container',
+    'Coolify does not manage routes or TLS certificates for your proxy',
+    'You own the complete traffic path',
+  ]}
+/>
+</CoolCompare>
+
+A direct host port mapping bypasses the proxy. Use a mapped port only when a client must connect directly or the protocol does not belong behind an HTTP reverse proxy.
+
+---
+
+## Open the proxy settings
+
+1. Open **Servers** in the Coolify dashboard.
+2. Select the server that receives traffic for your resources.
+3. Select **Proxy**.
+
+The **Configuration** page shows the selected proxy, its generated Docker Compose configuration, and controls for starting, stopping, restarting, saving, or resetting that configuration. **Dynamic Configurations** stores file-provider configuration, and **Logs** shows proxy output.
+
+<Callout type="warning" title="Custom configuration can affect every route">
+An invalid proxy configuration can make every application and service on the server unreachable. Keep a copy of working custom configuration and test changes on a non-production server when possible.
+</Callout>
+
+---
+
+## Switch between Traefik and Caddy
+
+The running proxy must be stopped before Coolify allows you to switch it. Plan a maintenance window because public routes remain unavailable until the new proxy starts and the resources have compatible labels.
+
+<Steps>
+<Step>
+
+### Prepare resource labels
+
+Confirm that applications and services have labels for the target proxy.
+
+For an application with **Readonly labels** enabled, open its **General** page and use **Reset Labels to Defaults** if its generated labels are outdated. For a Docker Compose application or service, save the Compose configuration so Coolify can generate the current proxy labels.
+
+</Step>
+<Step>
+
+### Stop the current proxy
+
+Open **Servers > your server > Proxy**, then select **Stop Proxy**. Wait until the status changes to **Proxy Exited**.
+
+Stopping the proxy interrupts HTTP and HTTPS traffic for every resource routed through it.
+
+</Step>
+<Step>
+
+### Select the new proxy
+
+Select **Switch Proxy**, confirm the warning, then choose **Traefik** or **Caddy**. Coolify replaces the selected proxy type and generates its default configuration.
+
+Custom changes in the previous proxy configuration may not carry over. Recreate only the settings that the new proxy supports.
+
+</Step>
+<Step>
+
+### Start the proxy and redeploy resources
+
+Select **Start Proxy**. Redeploy or restart each affected application and service so the target proxy labels are present on the running containers.
+
+</Step>
+<Step>
+
+### Verify public routes
+
+Open at least one HTTP and one HTTPS domain on the server. Confirm that HTTPS uses the expected certificate, redirects behave correctly, and the resource responds through the new proxy.
+
+If a route fails, inspect **Servers > your server > Proxy > Logs** and the resource's generated labels.
+
+</Step>
+</Steps>
+
+---
+
+## Configure the selected proxy
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Configure Traefik',
+      href: '/core/networking/proxy/traefik/overview',
+      description: 'Manage Traefik middleware, certificates, dynamic configuration, and traffic routing.',
+      icon: Route,
+    },
+    {
+      title: 'Configure Caddy',
+      href: '/core/networking/proxy/caddy/overview',
+      description: 'Use Coolify-managed Caddy routing and the available Caddy-specific guides.',
+      icon: ShieldSecurity2,
+    },
+    {
+      title: 'Review networking',
+      href: '/core/networking-in-coolify',
+      description: 'Understand how domains, the proxy, Docker networks, and container ports fit together.',
+      icon: Layers,
+    },
+  ]}
+/>

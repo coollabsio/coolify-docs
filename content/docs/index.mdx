@@ -1,7 +1,91 @@
 ---
-title: Coolify
-description: Coolify is an open-source Platform as a Service (PaaS) for self-hosting databases, services, and applications with free SSL, backups, and Git integration.
-full: true
+title: Home
+description: Welcome to Coolify Documentation
 ---
 
-<CoolifyHome />
+import {
+  Rocket2,
+  WindowPointer,
+  Database,
+  MedalStars,
+  Settings,
+} from 'reicon-react';
+
+# Build & deploy with Coolify
+Your handbook to owning and operating your infrastructure with Coolify.
+
+<CoolDocsPage>
+
+<CoolCallout id="get-started" icon={Rocket2} title="Get started">
+
+Set up Coolify and deploy your first app in minutes.
+
+<MediaCardGroup columns={3}>
+  <MediaCard title="Set up Coolify" imageSrc="/docs/images/home/setup-coolify.webp" href="/choose-your-path" />
+  <MediaCard title="Deploy your first app" imageSrc="/docs/images/home/deploy-first-app.webp" href="/deploy-your-first-app" />
+  <MediaCard title="Deploy your first database" imageSrc="/docs/images/home/deploy-first-db.webp" href="/deploy-your-first-database" />
+  <MediaCard title="API" imageSrc="/docs/images/home/api.webp" href="/api/overview" />
+  <MediaCard title="CLI" imageSrc="/docs/images/home/cli.webp" href="/cli/what-is-the-coolify-cli" />
+  <MediaCard title="MCP" imageSrc="/docs/images/home/mcp.webp" href="/mcp/what-is-mcp" />
+</MediaCardGroup>
+
+</CoolCallout>
+
+<CoolCallout icon={WindowPointer} title="Deploy any language. Any framework.">
+
+if Docker can package it, Coolify can run it.
+
+<MediaCardGroup columns={3}>
+  <MediaCard title="Laravel" imageSrc="/docs/images/home/laravel.webp" href="/applications/framework-examples/php/laravel" />
+  <MediaCard title="Next.js" imageSrc="/docs/images/home/nextjs.webp" href="/applications/framework-examples/javascript/nextjs" />
+  <MediaCard title="Spring Boot" imageSrc="/docs/images/home/spring.webp" href="/applications/" />
+  <MediaCard title="Django" imageSrc="/docs/images/home/django.webp" href="/applications/framework-examples/python/django" />
+  <MediaCard title="Ruby on Rails" imageSrc="/docs/images/home/rails.webp" href="/applications/framework-examples/ruby/rails" />
+  <MediaCard title="View all framework guides" icon={WindowPointer} href="/applications" />
+</MediaCardGroup>
+
+</CoolCallout>
+
+<CoolCallout icon={Database} title="Deploy any database">
+
+If your database has a Docker image, Coolify can deploy it.
+
+<MediaCardGroup columns={3}>
+  <MediaCard title="PostgreSQL" imageSrc="/docs/images/home/postgres.webp" href="/databases/postgresql" />
+  <MediaCard title="MySQL" imageSrc="/docs/images/home/mysql.webp" href="/databases/mysql" />
+  <MediaCard title="Redis" imageSrc="/docs/images/home/redis.webp" href="/databases/redis" />
+  <MediaCard title="MongoDB" imageSrc="/docs/images/home/mongodb.webp" href="/databases/mongodb" />
+  <MediaCard title="ClickHouse" imageSrc="/docs/images/home/clickhouse.webp" href="/databases/clickhouse" />
+  <MediaCard title="View all database guides" icon={Database} href="/databases" />
+</MediaCardGroup>
+
+</CoolCallout>
+
+<CoolCallout icon={Settings} title="Deploy any service">
+
+Deploy **300+** open-source software with our **One-click service** templates.
+
+<MediaCardGroup columns={3}>
+  <MediaCard title="Appwrite" imageSrc="/docs/images/home/appwrite.webp" href="/services/appwrite" />
+  <MediaCard title="Grafana" imageSrc="/docs/images/home/grafana.webp" href="/services/grafana" />
+  <MediaCard title="Elastic Search" imageSrc="/docs/images/home/elastic-search.webp" href="/services/elasticsearch" />
+  <MediaCard title="WordPress" imageSrc="/docs/images/home/wordpress.webp" href="/services/wordpress" />
+  <MediaCard title="Jellyfin" imageSrc="/docs/images/home/jellyfin.webp" href="/services/jellyfin" />
+  <MediaCard title="View all service templates" icon={Settings} href="/services/all" />
+</MediaCardGroup>
+
+</CoolCallout>
+
+<CoolCallout icon={MedalStars} title="Help & Support">
+
+Get help from the community and the Coolify team.
+
+<MediaCardGroup columns={3}>
+  <MediaCard title="Discord community" imageSrc="/docs/images/home/discord-community.webp" href="/support" />
+  <MediaCard title="Github discussions" imageSrc="/docs/images/home/github-discussions.webp" href="https://github.com/coollabsio/coolify/discussions" />
+  <MediaCard title="Email" imageSrc="/docs/images/home/email.webp" href="/support" />
+</MediaCardGroup>
+
+</CoolCallout>
+
+</CoolDocsPage>

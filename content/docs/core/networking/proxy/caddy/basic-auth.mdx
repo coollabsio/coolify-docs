@@ -1,0 +1,132 @@
+---
+title: Basic Authentication
+description: Protect Coolify applications with Caddy HTTP basic authentication.
+---
+
+# Basic authentication
+
+HTTP basic authentication requires a username and password before Caddy forwards a request to an application. Coolify can generate the required Caddy label and bcrypt hash for standard applications.
+
+<Callout type="info" title="Use application authentication for sensitive systems">
+HTTP basic authentication protects a route with one shared credential. It does not replace application accounts, role-based access, multi-factor authentication, or single sign-on.
+</Callout>
+
+## Protect a resource
+
+Choose the path that matches how the resource is deployed.
+
+<Tabs id="caddy-basic-auth-resource-type" items={['Standard application', 'Docker Compose or service']}>
+<Tab value="Standard application">
+
+### Automatic
+<Steps>
+<Step>
+
+#### Open the application settings
+
+Open the application, select **Configuration > General**, then find **HTTP Basic Authentication**.
+
+</Step>
+<Step>
+
+#### Add the credentials
+
+Enable **HTTP Basic Authentication**, then enter a **Username** and **Password**. Save the application settings.
+
+Coolify hashes the password and adds a `caddy_<index>.basicauth.<username>` label for each generated Caddy route.
+
+</Step>
+<Step>
+
+#### Redeploy and verify
+
+Redeploy the application. Open its domain in a private browser window and confirm that the browser requests the new credentials before loading the application.
+
+</Step>
+</Steps>
+### Manual
+
+<Steps>
+<Step>
+#### Generate credentials
+    Generate a bcrypt hash with the Caddy CLI:
+
+    ```bash
+    caddy hash-password --plaintext '<password>'
+    ```
+</Step>
+<Step>
+#### Add the label
+Open the application **General** page, find **Container Labels**, then disable **Readonly labels**. Add one `basicauth` label matching the index Coolify already generated for you domain:
+
+```ini
+caddy_0.basicauth.<username>="<bcrypt-hash>" # [!code ++][!code focus]
+caddy_0.encode=zstd gzip
+caddy_0.handle.0_reverse_proxy={{upstreams 3000}}
+caddy_0.handle=/*
+caddy_0.header=-Server
+caddy_0.try_files={path} /index.html /index.php
+caddy_0=https://domain.com # [!code focus]
+caddy_ingress_network=coolify
+```
+</Step>
+<Step>
+
+    #### Redeploy and verify
+
+    Redeploy the application. Open its domain in a private browser window and confirm that the browser requests the new credentials before loading the application.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Docker Compose or service">
+
+Generate a bcrypt hash with the Caddy CLI:
+
+```bash
+caddy hash-password --plaintext '<password>'
+```
+
+Add the result to the service labels. The `caddy_0` prefix must match the generated Caddy route index for the domain you want to protect.
+
+```yaml
+services:
+  app:
+    image: nginx:alpine
+    labels: # [!code ++:2][!code focus:2]
+      - 'caddy_0.basicauth.<username>="<caddy-bcrypt-hash>"'
+```
+
+Save and redeploy the resource. Open the domain in a private browser window to verify the prompt and credentials.
+
+<Callout type="warning" title="Generate the hash with Caddy">
+Do not place the plaintext password in the label. Caddy expects a supported password hash; `caddy hash-password` generates the correct format.
+</Callout>
+
+</Tab>
+</Tabs>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="The login prompt does not appear">
+
+Confirm the resource was redeployed after enabling authentication or changing its labels.
+
+</Accordion>
+
+<Accordion title="The credentials are rejected">
+
+Generate a new hash with `caddy hash-password`, replace the existing label value, and redeploy the resource. Do not use the plaintext password or a hash generated for a different authentication format.
+
+</Accordion>
+
+<Accordion title="The Caddy authentication label is not applied">
+
+Confirm the `caddy_0` route index matches the domain label on the running container. Inspect **Servers > your server > Proxy > Logs** for Caddyfile adaptation or authentication errors.
+
+</Accordion>
+
+</Accordions>

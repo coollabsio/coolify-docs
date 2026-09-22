@@ -1,0 +1,99 @@
+---
+title: Volume mounts
+description: Add a named Docker volume to a Coolify application or database and verify that its data survives redeployments.
+---
+
+# Volume mounts
+
+A volume mount stores data in a named Docker volume on the resource's deployment server. Docker manages the volume's directory, and Coolify mounts the volume at the **Destination Path** inside each replacement container.
+
+Choose a volume mount when the data must survive redeployments but you do not need it at a specific server filesystem path.
+
+## When to use a volume mount
+
+Volume mounts are a good default for:
+
+- application uploads and generated files
+- stateful application data
+- database data directories
+- caches that must survive container replacement
+
+Do not use a volume for temporary build files or caches that the application can safely recreate. Persistent data consumes disk space until you remove or clean up the volume.
+
+## Add a volume mount
+
+Before adding the mount, find the exact directory where the application writes its data. Check the image or application documentation instead of assuming that the path starts with `/app`.
+
+1. Open the application or database in Coolify.
+2. Select **Configuration** > **Persistent Storage**.
+3. Select **Add** > **Volume Mount**.
+4. Enter a short **Name**, such as `uploads`.
+5. Leave **Source Path** empty. Entering a source path creates a bind mount instead of a named volume.
+6. Enter the **Destination Path** inside the container. For example, use `/app/uploads` only when the application writes uploads to that exact path.
+7. Select **Add**.
+8. Redeploy the resource so Docker creates the new container with the mount attached.
+
+Coolify prefixes the name with the resource UUID to prevent name collisions on the deployment server. The name shown by `docker volume ls` is therefore longer than the value entered in **Name**.
+
+Verify the mount by letting the application write a test file under the destination path. Redeploy the resource again and confirm that the application can still read the file.
+
+## Use volume mounts with preview deployments
+
+Application preview deployments use separate storage by default. Coolify adds a `-pr-N` suffix to the volume name, where `N` is the pull request number.
+
+After creating a mount, keep **Add suffix for PR deployments** enabled when each preview should have isolated data. Disable it only when the main application and every preview can safely share the same volume.
+
+<Callout type="warning" title="Shared preview data can be changed by several deployments">
+Sharing a volume gives the main application and preview containers access to the same files. A preview can overwrite production data or apply an incompatible data change.
+</Callout>
+
+## Define volumes in Docker Compose
+
+For a Docker Compose application or one-click service, define the named volume in the Compose file:
+
+```yaml
+services:
+  app:
+    image: example/app:latest
+    volumes:
+      - app-data:/app/data
+
+volumes:
+  app-data:
+```
+
+Replace `/app/data` with the exact data directory used by the image. Save the Compose file and reload its configuration in Coolify.
+
+Coolify prefixes parsed volume names to avoid collisions. The **Persistent Storage** page displays the resulting mount as read-only because the Compose file owns its configuration. Edit the Compose file when the source or destination needs to change.
+
+## Back up a volume
+
+For an application, Coolify can create scheduled file-level archives of a Volume Mount, including a Volume Mount with a **Source Path**. You can keep archives on the deployment server and optionally copy them to S3-compatible storage.
+
+Read [Storage mount backups](/core/persistent-storage/storage-mounts/backups) to choose a target, reduce the risk of an inconsistent archive, set retention, and verify each execution.
+
+<Callout type="warning" title="Use an application-aware backup for databases">
+A file-level volume archive created while a database is writing may be inconsistent. Use the database engine's supported backup workflow for database data. If you also archive its storage, stop writes or enable **Stop containers while creating the archive**.
+</Callout>
+
+Coolify does not let you delete a volume while its storage backup schedule exists. Delete the schedule and its archives first, then delete the volume only after confirming that you no longer need its data.
+
+## Inspect a volume
+
+Connect over SSH to the deployment server, then list its Docker volumes:
+
+```bash
+docker volume ls
+```
+
+Inspect the volume after finding its actual name:
+
+```bash
+docker volume inspect <actual-volume-name>
+```
+
+The inspection output includes Docker's server-side mountpoint. Avoid editing files inside Docker's internal volume directory while the application is running.
+
+<Callout type="error" title="Docker cleanup can permanently delete volume data">
+An unused volume can still contain important data. Keep **Delete Unused Volumes** disabled unless you have identified and backed up every volume that cleanup may remove. Read [Automated Docker Cleanup](/core/infrastructure/servers/automated-docker-cleanup) before enabling it.
+</Callout>

@@ -1,0 +1,56 @@
+---
+title: Cursor Origin
+description: Deploy a private Cursor Origin repository with Coolify by sharing a deploy key between Coolify and Origin.
+---
+
+# Cursor Origin
+
+Coolify can deploy a private [Cursor Origin](https://cursor.com/origin) repository over SSH. Store the private key in Coolify, add the matching SSH key to Origin, and then create the application with the deploy-key source.
+
+<Steps>
+<Step>
+
+### Add a deploy key to Coolify
+
+1. Open **Keys & Tokens** in the Coolify dashboard.
+2. Select **Private keys**, then select **+ Add**.
+3. Generate a new SSH key or paste an existing private key.
+4. Save the key.
+
+Keep the key available while configuring Origin. Origin must use the same key that you stored in Coolify.
+
+</Step>
+<Step>
+
+### Add the key to Origin
+
+From the repository directory, run:
+
+```bash
+origin ssh-key add
+```
+
+Follow the Origin CLI prompts and add the SSH key that corresponds to the private key saved in Coolify.
+
+</Step>
+<Step>
+
+### Create the application in Coolify
+
+1. Open your project in Coolify and select **+ New**.
+2. Select **Private Repository (with deploy key)**.
+3. Choose the server that will run the application.
+4. Select the private key that you saved in the first step.
+5. Enter the repository's SSH clone URL and continue.
+6. Configure the application, then deploy it.
+
+</Step>
+</Steps>
+
+<Callout type="info" title="Use the SSH repository URL">
+
+The deploy key authenticates an SSH connection. An HTTPS repository URL will not use it.
+
+</Callout>
+
+For more information about this source type, see [Deploy keys](/applications/sources/deploy-keys). For build and application settings, see [Applications](/applications).

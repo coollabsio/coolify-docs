@@ -1,0 +1,98 @@
+---
+title: Bind mounts
+description: Map a specific directory on a Coolify deployment server into an application or database container.
+---
+
+# Bind mounts
+
+A bind mount maps a directory on the deployment server directly to a path inside the container.
+
+The **Source Path** is the directory on the server. The **Destination Path** is where the same files appear inside the container. Changes made at either location affect the same data.
+
+## When to use a bind mount
+
+Use a bind mount when you need:
+
+- a predictable server path for backups or external tools
+- an existing directory mounted into a container
+- direct access to files over SSH
+- a directory shared with another carefully coordinated process on the same server
+
+Use a [volume mount](/core/persistent-storage/storage-mounts/volume-mounts) when you do not need a specific server path. Docker-managed volumes reduce the chance of choosing an unsafe path or incorrect server permissions.
+
+## Bind mount options
+
+Coolify provides two ways to create a directory bind mount for standard applications and standalone databases:
+
+| Workflow | Fields | <span className="whitespace-nowrap">Dashboard location</span> | Behavior |
+| :--- | :--- | :--- | :--- |
+| **Volume Mount** with a **Source Path** | **Name**, **Source Path**, **Destination Path** | **Volumes** | Uses the source directory instead of creating a named Docker volume |
+| **Directory Mount** | **Source Directory**, **Destination Directory** | **Directories** | Creates the source directory when needed and lets Coolify manage the directory record separately |
+
+Both workflows produce a Docker bind mount. Use **Volume Mount** with a source path when you want the mapping grouped with the resource's other volumes. Use **Directory Mount** when you want it listed with Coolify-managed files and directories.
+
+## Add a bind mount
+
+This example maps `/srv/my-app/uploads` on the deployment server to `/app/uploads` in the container.
+
+1. Connect over SSH to the deployment server and create `/srv/my-app/uploads`.
+2. Set its owner and permissions for the user that the application image runs as.
+3. Open the application or database in Coolify.
+4. Select **Configuration** > **Persistent Storage**.
+5. Select **Add** > **Volume Mount**.
+6. Enter a **Name**, such as `uploads`.
+7. Enter `/srv/my-app/uploads` as the **Source Path**.
+8. Enter `/app/uploads` as the **Destination Path** only if the application writes uploads there.
+9. Select **Add**, then redeploy the resource.
+
+Upload or create a test file through the application. Confirm that it appears under `/srv/my-app/uploads` on the deployment server. Redeploy once more and confirm that the application can still read it.
+
+<Callout type="warning" title="Choose a dedicated source directory">
+Do not mount `/`, `/etc`, `/var/lib/docker`, `/data/coolify`, or another broad system directory into an application container. Use a dedicated directory that contains only the files the resource needs.
+</Callout>
+
+## Prepare permissions
+
+Docker does not translate file ownership between the server and the container. A process running as user ID `1000` in the container still accesses the source files as user ID `1000` on the server.
+
+Check the image documentation for its runtime user, then set the source directory owner and permissions accordingly. If the application reports `Permission denied`, inspect the numeric owner on the server and the user running inside the container before making the directory globally writable.
+
+## Use bind mounts with preview deployments
+
+For application preview deployments, Coolify adds `-pr-N` to the bind source path by default. A pull request numbered `12` therefore uses `/srv/my-app/uploads-pr-12` instead of `/srv/my-app/uploads`.
+
+Keep **Add suffix for PR deployments** enabled to isolate preview data. Disable it only when the source contains read-only configuration or the application is explicitly designed for concurrent access to the same files.
+
+## Define bind mounts in Docker Compose
+
+For a Docker Compose application or one-click service, define the server path in the Compose file:
+
+```yaml
+services:
+  app:
+    image: example/app:latest
+    volumes:
+      - /srv/my-app/uploads:/app/uploads
+```
+
+Create `/srv/my-app/uploads` with the correct permissions on the deployment server before deploying. Coolify parses the mount and displays it under **Persistent Storage**, but the Compose file remains the source of truth.
+
+For repository-relative directories, read the [Docker Compose storage guide](/applications/builds/docker-compose#storage). Coolify resolves supported relative sources into the resource's configuration directory on the deployment server.
+
+## Back up and move bind-mounted data
+
+For an application, Coolify can schedule file-level archives for both bind mount workflows on this page: a **Volume Mount** with a **Source Path** and a **Directory Mount**. Read [Storage mount backups](/core/persistent-storage/storage-mounts/backups) to configure local archives, an optional S3 copy, and retention.
+
+For a manual backup or server move, copy the source directory on the deployment server. The container destination is only another view of those same files.
+
+When moving the resource to another server:
+
+1. Stop application writes.
+2. Copy the source directory to the same path on the destination server, or update the mount to a new absolute path.
+3. Preserve the required numeric owners and permissions.
+4. Deploy the resource on the destination server.
+5. Verify the application can read and write the mounted data.
+
+<Callout type="error" title="Deleting a Directory Mount can delete its contents">
+The Directory Mount deletion dialog can remove the source directory and all its contents from the deployment server. Back up the directory and read every confirmation option before deleting the mount. If the directory has a storage backup schedule, delete that schedule and its archives before Coolify will let you delete the mount.
+</Callout>

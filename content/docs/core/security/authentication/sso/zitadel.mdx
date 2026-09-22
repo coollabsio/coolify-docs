@@ -1,0 +1,117 @@
+---
+title: Zitadel
+description: Configure Zitadel SSO for Coolify with a confidential web application, client secret, and instance base URL.
+---
+
+# Configure Zitadel SSO
+
+Create a confidential web application in Zitadel so Coolify can use the authorization code flow and request the user's OpenID profile and email address.
+
+<Callout type="warning" title="Requires Coolify v4.3.0">
+  Zitadel SSO is available in Coolify v4.3.0 or above
+</Callout>
+
+<Callout type="warning" title="Example data">
+Replace these values while following the guide:
+
+- **Coolify callback:** `https://coolify.shadowarcanist.com/auth/zitadel/callback`
+- **Zitadel Base URL:** `https://id.shadowarcanist.com`
+</Callout>
+
+## Set up Zitadel SSO
+
+<Steps>
+<Step>
+
+### Create or select a Zitadel project
+
+Open the Zitadel Console, select the organization that will own the integration, then create or open a project for Coolify.
+
+Use project roles and user grants when only selected organization members should access Coolify.
+
+See Zitadel's [OIDC login guide](https://zitadel.com/docs/guides/integrate/login/oidc/login-users) if the Console navigation differs.
+
+</Step>
+<Step>
+
+### Add a web application
+
+In the project, select **New Application**, enter a name such as `Coolify`, and choose **Web** as the application type.
+
+Choose the authorization code flow with a client secret. For the token endpoint authentication method, select **POST** so the client ID and secret are sent with the token request.
+
+</Step>
+<Step>
+
+### Register the callback URL
+
+Add this redirect URI:
+
+```txt
+https://coolify.shadowarcanist.com/auth/zitadel/callback
+```
+
+Keep development mode disabled for a production HTTPS domain, then finish creating the application.
+
+Coolify requests the `openid`, `profile`, and `email` scopes.
+
+</Step>
+<Step>
+
+### Save the Zitadel credentials
+
+Copy the generated **Client ID** and **Client Secret** and store the secret securely.
+
+Record the Zitadel instance origin as the **Base URL**, for example `https://id.shadowarcanist.com`. Do not append `/oauth/v2/authorize`, `/oauth/v2/token`, or `/oidc/v1/userinfo`.
+
+</Step>
+<Step>
+
+### Configure Zitadel in Coolify
+
+Open **Settings > OAuth** and find **Zitadel**.
+
+| Coolify field | Zitadel value |
+| :--- | :--- |
+| **Client ID** | Zitadel web application client ID |
+| **Client Secret** | Zitadel web application client secret |
+| **Redirect URI** | `https://coolify.shadowarcanist.com/auth/zitadel/callback` |
+| **Base URL** | Zitadel instance origin |
+
+Select **Save**, then turn on **Enabled** for Zitadel.
+
+<Callout type="warning" title="Base URL is required for sign-in">
+Coolify may allow the provider card to be enabled before **Base URL** is filled. Zitadel sign-in cannot work without it because Coolify builds the authorization, token, and user information endpoints from this value.
+</Callout>
+
+</Step>
+<Step>
+
+### Verify Zitadel sign-in
+
+Open the Coolify login page in a private browser window and select **Login with Zitadel**. Complete authentication, then confirm that Coolify opens the account matching the Zitadel email address.
+
+Test a user without the required project grant or provider access policy and confirm that Zitadel blocks access.
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="Zitadel reports an invalid redirect URI">
+
+Open the web application and confirm that its redirect URI exactly matches the public Coolify domain and `/auth/zitadel/callback` path.
+
+</Accordion>
+<Accordion title="The token exchange fails">
+
+Confirm that the web application uses a client secret and the **POST** token endpoint authentication method. Then verify that the client secret in Coolify has not been rotated.
+
+</Accordion>
+<Accordion title="Coolify cannot reach Zitadel">
+
+Confirm that **Base URL** is the Zitadel instance origin and is reachable from the Coolify server. Do not enter a console page or OAuth endpoint path.
+
+</Accordion>
+</Accordions>

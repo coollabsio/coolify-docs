@@ -1,0 +1,93 @@
+---
+title: Dashboard
+description: Expose the Traefik dashboard through a dedicated authenticated domain in Coolify.
+---
+
+# Traefik dashboard
+
+Coolify enables Traefik's dashboard API in secure mode, but does not publish it on a domain. Create a dynamic router to access the dashboard through HTTPS and protect it with basic authentication.
+
+<Callout type="warning" title="Use a dedicated dashboard hostname">
+Do not route the Traefik dashboard at `/api` on the same hostname as the Coolify dashboard. Traefik's dashboard uses `/api`, which conflicts with Coolify's API routes. Use a separate hostname such as `traefik.example.com`.
+</Callout>
+
+## Create dashboard credentials
+
+Generate a bcrypt credential with `htpasswd`:
+
+```bash
+htpasswd -nbB <username> '<password>'
+```
+
+Copy the complete `<username>:<hash>` output. Dynamic YAML does not require Docker Compose dollar-sign escaping.
+
+## Add the dashboard route
+
+Open **Servers > your server > Proxy > Dynamic Configurations**, select **Add**, and create `traefik-dashboard.yaml`:
+
+```yaml
+http:
+  middlewares:
+    dashboard-auth:
+      basicAuth:
+        users:
+          - '<username>:<bcrypt-hash>'
+    dashboard-https-redirect:
+      redirectScheme:
+        scheme: https
+
+  routers:
+    dashboard-http:
+      rule: 'Host(`traefik.example.com`)'
+      entryPoints:
+        - http
+      middlewares:
+        - dashboard-https-redirect
+      service: api@internal
+
+    dashboard-https:
+      rule: 'Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))'
+      entryPoints:
+        - https
+      middlewares:
+        - dashboard-auth
+      service: api@internal
+      tls:
+        certResolver: letsencrypt
+```
+
+Replace the hostname and credential, then save the file. Point the hostname's DNS record to this server.
+
+Open `https://traefik.example.com/dashboard/` and sign in with the configured credential.
+
+## Do not use insecure mode on a public server
+
+Setting `--api.insecure=true` exposes the dashboard directly on Traefik's API port without authentication. Coolify maps port `8080` in the default Traefik configuration, so enabling insecure mode can publish the dashboard through the server firewall.
+
+Use the authenticated HTTPS route above instead. If you temporarily enable insecure mode for isolated debugging, restrict port `8080` at the firewall and remove `--api.insecure=true` immediately afterward.
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="The dashboard page or its assets do not load">
+
+Open `/dashboard/` with the trailing slash. Traefik's dashboard redirects and assets expect it.
+
+Inspect **Servers > your server > Proxy > Logs** for dynamic configuration parsing errors.
+
+</Accordion>
+
+<Accordion title="The dashboard conflicts with the Coolify API">
+
+Confirm the Traefik dashboard uses a different hostname from the Coolify dashboard. Both products use an `/api` path, so they cannot share the same hostname with this router configuration.
+
+</Accordion>
+
+<Accordion title="The dashboard hostname does not resolve">
+
+Confirm its DNS record points to the server running this Traefik proxy and that ports `80` and `443` can reach the server.
+
+</Accordion>
+
+</Accordions>

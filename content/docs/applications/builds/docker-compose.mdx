@@ -1,0 +1,470 @@
+---
+title: Docker Compose
+description: Deploy Docker Compose from a Git repository or a definition stored directly in Coolify.
+---
+
+import { BranchUp, Layers } from 'reicon-react';
+
+# Docker Compose
+
+Coolify supports Docker Compose from a Git repository or from a definition pasted directly into Coolify.
+
+These paths create different resource types:
+
+| Path | Resource created | Compose definition | Git automation |
+| :--- | :--- | :--- | :--- |
+| Git repository with the **Docker Compose** build pack | Application | Stored in the repository. | Supports branch-based deployments, webhooks, and previews. |
+| **Docker Compose Empty** | User-defined Service | Pasted into and stored by Coolify. | Has no Git source, branch, or pull-request events. |
+
+In both paths, the Compose definition controls service images, builds, commands, environment references, volumes, health checks, dependencies, and Compose networking. Coolify parses the definition and adds the configuration required to manage the resource.
+
+## Create the Docker Compose resource
+
+<Tabs id="docker-compose-source" items={['Git repository', 'Docker Compose Empty']}>
+<Tab value="Git repository" icon={BranchUp}>
+
+Use this path when the Compose definition belongs in version control and deployments should follow repository changes.
+
+<Steps>
+<Step>
+
+### Choose the source
+
+Open the target project and environment, then select **+ New**.
+
+<ZoomImage src="/docs/images/builds/packs/compose/1.webp" alt="Create New Resource button in a Coolify project" />
+
+Choose a public repository, deploy key, or supported Git App. The repository must contain the Compose file.
+
+<ZoomImage src="/docs/images/builds/packs/compose/2.webp" alt="Git repository source options for a Docker Compose application" />
+
+For a public repository, paste its HTTPS URL and select **Check Repository**.
+
+<ZoomImage src="/docs/images/builds/packs/compose/3.webp" alt="Public repository URL field for a Docker Compose application" />
+
+</Step>
+<Step>
+
+### Select Docker Compose
+
+Under **Configuration > General**, select **Docker Compose** as the **Build Pack**.
+
+<ZoomImage src="/docs/images/builds/packs/compose/4.webp" alt="Docker Compose option in the Build Pack selector" />
+
+Set:
+
+- **Base Directory** to the repository directory that contains the application
+- **Docker Compose Location** to the Compose file path relative to the base directory
+
+Coolify combines both values when locating the file.
+
+<ZoomImage src="/docs/images/builds/packs/compose/5.webp" alt="Branch, Base Directory, and Docker Compose Location fields" />
+
+</Step>
+<Step>
+
+### Load and review the definition
+
+Save the configuration and review **Docker Compose Content**. For Git-based applications, edit the source file in the repository and reload the application configuration instead of treating the rendered content as the primary copy.
+
+Confirm every service has the required image or build definition, environment references, volumes, and health check.
+
+</Step>
+<Step>
+
+### Configure public services
+
+For each HTTP service that should be public, enter a domain in the service's **Domains** field.
+
+If the service listens on port `3000`, include that internal port in the value:
+
+```sh
+https://app.example.com:3000
+```
+
+The public request still uses normal HTTP or HTTPS ports. The suffix tells the Coolify proxy which container port receives the request.
+
+</Step>
+<Step>
+
+### Deploy and verify
+
+Select **Deploy**. Open **Deployments** and wait for the operation to complete.
+
+Verify each public domain and inspect **Logs** for services that do not start or become healthy.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Docker Compose Empty" icon={Layers}>
+
+Use this path to create a user-defined Service from a Compose definition without connecting a Git repository.
+
+<Steps>
+<Step>
+
+### Select Docker Compose Empty
+
+Open the target project and environment, select **+ New**, then select **Docker Compose Empty**.
+
+Choose the deployment server and destination when Coolify asks for them.
+
+</Step>
+<Step>
+
+### Enter the Compose definition
+
+Paste the complete YAML definition into **Docker Compose file**.
+
+The definition must include every service, image or build instruction, environment reference, volume, health check, and dependency required by the stack.
+
+</Step>
+<Step>
+
+### Create the Service
+
+Select **Save**. Coolify validates and parses the definition, creates a user-defined Service, and opens its configuration.
+
+Review the detected services, generated environment variables, domains, and storage before deploying.
+
+</Step>
+<Step>
+
+### Deploy and verify
+
+Select **Deploy**, then inspect the deployment logs for each service in the definition.
+
+Confirm that the required containers are running and healthy. Open every configured public domain and verify communication between dependent services.
+
+</Step>
+</Steps>
+
+To change the definition later, open the Service configuration and select **Edit Compose File**. Save the change, then redeploy the Service.
+
+Because this resource has no Git source, repository webhooks and pull-request previews do not apply. Read [Services](/services) for the user-defined Service lifecycle.
+
+</Tab>
+</Tabs>
+
+## Configure the Compose definition
+
+For a Git-based Application, edit the Compose file in the repository and redeploy the selected commit. For **Docker Compose Empty**, use **Edit Compose File** in the Service configuration.
+
+<span id="defining-environment-variables" />
+<span id="shared-environment-variables" />
+
+## Environment variables
+
+Values under a Compose service's `environment:` section can come directly from the Compose file or from Coolify.
+
+```yaml
+services:
+  api:
+    environment:
+      APP_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
+```
+
+`APP_ENV` is fixed to `production` in the Compose definition. It is passed to the container, but Coolify does not create an editable variable for it.
+
+`${DATABASE_URL}` tells Coolify to create **DATABASE_URL** under the resource's **Environment Variables**. Enter the connection string there instead of committing it to the Compose file.
+
+Both the list and mapping forms work:
+
+```yaml
+services:
+  api:
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+```
+
+### Defaults and required values
+
+Compose variable operators control what happens when a value has not been entered:
+
+| Syntax | Behavior | Typical use |
+| :--- | :--- | :--- |
+| `${VARIABLE}` | Creates an empty, editable variable in Coolify. | A value that can be empty or will be supplied later. |
+| `${VARIABLE:-text}` | Creates the variable with `text` as its initial value. Compose uses the fallback when the variable is unset or empty. | An optional setting with a safe default. |
+| `${VARIABLE-text}` | Creates the variable with `text` as its initial value. Compose uses the fallback only when the variable is unset. | A setting where an intentionally empty value must be preserved. |
+| `${VARIABLE:?}` | Marks the variable as required. Coolify highlights it when empty and prevents deployment until a value is entered. | A credential or connection value the stack cannot start without. |
+| `${VARIABLE?}` | Also marks the variable as required in Coolify. In Compose interpolation, the non-colon form distinguishes an unset value from an empty value. | Prefer `${VARIABLE:?}` unless the Compose distinction is intentional. |
+
+For example:
+
+```yaml
+services:
+  api:
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      API_KEY: ${API_KEY:?}
+```
+
+After Coolify loads the definition, **LOG_LEVEL** starts with `info`, while **DATABASE_URL** and **API_KEY** wait for values. **API_KEY** must have a value before the resource can deploy.
+
+Coolify keeps an existing value when the Compose definition is loaded again. Changing `LOG_LEVEL` from `info` to `debug` in the dashboard is not overwritten merely because the Compose file still contains `${LOG_LEVEL:-info}`.
+
+Defaults can reference another Compose or generated variable:
+
+```yaml
+services:
+  api:
+    environment:
+      PUBLIC_API_URL: ${PUBLIC_API_URL:-${SERVICE_URL_API}/v1}
+```
+
+Coolify creates **PUBLIC_API_URL** and retains the nested `SERVICE_URL_API` reference used by its default. Keep the braces balanced when nesting expressions.
+
+### Reuse one variable
+
+Reference the same key anywhere in the definition when several services or fields need one value:
+
+```yaml
+services:
+  api:
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+  worker:
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+```
+
+Both containers receive the value saved as **DATABASE_URL** in Coolify.
+
+The same substitution works in other Compose fields, including a bind-mount source:
+
+```yaml
+services:
+  api:
+    volumes:
+      - /data/${TENANT_NAME}:/app/data
+```
+
+### Use a shared variable
+
+Shared variables can be assigned to the corresponding application variable with reference syntax such as `{{environment.DATABASE_URL}}`.
+
+First declare `${DATABASE_URL}` in the Compose definition. Then open **Environment Variables** and set its value to the shared-variable reference:
+
+```dotenv
+DATABASE_URL={{environment.DATABASE_URL}}
+```
+
+Read [Environment variables](/applications/configuration/environment-variables) for build/runtime scope and secret handling.
+
+<span id="coolifys-magic-environment-variables" />
+
+### Generated stack values
+
+Coolify can generate a domain, username, password, or random value when the Compose definition contains a variable named `SERVICE_<TYPE>_<ID>`.
+
+`<ID>` identifies what the value belongs to. For `SERVICE_URL` and `SERVICE_FQDN`, use the Compose service name so Coolify can assign the generated domain to that service. Replace hyphens or dots in the service name with underscores in the variable. Reusing the same complete variable name returns the same stored value to every service in the resource.
+
+| Pattern | Generated value | Size |
+| :--- | :--- | :--- |
+| `SERVICE_URL_<ID>` | URL based on the configured wildcard domain. | Not applicable |
+| `SERVICE_FQDN_<ID>` | Domain name from the generated URL, without the scheme. | Not applicable |
+| `SERVICE_USER_<ID>` | Random alphanumeric username. | 16 characters |
+| `SERVICE_LOWERCASEUSER_<ID>` | Random lowercase alphanumeric username. | 16 characters |
+| `SERVICE_PASSWORD_<ID>` | Random password without symbols. | 32 characters |
+| `SERVICE_PASSWORD_64_<ID>` | Random password without symbols. | 64 characters |
+| `SERVICE_PASSWORDWITHSYMBOLS_<ID>` | Random password with symbols. | 32 characters |
+| `SERVICE_PASSWORDWITHSYMBOLS_64_<ID>` | Random password with symbols. | 64 characters |
+| `SERVICE_BASE64_<ID>` or `SERVICE_BASE64_32_<ID>` | Random alphanumeric string. Despite its name, this value is not Base64-encoded. | 32 characters |
+| `SERVICE_BASE64_64_<ID>` | Random alphanumeric string, not Base64-encoded. | 64 characters |
+| `SERVICE_BASE64_128_<ID>` | Random alphanumeric string, not Base64-encoded. | 128 characters |
+| `SERVICE_REALBASE64_<ID>` or `SERVICE_REALBASE64_32_<ID>` | Base64 encoding of random bytes. | 32 random bytes before encoding |
+| `SERVICE_REALBASE64_64_<ID>` | Base64 encoding of random bytes. | 64 random bytes before encoding |
+| `SERVICE_REALBASE64_128_<ID>` | Base64 encoding of random bytes. | 128 random bytes before encoding |
+| `SERVICE_HEX_32_<ID>` | Random hexadecimal string. | 32 characters |
+| `SERVICE_HEX_64_<ID>` | Random hexadecimal string. | 64 characters |
+| `SERVICE_HEX_128_<ID>` | Random hexadecimal string. | 128 characters |
+
+Generate and reuse credentials by referencing the generated names:
+
+```yaml
+services:
+  database:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${SERVICE_USER_POSTGRES}
+      POSTGRES_PASSWORD: ${SERVICE_PASSWORD_64_POSTGRES}
+
+  api:
+    image: example/api:latest
+    environment:
+      DATABASE_USER: ${SERVICE_USER_POSTGRES}
+      DATABASE_PASSWORD: ${SERVICE_PASSWORD_64_POSTGRES}
+      SESSION_SECRET: ${SERVICE_REALBASE64_64_API}
+```
+
+Coolify generates one PostgreSQL username and password, then supplies the same pair to both services. The API receives a separate Base64-encoded session secret.
+
+### Generate domains for services
+
+`SERVICE_URL_<ID>` includes the scheme. `SERVICE_FQDN_<ID>` contains the domain name without the scheme. Add a numeric suffix when the proxy should route to a specific internal container port, and assign a path as the variable value when the generated URL needs a path:
+
+
+```yaml
+services:
+  api:
+    environment:
+      SERVICE_URL_API_3000: /v1
+      PUBLIC_API_URL: ${SERVICE_URL_API_3000}
+      PUBLIC_API_HOST: ${SERVICE_FQDN_API_3000}
+```
+
+With a configured wildcard domain, Coolify generates the URL for the resource, appends `/v1`, and configures routing to port `3000` inside the `api` container. The public URL still uses the normal HTTP or HTTPS port.
+
+Use the matching service name in each generated domain variable:
+
+```yaml
+services:
+  frontend:
+    environment:
+      SERVICE_URL_FRONTEND: /
+  api:
+    environment:
+      SERVICE_URL_API_8080: /v1
+```
+
+Generated values persist between deployments and appear under **Environment Variables**. Passwords and random values can be edited there. Coolify manages the generated URL and FQDN values from the resource's domain configuration.
+
+## Storage
+
+Define Compose-owned volumes in the Compose file:
+
+```yaml
+services:
+  app:
+    image: example/app:latest
+    volumes:
+      - app-data:/app/data
+
+volumes:
+  app-data:
+```
+
+Coolify displays parsed storage under **Configuration > Persistent Storage**, but Compose-owned fields are read-only there. Change them in the Compose definition.
+
+Coolify also supports `is_directory: true` and `content:` extensions for repository-relative bind sources. Use these only when the deployment must create the directory or file.
+
+<Callout type="warning" title="A file bind source must exist">
+
+For a file bind mount, create the source file before deployment or use `content:` so Coolify creates it. When the file comes from the Git repository, enable **Configuration > General > Preserve Repository During Deployment** so it remains available in the deployment directory.
+
+If Docker receives a missing file source, it can create a directory at that path. The container then fails to start with an error such as `not a directory: unknown`.
+
+</Callout>
+
+Create a repository-relative directory before the container starts:
+
+```yaml
+services:
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    volumes:
+      - type: bind
+        source: ./srv
+        target: /srv
+        is_directory: true
+```
+
+Create a repository-relative file with predefined content:
+
+```yaml
+services:
+  database:
+    image: postgres:17
+    volumes:
+      - type: bind
+        source: ./init/99-roles.sql
+        target: /docker-entrypoint-initdb.d/99-roles.sql
+        content: |
+          CREATE ROLE app;
+```
+
+Read [Persistent storage](/core/persistent-storage/storage-mounts/overview) before choosing paths or backup behavior.
+
+If a file bind mount fails with `not a directory: unknown`, inspect the source path on the deployment server. Confirm that it exists as a file rather than a directory, then redeploy the resource.
+
+## Health checks
+
+Define health checks in the image Dockerfile or Compose service. Git-based Docker Compose Applications do not use the standard Application **Healthcheck** page, and user-defined Services also use the checks from their Compose definition.
+
+```yaml
+services:
+  api:
+    image: example/api:latest
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+```
+
+Use `exclude_from_hc: true` for a one-time service, such as a migration container, that should not determine the overall application health.
+
+<span id="connect-to-predefined-networks" />
+
+## Compose networking
+
+Coolify creates a resource-specific network for the Compose resource. Services in the definition can reach one another by service name and internal port.
+
+Enable **Configuration > Advanced > Connect To Predefined Network** only when the Compose services must communicate with resources on the selected Coolify destination. Names can be prefixed to prevent collisions, so verify the generated container or service name before using it as a hostname.
+
+<ZoomImage src="/docs/images/builds/packs/compose/6.webp" alt="Connect To Predefined Network option for a Docker Compose application" />
+
+Do not publish a service with `ports:` unless it must be reachable directly on a server interface. A published host port bypasses domain-based proxy routing and can expose an internal service.
+
+## Raw Compose deployment for an Application
+
+For a Git-based Docker Compose Application, **Raw Compose Deployment** applies the definition without most Coolify modifications. You must provide the proxy labels, networking, and other behavior that the normal deployment path generates.
+
+<ZoomImage src="/docs/images/builds/packs/compose/7.webp" alt="Raw Compose Deployment option" />
+
+<Callout type="warning" title="Raw mode requires complete Docker Compose ownership">
+
+Enable raw mode only when the Compose definition already contains everything required to expose and operate the application. Coolify cannot repair missing proxy or networking configuration in an as-is deployment.
+
+</Callout>
+
+## Application labels
+
+For a normal Git-based Docker Compose Application, Coolify adds these management labels when they are absent:
+
+```yaml
+labels:
+  - coolify.managed=true
+  - coolify.applicationId=<application-id>
+  - coolify.type=application
+```
+
+Coolify also generates the proxy labels needed for domains configured in the application. Define and maintain proxy labels yourself only when using **Raw Compose Deployment**.
+
+## Application build arguments
+
+For a Git-based Docker Compose Application, Coolify can inject application build variables as Docker build arguments for services that use `build:`.
+
+Disable **Configuration > Advanced > Inject Build Args to Dockerfile** when the service Dockerfiles declare and consume every required `ARG` themselves.
+
+`SOURCE_COMMIT` is excluded from the build by default so commits with unchanged layers can reuse cache. Enable **Include Source Commit in Build** only when the image contents need the commit value.
+
+## Application Compose commands
+
+For a Git-based Docker Compose Application, the **Custom Build Command** and **Custom Start Command** fields replace the normal Compose commands. Coolify injects the Compose file and environment-file flags unless the custom command supplies its own.
+
+Keep paths relative to **Base Directory** and use the same Compose definition that Coolify parsed. Otherwise, generated domains, labels, and variables may not match the deployed services.
+
+## Troubleshoot an unavailable domain
+
+If a domain shows **No Available Server**:
+
+1. inspect the deployment and service logs
+2. confirm the target service is running and healthy
+3. confirm the domain includes the service's internal listening port when it is not `80`
+4. confirm the process listens on `0.0.0.0`, not only `127.0.0.1`
+5. follow [No available server](/troubleshoot/applications/no-available-server) for proxy checks

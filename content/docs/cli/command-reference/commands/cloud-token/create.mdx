@@ -1,0 +1,30 @@
+---
+title: "Create"
+description: "Create a cloud provider token"
+---
+
+# Create
+
+Create a cloud provider token
+
+## Usage
+
+```sh
+coolify cloud-token create
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--name` | `string` | No | — | Friendly token name |
+| `--provider` | `string` | No | — | Cloud provider: hetzner, digitalocean, or vultr |
+| `--provider-token` | `string` | No | — | Provider API token (sensitive; never included in output) |
+
+## Get current help
+
+```sh
+coolify cloud-token create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

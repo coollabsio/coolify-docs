@@ -1,0 +1,55 @@
+---
+title: Resource Operations
+description: Clone a Service to another destination or move it between projects and environments.
+---
+
+# Clone or move a Service
+
+Open a Service and select **Configuration > Resource Operations**. This page provides two different placement actions:
+
+- **Clone Resource** creates another Service on a selected server and network destination.
+- **Move Resource** changes which project and environment contain the existing Service.
+
+Neither action moves a Service to another Coolify instance.
+
+<Tabs id="service-resource-operations" items={['Clone resource', 'Move resource']}>
+<Tab value="Clone resource">
+
+A clone creates another Service from the saved configuration. The source Service remains in its current destination and is not replaced.
+
+<Callout type="warning" title="Cloning does not migrate Service data">
+
+Treat the clone as a new stack. Do not assume Docker volume contents, bind-mounted files, database records, or data in external services have moved to the destination. Plan a separate, verified transfer or restore for every stateful component.
+
+</Callout>
+
+The Service clone can copy stack configuration such as the Compose definition, environment variables, scheduled tasks, and tags. Review generated domains, credentials, storage definitions, server paths, and automation before deployment.
+
+1. Confirm that the target server is validated, can host resources, and has the required network destination. Build servers cannot host the Service.
+2. Configure any registry, proxy, DNS, firewall, and external-service access required on the target server.
+3. Under **Clone Resource**, choose **Select Server** and **Select Network Destination**.
+4. Select **Clone Resource**.
+5. Open the new Service and review its source and deployable Compose, environment variables, domains, storage, scheduled tasks, and tags.
+6. Restore or transfer required data into the new volumes and server paths.
+7. Deploy with temporary domains or isolated external dependencies.
+8. Verify every component before moving production traffic.
+
+A bind source copied from the original Compose definition must exist on the destination server with the expected content and permissions. A database component must be restored with an engine-compatible procedure rather than by copying only its connection variables.
+
+</Tab>
+<Tab value="Move resource">
+
+Move a Service when it belongs in another project or environment on the same Coolify instance. Moving changes dashboard organization; it does not change the deployment server or network destination.
+
+1. Under **Move Resource**, choose **Select Target Project**.
+2. Choose **Select Target Environment**. Coolify excludes the current environment from the available targets.
+3. Select **Move Resource**.
+4. Open the Service from its new project and environment.
+5. Verify the Service status, domains, logs, scheduled tasks, tags, and links from related resources.
+
+The running containers are not intentionally stopped by the move. Project- or environment-level conventions and external automation do not automatically follow a changed dashboard path, so update references that use the former project or environment.
+
+Use **Clone Resource** instead when the stack must run on another server or network destination.
+
+</Tab>
+</Tabs>

@@ -13,5 +13,16 @@ It is usually a time synchronization issue.
 - Check your firewall (`ufw`, `iptables`) rules to see if you have any rules that block time synchronization ports (`123/udp, 123/tcp`).
 
 ## Solution
-- If your operating system is using systemd, you can synchronize the time with `sudo timedatectl set-ntp true`.
-- If your operating system is not using systemd, you can synchronize the time with `sudo ntpdate ntp.ubuntu.com`.
+
+<Tabs items={['systemd', 'Non-systemd']}>
+<Tab value="systemd">
+
+If your operating system is using systemd, you can synchronize the time with `sudo timedatectl set-ntp true`.
+
+</Tab>
+<Tab value="Non-systemd">
+
+If your operating system is not using systemd, you can synchronize the time with `sudo ntpdate ntp.ubuntu.com`.
+
+</Tab>
+</Tabs>

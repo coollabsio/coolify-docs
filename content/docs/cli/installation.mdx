@@ -1,0 +1,106 @@
+---
+title: Installation
+description: Install and verify the Coolify CLI on Linux, macOS, or Windows.
+---
+
+import { Code, Computer, TerminalSquare } from 'reicon-react';
+
+# Install the Coolify CLI
+
+Install the `coolify` binary on the computer or CI runner that will send requests to Coolify.
+
+## Choose an installation method
+
+<Tabs id="cli-installation-method" items={['Linux and macOS', 'Windows', 'Go']}>
+<Tab value="Linux and macOS" icon={TerminalSquare}>
+
+### Install with the install script
+
+The install script detects `amd64` and `arm64`, downloads the latest GitHub release, and installs the binary in `/usr/local/bin`:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/coollabsio/coolify-cli/main/scripts/install.sh | bash
+```
+
+A global installation may request `sudo`. To install without administrator access, pass `--user`; the binary is written to `~/.local/bin`:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/coollabsio/coolify-cli/main/scripts/install.sh | bash -s -- --user
+```
+
+Add `~/.local/bin` to `PATH` if your shell cannot find `coolify`.
+
+### Homebrew
+
+On macOS or Linux, you can install from the Coolify tap:
+
+```sh
+brew install coollabsio/coolify-cli/coolify-cli
+```
+
+</Tab>
+
+<Tab value="Windows" icon={Computer}>
+
+### Install with PowerShell
+
+Run PowerShell as an administrator to install into `%ProgramFiles%\Coolify`:
+
+```powershell
+irm https://raw.githubusercontent.com/coollabsio/coolify-cli/main/scripts/install.ps1 | iex
+```
+
+For a user installation without administrator access, install into `%LOCALAPPDATA%\Coolify`:
+
+```powershell
+$env:COOLIFY_USER_INSTALL=1; irm https://raw.githubusercontent.com/coollabsio/coolify-cli/main/scripts/install.ps1 | iex
+```
+
+To install a specific release, set `COOLIFY_VERSION` before running the installer:
+
+```powershell
+$env:COOLIFY_VERSION='v1.0.0'; irm https://raw.githubusercontent.com/coollabsio/coolify-cli/main/scripts/install.ps1 | iex
+```
+
+Restart the terminal if `coolify` is not found after the installer updates `PATH`.
+
+</Tab>
+
+<Tab value="Go" icon={Code}>
+
+### Install with Go
+
+If Go is installed, build and install the latest CLI release into `GOBIN`, or `GOPATH/bin` when `GOBIN` is unset:
+
+```sh
+go install github.com/coollabsio/coolify-cli/coolify@latest
+```
+
+Ensure that directory is in `PATH`.
+
+</Tab>
+</Tabs>
+
+## Verify the installation
+
+```sh
+coolify version
+coolify --help
+```
+
+The first CLI command creates its configuration file when the file does not exist. Follow [Authentication](/cli/authentication) to configure a token, then use [Contexts](/cli/contexts) to manage saved Coolify connections.
+
+## Enable shell completion
+
+Generate completion instructions for your shell:
+
+```sh
+coolify completion bash
+coolify completion zsh
+coolify completion fish
+coolify completion powershell
+```
+
+Run `coolify completion <shell> --help` for the commands that load completion now or enable it for future sessions.
+
+To install a newer release later, follow [Update the Coolify CLI](/cli/update). To remove the binary and optionally its saved contexts, follow [Uninstall the Coolify CLI](/cli/uninstallation).

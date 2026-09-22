@@ -1,20 +1,103 @@
 ---
 title: KeyDB
-description: Deploy KeyDB on Coolify with high-performance multithreading, Redis compatibility, active replication, and FLASH storage support.
+description: Deploy and operate KeyDB on Coolify with Redis-compatible connections, persistent storage, TLS, and health checks.
 ---
 
 # KeyDB
 
+Coolify deploys KeyDB as a standalone Redis-compatible datastore on the selected server and destination. A new resource gets a generated password, a persistent volume at `/data`, an internal connection URL, and a health check.
+
+KeyDB is a Redis-compatible datastore with multithreading and support for Redis commands and clients.
+
+## Create a KeyDB database
+
+<Steps>
+<Step>
+
+### Open New Resource
+
+Open the project and environment where the database should live, then select **New Resource**.
+
+</Step>
+<Step>
+
+### Select KeyDB
+
+Under **Databases**, select **KeyDB**. You can also search for **KeyDB** by name.
+
+</Step>
+<Step>
+
+### Select a server
+
+Select the server that should run KeyDB. Build servers cannot be selected because they do not host running database resources.
+
+</Step>
+<Step>
+
+### Select a destination
+
+Select the Docker network destination that KeyDB should join.
+
+</Step>
+<Step>
+
+### Review the generated configuration
+
+Coolify creates the resource and opens **Configuration > General**. Review the image, generated password, SSL settings, and connection URLs. Keep the default private networking unless an external client requires access.
+
+</Step>
+<Step>
+
+### Start KeyDB
+
+Select **Start** and follow the startup output. Wait until KeyDB is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+
+</Step>
+</Steps>
+
+## Default configuration
+
+| Setting | Default or behavior |
+| :--- | :--- |
+| Internal port | `6379`; TLS uses `6380` |
+| Default image | `eqalpha/keydb:latest` |
+| Authentication | Generated password |
+| Data mount | `/data` |
+| Scheduled database backups | Not supported by Coolify |
+| SSL | Supported with **Enable SSL** |
+
+KeyDB uses the Redis protocol and does not expose a username field in the Coolify database form.
 
 
+## Connect to KeyDB
 
-## What is KeyDB
+Use the **Internal URL** for an application on the same Coolify destination network:
 
-KeyDB is a high-performance fork of Redis, focusing on multithreading, memory efficiency, and high availability. It maintains API compatibility with Redis while offering improved performance, especially on multi-core systems. KeyDB introduces features like active replication, FLASH storage support, and subkey expires to enhance the capabilities of the traditional Redis model.
+```sh
+redis://:<password>@<database-container>:6379/0
+```
 
-Designed to be a drop-in replacement for Redis, KeyDB aims to provide better resource utilization and scalability for applications requiring high-throughput in-memory data storage and processing.
+With SSL enabled, use the generated `rediss` URL and TLS port `6380`. When **Make it publicly available** is enabled, use the generated **Public URL**.
 
-## Links
+## Configure KeyDB
 
-- [The official website](https://keydb.dev/)
-- [GitHub](https://github.com/EQ-Alpha/KeyDB)
+Open **Configuration > General** to change the image, password, **Ports Mappings**, public proxy, **Custom KeyDB Configuration**, and supported custom Docker options. Open **Configuration > Persistent Storage** to manage the `/data` volume.
+
+Custom KeyDB configuration is written as the configuration file used to start KeyDB. When it is set, Coolify uses that file and adds the password only when the file does not already define `requirepass`. Include persistence and other required settings in the file.
+
+## Backups and persistence
+
+Coolify does not create scheduled database backups for KeyDB. Keep the `/data` persistent volume and configure KeyDB's supported persistence or replication features when you need recovery copies. Test restores independently.
+
+## SSL and health checks
+
+KeyDB exposes **Enable SSL** without an SSL mode selector. See [Database SSL](/databases/ssl) for the CA certificate mount and TLS connection workflow.
+
+Configure the Docker health check under **Configuration > Healthcheck** and restart KeyDB after saving.
+
+## Official KeyDB resources
+
+- [KeyDB documentation](https://docs.keydb.dev/)
+- [KeyDB source](https://github.com/EQ-Alpha/KeyDB)
+- [KeyDB Docker image](https://hub.docker.com/r/eqalpha/keydb)

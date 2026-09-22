@@ -1,0 +1,88 @@
+---
+title: Resource Operations
+description: Clone a standalone database to another destination or move it between projects and environments.
+---
+
+# Clone or move a database
+
+Open a database and select **Configuration > Resource Operations**. This page has two different actions:
+
+- **Clone Resource** creates a second database resource on another server or network destination.
+- **Move Resource** changes the project and environment of the existing database on the same Coolify instance.
+
+Neither action is a database migration. A clone starts with a separate persistent volume, and a move changes organization without copying data.
+
+<Tabs id="database-resource-operations" items={['Clone resource', 'Move resource']}>
+<Tab value="Clone resource">
+
+Clone a database when you need the same configuration on another server or network destination.
+
+<Callout type="warning" title="Cloning does not copy database data">
+
+Coolify copies the database configuration, environment variables, storage definitions, scheduled backup configuration, and tags. It does not copy the contents of the database volume or other stored files. A clone is not a backup or a replica.
+
+</Callout>
+
+<Steps>
+<Step>
+
+### Prepare the destination
+
+Confirm that the target server can host resources and has the network destination that the clone should use. Build servers cannot host running database resources.
+
+</Step>
+<Step>
+
+### Select the destination
+
+Open **Configuration > Resource Operations**. Under **Clone Resource**, choose **Select Server**, then **Select Network Destination**.
+
+</Step>
+<Step>
+
+### Clone and review
+
+Select **Clone Resource**. The clone is created stopped. Review its generated name, image, credentials, internal and public connection details, storage mounts, environment variables, backup settings, ports, SSL settings, and tags before starting it.
+
+Give the clone a distinct domain or port mapping. Do not point production applications at it until you have restored or copied the required data and tested the connection.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Move resource">
+
+Move a database when it should belong to another project or environment on the same Coolify instance. Moving does not change the database's server, network destination, configuration, or persistent volume.
+
+<Callout type="info" title="Move is not a server migration">
+
+The running database is not stopped and its data is not copied. To run a second copy on another server, use **Clone Resource** and then restore or copy the data separately.
+
+</Callout>
+
+<Steps>
+<Step>
+
+### Choose the target project
+
+Open **Configuration > Resource Operations**. Under **Move Resource**, choose **Select Target Project**.
+
+</Step>
+<Step>
+
+### Choose the target environment
+
+Choose **Select Target Environment**. Coolify excludes the database's current environment. Select an environment in the current project or another project.
+
+</Step>
+<Step>
+
+### Move and verify
+
+Select **Move Resource**. Coolify changes the database's project and environment without stopping the running resource. Open the database from its new location and verify its status, internal URL, backups, webhooks, and related application references.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>

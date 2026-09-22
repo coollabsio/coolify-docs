@@ -1,0 +1,63 @@
+---
+title: Manage Members
+description: Review a Coolify team, change member roles, and manage pending invitations.
+---
+
+# Manage members
+
+Use the active team's **Members** page to review access, change another member's role, and revoke invitations that should no longer be accepted.
+
+## Review the member list
+
+1. Confirm that the intended team is active.
+2. Select **Teams** in the Coolify sidebar.
+3. Select **Members**.
+
+The table shows **Name**, **Email**, **Role**, and the actions your role permits.
+
+Review the list regularly and remove access that is no longer needed. A person's role applies only to this team; the same account can have a different role in another team.
+
+---
+
+## Change a member's role
+
+Owners and Admins can change another member's role. The available actions depend on your role and the other person's current role.
+
+| Your role | Role changes available |
+| :--- | :--- |
+| **Owner** | Change another Owner, Admin, or Member to any of the other roles. |
+| **Admin** | Change an Admin to Member, or change a Member to Admin. Owners cannot be changed. |
+| **Member** | No role-change actions. |
+
+Find the member, then select the required action: **To Owner**, **To Admin**, or **To Member**.
+
+<Callout type="info" title="Role changes revoke team API tokens">
+When you change a member's role, Coolify revokes that user's API tokens for this team. The person must create replacement tokens if they still need API access.
+</Callout>
+
+The member list reloads after the change. Confirm that the **Role** column shows the new role.
+
+You cannot change your own role from the member list. Ask another person with sufficient access to make the change.
+
+---
+
+## Review pending invitations
+
+Owners and Admins can review **Pending Invitations** below the invitation form.
+
+Each row shows:
+
+- the invited email address
+- whether the invitation was created for email delivery or as a link
+- the role the person will receive
+- the invitation link
+
+Invitation links are valid for three days. A valid invitation for an email address must be accepted, revoked, or allowed to expire before another invitation can be created for that address.
+
+---
+
+## Revoke an invitation
+
+Select **Revoke Invitation** beside an invitation that should no longer grant access.
+
+Coolify removes the pending invitation immediately. Confirm that its row disappears from **Pending Invitations**. If the person still needs access, create a new invitation with the correct role.

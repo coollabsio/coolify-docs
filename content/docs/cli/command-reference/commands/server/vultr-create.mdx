@@ -1,0 +1,38 @@
+---
+title: "Vultr create"
+description: "Create a Vultr server"
+---
+
+# Vultr create
+
+Create a Vultr server
+
+## Usage
+
+```sh
+coolify server vultr create
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--cloud-init` | `string` | No | — | Cloud-init YAML |
+| `--cloud-token` | `string` | No | — | Cloud provider token UUID |
+| `--disable-public-ipv4` | `boolean` | No | `false` | Disable public IPv4 |
+| `--enable-ipv6` | `boolean` | No | `true` | Enable public IPv6 |
+| `--name` | `string` | No | — | Server name |
+| `--os-id` | `integer` | No | `0` | Vultr operating system ID |
+| `--plan` | `string` | No | — | Vultr plan |
+| `--private-key` | `string` | No | — | Coolify private key UUID |
+| `--region` | `string` | No | — | Vultr region |
+| `--ssh-key-ids` | `stringSlice` | No | — | Additional Vultr SSH key IDs |
+| `--validate` | `boolean` | No | `false` | Validate after creation |
+
+## Get current help
+
+```sh
+coolify server vultr create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

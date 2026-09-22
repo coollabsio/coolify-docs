@@ -1,0 +1,9 @@
+{
+  "title": "Tag",
+  "pages": [
+    "create",
+    "delete",
+    "list",
+    "update"
+  ]
+}

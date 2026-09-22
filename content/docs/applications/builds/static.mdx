@@ -1,0 +1,115 @@
+---
+title: Static
+description: Package prebuilt static files in an Nginx image and deploy them with Coolify.
+---
+
+# Static
+
+The **Static** build pack packages files already present in the Git repository into an Nginx image.
+
+Use it when the repository contains the final HTML, CSS, JavaScript, and other assets that should be served. It does not run a framework build command.
+
+Use Nixpacks, Railpack, or a Dockerfile when the repository must run `npm run build` or another compilation step before the static files exist.
+
+## Deploy static files
+
+<Steps>
+<Step>
+
+### Prepare the repository
+
+Commit the final static files to the repository.
+
+If they are in a subdirectory such as `dist`, identify that path before creating the application.
+
+</Step>
+<Step>
+
+### Create a resource
+
+Open the project and environment that should contain the application, then select **+ New**.
+
+<ZoomImage src="/docs/images/builds/packs/static/1.webp" alt="Create New Resource button in a Coolify project" />
+
+</Step>
+<Step>
+
+### Choose the repository source
+
+Connect a public repository, deploy key, or supported Git App.
+
+<ZoomImage src="/docs/images/builds/packs/static/2.webp" alt="Git repository source options in Coolify" />
+
+For a public repository, paste its HTTPS URL and select **Check Repository**.
+
+<ZoomImage src="/docs/images/builds/packs/static/3.webp" alt="Public repository URL field for a static application" />
+
+</Step>
+<Step>
+
+### Select Static
+
+Select **Static** as the **Build Pack**.
+
+<ZoomImage src="/docs/images/builds/packs/static/4.webp" alt="Static option in the Build Pack selector" />
+
+</Step>
+<Step>
+
+### Set the base directory
+
+Set **Base Directory** to the directory containing the finished website files.
+
+Use `/` when the files are at the repository root, or a path such as `/dist` when they are in a subdirectory.
+
+<ZoomImage src="/docs/images/builds/packs/static/5.webp" alt="Base Directory field for a Static build" />
+
+Select **Continue**.
+
+</Step>
+<Step>
+
+### Review the web server
+
+Coolify uses Nginx to serve the static files.
+
+<ZoomImage src="/docs/images/builds/packs/static/6.webp" alt="Nginx selected as the web server for a Static build" />
+
+</Step>
+<Step>
+
+### Configure the domain
+
+Enter the domain where the site should be available. Separate multiple domains with commas.
+
+<ZoomImage src="/docs/images/builds/packs/static/7.webp" alt="Domains field for a Static application" />
+
+</Step>
+<Step>
+
+### Deploy and verify
+
+Select **Deploy**.
+
+<ZoomImage src="/docs/images/builds/packs/static/8.webp" alt="Deploy button for a Static application" />
+
+Open the domain and verify a document, asset, and client-side route used by the site.
+
+</Step>
+</Steps>
+
+## Nginx configuration
+
+Coolify provides a default Nginx configuration for the static image.
+
+Open **Configuration > General**, generate the configuration, and edit it only when the site needs behavior such as single-page application fallback, custom headers, or caching rules.
+
+<ZoomImage src="/docs/images/builds/packs/static/9.webp" alt="Generate button and Nginx configuration editor for a Static application" />
+
+Save the change and redeploy the application. Coolify copies the Nginx configuration into the static image during the image build, so a restart that reuses the existing image cannot apply the change.
+
+<Callout type="info" title="Building a frontend in Coolify">
+
+If the repository contains source files rather than final assets, [deploy with Nixpacks](/applications/builds/nixpacks/deploy) or use [Railpack](/applications/builds/railpack), enable **Is it a static site?**, and set the build output as **Publish Directory**.
+
+</Callout>

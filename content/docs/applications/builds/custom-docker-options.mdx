@@ -1,0 +1,82 @@
+---
+title: Custom Docker Options
+description: Add supported Docker run options to a Coolify application without replacing its Dockerfile.
+---
+
+# Custom Docker options
+
+Use **Configuration > General > Custom Docker Options** to add supported arguments to the command that starts an application container.
+
+Use this field only when the option belongs to the container runtime. Put image construction in a Dockerfile and use the dedicated Coolify settings for CPU, memory, GPU, ports, storage, and environment variables when available.
+
+## Supported options
+
+Coolify accepts these options:
+
+- `--ip`
+- `--ip6`
+- `--shm-size`
+- `--dns`
+- `--cap-add`
+- `--cap-drop`
+- `--security-opt`
+- `--sysctl`
+- `--device`
+- `--ulimit`
+- `--init`
+- `--privileged`
+- `--gpus`
+- `--hostname`
+- `--entrypoint`
+
+Coolify converts only the listed options into the generated container configuration. Other Docker run options are not applied because they can conflict with the network, storage, or lifecycle configuration Coolify manages.
+
+## Add an option
+
+Enter one or more arguments:
+
+```sh
+--shm-size 1g --init
+```
+
+Save the application, redeploy it, then inspect the deployment log and container behavior.
+
+## Override the entrypoint
+
+Use `--entrypoint` when the image contains the required executable but its default entrypoint is not correct for this application:
+
+```sh
+--entrypoint /app/start-worker.sh
+```
+
+Coolify accepts these entrypoint forms:
+
+```sh
+--entrypoint /bin/sh
+--entrypoint="/app/start-worker.sh"
+--entrypoint "sh -c 'php artisan horizon'"
+```
+
+Use the quoted form when the entrypoint contains spaces or arguments. Coolify converts the value to the Compose `entrypoint` field used by the generated deployment configuration.
+
+The entrypoint executable must exist inside the image. If it starts a process that exits, Docker treats the application container as stopped.
+
+An entrypoint override can run a different process from the same image, such as a queue worker instead of the web server:
+
+```sh
+--entrypoint "sh -c 'npm run worker'"
+```
+
+It can also run an image-owned initialization script:
+
+```sh
+--entrypoint /app/custom-init.sh
+```
+
+Use one `--entrypoint` value. Put multiple command arguments inside the quoted value instead of repeating the option.
+
+<Callout type="warning" title="Privileged options expand container access">
+
+Options such as `--privileged`, `--device`, and added Linux capabilities weaken the container isolation boundary. Grant only the access the application requires and verify the image is trusted.
+
+</Callout>

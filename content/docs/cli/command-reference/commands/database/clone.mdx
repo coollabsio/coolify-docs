@@ -1,0 +1,30 @@
+---
+title: "Clone"
+description: "Clone a database to a destination"
+---
+
+# Clone
+
+Clone a database to a destination
+
+## Usage
+
+```sh
+coolify database clone <uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--clone-volumes` | `boolean` | No | `false` | Clone volume data |
+| `--destination` | `string` | No | — | Destination UUID |
+| `--name` | `string` | No | — | Optional new name |
+
+## Get current help
+
+```sh
+coolify database clone --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

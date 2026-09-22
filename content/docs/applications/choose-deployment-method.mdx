@@ -1,0 +1,62 @@
+---
+title: Choose a Deployment Method
+description: Choose whether Coolify deploys a Git repository, a Dockerfile entered without Git, a Git-based Docker Compose definition, or an existing image.
+---
+
+# Choose a deployment method
+
+Choose the method that matches the input you already maintain. The deployment method determines what Coolify receives; the build method determines how Coolify creates images from Git source.
+
+## Choose what you provide
+
+| You have | What Coolify does | Guide |
+| :--- | :--- | :--- |
+| A Git repository | Coolify checks out the selected commit and prepares the required images. | [Compare build methods](/applications/builds/overview) |
+| A Dockerfile without a Git repository | Coolify stores the Dockerfile, builds an image from its instructions, and creates the application container from that image. | [Use a Dockerfile](/applications/builds/dockerfile) |
+| A Git repository containing a Compose file | Coolify reads the definition, builds images for services with `build:`, pulls images for services with `image:`, and applies the definition with Docker Compose. | [Use Docker Compose](/applications/builds/docker-compose) |
+| An image already published to a registry | Coolify pulls the image, applies the saved runtime configuration, and creates a container from it. | [Deploy a Docker image](/applications/deployments/docker-image) |
+
+## Use a Git repository
+
+Connect the repository through a public URL, deploy key, or supported Git App, then select its **Build Pack**.
+
+- Use [Nixpacks](/applications/builds/nixpacks/overview) or [Railpack](/applications/builds/railpack) when automatic framework and command detection is sufficient.
+- Use [Static](/applications/builds/static) when the repository already contains the finished website files.
+- Use [Dockerfile](/applications/builds/dockerfile) when the repository defines one custom image.
+- Use [Docker Compose](/applications/builds/docker-compose) when the repository defines multiple services or Compose-owned runtime configuration.
+
+Read [Compare build methods](/applications/builds/overview) for the differences between these choices.
+
+## Use a Dockerfile without Git
+
+Select **+ New > Dockerfile** when you want to paste a Dockerfile directly into Coolify without connecting a repository.
+
+This path stores the Dockerfile in Coolify and does not check out application source. A `COPY` instruction therefore cannot read files from a repository. Use the Git repository path when the image build needs project files.
+
+## Use Docker Compose from Git
+
+Select **Docker Compose** as the **Build Pack** when a Git repository contains the Compose definition for an Application.
+
+The Compose file becomes the source of truth for the services it defines. Do not expect every standard application setting to override Compose-owned configuration.
+
+<Callout type="info" title="Docker Compose Empty creates a Service">
+
+Selecting **+ New > Docker Compose Empty** creates a user-defined Service, not an Application. Use [Services](/services) when the Compose definition is not stored in Git.
+
+</Callout>
+
+## Use an existing Docker image
+
+Use a [Docker Image application](/applications/deployments/docker-image) when CI or another build system already publishes the image.
+
+Enter an image with a tag such as `ghcr.io/example/api:1.4.0` or a SHA256 digest. A digest identifies immutable image content; a mutable tag such as `latest` can resolve to different content during a later deployment.
+
+## Verify the choice
+
+After creating the application:
+
+1. Under **Configuration > General**, confirm the repository and build method, stored Dockerfile, Compose location, or image reference used by the selected path.
+2. For a non-Compose Application, set **Ports Exposes** to the port where the process listens. For Docker Compose, configure the domain and internal port on each public service.
+3. Deploy the application.
+4. Open **Deployments** and confirm the operation succeeds.
+5. Open the configured domain or test the exposed service.

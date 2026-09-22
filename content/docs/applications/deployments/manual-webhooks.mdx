@@ -1,0 +1,212 @@
+---
+title: Manual Git Webhooks
+description: Configure repository events for applications connected by a public URL or deploy key.
+---
+
+# Manual Git webhooks
+
+A manual Git webhook lets GitHub, GitLab, Bitbucket, or Gitea notify Coolify when a repository changes. Use one for an application created from a public repository URL or **Private Repository (with deploy key)**.
+
+Applications connected through an official Git App receive provider events through that integration and do not need a manual Git webhook.
+
+<Callout type="info" title="The deploy webhook is different">
+
+**Deploy Webhook (auth required)** starts a deployment when an external workflow calls Coolify with an API token. It is not a repository webhook. Follow [Automatic deployments](/applications/deployments/automatic-deployments) and choose **External workflow** when CI should call Coolify directly.
+
+</Callout>
+
+## Choose the repository provider
+
+Each provider uses its own URL and secret from **Configuration > Webhooks > Manual Git Webhooks**. Configure only the provider that hosts the repository.
+
+For production deployments, select the provider's push event and enable **Configuration > Advanced > Deployment > Auto Deploy**. For [preview deployments](/applications/deployments/preview-deployments), also select the pull-request or merge-request events shown below.
+
+<Tabs id="manual-git-webhook-provider" items={['GitHub', 'GitLab', 'Bitbucket', 'Gitea']}>
+<Tab value="GitHub">
+
+<Steps>
+<Step>
+
+### Enable automatic branch deployments
+
+Open the application, select **Configuration > Advanced > Deployment**, then enable **Auto Deploy** if pushes to the configured branch should deploy automatically.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/auto-deploy/webhooks/1.webp" alt="Auto Deploy enabled in the application advanced settings" />
+
+</Step>
+<Step>
+
+### Copy the GitHub webhook details
+
+Open **Configuration > Webhooks**. Enter a long random value in **GitHub Webhook Secret**, select **Save**, then copy the **GitHub** URL under **Manual Git Webhooks**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/auto-deploy/webhooks/2.webp" alt="GitHub manual webhook URL and secret in Coolify" />
+
+Keep the secret private. GitHub must use the same value when it signs webhook deliveries.
+
+</Step>
+<Step>
+
+### Add the webhook on GitHub
+
+Open the GitHub repository, select **Settings > Webhooks > Add webhook**, then enter:
+
+- **Payload URL:** the GitHub URL copied from Coolify
+- **Content type:** `application/json` or `application/x-www-form-urlencoded`
+- **Secret:** the value saved in Coolify
+
+Keep **Enable SSL verification** selected.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/auto-deploy/webhooks/3.webp" alt="Add webhook button in GitHub repository settings" />
+
+</Step>
+<Step>
+
+### Select the events
+
+Choose **Just the push event** for automatic deployments from the configured branch.
+
+If the application also uses previews, choose **Let me select individual events**, then select **Pushes** and **Pull requests**. Keep **Active** selected and select **Add webhook**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/auto-deploy/webhooks/4.webp" alt="GitHub webhook event and secret settings" />
+
+</Step>
+<Step>
+
+### Verify the webhook
+
+Push a commit to the application's configured branch. Open **Deployments** in Coolify and confirm a webhook deployment appears.
+
+GitHub also shows the webhook and its recent deliveries under **Settings > Webhooks**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/auto-deploy/webhooks/5.webp" alt="Configured webhook in GitHub repository settings" />
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="GitLab">
+
+<Steps>
+<Step>
+
+### Copy the GitLab webhook details
+
+Open **Configuration > Webhooks** in Coolify. Enter a long random value in **GitLab Webhook Secret**, select **Save**, then copy the **GitLab** URL.
+
+</Step>
+<Step>
+
+### Add the webhook on GitLab
+
+Open the GitLab project and select **Settings > Webhooks**. Paste the Coolify URL into **URL** and enter the same value in **Secret token**.
+
+</Step>
+<Step>
+
+### Select the events
+
+Select **Push events** for automatic branch deployments. Also select **Merge request events** when the application uses preview deployments, then add the webhook.
+
+</Step>
+<Step>
+
+### Enable and verify deployments
+
+Enable **Configuration > Advanced > Deployment > Auto Deploy** in Coolify, then push to the configured branch. Open **Deployments** and confirm a webhook deployment appears.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Bitbucket">
+
+<Steps>
+<Step>
+
+### Copy the Bitbucket webhook details
+
+Open **Configuration > Webhooks** in Coolify. Enter a long random value in **Bitbucket Webhook Secret**, select **Save**, then copy the **Bitbucket** URL.
+
+</Step>
+<Step>
+
+### Add the webhook on Bitbucket
+
+Open the Bitbucket repository and select **Repository settings > Webhooks > Add webhook**. Paste the Coolify URL and enter the same secret.
+
+</Step>
+<Step>
+
+### Select the events
+
+Select **Repository push** for automatic branch deployments.
+
+For previews, also select these pull-request events:
+
+- **Created**
+- **Updated**
+- **Merged**
+- **Declined**
+
+Save the webhook.
+
+</Step>
+<Step>
+
+### Enable and verify deployments
+
+Enable **Configuration > Advanced > Deployment > Auto Deploy** in Coolify, then push to the configured branch. Open **Deployments** and confirm a webhook deployment appears.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Gitea">
+
+<Steps>
+<Step>
+
+### Copy the Gitea webhook details
+
+Open **Configuration > Webhooks** in Coolify. Enter a long random value in **Gitea Webhook Secret**, select **Save**, then copy the **Gitea** URL.
+
+</Step>
+<Step>
+
+### Add the webhook on Gitea
+
+Open the Gitea repository and select **Settings > Webhooks > Add Webhook > Gitea**. Paste the Coolify URL into **Target URL** and enter the same secret.
+
+</Step>
+<Step>
+
+### Select the events
+
+Select the **Push** event for automatic branch deployments. Also select the **Pull Request** event when the application uses preview deployments, then add the webhook.
+
+</Step>
+<Step>
+
+### Enable and verify deployments
+
+Enable **Configuration > Advanced > Deployment > Auto Deploy** in Coolify, then push to the configured branch. Open **Deployments** and confirm a webhook deployment appears.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+## Troubleshoot a missing deployment
+
+Open the webhook's recent deliveries in the repository provider, then check:
+
+1. the provider sent an event supported by Coolify
+2. the delivery received a successful HTTP response
+3. the provider secret exactly matches the saved Coolify secret
+4. the Coolify webhook URL is reachable from the internet
+5. **Auto Deploy** is enabled for a push event
+6. the pushed branch matches the branch configured for the application
+
+A pull-request or merge-request event creates a preview only when **Preview Deployments** is enabled.
