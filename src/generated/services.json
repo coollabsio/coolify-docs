@@ -1890,6 +1890,13 @@
     "category": "Development"
   },
   {
+    "name": "Solidtime",
+    "slug": "solidtime",
+    "icon": "/docs/images/services/solidtime.svg",
+    "description": "Modern open-source time tracking for freelancers, agencies and teams.",
+    "category": "Productivity"
+  },
+  {
     "name": "Sonarr",
     "slug": "sonarr",
     "icon": "/docs/images/services/sonarr-logo.svg",
