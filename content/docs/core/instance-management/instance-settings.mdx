@@ -158,103 +158,115 @@ Enter the IPv6 address Coolify should use and click **Save changes**.
 
 <Tab value="Advanced" icon={Setting2}>
 
-Advanced contains access, DNS, API, outbound request, interface, telemetry, and image storage controls.
+<ZoomableImage src="/docs/images/core/instance-management/advanced-settings-overview.webp" alt="Advanced selected in the instance settings navigation, with Advanced settings sections visible" />
+
+Advanced contains access, DNS validation, API and MCP, outbound endpoint, interface and telemetry, and image storage controls.
+
+## Access
 
 ### Registration
 
-<ZoomableImage src="shadow-todo" alt="Registration Allowed setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/advanced-registration.webp" alt="Registration setting in Advanced settings" />
 
-Controls whether users can create their own accounts from the registration page.
-
-Choose **Registration enabled** or **Registration disabled**, then click **Save changes**.
+Controls whether users can create their own accounts from the registration page. Choose **Anyone can register** or **Registration disabled**, then click **Save changes**.
 
 **Accepted values:**
 
-- Registration enabled: anyone who can reach the registration page can create an account.
-- Registration disabled: only administrators can create accounts.
+- **Anyone can register:** anyone who can reach the registration page can create an account.
+- **Registration disabled:** only administrators can create accounts.
 
 **Notes:**
 
-- Keep this disabled unless you intentionally want public self-registration.
+- Keep registration disabled unless you intentionally want public self-registration.
 
 ---
 
-### Anonymous telemetry
+### Destructive action confirmation
 
-<ZoomableImage src="shadow-todo" alt="Do Not Track setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/advanced-destructive-action-confirmation.webp" alt="Destructive action confirmation setting in Advanced settings" />
 
-Controls whether this instance sends anonymous installation counts to Coolify. IP addresses are not stored, and error reports are not sent to Coolify.
-
-Choose whether anonymous telemetry is enabled, then click **Save changes**.
+Controls whether destructive actions require password and text confirmation. Choose **Require two-step confirmation** or **Skip two-step confirmation**, then click **Save changes**.
 
 **Accepted values:**
 
-- Enabled: do not send anonymous installation counts.
-- Disabled: allow anonymous installation counts. IP addresses are not stored, and error reports are not sent.
+- **Require two-step confirmation:** destructive actions require the extra confirmation step.
+- **Skip two-step confirmation:** destructive actions do not require the extra confirmation step.
+
+**Notes:**
+
+- Skipping confirmation increases the chance of accidental deletions or unwanted changes.
 
 ---
 
-### DNS Validation
+## DNS
 
-<ZoomableImage src="shadow-todo" alt="DNS Validation setting screenshot" />
+### DNS validation
 
-Checks whether custom domains point to the right server before Coolify saves or deploys resources.
+<ZoomableImage src="/docs/images/core/instance-management/advanced-dns-validation.webp" alt="DNS validation setting in Advanced settings" />
 
-Choose **Enabled** or **Disabled**, then click **Save changes**.
+Checks whether custom domains point to the right server before deployment. Choose **Enabled** or **Disabled**, then click **Save changes**.
 
 **Accepted values:**
 
-- Enabled: validate DNS before deployment to reduce domain misconfiguration failures.
-- Disabled: skip DNS validation when saving domains.
+- **Enabled:** validate custom domains before deployment.
+- **Disabled:** skip DNS validation.
 
 ---
 
-### Custom DNS Servers
+### Custom DNS servers
 
-<ZoomableImage src="shadow-todo" alt="Custom DNS Servers setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/advanced-custom-dns-servers.webp" alt="Custom DNS servers field in Advanced settings" />
 
-Changes which DNS resolvers Coolify uses for domain validation.
-
-Enter the resolver IPs in **Custom DNS servers**, then click **Save changes**.
+Changes which DNS resolvers Coolify uses for domain validation. Enter the resolver IPs in **Custom DNS servers**, then click **Save changes**.
 
 **Accepted values:**
 
-- Empty to use the system default DNS resolvers.
+- Leave it empty to use the system default DNS resolvers.
 - A comma-separated list of valid IPv4 or IPv6 addresses, for example `1.1.1.1,8.8.8.8`.
 
 ---
 
-### API Access
+## API and MCP
 
-<ZoomableImage src="shadow-todo" alt="API Access setting screenshot" />
+### API access
 
-Controls whether authenticated requests to the Coolify REST API are allowed.
+<ZoomableImage src="/docs/images/core/instance-management/advanced-api-access.webp" alt="API access setting in Advanced settings" />
 
-Choose **Enabled** or **Disabled**, then click **Save changes**. Create API tokens from **Keys & Tokens > API Tokens**.
+Controls whether authenticated requests to the Coolify REST API are allowed. Choose **Enabled** or **Disabled**, then click **Save changes**. For API tokens, follow [API tokens](/core/security/credentials/api-tokens).
 
 **Accepted values:**
 
-- Enabled: authenticated API requests are accepted.
-- Disabled: API requests are blocked.
+- **Enabled:** authenticated API requests are accepted.
+- **Disabled:** API requests are blocked.
 
-For the detailed guide, follow [API tokens](/core/security/credentials/api-tokens).
+---
+
+### MCP server
+
+<ZoomableImage src="/docs/images/core/instance-management/advanced-mcp-server.webp" alt="MCP server setting in Advanced settings" />
+
+Enables the MCP endpoint at `/mcp` for authenticated clients. Use your instance URL followed by `/mcp` and authenticate with a Sanctum bearer token created from [API tokens](/core/security/credentials/api-tokens).
+
+**Accepted values:**
+
+- **Enabled:** the instance MCP endpoint is available to authenticated clients.
+- **Disabled:** the instance MCP endpoint is unavailable.
+
+For the detailed guide, follow [MCP integration](/mcp/what-is-mcp).
 
 ---
 
 ### Allowed API IPs
 
-<ZoomableImage src="shadow-todo" alt="Allowed IPs for API Access setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/advanced-allowed-api-ips.webp" alt="Allowed API IPs field in Advanced settings" />
 
-Restricts which source IP addresses can call the Coolify API.
-
-Enter one or more IPs or CIDR ranges, then click **Save changes**.
+Restricts which source IP addresses can call the Coolify API. Enter comma-separated IPs or CIDR ranges, then click **Save changes**.
 
 **Accepted values:**
 
 - Empty or `0.0.0.0` allows API access from anywhere.
 - Single IPv4 or IPv6 addresses, for example `192.168.1.100` or `2001:db8::10`.
 - CIDR ranges, for example `10.0.0.0/8` or `203.0.113.0/24`.
-- Use commas to separate multiple entries.
 
 **Notes:**
 
@@ -262,105 +274,94 @@ Enter one or more IPs or CIDR ranges, then click **Save changes**.
 
 ---
 
-### MCP server
+## Outbound endpoints
 
-<ZoomableImage src="shadow-todo" alt="Enable MCP Server setting screenshot" />
+These controls limit which internal destinations Coolify can reach when making outbound requests.
 
-Exposes the instance MCP endpoint at `/mcp` for AI clients that authenticate with Coolify API tokens.
+### Allowed internal targets
 
-Enable **API access** first, create a token in **Keys & Tokens > API Tokens**, then enable the MCP server.
+<ZoomableImage src="/docs/images/core/instance-management/advanced-allowed-internal-targets.webp" alt="Allowed internal targets field in Advanced settings" />
 
-**Accepted values:**
-
-- Enabled: `https://coolify.shadowarcanist.com/mcp` is available to authenticated MCP clients.
-- Disabled: the instance-wide MCP endpoint is unavailable.
-
-For the detailed guide, follow [MCP integration](/mcp/what-is-mcp).
+Lists the internal destinations Coolify can reach when making outbound requests. Enter the hostnames, IP addresses, or CIDR ranges required by your integrations. Separate entries with commas or new lines, then click **Save changes**.
 
 ---
 
-### Navigation
+### Localhost targets
 
-<ZoomableImage src="shadow-todo" alt="SPA Navigation setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/advanced-localhost-targets.webp" alt="Localhost targets setting in Advanced settings" />
 
-Enables Livewire SPA-style navigation and prefetching for smoother dashboard page transitions.
-
-Choose **SPA navigation** or full page navigation, then click **Save changes**.
-
-**Accepted values:**
-
-- Enabled: dashboard links can prefetch and move between pages without full reloads.
-- Disabled: dashboard navigation uses full page loads.
+Controls whether outbound requests can target localhost addresses. Choose **Allowed** or **Blocked**, then click **Save changes**.
 
 **Notes:**
 
-- Disable it if the dashboard has navigation issues after a browser or Livewire change.
+- Loopback targets must also be included in **Allowed internal targets**.
+
+---
+
+## Interface and telemetry
+
+### Navigation
+
+<ZoomableImage src="/docs/images/core/instance-management/advanced-navigation.webp" alt="Navigation setting in Advanced settings" />
+
+Enables SPA-style navigation and prefetching for smoother dashboard page transitions. Choose **SPA navigation** or **Full page navigation**, then click **Save changes**.
+
+**Accepted values:**
+
+- **SPA navigation:** dashboard links can prefetch and move between pages without full reloads.
+- **Full page navigation:** dashboard navigation uses full page loads.
+
+**Notes:**
+
+- Choose full page navigation if the dashboard has navigation issues after a browser or Livewire change.
+
+---
+
+### Anonymous telemetry
+
+<ZoomableImage src="/docs/images/core/instance-management/advanced-anonymous-telemetry.webp" alt="Anonymous telemetry setting in Advanced settings" />
+
+Controls whether this instance sends an anonymous installation count to Coolify, contributing to the self-hosted installation count shown on [coolify.io](https://coolify.io/). Coolify does not store IP addresses or send error reports.
+
+Choose **Enabled** or **Disabled**, then click **Save changes**.
+
+**Accepted values:**
+
+- **Enabled:** do not send anonymous installation counts.
+- **Disabled:** allow anonymous installation counts.
 
 ---
 
 ### Sponsorship reminders
 
-<ZoomableImage src="shadow-todo" alt="Show Sponsorship Popup setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/advanced-sponsorship-reminders.webp" alt="Sponsorship reminders setting in Advanced settings" />
 
-Controls whether Coolify shows monthly sponsorship reminders.
-
-Choose whether sponsorship reminders are enabled, then click **Save changes**.
+Controls whether Coolify displays a sponsorship popup each month. Choose **Enabled** or **Disabled**, then click **Save changes**.
 
 **Accepted values:**
 
-- Enabled: monthly sponsorship reminders can be shown.
-- Disabled: sponsorship reminders are hidden permanently for the instance.
+- **Enabled:** monthly sponsorship reminders can be shown.
+- **Disabled:** sponsorship reminders are hidden for the instance.
 
 ---
 
-### Destructive action confirmation
+## Image storage
 
-<ZoomableImage src="shadow-todo" alt="Disable Two Step Confirmation setting screenshot" />
+These controls determine where compressed profile pictures and project icons are stored and how Coolify serves them.
 
-Controls whether destructive actions skip the extra text and password confirmation step.
+### Storage destination
 
-Choose **Require two-step confirmation** or **Skip two-step confirmation**, then click **Save changes**. Read the warning before allowing destructive actions to skip confirmation.
+<ZoomableImage src="/docs/images/core/instance-management/advanced-storage-destination.webp" alt="Image storage destination setting in Advanced settings" />
 
-**Accepted values:**
+Choose **Local storage** or a configured S3-compatible storage destination, then click **Save changes**. Add and test an S3 storage under **Storages** before selecting it here.
 
-- Require two-step confirmation: destructive actions require the extra confirmation step.
-- Skip two-step confirmation: destructive actions do not require the extra confirmation step.
+---
 
-**Notes:**
+### Image CDN URL
 
-- Coolify marks this as dangerous because it increases the chance of accidental deletions or unwanted changes.
+<ZoomableImage src="/docs/images/core/instance-management/advanced-image-cdn-url.webp" alt="Image CDN URL field in Advanced settings" />
 
-### Outbound endpoints
-
-These controls limit which internal destinations Coolify can reach when making outbound requests.
-
-#### Allowed internal targets
-
-<ZoomableImage src="shadow-todo" alt="Allowed internal targets setting" />
-
-Lists internal hosts that Coolify is allowed to reach when making outbound requests. Enter the hostnames required by your integrations, then click **Save changes**.
-
-#### Localhost targets
-
-<ZoomableImage src="shadow-todo" alt="Localhost targets setting" />
-
-Controls whether outbound requests can target localhost addresses. Choose **Allowed** or **Blocked**, then click **Save changes**.
-
-### Image storage
-
-These controls determine where uploaded profile images are stored and how Coolify serves them.
-
-#### Storage destination
-
-<ZoomableImage src="shadow-todo" alt="Image storage destination setting" />
-
-Choose **Local storage** or a configured S3-compatible storage destination for uploaded images, then click **Save changes**. Add and test an S3 storage under **Storages** before selecting it here.
-
-#### Image CDN URL
-
-<ZoomableImage src="shadow-todo" alt="Image CDN URL setting" />
-
-Sets the base URL used to serve stored images through a CDN. Enter the URL provided by your CDN, then click **Save changes**.
+Optionally sets the public CDN URL for profile pictures and project icons stored on S3. Enter the URL provided by your CDN, then click **Save changes**.
 
 </Tab>
 
