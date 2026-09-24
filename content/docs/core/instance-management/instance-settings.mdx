@@ -442,220 +442,89 @@ Choose the registry Coolify uses to pull its images. Switch registries if the cu
 
 ## Backup
 
-<ZoomableImage src="shadow-todo" alt="Coolify instance backup settings page" />
+<ZoomableImage src="/docs/images/core/instance-management/backup-settings-overview.webp" alt="Settings selected, then Backup in the instance settings navigation" />
 
-<Tabs id="instance-settings-backup" items={['Instance Database', 'Scheduled Backup', 'S3 Storage']}>
-<Tab value="Instance Database" icon={Database}>
+The Backup page manages backups of Coolify's internal database. It does not back up application volumes or external databases. For the full backup guide, see [Instance backup](/core/backup-and-recovery/instance-backup).
 
-The Backup page is for the internal Coolify database. It does not back up every application volume or every external database.
+### First-time setup
 
-### Configure Backup
+<ZoomableImage src="/docs/images/core/instance-management/backup-first-time-setup.webp" alt="Configure backup action when instance backups are not configured" />
 
-<ZoomableImage src="shadow-todo" alt="Configure Backup setting screenshot" />
-
-Creates the Coolify database resource and scheduled backup configuration needed for instance backups.
-
-If Coolify shows **Configure Backup**, click it first. If the localhost server is not validated, validate the server before configuring backups.
-
-**Accepted values:**
-
-- Available only when the localhost server is functional.
-- Creates or reveals the internal `coolify-db` backup configuration.
-
-For the detailed guide, follow [Instance backup](/core/backup-and-recovery/instance-backup).
+When instance backup has not been configured, the page shows **Backup is not configured**. Click **Configure backup** to create the internal `coolify-db` resource and its scheduled backup. The localhost server must be functional; if it is not, open server settings and validate the localhost connection first.
 
 ---
 
-### Description
+### Instance database
 
-<ZoomableImage src="shadow-todo" alt="Description setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/backup-instance-database.webp" alt="Internal coolify-db resource details on the Backup page" />
 
-Stores a short note for the internal Coolify database resource shown on the Backup page.
-
-Update **Description**, then click **Save changes**.
-
-**Accepted values:**
-
-- Any text value, or empty if you do not need a description.
+This section shows Coolify's internal `coolify-db` resource used for instance backups. Its **Name**, **UUID**, **User**, and **Password** are read-only. You can edit the **Description** and click **Save changes**.
 
 ---
 
-### UUID, Name, User, Password
+### Backup schedule
 
-<ZoomableImage src="shadow-todo" alt="UUID, Name, User, Password setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/backup-schedule.webp" alt="Backup schedule settings on the Backup page" />
 
-Shows the internal database identity and credentials Coolify uses for its own database backup resource.
+#### Enable or disable backups
 
-These fields are read-only on the Backup page. Change backup behavior from the Scheduled Backup section instead.
+Use **Enable backup** or **Disable backup** to turn the scheduled backup job on or off. This action saves immediately.
 
-**Accepted values:**
+Click **Back up now** to start a backup without waiting for the next scheduled run. The database must be running for this action.
 
-- Read-only values generated and managed by Coolify.
+#### Frequency
 
-</Tab>
+Sets how often the internal Coolify database is backed up. Enter a preset such as `hourly`, `daily`, `weekly`, `monthly`, or `yearly`, `every_minute`, or a valid cron expression, then click **Save changes**. For example, `0 0 * * *` runs daily at midnight.
 
-<Tab value="Scheduled Backup" icon={Calendar}>
+#### Timezone
 
-Scheduled Backup controls when the internal Coolify database backup runs and how long backup files are kept.
+Shows the timezone Coolify uses for the backup schedule. This field is read-only and uses the timezone set for Coolify's localhost server, or the instance timezone if no server timezone is set.
 
-### Backup Enabled
+#### Timeout
 
-<ZoomableImage src="shadow-todo" alt="Backup Enabled setting screenshot" />
+Sets the maximum backup runtime in seconds. If a backup exceeds this time, Coolify marks that execution as failed. Enter a value from `60` to `36000`, then click **Save changes**.
 
-Controls whether the scheduled backup job is active.
+#### Missing backup alert after
 
-Toggle **Backup Enabled** in **Scheduled Backup**, then click **Save changes**.
-
-**Accepted values:**
-
-- Enabled: the backup schedule can run.
-- Disabled: the backup schedule is kept but does not run.
+Sets how many days can pass without a backup execution before Coolify sends an alert through backup failure notification channels. Enter `0` to disable this alert, or a value from `1` to `365`, then click **Save changes**.
 
 ---
 
-### Backup Now
+### S3 storage
 
-<ZoomableImage src="shadow-todo" alt="Backup Now setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/backup-s3-storage.webp" alt="S3 storage settings on the Backup page" />
 
-Queues an immediate backup run without waiting for the next scheduled time.
+Use S3 storage to keep a remote copy of each instance backup. [Set up and validate an S3 storage destination](/core/s3-storage/overview) before enabling S3 backups.
 
-Click **Backup Now**. Coolify shows this action when the database resource is running.
-
-**Accepted values:**
-
-- A manual action; it does not change the saved schedule.
+Click **Enable S3** to turn on uploads, then select an **S3 storage** destination. Choose whether **Local copy** should **Keep local backup** or **Delete after S3 upload**. Save changes after updating the local copy option. The storage selector is unavailable until a validated destination exists.
 
 ---
 
-### Frequency
+### Retention
 
-<ZoomableImage src="shadow-todo" alt="Frequency setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/backup-retention.webp" alt="Local and S3 backup retention settings" />
 
-Sets how often the instance database backup runs.
+Set separate retention limits for **Local backups** and **S3 backups**. The first limit reached removes the oldest backup. A value of `0` means unlimited for that limit. Enter the limits, then click **Save changes**.
 
-Update **Frequency** in **Scheduled Backup**, then click **Save changes**.
+For each location, you can set:
 
-**Accepted values:**
-
-- `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, `yearly`, or a valid cron expression.
-- For example, `0 0 * * *` or `daily`.
-
----
-
-### Timezone
-
-<ZoomableImage src="shadow-todo" alt="Timezone setting screenshot" />
-
-Shows the timezone used for the backup schedule.
-
-This field is read-only on the backup schedule. Change the server timezone on the server settings page, or let Coolify use the instance timezone.
-
-**Accepted values:**
-
-- The server timezone when configured.
-- The instance timezone when the server does not define one.
+- **Backups to keep:** maximum number of recent backups.
+- **Days to keep:** remove backups older than this many days.
+- **Maximum storage (GB):** remove the oldest backups after the total size reaches this value. Decimal values are accepted.
 
 ---
 
-### Timeout
+### Executions
 
-<ZoomableImage src="shadow-todo" alt="Timeout setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/backup-executions.webp" alt="Instance backup execution history" />
 
-Sets the maximum time a backup job can run before Coolify treats it as timed out.
+Review backup status, database, file path, finish time, duration, size, and local or S3 availability.
 
-Update **Timeout** in seconds, then click **Save changes**.
+To delete a backup, click its delete icon. Whether Coolify asks for password confirmation depends on [Destructive action confirmation](#destructive-action-confirmation): **Require two-step confirmation** shows the prompt, while **Skip two-step confirmation** skips it. Coolify deletes the local backup file, if it is still present, and removes the execution from the list.
 
-**Accepted values:**
+Click the download icon on a successful run to download its backup.
 
-- Any integer from 60 to 36000 seconds.
-
----
-
-### Local Backup Retention
-
-<ZoomableImage src="shadow-todo" alt="Local Backup Retention setting screenshot" />
-
-Controls how many local backup files Coolify keeps on the server.
-
-Update the local retention limits, then click **Save changes**.
-
-**Accepted values:**
-
-- Number of backups to keep: integer `0` or greater.
-- Days to keep backups: integer `0` or greater.
-- Maximum storage in GB: number `0` or greater; decimals are accepted.
-- A value of `0` means unlimited for that specific limit.
-
-</Tab>
-
-<Tab value="S3 Storage" icon={CloudStorage}>
-
-S3 settings copy instance backup files to a validated S3-compatible storage target.
-
-### S3 Enabled
-
-<ZoomableImage src="shadow-todo" alt="S3 Enabled setting screenshot" />
-
-Controls whether backup files are uploaded to S3-compatible storage.
-
-Toggle **S3 Enabled**, choose a storage target, then click **Save changes**.
-
-**Accepted values:**
-
-- Enabled: upload backups to the selected S3 storage.
-- Disabled: keep backups local only unless **Disable Local Backup** was already reset.
-
-For the detailed guide, follow [S3 backups](/core/backup-and-recovery/instance-backup).
-
----
-
-### S3 Storage
-
-<ZoomableImage src="shadow-todo" alt="S3 Storage setting screenshot" />
-
-Selects the validated S3 storage record used for instance backup uploads.
-
-Create and validate an S3 storage entry first, then select it from the **S3 Storage** field.
-
-**Accepted values:**
-
-- One of the current team S3 storage entries.
-- Unavailable when no S3 storage exists.
-
----
-
-### Disable Local Backup
-
-<ZoomableImage src="shadow-todo" alt="Disable Local Backup setting screenshot" />
-
-Deletes the local backup file after Coolify uploads it to S3.
-
-Enable S3 backups first, then toggle **Disable Local Backup** and click **Save changes**.
-
-**Accepted values:**
-
-- Enabled: remove the local file after successful S3 upload.
-- Disabled: keep local backup files according to local retention rules.
-
----
-
-### S3 Storage Retention
-
-<ZoomableImage src="shadow-todo" alt="S3 Storage Retention setting screenshot" />
-
-Controls how many S3 backup files Coolify keeps in the selected S3 storage.
-
-Enable **S3**, update the S3 retention limits, then click **Save changes**.
-
-**Accepted values:**
-
-- Number of backups to keep: integer `0` or greater.
-- Days to keep backups: integer `0` or greater.
-- Maximum storage in GB: number `0` or greater; decimals are accepted.
-- A value of `0` means unlimited for that specific limit.
-
-</Tab>
-</Tabs>
+**Clean failed backups** removes rows for unsuccessful runs. **Clean deleted entries** removes rows for backups whose local files have already been deleted; it does not delete files. Successful runs appear here after a scheduled or manual backup completes.
 
 ---
 
