@@ -367,52 +367,73 @@ Optionally sets the public CDN URL for profile pictures and project icons stored
 
 <Tab value="Updates" icon={Refresh23}>
 
-Updates controls version checks and automatic self-updates.
+<ZoomableImage src="/docs/images/core/instance-management/updates-settings-overview.webp" alt="Settings selected, then Updates in the instance settings navigation" />
 
-### Check frequency
+Use the Updates page to check for new Coolify releases, install an update manually, or configure automatic updates.
 
-<ZoomableImage src="shadow-todo" alt="Update Check Frequency setting screenshot" />
+### Update Coolify
 
-Sets how often Coolify checks for new Coolify versions and pulls new service templates from the CDN.
+<ZoomableImage src="/docs/images/core/instance-management/updates-upgrade-now.webp" alt="Upgrade Now button in Updates settings" />
 
-Set **Check frequency**, then click **Save changes**. Use **Check Now** when you want to run the check immediately.
+When an update is available, click **Upgrade Now** to start the update. Coolify installs the latest version automatically. Follow [Update Coolify](/core/instance-management/update) for details.
+
+---
+
+### Update checks
+
+<ZoomableImage src="/docs/images/core/instance-management/updates-check-frequency.webp" alt="Check frequency field in Updates settings" />
+
+Sets how often Coolify checks the [Coolify versions file](https://cdn.coollabs.io/coolify/versions.json) for a new release.
+
+Set **Check frequency**, then click **Save changes**. Click **Check Now** to check for an update immediately.
 
 **Accepted values:**
 
 - `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, `yearly`, or a valid cron expression.
 - The default is `0 * * * *`, which checks every hour.
 
-For the detailed guide, follow [Update Coolify](/core/instance-management/update).
-
 ---
 
 ### Automatic updates
 
-<ZoomableImage src="shadow-todo" alt="Auto Update Enabled setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/updates-automatic-updates.webp" alt="Automatic updates selector in Updates settings" />
 
-Controls whether Coolify updates itself automatically.
+Controls whether Coolify installs updates automatically on the configured schedule.
 
-Choose **Enabled** or **Disabled** under **Automatic updates**. If `AUTOUPDATE` is set in `/data/coolify/source/.env`, the dashboard control is disabled and you must change the environment value instead.
+Choose **Enabled** or **Disabled** under **Automatic updates**. This setting saves immediately. When enabled, set **Update frequency** and click **Save changes**. If the control is disabled, `AUTOUPDATE` is set in `/data/coolify/source/.env` and controls automatic updates instead.
 
 **Accepted values:**
 
-- Enabled: Coolify can update itself on the configured schedule.
-- Disabled: Coolify only updates when you update it manually.
+- **Enabled:** Coolify installs updates on the configured schedule.
+- **Disabled:** Coolify does not install updates automatically.
 
 ---
 
 ### Update frequency
 
-<ZoomableImage src="shadow-todo" alt="Auto Update Frequency setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/updates-update-frequency.webp" alt="Update frequency field in Updates settings" />
 
-Sets the schedule Coolify uses when automatic updates are enabled.
+Sets how often Coolify installs updates when automatic updates are enabled.
 
-Enable **Automatic updates**, set **Update frequency**, then click **Save changes**.
+Enter the schedule in **Update frequency**, then click **Save changes**. This field is available when automatic updates are enabled and is managed by `AUTOUPDATE` in `/data/coolify/source/.env` when that variable is set.
 
 **Accepted values:**
 
 - `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, `yearly`, or a valid cron expression.
 - The default is `0 0 * * *`, which runs every day at `00:00`.
+
+---
+
+### Image registry
+
+<ZoomableImage src="/docs/images/core/instance-management/updates-image-registry.webp" alt="Docker registry selector in Updates settings" />
+
+Choose the registry Coolify uses to pull its images. Switch registries if the current source is rate limited or unreachable, then click **Save changes**.
+
+**Accepted values:**
+
+- **Docker Hub**
+- **GitHub Container Registry**
 
 </Tab>
 </Tabs>
