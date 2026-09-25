@@ -84,6 +84,10 @@ DATABASE_URL={{environment.DATABASE_URL}}
 
 Read [Shared variables](/core/team/shared-variables) for team, project, environment, and server scopes.
 
+## External secret managers
+
+Link Doppler, Infisical, or HashiCorp Vault and reference a remote value with `{{vault.KEY}}`. The source applies to the whole Service stack. Follow [Use a secret manager](/integrations/security/using-secret-managers).
+
 ## Generated domains and credentials
 
 Variables that start with `SERVICE_` can instruct Coolify to generate a value. URL and FQDN variables are tied to the matching Compose service and its domain configuration. Password, username, and random-value variables persist with the Service so components can share them.
