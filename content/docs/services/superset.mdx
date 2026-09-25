@@ -17,7 +17,7 @@ Superset is a modern data exploration and data visualization platform. Superset 
 
 ## Unofficial Docker Image
 
-By default, superset [does not support the use of docker-compose in production](https://github.com/amancevice/docker-superset). Coolify's superset template uses a [third-party, unofficial docker image created by amancevice](https://github.com/amancevice/docker-superset).
+Superset [does not support the use of Docker Compose in production](https://superset.apache.org/admin-docs/installation/docker-compose/). Coolify's Superset template uses a [third-party, unofficial Docker image created by amancevice](https://github.com/amancevice/docker-superset).
 
 ## Usage
 
@@ -25,7 +25,7 @@ By default, superset [does not support the use of docker-compose in production](
 
 After deploying the template, you will need to initialise the database and create your admin user. This can be done as follows:
 
-1. Open a termianal session to the superset docker container
+1. Open a terminal session to the Superset Docker container.
 
 2. Run one of the commands below, noting the `-` symbol:
 
@@ -37,15 +37,17 @@ After deploying the template, you will need to initialise the database and creat
    superset-demo
    ```
 
-   the source code for these scripts are available [here](https://github.com/amancevice/docker-superset/tree/main/bin).
+   The source code for these scripts is available [here](https://github.com/amancevice/docker-superset/tree/main/bin).
 
-3. Answer all questions in the prompts
+3. Follow the prompts to complete the setup.
 
 You can find the video instructions for this process in [Coolify's GitHub repository's pull request #4891](https://github.com/coollabsio/coolify/pull/4891).
 
-### Connecting to other Databases on Coolify Network
+### Connecting to Other Databases on the Coolify Network
 
-If you wish to connect to databases hosted on Coolify, but external to the Superset service template, you will need to turn on the option: [Connect to Predefined Network](/applications/builds/docker-compose#application-networking).
+If you wish to connect to databases hosted on Coolify but external to the Superset service template, you will need to enable the option [Connect to Predefined Networks](https://coolify.io/docs/knowledge-base/docker/compose#connect-to-predefined-networks).
+
+However, this may result in hostname conflicts with other services on the network. It is highly recommended that you [create a new Coolify destination](https://coolify.io/docs/knowledge-base/destinations/create) and deploy your Superset service and other databases to that destination instead.
 
 ### Configuring Superset
 
@@ -57,4 +59,4 @@ This Python configuration file can be edited from the service's **Persistent Sto
 
 - [Official Website](https://superset.apache.org)
 - [GitHub](https://github.com/apache/superset)
-- [Github Unofficial Docker Image](https://github.com/amancevice/docker-superset)
+- [Unofficial Docker Image](https://github.com/amancevice/docker-superset)
