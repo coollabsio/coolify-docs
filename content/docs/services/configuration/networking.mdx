@@ -1,32 +1,26 @@
 ---
 title: Networking
-description: Connect Service components to each other, the Coolify network, other Docker networks, and external clients.
+description: Connect Service components to each other, the Destination network, other Docker networks, and external clients.
 ---
 
 # Configure Service networking
 
-Every Service has a resource-specific Docker network for the components in its Compose definition. Coolify also creates a shared Docker network named `coolify` on each connected server.
+Every Service has its own Docker network for the components in its Compose definition. Every Service is also associated with a [Destination](/core/networking/destinations/overview), which identifies a server and a Docker network on that server.
 
-By default, Service components use only their resource-specific network. Enable **Connect To Predefined Network** when they must also join the predefined Docker network selected for the Service. On a standard installation, that network is `coolify`.
+By default, Service components use only their Service network. When **Connect To Predefined Network** is being enabled, they also join the Destination network.
 
-## Understand the two Service networks
+## Understand the Networks
 
 | Network | Purpose |
 | :--- | :--- |
-| Service network | A private network created for one Service stack. Its name is based on the Service UUID. Components in the stack use it automatically. |
-| Coolify network | The shared, attachable network named `coolify` that Coolify creates on the server. Applications, standalone Databases, the Coolify Proxy, and Services that enable **Connect To Predefined Network** can use it. |
+| Service network | A private network created for one Service stack. Its name is the Service UUID. Components in the stack use it automatically. |
+| Destination network | The shared Docker network of the Service's [Destination](/core/networking/destinations/overview), `coolify` as the default if no other Destination was created / selected by the user. Applications, standalone Databases, the Coolify Proxy, and Services that enable **Connect To Predefined Network** can use it. |
 
-The `coolify` network lets separate Coolify resources on the same server communicate without publishing host ports. It does not extend to another server.
-
-<Callout type="info" title="Predefined means the selected Coolify destination network">
-
-The default destination uses the Docker network named `coolify`. If an administrator creates another destination and selects it for the Service, **Connect To Predefined Network** attaches the Service components to that selected network instead. The setting attaches one predefined network; it does not connect the Service to every destination or Docker network on the server.
-
-</Callout>
+The Destination network lets separate Coolify resources on the same server communicate without publishing host ports. It does not extend to another server.
 
 ## Choose the connection target
 
-<Tabs id="service-networking-target" items={['Same Service', 'Coolify network', 'Other network', 'Other server', 'Public access']}>
+<Tabs id="service-networking-target" items={['Same Service', 'Destination network', 'Other network', 'Other server', 'Public access']}>
 <Tab value="Same Service">
 
 Components in one Compose definition communicate over the Service network. Use the Compose `services:` key as the hostname and the port where the dependency listens inside its container:
@@ -47,20 +41,18 @@ In this example, `api` connects to `database:5432`. It must not use `localhost`,
 You do not need `ports:` or a domain for this private connection. A Compose `depends_on` entry can control startup order, but the calling component must still tolerate the dependency taking time to become ready.
 
 </Tab>
-<Tab value="Coolify network">
+<Tab value="Destination network">
 
-Use the `coolify` network when the Service must privately reach an Application, standalone Database, or another Service attached to that network on the same server.
+Use the Destination network when the Service must privately reach an Application, standalone Database, or another Service on the same server.
 
-1. Confirm that both resources run on the same server.
-2. Confirm that the other resource is attached to the `coolify` network.
-3. Confirm that the Service's predefined destination network is `coolify`.
-4. Open the Service and select **Configuration > General**.
-5. Enable **Connect To Predefined Network**.
-6. Restart or deploy the Service.
-7. Use the other resource's internal hostname and internal port.
-8. Test the connection from the calling Service component.
+1. Confirm that both resources use the same Destination. [Manage Destinations](/core/networking/destinations/manage) shows the resources attached to each Destination.
+2. Open the Service and select **Configuration > General**.
+3. Enable **Connect To Predefined Network**.
+4. Restart or deploy the Service.
+5. Use the other resource's internal hostname and internal port.
+6. Test the connection from the calling Service component.
 
-Coolify attaches every Service component to the predefined network and adds an alias based on the Compose service name and Service UUID. With the default destination, the predefined network is `coolify`. Use the deployed container name or alias shown by Coolify when another resource must call that component. Do not assume that the unsuffixed Compose service name is unique outside its own stack.
+Coolify attaches every Service component to the Destination network and adds an alias in the form `<compose-service-name>-<service-uuid>`. Use that alias when another resource must call the component. Do not assume that the unsuffixed Compose service name is unique outside its own stack. Tip: You can find the UUID of your Service under the **Resource Details**.
 
 For a standalone Database, use the **Internal URL** shown by Coolify. For another Service, identify its deployed component name and the port where that component listens.
 
@@ -75,11 +67,11 @@ The Coolify Proxy joins the Service network when Coolify starts the stack. A com
 
 Resources on separate Docker networks cannot resolve or connect to each other by container name unless they also share a network.
 
-**Connect To Predefined Network** joins the Service only to its predefined destination network, normally `coolify`. It does not join every network on the server.
+**Connect To Predefined Network** joins the Service only to its Destination network. It does not join the networks of other Destinations or any other network on the server.
 
 Choose one of these approaches:
 
-1. **Use one shared network.** This is the simplest option when the resources are intended to communicate privately. For an existing Service, clone it to the required destination and migrate its data separately. [Clone or move a Service](/services/operations/resource-operations) explains the data boundary.
+1. **Use one Destination network.** This is the simplest option when the resources are intended to communicate privately. A Service's Destination cannot be changed in place, so clone the Service to the required Destination and migrate its data separately. [Clone or move a Service](/services/operations/resource-operations) explains the data boundary.
 2. **Use a domain or another routed endpoint.** This preserves network isolation and works well for HTTP APIs. The request travels through the proxy instead of Docker's private DNS.
 3. **Manage an external Docker network in Compose.** Use this only when you own the Compose definition and the network already exists on the same server.
 
@@ -98,14 +90,14 @@ networks:
 
 <Callout type="warning" title="External networks are an advanced Compose responsibility">
 
-Coolify does not create or manage an external network declared this way. The network must exist on the selected server, and deleting or renaming it breaks the connection. Declaring an external Compose network also does not change the Service's predefined destination in the dashboard.
+Coolify does not create or manage an external network declared this way. The network must exist on the selected server, and deleting or renaming it breaks the connection. Declaring an external Compose network also does not change the Service's Destination in the dashboard.
 
 </Callout>
 
 </Tab>
 <Tab value="Other server">
 
-A Docker bridge network and its container DNS exist on one Docker host. The `coolify` network on one server does not route traffic to the `coolify` network on another server.
+A Docker bridge network and its container DNS exist on one Docker host. Each Destination belongs to one server, so a Destination network on one server does not route traffic to a Destination network on another server, even when both are named `coolify`.
 
 Use a network path that is routable between the servers:
 
@@ -176,9 +168,9 @@ If private communication fails, first confirm that both containers run on the sa
 ## Networking boundaries
 
 - A project or environment organizes resources; it is not a network boundary.
-- Coolify creates a separate `coolify` network on each connected server.
-- A Service uses its resource-specific network even when another resource has the same project or environment.
-- **Connect To Predefined Network** joins the Service to its one predefined destination network, normally `coolify`.
+- Each Destination belongs to one server, so each server has its own Destination networks.
+- A Service uses its own Service network even when another resource has the same project or environment.
+- **Connect To Predefined Network** joins the Service to its one Destination network.
 - Docker service names resolve only on networks shared by the relevant containers.
 - Domains provide routed application access; they do not merge Docker networks.
 - Published ports expose server interfaces and require firewall and protocol security.
