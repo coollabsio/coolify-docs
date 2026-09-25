@@ -15,7 +15,7 @@ N8N is an open-source workflow automation tool that allows you to connect differ
 
 ## Deployment Variants
 
-N8N is available in three deployment configurations in Coolify:
+N8N is available in four deployment configurations in Coolify:
 
 ### n8n (Default)
 - **Database:** SQLite (embedded)
@@ -39,6 +39,17 @@ N8N is available in three deployment configurations in Coolify:
   - PostgreSQL 16 container
   - Redis container for queue management
   - Automatic database configuration and health checks
+
+### n8n with PostgreSQL, Worker, and AI Assistant
+- **Database:** PostgreSQL + Redis
+- **Use case:** Queue mode with n8n Assistant. Requires n8n 2.35+.
+- **Components:**
+  - n8n main container
+  - n8n-worker and task-runners
+  - PostgreSQL 16 and Redis
+  - sandbox-certs, sandbox-api, sandbox-runner-1 (privileged Docker-in-Docker)
+  - SearXNG (internal only)
+- Set `N8N_INSTANCE_AI_MODEL_API_KEY` (or add a model key in n8n after login). Do not publish sandbox or SearXNG ports.
 
 ## Screenshots
 
