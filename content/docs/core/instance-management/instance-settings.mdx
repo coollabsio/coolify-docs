@@ -36,7 +36,7 @@ Open **Settings** in the left sidebar, or visit:
 https://coolify.shadowarcanist.com/settings
 ```
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/general-settings-tab.webp" alt="Settings page with General selected in the instance settings navigation" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/general-settings-tab.webp" alt="Settings page with General selected in the instance settings navigation" />
 
 The Settings page groups options under **Configuration** (General, Advanced, and Updates) and **Instance** (Backup, Email, Authentication, and Scheduled Jobs). Select a section from the Settings navigation, then use **Save changes** to apply your edits.
 
@@ -45,13 +45,13 @@ The Settings page groups options under **Configuration** (General, Advanced, and
 <Tabs id="instance-settings-configuration" items={['General', 'Advanced', 'Updates']}>
 <Tab value="General" icon={Settings}>
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/general-settings-overview.webp" alt="Open Settings, then select General in the instance settings navigation" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/general-settings-overview.webp" alt="Open Settings, then select General in the instance settings navigation" />
 
 Use General for the dashboard URL, HTTP-to-HTTPS behavior, instance label, timezone, and network addresses Coolify should use.
 
 ### URL
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/general-url.webp" alt="URL field in General settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/general-url.webp" alt="URL field in General settings" />
 
 This is the address you use to open the Coolify dashboard. Coolify also uses it when it needs to generate links back to the instance. If you want the dashboard to use HTTPS, the value must start with `https://`.
 
@@ -70,7 +70,7 @@ Enter the full dashboard URL in **URL** and click **Save changes**. Before chang
 
 ### Redirect HTTP to HTTPS
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/general-redirect-http-to-https.webp" alt="Redirect HTTP to HTTPS setting" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/general-redirect-http-to-https.webp" alt="Redirect HTTP to HTTPS setting" />
 
 Controls whether requests to the Coolify dashboard over HTTP are redirected to HTTPS.
 
@@ -90,7 +90,7 @@ Choose **Enabled** or **Disabled**, then click **Save changes**.
 
 ### Name
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/general-name.webp" alt="Name field in General settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/general-name.webp" alt="Name field in General settings" />
 
 Adds the instance name in brackets before the page title shown in the browser tab. For example, a name of `Production` appears as `[Production] Settings | Coolify`. It does not change the Coolify name or logo in the sidebar.
 
@@ -105,7 +105,7 @@ Update **Name** and click **Save changes**.
 
 ### Instance timezone
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/general-timezone.webp" alt="Instance timezone selector in General settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/general-timezone.webp" alt="Instance timezone selector in General settings" />
 
 This timezone is used by instance-level schedules, including update checks and automatic updates. It does not change the timezone inside your applications or databases.
 
@@ -123,7 +123,7 @@ Search for the timezone in **Instance timezone**, select it from the list, and c
 
 ### Instance public IPv4
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/general-public-ipv4.webp" alt="Instance public IPv4 field in General settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/general-public-ipv4.webp" alt="Instance public IPv4 field in General settings" />
 
 Coolify normally detects the public IPv4 address of the server that runs the instance. Use this field only when the detected address is wrong, usually on servers with multiple public IPs.
 
@@ -138,7 +138,7 @@ Enter the IPv4 address Coolify should use and click **Save changes**.
 
 ### Instance public IPv6
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/general-public-ipv6.webp" alt="Instance public IPv6 field in General settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/general-public-ipv6.webp" alt="Instance public IPv6 field in General settings" />
 
 Coolify normally detects the public IPv6 address of the server that runs the instance. Use this field only when Coolify picks the wrong IPv6 address or cannot detect it.
 
@@ -153,7 +153,7 @@ Enter the IPv6 address Coolify should use and click **Save changes**.
 
 <Tab value="Advanced" icon={Setting2}>
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-settings-overview.webp" alt="Advanced selected in the instance settings navigation, with Advanced settings sections visible" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-settings-overview.webp" alt="Advanced selected in the instance settings navigation, with Advanced settings sections visible" />
 
 Advanced contains access, DNS validation, API and MCP, outbound endpoint, interface and telemetry, and image storage controls.
 
@@ -161,7 +161,7 @@ Advanced contains access, DNS validation, API and MCP, outbound endpoint, interf
 
 ### Registration
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-registration.webp" alt="Registration setting in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-registration.webp" alt="Registration setting in Advanced settings" />
 
 Controls whether users can create their own accounts from the registration page. Choose **Anyone can register** or **Registration disabled**, then click **Save changes**.
 
@@ -178,7 +178,7 @@ Controls whether users can create their own accounts from the registration page.
 
 ### Destructive action confirmation
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-destructive-action-confirmation.webp" alt="Destructive action confirmation setting in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-destructive-action-confirmation.webp" alt="Destructive action confirmation setting in Advanced settings" />
 
 Controls whether destructive actions require password and text confirmation. Choose **Require two-step confirmation** or **Skip two-step confirmation**, then click **Save changes**.
 
@@ -197,7 +197,7 @@ Controls whether destructive actions require password and text confirmation. Cho
 
 ### DNS validation
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-dns-validation.webp" alt="DNS validation setting in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-dns-validation.webp" alt="DNS validation setting in Advanced settings" />
 
 Checks whether custom domains point to the right server before deployment. Choose **Enabled** or **Disabled**, then click **Save changes**.
 
@@ -210,7 +210,7 @@ Checks whether custom domains point to the right server before deployment. Choos
 
 ### Custom DNS servers
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-custom-dns-servers.webp" alt="Custom DNS servers field in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-custom-dns-servers.webp" alt="Custom DNS servers field in Advanced settings" />
 
 Changes which DNS resolvers Coolify uses for domain validation. Enter the resolver IPs in **Custom DNS servers**, then click **Save changes**.
 
@@ -225,7 +225,7 @@ Changes which DNS resolvers Coolify uses for domain validation. Enter the resolv
 
 ### API access
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-api-access.webp" alt="API access setting in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-api-access.webp" alt="API access setting in Advanced settings" />
 
 Controls whether authenticated requests to the Coolify REST API are allowed. Choose **Enabled** or **Disabled**, then click **Save changes**. For API tokens, follow [API tokens](/core/security/credentials/api-tokens).
 
@@ -238,7 +238,7 @@ Controls whether authenticated requests to the Coolify REST API are allowed. Cho
 
 ### MCP server
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-mcp-server.webp" alt="MCP server setting in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-mcp-server.webp" alt="MCP server setting in Advanced settings" />
 
 Enables the MCP endpoint at `/mcp` for authenticated clients. Use your instance URL followed by `/mcp` and authenticate with a Sanctum bearer token created from [API tokens](/core/security/credentials/api-tokens).
 
@@ -253,7 +253,7 @@ For the detailed guide, follow [MCP integration](/mcp/what-is-mcp).
 
 ### Allowed API IPs
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-allowed-api-ips.webp" alt="Allowed API IPs field in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-allowed-api-ips.webp" alt="Allowed API IPs field in Advanced settings" />
 
 Restricts which source IP addresses can call the Coolify API. Enter comma-separated IPs or CIDR ranges, then click **Save changes**.
 
@@ -275,7 +275,7 @@ These controls limit which internal destinations Coolify can reach when making o
 
 ### Allowed internal targets
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-allowed-internal-targets.webp" alt="Allowed internal targets field in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-allowed-internal-targets.webp" alt="Allowed internal targets field in Advanced settings" />
 
 Lists the internal destinations Coolify can reach when making outbound requests. Enter the hostnames, IP addresses, or CIDR ranges required by your integrations. Separate entries with commas or new lines, then click **Save changes**.
 
@@ -283,7 +283,7 @@ Lists the internal destinations Coolify can reach when making outbound requests.
 
 ### Localhost targets
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-localhost-targets.webp" alt="Localhost targets setting in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-localhost-targets.webp" alt="Localhost targets setting in Advanced settings" />
 
 Controls whether outbound requests can target localhost addresses. Choose **Allowed** or **Blocked**, then click **Save changes**.
 
@@ -297,7 +297,7 @@ Controls whether outbound requests can target localhost addresses. Choose **Allo
 
 ### Navigation
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-navigation.webp" alt="Navigation setting in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-navigation.webp" alt="Navigation setting in Advanced settings" />
 
 Enables SPA-style navigation and prefetching for smoother dashboard page transitions. Choose **SPA navigation** or **Full page navigation**, then click **Save changes**.
 
@@ -314,7 +314,7 @@ Enables SPA-style navigation and prefetching for smoother dashboard page transit
 
 ### Anonymous telemetry
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-anonymous-telemetry.webp" alt="Anonymous telemetry setting in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-anonymous-telemetry.webp" alt="Anonymous telemetry setting in Advanced settings" />
 
 Controls whether this instance sends an anonymous installation count to Coolify, contributing to the self-hosted installation count shown on [coolify.io](https://coolify.io/). Coolify does not store IP addresses or send error reports.
 
@@ -329,7 +329,7 @@ Choose **Enabled** or **Disabled**, then click **Save changes**.
 
 ### Sponsorship reminders
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-sponsorship-reminders.webp" alt="Sponsorship reminders setting in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-sponsorship-reminders.webp" alt="Sponsorship reminders setting in Advanced settings" />
 
 Controls whether Coolify displays a sponsorship popup each month. Choose **Enabled** or **Disabled**, then click **Save changes**.
 
@@ -346,7 +346,7 @@ These controls determine where compressed profile pictures and project icons are
 
 ### Storage destination
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-storage-destination.webp" alt="Image storage destination setting in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-storage-destination.webp" alt="Image storage destination setting in Advanced settings" />
 
 Choose **Local storage** or a configured S3-compatible storage destination, then click **Save changes**. Add and test an S3 storage under **Storages** before selecting it here.
 
@@ -354,7 +354,7 @@ Choose **Local storage** or a configured S3-compatible storage destination, then
 
 ### Image CDN URL
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/advanced-image-cdn-url.webp" alt="Image CDN URL field in Advanced settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/advanced-image-cdn-url.webp" alt="Image CDN URL field in Advanced settings" />
 
 Optionally sets the public CDN URL for profile pictures and project icons stored on S3. Enter the URL provided by your CDN, then click **Save changes**.
 
@@ -362,13 +362,13 @@ Optionally sets the public CDN URL for profile pictures and project icons stored
 
 <Tab value="Updates" icon={Refresh23}>
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/updates-settings-overview.webp" alt="Settings selected, then Updates in the instance settings navigation" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/updates-settings-overview.webp" alt="Settings selected, then Updates in the instance settings navigation" />
 
 Use the Updates page to check for new Coolify releases, install an update manually, or configure automatic updates.
 
 ### Update Coolify
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/updates-upgrade-now.webp" alt="Upgrade Now button in Updates settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/updates-upgrade-now.webp" alt="Upgrade Now button in Updates settings" />
 
 When an update is available, click **Upgrade Now** to start the update. Coolify installs the latest version automatically. Follow [Update Coolify](/core/instance-management/update) for details.
 
@@ -376,7 +376,7 @@ When an update is available, click **Upgrade Now** to start the update. Coolify 
 
 ### Update checks
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/updates-check-frequency.webp" alt="Check frequency field in Updates settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/updates-check-frequency.webp" alt="Check frequency field in Updates settings" />
 
 Sets how often Coolify checks the [Coolify versions file](https://cdn.coollabs.io/coolify/versions.json) for a new release.
 
@@ -391,7 +391,7 @@ Set **Check frequency**, then click **Save changes**. Click **Check Now** to che
 
 ### Automatic updates
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/updates-automatic-updates.webp" alt="Automatic updates selector in Updates settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/updates-automatic-updates.webp" alt="Automatic updates selector in Updates settings" />
 
 Controls whether Coolify installs updates automatically on the configured schedule.
 
@@ -406,7 +406,7 @@ Choose **Enabled** or **Disabled** under **Automatic updates**. This setting sav
 
 ### Update frequency
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/updates-update-frequency.webp" alt="Update frequency field in Updates settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/updates-update-frequency.webp" alt="Update frequency field in Updates settings" />
 
 Sets how often Coolify installs updates when automatic updates are enabled.
 
@@ -421,7 +421,7 @@ Enter the schedule in **Update frequency**, then click **Save changes**. This fi
 
 ### Image registry
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/updates-image-registry.webp" alt="Docker registry selector in Updates settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/updates-image-registry.webp" alt="Docker registry selector in Updates settings" />
 
 Choose the registry Coolify uses to pull its images. Switch registries if the current source is rate limited or unreachable, then click **Save changes**.
 
@@ -438,13 +438,13 @@ Choose the registry Coolify uses to pull its images. Switch registries if the cu
 <Tabs id="instance-settings-instance" items={['Backup', 'Email', 'Authentication', 'Scheduled Jobs']}>
 <Tab value="Backup" icon={Database}>
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/backup-settings-overview.webp" alt="Settings selected, then Backup in the instance settings navigation" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/backup-settings-overview.webp" alt="Settings selected, then Backup in the instance settings navigation" />
 
 The Backup page manages backups of Coolify's internal database. It does not back up application volumes or external databases. For the full backup guide, see [Instance backup](/core/backup-and-recovery/instance-backup).
 
 ### First-time setup
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/backup-first-time-setup.webp" alt="Configure backup action when instance backups are not configured" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/backup-first-time-setup.webp" alt="Configure backup action when instance backups are not configured" />
 
 When instance backup has not been configured, the page shows **Backup is not configured**. Click **Configure backup** to create the internal `coolify-db` resource and its scheduled backup. The localhost server must be functional; if it is not, open server settings and validate the localhost connection first.
 
@@ -452,7 +452,7 @@ When instance backup has not been configured, the page shows **Backup is not con
 
 ### Instance database
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/backup-instance-database.webp" alt="Internal coolify-db resource details on the Backup page" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/backup-instance-database.webp" alt="Internal coolify-db resource details on the Backup page" />
 
 This section shows Coolify's internal `coolify-db` resource used for instance backups. Its **Name**, **UUID**, **User**, and **Password** are read-only. You can edit the **Description** and click **Save changes**.
 
@@ -460,7 +460,7 @@ This section shows Coolify's internal `coolify-db` resource used for instance ba
 
 ### Backup schedule
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/backup-schedule.webp" alt="Backup schedule settings on the Backup page" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/backup-schedule.webp" alt="Backup schedule settings on the Backup page" />
 
 #### Enable or disable backups
 
@@ -488,7 +488,7 @@ Sets how many days can pass without a backup execution before Coolify sends an a
 
 ### S3 storage
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/backup-s3-storage.webp" alt="S3 storage settings on the Backup page" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/backup-s3-storage.webp" alt="S3 storage settings on the Backup page" />
 
 Use S3 storage to keep a remote copy of each instance backup. [Set up and validate an S3 storage destination](/core/s3-storage/overview) before enabling S3 backups.
 
@@ -498,7 +498,7 @@ Click **Enable S3** to turn on uploads, then select an **S3 storage** destinatio
 
 ### Retention
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/backup-retention.webp" alt="Local and S3 backup retention settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/backup-retention.webp" alt="Local and S3 backup retention settings" />
 
 Set separate retention limits for **Local backups** and **S3 backups**. The first limit reached removes the oldest backup. A value of `0` means unlimited for that limit. Enter the limits, then click **Save changes**.
 
@@ -512,7 +512,7 @@ For each location, you can set:
 
 ### Executions
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/backup-executions.webp" alt="Instance backup execution history" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/backup-executions.webp" alt="Instance backup execution history" />
 
 Review backup status, database, file path, finish time, duration, size, and local or S3 availability.
 
@@ -526,13 +526,13 @@ Click the download icon on a successful run to download its backup.
 
 <Tab value="Email" icon={Mailbox}>
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/email-settings-overview.webp" alt="Email selected in instance settings, with Sender, SMTP server, and Resend sections" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/email-settings-overview.webp" alt="Email selected in instance settings, with Sender, SMTP server, and Resend sections" />
 
 Configure the sender identity and choose SMTP or Resend to deliver Coolify's transactional email.
 
 ### Sender
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/email-sender.webp" alt="Sender section with From name and From address highlighted" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/email-sender.webp" alt="Sender section with From name and From address highlighted" />
 
 Sender settings are shared by SMTP and Resend.
 
@@ -556,7 +556,7 @@ Sets the sender address used for outgoing email. Enter a valid email address, th
 
 ### SMTP server
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/email-smtp-server.webp" alt="SMTP server settings highlighted" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/email-smtp-server.webp" alt="SMTP server settings highlighted" />
 
 Connect Coolify to an SMTP-compatible email provider.
 
@@ -600,7 +600,7 @@ After editing SMTP connection settings, click **Save changes**.
 
 ### Resend
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/email-resend.webp" alt="Resend delivery settings and API key highlighted" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/email-resend.webp" alt="Resend delivery settings and API key highlighted" />
 
 Connect Coolify to [Resend](https://resend.com) to send transactional email through that provider.
 
@@ -610,13 +610,13 @@ Create an API key in Resend and enter it in **API key**. The key is required whe
 
 <Tab value="Authentication">
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/authentication-settings-overview.webp" alt="Authentication settings page with OAuth providers listed in the navigation" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/authentication-settings-overview.webp" alt="Authentication settings page with OAuth providers listed in the navigation" />
 
 The **Authentication** page lists the OAuth providers supported by Coolify. Each provider has its own section with an **Enable** action, credentials, a redirect URI, and any additional fields that provider requires.
 
 ### OAuth providers
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/authentication-providers.webp" alt="OAuth provider list in Authentication settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/authentication-providers.webp" alt="OAuth provider list in Authentication settings" />
 
 Currently supported providers are:
 
@@ -638,7 +638,7 @@ For the detailed guide, follow [OAuth setup](/core/security/authentication/oauth
 
 ### Enabled providers
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/authentication-enabled-providers.webp" alt="An enabled OAuth provider showing the Disable button" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/authentication-enabled-providers.webp" alt="An enabled OAuth provider showing the Disable button" />
 
 Controls whether the provider appears as a sign-in option on the Coolify login page.
 
@@ -648,7 +648,7 @@ Fill in the required provider fields, then click **Enable**. Click **Disable** t
 
 ### Redirect URI
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/authentication-redirect-uri.webp" alt="Redirect URI field in OAuth provider settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/authentication-redirect-uri.webp" alt="Redirect URI field in OAuth provider settings" />
 
 Defines the callback URL the identity provider redirects back to after authorization.
 
@@ -662,7 +662,7 @@ Copy the **Redirect URI** shown by Coolify into the OAuth application at the pro
 
 ### Client ID
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/authentication-client-id.webp" alt="Client ID field in OAuth provider settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/authentication-client-id.webp" alt="Client ID field in OAuth provider settings" />
 
 Stores the OAuth application client ID from the identity provider.
 
@@ -676,7 +676,7 @@ Create an OAuth application with the provider, copy its client ID, paste it into
 
 ### Client Secret
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/authentication-client-secret.webp" alt="Client secret field in OAuth provider settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/authentication-client-secret.webp" alt="Client secret field in OAuth provider settings" />
 
 Stores the OAuth application secret from the identity provider.
 
@@ -694,7 +694,7 @@ Provider sections show additional fields when required by that provider.
 
 ### Base URL
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/authentication-base-url.webp" alt="Base URL field in OAuth provider settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/authentication-base-url.webp" alt="Base URL field in OAuth provider settings" />
 
 Stores the provider base URL for self-hosted or issuer-based OAuth providers.
 
@@ -708,7 +708,7 @@ Enter the provider base URL, then click **Save changes**.
 
 ### Tenant
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/authentication-tenant.webp" alt="Tenant field in Azure OAuth provider settings" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/authentication-tenant.webp" alt="Tenant field in Azure OAuth provider settings" />
 
 Stores tenant information for providers that support or require tenant scoping.
 
@@ -722,13 +722,13 @@ For Azure, enter the required tenant value. For Google, optionally enter a hoste
 
 <Tab value="Scheduled Jobs" icon={Calendar}>
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/scheduled-jobs-overview.webp" alt="Scheduled Jobs page in instance settings, with Failures, Scheduler runs, and Skipped tabs" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/scheduled-jobs-overview.webp" alt="Scheduled Jobs page in instance settings, with Failures, Scheduler runs, and Skipped tabs" />
 
 The **Scheduled Jobs** page shows activity from the scheduler running on this Coolify instance. This includes scheduled database and volume backups, tasks, and Docker cleanup for resources on managed servers. It shows scheduler activity and job results; configure each backup, task, or cleanup in its own settings. Activity is grouped into **Failures**, **Scheduler runs**, and **Skipped**; you can search, filter, sort, refresh, and page through each list.
 
 ### Failures
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/scheduled-jobs-failures.webp" alt="Failures tab in Scheduled Jobs" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/scheduled-jobs-failures.webp" alt="Failures tab in Scheduled Jobs" />
 
 Shows scheduled backup, task, and cleanup executions that did not complete successfully. Review the job type, resource, server, timing, and error details. Search or filter the list, and refresh it after resolving a failure.
 
@@ -736,7 +736,7 @@ Shows scheduled backup, task, and cleanup executions that did not complete succe
 
 ### Scheduler runs
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/scheduled-jobs-runs.webp" alt="Scheduler runs tab showing recent scheduler activity" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/scheduled-jobs-runs.webp" alt="Scheduler runs tab showing recent scheduler activity" />
 
 Shows when the Coolify instance scheduler ran, its message and duration, and how many jobs it dispatched or skipped. Search, filter, sort, refresh, and paginate through the run history.
 
@@ -744,7 +744,7 @@ Shows when the Coolify instance scheduler ran, its message and duration, and how
 
 ### Skipped
 
-<ZoomableImage src="/docs/images/core/instance-management/manage-coolify/scheduled-jobs-skipped.webp" alt="Skipped tab showing skipped scheduled jobs and their reasons" />
+<ZoomableImage src="/docs/images/core/instance-management/instance-settings/scheduled-jobs-skipped.webp" alt="Skipped tab showing skipped scheduled jobs and their reasons" />
 
 Shows scheduled work that the Coolify instance scheduler did not dispatch, with the job type, resource, and reason. Review the reason, resolve the related issue, then refresh the list.
 </Tab>
