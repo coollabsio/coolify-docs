@@ -15,7 +15,6 @@ If you use **Coolify Cloud**, the Coolify team manages instance updates. You mus
 
 For a self-hosted instance, open **Settings** in the left sidebar, choose **Configuration**, then select **Updates**.
 
-{/* <ZoomableImage src="shadow-to-do" alt="Updates page in Coolify instance settings" /> */}
 
 ## Before you update
 
@@ -30,64 +29,37 @@ For a self-hosted instance, open **Settings** in the left sidebar, choose **Conf
 <Tabs id="coolify-update-path" items={['Automatic', 'Dashboard', 'Terminal']}>
 <Tab value="Automatic" icon={Autobrightness2}>
 
-### Configure automatic updates
+## Automatic updates
 
-The **Updates** page controls when Coolify checks for new releases and whether it installs them automatically.
+Enable **Automatic updates** and set **Update frequency**. Coolify then checks for a new release and installs it automatically when one is available.
 
-These schedules use the instance timezone configured in **Settings > Configuration > General**.
+### Enable automatic updates
 
-### Update check frequency
+<ZoomableImage src="/docs/images/core/instance-management/update/automatic-updates-overview.webp" alt="Settings, Updates, and Automatic updates controls highlighted in sequence" />
 
-{/* <ZoomableImage src="shadow-to-do" alt="Update Check Frequency setting in Coolify Updates" /> */}
+Choose **Enabled** under **Automatic updates**. This option saves immediately, and **Update frequency** becomes available.
 
-Controls how often Coolify checks the [CDN](https://cdn.coollabs.io/coolify/versions.json) for a newer Coolify version and pulls updated service templates.
+If automatic updates cannot be configured in the dashboard, `AUTOUPDATE` is set in `/data/coolify/source/.env`. Configure automatic updates in that file instead.
 
-Set **Update Check Frequency**, then click **Save**.
+### Update frequency
 
-Click **Check Manually** to run the check immediately.
+<ZoomableImage src="/docs/images/core/instance-management/update/automatic-update-frequency.webp" alt="Update frequency field in Automatic updates settings" />
 
-**Accepted values:**
+**Update frequency** sets how often Coolify checks for a new release and installs it if one is available. Enter a cron expression or a preset such as `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, or `yearly`, then click **Save changes**. The default is `0 0 * * *`, which runs daily at midnight in the instance timezone.
 
-- `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, or `yearly`.
-- A valid cron expression.
-- The default is `0 * * * *`, which checks every hour.
+During an update, Coolify restarts to apply the new version. The dashboard is unavailable briefly, usually for less than a minute.
 
----
-
-### Auto update
-
-{/* <ZoomableImage src="shadow-to-do" alt="Auto Update Enabled setting in Coolify Updates" /> */}
-
-Controls whether Coolify installs an available newer release on the automatic-update schedule.
-
-Under **Auto Update**, change **Enabled** and click **Save**.
-
-**Accepted values:**
-
-- Enabled: Coolify checks for a newer release when the automatic-update schedule runs and installs it when a new version is available.
-- Disabled: Coolify does not install releases automatically. You can still update from the dashboard or terminal.
-
-**Notes:**
-
-- When `AUTOUPDATE` is set in `/data/coolify/source/.env`, Coolify disables the dashboard control for automatic updates. Change the environment value in that file instead.
+**Update frequency is unavailable when `AUTOUPDATE` is set in `/data/coolify/source/.env`.**
 
 ---
 
-### Auto update frequency
+### Check frequency
 
-{/* <ZoomableImage src="shadow-to-do" alt="Auto Update Frequency setting in Coolify Updates" /> */}
+<ZoomableImage src="/docs/images/core/instance-management/update/automatic-update-check-frequency.webp" alt="Check frequency field and Check now button in Update checks" />
 
-Sets when Coolify runs automatic updates. Enable **Auto Update**, set **Frequency (cron expression)**, then click **Save**.
+**Check frequency** sets how often Coolify checks the [versions file on the CDN](https://cdn.coollabs.io/coolify/versions.json) and updates the available-version status. Coolify installs an update only when a new version is available. Enter a cron expression or a preset such as `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, or `yearly`, then click **Save changes**. The default is `0 * * * *`, which runs hourly.
 
-**Accepted values:**
-
-- `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, or `yearly`.
-- A valid cron expression.
-- The default is `0 0 * * *`, which runs every day at 00:00.
-
-**Notes:**
-
-- This setting is unavailable while automatic updates are disabled or controlled with `AUTOUPDATE` in `/data/coolify/source/.env`.
+Click **Check now** to check for a new version immediately. This does not install the update.
 
 </Tab>
 
