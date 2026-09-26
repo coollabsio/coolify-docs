@@ -106,23 +106,27 @@ When all update stages are complete, Coolify confirms the new version and reload
 
 <Tab value="Terminal" icon={BrowserTerminal}>
 
-### Run the installer over SSH
+### Manual update via terminal
 
-Use the installation script when you need to update over SSH or choose a specific version.
+Use the Coolify install script to update your instance. It detects the existing installation and upgrades it without reinstalling Coolify or deleting your data.
 
 <Steps>
 <Step>
 
 **Connect to the Coolify server**
 
-Connect to the server that runs the Coolify instance over SSH.
+Connect to the server that runs the Coolify instance over SSH:
+
+```sh
+ssh <username>@<server-ip>
+```
 
 </Step>
 <Step>
 
-**Run the update command**
+**Run the install script**
 
-Use the latest-release command, or provide a version argument for a specific release.
+Run the script for the latest release, or specify a version to install.
 
 Update to the latest release:
 
@@ -133,10 +137,10 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 Update to a specific release:
 
 ```sh
-curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash -s <version>
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash -s 4.3.23
 ```
 
-Replace `<version>` with the Coolify version you want to install, for example `4.1.2`.
+Replace `4.3.23` with the Coolify version you want to install.
 
 </Step>
 <Step>
