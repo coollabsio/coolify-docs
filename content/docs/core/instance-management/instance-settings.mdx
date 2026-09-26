@@ -11,9 +11,6 @@ import {
   Refresh23,
   Settings,
   Setting2,
-  Warning22,
-  SignalStream,
-  Checklist2,
 } from 'reicon-react';
 
 # Instance settings
@@ -725,41 +722,31 @@ For Azure, enter the required tenant value. For Google, optionally enter a hoste
 
 <Tab value="Scheduled Jobs" icon={Calendar}>
 
-<ZoomableImage src="shadow-todo" alt="Coolify scheduled job issues page" />
+<ZoomableImage src="/docs/images/core/instance-management/scheduled-jobs-overview.webp" alt="Scheduled Jobs page in instance settings, with Failures, Scheduler runs, and Skipped tabs" />
 
-<Tabs id="instance-settings-scheduled-jobs" items={['Failures', 'Scheduler runs', 'Skipped']}>
-<Tab value="Failures" icon={Warning22}>
+The **Scheduled Jobs** page shows activity from the scheduler running on this Coolify instance. This includes scheduled database and volume backups, tasks, and Docker cleanup for resources on managed servers. It shows scheduler activity and job results; configure each backup, task, or cleanup in its own settings. Activity is grouped into **Failures**, **Scheduler runs**, and **Skipped**; you can search, filter, sort, refresh, and page through each list.
 
-The **Scheduled Jobs** page groups activity into **Failures**, **Scheduler runs**, and **Skipped**. Search, filter, sort, refresh, and page through the activity from this page.
+### Failures
 
-Failures shows scheduled backup, task, and cleanup executions that did not finish successfully.
+<ZoomableImage src="/docs/images/core/instance-management/scheduled-jobs-failures.webp" alt="Failures tab in Scheduled Jobs" />
 
-### Filter failures
-
-<ZoomableImage src="shadow-todo" alt="Type Filter setting screenshot" />
-
-Filters the failures list by the kind of scheduled work and when it happened.
-
-Use **Filter** to choose the relevant criteria and review the results. Use the search field to find matching failure details.
-
-**Accepted values:**
-
-- `all`, `backup`, `task`, or `cleanup`.
+Shows scheduled backup, task, and cleanup executions that did not complete successfully. Review the job type, resource, server, timing, and error details. Search or filter the list, and refresh it after resolving a failure.
 
 ---
 
-### Failure Table
+### Scheduler runs
 
-<ZoomableImage src="shadow-todo" alt="Failure Table setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/scheduled-jobs-runs.webp" alt="Scheduler runs tab showing recent scheduler activity" />
 
-Shows the failed job type, resource, server, start time, duration, and error message.
+Shows when the Coolify instance scheduler ran, its message and duration, and how many jobs it dispatched or skipped. Search, filter, sort, refresh, and paginate through the run history.
 
-Use **Refresh** to reload the page data after you fix a failed backup, task, or cleanup job.
+---
 
-**Accepted values:**
+### Skipped
 
-- Read-only execution rows generated from failed scheduled work.
+<ZoomableImage src="/docs/images/core/instance-management/scheduled-jobs-skipped.webp" alt="Skipped tab showing skipped scheduled jobs and their reasons" />
 
+Shows scheduled work that the Coolify instance scheduler did not dispatch, with the job type, resource, and reason. Review the reason, resolve the related issue, then refresh the list.
 </Tab>
 
 <Tab value="Scheduler runs" icon={SignalStream}>
