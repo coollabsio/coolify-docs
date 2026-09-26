@@ -169,6 +169,13 @@
     "category": "Development"
   },
   {
+    "name": "Bulwark",
+    "slug": "bulwark",
+    "icon": "/docs/images/services/bulwark.svg",
+    "description": "Modern webmail client for Stalwart Mail Server built on the JMAP protocol.",
+    "category": "Email"
+  },
+  {
     "name": "Buzz",
     "slug": "buzz",
     "icon": "/docs/images/services/buzz-logo.svg",
@@ -498,6 +505,13 @@
     "icon": "/docs/images/services/emqx-enterprise.svg",
     "description": "Scalable, distributed MQTT messaging platform for IoT.",
     "category": "IoT"
+  },
+  {
+    "name": "Engram",
+    "slug": "engram",
+    "icon": "/docs/images/services/engram-logo.png",
+    "description": "Persistent memory sync server for AI coding agents (MCP).",
+    "category": "AI"
   },
   {
     "name": "Ente",
@@ -1005,6 +1019,13 @@
     "category": "AI"
   },
   {
+    "name": "Lidarr",
+    "slug": "lidarr",
+    "icon": "/docs/images/services/lidarr-logo.svg",
+    "description": "Music collection manager for Usenet and BitTorrent users.",
+    "category": "Media"
+  },
+  {
     "name": "LimeSurvey",
     "slug": "limesurvey",
     "icon": "/docs/images/services/limesurvey-logo.svg",
@@ -1330,6 +1351,20 @@
     "icon": "/docs/images/services/observium-logo.webp",
     "description": "Low-maintenance auto-discovering network monitoring platform.",
     "category": "Monitoring"
+  },
+  {
+    "name": "Obsidian LiveSync",
+    "slug": "obsidian-livesync",
+    "icon": "/docs/images/services/obsidian-livesync.svg",
+    "description": "Self-hosted sync backend for the Obsidian LiveSync plugin using CouchDB.",
+    "category": "Storage"
+  },
+  {
+    "name": "Obsidian",
+    "slug": "obsidian",
+    "icon": "/docs/images/services/obsidian-logo.svg",
+    "description": "A note-taking app that lets you create, link, and organize your notes with hundreds of plugins and themes.",
+    "category": "Productivity"
   },
   {
     "name": "Odoo",
@@ -1834,6 +1869,13 @@
     "category": "File Sharing"
   },
   {
+    "name": "Snipe-IT",
+    "slug": "snipe-it",
+    "icon": "/docs/images/services/snipe-it-logo.webp",
+    "description": "A free open source IT asset/license management system ",
+    "category": "Business"
+  },
+  {
     "name": "Soju",
     "slug": "soju",
     "icon": "/docs/images/services/soju-logo.svg",
@@ -2161,6 +2203,13 @@
     "icon": "/docs/images/services/yamtrack-logo.svg",
     "description": "Self-hosted music scrobble database.",
     "category": "Media"
+  },
+  {
+    "name": "Zero",
+    "slug": "zero",
+    "icon": "/docs/images/services/zero.svg",
+    "description": "Query-driven sync engine for TypeScript apps backed by Postgres.",
+    "category": "Development"
   },
   {
     "name": "Zipline",
