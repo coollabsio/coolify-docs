@@ -65,48 +65,43 @@ Click **Check now** to check for a new version immediately. This does not instal
 
 <Tab value="Dashboard" icon={Refresh23}>
 
-### Apply an available update
+## Manual updates via dashboard
 
-Use the dashboard when Coolify has found a newer version and you want to choose when to install it.
+Open the **Settings** page, then select **Updates**.
 
-The **Upgrade** action appears in the sidebar only after Coolify has found a newer version.
+<ZoomableImage src="/docs/images/core/instance-management/update/dashboard-settings-updates.webp" alt="Settings and Updates navigation, with the Update Coolify section visible" />
 
-Use **Check Manually** in **Settings > Configuration > Updates** to refresh that status first.
+### Check frequency
 
-<Steps>
-<Step>
+<ZoomableImage src="/docs/images/core/instance-management/update/dashboard-update-check-frequency.webp" alt="Check frequency field and Check now button in Update checks settings" />
 
-**Choose a clear deployment window**
+When a new version is available, Coolify shows **Update available** beside the version number at the top left of the sidebar. **Check frequency** controls how often Coolify checks the [versions file on the CDN](https://cdn.coollabs.io/coolify/versions.json). To check immediately, click **Check now** in the **Update checks** section. This checks for an update but does not install it.
 
-Confirm there are no active deployments before continuing.
+### Update Coolify
 
-</Step>
-<Step>
+<ZoomableImage src="/docs/images/core/instance-management/update/dashboard-upgrade-entry-points.webp" alt="Upgrade Now button and Update available badge highlighted as update entry points" />
 
-**Open the upgrade dialog**
+Click **Upgrade Now** in the **Update Coolify** section, or click **Update available** beside the version number in the sidebar. Both options open the upgrade modal.
 
-Click **Upgrade** in the left sidebar. Review the current and available version, then click **Upgrade Now**.
+### Review update version
 
-</Step>
-<Step>
+<ZoomableImage src="/docs/images/core/instance-management/update/dashboard-upgrade-confirmation.webp" alt="Upgrade available modal showing the current and new version, with Upgrade Now highlighted" />
 
-**Wait for Coolify to restart**
+Review the current and new version in the modal. Check that no deployments are pending or running, because deployments during the update will fail. Then click **Upgrade Now** to start the update.
 
-Keep the page open while Coolify shows progress.
+### Wait for the update to finish
 
-The dashboard may briefly be unavailable while its services restart.
+<ZoomableImage src="/docs/images/core/instance-management/update/dashboard-upgrade-progress.webp" alt="Upgrading modal showing Preparing, Helper, Image, and Restart stages" />
 
-If the dashboard has not automatically reloaded after three minutes, refresh the page.
+An update usually takes less than a minute. It can take longer depending on network conditions and server resources. Coolify restarts while applying the update, so the dashboard may be unavailable briefly.
 
-</Step>
-<Step>
+If the progress modal remains on **Restart** for more than five minutes, refresh the page. Coolify may have finished updating but failed to reload the page automatically. If you see a **Gateway Timeout** or **Bad Gateway** error, wait two minutes before refreshing. If the error remains after refreshing, check the update logs under `/data/coolify/source/upgrade-*`.
 
-**Confirm the running version**
+### Upgrade complete
 
-When the dashboard returns, confirm that the expected version is shown.
+<ZoomableImage src="/docs/images/core/instance-management/update/dashboard-upgrade-complete.webp" alt="Upgrade complete modal confirming the new version, with Reload Now button" />
 
-</Step>
-</Steps>
+When all update stages are complete, Coolify confirms the new version and reloads the page. If the page does not reload automatically, click **Reload Now**.
 
 </Tab>
 
