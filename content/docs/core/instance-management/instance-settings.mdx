@@ -613,44 +613,59 @@ Create an API key in Resend and enter it in **API key**. The key is required whe
 
 <Tab value="Authentication">
 
-<ZoomableImage src="shadow-todo" alt="Coolify OAuth settings page" />
+<ZoomableImage src="/docs/images/core/instance-management/authentication-settings-overview.webp" alt="Authentication settings page with OAuth providers listed in the navigation" />
 
-The **Authentication** page lists OAuth providers in its navigation. Select a provider to jump to its section. Each section has an **Enable** action, credentials, and a redirect URI.
+The **Authentication** page lists the OAuth providers supported by Coolify. Each provider has its own section with an **Enable** action, credentials, a redirect URI, and any additional fields that provider requires.
 
 ### OAuth providers
 
-<ZoomableImage src="shadow-todo" alt="Provider setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/authentication-providers.webp" alt="OAuth provider list in Authentication settings" />
 
-Coolify supports the providers listed on the Authentication page. Configure each provider in its own section rather than selecting a single provider from a dropdown.
+Currently supported providers are:
 
-Configure the provider card for the provider you want to enable.
-
-**Accepted values:**
-
-- `azure`, `bitbucket`, `clerk`, `discord`, `github`, `gitlab`, `google`, `authentik`, `infomaniak`, or `zitadel`.
+- Authentik
+- Bitbucket
+- Clerk
+- Discord
+- GitHub
+- GitLab
+- Google
+- Infomaniak
+- Microsoft
+- OpenID Connect (OIDC)
+- Zitadel
 
 For the detailed guide, follow [OAuth setup](/core/security/authentication/oauth/overview).
 
 ---
 
-### Enabled
+### Enabled providers
 
-<ZoomableImage src="shadow-todo" alt="Enabled setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/authentication-enabled-providers.webp" alt="An enabled OAuth provider showing the Disable button" />
 
-Controls whether a specific OAuth provider can be used on the Coolify sign-in page.
+Controls whether the provider appears as a sign-in option on the Coolify login page.
 
-Fill the required provider fields, then click **Enable** in that provider's section. Click **Save changes** to apply your edits.
+Fill in the required provider fields, then click **Enable**. Click **Disable** to remove the provider from the login page.
+
+---
+
+### Redirect URI
+
+<ZoomableImage src="/docs/images/core/instance-management/authentication-redirect-uri.webp" alt="Redirect URI field in OAuth provider settings" />
+
+Defines the callback URL the identity provider redirects back to after authorization.
+
+Copy the **Redirect URI** shown by Coolify into the OAuth application at the provider, then save the same value in Coolify if you override it.
 
 **Accepted values:**
 
-- Enabled: the provider can be used if required fields are complete.
-- Disabled: the provider is hidden or unavailable for sign-in.
+- A full URL matching the provider callback, usually `https://coolify.shadowarcanist.com/auth/<provider>/callback`.
 
 ---
 
 ### Client ID
 
-<ZoomableImage src="shadow-todo" alt="Client ID setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/authentication-client-id.webp" alt="Client ID field in OAuth provider settings" />
 
 Stores the OAuth application client ID from the identity provider.
 
@@ -664,7 +679,7 @@ Create an OAuth application with the provider, copy its client ID, paste it into
 
 ### Client Secret
 
-<ZoomableImage src="shadow-todo" alt="Client Secret setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/authentication-client-secret.webp" alt="Client secret field in OAuth provider settings" />
 
 Stores the OAuth application secret from the identity provider.
 
@@ -676,25 +691,27 @@ Copy the provider client secret, paste it into **Client Secret**, then click **S
 
 ---
 
-### Redirect URI
-
-<ZoomableImage src="shadow-todo" alt="Redirect URI setting screenshot" />
-
-Defines the callback URL the identity provider redirects back to after authorization.
-
-Copy the **Redirect URI** shown by Coolify into the OAuth application at the provider, then save the same value in Coolify if you override it.
-
-**Accepted values:**
-
-- A full URL matching the provider callback, usually `https://coolify.shadowarcanist.com/auth/<provider>/callback`.
-
 ### Provider-specific fields
 
 Provider sections show additional fields when required by that provider.
 
+### Base URL
+
+<ZoomableImage src="/docs/images/core/instance-management/authentication-base-url.webp" alt="Base URL field in OAuth provider settings" />
+
+Stores the provider base URL for self-hosted or issuer-based OAuth providers.
+
+Enter the provider base URL, then click **Save changes**.
+
+**Accepted values:**
+
+- Use a full URL from the provider, for example `https://auth.shadowarcanist.com`.
+
+---
+
 ### Tenant
 
-<ZoomableImage src="shadow-todo" alt="Tenant setting screenshot" />
+<ZoomableImage src="/docs/images/core/instance-management/authentication-tenant.webp" alt="Tenant field in Azure OAuth provider settings" />
 
 Stores tenant information for providers that support or require tenant scoping.
 
@@ -704,25 +721,6 @@ For Azure, enter the required tenant value. For Google, optionally enter a hoste
 
 - Azure: required tenant value.
 - Google: optional hosted domain value, for example `shadowarcanist.com`.
-- Other providers: leave empty unless the provider card shows the field.
-
----
-
-### Base URL
-
-<ZoomableImage src="shadow-todo" alt="Base URL setting screenshot" />
-
-Stores the provider base URL for self-hosted or issuer-based OAuth providers.
-
-Enter the provider base URL on provider cards that show **Base URL**, then click **Save changes**.
-
-**Accepted values:**
-
-- Required by Authentik and Clerk before enabling the provider.
-- Shown for Authentik, Clerk, GitLab, and Zitadel provider cards.
-- Use a full URL from the provider, for example `https://auth.shadowarcanist.com`.
-
----
 </Tab>
 
 <Tab value="Scheduled Jobs" icon={Calendar}>
