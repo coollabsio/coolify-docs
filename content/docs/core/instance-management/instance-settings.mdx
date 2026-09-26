@@ -5,17 +5,15 @@ description: Configure self-hosted Coolify instance settings for URL, access, up
 
 import {
   Calendar,
-  Checklist2,
   CloudStorage,
   Database,
   Mailbox,
   Refresh23,
-  Rocket2,
-  ServerCloud,
   Settings,
   Setting2,
-  SignalStream,
   Warning22,
+  SignalStream,
+  Checklist2,
 } from 'reicon-react';
 
 # Instance settings
@@ -438,9 +436,10 @@ Choose the registry Coolify uses to pull its images. Switch registries if the cu
 </Tab>
 </Tabs>
 
----
+## Instance
 
-## Backup
+<Tabs id="instance-settings-instance" items={['Backup', 'Email', 'Authentication', 'Scheduled Jobs']}>
+<Tab value="Backup" icon={Database}>
 
 <ZoomableImage src="/docs/images/core/instance-management/backup-settings-overview.webp" alt="Settings selected, then Backup in the instance settings navigation" />
 
@@ -526,197 +525,93 @@ Click the download icon on a successful run to download its backup.
 
 **Clean failed backups** removes rows for unsuccessful runs. **Clean deleted entries** removes rows for backups whose local files have already been deleted; it does not delete files. Successful runs appear here after a scheduled or manual backup completes.
 
----
+</Tab>
 
-## Email
+<Tab value="Email" icon={Mailbox}>
 
-<ZoomableImage src="shadow-todo" alt="Coolify transactional email settings page" />
+<ZoomableImage src="/docs/images/core/instance-management/email-settings-overview.webp" alt="Email selected in instance settings, with Sender, SMTP server, and Resend sections" />
 
-<Tabs id="instance-settings-email" items={['Sender', 'SMTP server', 'Resend']}>
-<Tab value="Sender" icon={Mailbox}>
+Configure the sender identity and choose SMTP or Resend to deliver Coolify's transactional email.
+
+### Sender
+
+<ZoomableImage src="/docs/images/core/instance-management/email-sender.webp" alt="Sender section with From name and From address highlighted" />
 
 Sender settings are shared by SMTP and Resend.
 
-### From Name
+#### From name
 
-<ZoomableImage src="shadow-todo" alt="From Name setting screenshot" />
-
-Sets the display name used in Coolify emails such as password resets and invitations.
-
-Enter **From Name**, then click **Save changes**.
+Sets the display name shown in outgoing email, such as password resets and invitations. Enter a name, then click **Save changes**.
 
 **Accepted values:**
 
 - A required text value, for example `Coolify`.
 
----
+#### From address
 
-### From Address
-
-<ZoomableImage src="shadow-todo" alt="From Address setting screenshot" />
-
-Sets the email address used as the sender for Coolify emails.
-
-Enter **From Address**, then click **Save changes**.
+Sets the sender address used for outgoing email. Enter a valid email address, then click **Save changes**.
 
 **Accepted values:**
 
-- A required valid email address, for example `noreply@shadowarcanist.com`.
+- A required email address, for example `noreply@shadowarcanist.com`.
 
 ---
+
+### SMTP server
+
+<ZoomableImage src="/docs/images/core/instance-management/email-smtp-server.webp" alt="SMTP server settings highlighted" />
+
+Connect Coolify to an SMTP-compatible email provider.
+
+Enter the required **Host**, **Port**, and **Encryption** values supplied by your provider. Fill the remaining fields as needed.
+
+#### SMTP delivery
+
+Choose **Enabled** to send email through SMTP or **Disabled** to turn SMTP off. This selection saves immediately. Enabling SMTP turns off Resend.
+
+#### Host
+
+Enter the SMTP server hostname provided by your email provider, for example `smtp.mailgun.org`.
+
+#### Port
+
+Enter the port provided by your email provider. It must be between `1` and `65535`; common values are `587`, `465`, and `25`.
+
+#### Encryption
+
+Select the encryption method required by your email provider:
+
+- **StartTLS**
+- **TLS / SSL**
+- **None**
+
+#### Username and password
+
+Enter the credentials required by your SMTP provider. Leave these fields empty if the provider does not require authentication.
+
+#### Timeout
+
+Sets the maximum delivery time in seconds. Leave it empty to use the default mailer behavior.
+
+#### EHLO domain
+
+Optionally set the fully qualified domain Coolify sends in the SMTP EHLO command. Leave it empty to use the system default.
+
+After editing SMTP connection settings, click **Save changes**.
+
+---
+
+### Resend
+
+<ZoomableImage src="/docs/images/core/instance-management/email-resend.webp" alt="Resend delivery settings and API key highlighted" />
+
+Connect Coolify to [Resend](https://resend.com) to send transactional email through that provider.
+
+Create an API key in Resend and enter it in **API key**. The key is required when Resend is enabled. Choose **Enabled** under **Resend delivery** to use Resend, or **Disabled** to turn it off. This selection saves immediately, and enabling Resend turns off SMTP. Click **Save changes** to save the API key and sender fields.
 
 </Tab>
 
-<Tab value="SMTP server" icon={ServerCloud}>
-
-SMTP Server connects Coolify to any SMTP-compatible email provider.
-
-### SMTP Enabled
-
-<ZoomableImage src="shadow-todo" alt="SMTP Enabled setting screenshot" />
-
-Controls whether Coolify sends transactional email through SMTP.
-
-Choose **Enabled** under **SMTP delivery**, complete the required SMTP fields, then click **Save changes**.
-
-**Accepted values:**
-
-- Enabled: SMTP is used and Resend is disabled.
-- Disabled: SMTP is not used.
-
----
-
-### Host
-
-<ZoomableImage src="shadow-todo" alt="Host setting screenshot" />
-
-Sets the SMTP server hostname Coolify connects to.
-
-Enter the provider host in the SMTP Server section, then click **Save changes**.
-
-**Accepted values:**
-
-- A required hostname, for example `smtp.mailgun.org`.
-
----
-
-### Port
-
-<ZoomableImage src="shadow-todo" alt="Port setting screenshot" />
-
-Sets the SMTP server port.
-
-Enter the provider port in the SMTP Server section, then click **Save changes**.
-
-**Accepted values:**
-
-- A required number from 1 to 65535, commonly 587, 465, or 25.
-
----
-
-### Encryption
-
-<ZoomableImage src="shadow-todo" alt="Encryption setting screenshot" />
-
-Sets how Coolify secures the SMTP connection.
-
-Choose **Encryption**, then click **Save changes**.
-
-**Accepted values:**
-
-- `starttls`
-- `tls`
-- `none`
-
----
-
-### SMTP Username
-
-<ZoomableImage src="shadow-todo" alt="SMTP Username setting screenshot" />
-
-Sets the username Coolify uses to authenticate to the SMTP server.
-
-Enter the username from your email provider in the SMTP Server section, then click **Save changes**.
-
-**Accepted values:**
-
-- Any string, or empty when the SMTP provider does not require a username.
-
----
-
-### SMTP Password
-
-<ZoomableImage src="shadow-todo" alt="SMTP Password setting screenshot" />
-
-Sets the password or token Coolify uses to authenticate to the SMTP server.
-
-Enter the password from your email provider in the SMTP Server section, then click **Save changes**.
-
-**Accepted values:**
-
-- Any string, or empty when the SMTP provider does not require a password.
-
----
-
-### Timeout
-
-<ZoomableImage src="shadow-todo" alt="Timeout setting screenshot" />
-
-Sets how long Coolify waits when sending SMTP email.
-
-Enter the timeout value in the SMTP Server section, then click **Save changes**.
-
-**Accepted values:**
-
-- A numeric timeout value, or empty to use the provider/default mailer behavior.
-
----
-
-### EHLO domain
-
-<ZoomableImage src="shadow-todo" alt="SMTP EHLO domain setting" />
-
-Sets the domain Coolify presents in the SMTP EHLO command. Enter a domain if your mail provider requires one, then click **Save changes**.
-
-</Tab>
-
-<Tab value="Resend" icon={Rocket2}>
-
-Resend connects Coolify to Resend instead of SMTP.
-
-### Resend Enabled
-
-<ZoomableImage src="shadow-todo" alt="Resend Enabled setting screenshot" />
-
-Controls whether Coolify sends email through Resend.
-
-Choose **Enabled** under **Resend delivery**, enter the API key, then click **Save changes**.
-
-**Accepted values:**
-
-- Enabled: Resend is used and SMTP is disabled.
-- Disabled: Resend is not used.
-
----
-
-### API Key
-
-<ZoomableImage src="shadow-todo" alt="API Key setting screenshot" />
-
-Stores the Resend API key used to send Coolify transactional email.
-
-Create an API key in Resend, paste it into **API Key**, then click **Save changes**.
-
-**Accepted values:**
-
-- A required Resend API key string when Resend is enabled.
-
-</Tab>
-</Tabs>
-
----
-
-## Authentication
+<Tab value="Authentication">
 
 <ZoomableImage src="shadow-todo" alt="Coolify OAuth settings page" />
 
@@ -828,8 +723,9 @@ Enter the provider base URL on provider cards that show **Base URL**, then click
 - Use a full URL from the provider, for example `https://auth.shadowarcanist.com`.
 
 ---
+</Tab>
 
-## Scheduled Jobs
+<Tab value="Scheduled Jobs" icon={Calendar}>
 
 <ZoomableImage src="shadow-todo" alt="Coolify scheduled job issues page" />
 
@@ -918,5 +814,7 @@ Read the **Reason** column, fix the related server, subscription, resource, appl
 
 - `server_not_functional`, `subscription_unpaid`, `database_deleted`, `server_deleted`, `resource_deleted`, `application_not_running`, `service_not_running`, or another internal reason label.
 
+</Tab>
+</Tabs>
 </Tab>
 </Tabs>
