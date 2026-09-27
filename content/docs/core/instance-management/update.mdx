@@ -140,9 +140,13 @@ When the dashboard returns, confirm that the expected version is shown.
 
 <Tab value="Terminal" icon={BrowserTerminal}>
 
-### Run the installer over SSH
+### Run the upgrade script over SSH
 
-Use the installation script when you need to update over SSH or choose a specific version.
+Use the upgrade script when you need to update over SSH or choose a specific version. It is the same script that the dashboard and automatic updates run.
+
+<Callout type="warning" title="Do not use the installation script to update">
+`install.sh` is for a fresh installation. On an existing instance it also runs `chown -R 9999:root /data/coolify` and `chmod -R 700 /data/coolify`, which rewrites the ownership and permissions of managed service data under `/data/coolify/services/`. That can break bind mounts and stop containers from starting. The upgrade script only adjusts `/data/coolify/images` and `/data/coolify/ssh`.
+</Callout>
 
 <Steps>
 <Step>
@@ -161,13 +165,13 @@ Use the latest-release command, or provide a version argument for a specific rel
 Update to the latest release:
 
 ```sh
-curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+curl -fsSL https://cdn.coollabs.io/coolify/upgrade.sh | bash
 ```
 
 Update to a specific release:
 
 ```sh
-curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash -s <version>
+curl -fsSL https://cdn.coollabs.io/coolify/upgrade.sh | bash -s <version>
 ```
 
 Replace `<version>` with the Coolify version you want to install, for example `4.1.2`.
