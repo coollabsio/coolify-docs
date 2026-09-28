@@ -25,7 +25,7 @@ Replace these values while following the guide:
 
 ### Create a Clerk OAuth application
 
-Open the [Clerk Dashboard OAuth applications](https://dashboard.clerk.com/~/oauth-applications) page for the Clerk instance that will authenticate Coolify users.
+Open the Clerk Dashboard for the Clerk instance that will authenticate Coolify users, then go to **OAuth applications**.
 
 Select **Add OAuth application**, enter a name such as `Coolify`, and include the `email` and `profile` scopes. Add `openid` only when another client needs OIDC; Coolify's Clerk integration requests `email` and `profile`.
 

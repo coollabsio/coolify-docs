@@ -169,6 +169,13 @@
     "category": "Development"
   },
   {
+    "name": "Bulwark",
+    "slug": "bulwark",
+    "icon": "/docs/images/services/bulwark.svg",
+    "description": "Modern webmail client for Stalwart Mail Server built on the JMAP protocol.",
+    "category": "Email"
+  },
+  {
     "name": "Buzz",
     "slug": "buzz",
     "icon": "/docs/images/services/buzz-logo.svg",
@@ -500,6 +507,13 @@
     "category": "IoT"
   },
   {
+    "name": "Engram",
+    "slug": "engram",
+    "icon": "/docs/images/services/engram-logo.png",
+    "description": "Persistent memory sync server for AI coding agents (MCP).",
+    "category": "AI"
+  },
+  {
     "name": "Ente",
     "slug": "ente-photos",
     "icon": "/docs/images/services/ente-logo.webp",
@@ -783,7 +797,7 @@
     "name": "Hermes Agent",
     "slug": "hermes-agent",
     "icon": "/docs/images/services/hermes-agent-logo.png",
-    "description": "Autonomous AI agent with persistent memory and scheduling, plus a self-hosted web chat UI.",
+    "description": "Autonomous AI agent from Nous Research with persistent memory, scheduling, and a web interface. Available as a two-container WebUI stack or a single-container dashboard.",
     "category": "AI"
   },
   {
@@ -1003,6 +1017,13 @@
     "icon": "/docs/images/services/libretranslate-logo.svg",
     "description": "Free and open-source machine translation API.",
     "category": "AI"
+  },
+  {
+    "name": "Lidarr",
+    "slug": "lidarr",
+    "icon": "/docs/images/services/lidarr-logo.svg",
+    "description": "Music collection manager for Usenet and BitTorrent users.",
+    "category": "Media"
   },
   {
     "name": "LimeSurvey",
@@ -1323,6 +1344,20 @@
     "icon": "/docs/images/services/observium-logo.webp",
     "description": "Low-maintenance auto-discovering network monitoring platform.",
     "category": "Monitoring"
+  },
+  {
+    "name": "Obsidian",
+    "slug": "obsidian",
+    "icon": "/docs/images/services/obsidian-logo.svg",
+    "description": "A note-taking app that lets you create, link, and organize your notes with hundreds of plugins and themes.",
+    "category": "Productivity"
+  },
+  {
+    "name": "Obsidian LiveSync",
+    "slug": "obsidian-livesync",
+    "icon": "/docs/images/services/obsidian-livesync.svg",
+    "description": "Self-hosted sync backend for the Obsidian LiveSync plugin using CouchDB.",
+    "category": "Storage"
   },
   {
     "name": "Odoo",
@@ -1827,6 +1862,13 @@
     "category": "File Sharing"
   },
   {
+    "name": "Snipe-IT",
+    "slug": "snipe-it",
+    "icon": "/docs/images/services/snipe-it-logo.webp",
+    "description": "A free open source IT asset/license management system.",
+    "category": "Business"
+  },
+  {
     "name": "Soju",
     "slug": "soju",
     "icon": "/docs/images/services/soju-logo.svg",
@@ -2154,6 +2196,13 @@
     "icon": "/docs/images/services/yamtrack-logo.svg",
     "description": "Self-hosted music scrobble database.",
     "category": "Media"
+  },
+  {
+    "name": "Zero",
+    "slug": "zero",
+    "icon": "/docs/images/services/zero.svg",
+    "description": "Query-driven sync engine for TypeScript apps backed by Postgres.",
+    "category": "Development"
   },
   {
     "name": "Zipline",

@@ -1,5 +1,6 @@
 import type React from 'react';
 import { cn } from '@/lib/ui/cn';
+import { CoolLink } from './cool-link';
 import type { CoolIcon } from './cool-types';
 
 export type CoolIconCardItem = {
@@ -64,12 +65,12 @@ export function CoolIconCard({ description, href, icon: Icon, title }: CoolIconC
 
   if (href) {
     return (
-      <a
+      <CoolLink
         href={href}
         className="group flex gap-3 rounded-lg border border-fd-border bg-fd-background/70 p-4 shadow-sm transition hover:bg-fd-muted/35"
       >
         {content}
-      </a>
+      </CoolLink>
     );
   }
 

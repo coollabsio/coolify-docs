@@ -1,0 +1,1 @@
+- In custom MDX components, use `fumadocs-core/link` instead of raw anchor elements so internal links include the configured `/docs` base path.
