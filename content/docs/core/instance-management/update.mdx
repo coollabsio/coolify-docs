@@ -108,7 +108,11 @@ When all update stages are complete, Coolify confirms the new version and reload
 
 ### Manual update via terminal
 
-Use the Coolify install script to update your instance. It detects the existing installation and upgrades it without reinstalling Coolify or deleting your data.
+Use the Coolify upgrade script to update an existing instance.
+
+<Callout type="warn" title="Do not use install.sh to update">
+On an existing instance, `install.sh` resets ownership and permissions under `/data/coolify`, including managed service data. Use `upgrade.sh` instead.
+</Callout>
 
 <Steps>
 <Step>
@@ -124,23 +128,19 @@ ssh <username>@<server-ip>
 </Step>
 <Step>
 
-**Run the install script**
+**Run the upgrade script**
 
-Run the script for the latest release, or specify a version to install.
-
-Update to the latest release:
+Run the upgrade script with the Coolify version you want to install. Use the version without a leading `v`.
 
 ```sh
-curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+curl -fsSL https://cdn.coollabs.io/coolify/upgrade.sh | bash -s 4.3.23
 ```
 
-Update to a specific release:
+Replace `4.3.23` with the Coolify version you want to install. The upgrade script updates configuration files from the [versions file on the CDN](https://cdn.coollabs.io/coolify/versions.json) as part of the process.
 
-```sh
-curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash -s 4.3.23
-```
-
-Replace `4.3.23` with the Coolify version you want to install.
+<Callout type="warn" title="Specify a version">
+Do not omit the version. Without one, the script writes `COOLIFY_VERSION=latest` to `.env`, which prevents update checks from working correctly.
+</Callout>
 
 </Step>
 <Step>
