@@ -797,7 +797,7 @@
     "name": "Hermes Agent",
     "slug": "hermes-agent",
     "icon": "/docs/images/services/hermes-agent-logo.png",
-    "description": "Autonomous AI agent with persistent memory and scheduling, plus a self-hosted web chat UI.",
+    "description": "Autonomous AI agent from Nous Research with persistent memory, scheduling, and a web interface. Available as a two-container WebUI stack or a single-container dashboard.",
     "category": "AI"
   },
   {
@@ -1346,18 +1346,18 @@
     "category": "Monitoring"
   },
   {
-    "name": "Obsidian LiveSync",
-    "slug": "obsidian-livesync",
-    "icon": "/docs/images/services/obsidian-livesync.svg",
-    "description": "Self-hosted sync backend for the Obsidian LiveSync plugin using CouchDB.",
-    "category": "Storage"
-  },
-  {
     "name": "Obsidian",
     "slug": "obsidian",
     "icon": "/docs/images/services/obsidian-logo.svg",
     "description": "A note-taking app that lets you create, link, and organize your notes with hundreds of plugins and themes.",
     "category": "Productivity"
+  },
+  {
+    "name": "Obsidian LiveSync",
+    "slug": "obsidian-livesync",
+    "icon": "/docs/images/services/obsidian-livesync.svg",
+    "description": "Self-hosted sync backend for the Obsidian LiveSync plugin using CouchDB.",
+    "category": "Storage"
   },
   {
     "name": "Odoo",
@@ -1865,7 +1865,7 @@
     "name": "Snipe-IT",
     "slug": "snipe-it",
     "icon": "/docs/images/services/snipe-it-logo.webp",
-    "description": "A free open source IT asset/license management system ",
+    "description": "A free open source IT asset/license management system.",
     "category": "Business"
   },
   {
