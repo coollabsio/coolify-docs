@@ -1,0 +1,259 @@
+---
+title: GitHub Actions Runners
+description: Run GitHub Actions workflow jobs of an organization on your Coolify build servers, in ephemeral Docker containers.
+---
+
+# GitHub Actions runners
+
+Coolify can run the GitHub Actions workflow jobs of a GitHub organization on your [build servers](/core/infrastructure/servers/build-servers). Each job runs in a new runner container. Coolify deletes the container after the job.
+
+This feature is available on self-hosted Coolify only.
+
+## How it works
+
+1. A workflow job asks for `runs-on: [self-hosted, <your label>]`.
+2. GitHub sends a **Workflow job** webhook event to Coolify through your GitHub App.
+3. Coolify finds an enabled build server whose labels match the job and that has free capacity. It selects the least busy server.
+4. Coolify starts an ephemeral runner container on that server and registers it with GitHub.
+5. The runner takes one job. When the job completes, Coolify deletes the container, its network, and its volumes.
+
+When all runners are busy, the job waits in the Coolify queue until a runner is free.
+
+<Callout type="warning" title="Use only for trusted, private repositories">
+With Docker enabled, each job gets a privileged Docker daemon. A malicious workflow can take control of the build server. Coolify creates a runner group that is limited to private repositories. Do not use these runners for repositories that accept code from untrusted contributors.
+</Callout>
+
+## What you need
+
+Before you start, make sure you have:
+
+- a server with the **Build** role. Refer to [Build servers](/core/infrastructure/servers/build-servers).
+- a GitHub App source in Coolify that belongs to a **GitHub organization**. Runners are registered at organization level, so GitHub Apps of personal accounts cannot run workflow jobs.
+- a Coolify instance that GitHub can send webhook events to.
+
+---
+
+## Set up the GitHub App
+
+The GitHub App needs these permissions and events:
+
+| Type | Name | Access |
+|------|------|--------|
+| Organization permission | Self-hosted runners | Write |
+| Repository permission | Actions | Read |
+| Webhook event | Workflow job | - |
+
+<Tabs id="github-app-runners" items={['Create a new GitHub App', 'Update an existing GitHub App']}>
+<Tab value="Create a new GitHub App">
+
+<Steps>
+<Step>
+
+### Create the source
+
+1. Open **Sources** in the Coolify sidebar.
+2. Select **+ Add** to create a source.
+3. Enter the **Name** and the **Organization**.
+4. In **Use this App for**, select **GitHub Actions runners**.
+5. Select **Continue**.
+
+The **Organization** field is required when you select **GitHub Actions runners**.
+
+</Step>
+<Step>
+
+### Register the App on GitHub
+
+1. On the next page, make sure that **GitHub Actions runners** is set to **Run workflow jobs on build servers**.
+2. Select **Register with GitHub**.
+3. Complete the registration and install the App in your organization.
+
+Coolify adds the required permissions and the **Workflow job** webhook event to the App.
+
+For the full registration flow, refer to [Set up a GitHub App](/applications/sources/github/app).
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Update an existing GitHub App">
+
+Use this procedure for a GitHub App that belongs to an organization and that you created before you used runners.
+
+<Steps>
+<Step>
+
+### Update the App on GitHub
+
+1. Open the settings of the GitHub App on GitHub.
+2. In **Permissions**, set **Organization permissions > Self-hosted runners** to **Read and write**.
+3. Set **Repository permissions > Actions** to **Read-only**.
+4. In **Subscribe to events**, select **Workflow job**.
+5. Save the changes.
+6. Accept the new permissions for the App installation in your organization.
+
+</Step>
+<Step>
+
+### Refetch the permissions in Coolify
+
+1. Open **Sources** in the Coolify sidebar and select the GitHub App.
+2. Open **Permissions** and select **Refetch**.
+3. Make sure that the **GitHub Actions runners** section does not show **Not ready for runners**.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+---
+
+## Configure runners on a build server
+
+<Steps>
+<Step>
+
+### Open the runner settings
+
+1. Open **Servers** in the Coolify sidebar.
+2. Select a server with the **Build** role.
+3. Open **GitHub Runners**.
+
+The menu shows only for build servers.
+
+</Step>
+<Step>
+
+### Set the runner settings
+
+| Setting | Description |
+|---------|-------------|
+| **GitHub App** | The organization GitHub App that receives the **Workflow job** events. |
+| **Labels** | Comma-separated custom labels, for example `coolify`. Coolify also registers `self-hosted` and `linux`. |
+| **Status** | **Take workflow jobs** or **Paused**. |
+| **Application builds** | **Also build applications**, or **Dedicated to runners**. A dedicated server is not used for application builds while its runners are enabled. |
+
+If Coolify shows **The GitHub App is not ready**, complete [Set up the GitHub App](#set-up-the-github-app).
+
+</Step>
+<Step>
+
+### Set the resources
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| **Parallel runners** | `2` | The maximum number of runners on this server at the same time (1 to 32). |
+| **CPU limit** | No limit | The number of CPUs for each runner, for example `2`. |
+| **Memory limit** | No limit | The memory for each runner, for example `4g`. |
+| **Docker in jobs** | Private Docker daemon | Refer to [Docker in jobs](#docker-in-jobs). |
+| **Runner image** | Official runner image | A custom image based on the official runner image. Use it to add tools. |
+
+The CPU and memory limits apply to the runner container and to its Docker sidecar.
+
+</Step>
+<Step>
+
+### Set the timeouts
+
+All values are in minutes.
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| **Queue wait** | `60` | Coolify drops a job that waits longer for a free runner. |
+| **Idle runner** | `10` | Coolify removes a runner that gets no job in this time. |
+| **Job** | `360` | Coolify stops a job that runs longer. |
+
+</Step>
+<Step>
+
+### Save the settings
+
+Select **Save**.
+
+When you save, Coolify creates a runner group named `Coolify <app-uuid>` in your organization. The group is limited to private repositories.
+
+<Callout type="info" title="GitHub Free organizations">
+Organizations on the GitHub Free plan cannot create runner groups. In that case, Coolify uses the **Default** runner group and shows a warning. On GitHub, check which repositories can use the Default group.
+</Callout>
+
+</Step>
+</Steps>
+
+You can configure runners on more than one build server. Coolify sends each job to the least busy server that matches the job labels.
+
+---
+
+## Use the runners in a workflow
+
+Add `self-hosted` and one of your custom labels to `runs-on`:
+
+```yaml
+jobs:
+  build:
+    runs-on: [self-hosted, coolify]
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t my-app .
+```
+
+Coolify takes a job only when:
+
+- the job asks for at least one of your custom labels, and
+- all labels of the job are registered by the runner (`self-hosted`, `linux`, and your custom labels).
+
+Jobs that ask only for generic labels, such as `self-hosted`, are left for other runners. This prevents Coolify from taking jobs that are for other self-hosted runners of your organization.
+
+A custom label can contain letters, numbers, dots, dashes, and underscores. You cannot use `self-hosted`, `linux`, `x64`, `arm64`, `arm`, `windows`, or `macos` as the only label.
+
+---
+
+## Docker in jobs
+
+| Mode | Description |
+|------|-------------|
+| **Private Docker daemon (privileged)** | Each runner gets its own Docker daemon in a privileged sidecar container. Use this mode for `docker` commands, service containers, and container jobs. |
+| **No Docker** | Jobs do not have Docker access. Use this mode when your jobs do not need Docker. |
+
+Coolify never shares the Docker socket of the host with a runner. Each runner has its own network and volumes.
+
+---
+
+## Monitor runners
+
+The **Recent runners** section on the **GitHub Runners** page shows the queued jobs, the active runners, and their results. The list updates every 10 seconds.
+
+| Status | Description |
+|--------|-------------|
+| **Queued** | The job waits for a free runner. |
+| **Provisioning** | Coolify starts the runner container. |
+| **Waiting for job** | The runner is registered and waits for GitHub to give it a job. |
+| **Running** | The runner runs the job. |
+| **Completed** | The job completed and Coolify removed the runner. |
+| **Failed** | Coolify could not start the runner. The error message shows the cause. |
+| **Cancelled** | The job ended before a runner started, the runner got no job, or a user cancelled it. |
+| **Timed out** | The job waited or ran longer than the configured timeout. |
+
+To stop an active runner, select **Cancel** on its row.
+
+---
+
+## Pause or remove runners
+
+- To stop taking new jobs, set **Status** to **Paused** and select **Save**.
+- To remove the configuration, select **Remove**. Before you remove the configuration, wait for the active runners to finish or cancel them. Coolify keeps the execution history of the server.
+
+You cannot change the role of a build server while its runners are enabled. Pause or remove the runner configuration first.
+
+---
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| The **GitHub Runners** menu does not show | Set the server role to **Build**. |
+| No GitHub App shows in the settings | Add a GitHub App that belongs to an organization, and install it. |
+| **The GitHub App is not ready** | Add the missing permissions or events on GitHub, then select **Refetch** on the **Permissions** page of the App. |
+| Jobs stay in **Queued** on GitHub and Coolify shows nothing | Make sure that `runs-on` has one of your custom labels, and that all labels of the job are registered by the runner. Make sure that GitHub can send webhook events to Coolify. |
+| Jobs stay in **Queued** in Coolify | All runners are busy. Increase **Parallel runners** or configure runners on more build servers. |
+| The job cannot find a tool | Use a custom **Runner image** based on the official runner image that includes the tool. |
