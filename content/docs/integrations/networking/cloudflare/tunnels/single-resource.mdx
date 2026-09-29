@@ -183,8 +183,10 @@ Follow [Step 5](/integrations/networking/cloudflare/tunnels/single-resource#5-co
 | Domain / Path                              | Service            | Purpose              |
 |--------------------------------------------|-------------------|----------------------|
 | `coolify.shadowarcanist.com/terminal/ws`     | `http://localhost:6002`    | WebSocket terminal   |
-| `coolify-realtime.shadowarcanist.com`        | `http://localhost:6001`    | Realtime server      |
+| `coolify-realtime.shadowarcanist.com`        | `http://localhost:6001`    | Realtime updates (Reverb) |
 | `coolify.shadowarcanist.com`                 | `http://localhost:8000`    | Coolify dashboard    |
+
+All three origin ports belong to the `coolify` container. Reverb listens on port `6001` and the web terminal server on port `6002`. If you upgraded from a release that used the separate `coolify-realtime` container, the same routes keep working. See the [Reverb migration guide](/core/instance-management/reverb-migration) for details.
 
 
 <Callout type="warn" title="HEADS UP!">
@@ -217,7 +219,7 @@ PUSHER_PORT=443
 ###########
 ```
 
-This ensures that Coolify uses the Cloudflare Tunnel for its realtime server.
+This tells the browser where to open the realtime WebSocket connection. Server-side event delivery stays inside the `coolify` container, so do not set `PUSHER_BACKEND_HOST` to this hostname.
 
 ### 3. Restart Coolify [!toc]
 

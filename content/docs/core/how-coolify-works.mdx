@@ -102,14 +102,13 @@ Coolify does not require a persistent deployment agent on a connected server. It
 
 ### Inside a self-hosted Coolify instance
 
-A standard self-hosted installation runs four base containers.
+A standard self-hosted installation runs three base containers.
 
 | <span className="inline-block min-w-40">Container</span> | Role |
 | :--- | :--- |
-| `coolify` | Serves the Coolify dashboard and API, processes queued jobs with Laravel Horizon, and runs scheduled jobs. |
+| `coolify` | Serves the Coolify dashboard and API, processes queued jobs with Laravel Horizon, runs scheduled jobs, provides realtime updates with Laravel Reverb, and runs the browser terminal server. |
 | `coolify-db` | Runs PostgreSQL for Coolify configuration and state. |
 | `coolify-redis` | Supports queued work and caching. |
-| <span className="whitespace-nowrap">`coolify-realtime`</span> | Runs Soketi for Coolify dashboard updates and a WebSocket server for browser terminal sessions. |
 
 The `coolify-proxy` and `coolify-sentinel` containers belong to the server runtime rather than this base control-plane stack. Coolify starts a reverse proxy on each server where it is enabled, while Sentinel remains optional.
 

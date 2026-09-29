@@ -1,0 +1,287 @@
+---
+title: Migrate realtime services to Reverb
+description: Prepare a self-hosted Coolify instance for the migration from the separate Soketi container to Laravel Reverb in the Coolify container.
+---
+
+# Migrate realtime services to Reverb
+
+New Coolify releases run Laravel Reverb and the web terminal server inside the main `coolify` container. They no longer use the separate `coolify-realtime` container.
+
+Most installations do not need a manual change. You must check your configuration before the update if you use a custom Compose override, custom realtime ports, a firewall, or a Cloudflare Tunnel.
+
+<Callout type="warning" title="Check custom Compose files before the update">
+The new release has no `soketi` service. An override in `docker-compose.custom.yml` that still configures `soketi` makes the Compose configuration invalid, and the update stops. Automatic updates fail in the same way until you change the override. Update the override right before you update Coolify.
+</Callout>
+
+## What changes
+
+| Before | After |
+| :--- | :--- |
+| Soketi listens in `coolify-realtime` | Reverb listens in `coolify` |
+| The terminal server listens in `coolify-realtime` | The terminal server listens in `coolify` |
+| The proxy sends realtime traffic to `coolify-realtime:6001` | The proxy sends realtime traffic to `coolify:6001` |
+| The proxy sends terminal traffic to `coolify-realtime:6002` | The proxy sends terminal traffic to `coolify:6002` |
+
+The external paths do not change:
+
+- `/app/*` carries browser WebSocket connections.
+- `/apps/*` carries Pusher-compatible API requests.
+- `/terminal/ws` carries web terminal connections.
+
+The update keeps the existing Pusher application ID, key, and secret. It also keeps `SOKETI_PORT` as the compatible Docker host-port setting. Do not rename that variable during this migration.
+
+The update script also removes the old `coolify-realtime` container. If `.env` still contains `PUSHER_BACKEND_HOST=coolify-realtime`, the script changes it to `127.0.0.1`, because Reverb now runs in the same container as Coolify.
+
+The `coolify` container also has `coolify-realtime` as a network alias on the `coolify` Docker network. A reverse proxy that still sends traffic to `coolify-realtime:6001` or `coolify-realtime:6002` keeps working.
+
+## Before you update
+
+<Steps>
+<Step>
+
+### Back up the instance configuration
+
+```sh
+cd /data/coolify/source
+cp .env .env.before-reverb
+
+if [ -f docker-compose.custom.yml ]; then
+  cp docker-compose.custom.yml docker-compose.custom.yml.before-reverb
+fi
+```
+
+</Step>
+<Step>
+
+### Check for a Soketi service override
+
+```sh
+grep -nE '^[[:space:]]*soketi:' docker-compose.custom.yml 2>/dev/null || true
+```
+
+If the command prints a line, migrate the override as shown in the next section.
+
+</Step>
+<Step>
+
+### Record custom realtime settings
+
+```sh
+grep -E '^(PUSHER_HOST|PUSHER_PORT|PUSHER_SCHEME|PUSHER_BACKEND_PORT|SOKETI_PORT|TERMINAL_PORT)=' .env || true
+```
+
+Keep this output until you finish the verification.
+
+</Step>
+</Steps>
+
+## Migrate a custom Compose override
+
+The old firewall example configured ports on two services:
+
+```yaml
+services:
+  coolify:
+    ports: !override
+      - "127.0.0.1:${APP_PORT:-8000}:8080"
+  soketi:
+    ports: !override
+      - "127.0.0.1:${SOKETI_PORT:-6001}:6001"
+      - "127.0.0.1:6002:6002"
+```
+
+Move all three bindings to the `coolify` service:
+
+```yaml
+services:
+  coolify:
+    ports: !override
+      - "127.0.0.1:${APP_PORT:-8000}:8080"
+      - "127.0.0.1:${SOKETI_PORT:-6001}:6001"
+      - "127.0.0.1:6002:6002"
+```
+
+The web terminal always uses host port `6002`. `TERMINAL_PORT` does not change the Docker host port.
+
+If your override removed all public bindings, replace this:
+
+```yaml
+services:
+  coolify:
+    ports: !override []
+  soketi:
+    ports: !override []
+```
+
+with this:
+
+```yaml
+services:
+  coolify:
+    ports: !override []
+```
+
+Move only port bindings that are still required. Remove Soketi-specific image, command, environment, health-check, and volume settings. Remove the `soketi` service block when it is empty.
+
+<Callout type="warning" title="Do not remove direct access too early">
+Keep ports `8000`, `6001`, and `6002` reachable until the dashboard, realtime updates, and terminal work through your domain. You can restrict them after you complete the verification.
+</Callout>
+
+## Check the environment variables
+
+The variables have different purposes:
+
+| Variable | Purpose |
+| :--- | :--- |
+| `SOKETI_PORT` | Compatible Docker host-port override for origin port `6001` |
+| `REVERB_PORT` | Optional. Takes precedence over `SOKETI_PORT` for the Docker host port of origin port `6001`. You do not need it when you already use `SOKETI_PORT`. |
+| `PUSHER_PORT` | Public port used by the browser |
+| `PUSHER_BACKEND_PORT` | Internal Reverb listen port, normally `6001` |
+| `PUSHER_BACKEND_HOST` | Host that Coolify uses to send events to Reverb, normally unset or `127.0.0.1` |
+| `TERMINAL_PORT` | Public port used by the browser for the web terminal, for example `443` behind a reverse proxy. It does not change the Docker host port, which is always `6002`. |
+
+Do not change an existing `SOKETI_PORT` value. Existing firewall rules and port forwarding can depend on it.
+
+For a dashboard behind Cloudflare, the public browser port is normally `443`:
+
+```bash
+PUSHER_PORT=443
+PUSHER_BACKEND_PORT=6001
+```
+
+Do not set `PUSHER_PORT=6001` for a Cloudflare-proxied hostname. Port `6001` is the origin port. The browser connects to Cloudflare on port `443`.
+
+If you do not have an explicit `PUSHER_PORT`, leave it unset. Coolify selects the public port from the dashboard request and keeps direct IP access compatible.
+
+## Cloudflare configurations
+
+### Dashboard through the Coolify proxy
+
+This is the recommended configuration. Send the dashboard hostname to the Coolify proxy on port `80` or `443`. The generated proxy configuration routes:
+
+```text
+/app/*       -> coolify:6001
+/apps/*      -> coolify:6001
+/terminal/ws -> coolify:6002
+/*           -> coolify:8080
+```
+
+You do not need separate Cloudflare routes for Reverb or the terminal.
+
+For a Cloudflare Tunnel that terminates TLS at Cloudflare, set the tunnel service URL to `http://localhost:80`. For end-to-end TLS, use the HTTPS origin configuration from the [Full TLS guide](/integrations/networking/cloudflare/tunnels/full-tls).
+
+### Separate realtime hostname
+
+Older tunnel configurations can use a separate hostname:
+
+| Public hostname or path | Tunnel service |
+| :--- | :--- |
+| `coolify.example.com` | `http://localhost:8000` |
+| `coolify.example.com/terminal/ws` | `http://localhost:6002` |
+| `coolify-realtime.example.com` | `http://localhost:6001` |
+
+This remains compatible. Keep:
+
+```bash
+PUSHER_HOST=coolify-realtime.example.com
+PUSHER_PORT=443
+PUSHER_BACKEND_PORT=6001
+```
+
+The Cloudflare route still connects to origin port `6001`, but Reverb now handles that port in the `coolify` container.
+
+## Validate and update
+
+The Compose files in `/data/coolify/source` still belong to your current release. They still define `soketi`, so they cannot show a problem with your override. Validate your override against the Compose files of the new release instead:
+
+```sh
+mkdir -p /tmp/coolify-compose-check
+cd /tmp/coolify-compose-check
+curl -fsSL https://cdn.coollabs.io/coolify/docker-compose.yml -o docker-compose.yml
+curl -fsSL https://cdn.coollabs.io/coolify/docker-compose.prod.yml -o docker-compose.prod.yml
+
+docker compose --env-file /data/coolify/source/.env \
+  -f docker-compose.yml \
+  -f docker-compose.prod.yml \
+  -f /data/coolify/source/docker-compose.custom.yml \
+  config --quiet
+```
+
+The command prints nothing when the configuration is valid. If you do not have `docker-compose.custom.yml`, you do not need this check.
+
+Continue only when the command finishes without an error. Then remove the check directory and update Coolify from **Settings > Update**:
+
+```sh
+rm -rf /tmp/coolify-compose-check
+```
+
+## Verify the migration
+
+Run these checks after the update:
+
+```sh
+docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
+docker logs --tail 100 coolify
+```
+
+Confirm that:
+
+1. `coolify`, `coolify-db`, and `coolify-redis` are running.
+2. The `coolify-realtime` container is gone. The update removes it.
+3. The dashboard loads through its normal URL.
+4. The browser developer tools show a successful WebSocket request to `/app/...`.
+5. The WebSocket request uses `wss` and public port `443` when Cloudflare serves the dashboard over HTTPS.
+6. A deployment or status change appears in the dashboard without a page refresh.
+7. The web terminal connects through `/terminal/ws`.
+
+You can also open `/realtime` in two browser tabs and send a test event.
+
+## Troubleshooting
+
+### The update stopped with "Failed to parse docker-compose configuration"
+
+Your custom Compose file still contains a `soketi` service. The update log in `/data/coolify/source/upgrade-*.log` shows the error, and `docker compose config` reports that `service "soketi" has neither an image nor a build context specified`.
+
+The update downloads the new Compose files first and stops before it changes any container. Your current Coolify version keeps running.
+
+1. Move the required port bindings to `coolify` and remove the `soketi` block, as described in [Migrate a custom Compose override](#migrate-a-custom-compose-override).
+2. Validate the files. The Compose files in `/data/coolify/source` now belong to the new release:
+
+   ```sh
+   cd /data/coolify/source
+   docker compose --env-file .env \
+     -f docker-compose.yml \
+     -f docker-compose.prod.yml \
+     -f docker-compose.custom.yml \
+     config --quiet
+   ```
+
+3. Start the update again from **Settings > Update**.
+
+### The `coolify` container stays unhealthy
+
+The container healthcheck now includes Reverb. Check the Reverb log inside the container and confirm that nothing else listens on port `6001`:
+
+```sh
+docker exec coolify curl --fail http://127.0.0.1:6001/up
+sudo ss -tulpn | grep :6001
+```
+
+The dashboard keeps working while the container is unhealthy. Only realtime updates stop.
+
+### Cloudflare returns an error for the WebSocket request
+
+- Confirm the browser connects to public port `443`, not origin port `6001`.
+- Confirm Cloudflare WebSockets are enabled for the zone.
+- Confirm the tunnel or proxy route includes `/app/*`.
+- Confirm the Coolify proxy can reach `coolify:6001` on the `coolify` Docker network.
+
+### The dashboard works but realtime updates do not
+
+Check `PUSHER_HOST` and `PUSHER_PORT` in `/data/coolify/source/.env`. Remove obsolete overrides when the dashboard and Reverb use the same hostname, or keep port `443` for a separate Cloudflare realtime hostname.
+
+Also confirm that `PUSHER_BACKEND_HOST` is unset or `127.0.0.1`. A public hostname in that variable sends server-side events to the wrong place.
+
+### Direct IP access stops receiving updates
+
+Confirm that the `coolify` container publishes host port `${REVERB_PORT:-${SOKETI_PORT:-6001}}` to container port `6001` and host port `6002` to container port `6002`. Also confirm that the server firewall permits these host ports from your client address.
