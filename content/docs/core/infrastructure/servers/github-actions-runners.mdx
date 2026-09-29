@@ -7,7 +7,11 @@ description: Run GitHub Actions workflow jobs of an organization on your Coolify
 
 Coolify can run the GitHub Actions workflow jobs of a GitHub organization on your [build servers](/core/infrastructure/servers/build-servers). Each job runs in a new runner container. Coolify deletes the container after the job.
 
-This feature is available on self-hosted Coolify only.
+<Callout type="info" title="Beta">
+GitHub Actions runners are in beta. The settings and the behavior can change in later versions.
+</Callout>
+
+The runners run on your own servers, on self-hosted Coolify and on Coolify Cloud. Coolify never runs them on the server that runs Coolify itself.
 
 ## How it works
 
@@ -17,10 +21,10 @@ This feature is available on self-hosted Coolify only.
 4. Coolify starts an ephemeral runner container on that server and registers it with GitHub.
 5. The runner takes one job. When the job completes, Coolify deletes the container, its network, and its volumes.
 
-When all runners are busy, the job waits in the Coolify queue until a runner is free.
+When all runners are busy, the job waits in the Coolify queue until a runner is free. When a runner cannot start, Coolify removes it and tries again, up to 3 times. Refer to [Monitor runners](#monitor-runners).
 
 <Callout type="warning" title="Use only for trusted, private repositories">
-With Docker enabled, each job gets a privileged Docker daemon. A malicious workflow can take control of the build server. Coolify creates a runner group that is limited to private repositories. Do not use these runners for repositories that accept code from untrusted contributors.
+In the **Docker (privileged, full host access)** mode, each job gets a privileged Docker daemon. A malicious workflow can take control of the build server. Use **Isolated Docker (Sysbox)** or **No Docker** to keep jobs away from the server. Coolify creates a runner group that is limited to private repositories. Do not use these runners for repositories that accept code from untrusted contributors.
 </Callout>
 
 ## What you need
@@ -30,6 +34,7 @@ Before you start, make sure you have:
 - a server with the **Build** role. Refer to [Build servers](/core/infrastructure/servers/build-servers).
 - a GitHub App source in Coolify that belongs to a **GitHub organization**. Runners are registered at organization level, so GitHub Apps of personal accounts cannot run workflow jobs.
 - a Coolify instance that GitHub can send webhook events to.
+- outbound internet access from the build server to `github.com`, `ghcr.io` (runner image), and Docker Hub (Docker sidecar image).
 
 ---
 
@@ -114,13 +119,13 @@ Use this procedure for a GitHub App that belongs to an organization and that you
 <Steps>
 <Step>
 
-### Open the runner settings
+### Enable the runners
 
-1. Open **Servers** in the Coolify sidebar.
-2. Select a server with the **Build** role.
-3. Open **GitHub Runners**.
+1. Open **Servers** in the Coolify sidebar and select the server.
+2. Open **GitHub Runners**.
+3. Select **Enable runners**.
 
-The menu shows only for build servers.
+Coolify saves the default settings and shows the runner settings. If the server does not have the **Build** role, the page shows **This server is not enabled for builds**. Change the role in the **General** settings of the server first.
 
 </Step>
 <Step>
@@ -129,12 +134,11 @@ The menu shows only for build servers.
 
 | Setting | Description |
 |---------|-------------|
-| **GitHub App** | The organization GitHub App that receives the **Workflow job** events. |
+| **GitHub App** | The organization GitHub App that receives the **Workflow job** events. Coolify selects the first App that has all the required permissions. |
 | **Labels** | Comma-separated custom labels, for example `coolify`. Coolify also registers `self-hosted` and `linux`. |
-| **Status** | **Take workflow jobs** or **Paused**. |
 | **Application builds** | **Also build applications**, or **Dedicated to runners**. A dedicated server is not used for application builds while its runners are enabled. |
 
-If Coolify shows **The GitHub App is not ready**, complete [Set up the GitHub App](#set-up-the-github-app).
+If Coolify shows **The GitHub App is not ready**, complete [Set up the GitHub App](#set-up-the-github-app). You can save the settings with an App that is not ready, but Coolify does not get jobs until the App has the required permissions.
 
 </Step>
 <Step>
@@ -146,8 +150,8 @@ If Coolify shows **The GitHub App is not ready**, complete [Set up the GitHub Ap
 | **Parallel runners** | `2` | The maximum number of runners on this server at the same time (1 to 32). |
 | **CPU limit** | No limit | The number of CPUs for each runner, for example `2`. |
 | **Memory limit** | No limit | The memory for each runner, for example `4g`. |
-| **Docker in jobs** | Private Docker daemon | Refer to [Docker in jobs](#docker-in-jobs). |
-| **Runner image** | Official runner image | A custom image based on the official runner image. Use it to add tools. |
+| **Docker in jobs** | Docker (privileged, full host access) | Refer to [Docker in jobs](#docker-in-jobs). |
+| **Runner image** | `ghcr.io/actions/actions-runner:latest` | Refer to [Runner image](#runner-image). |
 
 The CPU and memory limits apply to the runner container and to its Docker sidecar.
 
@@ -171,7 +175,7 @@ All values are in minutes.
 
 Select **Save**.
 
-When you save, Coolify creates a runner group named `Coolify <app-uuid>` in your organization. The group is limited to private repositories.
+When the GitHub App has all the required permissions, Coolify creates a runner group named `Coolify <app-uuid>` in your organization. The group is limited to private repositories.
 
 <Callout type="info" title="GitHub Free organizations">
 Organizations on the GitHub Free plan cannot create runner groups. In that case, Coolify uses the **Default** runner group and shows a warning. On GitHub, check which repositories can use the Default group.
@@ -212,10 +216,58 @@ A custom label can contain letters, numbers, dots, dashes, and underscores. You 
 
 | Mode | Description |
 |------|-------------|
-| **Private Docker daemon (privileged)** | Each runner gets its own Docker daemon in a privileged sidecar container. Use this mode for `docker` commands, service containers, and container jobs. |
-| **No Docker** | Jobs do not have Docker access. Use this mode when your jobs do not need Docker. |
+| **Docker (privileged, full host access)** | Each runner gets its own Docker daemon in a privileged sidecar container. A job can get root access to the build server. Use this mode only for trusted repositories. |
+| **Isolated Docker (Sysbox)** | Each runner gets its own Docker daemon in an unprivileged sidecar container that uses the [Sysbox](https://github.com/nestybox/sysbox) runtime. The root user in a job has no rights on the build server. The server must have Sysbox. Refer to [Install Sysbox](#install-sysbox). |
+| **No Docker (isolated, no container actions)** | Jobs run in an unprivileged container without Docker. |
+
+What works in each mode:
+
+| Workflow feature | Docker (privileged) | Isolated Docker (Sysbox) | No Docker |
+|------------------|:-------------------:|:------------------------:|:---------:|
+| Shell steps, JavaScript actions, and composite actions | Yes | Yes | Yes |
+| `docker` commands | Yes | Yes | No |
+| Service containers (`services:`) | Yes | Yes | No |
+| Container jobs (`container:`) | Yes | Yes | No |
+| Docker container actions (`uses: docker://...` or actions with `runs.using: docker`) | Yes | Yes | No |
 
 Coolify never shares the Docker socket of the host with a runner. Each runner has its own network and volumes.
+
+### Install Sysbox
+
+When you select **Isolated Docker (Sysbox)**, Coolify checks if the server has Sysbox. If Sysbox is not installed, select **Install Sysbox**. Coolify shows the installation logs.
+
+The automatic installation needs:
+
+- Debian or Ubuntu.
+- The `amd64` or `arm64` architecture.
+- Linux kernel 5.12 or newer.
+
+During the installation, Coolify:
+
+1. Writes the current `bip` and `default-address-pools` values of Docker to `/etc/docker/daemon.json`. It keeps the other settings and saves a backup of the file as `/etc/docker/daemon.json.before-sysbox`. Without these values, the Sysbox package restarts Docker, or stops when containers exist.
+2. Downloads the pinned Sysbox package from GitHub and checks its SHA-256 checksum.
+3. Installs the package and `fuse3`. Docker reloads its configuration. Running containers are not restarted.
+
+For other distributions, [install Sysbox manually](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install-package.md). Coolify detects it when the Sysbox services run and Docker lists the `sysbox-runc` runtime.
+
+<Callout type="warning" title="Known Sysbox issue">
+Sysbox has an [open issue](https://github.com/nestybox/sysbox/issues/1018) in which a host can stop responding. Coolify does not remove Sysbox from a server. To remove it, refer to the [Sysbox uninstall instructions](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install-package.md).
+</Callout>
+
+---
+
+## Runner image
+
+By default, Coolify uses `ghcr.io/actions/actions-runner:latest` and pulls it each time it starts a runner, so the runner stays up to date. When the registry is not available, Coolify uses the image that is already on the server.
+
+In **Runner image**, you can:
+
+- pin a version, for example `ghcr.io/actions/actions-runner:2.337.0`.
+- use a custom image based on the official runner image, to add tools.
+
+<Callout type="warning" title="Keep pinned images up to date">
+GitHub stops sending jobs to runners that are more than 30 days behind the newest runner version. If you pin a version or use a custom image, update it regularly.
+</Callout>
 
 ---
 
@@ -230,20 +282,25 @@ The **Recent runners** section on the **GitHub Runners** page shows the queued j
 | **Waiting for job** | The runner is registered and waits for GitHub to give it a job. |
 | **Running** | The runner runs the job. |
 | **Completed** | The job completed and Coolify removed the runner. |
-| **Failed** | Coolify could not start the runner. The error message shows the cause. |
+| **Failed** | Coolify could not start the runner after 3 attempts. The error message shows the cause. |
 | **Cancelled** | The job ended before a runner started, the runner got no job, or a user cancelled it. |
 | **Timed out** | The job waited or ran longer than the configured timeout. |
+
+When a runner cannot start, Coolify removes it and puts the job back in the queue. It tries again after 30 seconds, and then after 60 seconds, possibly on another build server. While it waits, the row shows **Attempt 1 of 3 failed** or **Attempt 2 of 3 failed** with the cause.
+
+After the last failed attempt, the job stays queued on GitHub until GitHub cancels it. Another runner with matching labels can still take it.
 
 To stop an active runner, select **Cancel** on its row.
 
 ---
 
-## Pause or remove runners
+## Disable runners
 
-- To stop taking new jobs, set **Status** to **Paused** and select **Save**.
-- To remove the configuration, select **Remove**. Before you remove the configuration, wait for the active runners to finish or cancel them. Coolify keeps the execution history of the server.
+Select **Disable runners** to stop taking new jobs. Coolify removes the runners that wait for a job. Running jobs continue until they finish. Coolify keeps the settings and the execution history of the server.
 
-You cannot change the role of a build server while its runners are enabled. Pause or remove the runner configuration first.
+To take jobs again, select **Enable runners**.
+
+You cannot change the role of a build server while its runners are enabled. Disable the runners first.
 
 ---
 
@@ -251,9 +308,15 @@ You cannot change the role of a build server while its runners are enabled. Paus
 
 | Problem | Solution |
 |---------|----------|
-| The **GitHub Runners** menu does not show | Set the server role to **Build**. |
+| **This server is not enabled for builds** | Set the server role to **Build** in the **General** settings of the server. |
+| The **GitHub Runners** menu does not show | Coolify does not run runners on the server that runs Coolify. Use another server. |
 | No GitHub App shows in the settings | Add a GitHub App that belongs to an organization, and install it. |
 | **The GitHub App is not ready** | Add the missing permissions or events on GitHub, then select **Refetch** on the **Permissions** page of the App. |
 | Jobs stay in **Queued** on GitHub and Coolify shows nothing | Make sure that `runs-on` has one of your custom labels, and that all labels of the job are registered by the runner. Make sure that GitHub can send webhook events to Coolify. |
 | Jobs stay in **Queued** in Coolify | All runners are busy. Increase **Parallel runners** or configure runners on more build servers. |
+| A job fails at **Initialize containers** or at a Docker step | The job needs Docker. Select **Docker (privileged, full host access)** or **Isolated Docker (Sysbox)**. |
+| **Install Sysbox** fails | Make sure that the server runs Debian or Ubuntu on `amd64` or `arm64`, with Linux kernel 5.12 or newer. Otherwise, install Sysbox manually. |
+| **Sysbox is not installed** shows after a manual installation | Make sure that the `sysbox-mgr` and `sysbox-fs` services run, that `/usr/bin/fusermount3` exists, and that `docker info` lists the `sysbox-runc` runtime. Select **Install Sysbox** to repair the installation on Debian or Ubuntu. |
+| Runners show **Failed** with **Could not start a runner after 3 attempts** | Read the error message. For Isolated Docker, check the Sysbox services on the server. |
+| GitHub does not send jobs to the runners | A pinned or custom **Runner image** can be too old. Use a newer runner version. |
 | The job cannot find a tool | Use a custom **Runner image** based on the official runner image that includes the tool. |
