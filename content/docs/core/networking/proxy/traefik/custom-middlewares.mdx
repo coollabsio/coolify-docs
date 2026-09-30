@@ -1,0 +1,223 @@
+---
+title: Custom Middlewares
+description: Add reusable Traefik request middleware and redirects to Coolify resources.
+---
+
+# Custom middlewares
+
+Traefik middleware changes a request before it reaches a resource. Common uses include rate limits, response headers, IP allow lists, redirects, and external authentication.
+
+How you attach middleware depends on the resource type. Standard applications can use generated labels or manually edited labels. Docker Compose applications and services can use Coolify's `coolify.traefik.middlewares` shorthand.
+
+<Callout type="warning" title="Keep Readonly labels enabled when possible">
+Disabling **Readonly labels** stops Coolify from regenerating application labels. You become responsible for every router, middleware, service, and certificate label for the application. Use dynamic configuration with a small reference label when it can meet the requirement.
+</Callout>
+
+## Define reusable middleware
+
+Open **Servers > your server > Proxy > Dynamic Configurations** and create a file such as `shared-middlewares.yaml`. Start with the example that matches the request change you need. You can combine multiple middleware definitions in the same file.
+
+<Tabs id="traefik-middleware-example" items={['Rate limiting', 'Security headers', 'IP allow list']}>
+<Tab value="Rate limiting">
+
+```yaml
+http:
+  middlewares:
+    app-rate-limit:
+      rateLimit:
+        average: 100
+        period: 1m
+        burst: 50
+```
+
+</Tab>
+<Tab value="Security headers">
+
+```yaml
+http:
+  middlewares:
+    security-headers:
+      headers:
+        contentTypeNosniff: true
+        frameDeny: true
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+```
+
+</Tab>
+<Tab value="IP allow list">
+
+```yaml
+http:
+  middlewares:
+    internal-only:
+      ipAllowList:
+        sourceRange:
+          - '192.168.1.0/24'
+          - '10.0.0.0/8'
+```
+
+</Tab>
+</Tabs>
+
+The `@file` suffix identifies middleware loaded from Traefik's file provider.
+
+## Attach middleware to a resource
+
+<Tabs items={['Standard application', 'Docker Compose or service']}>
+<Tab value="Standard application">
+
+Open the application **General** page and find **Container Labels**. Disable **Readonly labels**, then append the middleware names to the existing HTTPS router label:
+
+```ini
+traefik.http.routers.https-0-<resource-id>.middlewares=gzip # [!code --][!code focus]
+traefik.http.routers.https-0-<resource-id>.middlewares=gzip,app-rate-limit@file,security-headers@file # [!code ++][!code focus]
+```
+
+Keep every existing middleware name. Save and redeploy the application.
+
+If the route breaks, select **Reset Labels to Defaults**, re-enable **Readonly labels**, and redeploy before trying again.
+
+</Tab>
+<Tab value="Docker Compose or service">
+
+Add the Coolify shorthand to the service that receives the domain:
+
+```yaml
+services:
+  app:
+    image: nginx:alpine
+    labels: # [!code ++:2][!code focus:2]
+      - 'coolify.traefik.middlewares=app-rate-limit@file,security-headers@file'
+```
+
+Coolify reads this value while it generates the router and adds the named middleware to the chain. Save and redeploy the resource.
+
+</Tab>
+</Tabs>
+
+You can also define middleware with Docker labels. For example:
+
+```yaml
+labels: # [!code ++:5][!code focus:5]
+  - 'traefik.http.middlewares.app-rate-limit.ratelimit.average=100'
+  - 'traefik.http.middlewares.app-rate-limit.ratelimit.period=1m'
+  - 'traefik.http.middlewares.app-rate-limit.ratelimit.burst=50'
+  - 'coolify.traefik.middlewares=app-rate-limit'
+```
+
+Use file-based configuration when several resources share the same middleware. Use labels when the middleware belongs to one Compose service.
+
+---
+
+## Redirects
+
+Choose the redirect that matches the result you need.
+
+<Tabs id="traefik-redirect-type" items={['www and non-www', 'One domain to another']}>
+<Tab value="www and non-www">
+
+Standard applications have a built-in **Direction** setting. Add both domains to **Domains**, keep **Readonly labels** enabled, then choose one of:
+
+| Direction | Result |
+|---|---|
+| **Allow www & non-www.** | Both configured hostnames remain available. |
+| **Redirect to www.** | The non-`www` hostname redirects to the configured `www` hostname. |
+| **Redirect to non-www.** | The `www` hostname redirects to the configured non-`www` hostname. |
+
+Select **Set Direction**, confirm the change, and redeploy if the running container does not yet have the regenerated labels. Both hostnames also need DNS records that point to the server.
+
+### Docker Compose applications and services
+
+Add both domains to the resource, then add the redirect middleware labels to the service that receives them.
+
+<Tabs id="traefik-compose-www-redirect" items={['Redirect to www', 'Redirect to non-www']}>
+<Tab value="Redirect to www">
+
+```yaml
+labels: # [!code ++:5][!code focus:5]
+  - 'traefik.http.middlewares.example-redirect.redirectregex.regex=^(http|https)://(?:www\.)?(.+)'
+  - 'traefik.http.middlewares.example-redirect.redirectregex.replacement=${1}://www.${2}'
+  - 'traefik.http.middlewares.example-redirect.redirectregex.permanent=true'
+  - 'coolify.traefik.middlewares=example-redirect'
+```
+
+</Tab>
+<Tab value="Redirect to non-www">
+
+```yaml
+labels: # [!code ++:5][!code focus:5]
+  - 'traefik.http.middlewares.example-redirect.redirectregex.regex=^(http|https)://www\.(.+)'
+  - 'traefik.http.middlewares.example-redirect.redirectregex.replacement=${1}://${2}'
+  - 'traefik.http.middlewares.example-redirect.redirectregex.permanent=true'
+  - 'coolify.traefik.middlewares=example-redirect'
+```
+
+</Tab>
+</Tabs>
+
+These examples assume **Escape special characters in labels?** remains enabled. If you disable it, write each `$` as `$$` in the source Compose file.
+
+</Tab>
+<Tab value="One domain to another">
+
+Create a dynamic middleware that preserves the request path:
+
+```yaml
+http:
+  middlewares:
+    move-domain:
+      redirectRegex:
+        regex: '^https?://source\.example\.com/(.*)'
+        replacement: 'https://target.example.com/${1}'
+        permanent: true
+```
+
+Configure `https://source.example.com` as a domain on the resource so Traefik creates the source router and certificate, then attach `move-domain@file` using the appropriate resource method above.
+
+<Callout type="info" title="Use temporary redirects while testing">
+Set `permanent: false` until the source hostname, certificate, path handling, and destination are correct. Browsers and search engines can cache permanent redirects.
+</Callout>
+
+</Tab>
+</Tabs>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="Traefik cannot find the middleware">
+
+Confirm the middleware name and provider suffix match exactly. File-provider middleware uses `@file`.
+
+Inspect **Servers > your server > Proxy > Logs** for missing middleware or YAML errors.
+
+</Accordion>
+
+<Accordion title="The middleware is defined but does not change requests">
+
+Confirm the middleware is attached to the expected router. Defining middleware without adding it to a router does not process traffic.
+
+</Accordion>
+
+<Accordion title="An existing middleware stops working">
+
+Keep existing middleware such as `gzip` when editing a generated router chain. Append the new middleware instead of replacing the complete value.
+
+</Accordion>
+
+<Accordion title="A label containing dollar signs is invalid">
+
+Coolify enables **Escape special characters in labels?** by default. With this setting enabled, enter each dollar sign once in the source Compose file. For example:
+
+```yaml
+- 'traefik.http.middlewares.example-redirect.redirectregex.replacement=${1}://${2}'
+```
+
+Coolify writes each `$` as `$$` in the deployable Compose file so Docker Compose passes a single `$` to Traefik. After deployment, `docker inspect` should show `${1}://${2}` as the replacement value.
+
+If you disable **Escape special characters in labels?**, escape each dollar sign yourself by writing `$$` in the source Compose file.
+
+</Accordion>
+
+</Accordions>

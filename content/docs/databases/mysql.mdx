@@ -1,19 +1,115 @@
 ---
 title: MySQL
-description: Deploy MySQL databases on Coolify with ACID compliance, replication, partitioning, full-text indexing, and automated backup features.
+description: Deploy and operate MySQL on Coolify with generated credentials, persistent storage, SSL, health checks, backups, and restore support.
 ---
 
 # MySQL
 
-<ZoomImage src="/docs/images/database-logos/mysql.webp" alt="MySQL" />
+Coolify deploys MySQL as a standalone container on the selected server and destination. A new resource gets generated root and application-user passwords, a persistent data volume, an internal connection URL, and a health check.
 
-## What is MySQL
+MySQL is an open-source relational database used by applications that need SQL storage and transactions.
 
-MySQL is a widely-used, open-source relational database management system (RDBMS) known for its reliability, ease of use, and performance. It's an essential component of the popular LAMP (Linux, Apache, MySQL, PHP/Python/Perl) stack used for web development.
+## Create a MySQL database
 
-MySQL provides a robust, ACID-compliant database solution suitable for a wide range of applications, from small websites to large-scale enterprise systems. It offers features like replication, partitioning, and full-text indexing, making it versatile for various use cases.
+<Steps>
+<Step>
 
-## Links
+### Open New Resource
 
-- [The official website](https://www.mysql.com/)
-- [GitHub](https://github.com/mysql/mysql-server)
+Open the project and environment where the database should live, then select **New Resource**.
+
+</Step>
+<Step>
+
+### Select MySQL
+
+Under **Databases**, select **MySQL**. You can also search for **MySQL** by name.
+
+</Step>
+<Step>
+
+### Select a server
+
+Select the server that should run MySQL. Build servers cannot be selected because they do not host running database resources.
+
+</Step>
+<Step>
+
+### Select a destination
+
+Select the Docker network destination that MySQL should join.
+
+</Step>
+<Step>
+
+### Review the generated configuration
+
+Coolify creates the resource and opens **Configuration > General**. Review the image, root password, normal username and password, initial database, and connection URLs. Keep the default private networking unless an external client requires access.
+
+</Step>
+<Step>
+
+### Start MySQL
+
+Select **Start** and follow the startup output. Wait until MySQL is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+
+</Step>
+</Steps>
+
+## Default configuration
+
+| Setting | Default or behavior |
+| :--- | :--- |
+| Internal port | `3306` |
+| Default image | `mysql:8` |
+| Normal user | `mysql` |
+| Initial database | `default` |
+| Data mount | `/var/lib/mysql` |
+| Scheduled backups | Supported |
+| SSL | Supported with MySQL SSL modes |
+
+The root password and normal-user password are generated when the resource is created. If you change credentials or the initial database inside MySQL, update the matching values in **Configuration > General** so connection URLs and automated backups use the current values.
+
+
+## Connect to MySQL
+
+Use the **Internal URL** for an application on the same Coolify destination network:
+
+```sh
+mysql://<user>:<password>@<database-container>:3306/<database>
+```
+
+When **Make it publicly available** is enabled, Coolify shows a **Public URL** using the server address and **Public Port**. Keep MySQL private unless an external client requires direct access.
+
+Read [Databases](/databases) for port mappings, the public TCP proxy, and firewall considerations.
+
+## Configure MySQL
+
+Open **Configuration > General** to change the image, credentials, **Ports Mappings**, public proxy, custom Docker options, and **Custom Mysql Configuration**. Coolify mounts the custom configuration into the MySQL container and recreates the generated configuration when you restart the resource.
+
+Use the image version that matches your application and backup/restore tooling. Test major-version changes against a copy of the data before applying them to production.
+
+## Back up and restore MySQL
+
+Coolify uses `mysqldump` for scheduled backups. Selected databases are dumped directly; **Backup All Databases** creates a gzip-compressed all-database dump. Multiple selected database names are comma-separated.
+
+Configure schedules, retention, and S3 storage under [Database backups](/databases/backups). The built-in **Import Backup** form accepts MySQL backups while the database is running; follow [Restore a database](/databases/restore) for the import workflow.
+
+<Callout type="warning" title="Restore replaces data">
+
+Stop application writes and verify the target resource before confirming an import. Keep a separate copy of any data that must not be replaced.
+
+</Callout>
+
+## SSL and health checks
+
+MySQL supports **Prefer**, **Require**, **Verify CA**, and **Verify Full**. The verification modes require the client to trust the Coolify CA certificate. See [Database SSL](/databases/ssl).
+
+Configure the Docker health check under **Configuration > Healthcheck** and restart MySQL after saving.
+
+## Official MySQL resources
+
+- [MySQL documentation](https://dev.mysql.com/doc/)
+- [MySQL source](https://github.com/mysql/mysql-server)
+- [MySQL Docker image](https://hub.docker.com/_/mysql)
+- [MySQL `mysqldump` documentation](https://dev.mysql.com/doc/refman/8.4/en/mysqldump.html)

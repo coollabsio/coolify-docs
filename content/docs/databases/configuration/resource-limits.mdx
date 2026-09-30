@@ -1,0 +1,49 @@
+---
+title: Resource Limits
+description: Limit the CPU and memory available to a standalone database container.
+---
+
+# Resource limits
+
+Open a database resource, then select **Configuration > Resource Limits** to restrict the CPU and memory available to its container.
+
+Start with measured database usage and leave enough capacity for startup, backups, compaction, and query bursts. A limit that is too low can make a healthy database appear unavailable.
+
+## CPU limits
+
+| Setting | Accepted value | Default | Behavior |
+| :--- | :--- | :---: | :--- |
+| **Number of CPUs** | A whole or decimal number, such as `2` or `0.5`. | `0` | Maximum CPU capacity. `0` means no configured limit. |
+| **CPU sets to use** | CPU numbers or ranges, such as `0-2` or `0,1,3`. | Empty | Restricts the container to selected CPU cores. |
+| **CPU Weight** | A whole number of `0` or greater. | `1024` | Relative CPU priority when containers compete for CPU time. |
+
+**CPU Weight** changes priority during contention; it does not reserve CPU capacity.
+
+## Memory limits
+
+Memory fields accept `0` or a number followed by `b`, `k`, `m`, or `g`, such as `256m` or `1g`.
+
+| Setting | Default | Behavior |
+| :--- | :---: | :--- |
+| **Soft Memory Limit** | `0` | Memory reservation used during server memory pressure. |
+| **Swappiness** | `60` | Value from `0` to `100` controlling how readily anonymous memory can be swapped. |
+| **Maximum Memory Limit** | `0` | Hard memory limit for the container. |
+| **Maximum Swap Limit** | `0` | Total memory and swap available to the container. |
+
+`0` means no configured limit for the CPU and memory limit fields. Set an explicit limit only when you understand the database's memory behavior and the server's available capacity.
+
+<Callout type="warning" title="Low limits can stop a database">
+
+A database that reaches its hard memory limit can be terminated by Docker. A low CPU limit can also make startup, health checks, backups, or queries time out. Review **Logs**, **Metrics**, and health status after applying a limit.
+
+</Callout>
+
+## Apply and verify
+
+Select **Save**, then restart or redeploy the database so the container starts with the new limits.
+
+After it starts:
+
+1. Open **Metrics** and check CPU and memory usage.
+2. Open **Logs** for out-of-memory exits, repeated restarts, or failed startup messages.
+3. Run a representative application query and a backup, when supported.

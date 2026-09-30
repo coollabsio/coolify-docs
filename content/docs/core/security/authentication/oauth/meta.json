@@ -1,0 +1,13 @@
+{
+  "title": "OAuth",
+  "pages": [
+    "overview",
+    "github",
+    "gitlab",
+    "google",
+    "azure",
+    "bitbucket",
+    "discord",
+    "infomaniak"
+  ]
+}

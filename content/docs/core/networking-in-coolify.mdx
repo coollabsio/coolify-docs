@@ -1,0 +1,205 @@
+---
+title: Networking in Coolify
+description: How public traffic, reverse proxies, Docker networks, and direct ports fit together in Coolify.
+---
+
+import {
+  ArrowsRight,
+  Box2,
+  Globe3,
+  Layers,
+  Server,
+  ShieldSecurity2,
+} from 'reicon-react';
+
+# Networking in Coolify
+
+Coolify separates public traffic from private container traffic. HTTP and HTTPS requests enter through the Coolify Proxy container on the server running the resource, while applications, databases, and services communicate over Docker networks.
+
+Understanding these paths makes domains, ports, destinations, and proxy settings easier to configure.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+For a domain, DNS resolves the hostname to the server running the resource. The Coolify Proxy container, named `coolify-proxy`, matches the domain and path, then forwards the request over a Docker network to the correct container port.
+
+Containers that share a Docker network communicate directly through internal names and ports. They do not need a public domain or a port mapped to the server.
+
+</CoolCallout>
+
+---
+
+## The three networking paths
+
+Most Coolify networking decisions belong to one of three paths.
+
+<CoolIconCardGrid
+  columns={3}
+  surface
+  cards={[
+    {
+      title: 'Public HTTP and HTTPS',
+      description: 'Requests for a domain pass through the Coolify Proxy container on the server running the resource.',
+      icon: Globe3,
+    },
+    {
+      title: 'Private container traffic',
+      description: 'Containers on a shared Docker network use internal names and ports without public exposure.',
+      icon: Box2,
+    },
+    {
+      title: 'Direct host ports',
+      description: 'A host port mapping exposes a container port without using HTTP domain routing.',
+      icon: Server,
+    },
+  ]}
+/>
+
+A domain is the normal path for a web application or HTTP service. Use private networking for dependencies such as databases. Map a port to the server only when a client must connect directly or the protocol does not belong behind the HTTP proxy.
+
+---
+
+## How public traffic reaches a resource
+
+Coolify configures the route, but the Coolify instance does not relay application traffic. The request goes to the Coolify Proxy container on the server where the resource runs.
+
+<CoolFlow
+  id="public-traffic-flow"
+  icon={Globe3}
+  title="From a domain to a container"
+  description="The domain, proxy route, Docker network, and container port must all describe the same path."
+  steps={[
+    'Point the domain DNS record to the server',
+    'Add the domain to the application or service',
+    'Receive the request on port `80` or `443`',
+    'Match the request by hostname and path',
+    'Forward the request to the container port',
+  ]}
+  list={[
+    'The Coolify Proxy runs as the `coolify-proxy` container on the resource server.',
+    'Coolify generates routing for the selected integrated proxy, Traefik or Caddy, from the configured domain and target port.',
+    'An `https://` domain enables TLS certificate automation through the selected integrated proxy.',
+    'The Coolify Proxy container and the destination container share a Docker network.',
+  ]}
+  endnote="Already-running resources remain reachable while the Coolify control plane is unavailable, provided that the server, Coolify Proxy container, resource containers, DNS, and upstream network remain available."
+/>
+
+The application must listen on the port configured for the resource. For example, if an application listens on port `3000` inside its container, the Coolify Proxy container must target port `3000` even though visitors connect over the standard HTTPS port `443`.
+
+Applications and services can use domains. Databases use private networking by default and can be exposed separately with a public database port when an external client must connect.
+
+---
+
+## How private container traffic works
+
+A **destination** represents a Docker network on a connected server. On a standalone server, Coolify creates an attachable Docker network named `coolify` during setup. The `coolify` network is the default destination, and Coolify deploys non-Docker Compose applications to it unless you select another destination.
+
+The Coolify Proxy container joins the `coolify` network and the resource-specific networks used by Docker Compose applications and service stacks. This allows the Coolify Proxy container to reach containers that have public routes. Other containers on a shared network can communicate directly through their container or service name, a network alias, and the internal port where the dependency listens.
+
+Common private paths include:
+
+- an application connecting to a database on its database port
+- one service container calling another by its Docker Compose service name
+- the Coolify Proxy container forwarding a domain request to an application port
+
+Private traffic does not need a public domain, a public IP address, or a host port mapping. Resources on separate Docker networks remain isolated unless you connect them to a shared network.
+
+Docker Compose applications and service stacks use their own resource-specific network by default and do not join the `coolify` network automatically. Enable **Connect To Predefined Network** when the stack must reach another resource through its Coolify destination. Read [Docker Compose networking](/applications/builds/docker-compose#application-networking) before changing that connection.
+
+---
+
+## Choose a proxy model
+
+Coolify supports two integrated proxies, Traefik and Caddy, plus **Custom (None)**. Coolify selects Traefik by default when you add a server. You can select Caddy instead and keep Coolify-managed routing and TLS certificates, or bring your own proxy with **Custom (None)** and manage the entire public traffic path yourself.
+
+<CoolCompare
+  id="proxy-models"
+  className="not-prose"
+  columns={3}
+  icon={Layers}
+  title="Proxy models"
+  description="Compare the routing model before deploying resources that need domains."
+>
+<CoolCompareColumn
+  title="Traefik"
+  items={[
+    'A proxy integrated with Coolify',
+    'Selected by default when you add a server',
+    'Coolify manages domain routing, generated labels, and TLS certificates',
+  ]}
+/>
+<CoolCompareColumn
+  title="Caddy"
+  items={[
+    'A proxy you can select instead of Traefik',
+    'Coolify manages Caddy routing configuration, generated labels, and TLS certificates',
+    'Currently documented as experimental',
+  ]}
+/>
+<CoolCompareColumn
+  title="Custom (None)"
+  items={[
+    'Bring your own proxy for full control instead of running the Coolify Proxy',
+    'Coolify does not manage routing or TLS certificates for your proxy',
+    'You configure routing, TLS certificates, redirects, middleware, and other proxy behavior',
+  ]}
+/>
+</CoolCompare>
+
+A direct host port mapping bypasses the proxy. It exposes the selected container port through the server, so you must choose a free host port and restrict it with the appropriate firewall rules. Application port mappings also disable rolling updates for that application.
+
+---
+
+## The networking responsibility boundary
+
+The same boundary applies to self-hosted Coolify and Coolify Cloud: resources run on servers you provide. When you self-host, you also operate the network path to the Coolify instance itself.
+
+<CoolCompare
+  id="networking-responsibility-boundary"
+  className="not-prose"
+  icon={ShieldSecurity2}
+  title="Who manages each part"
+  description="Coolify automates container routing on connected servers, while you control the infrastructure around those servers."
+>
+<CoolCompareColumn
+  title="Coolify coordinates"
+  items={[
+    'Configuration for the selected integrated Traefik or Caddy proxy',
+    'Domain, path, target-port, and TLS certificate automation for applications and services',
+    'Docker network creation and the connections required by the Coolify Proxy container and resources',
+    'Resource settings for internal ports, host port mappings, and network aliases',
+  ]}
+/>
+<CoolCompareColumn
+  title="You remain responsible for"
+  items={[
+    'DNS records that point each domain to the correct server',
+    'Firewall or security-group rules for ports `80`, `443`, SSH, and any directly exposed ports',
+    'Making each application listen on its configured container port',
+    'External load balancers, CDNs, WAFs, private networks, and custom proxy configuration',
+  ]}
+/>
+</CoolCompare>
+
+When a connection fails, trace the path in order. For a domain, check DNS, the firewall, Coolify Proxy container status, the generated route, the shared Docker network, and the container port. For a private dependency, check the shared network, internal hostname, internal port, and credentials.
+
+---
+
+## Continue with networking
+
+Use the detailed guides for the part of the path you need to configure.
+
+### Configure domains
+
+Use [Domains](/core/networking/domains) to configure DNS records, HTTPS, target ports, paths, redirects, and generated domains.
+
+### Configure the proxy
+
+- [Choose or switch proxies](/core/networking/proxy/overview)
+- [Configure Traefik](/core/networking/proxy/traefik/overview)
+- [Configure Caddy](/core/networking/proxy/caddy/overview)
+
+### Secure and troubleshoot traffic
+
+- [Configure the server firewall](/core/infrastructure/servers/firewall)
+- [Troubleshoot Let's Encrypt](/troubleshoot/dns-and-domains/lets-encrypt-not-working)
+- [Troubleshoot gateway timeouts](/troubleshoot/applications/gateway-timeout)

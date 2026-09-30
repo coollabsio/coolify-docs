@@ -1,0 +1,28 @@
+---
+title: "Backup delete execution"
+description: "Delete a specific backup execution and optionally from S3. First UUID is the database, second is the backup configuration, third is the specific execution."
+---
+
+# Backup delete execution
+
+Delete a specific backup execution and optionally from S3. First UUID is the database, second is the backup configuration, third is the specific execution.
+
+## Usage
+
+```sh
+coolify database backup delete-execution <database_uuid> <backup_uuid> <execution_uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--delete-s3` | `boolean` | No | `false` | Delete backup file from S3 |
+
+## Get current help
+
+```sh
+coolify database backup delete-execution --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

@@ -1,0 +1,10 @@
+{
+  "title": "Storage mounts",
+  "pages": [
+    "overview",
+    "volume-mounts",
+    "bind-mounts",
+    "file-mounts",
+    "backups"
+  ]
+}

@@ -9,8 +9,10 @@ export const imagesDir = path.join(root, 'public/images/services')
 
 const ignoredServiceFiles = new Set([
   'all.mdx',
-  'introduction.mdx',
+  'how-services-work.mdx',
+  'index.mdx',
   'overview.mdx',
+  'what-is-a-service.mdx',
 ])
 
 const imageExtensions = new Set(['.svg', '.png', '.webp', '.jpg', '.jpeg'])
@@ -201,6 +203,19 @@ function isDisabledService(frontmatter, markdown) {
 }
 
 /**
+ * Check whether an icon path points at an existing service image asset.
+ *
+ * @param {string} icon
+ * @param {Set<string>} imageFiles
+ * @returns {boolean}
+ */
+function iconExists(icon, imageFiles) {
+  const prefix = '/docs/images/services/'
+
+  return icon.startsWith(prefix) && imageFiles.has(icon.slice(prefix.length))
+}
+
+/**
  * Collect normalized service metadata from service markdown files.
  *
  * @returns {Promise<ServiceRecord[]>}
@@ -212,6 +227,8 @@ export async function collectServices() {
   ])
 
   const imageIndex = buildImageIndex(imageFiles)
+  const imageFileSet = new Set(imageFiles)
+  const iconWarnings = []
   const services = []
 
   for (const file of serviceFiles.sort()) {
@@ -225,8 +242,17 @@ export async function collectServices() {
     const title = frontmatter.title || slug
     const description = frontmatter.description || ''
     const category = frontmatter.category || 'Uncategorized'
-    const icon = frontmatter.icon || resolveIcon(slug, title, imageIndex) || extractMarkdownIcon(markdown)
     const disabled = isDisabledService(frontmatter, markdown)
+    const icon =
+      [frontmatter.icon, resolveIcon(slug, title, imageIndex), extractMarkdownIcon(markdown)].find(
+        (candidate) => candidate && iconExists(candidate, imageFileSet),
+      ) || ''
+
+    if (frontmatter.icon && !iconExists(frontmatter.icon, imageFileSet)) {
+      iconWarnings.push(`${slug} (icon not found: ${frontmatter.icon})`)
+    } else if (!icon && !disabled) {
+      iconWarnings.push(`${slug} (no icon)`)
+    }
 
     services.push({
       name: title,
@@ -236,6 +262,10 @@ export async function collectServices() {
       category,
       ...(disabled ? { disabled } : {}),
     })
+  }
+
+  if (iconWarnings.length > 0) {
+    console.warn(`[services] ${iconWarnings.length} service icon(s) need attention:\n  ${iconWarnings.join('\n  ')}`)
   }
 
   services.sort((a, b) => a.name.localeCompare(b.name, 'en'))

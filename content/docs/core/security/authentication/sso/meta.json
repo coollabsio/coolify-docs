@@ -1,0 +1,9 @@
+{
+  "title": "SSO",
+  "pages": [
+    "overview",
+    "authentik",
+    "clerk",
+    "zitadel"
+  ]
+}

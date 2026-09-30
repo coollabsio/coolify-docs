@@ -1,0 +1,268 @@
+---
+title: Docker and Containers
+description: How Docker images, containers, persistent storage, networks, and Compose fit into a Coolify deployment.
+---
+
+import {
+  ArrowsRight,
+  Box2,
+  HardDrive,
+  Hierarchy2,
+  Layers,
+  Package,
+  Rocket2,
+  Warning22,
+} from 'reicon-react';
+
+# Docker and containers
+
+Coolify uses Docker to run applications, databases, and services on the servers you connect. Coolify coordinates the work; Docker provides the images, containers, storage, and networks that make each resource run.
+
+You do not need to manage Docker by hand for a first deployment. Understanding these Docker concepts helps you choose storage, follow deployment logs, and diagnose why a resource cannot start or connect.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+An image describes what to run. A container is a running instance of an image. Persistent storage keeps data outside the replaceable container. Networks connect containers, while a Docker Compose definition describes how multiple containers run together.
+
+Coolify prepares the container configuration and directs Docker to build or pull images, attach storage and networks, and start containers on the connected server.
+
+</CoolCallout>
+
+---
+
+## Core Docker concepts
+
+<CoolIconCardGrid
+  surface
+  cards={[
+    {
+      title: 'Images',
+      description: 'Packaged application files and runtime dependencies used to create containers.',
+      icon: Package,
+    },
+    {
+      title: 'Containers',
+      description: 'Running instances of images. A Coolify resource can run one container or several.',
+      icon: Box2,
+    },
+    {
+      title: 'Persistent storage',
+      description: 'Named volumes or bind mounts that keep data outside a container’s replaceable filesystem.',
+      icon: HardDrive,
+    },
+    {
+      title: 'Networks',
+      description: 'Private Docker networks that let related containers and the server proxy communicate.',
+      icon: Hierarchy2,
+    },
+  ]}
+/>
+
+Docker images, containers, storage, and networks follow standard Docker behavior. Docker Compose describes how containers, storage, and networks work together. Coolify translates your resource settings into Docker operations on the connected server.
+
+---
+
+## Images and containers
+
+An image is the reusable package Docker uses to create a container. The image contains the application and the files it needs, but it is not a running application by itself.
+
+Based on your Coolify resource settings, Docker can build an application image from source code, pull a prebuilt image from a container registry, or start the images defined in a Docker Compose file.
+
+<CoolCompare
+  id="images-and-containers"
+  className="not-prose"
+  icon={Box2}
+  title="Image or container"
+  description="Docker creates a container from an image, then applies the runtime configuration for that deployment."
+>
+<CoolCompareColumn
+  title="Image"
+  items={[
+    'A reusable package used as the starting point for a container.',
+    'Built from source code or pulled from a container registry.',
+    'Can be used to create more than one container.',
+    'Does not contain a running process.',
+  ]}
+/>
+<CoolCompareColumn
+  title="Container"
+  items={[
+    'A running instance created from an image.',
+    'Receives environment variables, ports, storage mounts, and networks.',
+    'Can be started, stopped, restarted, or replaced.',
+    'Has a writable filesystem that belongs to that container.',
+  ]}
+/>
+</CoolCompare>
+
+During a redeployment, Coolify may replace a container to apply a new image or configuration. The image remains reusable, while the new container receives the current resource settings.
+
+Read Docker’s guides to [images](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image/) and [containers](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/) for more detail.
+
+---
+
+## Persistent data
+
+A container’s writable filesystem is not a safe location for data that must survive a redeployment. If Docker deletes and replaces the container, changes stored only in that filesystem disappear with it.
+
+Coolify persistent storage can use a named Docker volume or a bind mount from the server filesystem. Both types attach storage from outside the container to a path inside it.
+
+<CoolCompare
+  id="container-and-persistent-data"
+  className="not-prose"
+  icon={HardDrive}
+  title="Replaceable runtime and persistent data"
+  description="A redeployment can replace the container. Data survives only when the resource stores it outside that container."
+>
+<CoolCompareColumn
+  title="Inside the container"
+  items={[
+    'Application files supplied by the image.',
+    'Temporary files and caches that do not need to survive.',
+    'Changes written to the container filesystem without a storage mount.',
+    'Removed when that container is deleted.',
+  ]}
+/>
+<CoolCompareColumn
+  title="Persistent storage"
+  items={[
+    'Database files, uploads, or other state that must survive.',
+    'Stored in a named Docker volume or a bind-mounted server path.',
+    'Mounted into each replacement container through the resource configuration.',
+    'Remains separate when the container is replaced.',
+  ]}
+/>
+</CoolCompare>
+
+<CoolCallout icon={Warning22} title="Configure storage before writing important data" type="warning">
+
+A redeployment preserves only data stored in configured persistent storage or an external system. Adding a mount later does not recover files from a container that has already been removed.
+
+Persistent storage is not a backup. Back up databases, uploads, and other important data separately.
+
+</CoolCallout>
+
+Read [Persistent Storage](/core/persistent-storage/storage-mounts/overview) to configure volume, bind, directory, and file mounts in Coolify. Docker’s [storage guide](https://docs.docker.com/get-started/docker-concepts/running-containers/persisting-container-data/) explains the underlying model.
+
+---
+
+## Networks and Docker Compose
+
+Networks and Compose describe how containers fit together. Networks provide the connections; Compose records the desired multi-container configuration.
+
+### Networks
+
+Docker networks let containers communicate without exposing every service directly to the internet. Containers on the same network can reach the services they need. Containers on different, unconnected networks cannot communicate through those networks.
+
+Coolify creates or uses the networks required by each resource and connects the server proxy when HTTP routing is required. The proxy receives public traffic, then forwards it to the correct container over a Docker network.
+
+Read [Networking in Coolify](/core/networking-in-coolify) for domains, proxy modes, public ports, and internal service connections. Docker’s [networking guide](https://docs.docker.com/engine/network/) covers the underlying network drivers and behavior.
+
+### Docker Compose
+
+A Docker Compose file describes one or more services and their images, environment variables, ports, storage mounts, networks, health checks, and dependencies.
+
+Coolify generates the Compose configuration needed for resources such as applications and databases. For a Docker Compose application or a one-click service, Coolify uses the Compose definition you provide or select. You do not need to write a Compose file for every resource.
+
+Compose defines the desired runtime configuration; it does not make container-local data persistent. Storage still needs a volume, bind mount, or external data service.
+
+Read Docker’s [Compose application model](https://docs.docker.com/compose/intro/compose-application-model/) for the relationship between services, networks, and volumes.
+
+---
+
+## From configuration to running containers
+
+<CoolFlow
+  id="coolify-docker-flow"
+  icon={Layers}
+  title="From resource settings to running containers"
+  description="The exact commands vary by resource type and deployment strategy, but the Docker model stays the same."
+  steps={[
+    'Configure a resource',
+    'Build or pull an image',
+    'Prepare the container definition',
+    'Start with storage and networks',
+    'Route traffic when needed',
+  ]}
+  list={[
+    'Choose the source, build method, image, database, or Compose definition and the connected server where it should run.',
+    'Docker builds the required image or pulls an existing image from a registry.',
+    'Coolify prepares environment variables, ports, health checks, restart behavior, and other runtime settings.',
+    'Docker creates or replaces the containers with the configured volumes, bind mounts, and networks.',
+    'For HTTP resources, the proxy on that server routes configured domains to the correct container.',
+  ]}
+  endnote="The containers, networks, and storage live on the connected server where the resource runs. Coolify remains the control plane that coordinates future operations."
+/>
+
+---
+
+## Inspect Docker resources
+
+You can inspect Docker state without changing it. Connect over SSH to the server that runs the resource, then use the standard Docker listing commands:
+
+```bash
+docker ps
+docker image ls
+docker volume ls
+docker network ls
+```
+
+These commands show resources on the current server only. If one Coolify instance manages several connected servers, run them on the server assigned to the resource you are checking.
+
+### Check the self-hosted Coolify containers
+
+Coolify itself also runs in containers when you self-host it. Run this command on the machine that hosts your Coolify instance:
+
+```bash
+docker ps --filter "name=coolify" \
+  --format "table {{.Names}}\t{{.Image}}\t{{.RunningFor}}"
+```
+
+Coolify Cloud users do not have access to the managed control plane host. You can inspect the workload servers connected to your Cloud account instead.
+
+<CoolCallout icon={Warning22} title="Make lasting changes in Coolify" type="warning">
+
+Use direct Docker commands for inspection and carefully scoped debugging. Changes made directly to a Coolify-managed container can disappear when Coolify recreates it.
+
+Put lasting changes in the resource settings in Coolify or in the source Docker Compose file.
+
+</CoolCallout>
+
+---
+
+## Why standard Docker matters
+
+Docker keeps the workload layer familiar and portable. You can use normal Docker concepts and inspection tools on the servers you control, and running resources remain standard Docker containers.
+
+If the Coolify control plane becomes unavailable, containers that are already running remain on their connected servers. Dashboard controls and deployment automation are unavailable until the Coolify instance returns.
+
+Read [How Coolify works](/core/how-coolify-works) for the relationship between the control plane, connected servers, Docker, and proxy traffic.
+
+---
+
+## Go deeper
+
+Continue with the part of the Docker model that affects your next deployment.
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Build and deployment model',
+      href: '/core/build-deployment-model',
+      description: 'See how Coolify turns source code or an existing image into a running application.',
+      icon: Rocket2,
+    },
+    {
+      title: 'Networking in Coolify',
+      href: '/core/networking-in-coolify',
+      description: 'Follow public traffic through the server proxy and private Docker networks.',
+      icon: Hierarchy2,
+    },
+    {
+      title: 'Persistent Storage',
+      href: '/core/persistent-storage/storage-mounts/overview',
+      description: 'Choose and configure a volume, bind, directory, or file mount for data that must survive container replacement.',
+      icon: HardDrive,
+    },
+  ]}
+/>

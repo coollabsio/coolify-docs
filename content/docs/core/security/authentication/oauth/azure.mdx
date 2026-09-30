@@ -1,0 +1,105 @@
+---
+title: Azure
+description: Configure Microsoft Entra ID OAuth sign-in for Coolify with an app registration, tenant ID, and client secret.
+---
+
+# Configure Azure OAuth
+
+Register Coolify as a Microsoft Entra web application. Coolify uses Microsoft Graph `User.Read` to obtain the signed-in user's name and user principal name.
+
+<Callout type="warning" title="Example data">
+Replace the example domain while following this guide:
+
+- **Coolify callback:** `https://coolify.shadowarcanist.com/auth/azure/callback`
+- **Tenant:** the Microsoft Entra **Directory (tenant) ID**
+</Callout>
+
+## Set up Azure OAuth
+
+<Steps>
+<Step>
+
+### Create an app registration
+
+Open the [Microsoft Entra admin center](https://entra.microsoft.com/), then go to **Identity > Applications > App registrations** and select **New registration**.
+
+Enter a name such as `Coolify`. Choose the supported account type that matches who may sign in.
+
+Under **Redirect URI**, select **Web** and enter:
+
+```txt
+https://coolify.shadowarcanist.com/auth/azure/callback
+```
+
+Select **Register**.
+
+</Step>
+<Step>
+
+### Copy the application and tenant IDs
+
+On the app registration **Overview** page, copy:
+
+- **Application (client) ID**
+- **Directory (tenant) ID**
+
+For a single-tenant organization, use the Directory tenant ID in Coolify. Microsoft also supports tenant selectors such as `organizations`, `common`, or `consumers` for app registrations configured for those account types.
+
+</Step>
+<Step>
+
+### Create a client secret
+
+Open **Certificates & secrets > Client secrets**, select **New client secret**, enter a description and expiration, then select **Add**.
+
+Copy the secret **Value** immediately. Do not copy the **Secret ID**; Coolify needs the secret value.
+
+</Step>
+<Step>
+
+### Confirm Microsoft Graph access
+
+Open **API permissions** and confirm that the delegated Microsoft Graph permission **User.Read** is present. Add it if the registration does not already include it.
+
+Apply administrator consent when your Microsoft Entra policies require it.
+
+</Step>
+<Step>
+
+### Configure Azure in Coolify
+
+Open **Settings > OAuth** and find **Azure**.
+
+| Coolify field | Microsoft Entra value |
+| :--- | :--- |
+| **Client ID** | **Application (client) ID** |
+| **Client Secret** | Client secret **Value** |
+| **Redirect URI** | `https://coolify.shadowarcanist.com/auth/azure/callback` |
+| **Tenant** | **Directory (tenant) ID**, or the allowed tenant selector for the app registration. |
+
+Select **Save**, then turn on **Enabled** for Azure.
+
+</Step>
+<Step>
+
+### Verify Azure sign-in
+
+Open the Coolify login page in a private browser window and select **Login with Azure**. Sign in with an account allowed by the app registration, then confirm that Coolify opens the matching account.
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="Microsoft reports a reply URL mismatch">
+
+Open **Authentication** on the app registration and confirm the **Web** redirect URI exactly matches `/auth/azure/callback` on the public Coolify domain.
+
+</Accordion>
+<Accordion title="Coolify returns to the login page after Microsoft sign-in">
+
+Confirm that **User.Read** is granted and that Microsoft Graph returns a user principal name Coolify can use as the account email. Also confirm that the client secret has not expired.
+
+</Accordion>
+</Accordions>

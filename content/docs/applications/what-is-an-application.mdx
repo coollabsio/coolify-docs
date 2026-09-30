@@ -1,0 +1,73 @@
+---
+title: What is an application
+description: Understand what an application is in Coolify and what you need before deploying one.
+---
+
+import { BranchUp, Box2, Server } from 'reicon-react';
+
+# What is an application
+
+An application is a workload that Coolify deploys and manages as one or more Docker containers on a connected server.
+
+You provide a Git repository, Dockerfile, or image reference. A Git repository can also contain a Docker Compose definition. Coolify coordinates image preparation, runtime configuration, domains, health checks, logs, and lifecycle actions.
+
+## What an application includes
+
+| Part | Purpose |
+| :--- | :--- |
+| Deployment input | A Git repository, a Dockerfile entered without Git, or an existing Docker image reference. A Git repository can use Docker Compose as its build pack. |
+| Build method | How Coolify prepares required images from Git source. Most methods build one image; Docker Compose can build or pull an image for each service. Docker Image applications skip this stage. |
+| Runtime configuration | Environment variables, domains, ports, networks, storage, health checks, and resource limits. |
+| Deployment history | The queued and completed operations that build or pull images, apply runtime configuration, and start containers. |
+| Operations | Logs, terminal access, backups, rollbacks, metrics, tags, and lifecycle actions. |
+
+## What Coolify manages
+
+Coolify stores the application configuration and coordinates Docker on the selected server. Depending on the deployment method, Coolify can:
+
+- clone a Git repository
+- build or pull Docker images
+- create runtime environment files
+- attach networks and persistent storage
+- configure proxy routing for application domains
+- start, stop, restart, and replace containers
+- record deployment status and logs
+
+The connected server, Docker daemon, DNS records, firewall, application data, and external services remain part of your infrastructure.
+
+## Before deploying
+
+Make sure:
+
+- Coolify has a validated deployment server
+- the Coolify proxy is running when the application needs a domain
+- the source or image can be accessed by Coolify
+- you know which port the application listens on
+- persistent data has an explicit storage and backup plan
+
+Follow [Deploy your first app](/deploy-your-first-app) if you want to verify deployments before connecting your own source.
+
+## Continue learning
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'How applications work',
+      href: '/applications/how-applications-work',
+      description: 'Follow the path from source code or an image to a running container.',
+      icon: Box2,
+    },
+    {
+      title: 'Choose a deployment method',
+      href: '/applications/choose-deployment-method',
+      description: 'Choose between Git source, a Dockerfile without Git, Git-based Docker Compose, and an existing image.',
+      icon: BranchUp,
+    },
+    {
+      title: 'Coming from a managed platform',
+      href: '/applications/coming-from-managed-platforms',
+      description: 'Map managed-platform concepts to Coolify and your own server.',
+      icon: Server,
+    },
+  ]}
+/>

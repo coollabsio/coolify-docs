@@ -1,0 +1,136 @@
+---
+title: Create a Destination
+description: Create another Docker network destination in Coolify or scan a network that already exists on a server.
+---
+
+# Create a destination
+
+Create a destination when you need another Docker network for isolation.
+## Before you start
+
+You need:
+
+- a validated, reachable server that can run deployed resources
+- a Docker network name that is not already registered as a destination on that server
+
+A build server cannot be selected as a deployment destination. If you still need to connect a server, follow [Add Server](/core/infrastructure/servers/add-server) first.
+
+## Create a new destination
+
+<Steps>
+<Step>
+
+### Open the new destination form
+
+<ZoomImage src="/docs/images/destinations/create-destination.webp" alt="Destinations page with the Add button in Coolify" />
+
+1. Select **Destinations** in the Coolify sidebar.
+2. Select **+ Add**.
+
+You can also open **Servers**, select a server, open **Destinations**, and select **+ Add**. Coolify uses the selected server in the form.
+
+</Step>
+<Step>
+
+### Configure the destination
+
+<ZoomImage src="/docs/images/destinations/create-destination-modal.webp" alt="New Destination form with Name, Network, and server fields" />
+
+Review the generated values before continuing:
+
+<table>
+  <colgroup>
+    <col style={{ width: '1%' }} />
+    <col />
+  </colgroup>
+  <thead>
+    <tr>
+      <th className="whitespace-nowrap">Field</th>
+      <th>What to enter</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td className="whitespace-nowrap"><strong>Name</strong></td>
+      <td>A recognizable name for the network in the Coolify dashboard. Coolify initially combines the server name and generated network value.</td>
+    </tr>
+    <tr>
+      <td className="whitespace-nowrap"><strong>Network</strong></td>
+      <td>The Docker network name. Keep the generated value or enter a name that starts with a letter or number and contains only letters, numbers, periods, hyphens, and underscores.</td>
+    </tr>
+    <tr>
+      <td className="whitespace-nowrap"><strong>Select a server</strong></td>
+      <td>The validated, reachable server where the Docker network should exist.</td>
+    </tr>
+  </tbody>
+</table>
+
+The **Network** value can contain up to 255 characters and must be unique among destinations of the same type on that server. You cannot change this value after creating the destination.
+
+</Step>
+<Step>
+
+### Create and verify the destination
+
+Select **Continue**.
+
+Coolify records the destination, creates the Docker network when it does not already exist, and connects the Coolify Proxy to the networks it needs on the server.
+
+The destination's **General** page opens after creation. Confirm that **Name**, **Server IP**, and **Docker Network** show the values you selected.
+
+</Step>
+</Steps>
+
+## Import an existing Docker network
+
+Use the server's destination scanner when the Docker network already exists but does not appear in Coolify.
+
+<Steps>
+<Step>
+
+### Scan the server
+
+<ZoomImage src="/docs/images/destinations/scan-networks.webp" alt="Server Destinations page showing networks found by Scan for Destinations" />
+
+1. Select **Servers** in the Coolify sidebar.
+2. Select the server that owns the Docker network.
+3. Open **Destinations**.
+4. Select **Scan for Destinations**.
+
+Coolify excludes the built-in `bridge`, `host`, and `none` networks, along with networks already registered as destinations.
+
+</Step>
+<Step>
+
+### Add the discovered network
+
+Under **Found Destinations**, select **Add &lt;network-name&gt;** for the network you want to use.
+
+Coolify adds the network under **Available Destinations** and connects the Coolify Proxy to the server networks it needs. Select the destination and confirm that its **Docker Network** value matches the existing network name.
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="Network already added to this server">
+
+Open the existing destination instead of creating another entry for the same network.
+
+</Accordion>
+
+<Accordion title="Server not found">
+
+Confirm that the server belongs to the current team and is validated, reachable, and not configured only as a build server.
+
+</Accordion>
+
+<Accordion title="Invalid Docker network name">
+
+Start the name with a letter or number and remove spaces or characters other than periods, hyphens, and underscores.
+
+</Accordion>
+
+</Accordions>

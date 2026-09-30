@@ -1,9 +1,0 @@
-{
-  "title": "Tunnels",
-  "pages": [
-    "all-resource",
-    "single-resource",
-    "server-ssh",
-    "full-tls"
-  ]
-}

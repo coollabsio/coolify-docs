@@ -1,0 +1,134 @@
+---
+title: DNS
+description: Point domains to Coolify servers, verify DNS records, and configure wildcard domains and DNS validation.
+---
+
+import { Globe3, Layers, Route } from 'reicon-react';
+
+# DNS
+
+DNS connects a domain such as `app.example.com` to the server that runs your Coolify resource. Coolify configures the resource route and proxy, but you create and manage DNS records with your DNS provider.
+
+Point each domain to the server where the application or service runs, not to the server that runs the Coolify dashboard.
+
+## Point a domain to the server
+
+1. Open the resource in Coolify and identify its server.
+2. Copy the server's public IPv4 address. If you use IPv6, copy its public IPv6 address as well.
+3. Open the DNS zone with the provider that manages your domain.
+4. Create the DNS record for the hostname you want to use.
+5. Wait until public DNS resolvers return the new value.
+6. Follow [Add a custom domain](/core/networking/domains#add-a-custom-domain) to configure the matching URL in Coolify and redeploy the resource.
+
+For example, to use `app.example.com` with a server at `203.0.113.10`, create this record:
+
+| Type | Name | Value |
+| :--- | :--- | :--- |
+| `A` | `app` | `203.0.113.10` |
+
+DNS providers use different names for the **Name** field. Some display the complete hostname instead of `app`.
+
+You can point several root domains and subdomains to the same server IP address. The Coolify Proxy uses the requested hostname to route each request to the correct resource.
+
+## Choose the DNS record
+
+| What you want to use | Record | Name at most providers | Value |
+| :--- | :--- | :--- | :--- |
+| `example.com` | `A` | `@` or empty | Server's public IPv4 address |
+| `app.example.com` | `A` | `app` | Server's public IPv4 address |
+| Any subdomain of `example.com` | `A` | `*` | Server's public IPv4 address |
+| An IPv6 route | `AAAA` | `@`, a subdomain, or `*` | Server's public IPv6 address |
+
+Create an `AAAA` record only when the server and its network path accept IPv6 traffic. If a hostname has both `A` and `AAAA` records, both addresses must reach the same intended resource path. A broken IPv6 path can cause domain or certificate requests to fail even when IPv4 works.
+
+For a self-hosted Coolify dashboard domain, point the record to the server that runs the Coolify instance. Then follow [Set the Coolify dashboard domain](/core/networking/domains#set-the-coolify-dashboard-domain) to configure the URL.
+
+## Verify the DNS change
+
+DNS changes may take time to propagate because resolvers cache the previous result. Check the public result before troubleshooting Coolify.
+
+Run the following command from your computer, replacing the hostname with your domain:
+
+```sh
+dig +short app.example.com A
+```
+
+The output should contain the public IPv4 address of the server that runs the resource. If you created an `AAAA` record, check it separately:
+
+```sh
+dig +short app.example.com AAAA
+```
+
+You can also query the default Coolify validation resolver directly:
+
+```sh
+dig @1.1.1.1 +short app.example.com A
+```
+
+If the result is empty or shows an unexpected address, check the record name, value, and DNS zone at your provider. If the result is correct but the domain does not open, confirm that:
+
+- the resource uses the same domain in Coolify
+- the domain points to the server where that resource runs
+- ports `80` and `443` are open on the server
+- the Coolify Proxy is running on the server
+- the application listens on the container port configured in Coolify
+
+## Configure wildcard DNS
+
+A wildcard DNS record lets multiple subdomains resolve to the same server without a separate record for each name. For example, create this record to send subdomains of `example.com` to `203.0.113.10`:
+
+| Type | Name | Value |
+| :--- | :--- | :--- |
+| `A` | `*` | `203.0.113.10` |
+
+The wildcard record covers matching subdomains, but it does not cover the apex domain `example.com`. Create a separate record for the apex domain when you also use it.
+
+After the wildcard record resolves to the server, follow [Use generated domains](/core/networking/domains#use-generated-domains) to configure **Wildcard Domain** and generate application URLs in Coolify.
+
+Preview deployments can generate additional subdomains from the application's preview URL template. Make sure the DNS records cover those names before relying on the generated preview URLs. See [Preview Deployments](/applications/deployments/preview-deployments) for the preview-specific setup.
+
+## Configure Coolify DNS validation
+
+Coolify can check application domains and the self-hosted instance URL against public DNS. DNS validation is enabled by default.
+
+Open **Settings > Configuration > Advanced** to manage:
+
+- **DNS Validation**: enables or disables the check.
+- **Custom DNS Servers**: sets the resolvers used for the check. The default is `1.1.1.1`. Enter a comma-separated list of IPv4 or IPv6 resolver addresses, such as `1.1.1.1,8.8.8.8`, or leave the field empty to use the system resolvers.
+
+Current DNS validation checks the domain's `A` records. Validation succeeds when an address matches the selected server's IPv4 address or a recognized Cloudflare proxy address. Coolify skips this check for generated `sslip.io` domains.
+
+DNS validation reports a mismatch, but it does not replace a public DNS check. A cached resolver result, an incorrect `AAAA` record, firewall rules, or a proxy configuration can still prevent the domain from working.
+
+## Use internationalized domain names
+
+Convert domains that contain non-ASCII characters to [Punycode](https://en.wikipedia.org/wiki/Punycode) before you create DNS records or enter the domain in Coolify.
+
+For example, use `xn--mnchen-3ya.example.com` for `münchen.example.com`. Some DNS providers perform this conversion automatically, but the DNS record and the domain saved in Coolify must resolve to the same hostname.
+
+## Related networking guides
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Configure domains',
+      href: '/core/networking/domains',
+      description: 'Configure URL formats, target ports, paths, redirects, and generated domains in Coolify.',
+      icon: Globe3,
+    },
+    {
+      title: 'Understand networking',
+      href: '/core/networking-in-coolify',
+      description: 'See how DNS, the Coolify Proxy, Docker networks, and container ports fit together.',
+      icon: Layers,
+    },
+    {
+      title: 'Configure the proxy',
+      href: '/core/networking/proxy/overview',
+      description: 'Choose and operate the proxy that routes public HTTP and HTTPS traffic to resources.',
+      icon: Route,
+    },
+  ]}
+/>
+
+If DNS resolves correctly but HTTPS still fails, follow [Let's Encrypt troubleshooting](/troubleshoot/dns-and-domains/lets-encrypt-not-working).

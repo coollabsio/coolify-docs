@@ -1,0 +1,74 @@
+---
+title: How the CLI works
+description: Understand how the Coolify CLI selects a context, authenticates requests, calls the Coolify API, retries failures, and formats responses.
+---
+
+# How the CLI works
+
+The Coolify CLI translates terminal commands into requests to the Coolify REST API. It selects a saved Coolify connection, sends the request with an API token, and formats the response for a person or automation workflow.
+
+The same process applies to Coolify Cloud and self-hosted Coolify. The selected URL, token permissions, and self-hosted API controls determine which resources and operations are available.
+
+## From a command to a response
+
+When you run a resource command, the CLI follows this sequence:
+
+1. Loads the CLI configuration file.
+2. Selects the context named by `--context`, or the default context when the flag is absent.
+3. Uses the token supplied by `--token`, or the token saved in the selected context when the flag is absent.
+4. Adds `/api/v1/` and the command's endpoint path to the context URL.
+5. Sends the token in the `Authorization: Bearer <api-token>` header.
+6. Checks the HTTP response and formats successful response data for the terminal.
+
+For example, a context URL of `https://coolify.example.com` and an operation that uses `resources` produce a request to:
+
+```txt
+https://coolify.example.com/api/v1/resources
+```
+
+The CLI does not connect directly to the Docker engine for resource commands. Coolify receives the API request and performs the requested operation on the relevant resource or server.
+
+## Context and token precedence
+
+The CLI resolves connection details in this order:
+
+| Setting | First choice | Fallback |
+| :--- | :--- | :--- |
+| Coolify URL | Context selected with `--context` | Default context |
+| API token | Token supplied with `--token` | Token saved in the selected context |
+
+The `--token` flag changes only the token used for that command. It does not modify the saved context. Follow [Contexts](/cli/contexts) to change a saved URL or token.
+
+## Access boundaries
+
+Each API token belongs to the Coolify user and team that created it. The CLI can access only the resources and operations allowed by that token's team and permissions.
+
+Coolify Cloud keeps API access enabled. On self-hosted Coolify, **API Access** and the optional IP allowlist are checked before the token's permissions. Read [API permissions](/api/permissions) for token scope and [IP Allowlist](/api/ip-allowlist) for self-hosted controls.
+
+## Request failures and retries
+
+Each API request has a 30-second timeout. When a request fails because of a network error, server error, or `429 Too Many Requests` response, the CLI retries up to three times with waits of 1, 2, and 4 seconds.
+
+The CLI does not retry other `4xx` responses. Correct the URL, token, permissions, command arguments, or requested resource before running the command again.
+
+If every attempt fails, the command returns an error and exits with a nonzero status. This lets shell scripts and CI jobs stop when a Coolify operation fails.
+
+## Response formats
+
+The CLI supports three global output formats:
+
+| Format | Intended use |
+| :--- | :--- |
+| `table` | Default human-readable terminal output. |
+| `json` | Compact output for scripts and automation. |
+| `pretty` | Indented JSON for inspection and debugging. |
+
+Select a format for one command:
+
+```sh
+coolify --format json resource list
+```
+
+Sensitive values remain hidden unless the API token can read them and `--show-sensitive` is supplied. Avoid `--show-sensitive` in shared terminals and CI logs.
+
+Follow [Deploy applications](/cli/deploy-applications), [Automate with the CLI](/cli/automate-with-cli), or [Manage database backups](/cli/database-backups) for operational examples. Open **Commands** in the sidebar for operation-level syntax and options.

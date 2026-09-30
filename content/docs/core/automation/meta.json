@@ -1,0 +1,9 @@
+{
+  "title": "Automation",
+  "pages": [
+    "scheduled-tasks",
+    "tags",
+    "deploy-webhooks",
+    "cron-syntax"
+  ]
+}

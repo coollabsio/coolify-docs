@@ -1,0 +1,47 @@
+---
+title: Cloudflare R2
+description: Configure Cloudflare R2 S3-compatible storage for Coolify backups with bucket creation, API token setup, and access credentials.
+---
+
+# Cloudflare R2
+
+Cloudflare R2 is S3-compatible storage that you can use for Coolify backups.
+
+## Configure Cloudflare R2
+
+<Steps>
+<Step>
+
+### Create a bucket
+
+Create the bucket that will hold the backup files in the Cloudflare R2 dashboard.
+
+</Step>
+<Step>
+
+### Create an R2 API token
+
+Create an R2 API token with **Object Read & Write** permission. Scope the token to the backup bucket when you do not want it to access other R2 buckets.
+
+</Step>
+<Step>
+
+### Save the S3 credentials
+
+After Cloudflare creates the token, copy the S3 client credentials shown on the confirmation page.
+
+<Callout type="success" title="Values required by Coolify">
+Save the **Access Key ID**, **Secret Access Key**, and **S3 endpoint**. You need all three values when adding the storage to Coolify.
+</Callout>
+
+</Step>
+<Step>
+
+### Add Cloudflare R2 to Coolify
+
+Open **S3 Storages** in the Coolify sidebar, select **Add**, and enter the bucket name, endpoint, and credentials from the previous steps. Leave **Region** at its default value for R2.
+
+Select **Validate Connection & Continue**. Coolify verifies the connection by listing objects in the bucket.
+
+</Step>
+</Steps>

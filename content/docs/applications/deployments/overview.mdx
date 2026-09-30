@@ -1,0 +1,68 @@
+---
+title: Overview
+description: Understand application deployment triggers, history, logs, and lifecycle actions in Coolify.
+---
+
+import { BranchUp, History, Refresh23 } from 'reicon-react';
+
+# Deploy applications
+
+A deployment is a queued operation that prepares the required images and applies the application's runtime configuration on the selected server.
+
+The deployment can build images from source, [pull existing images](/applications/deployments/docker-image), or build and pull the images required by services in a Docker Compose definition. Docker creates and runs the resulting containers on your infrastructure.
+
+Read [Build and deployment model](/core/build-deployment-model) for the complete path from source to running containers.
+
+<CoolCallout icon={Refresh23} title="The short version">
+
+Start a deployment manually, from a Git event, or through automation. Use **Deployments** to follow the queue, inspect the exact operation log, and verify the result.
+
+</CoolCallout>
+
+---
+
+## Start a deployment
+
+| Action | When to use it |
+| :--- | :--- |
+| **Deploy** | Start the first deployment of a configured application. |
+| **Redeploy** | Run the normal deployment flow again for an existing application. |
+| **Restart** | Recreate the runtime through the deployment queue. Source-based paths reuse an existing image when eligible and can build when required. Docker Image pulls the saved image reference again. |
+| **Force deploy (without cache)** | Disable cache for a Coolify-generated source build. A custom Docker Compose build command controls its own cache flags. |
+| Git webhook | Deploy a new commit received from the connected repository. |
+| Deploy webhook or API | Start a deployment from an external CI system or automation. |
+
+A deployment request enters the queue. Coolify records whether it is queued, in progress, successful, failed, or cancelled.
+
+## Inspect deployment history
+
+Open **Deployments** on the application to see previous and active operations.
+
+Open one deployment to inspect its log. The log shows the selected source revision, image build or pull, generated configuration, and container actions. Use the first failing command as the starting point when a deployment does not complete.
+
+A failed source build does not replace the running application. Failures after the build can depend on the replacement path and health-check configuration.
+
+## Choose the next deployment guide
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Automatic deployments',
+      href: '/applications/deployments/automatic-deployments',
+      description: 'Start deployments from repository events and limit monorepo triggers.',
+      icon: BranchUp,
+    },
+    {
+      title: 'Preview deployments',
+      href: '/applications/deployments/preview-deployments',
+      description: 'Run pull requests separately from the production application.',
+      icon: History,
+    },
+    {
+      title: 'Rolling updates',
+      href: '/applications/deployments/rolling-updates',
+      description: 'Understand when Coolify can start a replacement before stopping the current container.',
+      icon: Refresh23,
+    },
+  ]}
+/>

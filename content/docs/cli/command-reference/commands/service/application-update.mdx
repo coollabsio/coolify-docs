@@ -1,0 +1,36 @@
+---
+title: "Application update"
+description: "Update an application in a service"
+---
+
+# Application update
+
+Update an application in a service
+
+## Usage
+
+```sh
+coolify service application update <service-uuid> <application-uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--description` | `string` | No | — | Description |
+| `--exclude-from-status` | `boolean` | No | `false` | Exclude from service status |
+| `--force-domain-override` | `boolean` | No | `false` | Allow conflicting or duplicate domains |
+| `--gzip-enabled` | `boolean` | No | `false` | Enable gzip compression |
+| `--human-name` | `string` | No | — | Human-readable name |
+| `--image` | `string` | No | — | Container image |
+| `--log-drain-enabled` | `boolean` | No | `false` | Enable log drain |
+| `--stripprefix-enabled` | `boolean` | No | `false` | Enable path prefix stripping |
+| `--url` | `string` | No | — | Comma-separated public URLs |
+
+## Get current help
+
+```sh
+coolify service application update --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

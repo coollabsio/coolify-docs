@@ -1,0 +1,53 @@
+---
+title: Permissions
+description: Choose Coolify API token permissions and understand team, role, and sensitive-data restrictions.
+---
+
+# API permissions
+
+Each API token belongs to the user and active team that created it. Its permissions determine which endpoints it can use and whether supported responses can include sensitive values.
+
+Choose the smallest permission set required by the integration.
+
+## Permission levels
+
+| Permission | Allows | Important restrictions |
+| :--- | :--- | :--- |
+| `read` | List and inspect resources. | Sensitive response values remain redacted. |
+| `read:sensitive` | Read secrets, logs, passwords, private keys, environment values, and Compose content returned by supported endpoints. | Coolify also adds `read`. The token owner must be a team administrator or owner. |
+| `write` | Create, update, and delete resources through write endpoints. | The token owner must remain a team administrator or owner when the request runs. |
+| `deploy` | Trigger deployments, restarts, stops, cancellations, and deploy webhooks. | Selecting it in the dashboard creates a deploy-only token. The token owner must be a team administrator or owner. |
+| `root` | Bypass the `read`, `write`, and `deploy` checks on API endpoints. | It remains team-bound and does not bypass instance-wide API access or the IP allowlist. The token owner must be a team administrator or owner. |
+
+Selecting `root` in the dashboard removes the other permissions because they are unnecessary. It does not provide access to resources owned by another team.
+
+---
+
+## Team and role scope
+
+Coolify records the active team when the token is created. Switching teams later does not change an issued token.
+
+- Create a separate token for each team an integration must access.
+- Removing the token owner from the team makes the token invalid.
+- A token that performs privileged operations requires its owner to remain a team administrator or owner.
+- Instance-wide [API access and IP allowlist controls](/api/ip-allowlist) still apply to every self-hosted token, including `root`.
+
+---
+
+## Sensitive response data
+
+Endpoint access and sensitive-data access are separate checks. A request with `read` may succeed while passwords, private keys, environment values, logs, or Compose content remain redacted.
+
+Add `read:sensitive` only when the integration needs supported sensitive fields. The token must have that permission, and its owner must be a team administrator or owner. A `root` token can also receive supported sensitive data, but it should be reserved for integrations that need full API access.
+
+---
+
+## Choose the least privilege
+
+- Use `read` for inventory, monitoring, and status checks.
+- Use `deploy` for a deployment-only CI or automation workflow.
+- Use `write` only when the integration must change resource configuration.
+- Add `read:sensitive` only when redacted responses are insufficient.
+- Use `root` only when the integration must call endpoints across permission levels or manage instance-wide API functions.
+
+Follow [API Tokens](/core/security/credentials/api-tokens) to create, store, rotate, and revoke credentials. Each endpoint under **Endpoints** identifies the permission required for that operation.

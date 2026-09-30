@@ -1,0 +1,108 @@
+---
+title: Add a Member
+description: Invite a person to a Coolify team by email or with a generated invitation link.
+---
+
+import { Link, Mailbox } from 'reicon-react';
+
+# Add a member
+
+Invite a person to the active team and choose the role they will receive when they accept.
+
+## Before you invite someone
+
+You must be an **Owner** or **Admin** in the active team.
+
+Choose the lowest role the person needs:
+
+- **Member** for read-only access to team resources
+- **Admin** to manage team settings, invitations, and members at the Admin or Member level
+- **Owner** for full control over roles, including other Owners
+
+Only an Owner can invite another Owner. Read [Roles & Permissions](/core/team/roles-and-permissions) for the role comparison.
+
+Sending the invitation from Coolify requires transactional email to be enabled. If email is not configured, you can still generate a link and send it to the person yourself.
+
+---
+
+## Invite the member
+
+<Steps>
+<Step>
+
+### Open the active team's Members page
+
+1. Confirm that the intended team is active.
+2. Select **Teams** in the Coolify sidebar.
+3. Select **Members**.
+
+</Step>
+<Step>
+
+### Enter the email address
+
+Under **Invite New Member**, enter the person's email address. Coolify stores invitation email addresses in lowercase and uses the address to identify who may accept the invitation.
+
+If the address already belongs to this team, Coolify reports that the person is already a member. If Coolify reports an existing pending invitation for the address, that invitation must be accepted, revoked from the team that created it, or allowed to expire before you create another one.
+
+</Step>
+<Step>
+
+### Choose a role
+
+Select **Member**, **Admin**, or **Owner** from **Role**.
+
+Admins can invite Members and Admins. Owners can invite all three roles.
+
+</Step>
+</Steps>
+
+---
+
+## Send or copy the invitation
+
+<Tabs id="member-invitation-delivery" items={['Email', 'Invitation link']}>
+<Tab value="Email" icon={Mailbox}>
+
+### Send the invitation by email
+
+Select **Send Invitation via Email**. Coolify sends the invitation to the entered address using the instance's transactional email configuration.
+
+</Tab>
+
+<Tab value="Invitation link" icon={Link}>
+
+### Share an invitation link
+
+Select **Generate Invitation Link** to add the invitation under **Pending Invitations**. On an HTTPS dashboard, select **Copy Invitation Link** and send it directly to that person. On an HTTP dashboard, copy the displayed link manually.
+
+<Callout type="warning" title="Share the link only with the invited person">
+The invitation is tied to the entered email address and grants the selected role. Treat the link as sensitive until it is accepted or revoked.
+</Callout>
+
+</Tab>
+</Tabs>
+
+When the email address does not yet have a Coolify account, Coolify prepares an account for that address as part of the invitation flow. The invited person uses the link to sign in, join the team, and set their own password when prompted.
+
+An existing Coolify user must sign in with the invited email address before accepting the invitation.
+
+---
+
+## Verify the invitation
+
+Before acceptance, confirm that **Pending Invitations** shows the correct email address, delivery method, and role.
+
+After the person accepts, confirm that:
+
+1. the invitation no longer appears under **Pending Invitations**
+2. the person appears in the member list
+3. the **Role** column shows the role you selected
+
+---
+
+## If the invitation is not accepted
+
+Invitation links are valid for three days. After a link expires, create a new invitation.
+
+To invalidate a link before it is accepted, select **Revoke Invitation** beside the pending invitation. The revoked link can no longer be used to join the team.

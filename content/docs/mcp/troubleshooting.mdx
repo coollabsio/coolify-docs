@@ -1,0 +1,44 @@
+---
+title: Troubleshoot MCP
+description: Fix common Coolify MCP connection, authentication, permission, and resource-scope problems.
+---
+
+# Troubleshoot MCP
+
+<Accordions type="multiple">
+<Accordion title="The MCP endpoint returns 404">
+
+Enable **MCP server** in **Settings > Configuration > Advanced**. The instance endpoint returns `404` while this setting is disabled.
+
+</Accordion>
+<Accordion title="The MCP endpoint returns 403">
+
+Check the team settings for the token's team. The team must have **MCP server** set to **Enabled for this team**.
+
+</Accordion>
+<Accordion title="The client returns 401 or authentication fails">
+
+Confirm the complete token appears after `Bearer`, has not expired or been revoked, and belongs to a team member. Confirm the client sends the header on every MCP request.
+
+</Accordion>
+<Accordion title="The client cannot connect">
+
+Confirm the URL ends with `/mcp`, the instance is reachable from the client machine, HTTPS is valid, and transport is **Streamable HTTP**. Do not configure SSE or stdio for Coolify's remote endpoint.
+
+</Accordion>
+<Accordion title="A tool reports missing permissions">
+
+Use `read` for inspection, `read:sensitive` for supported sensitive output, and `deploy` for deployment or lifecycle operations. The token owner must retain the required team role for restricted operations.
+
+</Accordion>
+<Accordion title="A resource is missing">
+
+MCP returns only resources owned by the token's team. Create or use a token for the team that owns the resource. Start with `get_current_team` or `get_infrastructure_overview` to inspect the token's scope.
+
+</Accordion>
+<Accordion title="Logs are unavailable">
+
+`get_logs` requires `read:sensitive`, a running container, and a reachable server. For a failed deployment, call `get_deployment` first and request an optional log summary only when needed.
+
+</Accordion>
+</Accordions>

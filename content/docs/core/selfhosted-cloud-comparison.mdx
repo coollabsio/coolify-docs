@@ -1,0 +1,157 @@
+---
+title: Self Hosted vs Coolify Cloud
+description: Compare self-hosted Coolify and Coolify Cloud by ownership, responsibilities, and cost.
+---
+
+import {
+  ArrowsRight,
+  Box2,
+  Cloud,
+  Layers,
+  Server,
+  ServerCloud,
+  ShieldSecurity2,
+} from 'reicon-react';
+
+# Self Hosted vs Coolify Cloud
+
+You can use Coolify in two ways: run the Coolify instance yourself, or use the instance hosted and maintained by the Coolify team.
+
+The Coolify instance is the control plane that provides the dashboard and coordinates deployments. Your applications, databases, and services still run on servers you connect in either model.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Choose **self-hosted Coolify** when you want to operate the Coolify instance and control its updates, backups, availability, and recovery.
+
+Choose **Coolify Cloud** when you want the Coolify team to operate that instance for you. You still provide and secure the servers where your workloads run.
+
+</CoolCallout>
+
+---
+
+## What stays the same
+
+The option you choose changes who operates the Coolify instance. It does not change the resource workflow or move your workloads onto Coolify-managed servers.
+
+<CoolIconCardGrid
+  surface
+  cards={[
+    {
+      title: 'Same feature set',
+      description: 'Deploy and manage applications, databases, and one-click services with either model.',
+      icon: Layers,
+    },
+    {
+      title: 'Your workload servers',
+      description: 'You provide the servers where applications, databases, and services run.',
+      icon: Server,
+    },
+    {
+      title: 'Standard Docker resources',
+      description: 'Resources run as Docker containers, networks, and storage on the servers you connect.',
+      icon: Box2,
+    },
+    {
+      title: 'One or more servers',
+      description: 'A Coolify instance can coordinate resources across multiple connected servers.',
+      icon: ServerCloud,
+    },
+  ]}
+/>
+
+---
+
+## Compare self-hosted Coolify and Coolify Cloud
+
+The main differences are control-plane operations, dashboard access, notification delivery, and cost.
+
+| Area | Self-hosted Coolify | Coolify Cloud |
+| :--- | :--- | :--- |
+| Coolify instance | Runs on infrastructure you control. | Runs on infrastructure managed by the Coolify team. |
+| Setup and maintenance | You install, monitor, maintain, and restore the instance from backups. | The Coolify team sets up, monitors, maintains, and restores the instance from backups. |
+| Coolify updates | You choose when to update the instance. | The Coolify team manages control-plane updates. |
+| Coolify instance backups | You configure, store, and test instance backups. | The Coolify team manages backups of the Cloud instance. |
+| Dashboard access | You configure the domain for your instance. | You use [app.coolify.io](https://app.coolify.io). |
+| Email alerts | You configure SMTP or Resend. | Email delivery for Coolify notifications is preconfigured by the Coolify team. |
+| Other notification channels | You configure each channel, such as Discord or Telegram. | You configure each channel, such as Discord or Telegram. |
+| Features | All current and upcoming Coolify features, free forever. | All current and upcoming Coolify features are included in the subscription. |
+| Codebase | Open source. | Open source. |
+| Teams | Unlimited. | Unlimited; each team requires a separate subscription. |
+| Team members | Unlimited. | Unlimited. |
+| Connected servers | Unlimited. | Unlimited. Each server after the first two increases the subscription cost. |
+| Workload servers and data | Applications, databases, services, and persistent data run on your servers. | Applications, databases, services, and persistent data run on your servers. |
+| Platform cost | No Coolify license fee. You pay for your infrastructure. | Paid managed service. You also pay for your workload servers. |
+
+---
+
+## Compare the cost
+
+Self-hosted Coolify has no license fee. You still pay for the infrastructure that runs the Coolify instance and your workloads.
+
+Coolify Cloud starts at $5 per month and includes up to two connected servers. Each additional connected server adds $3 per month.
+
+Cloud pricing can change. Check the [current Coolify Cloud pricing](https://coolify.io/pricing) before subscribing.
+
+---
+
+## Understand the responsibility boundary
+
+Coolify Cloud manages the control plane, not the servers and workloads you connect to it. If you self-host, you operate both sides of this boundary.
+
+<CoolCompare
+  id="coolify-deployment-responsibilities"
+  className="not-prose"
+  icon={ShieldSecurity2}
+  title="Who operates each layer"
+  description="With Coolify Cloud, the Coolify team operates the control plane while you continue to operate your connected infrastructure."
+>
+<CoolCompareColumn
+  title="Coolify Cloud manages"
+  items={[
+    'Control-plane hosting and availability',
+    'Coolify updates and operational maintenance',
+    'Backups and recovery for the Cloud instance',
+    'Preconfigured email delivery for Coolify notifications',
+  ]}
+/>
+<CoolCompareColumn
+  title="You manage in both models"
+  items={[
+    'Choosing and paying for connected servers',
+    'Operating system updates, SSH access, firewall rules, and DNS',
+    'Application data, database data, and a tested backup and restore strategy',
+    'Secrets, access permissions, and the security of exposed workloads',
+  ]}
+/>
+</CoolCompare>
+
+Read the [Security model](/core/security-model) before placing production workloads on a connected server.
+
+---
+
+## Choose your path
+
+Choose self-hosted Coolify if control of the instance matters more than avoiding control-plane maintenance. Choose Coolify Cloud if you want a managed instance and the subscription fits your operating model.
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Start with self-hosted',
+      href: '/start-with-self-hosted',
+      description: 'Install Coolify on infrastructure you control and operate the instance yourself.',
+      icon: Server,
+    },
+    {
+      title: 'Start with Coolify Cloud',
+      href: '/start-with-cloud',
+      description: 'Use the managed Coolify instance and connect your own workload server.',
+      icon: Cloud,
+    },
+    {
+      title: 'Review the security model',
+      href: '/core/security-model',
+      description: 'Understand the controls Coolify provides and the infrastructure you must secure.',
+      icon: ShieldSecurity2,
+    },
+  ]}
+/>

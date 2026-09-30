@@ -1,0 +1,46 @@
+---
+title: Overview
+description: Find the Coolify API base URL and the documentation for authentication, access controls, limits, errors, and endpoints.
+---
+
+# Coolify API
+
+The Coolify REST API lets integrations inspect and manage teams, projects, applications, databases, services, servers, deployments, and other Coolify resources.
+
+## Base URLs
+
+| Deployment | Base URL |
+| :--- | :--- |
+| Coolify Cloud | `https://app.coolify.io/api/v1` |
+| Self-hosted Coolify | `https://<your-coolify-domain>/api/v1` |
+
+For example, a self-hosted instance at `https://coolify.shadowarcanist.com` uses:
+
+```txt
+https://coolify.shadowarcanist.com/api/v1
+```
+
+The public health check is available at `/api/health` and `/api/v1/health`. It does not require a Bearer token.
+
+---
+
+## Before sending a protected request
+
+1. Create an [API token](/core/security/credentials/api-tokens) for the team and permissions the integration needs.
+2. Follow [Authorization](/api/authorization) to send the token as a Bearer credential.
+3. Follow [Making Requests](/api/making-requests) to build the URL, headers, parameters, and request body.
+4. Choose an operation from **Endpoints** in the API sidebar.
+
+On a self-hosted instance, an administrator must also enable API access. Use [IP Allowlist](/api/ip-allowlist) to enable the API and optionally restrict requests by source address.
+
+---
+
+## API reference sections
+
+- [Making Requests](/api/making-requests) explains URLs, methods, headers, parameters, bodies, and responses.
+- [Authorization](/api/authorization) explains Bearer tokens and access checks.
+- [Permissions](/api/permissions) covers token abilities, team scope, roles, and sensitive data.
+- [IP Allowlist](/api/ip-allowlist) covers self-hosted API access and source-IP restrictions.
+- [Rate Limits](/api/rate-limits) documents request limits, response headers, and retries.
+- [Errors](/api/errors) explains status codes and common failure responses.
+- **Endpoints** contains the generated request and response schema for each API operation.

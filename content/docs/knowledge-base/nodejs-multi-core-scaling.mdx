@@ -38,7 +38,7 @@ Run **multiple worker processes** inside the container. Each runtime has its pre
 | Bun | `Bun.serve({ reusePort: true })` | One-line app change | Kernel load-balances via `SO_REUSEPORT` |
 | Deno | `Deno.serve({ reusePort: true })` | One-line app change | Same kernel mechanism as Bun |
 
-This guide covers **PM2 cluster mode** (Node.js) and **`reusePort`** (Bun, Deno), with examples for the [Dockerfile](/applications/build-packs/dockerfile) and [Nixpacks](/applications/build-packs/nixpacks) build packs.
+This guide covers **PM2 cluster mode** (Node.js) and **`reusePort`** (Bun, Deno), with examples for the [Dockerfile](/applications/builds/dockerfile) and [Nixpacks](/applications/builds/nixpacks/overview) build packs.
 
 ## Technical Background
 
@@ -48,7 +48,7 @@ This guide covers **PM2 cluster mode** (Node.js) and **`reusePort`** (Bun, Deno)
 
 ## Dockerfile Example (PM2 Cluster Mode)
 
-Use this when your app is built with the [Dockerfile build pack](/applications/build-packs/dockerfile).
+Use this when your app is built with the [Dockerfile build pack](/applications/builds/dockerfile).
 
 ```dockerfile
 FROM node:lts-alpine
@@ -71,9 +71,10 @@ Key points:
 
 ## Nixpacks Example
 
-Use this when your app is built with the [Nixpacks build pack](/applications/build-packs/nixpacks).
+Use this when your app is built with the [Nixpacks build pack](/applications/builds/nixpacks/overview).
 
-### Option A — Set `NIXPACKS_START_CMD` as an Environment Variable
+<Tabs id="nixpacks-pm2" items={['Environment variable', 'nixpacks.toml']}>
+<Tab value="Environment variable">
 
 Set the following environment variable on your application (in Coolify: open your application → **Environment Variables**):
 
@@ -83,7 +84,8 @@ NIXPACKS_START_CMD=pm2-runtime -i max dist/index.js
 
 Then add `pm2` to the `dependencies` section of `package.json` so Nixpacks installs it during the build.
 
-### Option B — `nixpacks.toml` in the Repo Root
+</Tab>
+<Tab value="nixpacks.toml">
 
 ```toml
 [phases.setup]
@@ -94,6 +96,9 @@ cmd = "pm2-runtime -i max dist/index.js"
 ```
 
 This keeps the multi-core configuration in version control and works across local and remote builds.
+
+</Tab>
+</Tabs>
 
 ## Bun Alternative (One-Line Multi-Core)
 
@@ -111,7 +116,10 @@ Bun.serve({
 });
 ```
 
-### Dockerfile
+### Build configuration
+
+<Tabs id="js-multicore-build" items={['Dockerfile', 'nixpacks.toml']}>
+<Tab value="Dockerfile">
 
 ```dockerfile
 FROM oven/bun:alpine
@@ -127,7 +135,8 @@ EXPOSE 3000
 CMD ["sh", "-c", "for i in $(seq 1 $(nproc)); do bun run server.js & done; wait"]
 ```
 
-### Nixpacks (`nixpacks.toml`)
+</Tab>
+<Tab value="nixpacks.toml">
 
 ```toml
 [phases.setup]
@@ -136,6 +145,9 @@ nixPkgs = ["bun"]
 [start]
 cmd = "sh -c 'for i in $(seq 1 $(nproc)); do bun run server.js & done; wait'"
 ```
+
+</Tab>
+</Tabs>
 
 Notes:
 
@@ -155,7 +167,10 @@ Deno.serve({ port: 3000, reusePort: true }, (_req) => {
 });
 ```
 
-### Dockerfile
+### Build configuration
+
+<Tabs id="js-multicore-build" items={['Dockerfile', 'nixpacks.toml']}>
+<Tab value="Dockerfile">
 
 ```dockerfile
 FROM denoland/deno:alpine
@@ -169,7 +184,8 @@ EXPOSE 3000
 CMD ["sh", "-c", "for i in $(seq 1 $(nproc)); do deno run --allow-net server.ts & done; wait"]
 ```
 
-### Nixpacks (`nixpacks.toml`)
+</Tab>
+<Tab value="nixpacks.toml">
 
 ```toml
 [phases.setup]
@@ -178,6 +194,9 @@ nixPkgs = ["deno"]
 [start]
 cmd = "sh -c 'for i in $(seq 1 $(nproc)); do deno run --allow-net server.ts & done; wait'"
 ```
+
+</Tab>
+</Tabs>
 
 Same caveats as Bun apply: no IPC between processes, no built-in per-worker restart.
 

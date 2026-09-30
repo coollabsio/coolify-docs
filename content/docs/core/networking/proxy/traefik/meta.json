@@ -1,0 +1,15 @@
+{
+  "title": "Traefik",
+  "pages": [
+    "[Overview](/core/networking/proxy/traefik/overview)",
+    "basic-auth",
+    "custom-ssl-certs",
+    "dashboard",
+    "custom-middlewares",
+    "dynamic-config",
+    "load-balancing",
+    "dns-challenge",
+    "wildcard-certs",
+    "protect-services-with-authentik"
+  ]
+}

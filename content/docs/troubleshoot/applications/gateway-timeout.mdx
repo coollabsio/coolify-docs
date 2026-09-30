@@ -24,7 +24,9 @@ There are two primary scenarios that cause 504 Gateway Timeout errors in Coolify
 1. **Custom Docker Network Isolation** - The proxy cannot reach applications using custom networks
 2. **Large Upload/Download Timeouts** - Default timeout settings are too short for large file transfers
 
-## Issue 1: Custom Docker Network Isolation
+<Accordions type="multiple">
+
+<Accordion title="Issue 1: Custom Docker Network Isolation">
 
 ### Symptoms
 
@@ -54,13 +56,14 @@ When you define custom Docker networks in your Docker Compose file, the `coolify
 
 ### Solutions
 
-#### Solution 1: Use Coolify Destinations (Recommended)
+<Tabs items={['Use Coolify Destinations (Recommended)', 'Manual Network Connection (Temporary)']}>
+<Tab value="Use Coolify Destinations (Recommended)">
 
-Let Coolify manage networks automatically by using [Destinations](/knowledge-base/destinations/) instead of custom networks:
+Let Coolify manage networks automatically by using [Destinations](/core/networking/destinations/overview) instead of custom networks:
 
 1. Remove custom network definitions from your Docker Compose file
-2. [Configure the network destination](/knowledge-base/destinations/create) in Coolify's UI under **Destinations**
-3. [Move your application / service to the desired destination](/knowledge-base/destinations/manage#assign-resources-to-a-destination)
+2. [Create the network destination](/core/networking/destinations/create) in Coolify under **Destinations**
+3. [Connect the Docker Compose resource to its predefined destination](/core/networking/destinations/manage#connect-docker-compose-resources)
 4. Redeploy
 
 **Before (problematic):**
@@ -86,7 +89,8 @@ services:
     # Let Coolify handle networking
 ```
 
-#### Solution 2: Manual Network Connection (Temporary)
+</Tab>
+<Tab value="Manual Network Connection (Temporary)">
 
 If you must use custom networks, manually connect the proxy:
 
@@ -96,7 +100,12 @@ docker network connect <your-network-name> coolify-proxy
 
 **Note:** This is a temporary fix that may need to be reapplied after proxy restarts.
 
-## Issue 2: Large Upload/Download Timeouts
+</Tab>
+</Tabs>
+
+</Accordion>
+
+<Accordion title="Issue 2: Large Upload/Download Timeouts">
 
 ### Symptoms
 
@@ -136,9 +145,13 @@ Any request exceeding the configured timeout will result in a 504 Gateway Timeou
 
 ### Solutions
 
-#### Solution 1: Increase Proxy Timeout
+<Tabs items={['Increase Proxy Timeout', 'Implement Chunked Uploads', 'Use Background Processing']}>
+<Tab value="Increase Proxy Timeout">
 
 The configuration method depends on your proxy type:
+
+<Tabs items={['Traefik', 'Caddy', 'Nginx']}>
+<Tab value="Traefik">
 
 ##### For Traefik (Default Proxy)
 
@@ -154,6 +167,9 @@ command:
 ```
 
 Read more about Traefik timeouts in the [official documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#timeout).
+
+</Tab>
+<Tab value="Caddy">
 
 ##### For Caddy
 
@@ -171,6 +187,9 @@ caddy.servers.timeouts.idle=5m
 
 Read more about Caddy timeouts in the [official documentation](https://caddyserver.com/docs/caddyfile/options#timeouts).
 
+</Tab>
+<Tab value="Nginx">
+
 ##### For Nginx (One-Click Databases)
 
 Nginx configuration cannot be directly modified for one-click databases in Coolify. Instead, **bypass Nginx entirely** to avoid timeout issues:
@@ -184,7 +203,11 @@ Nginx configuration cannot be directly modified for one-click databases in Cooli
 
 Read more about public database access here: [One-Click Databases](/databases/#ports-mapping-vs-public-port).
 
-#### Solution 2: Implement Chunked Uploads
+</Tab>
+</Tabs>
+
+</Tab>
+<Tab value="Implement Chunked Uploads">
 
 For very large files, consider implementing chunked uploads in your application:
 
@@ -192,13 +215,21 @@ For very large files, consider implementing chunked uploads in your application:
 2. Upload chunks individually (each under the timeout limit)
 3. Reassemble on the server side
 
-#### Solution 3: Use Background Processing
+</Tab>
+<Tab value="Use Background Processing">
 
 For long-running operations:
 
 1. Accept the request and return immediately with a job ID
 2. Process the request in the background
 3. Provide an endpoint to check job status
+
+</Tab>
+</Tabs>
+
+</Accordion>
+
+</Accordions>
 
 ## Quick Diagnosis Checklist
 

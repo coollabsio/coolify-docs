@@ -1,0 +1,67 @@
+---
+title: Custom SSL Certificates
+description: Load certificates from a Coolify server into Traefik with dynamic configuration.
+---
+
+# Custom SSL certificates
+
+Traefik normally obtains HTTPS certificates through the `letsencrypt` certificate resolver. Use a custom certificate when a private certificate authority, an organization-managed certificate, or another certificate workflow must terminate TLS at Traefik.
+
+The certificate and private key must exist on every server whose Traefik proxy serves the domain.
+
+## Prepare the certificate files
+
+You need:
+
+- a PEM-encoded certificate file that includes any required intermediate certificates
+- the matching unencrypted private key
+- shell access to the server running the resource
+
+<Callout type="warning" title="Protect the private key">
+Copy the key over an encrypted connection, restrict its permissions, and never commit it to a repository or paste it into the Coolify dashboard.
+</Callout>
+
+On the resource server, create the certificate directory:
+
+```bash
+sudo install -d -m 700 /data/coolify/proxy/certs
+```
+
+Copy the files from your machine to the resource server. Replace the local paths and server address:
+
+```bash
+scp /path/to/example.com.crt root@<server-address>:/data/coolify/proxy/certs/example.com.crt
+scp /path/to/example.com.key root@<server-address>:/data/coolify/proxy/certs/example.com.key
+```
+
+Restrict access to the private key on the server:
+
+```bash
+sudo chmod 600 /data/coolify/proxy/certs/example.com.key
+```
+
+Coolify mounts `/data/coolify/proxy/` at `/traefik/` inside the Traefik container.
+
+## Add the dynamic TLS configuration
+
+Open **Servers > your server > Proxy > Dynamic Configurations**, select **Add**, and create a file such as `custom-certificates.yaml`:
+
+```yaml
+tls:
+  certificates:
+    - certFile: /traefik/certs/example.com.crt
+      keyFile: /traefik/certs/example.com.key
+```
+
+Save the file. Traefik watches the dynamic configuration directory and selects a matching certificate from the certificate's subject alternative names when a request arrives.
+
+## Verify the certificate
+
+Open the HTTPS domain and inspect the certificate issuer, subject alternative names, and expiration date. You can also check from a terminal:
+
+```bash
+openssl s_client -connect example.com:443 -servername example.com </dev/null 2>/dev/null \
+  | openssl x509 -noout -subject -issuer -dates
+```
+
+If Traefik continues to serve another certificate, confirm that the certificate covers the requested hostname and inspect **Servers > your server > Proxy > Logs** for file or key parsing errors.

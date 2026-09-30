@@ -1,0 +1,147 @@
+---
+title: DNS Challenge
+description: Build Caddy with a DNS provider module and use DNS-based ACME validation in Coolify.
+---
+
+# DNS challenge
+
+Caddy's default HTTP challenge requires public access to port `80`. Use the DNS challenge when you need wildcard certificates or cannot expose port `80` during certificate validation.
+
+Caddy DNS providers are modules compiled into the Caddy binary. Coolify's default `lucaslorentz/caddy-docker-proxy:2.8-alpine` image does not include these modules, so you must build a compatible image from the proxy Docker Compose configuration.
+
+## What you need
+
+- a domain hosted by a [Caddy DNS provider](https://github.com/orgs/caddy-dns/repositories)
+- provider credentials that can create and delete DNS records
+
+<Callout type="warning" title="Build and test on a non-production server first">
+Changing the proxy image rebuilds the component that serves every public route on the server. A failed module build or invalid Caddy option can leave all routes unavailable.
+</Callout>
+
+## Add a DNS-enabled Caddy build
+
+Open **Servers > your server > Proxy > Configuration**. In the `caddy` service, remove the existing `image` line and add the provider-specific `build`, credential, and `caddy.acme_dns` label below. Keep the existing networks, ports, volumes, and Coolify labels.
+
+Each example visually marks the existing image line in red and the replacement lines in green.
+
+<Tabs items={['Cloudflare', 'Hetzner', 'AWS Route 53']}>
+<Tab value="Cloudflare">
+
+```yaml
+services:
+  caddy:
+    image: 'lucaslorentz/caddy-docker-proxy:2.8-alpine' # [!code --][!code focus]
+    build: # [!code ++:9][!code focus:9]
+      dockerfile_inline: |
+        FROM caddy:2.11-builder AS builder
+        RUN xcaddy build \
+          --with github.com/lucaslorentz/caddy-docker-proxy/v2@v2.8.11 \
+          --with github.com/caddy-dns/cloudflare@v0.2.4
+        FROM caddy:2.11-alpine
+        COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+        CMD ["caddy", "docker-proxy"]
+    environment:
+      - CADDY_DOCKER_POLLING_INTERVAL=5s
+      - CADDY_DOCKER_CADDYFILE_PATH=/dynamic/Caddyfile
+      - CF_API_TOKEN=<cloudflare-api-token> # [!code ++][!code focus]
+    labels:
+      - coolify.managed=true
+      - coolify.proxy=true
+      - 'caddy.acme_dns=cloudflare {env.CF_API_TOKEN}' # [!code ++][!code focus]
+```
+
+</Tab>
+<Tab value="Hetzner">
+
+```yaml
+services:
+  caddy:
+    image: 'lucaslorentz/caddy-docker-proxy:2.8-alpine' # [!code --][!code focus]
+    build: # [!code ++:9][!code focus:9]
+      dockerfile_inline: |
+        FROM caddy:2.11-builder AS builder
+        RUN xcaddy build \
+          --with github.com/lucaslorentz/caddy-docker-proxy/v2@v2.8.11 \
+          --with github.com/caddy-dns/hetzner/v2@v2.0.0
+        FROM caddy:2.11-alpine
+        COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+        CMD ["caddy", "docker-proxy"]
+    environment:
+      - CADDY_DOCKER_POLLING_INTERVAL=5s
+      - CADDY_DOCKER_CADDYFILE_PATH=/dynamic/Caddyfile
+      - HETZNER_API_TOKEN=<hetzner-api-token> # [!code ++][!code focus]
+    labels:
+      - coolify.managed=true
+      - coolify.proxy=true
+      - 'caddy.acme_dns=hetzner {env.HETZNER_API_TOKEN}' # [!code ++][!code focus]
+```
+
+</Tab>
+<Tab value="AWS Route 53">
+
+```yaml
+services:
+  caddy:
+    image: 'lucaslorentz/caddy-docker-proxy:2.8-alpine' # [!code --][!code focus]
+    build: # [!code ++:9][!code focus:9]
+      dockerfile_inline: |
+        FROM caddy:2.11-builder AS builder
+        RUN xcaddy build \
+          --with github.com/lucaslorentz/caddy-docker-proxy/v2@v2.8.11 \
+          --with github.com/caddy-dns/route53@v1.6.2
+        FROM caddy:2.11-alpine
+        COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+        CMD ["caddy", "docker-proxy"]
+    environment:
+      - CADDY_DOCKER_POLLING_INTERVAL=5s
+      - CADDY_DOCKER_CADDYFILE_PATH=/dynamic/Caddyfile
+      - AWS_ACCESS_KEY_ID=<access-key-id> # [!code ++:3][!code focus:3]
+      - AWS_SECRET_ACCESS_KEY=<secret-access-key>
+      - AWS_REGION=<region>
+    labels:
+      - coolify.managed=true
+      - coolify.proxy=true
+      - caddy.acme_dns=route53 # [!code ++][!code focus]
+```
+
+</Tab>
+</Tabs>
+
+For another provider, use the module path and configuration from that provider's repository. Confirm that the module version supports the selected Caddy version before restarting the proxy.
+
+## Restart and verify
+
+Save the proxy configuration, then select **Restart Proxy**. The first restart builds the custom image and can take longer than a normal restart.
+
+Redeploy a resource with an HTTPS domain, open the domain, and inspect its certificate. Check **Servers > your server > Proxy > Logs** for image-build, module, DNS, or ACME errors.
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="Caddy reports an unknown DNS provider">
+
+The module was not compiled into the running binary. Confirm the `xcaddy build` command includes the correct provider module, then rebuild and restart the proxy.
+
+</Accordion>
+
+<Accordion title="DNS validation times out">
+
+Confirm the token can edit the correct zone and that `_acme-challenge` TXT records become visible publicly. Follow the provider module's documentation for propagation settings when required.
+
+</Accordion>
+
+<Accordion title="Let's Encrypt rate limits block testing">
+
+Add the staging CA label while testing:
+
+```yaml
+labels: # [!code ++:2][!code focus:2]
+  - caddy.acme_ca=https://acme-staging-v02.api.letsencrypt.org/directory
+```
+
+Remove it after validation succeeds. Staging certificates are not trusted by browsers.
+
+</Accordion>
+
+</Accordions>

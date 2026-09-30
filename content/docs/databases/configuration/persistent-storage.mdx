@@ -1,0 +1,53 @@
+---
+title: Persistent Storage
+description: Configure the volume, directory, and file mounts that keep database data outside the replaceable container.
+---
+
+# Configure persistent storage
+
+Database containers are replaceable. Coolify mounts database files outside the container so normal container recreation does not remove the data.
+
+Open the database resource, then select **Configuration > Persistent Storage**.
+
+<Callout type="warning" title="Do not remove the database data mount">
+
+Removing or changing the data mount can make an existing database appear empty or prevent it from starting. Take a verified backup and confirm the engine's data path before changing storage.
+
+</Callout>
+
+## Default database data paths
+
+Coolify creates the default persistent volume for a one-click database at the engine's data path:
+
+| Database | Data path |
+| :--- | :--- |
+| PostgreSQL before version 18 | `/var/lib/postgresql/data` |
+| PostgreSQL 18 and later | `/var/lib/postgresql` |
+| MySQL and MariaDB | `/var/lib/mysql` |
+| MongoDB | `/data/db` and `/data/configdb` |
+| Redis, Dragonfly, and KeyDB | `/data` |
+| ClickHouse | `/var/lib/clickhouse` |
+
+Use the path for the image and major version you selected. PostgreSQL 18 uses a different default path from earlier PostgreSQL images.
+
+## Add a mount
+
+Select **Add**, then choose the mount type that matches the database configuration:
+
+| Mount type | Use it for |
+| :--- | :--- |
+| **Volume Mount** | A Docker-managed volume attached at a container destination. |
+| **Directory Mount** | A directory that already exists or should be created on the deployment server. |
+| **File Mount** | A configuration file whose contents Coolify manages. |
+| **Host File Mount** | An existing file on the server that Coolify should bind into the container. |
+
+Enter the exact **Destination Path** expected by the database image. Save the mount, then restart or redeploy the database and verify that it starts with the expected data.
+
+## Storage boundaries
+
+- Storage is local to the deployment server unless the Docker destination provides shared storage.
+- The database process must have permission to read and write the mounted path.
+- A mount does not recover data that was already deleted from a container or volume.
+- Persistent storage is not a backup. Configure [database backups](/databases/backups) for supported engines and test [restoring a database](/databases/restore).
+
+Read the [Core persistent storage guide](/core/persistent-storage/storage-mounts/overview) for mount permissions, source paths, and backup behavior.

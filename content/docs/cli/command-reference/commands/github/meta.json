@@ -1,0 +1,12 @@
+{
+  "title": "Github",
+  "pages": [
+    "branches",
+    "create",
+    "delete",
+    "get",
+    "list",
+    "repos",
+    "update"
+  ]
+}

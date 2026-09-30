@@ -1,0 +1,91 @@
+---
+title: Overview
+description: Find the Coolify settings used to configure a Docker Compose Service and its components.
+---
+
+import { BranchUp, Box2, Settings } from 'reicon-react';
+
+# Configure a Service
+
+Open a Service and select **Configuration** to change the stack, its Compose components, environment values, storage, automation, and organization.
+
+A Service has two configuration levels:
+
+- stack settings apply to the complete Docker Compose resource
+- component settings apply to one detected application or database container
+
+## Stack configuration pages
+
+| <span className="inline-block min-w-40 whitespace-nowrap">Configuration page</span> | What it controls | Guide |
+| :--- | :--- | :--- |
+| **General** | Service name, description, predefined network access, service-specific fields, Compose definition, and component list. | [Review General settings](/services/configuration/general) |
+| **Networking** | Communication inside the stack, through the `coolify` network, across servers, and through domains or published ports. | [Configure Service networking](/services/configuration/networking) |
+| **Environment Variables** | Values used when Coolify renders the Service `.env` file and Compose definition. | [Configure environment variables](/services/configuration/environment-variables) |
+| **Persistent Storages** | Parsed volumes, directories, and files grouped by component. | [Review persistent storage](/services/configuration/persistent-storage) |
+| **Scheduled Tasks** | Commands that Coolify runs inside one Service container on a schedule. | [Configure scheduled tasks](/services/operations/scheduled-tasks) |
+| **Webhooks** | Authenticated requests for Service lifecycle operations. | [Use deploy webhooks](/core/automation/deploy-webhooks) |
+| **Resource Operations** | Clone the Service to another destination or move it between projects and environments. | [Clone or move a Service](/services/operations/resource-operations) |
+| **Tags** | Team-level labels used to organize and automate resources. | [Organize resources with tags](/core/automation/tags/overview) |
+| **Danger Zone** | Permanent Service deletion and optional Docker cleanup actions. | [Delete a Service](/services/operations/danger-zone) |
+
+## Component settings
+
+Select **Settings** on a component card under **Configuration > General**.
+
+Application component settings can include:
+
+- display name, description, image, and domains
+- gzip compression and path-prefix stripping
+- aggregate-status exclusion and log drain
+
+Database component settings can include:
+
+- display name, description, and image
+- public TCP proxy and public port
+- aggregate-status exclusion and log drain
+- supported backups and import controls
+
+Coolify detects common database images while parsing Compose. If a component is classified incorrectly, its settings provide **Convert to Application** or **Convert to Database**. Conversion changes how Coolify presents and operates that component; it does not change the image into another database or application.
+
+## Apply configuration changes
+
+Saving a setting updates Coolify's stored configuration. It does not always recreate the running containers immediately.
+
+Use:
+
+- **Deploy** for the first deployment or a stopped Service
+- **Restart** to recreate the stack without first pulling newer images
+- **Pull Latest Images & Restart** to pull the saved image tags and recreate the stack
+
+Review the configuration-change indicator after saving. Verify every component after a restart, especially after changing Compose, images, variables, domains, networks, or mounts.
+
+<Callout type="warning" title="Back up state before changing the stack">
+
+An image, volume, credential, or Compose change can make a stateful component unavailable or incompatible with its existing data. Create a verified backup and read the component's upgrade instructions before changing a production Service.
+
+</Callout>
+
+## Continue with configuration guides
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'General settings',
+      href: '/services/configuration/general',
+      description: 'Configure the stack and each detected component.',
+      icon: Settings,
+    },
+    {
+      title: 'Docker Compose',
+      href: '/services/configuration/docker-compose',
+      description: 'Edit the saved definition and review the deployable result.',
+      icon: Box2,
+    },
+    {
+      title: 'Persistent storage',
+      href: '/services/configuration/persistent-storage',
+      description: 'Protect data outside replaceable Service containers.',
+      icon: BranchUp,
+    },
+  ]}
+/>

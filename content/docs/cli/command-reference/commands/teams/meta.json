@@ -1,0 +1,9 @@
+{
+  "title": "Teams",
+  "pages": [
+    "current",
+    "get",
+    "list",
+    "members-list"
+  ]
+}

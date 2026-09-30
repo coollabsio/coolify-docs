@@ -1,0 +1,177 @@
+---
+title: Deploy Webhooks
+description: Trigger Coolify resource or tag deployments from CI and external automation with an authenticated webhook URL.
+---
+
+# Deploy webhooks
+
+A deploy webhook is an authenticated Coolify API URL that starts a deployment without using the dashboard. Use it after CI checks pass, from a Git provider without a native Coolify integration, or from another automation system.
+
+Resource deploy webhooks target one application or service. Tag deploy webhooks target every application and service assigned to the selected [tag](/core/automation/tags/overview).
+
+## Before you start
+
+You need:
+
+- API access enabled for the Coolify instance
+- permission to create an API token for the active team
+- the resource or tag you want the webhook to deploy
+- a secure secret store in the system that will call the webhook
+
+On a self-hosted instance, open **Settings > Advanced** and turn on **API Access** if the API is disabled.
+
+---
+
+## Create a deploy token
+
+<Steps>
+<Step>
+
+### Open API Tokens
+
+Open **Keys & Tokens** in the main sidebar, then select **API Tokens**.
+
+</Step>
+<Step>
+
+### Configure the token
+
+Enter a description, choose an expiration period, and select the `deploy` permission.
+
+A deploy-only token can trigger deploy webhooks without receiving general read or write access to the API.
+
+</Step>
+<Step>
+
+### Create and copy the token
+
+Click **Create**, then copy the token immediately. Coolify shows the token value only once.
+
+</Step>
+<Step>
+
+### Store the token
+
+Save it in your CI or automation platform's secret store, for example as `COOLIFY_TOKEN`. Do not commit it to a repository or place it directly in a workflow file.
+
+</Step>
+</Steps>
+
+Read [API Tokens](/core/security/credentials/api-tokens) for team scoping, expiration, and API access controls.
+
+---
+
+## Copy a webhook URL
+
+Choose the URL that matches the deployment target.
+
+<Tabs id="deploy-webhook-target" items={['Resource', 'Tag']}>
+<Tab value="Resource">
+
+Use a resource webhook to deploy one application or service.
+
+1. Open the application or service.
+2. Select **Configuration > Webhooks**.
+3. Copy **Deploy Webhook (auth required)**.
+
+The generated URL has this form:
+
+```txt
+https://coolify.shadowarcanist.com/api/v1/deploy?uuid=<resource-uuid>&force=false
+```
+
+</Tab>
+<Tab value="Tag">
+
+Use a tag webhook to deploy every application and service assigned to one tag.
+
+1. Open **Tags** in the main sidebar.
+2. Select the tag.
+3. Copy **Deploy Webhook URL**.
+
+The generated URL has this form:
+
+```txt
+https://coolify.shadowarcanist.com/api/v1/deploy?tag=<tag-name>
+```
+
+Review [Deploy by Tag](/core/automation/tags/deploy-by-tag) before automating a group deployment.
+
+</Tab>
+</Tabs>
+
+---
+
+## Trigger the deployment
+
+Store the copied URL as `COOLIFY_DEPLOY_WEBHOOK`, then send a `GET` request with the token in the `Authorization` header:
+
+```sh
+curl --request GET "$COOLIFY_DEPLOY_WEBHOOK" \
+  --header "Authorization: Bearer $COOLIFY_TOKEN"
+```
+
+Coolify also accepts `POST` requests. The endpoint requires either `uuid` or `tag`; do not send both in one request.
+
+<Callout type="warn" title="Protect the API token">
+The URL identifies the deployment target, but the Bearer token authorizes the action. Revoke the token from **Keys & Tokens > API Tokens** if it is exposed.
+</Callout>
+
+---
+
+## Request options
+
+| Option | Purpose | Example |
+| --- | --- | --- |
+| `uuid` | Deploy one or more resource UUIDs. Separate several UUIDs with commas. | `uuid=abc,def` |
+| `tag` | Deploy one or more tag groups. Separate several names with commas. | `tag=api,worker` |
+| `force` | Rebuild an application without using its build cache. | `force=true` |
+
+For a JSON `POST` request, send the same option names in the request body:
+
+```sh
+curl --request POST "https://coolify.shadowarcanist.com/api/v1/deploy" \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Content-Type: application/json" \
+  --data '{"uuid":"<resource-uuid>","force":false}'
+```
+
+---
+
+## Verify the deployment
+
+A successful application request returns deployment details, including a deployment UUID when a deployment was queued. Open the application's **Deployments** page and confirm that the matching deployment starts and finishes successfully.
+
+For a service or tag request, verify each affected resource from its Coolify page. Do not treat an accepted API request as proof that every resource became healthy.
+
+---
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="The request returns 401 Unauthorized">
+
+Confirm that the complete token is present after `Bearer`, has not expired, and belongs to the team that owns the target resource or tag.
+
+</Accordion>
+<Accordion title="The request returns 403 Forbidden">
+
+Create or use a token with `deploy` permission. A read-only token cannot trigger the endpoint.
+
+</Accordion>
+<Accordion title="The request says uuid or tag is required">
+
+Copy the generated URL again or include exactly one of `uuid` and `tag` in the query string or JSON body.
+
+</Accordion>
+<Accordion title="No resources were found">
+
+Confirm that the resource UUID or tag name is correct and belongs to the token's active team. For a tag request, confirm that at least one application or service still has the tag.
+
+</Accordion>
+<Accordion title="The request returns 429 Too Many Requests">
+
+Wait for the `Retry-After` interval before trying again. A busy application deployment queue can also return `429` while a group deployment is being created.
+
+</Accordion>
+</Accordions>

@@ -1,0 +1,569 @@
+---
+title: Deploy your first database
+description: Deploy your first Redis database on Coolify using the one-click resources list and test the connection from terminal.
+---
+
+import {
+  ArrowsRight,
+  BrowserTerminal,
+  Database,
+  Key2,
+  Plug2,
+  Rocket2,
+  Server,
+  Settings,
+  ShieldAlert,
+  TerminalSquare,
+  WindowPointer,
+} from 'reicon-react';
+
+# Deploy your first database
+
+Deploying your first database in Coolify helps you validate database creation, credentials, port mapping, and terminal access in a simple flow.
+
+In this guide, you will deploy **Redis** from the one-click database resources list.
+
+A one-click database is a standalone database resource that Coolify creates from its **New Resource > Databases** list. Coolify supplies the Redis image, generated credentials, persistent storage, network, and connection details so you can deploy it without writing a Docker Compose file.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Create or open a project, create a Redis database resource, map a host port, deploy Redis, copy the generated password, and run `PING` from your terminal.
+
+This path is ideal for a first database deployment because Redis is lightweight and easy to test.
+
+</CoolCallout>
+
+---
+
+
+## Before you start
+
+Make sure these things are ready before you deploy the database.
+
+<CoolActionCardGrid
+  data-first-database
+  className="not-prose my-5"
+  surface
+  cards={[
+    {
+      title: 'Dashboard access',
+      description: 'You can sign in to Coolify and see the main dashboard.',
+      bullets: ['You can access Coolify in your browser', 'Dashboard loads without errors'],
+      icon: WindowPointer,
+    },
+    {
+      title: 'Server is connected',
+      description: 'Coolify has at least one server listed on the Servers page.',
+      bullets: ['Open Servers from the sidebar', 'For self-hosted installs, localhost is fine'],
+      icon: Server,
+    },
+    {
+      title: 'Terminal ready',
+      description: 'You can run a command from your computer to test Redis.',
+      bullets: ['Use redis-cli if installed', 'Use Docker if redis-cli is not installed'],
+      icon: TerminalSquare,
+    },
+  ]}
+/>
+
+If Coolify is not ready yet, first follow [Start with Self-hosted](/start-with-self-hosted) or [Start with Coolify Cloud](/start-with-cloud).
+
+---
+
+
+## Deployment overview
+
+<section data-first-database className="not-prose my-5">
+<CoolFlow
+  id="first-database-deployment-flow"
+  icon={Database}
+  title="First database deployment flow"
+  description="This first database deployment uses Redis because it is lightweight, quick to deploy, and easy to test from your terminal."
+  steps={[
+    'Create or open a project',
+    'Choose Redis',
+    'Map host port',
+    'Open firewall',
+    'Deploy Redis',
+    'Test with redis-cli',
+  ]}
+  list={[
+    'Create or open the project where the database will live.',
+    'Choose Redis from the database resources list.',
+    'Map a temporary host port for terminal testing.',
+    'Open the mapped host port in your firewall rules.',
+    'Deploy Redis and copy the generated password.',
+    'Run PING from redis-cli and confirm Redis returns PONG.',
+  ]}
+  endnote="You should end with a running Redis container, a mapped host port allowed by your firewall, a Redis password, and a successful PONG response."
+/>
+</section>
+
+<CoolCallout icon={Database} title="Databases run as containers">
+
+Coolify deploys databases as containers. For this guide, Coolify will create and run a Redis container, generate credentials, and keep the database data on the server.
+
+The Redis container listens on port `6379` internally. You will map a temporary host port so your terminal can connect to it for testing.
+
+</CoolCallout>
+
+---
+
+
+## Deploy your first Redis database
+
+Choose the deployment method you want to use. Each tab reaches the same first-deployment outcome.
+
+<Tabs items={['Dashboard', 'API', 'CLI', 'MCP']}>
+<Tab value="Dashboard">
+
+<Steps>
+<Step>
+
+### Create your first project
+
+On the Coolify dashboard:
+
+- click **New Project**
+- enter a project name, for example `my-first-project`
+- click **Continue**
+
+<Callout type="success" title="Tip">
+
+If you already have a project, skip this step and continue to Step 2.
+
+</Callout>
+
+</Step>
+<Step>
+
+### Create a new resource
+
+Open your project and click **Create New Resource**.
+
+A resource is something Coolify will run for you, such as an app, database, or service. In this guide, the resource will be a Redis database.
+
+</Step>
+<Step>
+
+### Choose Redis from the database list
+
+In the resource list:
+
+- search for **Redis**
+- click **Redis**
+
+Coolify will create a Redis database resource with generated settings and credentials.
+
+</Step>
+<Step>
+
+### Configure port mapping
+
+Set a temporary port mapping so you can connect from your terminal.
+
+Example:
+
+```txt
+6380:6379
+```
+
+<CoolCompare
+  data-first-database
+  className="not-prose my-5"
+  id="redis-port-mapping"
+  icon={Plug2}
+  title="Redis port mapping"
+>
+<CoolCompareColumn
+  title="Host port"
+  code="6380"
+  items={[
+    'This is the server port you connect to from your terminal.',
+    'Choose another free host port if 6380 is already used.',
+  ]}
+/>
+<CoolCompareColumn
+  title="Container port"
+  code="6379"
+  items={[
+    'This is the Redis port inside the container.',
+    'Keep this side as 6379 for this guide.',
+  ]}
+/>
+</CoolCompare>
+
+</Step>
+<Step>
+
+### Open the mapped host port on your firewall
+
+Port mapping publishes Redis on the server, but your firewall or cloud provider may still block incoming traffic.
+
+Open the mapped host port, for example TCP `6380`, wherever you manage firewall rules for the server running Redis. This is different for each provider and server setup, so check your provider firewall, security group, or server firewall configuration.
+
+For safer testing, allow the port only from your own IP address and close it again when you are done. For general guidance, see [Firewall](/core/infrastructure/servers/firewall).
+
+<CoolCallout icon={ShieldAlert} title="Do not expose databases casually" type="warn">
+
+Exposing a database port publicly is risky in production. This guide maps a Redis port only so you can test the first deployment from your terminal.
+
+For real production workloads, keep databases private unless you have a specific reason and strict network controls.
+
+</CoolCallout>
+
+</Step>
+<Step>
+
+### Start Redis
+
+Click **Start**.
+
+After deployment, keep these values ready:
+
+- server IP address
+- mapped host port, for example `6380`
+- Redis password from the Coolify dashboard
+
+</Step>
+<Step>
+
+### Connect to Redis from terminal
+
+Use `redis-cli` from your terminal:
+
+```sh
+redis-cli --user default -h <server-ip> -p <host-port> -a "<redis-password>"
+```
+
+Example:
+
+```sh
+redis-cli --user default -h 203.0.113.10 -p 6380 -a "your-password"
+```
+
+Then run:
+
+```sh
+PING
+```
+
+If everything is working, Redis returns:
+
+```txt
+PONG
+```
+
+<Callout type="info" title="No redis-cli installed?">
+
+Run `redis-cli` from a temporary Redis container instead:
+
+```sh
+docker run --rm -it redis:alpine redis-cli --user default -h <server-ip> -p <host-port> -a "<redis-password>" PING
+```
+
+If the connection works, it returns `PONG`.
+
+</Callout>
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="API">
+
+<Callout type="info" title="API requirements">
+
+Create a `root` API token for this tutorial. Coolify Cloud already has API access enabled, so Cloud users only need to create the token. On self-hosted Coolify, an administrator must also [enable API access](/api/ip-allowlist#api-access-controls). See [API authorization](/api/authorization) before sending these requests.
+
+Set your base URL and token in the terminal where you will run cURL:
+
+```sh
+export COOLIFY_URL="https://<your-coolify-domain>"
+export COOLIFY_TOKEN="<api-token>"
+```
+
+Coolify Cloud users should set `COOLIFY_URL` to `https://app.coolify.io`.
+
+</Callout>
+
+<Callout type="warning" title="Use least-privilege tokens in production">
+
+This tutorial uses a `root` token so the same credential works across every read, write, deployment, and sensitive-data request. A `root` token has more access than most integrations need. For production, create a separate token with only the permissions required by that workflow, and revoke the tutorial token when you finish.
+
+</Callout>
+
+<Steps>
+<Step>
+
+### Create a project and find a server
+
+Create a project, then copy its UUID:
+
+```sh
+curl --fail-with-body --request POST \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --data '{"name":"my-first-project"}' \
+  "$COOLIFY_URL/api/v1/projects"
+
+export PROJECT_UUID="<project-uuid>"
+```
+
+List servers, copy the target server UUID, and set it:
+
+```sh
+curl --fail-with-body \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Accept: application/json" \
+  "$COOLIFY_URL/api/v1/servers"
+
+export SERVER_UUID="<server-uuid>"
+```
+
+Use `GET /api/v1/projects` instead if the project already exists.
+
+</Step>
+<Step>
+
+### Create and start Redis
+
+The following request publishes Redis on server port `6380`, generates a password when `redis_password` is omitted, and starts it immediately:
+
+```sh
+curl --fail-with-body --request POST \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --data "{"project_uuid":"$PROJECT_UUID","server_uuid":"$SERVER_UUID","environment_name":"production","name":"my-first-redis","is_public":true,"public_port":6380,"instant_deploy":true}" \
+  "$COOLIFY_URL/api/v1/databases/redis"
+```
+
+Copy the database UUID from the response:
+
+```sh
+export DATABASE_UUID="<database-uuid>"
+```
+
+Allow TCP port `6380` from your own IP address in the server firewall before testing. Do not open the port to every source.
+
+</Step>
+<Step>
+
+### Read the password and test Redis
+
+The `root` token used by this tutorial allows the API response to include the password:
+
+```sh
+curl --fail-with-body \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Accept: application/json" \
+  "$COOLIFY_URL/api/v1/databases/$DATABASE_UUID"
+```
+
+Copy the Redis password, then run the same `redis-cli` test shown in the Dashboard tab. A `PONG` response confirms that Redis is reachable.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="CLI">
+
+<Callout type="info" title="CLI requirements">
+
+[Install the Coolify CLI](/cli/installation), then create a `root` API token for the team that will own the resource.
+
+**Coolify Cloud:** API access is already enabled. Save the token in the preconfigured `cloud` context, select it, and verify authentication:
+
+```sh
+coolify context set-token cloud <api-token>
+coolify context use cloud
+coolify context verify
+```
+
+**Self-hosted Coolify:** An administrator must [enable API access](/api/ip-allowlist#api-access-controls) first. Add a context using the full instance URL without `/api/v1`, then verify authentication:
+
+```sh
+coolify context add --default production https://coolify.example.com <api-token>
+coolify context verify
+```
+
+A successful verification reports that the connection and authentication are valid. See [CLI authentication](/cli/authentication) for token safety, IP allowlists, and troubleshooting.
+
+</Callout>
+
+<Callout type="warning" title="Use least-privilege tokens in production">
+
+This tutorial uses a `root` token so the same credential works across every read, write, deployment, and sensitive-data request. A `root` token has more access than most integrations need. For production, create a separate token with only the permissions required by that workflow, and revoke the tutorial token when you finish.
+
+</Callout>
+
+<Steps>
+<Step>
+
+### Create a project and find a server
+
+```sh
+coolify project create --name my-first-project
+coolify server list
+```
+
+Copy the project and server UUIDs. Use `coolify project list` if the project already exists.
+
+</Step>
+<Step>
+
+### Create and start Redis
+
+```sh
+coolify database create redis \
+  --project-uuid <project-uuid> \
+  --server-uuid <server-uuid> \
+  --environment-name production \
+  --name my-first-redis \
+  --is-public \
+  --public-port 6380 \
+  --instant-deploy
+```
+
+Copy the database UUID from the response. Allow TCP port `6380` from your own IP address in the server firewall before testing.
+
+</Step>
+<Step>
+
+### Read the connection details and test Redis
+
+```sh
+coolify database get <database-uuid>
+```
+
+Copy the generated password, then test the connection:
+
+```sh
+redis-cli --user default -h <server-ip> -p 6380 -a "<redis-password>" PING
+```
+
+A `PONG` response confirms the deployment worked. See [`coolify database create`](/cli/command-reference/commands/database/create) for the other database types and options.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="MCP">
+
+<Callout type="warning" title="Creation is not available through MCP yet">
+
+Coolify MCP can inspect and start existing resources, but its current tools cannot create applications, databases, services, or projects. Create the resource with the Dashboard, API, or CLI tab first. You can then use the prompts below to start and verify it without returning to the dashboard.
+
+</Callout>
+
+After [setting up Coolify MCP](/mcp/setup), create a `root` token for this end-to-end workflow, then give your client the Redis UUID or exact name. The prompts need to inspect Redis, start it, and read its sensitive connection values. A `deploy` token cannot perform read operations, and `read:sensitive` cannot start the database.
+
+<Callout type="warning" title="Revoke the root token after this tutorial">
+
+A `root` token bypasses the `read`, `write`, and `deploy` endpoint checks and can return supported sensitive data. It remains limited to the active team, but it grants more access than routine MCP use requires. Revoke it when you finish this first deployment.
+
+</Callout>
+
+<Steps>
+<Step>
+
+### Find Redis
+
+```txt
+Find the database named my-first-redis in my-first-project. Show me its UUID, type, current status, and public connection settings. Do not change anything yet.
+```
+
+Confirm that the returned database is the Redis resource you created.
+
+</Step>
+<Step>
+
+### Start and verify Redis
+
+```txt
+Start the Coolify database with UUID <database-uuid>. Then check its status and tell me when it is running. Show the host, public port, and Redis password needed for a redis-cli PING test. Do not stop or restart any other resource.
+```
+
+Run the `redis-cli` command from the Dashboard or CLI tab. A `PONG` response verifies the deployment. Sensitive values remain redacted unless the MCP token has `read:sensitive`.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+---
+
+## Common first-deploy issues
+
+Use these checks when Redis deploys but the terminal test does not behave as expected.
+
+<Tabs id="first-database-issues" items={['Connection refused', 'Auth failed', 'redis-cli missing']}>
+<Tab value="Connection refused" icon={Plug2}>
+
+Usually means Redis is not reachable on the host port you are using.
+
+Check:
+
+- Redis deployment is in **running** state
+- **Ports Mappings** uses the host port you are connecting to
+- your server firewall allows the mapped host port
+- you are using the server IP address, not the Redis container IP
+
+</Tab>
+<Tab value="Auth failed" icon={Key2}>
+
+Usually means the password in your command does not match the Redis password in Coolify.
+
+Check:
+
+- copy the Redis password from the Coolify dashboard again
+- keep the password inside quotes if it contains special characters
+- remove accidental spaces before or after the password
+
+</Tab>
+<Tab value="redis-cli missing" icon={BrowserTerminal}>
+
+If your computer does not have `redis-cli`, use Docker to run it temporarily.
+
+```sh
+docker run --rm -it redis:alpine redis-cli --user default -h <server-ip> -p <host-port> -a "<redis-password>" PING
+```
+
+If Docker is not installed either, install Redis CLI locally or test from a machine that has it.
+
+</Tab>
+</Tabs>
+
+---
+
+
+## What to do next
+
+Your first database confirms that Coolify can create a database, generate credentials, expose a test port, and accept a connection.
+
+<CoolNextSteps
+  data-first-database
+  cards={[
+    {
+      title: 'Deploy an app',
+      description: 'Deploy an application that can connect to a database.',
+      href: '/deploy-your-first-app',
+      icon: Rocket2,
+    },
+    {
+      title: 'Deploy a service',
+      description: 'Deploy a ready-made service from the Coolify catalog.',
+      href: '/deploy-your-first-service',
+      icon: Settings,
+    },
+    {
+      title: 'Learn databases',
+      description: 'Learn how Coolify manages database resources, passwords, and backups.',
+      href: '/databases',
+      icon: Database,
+    },
+  ]}
+/>

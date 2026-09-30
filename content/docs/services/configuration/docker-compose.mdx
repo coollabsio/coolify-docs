@@ -1,0 +1,176 @@
+---
+title: Docker Compose
+description: Edit the Docker Compose definition stored on a Service and understand how Coolify turns it into a deployment.
+---
+
+# Docker Compose
+
+Every Service is based on a Docker Compose definition stored in Coolify. A one-click Service starts with a copied template; a user-defined Service starts with the YAML you enter through **Docker Compose Empty**.
+
+Open **Configuration > General** and select **Edit Compose File** to review or change the definition.
+
+## Source and deployable Compose
+
+| View | Purpose | <span className="whitespace-nowrap">Editable</span> |
+| :--- | :--- | :---: |
+| **Source Compose** | The definition stored on the Service and reparsed when you save. | Yes |
+| **Deployable Compose** | The generated definition Coolify writes to the Service configuration directory and sends to Docker Compose. | No |
+
+Coolify can add or normalize container names, labels, volume names, networks, environment references, and proxy configuration in the deployable definition.
+
+When troubleshooting, confirm the intended setting exists in the source definition, then use the deployable view to see the actual Docker Compose input.
+
+## Edit a user-defined Service
+
+1. Open **Configuration > General > Edit Compose File**.
+2. Change **Source Compose**.
+3. Select **Validate** to check a Service created with **Docker Compose Empty**.
+4. Select **Save**.
+5. Review the updated component cards, environment variables, storage, and **Deployable Compose**.
+6. Deploy or restart the Service.
+7. Follow the deployment output and verify every required component.
+
+Saving reparses the definition. Removing or renaming a Compose service changes how Coolify identifies its components, so back up its data and inspect storage names before the change.
+
+## Environment references
+
+Reference a value with Compose interpolation to manage it under **Configuration > Environment Variables**:
+
+```yaml
+services:
+  api:
+    image: example/api:1.0
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+```
+
+`${DATABASE_URL:?}` marks the value as required. Coolify prevents deployment while a required Service variable is empty. `${LOG_LEVEL:-info}` supplies `info` as the initial fallback.
+
+Hard-coded values remain in the Compose definition. Coolify can display them for reference, but change them in **Source Compose**.
+
+## Generated Service values
+
+Coolify recognizes `SERVICE_<TYPE>_<ID>` variable names in Compose and can generate reusable URLs, domains, usernames, passwords, and random values.
+
+`<ID>` identifies the value and lets you reuse it. For URL and FQDN variables, use the Compose service name as the ID. Replace hyphens and dots in the service name with underscores in the variable name. Reusing the same complete variable name returns the same stored value throughout the Service.
+
+### All magic environment variables
+
+| Pattern | Generated value | Size |
+| :--- | :--- | :--- |
+| `SERVICE_NAME_<SERVICE>` | Compose service name. Coolify creates this variable automatically for every Compose service. | Not applicable |
+| `SERVICE_URL_<SERVICE>` | URL with a scheme for the matching Compose service. | Not applicable |
+| `SERVICE_URL_<SERVICE>_<PORT>` | URL with a scheme, routed to the specified internal port. | Not applicable |
+| `SERVICE_FQDN_<SERVICE>` | Hostname for the matching Compose service, without the scheme. | Not applicable |
+| `SERVICE_FQDN_<SERVICE>_<PORT>` | Hostname without the scheme, paired with the URL routed to the specified internal port. | Not applicable |
+| `SERVICE_USER_<ID>` | Random alphanumeric username. | 16 characters |
+| `SERVICE_LOWERCASEUSER_<ID>` | Random lowercase alphanumeric username. | 16 characters |
+| `SERVICE_PASSWORD_<ID>` | Random password without symbols. | 32 characters |
+| `SERVICE_PASSWORD_64_<ID>` | Random password without symbols. | 64 characters |
+| `SERVICE_PASSWORDWITHSYMBOLS_<ID>` | Random password with symbols. | 32 characters |
+| `SERVICE_PASSWORDWITHSYMBOLS_64_<ID>` | Random password with symbols. | 64 characters |
+| `SERVICE_BASE64_<ID>` or `SERVICE_BASE64_32_<ID>` | Random alphanumeric string. Despite its name, the value is not Base64-encoded. | 32 characters |
+| `SERVICE_BASE64_64_<ID>` | Random alphanumeric string, not Base64-encoded. | 64 characters |
+| `SERVICE_BASE64_128_<ID>` | Random alphanumeric string, not Base64-encoded. | 128 characters |
+| `SERVICE_REALBASE64_<ID>` or `SERVICE_REALBASE64_32_<ID>` | Base64 encoding of random bytes. | 32 random bytes before encoding |
+| `SERVICE_REALBASE64_64_<ID>` | Base64 encoding of random bytes. | 64 random bytes before encoding |
+| `SERVICE_REALBASE64_128_<ID>` | Base64 encoding of random bytes. | 128 random bytes before encoding |
+| `SERVICE_HEX_32_<ID>` | Random hexadecimal string. | 32 characters |
+| `SERVICE_HEX_64_<ID>` | Random hexadecimal string. | 64 characters |
+| `SERVICE_HEX_128_<ID>` | Random hexadecimal string. | 128 characters |
+| `SERVICE_SUPABASEANON_<ID>` | Supabase JWT with the `anon` role, signed with `SERVICE_PASSWORD_JWT`. | JWT |
+| `SERVICE_SUPABASESERVICE_<ID>` | Supabase JWT with the `service_role` role, signed with `SERVICE_PASSWORD_JWT`. | JWT |
+
+The Supabase-specific variables are generated only when the Service also defines `SERVICE_PASSWORD_JWT`.
+
+Use the same complete name in several components to reuse one stored value:
+
+```yaml
+services:
+  database:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${SERVICE_USER_POSTGRES}
+      POSTGRES_PASSWORD: ${SERVICE_PASSWORD_64_POSTGRES}
+
+  api:
+    image: example/api:1.0
+    environment:
+      DATABASE_USER: ${SERVICE_USER_POSTGRES}
+      DATABASE_PASSWORD: ${SERVICE_PASSWORD_64_POSTGRES}
+```
+
+Generated values persist between deployments and appear under **Environment Variables**. Passwords and random values can be edited there. Coolify manages URL, FQDN, and service-name variables from the Service definition and domain configuration.
+
+## Domains and internal ports
+
+Declare `SERVICE_URL_<SERVICE>` or `SERVICE_FQDN_<SERVICE>` on the component that needs a generated domain. Add a numeric port suffix when the proxy must route to a specific internal port:
+
+```yaml
+services:
+  api:
+    image: example/api:1.0
+    environment:
+      SERVICE_URL_API_3000: /v1
+      PUBLIC_URL: ${SERVICE_URL_API_3000}
+```
+
+Coolify associates the generated domain with the `api` component, routes it to port `3000`, and appends `/v1` to the URL value.
+
+You can also set a component's **Domains** field after parsing. Review the generated variable after changing a domain.
+
+## Storage is Compose-owned
+
+Define Service volumes and bind mounts in the source definition:
+
+```yaml
+services:
+  app:
+    image: example/app:1.0
+    volumes:
+      - app-data:/app/data
+
+volumes:
+  app-data:
+```
+
+Coolify prefixes managed volume names to avoid collisions and displays the parsed result under **Configuration > Persistent Storages**. The storage view is read-only for Service components; edit the Compose definition to change a mount.
+
+## Health checks are Compose-owned
+
+Services do not have the standalone Application or Database health-check configuration page. Define health checks in the image or Compose service:
+
+```yaml
+services:
+  api:
+    image: example/api:1.0
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+```
+
+Use `exclude_from_hc: true` for a one-time or optional Compose service that should not determine the overall Service health.
+
+## Networking
+
+Components in the same stack can use their Compose service names on the Service-specific network. Do not publish `ports:` for internal-only components.
+
+Enable **Connect To Predefined Network** when the stack must communicate with other resources on the selected destination. Read [Networking in Coolify](/core/networking-in-coolify) before relying on host ports or cross-resource DNS names.
+
+## Update a one-click Service
+
+A one-click template is copied at resource creation. Coolify does not merge future template changes into the saved Service.
+
+Before updating:
+
+1. Read the upstream release notes and the individual Service guide.
+2. Back up persistent data and test its restore path.
+3. Compare the current source definition with the newer template or upstream Compose changes.
+4. Apply required image, variable, mount, and migration changes deliberately.
+5. Save, review the deployable definition, and deploy during a maintenance window.
+6. Verify every component and application workflow.
+
+Use **Pull Latest Images & Restart** only when pulling the tags already stored in Compose is the intended update. A mutable tag such as `latest` can change without showing which version will run, so pin production images when the upstream project supports versioned tags.

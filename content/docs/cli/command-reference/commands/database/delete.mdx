@@ -1,0 +1,31 @@
+---
+title: "Delete"
+description: "Delete a database and optionally clean up its configurations, volumes, and networks."
+---
+
+# Delete
+
+Delete a database and optionally clean up its configurations, volumes, and networks.
+
+## Usage
+
+```sh
+coolify database delete <uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--delete-configurations` | `boolean` | No | `true` | Delete configurations |
+| `--delete-connected-networks` | `boolean` | No | `true` | Delete connected networks |
+| `--delete-volumes` | `boolean` | No | `true` | Delete volumes |
+| `--docker-cleanup` | `boolean` | No | `true` | Run docker cleanup |
+
+## Get current help
+
+```sh
+coolify database delete --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

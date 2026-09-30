@@ -1,0 +1,22 @@
+---
+title: Other MCP clients
+description: Configure an MCP-compatible client to connect to Coolify over Streamable HTTP.
+---
+
+# Connect other MCP clients
+
+Any MCP client that supports remote Streamable HTTP servers can connect to Coolify.
+
+## Required configuration
+
+```yaml
+server_url: https://app.coolify.io/mcp
+transport: streamable-http
+authorization: Bearer 67|abcthisisa123dummytoken
+```
+
+Client configuration formats differ. Follow your client's documentation for adding a remote server and setting HTTP headers.
+
+## Verify the connection
+
+Call `get_current_team` or `get_infrastructure_overview`. If the client cannot connect, check [Troubleshooting](/mcp/troubleshooting).

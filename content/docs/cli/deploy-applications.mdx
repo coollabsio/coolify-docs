@@ -1,0 +1,113 @@
+---
+title: Deploy Applications
+description: Create, configure, deploy, and monitor an application with the Coolify CLI.
+---
+
+# Deploy applications with the CLI
+
+This workflow creates an application from a public Git repository, configures its environment variables, deploys it, and verifies the result.
+
+## Before you begin
+
+You need:
+
+- a verified CLI context with a token that can create and deploy applications
+- the UUIDs of the target project and server
+- the target environment name or UUID
+- a public Git repository, branch, build pack, and exposed port
+
+Find the required resources:
+
+```sh
+coolify context verify
+coolify project list
+coolify server list
+```
+
+<Steps>
+<Step>
+
+### Create the application
+
+```sh
+coolify app create public \
+  --server-uuid <server-uuid> \
+  --project-uuid <project-uuid> \
+  --environment-name production \
+  --git-repository https://github.com/example/api \
+  --git-branch main \
+  --build-pack nixpacks \
+  --ports-exposes 3000
+```
+
+The response contains the new application UUID. Save it for later commands.
+
+Use [Create public](/cli/command-reference/commands/app/create-public) for all available build, routing, health-check, resource-limit, and deployment options.
+
+</Step>
+<Step>
+
+### Configure environment variables
+
+Create one variable:
+
+```sh
+coolify app env create <application-uuid> \
+  --key API_URL \
+  --value https://api.example.com
+```
+
+To load several variables, sync a dotenv file:
+
+```sh
+coolify app env sync <application-uuid> --file .env.production
+```
+
+Sync updates matching keys and creates missing keys. It does not delete variables that are absent from the file.
+
+<Callout type="warning" title="Keep secrets out of command history">
+Command arguments can be stored in shell history or CI logs. Pass sensitive values through your automation platform's secret handling and review its log redaction.
+</Callout>
+
+</Step>
+<Step>
+
+### Deploy the application
+
+Deploy by application UUID:
+
+```sh
+coolify deploy uuid <application-uuid>
+```
+
+You can also deploy by its Coolify name:
+
+```sh
+coolify deploy name <application-name>
+```
+
+Use `--force` only when the deployment must run without detected changes.
+
+</Step>
+<Step>
+
+### Verify the deployment
+
+List deployments and inspect the returned deployment UUID:
+
+```sh
+coolify deploy list
+coolify deploy get <deployment-uuid>
+```
+
+Then inspect the running application and its logs:
+
+```sh
+coolify app get <application-uuid>
+coolify app logs <application-uuid> --lines 100 --show-timestamps
+```
+
+For a Docker Compose application, add `--service <name>` to select one service container. Add `--follow` when you need to stream new log entries.
+
+</Step>
+</Steps>

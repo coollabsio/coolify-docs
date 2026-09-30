@@ -1,0 +1,90 @@
+---
+title: Making Requests
+description: Build Coolify API URLs, send headers and JSON bodies, and handle API responses.
+---
+
+# Make API requests
+
+Each endpoint specifies an HTTP method, path, parameters, request body, and possible responses. Combine the documented path with the [base URL](/api/overview#base-urls) for your Coolify deployment.
+
+<Callout type="info" title="Example data">
+The examples on this page use the following sample values:
+
+- **Coolify URL:** `https://coolify.shadowarcanist.com`
+- **API token:** `67|abcthisisa123dummytoken`
+- **Project UUID:** `x0k4w8s4o0c8g4k4c0s4`
+- **Application UUID:** `g8k4s0w8c4o0k8w4s0c4`
+
+Replace these values with your Coolify URL, API token, and resource UUIDs before sending a request. Follow [API Tokens](/core/security/credentials/api-tokens) to create and securely store a token.
+</Callout>
+
+## Build the request URL
+
+Choose an operation under **Endpoints**, then use the HTTP method and path shown on that page.
+
+For example, an endpoint documented as:
+
+```txt
+PATCH /projects/{uuid}
+```
+
+becomes the following URL after you replace `{uuid}` with your project's UUID:
+
+```txt
+https://coolify.shadowarcanist.com/api/v1/projects/x0k4w8s4o0c8g4k4c0s4
+```
+
+Some endpoints also document query parameters. For example:
+
+```txt
+POST https://coolify.shadowarcanist.com/api/v1/deploy?uuid=g8k4s0w8c4o0k8w4s0c4&force=true
+```
+
+The UUIDs are examples. Replace them with the project or application UUID from your Coolify instance.
+
+---
+
+## Send request headers
+
+Protected endpoints require the complete API token as a Bearer credential. Request JSON responses with `Accept: application/json`:
+
+```sh
+export COOLIFY_URL="https://coolify.shadowarcanist.com"
+export COOLIFY_TOKEN="67|abcthisisa123dummytoken"
+
+curl --fail-with-body \
+  --request GET \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Accept: application/json" \
+  "$COOLIFY_URL/api/v1/teams/current"
+```
+
+Use `Content-Type: application/json` when the request includes a JSON body:
+
+```sh
+curl --fail-with-body \
+  --request PATCH \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --data '{"name":"production-platform"}' \
+  "$COOLIFY_URL/api/v1/projects/x0k4w8s4o0c8g4k4c0s4"
+```
+
+Replace the example project UUID before running the request.
+
+---
+
+## Send JSON request bodies
+
+For `POST` and `PATCH` requests, follow the request-body fields and value types shown on the endpoint page. Send the body as JSON and include `Content-Type: application/json`.
+
+---
+
+## Handle the response
+
+Check the HTTP status before using the response body. Most API endpoints return JSON. The public `/api/health` and `/api/v1/health` endpoints are exceptions and return plain text `OK` without requiring a token.
+
+The `--fail-with-body` cURL option returns a nonzero exit status for HTTP errors while preserving the response body for diagnostics.
+
+Read [Errors](/api/errors) for common status codes and [Rate Limits](/api/rate-limits) for the limit headers returned with API responses.

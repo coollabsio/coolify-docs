@@ -1,0 +1,13 @@
+{
+  "title": "Builds",
+  "pages": [
+    "overview",
+    "nixpacks",
+    "railpack",
+    "static",
+    "dockerfile",
+    "docker-compose",
+    "docker-registries",
+    "custom-docker-options"
+  ]
+}

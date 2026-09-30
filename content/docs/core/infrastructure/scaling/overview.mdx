@@ -1,0 +1,59 @@
+---
+title: Overview
+description: Understand the scaling options available for applications deployed with Coolify and choose when to add servers or a cloud load balancer.
+---
+
+# Scaling overview
+
+Scaling an application can mean giving one server more capacity, running the application on more than one server, or distributing traffic across those servers.
+
+Coolify can deploy the same application image to multiple connected servers. A cloud load balancer can then direct requests to the healthy application instances. Coolify does not create or manage that external load balancer for you.
+
+<Callout type="info" title="Start with the smallest setup that meets your needs">
+Add infrastructure when load, availability requirements, or measured bottlenecks justify it. A single appropriately sized server is easier to operate than a multi-server deployment.
+</Callout>
+
+## Choose a scaling path
+
+| Need | Approach | Start here |
+| :--- | :--- | :--- |
+| More CPU, memory, or storage for the current workload | Resize the current server or move the resource to a larger server | [Servers overview](/core/infrastructure/servers/overview) |
+| Run the same application on several standalone servers | Attach additional deployment servers to the application | [Multi-server Deployments](/core/infrastructure/scaling/multi-server-deployments) |
+| Distribute public traffic and remove unhealthy servers from rotation | Put a provider-managed load balancer in front of the application servers | [Cloud Load Balancing](/core/infrastructure/scaling/cloud-load-balancing) |
+| Maintain an existing Docker Swarm deployment on Coolify v4 | Continue only as a temporary legacy setup | [Docker Swarm (Deprecated)](/core/infrastructure/scaling/docker-swarm) |
+
+Multi-server deployment and load balancing solve different parts of the same architecture. Coolify deploys a consistent application image to each attached server. The load balancer decides which server receives each incoming request.
+
+## What Coolify handles
+
+For a supported multi-server application, Coolify:
+
+- keeps one server as the primary deployment server
+- builds the application on the primary server or a configured build server
+- pushes the built image to the Docker registry configured for the application
+- deploys that image to the additional servers attached to the application
+- lets you deploy, stop, remove, or promote individual servers from the application's **Servers** page
+
+You remain responsible for:
+
+- configuring the external load balancer and its health checks
+- securing traffic between the load balancer and application servers
+- keeping sessions, uploads, and other application state available to every instance
+- operating shared databases, caches, queues, and file storage
+- monitoring capacity and deciding when to add or remove servers
+
+## Prepare the application
+
+Horizontal scaling works best when any application instance can serve any request. Before adding servers:
+
+1. Move session state, user uploads, queues, and caches out of the container filesystem.
+2. Use a database and storage location reachable from every application server.
+3. Add a health endpoint that returns a successful response only when the instance can serve traffic.
+4. Confirm that the application can run from the same image and configuration on every server.
+5. Decide where TLS terminates and how the load balancer reaches each server.
+
+Applications with persistent storage configured in Coolify cannot use the current multi-server deployment feature. Docker Compose applications also cannot attach additional deployment servers through the application's **Servers** page.
+
+## Related scaling guides
+
+This section covers infrastructure-level scaling across servers. For a provider-specific example, read [Load Balancing on Hetzner](/knowledge-base/hetzner-loadbalancing). To use multiple CPU cores for a Node.js process on one server, read [Node.js Multi-core Scaling](/knowledge-base/nodejs-multi-core-scaling).

@@ -1,0 +1,12 @@
+{
+  "title": "Deployments",
+  "pages": [
+    "overview",
+    "docker-image",
+    "automatic-deployments",
+    "manual-webhooks",
+    "preview-deployments",
+    "rolling-updates",
+    "rollbacks"
+  ]
+}

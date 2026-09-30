@@ -1,0 +1,14 @@
+{
+  "title": "Source Code",
+  "pages": [
+    "overview",
+    "public-repositories",
+    "deploy-keys",
+    "cursor-origin",
+    "github",
+    "gitlab",
+    "bitbucket",
+    "gitea",
+    "other-providers"
+  ]
+}

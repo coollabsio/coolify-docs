@@ -1,0 +1,107 @@
+---
+title: How Databases Work
+description: Follow how Coolify creates, connects, stores, checks, and backs up standalone databases.
+---
+
+import { Box2, BranchUp, Settings } from 'reicon-react';
+
+# How databases work
+
+Coolify combines a database definition in the control plane with a database container and persistent storage on a connected server.
+
+The database definition contains the selected engine and image, credentials, deployment destination, storage, networking, health-check, backup, and resource settings. Docker runs the container and stores the database files in the attached volume.
+
+## How a one-click database works in Coolify
+
+A one-click database is created from an engine-specific helper in Coolify. The helper applies the defaults for that engine, generates credentials, creates the standalone database record, creates its default persistent storage, and sends you to the database's configuration page. It does not start the database container during resource creation; you review the generated settings and deploy it from Coolify.
+
+The resource is attached to a project and environment, then placed on a selected server and Docker network destination. Coolify excludes build servers from this selection because they are not intended to host running database resources.
+
+The supported engine determines the generated image, connection port, data path, credentials, health probe, connection URL format, SSL behavior, and whether Coolify's database-aware backup workflow is available. For example, PostgreSQL offers image choices after you select the server and destination; MySQL, MariaDB, MongoDB, Redis, Dragonfly, KeyDB, and ClickHouse use their engine-specific creation defaults.
+
+## From creation to a running database
+
+1. Select an engine from **New Resource > Databases** inside a project and environment.
+2. Select the server and network destination where the database should run.
+3. Review the generated resource under **Configuration > General**, including its image, credentials, ports, connection URLs, and engine-specific settings.
+4. Confirm the persistent storage under **Configuration > Persistent Storage**.
+5. Select **Start**. Coolify prepares the container, attaches the volume and destination network, and starts the database.
+6. Docker runs the configured health check. A healthy database can accept connections from applications and clients that can reach its network.
+
+The resource remains available in the project after deployment. Use its configuration and operation pages to change settings, view logs, open a terminal, restart it, or redeploy it.
+
+## What Coolify manages
+
+Coolify manages the resource definition and coordinates Docker operations on the selected server. Depending on the engine and settings, it can manage:
+
+- the database image and generated container configuration
+- generated credentials and the connection URLs shown in **General**
+- the default persistent volume and engine data path
+- the destination network and optional host port or public TCP proxy
+- the Docker health check and resource limits
+- SSL certificates and connection settings where the engine supports them
+- scheduled database backups for supported engines
+
+Coolify does not turn a one-click database into a cluster. Replication, sharding, failover, engine-level users, schema migrations, and major-version upgrades remain database-engine responsibilities.
+
+## Containers can be replaced
+
+Coolify can recreate the database container when its image or generated configuration changes. The named volume is separate from the container, so normal container replacement does not remove the database files. The default data path differs by engine and, for PostgreSQL, by major image version.
+
+Data written only to the container filesystem is not protected. Do not remove or change the database's persistent storage mount unless you have verified the data location and have a backup.
+
+Changing an image tag or generated configuration is not the same as performing a safe database upgrade. Take a verified backup and follow the engine's upgrade procedure before changing a production major version.
+
+## How applications connect
+
+Applications on the same Coolify destination network should use the database's **Internal URL**. The URL contains the generated credentials, database name, container name, and engine port.
+
+| Connection location | Use |
+| :--- | :--- |
+| Same destination network | The **Internal URL** from **Configuration > General**. |
+| Another server or external client | A configured port mapping or **Make it publicly available** TCP proxy, plus the generated public connection details. |
+
+Coolify does not publish a database endpoint by default. Read [Network access](/databases#network-access) before exposing one.
+
+## Health checks show database readiness
+
+The database health check is a Docker health check, not a backup or a data-integrity check. Configure it under **Configuration > Healthcheck** with **Interval (s)**, **Timeout (s)**, **Retries**, and **Start Period (s)**. A successful health check means the configured probe passed; it does not confirm that an application query or replication setup is correct.
+
+## Backups are engine-specific
+
+Coolify runs database-aware scheduled backups for PostgreSQL, MySQL, MariaDB, MongoDB, and ClickHouse. Redis, Dragonfly, and KeyDB have persistent storage but do not expose the standalone database backup workflow.
+
+The backup destination can be local storage or an S3-compatible bucket. A backup is separate from the live database volume: it gives you a recovery artifact that can be stored away from the database server.
+
+Read [Configure database backups](/databases/backups) for schedules, retention, and storage. Read [Restore a database](/databases/restore) for the supported import workflow.
+
+## Control plane and database server
+
+Coolify is the control plane that stores the resource configuration and coordinates operations. The connected server is the workload machine that stores the Docker volume and runs the database container.
+
+Running database containers can continue serving traffic while the Coolify control plane is unavailable, as long as Docker, the server, the network, and the database remain healthy. New Coolify operations require the control plane to be available.
+
+## Continue learning
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Choose a database',
+      href: '/databases/choose-a-database',
+      description: 'Compare the supported engines and deployment options.',
+      icon: BranchUp,
+    },
+    {
+      title: 'Database overview',
+      href: '/databases',
+      description: 'Review deployment, storage, networking, and resource navigation.',
+      icon: Box2,
+    },
+    {
+      title: 'Database SSL',
+      href: '/databases/ssl',
+      description: 'Configure the SSL behavior supported by each database engine.',
+      icon: Settings,
+    },
+  ]}
+/>

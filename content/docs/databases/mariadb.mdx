@@ -1,20 +1,111 @@
 ---
 title: MariaDB
-description: Deploy MariaDB databases on Coolify with MySQL compatibility, enhanced performance, additional storage engines, and automated backups.
+description: Deploy and operate MariaDB on Coolify with generated credentials, persistent storage, health checks, SSL, backups, and restore support.
 ---
 
 # MariaDB
 
+Coolify deploys MariaDB as a standalone container on the selected server and destination. A new resource gets generated root and application-user passwords, a persistent data volume, an internal connection URL, and a health check.
+
+MariaDB is an open-source relational database that is compatible with many MySQL clients, schemas, and tools.
+
+## Create a MariaDB database
+
+<Steps>
+<Step>
+
+### Open New Resource
+
+Open the project and environment where the database should live, then select **New Resource**.
+
+</Step>
+<Step>
+
+### Select MariaDB
+
+Under **Databases**, select **MariaDB**. You can also search for **MariaDB** by name.
+
+</Step>
+<Step>
+
+### Select a server
+
+Select the server that should run MariaDB. Build servers cannot be selected because they do not host running database resources.
+
+</Step>
+<Step>
+
+### Select a destination
+
+Select the Docker network destination that MariaDB should join.
+
+</Step>
+<Step>
+
+### Review the generated configuration
+
+Coolify creates the resource and opens **Configuration > General**. Review the image, root password, normal username and password, initial database, and connection URLs. Keep the default private networking unless an external client requires access.
+
+</Step>
+<Step>
+
+### Start MariaDB
+
+Select **Start** and follow the startup output. Wait until MariaDB is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+
+</Step>
+</Steps>
+
+## Default configuration
+
+| Setting | Default or behavior |
+| :--- | :--- |
+| Internal port | `3306` |
+| Default image | `mariadb:11` |
+| Normal user | `mariadb` |
+| Initial database | `default` |
+| Data mount | `/var/lib/mysql` |
+| Scheduled backups | Supported |
+| SSL | Supported with **Enable SSL** |
+
+The root password and normal-user password are generated when the resource is created. If you change credentials or the initial database in MariaDB, update the matching values in **Configuration > General** so connection URLs and automated backups continue to work.
 
 
+## Connect to MariaDB
 
-## What is MariaDB
+MariaDB uses a MySQL-compatible connection URL. Use the **Internal URL** for an application on the same Coolify destination network:
 
-MariaDB is an open-source fork of MySQL, designed to remain free and open-source. It aims to be a drop-in replacement for MySQL with enhanced features and performance. MariaDB maintains high compatibility with MySQL while offering additional storage engines, performance improvements, and features.
+```sh
+mysql://<user>:<password>@<database-container>:3306/<database>
+```
 
-Started by core members of MySQL, MariaDB provides a robust and scalable database solution suitable for a wide range of applications.
+Coolify shows a **Public URL** only after **Make it publicly available** and **Public Port** are configured. Keep the database private unless an external client requires direct access.
 
-## Links
+## Configure MariaDB
 
-- [The official website](https://mariadb.org/)
-- [GitHub](https://github.com/MariaDB/server)
+Open **Configuration > General** to change the image, credentials, **Ports Mappings**, public proxy, custom Docker options, and **Custom Mariadb Configuration**. Restart the resource after changing generated container configuration.
+
+## Back up and restore MariaDB
+
+Coolify uses `mariadb-dump` for scheduled backups. Selected databases are dumped directly. **Backup All Databases** passes `--compress` to `mariadb-dump`, but Coolify does not pipe the output through `gzip`; do not assume the resulting file is a gzip stream. Multiple selected database names are comma-separated.
+
+Use [Database backups](/databases/backups) to configure schedules, retention, and S3 storage. The built-in **Import Backup** form accepts MariaDB backups while the database is running; follow [Restore a database](/databases/restore) for the import workflow.
+
+<Callout type="warning" title="Restore replaces data">
+
+Stop application writes and verify the target resource before confirming an import. Keep a separate copy of any data that must not be replaced.
+
+</Callout>
+
+## SSL and health checks
+
+MariaDB exposes **Enable SSL** without an SSL mode selector. Coolify configures the database TLS listener; configure the MariaDB client with its SSL options when connecting. See [Database SSL](/databases/ssl) for the CA certificate workflow.
+
+Configure the Docker health check under **Configuration > Healthcheck** and restart MariaDB after saving.
+
+## Official MariaDB resources
+
+- [MariaDB documentation](https://mariadb.com/kb/en/documentation/)
+- [MariaDB source](https://github.com/MariaDB/server)
+- [MariaDB Docker image](https://hub.docker.com/_/mariadb)
+- [MariaDB dump documentation](https://mariadb.com/kb/en/mariadb-dump/)

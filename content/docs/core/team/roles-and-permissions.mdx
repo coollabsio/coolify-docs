@@ -1,0 +1,109 @@
+---
+title: "Roles & Permissions"
+description: Compare Owner, Admin, and Member access across team management, resources, servers, credentials, and API tokens.
+---
+
+# Roles and permissions
+
+Coolify assigns each person a role for each team they join. A person can be an Owner in one team and a Member or Admin in another.
+
+In Coolify v4.x, **Member** is the read-only role for most team resources. **Admin** and **Owner** can operate resources and manage team settings. Owner adds control over who else can become or remain an Owner.
+
+## Role comparison
+
+### Team and members
+
+| Permission | Owner | Admin | Member |
+| :--- | :---: | :---: | :---: |
+| View the team and member list | Yes | Yes | Yes |
+| Change the team name and description | Yes | Yes | No |
+| Invite Members or Admins | Yes | Yes | No |
+| Invite Owners | Yes | No | No |
+| Change or remove Members or Admins | Yes | Yes | No |
+| Change or remove Owners | Yes | No | No |
+| Delete an eligible team | Yes | Yes | No |
+
+The member-management controls apply to other people. Coolify does not show actions for changing your own role or removing yourself on the **Members** page.
+
+### Projects and resources
+
+| Permission | Owner | Admin | Member |
+| :--- | :---: | :---: | :---: |
+| View projects, environments, applications, databases, and services | Yes | Yes | Yes |
+| Create, update, or delete projects and environments | Yes | Yes | No |
+| Create, update, or delete applications, databases, and services | Yes | Yes | No |
+| Deploy applications and services | Yes | Yes | No |
+| Start, stop, restart, or otherwise operate resources | Yes | Yes | No |
+| Manage deployments, environment variables, storage, scheduled tasks, tags, webhooks, and backups | Yes | Yes | No |
+| Open a resource terminal | Yes | Yes | No |
+
+Member access lets a person inspect team resources without changing or deploying them. A page may still be visible to a Member while its editing and operational controls are unavailable.
+
+### Servers and destinations
+
+| Permission | Owner | Admin | Member |
+| :--- | :---: | :---: | :---: |
+| View team servers and destinations | Yes | Yes | Yes |
+| Add, update, or remove servers and destinations | Yes | Yes | No |
+| Manage the proxy and server certificate authorities | Yes | Yes | No |
+| View or manage server security and Sentinel | Yes | Yes | No |
+| Use the Web Terminal | Yes | Yes | No |
+
+Terminal commands run on your infrastructure. Coolify therefore restricts both the global [Web Terminal](/core/infrastructure/servers/web-terminal) and resource terminals to Owners and Admins.
+
+### Team configuration and credentials
+
+| Permission | Owner | Admin | Member |
+| :--- | :---: | :---: | :---: |
+| View shared-variable entries | Yes | Yes | Yes |
+| Create, update, or delete shared variables | Yes | Yes | No |
+| View notification settings | Yes | Yes | Yes |
+| Configure notifications or send test notifications | Yes | Yes | No |
+| View team S3 storage, Git sources, and private-key entries | Yes | Yes | Yes |
+| Create, update, or delete S3 storage, Git sources, and private keys | Yes | Yes | No |
+| View or manage cloud-init scripts and cloud provider tokens | Yes | Yes | No |
+
+Viewing a credential entry does not mean Coolify reveals every stored secret. Secret fields can remain concealed even when the surrounding resource is visible.
+
+### API tokens
+
+When API access is enabled for the instance, each role can create and revoke its own tokens.
+
+| Permission | Owner | Admin | Member |
+| :--- | :---: | :---: | :---: |
+| Create and revoke personal API tokens | Yes | Yes | Yes |
+| Create a token with `read` permission | Yes | Yes | Yes |
+| Grant `read:sensitive`, `write`, `write:sensitive`, `deploy`, or `root` permissions | Yes | Yes | No |
+
+API tokens belong to the person who creates them and are scoped to the active team. A Member can create a read-only token, but cannot grant it sensitive, write, deployment, or root permissions. See [API permissions](/api/permissions) for the available token permissions.
+
+---
+
+## Owner-only controls
+
+Owner is the highest team role. Only an Owner can:
+
+- invite another Owner
+- promote an Admin or Member to Owner
+- change another Owner to Admin or Member
+- remove another Owner from the team
+
+More than one person can have the Owner role. Keep at least one trusted Owner available so the team does not depend on a single account.
+
+---
+
+## Instance administration
+
+Team roles and instance administration are separate. On a self-hosted Coolify instance, only an Owner or Admin of the default team can view or update instance-wide settings and access system resources.
+
+An Owner or Admin role in another team does not make a person an instance administrator. That role applies to that team's resources.
+
+---
+
+## Choose a role
+
+- Choose **Member** when the person only needs to review team resources and their current state.
+- Choose **Admin** when the person should deploy and operate resources, manage servers and credentials, change team settings, and manage Members or Admins.
+- Choose **Owner** only when the person must also grant, change, or remove Owner access.
+
+Use the lowest role that provides the access the person needs. You can update another person's role from **Teams > Members**. Follow [Manage Members](/core/team/members/manage-members) for the role-change rules and verification steps.

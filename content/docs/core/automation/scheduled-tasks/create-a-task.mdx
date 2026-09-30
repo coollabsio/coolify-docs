@@ -1,0 +1,130 @@
+---
+title: Create a Task
+description: Create a scheduled command for a Coolify application or service and verify its first execution.
+---
+
+# Create a scheduled task
+
+Create a scheduled task when an application or service needs to run the same command on a recurring schedule.
+
+## Before you create a task
+
+Make sure you know:
+
+- the exact command that works inside the resource container
+- how often the command should run
+- which container or service component should receive the command
+- the longest time the command should be allowed to run
+
+If the command changes or deletes data, test it inside the intended container before scheduling it.
+
+---
+
+## Create the task
+
+<Steps>
+<Step>
+
+### Open Scheduled Tasks
+
+Open the application or service, select **Configuration**, then select **Scheduled Tasks**.
+
+</Step>
+<Step>
+
+### Open the task form
+
+Click **+ Add**. Coolify opens **New Scheduled Task**.
+
+</Step>
+<Step>
+
+### Name the task
+
+Enter a short name that describes the command's purpose, such as `Run Laravel scheduler` or `Clear expired sessions`.
+
+</Step>
+<Step>
+
+### Enter the command
+
+Enter the command exactly as it should run inside the container. For example:
+
+```sh
+php artisan schedule:run
+```
+
+Do not include `docker exec`. Coolify enters the selected container before running the command.
+
+</Step>
+<Step>
+
+### Set the frequency
+
+Enter a five-field cron expression such as `0 0 * * *`, or a named schedule such as `daily`.
+
+The schedule uses the timezone configured for the server that runs the resource. See [Cron Syntax](/core/automation/cron-syntax) for more examples.
+
+</Step>
+<Step>
+
+### Set the timeout
+
+Enter the maximum execution time in seconds. The dashboard accepts values from `60` to `36000` and uses `300` seconds by default.
+
+Choose a value longer than the task's normal runtime, but short enough to stop a stuck command.
+
+</Step>
+<Step>
+
+### Select the container
+
+For an application with one container, you can leave **Container name** empty. If the application has multiple containers, select or enter the container that contains the command.
+
+For a service, select the service component. If you enter it manually later, use the component name from the Docker Compose definition, such as `mysql`, without Coolify's generated resource suffix.
+
+</Step>
+<Step>
+
+### Save the task
+
+Click **Save**. Coolify creates the task as enabled and adds it to the **Scheduled Tasks** list.
+
+</Step>
+</Steps>
+
+---
+
+## Verify the task
+
+Open the new task. If the resource is running, click **Execute Now**.
+
+Under **Recent executions**, open the new execution and confirm that:
+
+- the status changes to **Success**
+- the start and end times are shown
+- the command output matches the expected result
+
+Scheduled runs use the same command, container, and timeout. Their results appear in the same execution history.
+
+---
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="Coolify reports an invalid cron expression">
+
+Use a valid five-field expression or one of Coolify's named schedules. The named value `daily` is valid; `@every_minute` is not supported. Compare the value with [Cron Syntax](/core/automation/cron-syntax).
+
+</Accordion>
+<Accordion title="The task reports that more than one container exists">
+
+Open the task and set **Container name** to the application container or service component that should run the command.
+
+</Accordion>
+<Accordion title="The task reports that no containers are running">
+
+Start the application or service, confirm that its target container is running, then click **Execute Now** again.
+
+</Accordion>
+</Accordions>

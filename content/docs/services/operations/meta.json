@@ -1,0 +1,11 @@
+{
+  "title": "Operations",
+  "pages": [
+    "overview",
+    "scheduled-tasks",
+    "resource-operations",
+    "update-service",
+    "troubleshooting",
+    "danger-zone"
+  ]
+}

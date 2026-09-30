@@ -1,0 +1,85 @@
+---
+title: Deploy Keys
+description: Give Coolify read-only SSH access to one private Git repository.
+---
+
+# Deploy keys
+
+A deploy key grants one SSH key access to one private repository. Use it when you cannot install a Git App or when repository-specific access is preferred.
+
+## Create a deploy key
+
+<Steps>
+<Step>
+
+### Generate a key in Coolify
+
+Open **Keys & Tokens > Private Keys**, select **+ Add**, and generate an ED25519 or RSA key.
+
+Give the key a name that identifies the repository. Copy the public key and save the private key in Coolify.
+
+</Step>
+<Step>
+
+### Add the public key to the repository
+
+Open the repository's deploy-key or access-key settings and add the copied public key.
+
+Keep write access disabled. Coolify only needs to clone and fetch the repository.
+
+</Step>
+<Step>
+
+### Copy the SSH repository URL
+
+Use the provider's SSH clone URL:
+
+```sh
+git@github.com:coollabsio/coolify-examples.git
+```
+
+Do not use the HTTPS URL for **Private Repository (with deploy key)**.
+
+</Step>
+<Step>
+
+### Create the application
+
+Open a project, select **+ New**, then **Private Repository (with deploy key)**.
+
+Choose the server, select the stored private key, paste the SSH URL, and configure the application.
+
+</Step>
+<Step>
+
+### Deploy and verify
+
+Select **Deploy**. Confirm the repository clone and requested branch succeed in the deployment log.
+
+</Step>
+</Steps>
+
+## Automatic deployments
+
+The SSH key only provides repository access. Choose how the deployment starts.
+
+<Tabs id="deploy-key-automatic-deployment" items={['Repository webhook', 'External workflow']}>
+<Tab value="Repository webhook">
+
+Add a [manual Git webhook](/applications/deployments/manual-webhooks), then enable **Configuration > Advanced > Auto Deploy**. The provider can then notify Coolify when the configured branch changes.
+
+Use a [GitHub App](/applications/sources/github/app) instead when you want GitHub repository selection and webhook configuration through one integration.
+
+</Tab>
+<Tab value="External workflow">
+
+Call the authenticated **Deploy Webhook** from GitHub Actions or another CI system after its checks pass.
+
+The deployment step in the [GitHub Actions example](/applications/sources/github/actions#example-workflow) shows the authentication pattern.
+
+</Tab>
+</Tabs>
+
+## Key scope
+
+Prefer a separate deploy key for each repository. If a key is exposed, remove it from the repository and Coolify, create a replacement, attach the new key under **Configuration > Git Source**, and redeploy.

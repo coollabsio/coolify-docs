@@ -1,0 +1,38 @@
+---
+title: "Digitalocean create"
+description: "Create a DigitalOcean server"
+---
+
+# Digitalocean create
+
+Create a DigitalOcean server
+
+## Usage
+
+```sh
+coolify server digitalocean create
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--cloud-init` | `string` | No | — | Cloud-init YAML |
+| `--cloud-token` | `string` | No | — | Cloud provider token UUID |
+| `--enable-ipv6` | `boolean` | No | `true` | Enable public IPv6 |
+| `--image` | `string` | No | — | DigitalOcean image ID or slug |
+| `--monitoring` | `boolean` | No | `true` | Enable DigitalOcean monitoring |
+| `--name` | `string` | No | — | Server name |
+| `--private-key` | `string` | No | — | Coolify private key UUID |
+| `--region` | `string` | No | — | DigitalOcean region |
+| `--size` | `string` | No | — | DigitalOcean size |
+| `--ssh-key-ids` | `intSlice` | No | — | Additional DigitalOcean SSH key IDs |
+| `--validate` | `boolean` | No | `false` | Validate after creation |
+
+## Get current help
+
+```sh
+coolify server digitalocean create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

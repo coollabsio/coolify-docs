@@ -1,0 +1,110 @@
+---
+title: How Services Work
+description: Follow how Coolify turns a one-click template or Docker Compose definition into a running Service stack.
+---
+
+import { Box2, BranchUp, Settings } from 'reicon-react';
+
+# How Services work
+
+Coolify combines a Service definition in the control plane with a Docker Compose project on one connected server.
+
+The Service definition stores the raw Compose YAML, generated environment values, selected destination, component settings, and operational configuration. Docker stores the images, networks, containers, and persistent volumes used by the running stack.
+
+## From creation to a running Service
+
+1. You select a one-click template or **Docker Compose Empty** in a project and environment.
+2. Coolify stores the selected template or pasted Compose definition on the new Service resource.
+3. Coolify parses each Compose service, identifies common database images, creates component records, and generates referenced values such as domains and credentials.
+4. You review the stack, required variables, domains, and storage under **Configuration**.
+5. When you select **Deploy**, Coolify saves a generated `.env` file and deployable `docker-compose.yml` in the Service configuration directory on the selected server.
+6. Coolify pulls the configured images, creates the resource network when required, and runs `docker compose up` with the saved project name and configuration.
+7. Docker starts the component containers and runs health checks defined by the images or Compose definition.
+8. The Coolify proxy routes configured domains to the appropriate application components.
+
+## Raw and deployable Compose
+
+The **Source Compose** is the definition stored on the Service. It is the copy you edit.
+
+The **Deployable Compose** is the generated definition Coolify sends to Docker Compose. It can include normalized volume names, container names, labels, networks, environment references, and proxy configuration.
+
+Do not copy generated names back into the source definition unless the stack genuinely requires them. Review both views from **Configuration > General > Edit Compose File**.
+
+## Components belong to one stack
+
+Coolify shows each parsed Compose service as a component card under **Configuration > General**:
+
+- application components can have domains and proxy behavior
+- database components can have public proxy settings and supported backup controls
+- every component can show its image and container status
+
+The Service status aggregates its non-excluded components. An optional or one-time component can be excluded from the aggregate status from its **Advanced** settings.
+
+A component can be restarted separately, but **Deploy**, **Restart**, **Stop**, and **Pull Latest Images & Restart** act on the Service stack.
+
+## Networking
+
+Coolify creates a resource-specific Docker network for the Service. Components in the same Compose definition communicate by Compose service name and internal port.
+
+Coolify creates a shared Docker network named `coolify` on each connected server. Enable **Connect To Predefined Network** when the stack must privately communicate with resources on its predefined network, which is `coolify` for the default destination. Other Docker networks remain isolated, and the `coolify` network does not extend across servers.
+
+Use a domain for public HTTP traffic. Publish a host port only when an external client requires direct TCP or UDP access.
+
+Read [Service networking](/services/configuration/networking) for same-stack connections, the `coolify` network, other Docker networks, cross-server paths, domains, and published ports.
+
+## Configuration changes and redeployment
+
+Saving a value updates the Service definition. Changes that affect container configuration do not necessarily change a running container immediately.
+
+Deploy or restart the Service after changing:
+
+- the Compose definition or an image reference
+- environment variables
+- domains, ports, proxy behavior, or networks
+- persistent storage
+- component logging or status settings
+
+**Restart** recreates the stack without first pulling newer images. **Pull Latest Images & Restart** pulls the image tags stored in the current Compose definition, then recreates the stack.
+
+<Callout type="info" title="Template updates do not replace an existing Service">
+
+Coolify can refresh the template catalog used to create new resources. An existing one-click Service keeps its saved Compose definition. Review the upstream release and edit the Service definition when an upgrade requires new Compose settings, migrations, or image tags.
+
+</Callout>
+
+## Persistent data
+
+Containers are replaceable. Store required data in volumes, directories, file mounts, or external services declared by the Compose definition.
+
+Parsed mounts appear under **Configuration > Persistent Storages** for the component that uses them. For a Service, change Compose-owned mount definitions in **Edit Compose File**, not in the read-only storage view.
+
+## Control plane and Service server
+
+The Coolify instance stores configuration and coordinates operations. The connected server stores the Service configuration directory and runs its Docker resources.
+
+Already-running containers can continue operating while the Coolify control plane is unavailable, as long as Docker, the server, its networks, the proxy, and the containers remain healthy. New Coolify operations require the control plane to be available.
+
+## Continue learning
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Docker Compose',
+      href: '/services/configuration/docker-compose',
+      description: 'Edit the source definition and understand generated values.',
+      icon: BranchUp,
+    },
+    {
+      title: 'Configure a Service',
+      href: '/services/configuration/overview',
+      description: 'Find every stack and component configuration page.',
+      icon: Settings,
+    },
+    {
+      title: 'Operate Services',
+      href: '/services/operations/overview',
+      description: 'Use lifecycle actions, logs, terminal access, and maintenance controls.',
+      icon: Box2,
+    },
+  ]}
+/>

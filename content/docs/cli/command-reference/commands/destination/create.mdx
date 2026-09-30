@@ -1,0 +1,31 @@
+---
+title: "Create"
+description: "Create a destination for a server"
+---
+
+# Create
+
+Create a destination for a server
+
+## Usage
+
+```sh
+coolify destination create
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--name` | `string` | No | — | Destination name (defaults on the server) |
+| `--network` | `string` | Yes | — | Docker network name (required) |
+| `--server` | `string` | Yes | — | Server UUID (required) |
+| `--type` | `string` | No | — | Destination type: standalone or swarm |
+
+## Get current help
+
+```sh
+coolify destination create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

@@ -4,11 +4,11 @@ import { Resvg } from '@resvg/resvg-js';
 import { loader, multiple, source as createSource } from 'fumadocs-core/source';
 import { openapiPlugin, openapiSource } from 'fumadocs-openapi/server';
 import { getDocEntries, getDocSourceFiles } from './lib/content';
-import { getManifestKey } from '../src/lib/docs-manifest';
-import { openapi } from '../src/lib/openapi';
-import { preparePageTree } from '../src/lib/page-tree';
+import { openapi } from '../src/lib/config/openapi';
+import { getDocMarkdownPath, getDocOgPath } from '../src/lib/config/site';
+import { getManifestKey } from '../src/lib/docs/docs-manifest';
+import { preparePageTree } from '../src/lib/docs/page-tree';
 import { absoluteUrl, site } from './lib/site';
-import { getDocMarkdownPath, getDocOgPath } from '../src/lib/site';
 import { currentDirFromMetaUrl } from './lib/runtime-path';
 
 const currentDir = currentDirFromMetaUrl(import.meta.url);
@@ -170,7 +170,7 @@ async function writeDocsManifest() {
     multiple({
       docs: createSource({ metas, pages: sourcePages }),
       openapi: await openapiSource(openapi, {
-        baseDir: 'api-reference/api',
+        baseDir: 'api/endpoints',
         groupBy: 'tag',
       }),
     }),

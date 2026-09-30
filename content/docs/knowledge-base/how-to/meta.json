@@ -1,14 +1,7 @@
 {
   "title": "How-Tos",
   "pages": [
-    "migrate-apps-different-host",
-    "backup-restore-coolify",
-    "hetzner-loadbalancing",
-    "wordpress-multisite",
-    "raspberry-pi-os",
     "macos-colima",
-    "private-npm-registry",
-    "ollama-with-gpu",
     "webstudio-with-hetzner"
   ]
 }

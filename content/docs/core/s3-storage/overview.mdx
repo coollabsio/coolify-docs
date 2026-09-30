@@ -1,0 +1,61 @@
+---
+title: Overview
+description: Configure S3-compatible storage for Coolify backups with Amazon S3, Cloudflare R2, Supabase Storage, and other supported providers.
+---
+
+# S3 storage overview
+
+Coolify connects to S3-compatible storage for backup files. You create the bucket with a storage provider, then add its connection details to Coolify as an S3 storage.
+
+## Before you add S3 storage
+
+Create the bucket with your provider and collect these connection details:
+
+- Endpoint
+- Bucket name
+- Region
+- Access key
+- Secret key
+
+Coolify uses MinIO's [`mc` client](https://min.io/docs/minio/linux/reference/minio-mc.html) to transfer backup files. When you validate the storage, Coolify sends a `ListObjectsV2` request to the configured bucket.
+
+<Callout type="info" title="Create the bucket before validation">
+The bucket must already exist before you add and validate the storage in Coolify.
+</Callout>
+
+## Choose a storage provider
+
+These guides cover the complete provider setup and the values to enter in Coolify:
+
+| Provider | Provider setup | Guide |
+| :--- | :--- | :--- |
+| Amazon S3 | S3 bucket, IAM policy, IAM user, and access key | [Configure Amazon S3](/core/s3-storage/aws) |
+| Cloudflare R2 | R2 bucket and Object Read & Write API token | [Configure Cloudflare R2](/core/s3-storage/r2) |
+| Supabase Storage | Storage bucket, S3 endpoint, and access key pair | [Configure Supabase Storage](/core/s3-storage/supabase) |
+
+### Other supported providers
+
+Coolify also supports these S3-compatible storage providers:
+
+- DigitalOcean Spaces
+- MinIO
+- Backblaze B2
+- Scaleway Object Storage
+- Hetzner S3 Storage
+- Wasabi Hot Cloud Storage
+- Vultr
+- CloudPe Object Storage
+- IDrive e2
+
+Other providers may also work. If you successfully connect another provider, let the Coolify team know.
+
+## Add the storage to Coolify
+
+After you prepare the bucket and credentials:
+
+1. Open **S3 Storages** in the Coolify sidebar.
+2. Select **Add**.
+3. Enter the connection details supplied by your provider.
+4. Select **Validate Connection & Continue**.
+
+After validation succeeds, Coolify opens the storage details page. The S3 storage is then ready to select when you configure a backup.

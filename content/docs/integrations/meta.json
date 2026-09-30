@@ -1,8 +1,13 @@
 {
   "title": "Integrations",
+  "root": true,
   "pages": [
-    "cloudflare",
-    "mcp",
-    "external:[Crowdsec](https://www.crowdsec.net/blog/securing-automated-app-deployment-crowdsec-and-coolify)"
+    "---Networking---",
+    "networking/cloudflare/tunnels",
+    "---Security---",
+    "security/secret-managers",
+    "security/using-secret-managers",
+    "security/cloudflare/ddos-protection",
+    "external:[CrowdSec](https://www.crowdsec.net/blog/securing-automated-app-deployment-crowdsec-and-coolify)"
   ]
 }

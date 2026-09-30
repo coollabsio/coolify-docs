@@ -1,0 +1,102 @@
+---
+title: Cloud Load Balancing
+description: Put a provider-managed load balancer in front of an application deployed by Coolify to multiple servers.
+---
+
+import { Globe3, Server } from 'reicon-react';
+
+# Cloud load balancing
+
+A cloud load balancer accepts traffic for your public domain and forwards each request to one of your application servers. Health checks allow the load balancer to stop sending traffic to an instance that cannot serve requests.
+
+Coolify deploys and manages the application instances. You configure the load balancer, backend targets, TLS settings, health checks, DNS, and network rules with your infrastructure provider.
+
+## Before you begin
+
+- Complete [Multi-server Deployments](/core/infrastructure/scaling/multi-server-deployments) and verify the application on every server.
+- Create a health endpoint that returns a successful response when the instance is ready to receive traffic.
+- Decide whether the load balancer will connect directly to a mapped host port or through the Coolify Proxy on each server.
+- Put the load balancer and application servers on a private network when your provider supports one.
+- Decide where TLS terminates. A common setup terminates TLS at the cloud load balancer and sends HTTP traffic over a private network to the application servers.
+
+The examples below use `app.example.com` as the public domain, port `443` on the load balancer, and `/health` as the health-check path. Replace them with values for your application.
+
+## Choose how the load balancer reaches each server
+
+| <span className="inline-block min-w-40">Origin path</span> | Use when | Trade-off |
+| :--- | :--- | :--- |
+| <span className="whitespace-nowrap">Direct host port</span> | The load balancer serves one application or you want to bypass the proxy on each application server | Requires a host port mapping and strict firewall rules; host port mappings disable Coolify rolling updates for that application |
+| <span className="whitespace-nowrap">Coolify Proxy</span> | The application servers host several domains or you want Coolify-managed routing on each server | Adds one proxy hop and requires the load balancer to preserve the request host name |
+
+<Tabs id="load-balancer-origin-path" items={['Direct host port', 'Coolify Proxy']}>
+<Tab value="Direct host port" icon={Server}>
+
+Map the same host port on every application server. For example, `8080:3000` maps port `8080` on each server to port `3000` in the application container.
+
+1. Open **Configuration** > **General** for the application.
+2. Add the mapping to **Ports Mappings**.
+3. Remove the public domain from **Domains** because requests will bypass the Coolify Proxy.
+4. Redeploy the application and test `http://<server-address>:8080` from a network that can reach the server.
+5. Add each server address and port `8080` as a backend target in the load balancer.
+
+<Callout type="warning" title="Restrict the mapped port">
+A mapped host port can expose the application directly. Configure the provider firewall or server firewall so the port accepts traffic only from the load balancer or its private network.
+</Callout>
+
+</Tab>
+<Tab value="Coolify Proxy" icon={Globe3}>
+
+Keep the same HTTP domain on the application deployed to every server. The load balancer terminates public TLS, connects to port `80` on each server, and forwards the original `Host` header so the Coolify Proxy can select the correct route.
+
+1. Open **Configuration** > **General** for the application.
+2. Set **Domains** to the load-balanced domain with the `http://` scheme, such as `http://app.example.com`.
+3. Redeploy the application to every server.
+4. Add each server address and port `80` as a backend target in the load balancer.
+5. Configure the load balancer to preserve `Host: app.example.com` when it sends a request to an application server.
+
+Before adding the servers to the load balancer, test each proxy route from a network that can reach the server:
+
+```bash
+curl --header 'Host: app.example.com' http://<server-address>/health
+```
+
+Do not add a host port mapping for this path. The Coolify Proxy must receive the request and forward it to the application container over its Docker network.
+
+</Tab>
+</Tabs>
+
+## Configure the load balancer
+
+Create the load balancer with your infrastructure provider, then configure:
+
+1. A public listener on port `443` with a certificate for `app.example.com`.
+2. A backend pool containing every application server and the port selected above.
+3. An HTTP health check for `/health` on the same backend port. For the Coolify Proxy path, configure the health check to send `Host: app.example.com`.
+4. A forwarding policy or algorithm appropriate for your traffic.
+5. Optional sticky sessions only when the application cannot yet keep session state in a shared store.
+
+The exact labels vary by provider. Confirm that a healthy response adds the server to rotation and a failed response removes it.
+
+## Point DNS to the load balancer
+
+At your DNS provider, point `app.example.com` to the public address or hostname supplied by the load balancer. Do not point the public record at one of the application servers.
+
+Wait for the DNS change to propagate, then open `https://app.example.com` and confirm that the certificate is valid.
+
+## Verify traffic and failover
+
+1. Confirm that every backend target is healthy in the load balancer dashboard.
+2. Send several requests to `https://app.example.com` and check application logs on the servers to confirm that more than one instance receives traffic.
+3. Stop the application on one additional server from **Configuration** > **Servers**.
+4. Confirm that the load balancer marks that backend unhealthy and the public domain continues to respond through another server.
+5. Deploy the stopped server again and confirm that it returns to the healthy backend pool.
+
+## Operating considerations
+
+- Adding or removing an application server in Coolify does not update the cloud load balancer. Keep its backend pool in sync with the application's **Servers** page.
+- Store sessions, uploads, queues, caches, and other shared state outside the application containers.
+- Restrict backend ports to the load balancer and required administrative networks.
+- Monitor the public endpoint from outside your infrastructure as well as the individual servers.
+- Test a complete server failure, not only a stopped container, before relying on the setup for availability.
+
+For a provider-specific example, read [Load Balancing on Hetzner](/knowledge-base/hetzner-loadbalancing). For a custom Traefik configuration instead of a provider-managed load balancer, read [Traefik Load-balancing](/core/networking/proxy/traefik/load-balancing).

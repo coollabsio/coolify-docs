@@ -1,0 +1,120 @@
+---
+title: Set up MCP
+description: Enable Coolify MCP, create a team-scoped API token, and connect an MCP-compatible AI client.
+---
+
+# Set up MCP
+
+Set up Coolify MCP by enabling the instance endpoint, confirming team access, creating a token, and adding the endpoint to your AI client.
+
+## Before you begin
+
+- Use Coolify Cloud or a self-hosted Coolify instance with a public HTTPS URL.
+- On self-hosted Coolify, enable **API access** in **Settings > Configuration > Advanced**.
+- Choose the team whose resources the client must access.
+- Create an API token with the smallest required permissions. See [API tokens](/core/security/credentials/api-tokens).
+
+<Callout type="warning" title="Protect the token">
+An MCP client can use every operation allowed by its token. Store the token in the client's secret configuration, never commit it, and revoke it if exposed.
+</Callout>
+
+## Example values
+
+This guide uses Coolify Cloud in its examples. If you use a self-hosted Coolify instance, replace `app.coolify.io` with your instance's domain in every URL, and use your own token:
+
+<Callout type="info" title="Example data">
+
+- **Coolify URL:** `https://app.coolify.io`
+- **MCP endpoint:** `https://app.coolify.io/mcp`
+- **API token:** `67|abcthisisa123dummytoken`
+
+</Callout>
+
+<Steps>
+<Step>
+
+### Enable MCP
+
+<Callout type="info" title="Coolify Cloud">
+Coolify Cloud already has instance MCP enabled. Skip the Dashboard and API tabs, then continue to [Create an MCP token](#create-an-mcp-token). Team access remains enabled by default, but check team settings if a client receives `403`.
+</Callout>
+
+<Tabs items={['Dashboard', 'API']}>
+<Tab value="Dashboard">
+
+<ZoomImage src="/docs/images/mcp/enable-mcp.webp" alt="Coolify Advanced settings with MCP server enabled" />
+
+1. Open **Settings** in the sidebar.
+2. Select **Configuration**.
+3. Open **Advanced**.
+4. In **API and MCP**, set **MCP server** to **Enabled**.
+
+MCP must also be enabled in the current team's settings. Open team settings and set **MCP server** to **Enabled for this team**.
+
+</Tab>
+<Tab value="API">
+
+On a self-hosted instance, use a `root` API token to enable or disable the instance endpoint. Replace the example URL with your instance's domain:
+
+```sh
+export COOLIFY_URL="https://coolify.example.com"
+export COOLIFY_ROOT_TOKEN="67|abcthisisa123dummytoken"
+
+curl --fail-with-body --request POST \
+  --header "Authorization: Bearer $COOLIFY_ROOT_TOKEN" \
+  "$COOLIFY_URL/api/v1/mcp/enable"
+```
+
+The endpoint returns `MCP server enabled.`. Disable it with `POST /api/v1/mcp/disable`.
+
+These endpoints require a `root` token. A `read` or `write` token cannot change the instance MCP setting.
+
+</Tab>
+</Tabs>
+
+</Step>
+<Step>
+
+### Create an MCP token
+
+Create a token from **Keys & Tokens > API Tokens** while the required team is active.
+
+Coolify displays the complete token only once. Copy it into the client's secret configuration before leaving the API Tokens page.
+
+- Use `read` for inventory and inspection.
+- Add `read:sensitive` only for supported sensitive data or log summaries.
+- Add `deploy` for deploy, start, stop, restart, or cancel operations.
+- Do not use `root` for normal MCP clients.
+
+MCP endpoint URL:
+
+```txt
+https://app.coolify.io/mcp
+```
+
+</Step>
+<Step>
+
+### Connect a client
+
+Configure the client with:
+
+- **URL:** `https://app.coolify.io/mcp`
+- **Transport:** Streamable HTTP
+- **Authorization:** `Bearer 67|abcthisisa123dummytoken`
+
+Follow a client guide:
+
+- [Claude Code](/mcp/clients/claude-code)
+- [Cursor](/mcp/clients/cursor)
+- [Other MCP clients](/mcp/clients/other-clients)
+
+</Step>
+<Step>
+
+### Verify access
+
+Ask the client to call `get_current_team` or `get_infrastructure_overview`. The response should contain the team and resources associated with the token.
+
+</Step>
+</Steps>

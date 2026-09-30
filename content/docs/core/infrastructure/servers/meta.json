@@ -1,0 +1,18 @@
+{
+  "title": "Servers",
+  "pages": [
+    "overview",
+    "add-server",
+    "provision-cloud-server",
+    "manage-server",
+    "remove-server",
+    "openssh",
+    "firewall",
+    "non-root-user",
+    "build-servers",
+    "github-actions-runners",
+    "server-patching",
+    "automated-docker-cleanup",
+    "web-terminal"
+  ]
+}

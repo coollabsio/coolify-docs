@@ -1,0 +1,82 @@
+---
+title: Docker Registries
+description: Pull existing application images and push images built by Coolify to a Docker registry.
+---
+
+# Docker registries
+
+Coolify can pull an existing image for a Docker Image application or push an image created from application source.
+
+Registry authentication is stored by Docker for the server user Coolify uses to run Docker commands.
+
+## Pull an existing image
+
+Create a [Docker Image application](/applications/deployments/docker-image) and enter an image reference:
+
+```sh
+ghcr.io/example/api:1.4.0
+```
+
+You can also use a SHA256 digest:
+
+```sh
+ghcr.io/example/api@sha256:<digest>
+```
+
+A digest identifies fixed image content. A tag can resolve to different content after the registry publishes another image with the same tag.
+
+## Push an image built by Coolify
+
+Open **Configuration > General > Docker Registry**.
+
+| Field | Purpose |
+| :--- | :--- |
+| **Docker Image** | Registry and repository name, such as `ghcr.io/example/api`. Leaving it empty prevents Coolify from pushing the built image. |
+| **Docker Image Tag** | Optional additional tag. Coolify also tags the image with the source commit for Git-based builds. |
+
+Deploy the application and confirm the registry contains the expected image and tags.
+
+<span id="docker-credentials" />
+
+## Authenticate a private registry
+
+Connect to the deployment or build server through SSH as the user configured for that Coolify server, then authenticate:
+
+```bash
+docker login <registry-host>
+```
+
+For token-based authentication:
+
+```bash
+printf '%s' "$REGISTRY_TOKEN" | docker login <registry-host> --username <registry-user> --password-stdin
+```
+
+Docker stores the credentials for that server user. Repeat the authentication on every machine that must push or pull the private image.
+
+<Callout type="warning" title="Build servers require a shared registry path">
+
+A build server cannot run the completed application. Configure a registry image name and authenticate both the build server and deployment server so the first can push the image and the second can pull it.
+
+</Callout>
+
+## Use a registry with Docker Swarm
+
+Every manager and worker that can run the application must be able to resolve, reach, and authenticate with the registry.
+
+Coolify passes registry authentication to `docker stack deploy`, but the image still has to be available from the registry to every Swarm node. Test an image pull from each node before relying on the deployment.
+
+## Host a registry in Coolify
+
+Coolify includes a [Docker Registry one-click service](/services/docker-registry).
+
+The current template:
+
+- runs `registry:3`
+- creates a registry username and password through Coolify service variables
+- generates the htpasswd file when the service starts
+- stores images in the persistent `registry-data` volume
+
+Create the service, configure a public domain, then use the generated credentials with `docker login <registry-domain>` on each server that must push or pull images.
+
+Registry storage grows as images and tags are added. Include the `registry-data` volume in backups, configure retention outside Coolify, and review the upstream [storage-driver documentation](https://distribution.github.io/distribution/storage-drivers/) when the registry should use an external storage backend.

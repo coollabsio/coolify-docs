@@ -1,0 +1,84 @@
+---
+title: Coming from Managed Platforms
+description: Map managed deployment platform concepts to Coolify, Docker, and servers you control.
+---
+
+# Coming from managed platforms
+
+Managed platforms such as Vercel combine a deployment control plane, build infrastructure, runtime infrastructure, networking, and platform defaults.
+
+Coolify provides the deployment control plane and coordinates Docker on servers you connect. This gives you more infrastructure control, but it also makes server capacity, networking, data persistence, and recovery explicit responsibilities.
+
+## Map familiar concepts
+
+| Managed-platform concept | Coolify equivalent |
+| :--- | :--- |
+| Project or application | A resource inside a Coolify project and environment |
+| Git integration | A [Git source](/applications/sources/overview), [deploy key](/applications/sources/deploy-keys), or [public repository](/applications/sources/public-repositories) |
+| Framework preset | [Nixpacks](/applications/builds/nixpacks/overview) or [Railpack](/applications/builds/railpack) detection, or explicit build commands |
+| Build image | A [Docker image](/core/docker-and-containers#images-and-containers) created on the deployment server or a [build server](/core/infrastructure/servers/build-servers) |
+| Serverless or managed runtime | A [Docker container](/applications/how-applications-work) running on a server connected to Coolify |
+| Production domain | A [resource domain](/core/networking/domains) routed by the Coolify Proxy on the deployment server |
+| Preview URL | A [preview deployment](/applications/deployments/preview-deployments) with its own generated or configured domain |
+| Environment variables | [Resource variables](/applications/configuration/environment-variables) with build-time, runtime, and preview scopes |
+| Persistent data | A [volume or bind mount](/core/persistent-storage/storage-mounts/overview), database, or external storage service |
+| Platform logs | [Deployment logs and runtime container logs](/applications/operations/overview#logs-and-terminal) |
+| Instant rollback | A [rollback](/applications/deployments/rollbacks) to an image still retained on the deployment server |
+
+## What you must decide
+
+Use this order to plan the Coolify deployment before moving production traffic.
+
+<Steps>
+<Step>
+
+### Choose where the application runs
+
+Select a [server](/core/infrastructure/servers/overview) with enough CPU, memory, disk, and network capacity. A self-hosted installation starts with a **localhost** server that can run both Coolify and deployed resources. Coolify Cloud requires a connected or provisioned server for deployed resources.
+
+</Step>
+<Step>
+
+### Choose what Coolify deploys
+
+[Choose a deployment method](/applications/choose-deployment-method) that matches what you want to deploy. For a Git repository, use Nixpacks or Railpack for automatic framework detection, or choose Static, Dockerfile, or Docker Compose. Use Docker Image when another system already publishes the image.
+
+</Step>
+<Step>
+
+### Plan where data persists
+
+Identify uploads, generated files, and application state that must survive a deployment. Configure [persistent storage](/core/persistent-storage/storage-mounts/overview) or use an external data service instead of the writable container filesystem.
+
+</Step>
+<Step>
+
+### Plan how traffic reaches the application
+
+Identify the domain, DNS record, and internal port the application needs. The Coolify Proxy on the deployment server handles HTTP and HTTPS routing to that port.
+
+</Step>
+<Step>
+
+### Plan how the application recovers
+
+Decide how you will recover from a bad release, data loss, or server failure. A [rollback](/applications/deployments/rollbacks) can redeploy a retained application image, but it does not restore databases or persistent files. Keep separate backups for persistent data and document how to restore external dependencies.
+
+</Step>
+</Steps>
+
+## A safe migration sequence
+
+1. Deploy the application to Coolify without changing production DNS.
+2. Configure environment variables and external dependencies.
+3. Add persistent storage where the application writes important files.
+4. If the application provides a health endpoint, configure and verify a health check.
+5. Test the Coolify deployment through a temporary or generated domain.
+6. Point production DNS to the Coolify deployment server.
+7. Monitor runtime logs and keep the previous platform available until the Coolify deployment is confirmed stable.
+
+<Callout type="warning" title="Do not move stateful data during live writes">
+
+Stop writes or use the database or storage system's supported migration process before transferring persistent data. Copying a live data directory can produce an inconsistent result.
+
+</Callout>

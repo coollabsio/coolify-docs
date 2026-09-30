@@ -1,0 +1,188 @@
+---
+title: Non-root User
+description: Create a non-root SSH user and give it the access Coolify needs to manage a server.
+---
+
+# Use a non-root server user
+
+Coolify can connect to a server using an account other than `root`. This feature is experimental and still requires the account to run commands with passwordless `sudo`.
+
+<Callout type="warning" title="The account still has root-level access">
+The user created in this guide can run any command as `root` without entering a password. Use a dedicated account and SSH key only for Coolify.
+</Callout>
+
+This guide uses `cooluser` as the username. Replace `cooluser` with the username you want to use.
+
+---
+
+## Configure the non-root user
+
+<Steps>
+<Step>
+
+### Sign in as root
+
+Connect to the server as `root` using SSH or the server console.
+
+Keep this session open until Coolify successfully validates the new account.
+
+</Step>
+<Step>
+
+### Create the user
+
+Run the command for the server's operating system.
+
+<Tabs id="non-root-user-operating-system" items={['Ubuntu or Debian', 'RHEL compatible', 'SUSE', 'Arch Linux', 'Alpine Linux']}>
+<Tab value="Ubuntu or Debian">
+
+```sh
+useradd --create-home --user-group --shell /bin/bash cooluser
+```
+
+</Tab>
+<Tab value="RHEL compatible">
+
+Use this for CentOS, RHEL, Rocky Linux, AlmaLinux, Fedora, Amazon Linux, Oracle Linux, or TencentOS.
+
+```sh
+useradd --create-home --user-group --shell /bin/bash cooluser
+```
+
+</Tab>
+<Tab value="SUSE">
+
+```sh
+useradd --create-home --user-group --shell /bin/bash cooluser
+```
+
+</Tab>
+<Tab value="Arch Linux">
+
+```sh
+useradd --create-home --user-group --shell /bin/bash cooluser
+```
+
+</Tab>
+<Tab value="Alpine Linux">
+
+```sh
+adduser -D -s /bin/ash cooluser
+```
+
+</Tab>
+</Tabs>
+
+Confirm that the account exists:
+
+```sh
+id cooluser
+```
+
+The command should print the user's ID and group information.
+
+</Step>
+<Step>
+
+### Open the Coolify dashboard
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/private-keys/private-keys-page.webp" alt="Private Keys page with the Add button in Coolify" />
+
+1. Select **Keys & Tokens** in the sidebar.
+2. Select **Private Keys**.
+3. Select **+ Add**.
+
+</Step>
+<Step>
+
+### Generate the SSH key
+
+<ZoomImage src="/docs/images/core/infrastructure/servers/private-keys/new-private-key-form.webp" alt="New Private Key form in Coolify" />
+
+1. Select **Generate new ED25519 SSH Key**.
+2. Enter a name such as `cooluser-key`.
+3. Copy the complete value shown in **Public Key**.
+4. Select **Continue** to save the key.
+
+Do not add a passphrase to the private key. Coolify must use it without an interactive prompt.
+
+</Step>
+<Step>
+
+### Add the key to the new user
+
+Back in the root session on the server, run:
+
+```sh
+install -d -m 700 -o cooluser -g cooluser /home/cooluser/.ssh
+nano /home/cooluser/.ssh/authorized_keys
+```
+
+Paste the public key on a new line and save the file. Then run:
+
+```sh
+chown cooluser:cooluser /home/cooluser/.ssh/authorized_keys
+chmod 600 /home/cooluser/.ssh/authorized_keys
+```
+
+</Step>
+<Step>
+
+### Allow passwordless sudo
+
+Make sure the `sudo` command is installed, then run these commands as `root`:
+
+```sh
+echo 'cooluser ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/cooluser
+chmod 440 /etc/sudoers.d/cooluser
+```
+
+Check that the new user can use `sudo` without a password:
+
+```sh
+su - cooluser -c 'sudo -n whoami'
+```
+
+The command should print `root` without asking for a password.
+
+</Step>
+<Step>
+
+### Prepare the Coolify data directory
+
+Coolify stores application, database, service, proxy, and certificate files under `/data/coolify` on the server.
+
+Create the directory and give the non-root user ownership:
+
+```sh
+mkdir -p /data/coolify
+chown -R cooluser:cooluser /data/coolify
+chmod -R o-rwx /data/coolify
+```
+
+The `cooluser` user can now manage files under `/data/coolify`. Coolify applies the same ownership pattern when it creates additional directories for a non-root server user.
+
+</Step>
+<Step>
+
+### Continue to Add Server
+
+Follow [Connect the server](/core/infrastructure/servers/add-server#connect-the-server) to add and validate the server.
+
+When you complete the server form:
+
+- Enter `cooluser` in **User**.
+- Select the private key whose public key you added to `/home/cooluser/.ssh/authorized_keys`.
+- Skip the key-creation steps in that guide because the key is already configured.
+
+After validation, the server's **General** page should report **Server is reachable and validated**.
+
+If validation fails:
+
+- Run `su - cooluser -c 'sudo -n true'` again. A password prompt means the sudo rule is incorrect.
+- Confirm the public key is in `/home/cooluser/.ssh/authorized_keys`.
+- Confirm **User** is `cooluser` in Coolify.
+- Check the [OpenSSH](/core/infrastructure/servers/openssh) settings and [firewall](/core/infrastructure/servers/firewall) rule for the SSH port.
+
+</Step>
+</Steps>

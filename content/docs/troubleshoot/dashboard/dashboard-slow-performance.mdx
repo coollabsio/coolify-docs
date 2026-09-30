@@ -7,14 +7,20 @@ description: Resolve slow Coolify dashboard loading by disabling Cloudflare Rock
 
 If your Coolify dashboard loads very slow or some pages don't load at all, this might be the guide for you.
 
-## 1. Determine Your Domain Setup
+<Steps>
+<Step>
+
+### Determine Your Domain Setup
 
 First, ask yourself: **Are you using a domain whose DNS is managed by Cloudflare?**
 
 - **Yes:** The issue is likely due to Cloudflare's [Rocket Loader](https://developers.cloudflare.com/speed/optimization/content/rocket-loader/) feature.
 - **No:** The slowdown might be caused by your server or another factor.
 
-## 2. Test with Your Server's IP Address
+</Step>
+<Step>
+
+### Test with Your Server's IP Address
 
 ### A. Open Your Firewall Port
 
@@ -29,7 +35,10 @@ First, ask yourself: **Are you using a domain whose DNS is managed by Cloudflare
   - If the dashboard feels fast and all pages load correctly, the issue is most likely with Cloudflare [Rocket Loader](https://developers.cloudflare.com/speed/optimization/content/rocket-loader/).
   - If performance doesn't improve, the problem could be related to your server's location or your internet speed.
 
-## 3. Addressing Cloudflare Rocket Loader
+</Step>
+<Step>
+
+### Addressing Cloudflare Rocket Loader
 
 If the dashboard is fast via your server IP but slow through your custom domain, try this:
 
@@ -43,12 +52,18 @@ If the dashboard is fast via your server IP but slow through your custom domain,
   - Switch the toggle for **Rocket Loader** to **Off**.
 - **Wait:** Allow a few minutes for the changes to take effect, then visit your Coolify dashboard using your domain.
 
-## 4. Getting Further Assistance
+</Step>
+<Step>
+
+### Getting Further Assistance
 
 If none of these steps work:
 
 - **Community Help:** Join our [Discord community](https://coolify.io/discord) and post in the support forum channel.
 - **What to Share:** Provide a screen recording of the issue you're experiencing and a description of the steps you’ve already tried.
+
+</Step>
+</Steps>
 
 ## Summary of Common Issues
 

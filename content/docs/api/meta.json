@@ -1,0 +1,18 @@
+{
+  "title": "API Reference",
+  "root": true,
+  "pages": [
+    "---Get Started---",
+    "overview",
+    "making-requests",
+    "---Access & Security---",
+    "authorization",
+    "permissions",
+    "ip-allowlist",
+    "---Requests & Responses---",
+    "rate-limits",
+    "errors",
+    "---Endpoints---",
+    "...endpoints"
+  ]
+}

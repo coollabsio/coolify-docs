@@ -1,0 +1,250 @@
+---
+title: Security Model
+description: Understand Coolify's security boundary, built-in controls, and the infrastructure and workloads you must secure.
+---
+
+import {
+  ArrowsRight,
+  CloudStorage,
+  Database,
+  Globe3,
+  Key2,
+  Rocket2,
+  SecuritySafe2,
+  Server,
+  Settings,
+  ShieldSecurity2,
+  Warning22,
+} from 'reicon-react';
+
+# Security model
+
+Coolify is a privileged control plane: the administrative layer that stores credentials and connects to servers over SSH so it can deploy and manage Docker resources on your infrastructure.
+
+Coolify protects access to its own controls and authenticates supported API and webhook requests. You remain responsible for the security of every server, application, database, network, and backup you control.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Treat administrative access to Coolify as privileged infrastructure access. Protect Coolify accounts, API tokens, instance data, and SSH keys with the same care as direct server access.
+
+Coolify Cloud changes who operates the Coolify instance. It does not transfer responsibility for the connected servers, applications, databases, and services you provide.
+
+</CoolCallout>
+
+---
+
+## Security boundary
+
+Coolify supplies security controls for the management layer. Those controls do not replace host hardening, application security, or an incident response plan.
+
+<CoolCompare
+  id="coolify-security-boundary"
+  className="not-prose"
+  icon={ShieldSecurity2}
+  title="Who secures each layer"
+  description="This boundary applies to self-hosted Coolify and Coolify Cloud. If you self-host, you also operate and secure the Coolify instance itself."
+>
+<CoolCompareColumn
+  title="Coolify provides"
+  items={[
+    'Dashboard authentication, optional two-factor authentication, OAuth sign-in, and team-based access controls',
+    'Authenticated API access with team-scoped tokens, selected permissions, expiration, and optional source-IP restrictions',
+    'Encrypted database storage for supported credentials, private keys, environment values, and integration secrets',
+    'Signature or token verification for supported Git provider webhooks',
+    'Server-local proxy routing and HTTPS certificate automation for configured domains',
+  ]}
+/>
+<CoolCompareColumn
+  title="You remain responsible for"
+  items={[
+    'Who can register, join teams, receive elevated roles, and create or use API tokens',
+    'Operating system and Docker updates, SSH access, firewall rules, and provider network controls',
+    'Application code, dependencies, container images, runtime permissions, and public endpoints',
+    'DNS, external load balancers, content delivery networks, web application firewalls, and any ports exposed outside the server',
+    'Secret rotation, workload data, backups, restore testing, monitoring, and incident response',
+  ]}
+/>
+</CoolCompare>
+
+For Coolify Cloud, the Coolify team operates the Coolify control plane. You still secure your account, API tokens, connected servers, deployed resources, and workload data.
+
+---
+
+## Security controls in Coolify
+
+The built-in controls cover four parts of control-plane security.
+
+<CoolIconCardGrid
+  surface
+  cards={[
+    {
+      title: 'Account access',
+      description: 'Email and password sign-in, optional OAuth and 2FA, team membership, and roles control dashboard access.',
+      icon: SecuritySafe2,
+    },
+    {
+      title: 'API automation',
+      description: 'API tokens belong to a team and carry selected permissions and an optional expiration date.',
+      icon: Key2,
+    },
+    {
+      title: 'Stored credentials',
+      description: 'Coolify encrypts supported values such as SSH private keys, environment values, provider tokens, and database passwords before storing them in its database.',
+      icon: Database,
+    },
+    {
+      title: 'Deployment triggers',
+      description: 'Supported Git provider webhooks are checked with a signature or shared token before a matching deployment is queued.',
+      icon: Rocket2,
+    },
+  ]}
+/>
+
+On self-hosted instances, **Settings > Configuration > Advanced** also lets you disable API access or restrict it to specific IP addresses and CIDR ranges. Create and revoke tokens under **Keys & Tokens > API Tokens**.
+
+Read [API tokens](/core/security/credentials/api-tokens) for the available token permissions and request format.
+
+These controls reduce risk in the paths Coolify manages. They do not replace security reviews, dependency updates, or runtime protections inside your applications.
+
+---
+
+## Protect the Coolify control plane
+
+The control plane holds the access needed to coordinate deployments. A weakness at this layer can affect every connected server that trusts it.
+
+<CoolCallout type="warning" icon={Warning22} title="A compromised control plane can reach connected servers">
+
+Coolify stores SSH private keys and uses them to run commands on connected servers. An attacker who gains sufficient administrative access to the Coolify instance can use the same management paths.
+
+Restrict administrative access. If you self-host Coolify, install supported updates and protect the instance database, `/data/coolify/source/.env`, backups, and SSH key storage.
+
+</CoolCallout>
+
+### Secure account access
+
+- Keep **Registration Allowed** disabled unless you intentionally allow people to create accounts.
+- Enable two-factor authentication for every account with elevated access and store recovery codes safely.
+- Give team members the lowest role they need, then remove access when it is no longer required.
+- Configure OAuth or SSO with trusted identity providers and limit who the provider allows to sign in.
+
+### Limit API and integration access
+
+- Enable **API Access** only when an integration needs it.
+- Restrict **Allowed IPs for API Access** on a self-hosted instance whenever the callers have predictable source addresses.
+- Give each integration its own token with only the permissions it needs and an appropriate expiration date.
+- Revoke unused or exposed tokens, then replace them in every integration that used them.
+
+### Protect encrypted data and recovery material
+
+Coolify encrypts supported credentials before storing them in its database. On a self-hosted instance, the `APP_KEY` in `/data/coolify/source/.env` is the key used for that encryption.
+
+A database backup does not include the environment file. Save the `APP_KEY` separately in a password manager or another secure location outside the Coolify server, and keep it with the recovery material for that instance. Without the matching key, Coolify cannot read encrypted credentials from a restored database.
+
+Follow [Back up Coolify](/core/backup-and-recovery/instance-backup) for the exact backup and `APP_KEY` procedure.
+
+### Keep the control plane recoverable
+
+For self-hosted Coolify, install supported updates, keep instance backups outside the server, and test the [instance restore procedure](/core/backup-and-recovery/instance-restore). Coolify Cloud handles control-plane updates and backups, but you still need a recovery plan for the workloads on your servers.
+
+---
+
+## Protect connected servers and workloads
+
+Coolify automates work on connected servers; it does not become the security boundary for those servers or the resources running on them.
+
+### Harden each server
+
+- Keep the operating system, Docker Engine, and the Coolify proxy running on the server updated.
+- Use a dedicated SSH key for Coolify and restrict who can use the corresponding server account.
+- Restrict inbound SSH in the provider firewall or security group and in the host firewall when your network setup allows it.
+- Open only the ports required by the Coolify proxy and the resources you intentionally expose.
+- Monitor host availability, disk usage, authentication activity, and unexpected container changes.
+
+Coolify's automated SSH connection must work without an interactive prompt. Follow the [OpenSSH guide](/core/infrastructure/servers/openssh) when configuring the server account and key.
+
+### Control network exposure
+
+Application traffic goes to the proxy on the server running the resource. Secure the firewall, DNS, and any external load balancer, content delivery network, or web application firewall in front of that server.
+
+Keep databases and internal services on Docker networks unless they require public access. Publishing a host port creates a direct network path that does not depend on domain-based proxy routing, so expose one only when a trusted client needs that connection.
+
+Read [Networking in Coolify](/core/networking-in-coolify) for the traffic and Docker network model.
+
+### Secure applications and data
+
+- Review the source repository, container image, Dockerfile, and Docker Compose configuration before deployment.
+- Keep application dependencies and base images updated.
+- Implement authentication, authorization, validation, rate limiting, and logging inside the application where required.
+- Back up application and database data independently from the Coolify control-plane backup, then test recovery.
+
+Docker separates workloads into containers and networks, but that isolation does not replace host hardening or application-level security.
+
+---
+
+## Security baseline for production
+
+Review this baseline before placing production workloads on a connected server:
+
+1. Serve the Coolify dashboard over HTTPS and restrict who can reach it when possible.
+2. Disable public registration unless it is required, enable 2FA, and review team roles.
+3. Keep API access disabled unless needed; otherwise, restrict source IPs and issue separate least-privilege tokens.
+4. Use a dedicated SSH key, harden SSH, patch the server, and allow only required firewall ports.
+5. Review deployment sources, environment values, volume mounts, and every publicly exposed port.
+6. Back up workload data. For self-hosted Coolify, also back up the instance database and save its `APP_KEY` separately.
+7. Configure monitoring and alerts, document how to revoke access, and test restore procedures before an incident.
+
+Security is an ongoing operational responsibility. Repeat this review when you add a server, grant access, expose a new service, or change an integration.
+
+---
+
+## Where to go next
+
+Use the detailed guides to apply the security model to your Coolify instance and connected servers.
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Review instance settings',
+      href: '/core/instance-management/instance-settings',
+      description: 'Configure registration, API access, source-IP restrictions, OAuth, updates, and other self-hosted instance controls.',
+      icon: Settings,
+    },
+    {
+      title: 'Back up Coolify',
+      href: '/core/backup-and-recovery/instance-backup',
+      description: 'Protect the self-hosted control-plane database and save the matching APP_KEY outside the server.',
+      icon: CloudStorage,
+    },
+    {
+      title: 'Review networking',
+      href: '/core/networking-in-coolify',
+      description: 'Understand proxy traffic, Docker networks, public ports, and infrastructure-level responsibilities.',
+      icon: Globe3,
+    },
+  ]}
+  groups={[
+    {
+      title: 'Access and automation',
+      description: 'Configure the people and integrations that can operate Coolify.',
+      icon: Key2,
+      links: [
+        { title: 'API tokens', href: '/core/security/credentials/api-tokens' },
+        { title: 'SSH keys', href: '/core/security/credentials/ssh-keys' },
+        { title: 'OAuth', href: '/core/security/authentication/oauth/overview' },
+        { title: 'SSO', href: '/core/security/authentication/sso/overview' },
+        { title: '2FA', href: '/core/security/authentication/2fa' },
+        { title: 'Terminal access', href: '/core/infrastructure/servers/web-terminal' },
+      ],
+    },
+    {
+      title: 'Server and data protection',
+      description: 'Harden server access and prepare the data recovery paths you depend on.',
+      icon: Server,
+      links: [
+        { title: 'OpenSSH', href: '/core/infrastructure/servers/openssh' },
+        { title: 'Database SSL', href: '/databases/ssl' },
+        { title: 'Restore a Coolify instance', href: '/core/backup-and-recovery/instance-restore' },
+      ],
+    },
+  ]}
+/>

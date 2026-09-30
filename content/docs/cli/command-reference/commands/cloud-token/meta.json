@@ -1,0 +1,11 @@
+{
+  "title": "Cloud Token",
+  "pages": [
+    "create",
+    "delete",
+    "get",
+    "list",
+    "update",
+    "validate"
+  ]
+}

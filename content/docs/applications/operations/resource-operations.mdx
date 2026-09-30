@@ -1,0 +1,117 @@
+---
+title: Resource Operations
+description: Clone an application to another destination or move it between projects and environments.
+---
+
+# Clone or move an application
+
+**Configuration > Resource Operations** provides two different placement actions:
+
+- **Clone Resource** creates another application on a selected server and network destination.
+- **Move Resource** changes which project and environment contain the existing application.
+
+Neither action moves an application to another Coolify instance. Follow [Migrate an application](/applications/operations/migrate-between-instances) for that process.
+
+<Tabs id="application-resource-operation" items={['Clone resource', 'Move resource']}>
+<Tab value="Clone resource">
+
+A clone copies the application configuration into a new, stopped application. The source application continues running and is not changed.
+
+<Callout type="warning" title="Cloning does not copy stored application data">
+
+Coolify copies storage definitions, but it does not copy the files inside Docker volumes, bind mounts, or directories through this application workflow. Databases and other external state also remain separate.
+
+Plan how to copy required state before deploying the clone.
+
+</Callout>
+
+The cloned configuration includes application settings, environment variables, preview variables, storage definitions, scheduled tasks, tags, and preview records. Review every copied value before deployment, especially domains, secrets, server paths, and external dependency addresses.
+
+<Steps>
+<Step>
+
+### Prepare the destination
+
+Confirm that the destination server is validated, can host resources, and has the required network destination. Build servers cannot be selected because they do not host running resources.
+
+Configure any repository, registry, proxy, DNS, and external-service access required by the application on that server.
+
+</Step>
+<Step>
+
+### Open Clone Resource
+
+Open the application and select **Configuration > Resource Operations**. Under **Clone Resource**, choose **Select Server**.
+
+</Step>
+<Step>
+
+### Select the network destination
+
+Choose **Select Network Destination** for the selected server, then select **Clone Resource**.
+
+Coolify creates a stopped application in the current project and environment with a name beginning with `clone-of-`.
+
+</Step>
+<Step>
+
+### Review the clone
+
+Before deploying, review:
+
+- the domain and proxy labels, so the clone does not compete with the source application
+- production and preview environment variables
+- source or registry access from the destination server
+- persistent-storage names and source paths
+- scheduled tasks, so the clone does not run duplicate recurring work unexpectedly
+- database, cache, queue, storage, and callback addresses
+
+Copy or restore required persistent data separately. A bind-mount path copied from the source configuration must exist on the destination server with the expected files and permissions.
+
+</Step>
+<Step>
+
+### Deploy and verify the clone
+
+Deploy the cloned application with a temporary domain. Verify the image, health check, logs, storage, dependencies, and critical application flow before assigning production traffic.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Move resource">
+
+Move the application when it belongs in another project or environment on the same Coolify instance. The application keeps its server, network destination, configuration, domain, and running containers.
+
+Use **Clone Resource** instead when the application must run on another server or network destination.
+
+<Steps>
+<Step>
+
+### Choose the target location
+
+Open **Configuration > Resource Operations**. Under **Move Resource**, choose **Select Target Project**.
+
+Select **Select Target Environment**. Coolify excludes the application's current environment from the available targets.
+
+</Step>
+<Step>
+
+### Move the resource
+
+Select **Move Resource**. Coolify changes the application's project and environment without stopping the running application.
+
+</Step>
+<Step>
+
+### Verify the new location
+
+Confirm that the application appears in the selected project and environment. Open its domain and logs to confirm that the existing runtime remains available.
+
+Review project- or environment-level expectations outside the application, such as team conventions, related resources, and automation that uses the old dashboard path.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>

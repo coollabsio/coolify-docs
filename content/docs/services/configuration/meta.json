@@ -1,0 +1,11 @@
+{
+  "title": "Configuration",
+  "pages": [
+    "overview",
+    "general",
+    "networking",
+    "docker-compose",
+    "environment-variables",
+    "persistent-storage"
+  ]
+}

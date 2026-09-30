@@ -1,0 +1,254 @@
+---
+title: Health Checks
+description: Configure HTTP or command health checks in Coolify, a Dockerfile, or Docker Compose.
+keywords: ["Healthchecks", "No available server", "404", "503"]
+---
+
+import { Code, Globe3, Layers } from 'reicon-react';
+
+# Health checks
+
+A health check tells Docker and Coolify whether an application container is ready. Health checks are optional, but they provide a readiness signal for deployments and rolling replacement.
+
+This routing behavior applies only when Coolify Proxy uses Traefik. When application health checks are enabled, Traefik removes unhealthy containers from routing. If every application container is unhealthy, Traefik can return `404 Not Found` or `No available server` instead of forwarding the request.
+
+## Choose where to define the check
+
+| Location | Use it for | Availability |
+| :--- | :--- | :--- |
+| **Configuration > Healthcheck** | Configure an HTTP request or a command without changing the image definition. | Nixpacks, Railpack, Static, Dockerfile, and Docker Image applications. |
+| Dockerfile `HEALTHCHECK` | Keep the check with the image and use it anywhere the image runs. | Any image built from a Dockerfile. |
+| Docker Compose `healthcheck` | Configure a separate check for each service in a Compose application. | Docker Compose applications and user-defined Services. |
+
+Docker Compose applications do not use the standard application **Healthcheck** page. Define the check in each service's Dockerfile or in the Compose definition.
+
+For a non-Compose Dockerfile application, Coolify detects the image's `HEALTHCHECK` and uses it instead of adding the health check configured in the dashboard. Remove the Dockerfile instruction and redeploy before switching that application to a Coolify-managed check.
+
+<span id="configure-health-checks" />
+
+## Configure a health check in Coolify
+
+Open the application, select **Configuration > Healthcheck**, then choose **HTTP** or **CMD** under **Type**.
+
+<Callout type="warning" title="HTTP checks require curl or wget inside the container">
+
+Coolify runs dashboard-configured HTTP checks from inside the application container. The final application image must contain `curl` or `wget`; installing either command only on the deployment server is not enough. Without one of them, the HTTP check fails and Docker marks the container unhealthy.
+
+</Callout>
+
+<Tabs id="application-healthcheck-types" items={['HTTP', 'CMD']}>
+<Tab value="HTTP" icon={Globe3}>
+
+Choose HTTP when the application exposes an endpoint that reports whether it is ready to receive requests.
+
+<Steps>
+<Step>
+
+### Create a readiness endpoint
+
+Add an endpoint such as `/health` to the application. It should return success only when the process is ready, remain lightweight, and avoid changing application data.
+
+</Step>
+<Step>
+
+### Configure the request
+
+Enter:
+
+- **Method**: `GET` or `POST`
+- **Scheme**: `http` or `https`
+- **Host**: normally `localhost`
+- **Port**: the port used inside the container; when empty, Coolify uses the first value from **Ports Exposes**
+- **Path**: the readiness path, such as `/health`
+
+For a static application, Coolify uses port `80`.
+
+</Step>
+<Step>
+
+### Verify the container has an HTTP client
+
+Open the application's **Terminal** and confirm that the running container contains at least one supported client:
+
+```sh
+command -v curl || command -v wget
+```
+
+Use `curl` when the check depends on the selected HTTP method. The generated `wget` fallback performs its normal request behavior.
+
+</Step>
+<Step>
+
+### Test the endpoint
+
+Open the application's **Terminal** and run the same internal request:
+
+```sh
+curl --fail http://localhost:3000/health
+```
+
+Replace `3000` and `/health` with the values entered in the health-check form. The command should exit with code `0`.
+
+</Step>
+</Steps>
+
+<Callout type="info" title="Current response validation">
+
+The generated HTTP check currently uses the `curl` or `wget` exit status to determine health. Although **Return Code** and **Response Text** appear in the form, the generated check does not compare the response against those two fields.
+
+</Callout>
+
+</Tab>
+<Tab value="CMD" icon={Code}>
+
+Choose CMD when a local process, file, socket, or dependency can provide a better readiness signal than an HTTP endpoint.
+
+<Steps>
+<Step>
+
+### Choose a command
+
+Use a command that exists inside the application container and exits with code `0` only when the application is ready.
+
+For PostgreSQL tooling:
+
+```sh
+pg_isready -U postgres
+```
+
+For a Node.js application with a health-check script included in the image:
+
+```sh
+node healthcheck.js
+```
+
+</Step>
+<Step>
+
+### Enter the command
+
+Select **CMD**, then enter the command under **Command**.
+
+The command can contain letters, numbers, spaces, and safe argument characters. Shell operators and substitutions such as `;`, `|`, `&`, `$()`, `>`, and `<` are not allowed. Put multi-step logic in a script inside the image, then run that script from **Command**.
+
+</Step>
+<Step>
+
+### Test the command
+
+Open the application's **Terminal**, run the exact command, then check its exit code:
+
+```sh
+pg_isready -U postgres
+echo $?
+```
+
+The result must be `0` when the application is ready and non-zero when it is not ready.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+### Configure timing
+
+These settings apply to both HTTP and CMD checks:
+
+| Setting | Behavior |
+| :--- | :--- |
+| **Interval (s)** | Time between health-check attempts. Must be at least one second. |
+| **Timeout (s)** | Maximum time allowed for one attempt. Must be at least one second. |
+| **Retries** | Consecutive failed attempts required before Docker marks the container unhealthy. Must be at least one. |
+| **Start Period (s)** | Startup period before failures count toward the retry limit. |
+
+Give slow-starting applications enough **Start Period (s)** to complete migrations, cache loading, or other required initialization.
+
+### Save and enable the check
+
+Select **Save**, then select **Enable Healthcheck**.
+
+If the application is already running, restart or redeploy it so Coolify recreates the container with the health-check configuration. Disabling a check also requires the container configuration to be recreated before Docker stops running it.
+
+## Define the check with the application
+
+Keep a health check in the Docker configuration when it should travel with the image or Compose service instead of being owned by one Coolify application.
+
+<Tabs id="healthcheck-code-definitions" items={['Dockerfile', 'Docker Compose']}>
+<Tab value="Dockerfile" icon={Code}>
+
+Add a `HEALTHCHECK` instruction after installing the command used by the check:
+
+```dockerfile
+FROM node:22-alpine
+
+RUN apk add --no-cache curl
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY . .
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD curl --fail http://localhost:3000/health || exit 1
+
+CMD ["npm", "start"]
+```
+
+The command runs inside containers created from the image. It must use the internal listening port, and every binary referenced by `HEALTHCHECK` must be installed in the final image stage.
+
+For a non-Compose Dockerfile application, Coolify detects this instruction and does not add its dashboard-configured health check to the generated container definition.
+
+</Tab>
+<Tab value="Docker Compose" icon={Layers}>
+
+Add `healthcheck` to each service that needs a readiness signal:
+
+```yaml
+services:
+  api:
+    build: .
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  worker:
+    build: ./worker
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+```
+
+Each command runs inside its own service container. The `api` image must contain `curl`, and the `worker` image must contain `healthcheck.js` at the working-directory path used by the command.
+
+A Compose `healthcheck` overrides the image's Dockerfile `HEALTHCHECK` for that service. Omit the Compose block when the service should inherit the check from its image.
+
+Read [Docker Compose health checks](/applications/builds/docker-compose#health-checks) for Compose-specific behavior, including one-time services.
+
+</Tab>
+</Tabs>
+
+## Health checks and rolling updates
+
+During an application-level rolling update, a health check lets Coolify wait for the new container before removing the currently running container. If the replacement fails its check, Coolify can remove it and keep the healthy version running.
+
+Rolling replacement also depends on container naming, networking, and port settings. Read [Rolling updates](/applications/deployments/rolling-updates) before depending on zero-downtime replacement.
+
+## Troubleshoot a failed check
+
+1. Open the application's **Terminal**.
+2. Run the same request or command used by the health check.
+3. Confirm the binary exists inside the container.
+4. Confirm the check uses the internal container port rather than a public or host-mapped port.
+5. Inspect **Logs** for startup or dependency failures.
+
+Follow [No available server](/troubleshoot/applications/no-available-server) when Traefik has no healthy target.

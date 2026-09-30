@@ -1,0 +1,93 @@
+---
+title: GitLab
+description: Configure GitLab.com or self-managed GitLab OAuth sign-in for Coolify with a read-user application.
+---
+
+# Configure GitLab OAuth
+
+Create a GitLab OAuth application so Coolify can read the authenticated user's profile and email address. The same Coolify provider card supports GitLab.com and self-managed GitLab.
+
+<Callout type="warning" title="Example data">
+Replace these values while following the guide:
+
+- **Coolify callback:** `https://coolify.shadowarcanist.com/auth/gitlab/callback`
+- **GitLab.com Base URL:** leave empty
+- **Self-managed Base URL:** `https://gitlab.shadowarcanist.com`
+</Callout>
+
+## Set up GitLab OAuth
+
+<Steps>
+<Step>
+
+### Open GitLab applications
+
+Sign in to GitLab, open your avatar menu, select **Edit profile**, then open **Access > Applications**.
+
+On a self-managed instance, an administrator can create an instance-wide application instead when organizational ownership is required. Follow GitLab's [OAuth provider documentation](https://docs.gitlab.com/integration/oauth_provider/) for the applicable application location.
+
+</Step>
+<Step>
+
+### Create the OAuth application
+
+Select **Add new application** and enter:
+
+| GitLab field | Value |
+| :--- | :--- |
+| **Name** | A recognizable name such as `Coolify`. |
+| **Redirect URI** | `https://coolify.shadowarcanist.com/auth/gitlab/callback` |
+| **Confidential** | Enabled. Coolify stores and uses a client secret. |
+| **Scopes** | Select `read_user`. |
+
+Save the application.
+
+</Step>
+<Step>
+
+### Save the GitLab credentials
+
+Copy the **Application ID** and **Secret** from the created application.
+
+Store the secret securely. If GitLab no longer shows the complete value, create or rotate the secret before continuing.
+
+</Step>
+<Step>
+
+### Configure GitLab in Coolify
+
+Open **Settings > OAuth** and find **GitLab**.
+
+| Coolify field | GitLab value |
+| :--- | :--- |
+| **Client ID** | The GitLab **Application ID**. |
+| **Client Secret** | The GitLab application **Secret**. |
+| **Redirect URI** | `https://coolify.shadowarcanist.com/auth/gitlab/callback` |
+| **Base URL** | Leave empty for GitLab.com. For self-managed GitLab, enter only its origin, such as `https://gitlab.shadowarcanist.com`. |
+
+Select **Save**, then turn on **Enabled** for GitLab.
+
+</Step>
+<Step>
+
+### Verify GitLab sign-in
+
+Open the Coolify login page in a private browser window and select **Login with GitLab**. Approve the application if requested, then confirm that Coolify opens the account matching the GitLab email address.
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions type="multiple">
+<Accordion title="A self-managed GitLab redirects to GitLab.com">
+
+Set **Base URL** to the self-managed GitLab origin. Do not include `/oauth/authorize`, `/api`, or a trailing application path.
+
+</Accordion>
+<Accordion title="GitLab rejects the callback">
+
+Confirm that GitLab and Coolify contain the exact `https://coolify.shadowarcanist.com/auth/gitlab/callback` value and that the application is confidential with the `read_user` scope.
+
+</Accordion>
+</Accordions>

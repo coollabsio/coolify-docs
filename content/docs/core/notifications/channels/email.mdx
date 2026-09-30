@@ -1,0 +1,156 @@
+---
+title: Email
+description: Configure Coolify email notifications with hosted email, self-hosted instance-wide transactional email, SMTP, or Resend.
+---
+
+import { Cloud, Rocket2, Server, ServerCloud } from 'reicon-react';
+
+# Email
+
+Coolify can send team notifications through a hosted email service, a team-specific SMTP server, or Resend. Self-hosted teams can also reuse the transactional email provider configured for the entire Coolify instance.
+
+Open **Notifications > Email** to configure the channel.
+
+<Callout type="info" title="Instance-wide email is self-hosted only">
+The **Use system wide (transactional) email settings** option appears only on self-hosted Coolify. It uses the sender and SMTP or Resend provider configured under [**Settings > Email**](/core/instance-management/instance-settings#transactional-email) for the Coolify instance.
+
+Coolify Cloud shows **Use Hosted Email Service** instead. Cloud users do not configure the instance-wide provider.
+</Callout>
+
+## Choose an email provider
+
+The available choices depend on how you use Coolify:
+
+| Provider | Availability | What you need |
+| :--- | :--- | :--- |
+| **Use Hosted Email Service** | Coolify Cloud | No provider credentials. |
+| **Use system wide (transactional) email settings** | Self-hosted Coolify | A working email provider under **Settings > Email**. |
+| **SMTP Server** | Coolify Cloud and self-hosted Coolify | SMTP sender, host, port, encryption, and optional authentication details. |
+| **Resend** | Coolify Cloud and self-hosted Coolify | A sender name, sender address, and Resend API key. |
+
+A team can use only one email path at a time. The hosted and instance-wide options disable team-specific SMTP and Resend. Enabling team-specific SMTP disables Resend, and enabling Resend disables SMTP.
+
+Before you start, prepare the values required by the option you plan to use:
+
+- For **SMTP**, copy the host, port, encryption method, username, and password from your email provider. Confirm that the provider permits the sender address you want to use.
+- For **Resend**, verify your sending domain or sender in Resend and create an API key.
+- For **system-wide email**, configure and test the instance provider first. This requires access to the self-hosted instance settings.
+
+---
+
+## Use the hosted or system-wide provider
+
+The dashboard shows the option for your Coolify deployment type. It does not show both options together.
+
+<Tabs id="notification-email-deployment-type" items={['Self-hosted', 'Coolify Cloud']}>
+<Tab value="Self-hosted" icon={Server}>
+
+<Steps>
+<Step>
+
+### Configure the instance provider
+
+As an instance administrator, open [**Settings > Email**](/core/instance-management/instance-settings#transactional-email). Enter the shared sender details, configure either SMTP or Resend, enable that provider, and save it.
+
+Use **Send Test Email** on the instance settings page. Continue only after that test arrives. This confirms that the instance-wide provider works before a team tries to reuse it.
+
+</Step>
+<Step>
+
+### Reuse it for the team
+
+Open **Notifications > Email** for the team and turn on **Use system wide (transactional) email settings**.
+
+The team now uses the instance sender and provider credentials. It does not receive its own copy of those credentials, and team members cannot change them from the Notifications page.
+
+</Step>
+<Step>
+
+### Choose events and test the team channel
+
+Select the events to send by email under **Notification Settings**. Then select **Send Test Email**, enter a recipient address you can access, and send the test.
+
+</Step>
+</Steps>
+
+Event selections and the test recipient remain specific to this team. Changing the instance-wide provider affects every team that reuses it.
+
+</Tab>
+<Tab value="Coolify Cloud" icon={Cloud}>
+
+1. Open **Notifications > Email** for the team.
+2. Turn on **Use Hosted Email Service**. No SMTP host, password, or Resend API key is required.
+3. Select the events to send by email under **Notification Settings**.
+4. Select **Send Test Email**, enter a recipient address you can access, and send the test.
+5. Confirm that the message arrives before relying on the channel for operational alerts.
+
+</Tab>
+</Tabs>
+
+---
+
+## Configure a team provider
+
+Choose SMTP or Resend when this team should use its own email provider instead of the hosted or system-wide configuration.
+
+<Tabs id="notification-email-provider" items={['SMTP', 'Resend']}>
+<Tab value="SMTP" icon={ServerCloud}>
+
+Enter the connection details supplied by your SMTP provider.
+
+1. Open **Notifications > Email**.
+2. Enter **From Name** and a valid **From Address**.
+3. Under **SMTP Server**, enter the connection details supplied by your email provider:
+
+   | Field | Value |
+   | :--- | :--- |
+   | **Host** | SMTP hostname, such as `smtp.example.com`. |
+   | **Port** | Provider's SMTP port. Common values are `587`, `465`, and `25`; Coolify accepts ports from `1` to `65535`. |
+   | **Encryption** | `StartTLS`, `TLS/SSL`, or `None`. Port `587` commonly uses StartTLS and port `465` commonly uses TLS/SSL, but follow your provider's instructions. |
+   | **SMTP Username** | Authentication username, when required. |
+   | **SMTP Password** | Authentication password, when required. |
+   | **Timeout** | Optional send timeout in seconds. |
+
+4. Check the values against your provider's documentation. A mismatched port and encryption option prevents Coolify from connecting.
+5. Select **Save** in the **SMTP Server** section.
+6. Turn on **Enabled** for SMTP. Coolify disables Resend when SMTP is enabled.
+
+<Callout type="warning" title="Do not use unencrypted SMTP over an untrusted network">
+Choose **None** only when your email provider explicitly requires it and the connection stays on a trusted network. Prefer an encrypted option supported by the provider.
+</Callout>
+
+</Tab>
+<Tab value="Resend" icon={Rocket2}>
+
+Create a Resend API key and use a sender address that Resend has verified.
+
+1. Create an API key in the [Resend dashboard](https://resend.com/api-keys).
+2. Verify the domain or sender address that Coolify will use in Resend.
+3. Open **Notifications > Email**.
+4. Enter **From Name** and the verified **From Address**.
+5. Under **Resend**, enter the **API Key** and select **Save**.
+6. Turn on **Enabled** for Resend. Coolify disables SMTP when Resend is enabled.
+
+</Tab>
+</Tabs>
+
+---
+
+## Choose events and verify delivery
+
+Under **Notification Settings**, select the events to send by email. See [Notification events](/core/notifications/events) for the trigger behind each setting.
+
+Select **Send Test Email**, enter a recipient address you can access, and send the test. Confirm that the message arrives. If it does not, check the provider's activity logs, sender verification, SMTP port access, and spam folder.
+
+---
+
+## Troubleshoot email delivery
+
+If the test email does not arrive:
+
+1. Confirm that the intended provider is enabled. SMTP, Resend, and the hosted or system-wide option are mutually exclusive.
+2. For SMTP, compare the host, port, and encryption method with the provider's current settings. Also confirm that the Coolify server can make outbound connections on that port.
+3. Check whether the provider requires the **From Address** or its domain to be verified.
+4. Check the provider's delivery or activity logs. An accepted request can still be rejected later because of sender policy or recipient filtering.
+5. Check the recipient's spam or junk folder.
+6. When using the self-hosted system-wide provider, send a test from **Settings > Email**. If that test also fails, fix the instance provider before troubleshooting the team channel.

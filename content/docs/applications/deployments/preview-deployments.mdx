@@ -1,0 +1,262 @@
+---
+title: Preview Deployments
+description: Deploy pull requests separately with scoped access, variables, domains, and Git provider events.
+---
+
+# Preview deployments
+
+A preview deployment runs the code from a pull request or merge request separately from the production application. Each preview can use its own domain and environment variables without replacing the production deployment.
+
+Coolify deletes an automatically created preview after its pull request or merge request is closed or merged.
+
+## Before enabling previews
+
+Confirm that the application deploys successfully from its configured branch and that the deployment server has enough capacity to run production and preview containers at the same time.
+
+<Callout type="warning" title="Treat preview code as untrusted">
+
+A pull request can run code on the deployment server. Do not expose production credentials to preview deployments, and keep **Allow Public PR Deployments** disabled unless you accept the risk of running code from public contributors.
+
+</Callout>
+
+## Enable preview deployments
+
+Open the application, select **Configuration > Advanced > Deployment**, then enable **Preview Deployments**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/1.webp" alt="Preview Deployments and Allow Public PR Deployments settings" />
+
+With **Allow Public PR Deployments** disabled, Coolify blocks pull requests from forks unless the author is a repository owner, member, or collaborator. Enable it only when anyone should be allowed to trigger a preview.
+
+## Connect pull-request events
+
+Choose how Coolify receives pull-request or merge-request events for the application.
+
+<Tabs id="preview-deployment-event-source" items={['GitHub App', 'Repository webhook']}>
+<Tab value="GitHub App">
+
+Follow [Set up a GitHub App](/applications/sources/github/app) first. Its repository installation must include the repository used by the application.
+
+<Tabs id="preview-github-app-setup" items={['Automated installation', 'Manual installation']}>
+<Tab value="Automated installation">
+
+<Steps>
+<Step>
+
+### Enable preview permissions in Coolify
+
+During the automated GitHub App setup, enable **Preview Deployments** before selecting **Register Now**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/github-app/1.webp" alt="Preview Deployments permission during automated GitHub App installation" />
+
+Coolify requests read-and-write access to pull requests and subscribes the app to pull-request events.
+
+</Step>
+<Step>
+
+### Finish the GitHub App installation
+
+Complete the registration and install the GitHub App for the required account and repositories.
+
+</Step>
+<Step>
+
+### Verify the event connection
+
+Open or update a pull request. Open **Configuration > Preview Deployments** in Coolify and confirm that the pull request appears.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Manual installation">
+
+<Steps>
+<Step>
+
+### Grant pull-request permission
+
+While creating the GitHub App, open **Repository permissions** and set **Pull requests** to **Read and write**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/github-app/2.webp" alt="Pull request permission during manual GitHub App creation" />
+
+</Step>
+<Step>
+
+### Subscribe to pull-request events
+
+Under **Subscribe to events**, select **Pull request**, then finish creating and installing the GitHub App.
+
+</Step>
+<Step>
+
+### Verify the event connection
+
+Open or update a pull request. Open **Configuration > Preview Deployments** in Coolify and confirm that the pull request appears.
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+### Update an existing GitHub App
+
+If the GitHub App was created without preview permissions, update it before testing previews.
+
+<Steps>
+<Step>
+
+### Open the GitHub App permissions
+
+Open **Sources** in Coolify, select the GitHub App, open **Permissions**, then select **Update**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/github-app/3.webp" alt="Update GitHub App permissions action in Coolify" />
+
+</Step>
+<Step>
+
+### Update GitHub permissions
+
+On GitHub, set **Pull requests** to **Read and write** under **Repository permissions** and subscribe to the **Pull request** event.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/github-app/4.webp" alt="Pull request permission and event subscription on GitHub" />
+
+</Step>
+<Step>
+
+### Accept and verify the update
+
+Accept the permission update, then open or update a pull request. Confirm that it appears under **Configuration > Preview Deployments**.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Repository webhook">
+
+Use this path for an application created from a public repository URL or **Private Repository (with deploy key)**.
+
+<Steps>
+<Step>
+
+### Copy the provider webhook details
+
+Open **Configuration > Webhooks**. Enter a long random value in the matching **Webhook Secret** field, select **Save**, then copy the URL for the repository provider under **Manual Git Webhooks**.
+
+For GitHub, the fields look like this:
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/webhook/1.webp" alt="GitHub manual webhook URL and secret in Coolify" />
+
+</Step>
+<Step>
+
+### Add the repository webhook
+
+Add the copied URL and the same secret to the repository's webhook settings. Follow [Manual Git webhooks](/applications/deployments/manual-webhooks#choose-the-repository-provider) for the exact provider navigation and event names.
+
+For GitHub, open **Settings > Webhooks > Add webhook**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/webhook/2.webp" alt="Webhooks page in GitHub repository settings" />
+
+</Step>
+<Step>
+
+### Select pull-request events
+
+For GitHub, paste the Coolify URL into **Payload URL**, enter the same secret, keep **Enable SSL verification** selected, and choose **Let me select individual events**. Select **Pull requests**, keep **Active** selected, then select **Add webhook**.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/webhook/3.webp" alt="GitHub webhook configured for pull-request events" />
+
+</Step>
+<Step>
+
+### Verify the webhook
+
+Open or update a pull request. Confirm that the provider reports a successful delivery and that Coolify creates a preview.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/webhook/4.webp" alt="Active pull-request webhook in GitHub" />
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+## Configure preview domains
+
+Open **Configuration > Preview Deployments**. **Preview URL Template** controls the generated domain:
+
+- `{{pr_id}}` inserts the pull-request or merge-request number.
+- `{{random}}` inserts a random value.
+- `{{domain}}` inserts the production application's domain name.
+
+The default template is `{{pr_id}}.{{domain}}`.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/4.webp" alt="Preview URL Template and Load Pull Requests controls in Coolify" />
+
+For example, `{{pr_id}}.preview.example.com` produces `123.preview.example.com` for pull request 123.
+
+<Callout type="warning" title="Create wildcard DNS before using generated subdomains">
+
+To use domains such as `123.preview.example.com`, create an `A` or `AAAA` record for `*.preview.example.com` that points to the deployment server.
+
+</Callout>
+
+You can also enter a domain for an individual preview. Docker Compose previews can have a separate domain for each service.
+
+## Separate preview variables from production
+
+Coolify keeps production and preview environment variables in separate groups.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/2.webp" alt="Production and preview environment variable groups" />
+
+- **Production Environment Variables** apply to the main deployment.
+- **Preview Deployment Environment Variables** apply to pull-request and merge-request deployments.
+
+Use non-production credentials for preview databases, storage, and external services. A preview container is temporary, but data written to an external service can remain after Coolify deletes the preview.
+
+Follow [Environment variables](/applications/configuration/environment-variables) for variable scopes and build-time values.
+
+## Load pull requests that were already open
+
+Coolify does not automatically deploy pull requests that were open before previews were enabled.
+
+For a GitHub-based application, open **Configuration > Preview Deployments** and select **Load Pull Requests**. Select **Deploy** beside each existing pull request that needs a preview.
+
+## GitHub pull-request comments
+
+A GitHub App can add the preview deployment status and domain to the pull request, then update the comment when the deployment state changes.
+
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/3.webp" alt="Coolify preview deployment comment on a GitHub pull request" />
+
+Manual repository webhooks can trigger previews, but automated pull-request comments require a GitHub App with the required permissions.
+
+## Deploy a Docker Image preview manually
+
+For a [Docker Image application](/applications/deployments/docker-image), open **Configuration > Preview Deployments** and use **Manual Preview Deployment**.
+
+Enter:
+
+- **Pull Request Id:** an identifier used in the preview name, domain, logs, and cleanup
+- **Docker Tag:** the image tag to deploy, for example `pr_1234`
+
+Select **Deploy Preview**. This path is useful when an external CI system builds one image tag for each pull request.
+
+## Manage a preview
+
+Open **Configuration > Preview Deployments** to view each preview and its domain, Git request, deployment logs, and application logs.
+
+Depending on the preview state, you can:
+
+- select **Deploy** or **Redeploy**
+- select **Force deploy (without cache)**
+- select **Stop** to remove its containers and other non-persistent runtime resources
+- select **Delete** to permanently remove the preview deployment
+
+## Verify the preview lifecycle
+
+1. Open or update a pull request or merge request.
+2. Confirm that Coolify creates a separate preview deployment.
+3. Open the preview domain and test the proposed change.
+4. Close or merge the request.
+5. Confirm that Coolify removes the automatically created preview.

@@ -1,6 +1,25 @@
 {
   "title": "Services",
+  "root": true,
   "pages": [
+    "---Understand Services---",
+    "what-is-a-service",
+    "how-services-work",
+    "---Configuration---",
+    "configuration/overview",
+    "configuration/general",
+    "configuration/networking",
+    "configuration/docker-compose",
+    "configuration/environment-variables",
+    "configuration/persistent-storage",
+    "---Operations---",
+    "operations/overview",
+    "operations/update-service",
+    "operations/scheduled-tasks",
+    "operations/resource-operations",
+    "operations/troubleshooting",
+    "operations/danger-zone",
+    "---Service Catalog---",
     "overview",
     "all"
   ]

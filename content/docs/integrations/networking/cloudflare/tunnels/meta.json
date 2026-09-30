@@ -1,0 +1,10 @@
+{
+  "title": "Cloudflare Tunnel",
+  "pages": [
+    "index",
+    "all-resource",
+    "single-resource",
+    "server-ssh",
+    "full-tls"
+  ]
+}

@@ -1,0 +1,155 @@
+---
+title: DNS Challenge
+description: Configure Traefik to obtain Let's Encrypt certificates through a DNS provider API.
+---
+
+# DNS challenge
+
+Coolify's default Traefik configuration uses the ACME HTTP challenge, which requires public access to port `80`. Switch to the DNS challenge when you need wildcard certificates or cannot make port `80` reachable during certificate validation.
+
+Traefik uses its Lego DNS provider integration to create a temporary `_acme-challenge` TXT record, waits for DNS validation, and removes the record after the certificate is issued.
+
+## What you need
+
+- a domain hosted by a [DNS provider supported by Lego](https://go-acme.github.io/lego/dns/)
+- provider credentials that can create and delete DNS records for the required zone
+
+<Callout type="warning" title="Use a restricted DNS credential">
+Create a token limited to the DNS zone and record permissions Traefik needs. Do not reuse an account-wide key when the provider supports scoped tokens.
+</Callout>
+
+## Change the Traefik configuration
+
+Open **Servers > your server > Proxy > Configuration**. Keep the existing Docker Compose configuration, then make two changes inside the `traefik` service:
+
+1. Add the DNS provider credentials under `environment`.
+2. Remove the two `httpchallenge` command flags and add the provider's `dnschallenge` flags.
+
+Each example visually marks the lines to remove and add. Keep the other values from your existing proxy configuration.
+
+<Tabs items={['Cloudflare', 'Hetzner', 'AWS Route 53', 'Hostinger']}>
+<Tab value="Cloudflare">
+
+```yaml
+services:
+  traefik:
+    environment: # [!code ++:2][!code focus:2]
+      - CF_DNS_API_TOKEN=<cloudflare-api-token>
+    command:
+      # Keep the other existing command values.
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge=true' # [!code --:2][!code focus:2]
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http'
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare' # [!code ++:2][!code focus:2]
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0'
+      - '--certificatesresolvers.letsencrypt.acme.storage=/traefik/acme.json'
+```
+
+Use a Cloudflare API token with DNS edit permission for the zone.
+
+</Tab>
+<Tab value="Hetzner">
+
+```yaml
+services:
+  traefik:
+    environment: # [!code ++:2][!code focus:2]
+      - HETZNER_API_TOKEN=<hetzner-api-token>
+    command:
+      # Keep the other existing command values.
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge=true' # [!code --:2][!code focus:2]
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http'
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=hetzner' # [!code ++:2][!code focus:2]
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0'
+      - '--certificatesresolvers.letsencrypt.acme.storage=/traefik/acme.json'
+```
+
+</Tab>
+<Tab value="AWS Route 53">
+
+```yaml
+services:
+  traefik:
+    environment: # [!code ++:4][!code focus:4]
+      - AWS_ACCESS_KEY_ID=<access-key-id>
+      - AWS_SECRET_ACCESS_KEY=<secret-access-key>
+      - AWS_REGION=<region>
+    command:
+      # Keep the other existing command values.
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge=true' # [!code --:2][!code focus:2]
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http'
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=route53' # [!code ++:2][!code focus:2]
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0'
+      - '--certificatesresolvers.letsencrypt.acme.storage=/traefik/acme.json'
+```
+
+</Tab>
+<Tab value="Hostinger">
+
+```yaml
+services:
+  traefik:
+    environment: # [!code ++:2][!code focus:2]
+      - HOSTINGER_API_TOKEN=<hostinger-api-token>
+    command:
+      # Keep the other existing command values.
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge=true' # [!code --:2][!code focus:2]
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http'
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=hostinger' # [!code ++:2][!code focus:2]
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0'
+      - '--certificatesresolvers.letsencrypt.acme.storage=/traefik/acme.json'
+```
+
+</Tab>
+</Tabs>
+
+For another provider, use the identifier and environment variables from the [Lego DNS provider documentation](https://go-acme.github.io/lego/dns/).
+
+## Restart and verify
+
+Save the proxy configuration, then select **Restart Proxy**. Redeploy one resource with an HTTPS domain to trigger certificate issuance.
+
+Verify that the domain serves a valid certificate and inspect **Servers > your server > Proxy > Logs** for ACME messages.
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="The TXT record is not visible in time">
+
+Increase the propagation delay:
+
+```yaml
+- '--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0' # [!code --][!code focus]
+- '--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=30' # [!code ++][!code focus]
+```
+
+</Accordion>
+
+<Accordion title="CNAME delegation fails">
+
+Some provider integrations follow CNAME records for `_acme-challenge`. If your delegated setup requires disabling that behavior, add:
+
+```yaml
+services:
+  traefik:
+    environment: # [!code ++:2][!code focus:2]
+      - LEGO_DISABLE_CNAME_SUPPORT=true
+```
+
+</Accordion>
+
+<Accordion title="Let's Encrypt rate limits block testing">
+
+Temporarily add the staging ACME server, restart the proxy, and test issuance:
+
+```yaml
+- '--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory' # [!code ++][!code focus]
+```
+
+Remove the staging line after the configuration works. Staging certificates are not trusted by browsers.
+
+</Accordion>
+
+</Accordions>
+
+Continue with [Wildcard Certificates](/core/networking/proxy/traefik/wildcard-certs) when you need one certificate for multiple subdomains.

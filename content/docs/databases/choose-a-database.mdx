@@ -1,0 +1,53 @@
+---
+title: Choose a Database
+description: Choose a supported database engine, version, and deployment method for your workload.
+---
+
+# Choose a database
+
+Choose the database engine that matches the data model and workload your application already uses. [What is a database](/databases/what-is-a-database) explains the one-click resource that Coolify creates for each supported engine.
+
+## Choose an engine
+
+| Engine | Use it for | Default port | Coolify scheduled backups |
+| :--- | :--- | :---: | :---: |
+| [PostgreSQL](/databases/postgresql) | Relational data, transactions, and PostgreSQL extensions. | `5432` | Yes |
+| [MySQL](/databases/mysql) | Relational applications and the MySQL ecosystem. | `3306` | Yes |
+| [MariaDB](/databases/mariadb) | MySQL-compatible relational workloads. | `3306` | Yes |
+| [MongoDB](/databases/mongodb) | Document data and flexible schemas. | `27017` | Yes |
+| [Redis](/databases/redis) | Caches, queues, streams, and key-value data. | `6379` | No |
+| [Dragonfly](/databases/dragonfly) | Redis-compatible workloads using a multithreaded datastore. | `6379` | No |
+| [KeyDB](/databases/keydb) | Redis-compatible workloads using multithreading. | `6379` | No |
+| [ClickHouse](/databases/clickhouse) | Analytical queries and column-oriented data. | `9000` | Yes |
+
+Backup support means that the database resource exposes Coolify's engine-specific backup workflow. It does not mean that the engine cannot create its own backups.
+
+## Choose a one-click database or a service
+
+Use a one-click database when one standalone database container is enough and you want Coolify to manage its standard configuration and lifecycle.
+
+A [Service](/services) is a Docker Compose deployment. A one-click Service starts from a curated Compose template; **Docker Compose Empty** lets you provide your own Compose file. Use a Service when you need multiple database nodes, a custom topology, an unsupported engine, or configuration that the one-click database form does not expose.
+
+<Callout type="info" title="A database resource is not an application">
+
+Create the database from **New Resource > Databases**. Use an application only for a workload that runs your application image. Keep the application and database as separate resources so their containers and deployments have separate lifecycles. Read [What is a database](/databases/what-is-a-database) for the creation flow and resource boundaries.
+
+</Callout>
+
+## Choose a version and image
+
+The database selector provides the versions and images supported by the current Coolify release. PostgreSQL currently offers PostgreSQL 18, 17, and 16, plus Supabase PostgreSQL, PostGIS, and PGVector extension images. Select an image that matches your application's compatibility, architecture, and migration requirements.
+
+Do not change a production database image to another major version without checking the engine's upgrade procedure and taking a verified backup first. A database image version is not the same as a Coolify version.
+
+## Verify the choice
+
+After creating the database:
+
+1. Open **Configuration > General** and confirm the image, credentials, database name, and internal port.
+2. Confirm the persistent storage mount under **Configuration > Persistent Storage**.
+3. Start the database and check its status and logs.
+4. Connect an application on the same destination with the **Internal URL**.
+5. Configure [backups](/databases/backups) for a supported engine and verify the [restore workflow](/databases/restore).
+
+If your application uses a different engine or requires a cluster, do not force it into a one-click resource. Use a Compose service or an external database provider instead.

@@ -79,7 +79,7 @@ To request a new service, please check our [contribution guide](https://github.c
  * @returns {Promise<void>}
  */
 async function generateServicesPage() {
-  const services = await collectServices()
+  const services = (await collectServices()).filter((service) => !service.disabled)
   const categoryOrder = buildCategoryOrder(services)
   const content = renderServicesPage(services, categoryOrder)
 

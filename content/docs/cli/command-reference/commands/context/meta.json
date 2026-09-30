@@ -1,0 +1,15 @@
+{
+  "title": "Context",
+  "pages": [
+    "add",
+    "delete",
+    "get",
+    "list",
+    "set-default",
+    "set-token",
+    "update",
+    "use",
+    "verify",
+    "version"
+  ]
+}

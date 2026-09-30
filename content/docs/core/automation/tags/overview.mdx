@@ -1,0 +1,68 @@
+---
+title: Overview
+description: Group Coolify applications and services with team-scoped tags for filtering and bulk deployment.
+---
+
+import { ArrowsRight, Rocket2, Settings, Tags } from 'reicon-react';
+
+# Tags overview
+
+Tags group related applications and services across projects and environments. Use them to find a resource group and redeploy every resource in that group from one page or webhook.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Add tags from a resource's **Configuration > Tags** page. Then open **Tags** in the main sidebar to review the resources with a tag, redeploy them together, or copy the tag's deploy webhook URL.
+
+</CoolCallout>
+
+---
+
+## What tags do
+
+A tag describes a relationship that matters to your team. For example:
+
+- `production` for resources that serve production traffic
+- `storefront` for an application and its supporting service
+- `eu` for resources deployed in one region
+- `release-group-a` for resources that should be redeployed together
+
+Tags do not change resource configuration, networking, or deployment order. They provide a shared grouping for navigation and bulk deployment.
+
+---
+
+## Tag scope
+
+Tags belong to the active team. A tag created in one team does not group resources from another team, and deploy webhooks only act on resources available to the token's team.
+
+Coolify stores tag names in lowercase. Within a team, resources that use the same name share the same tag.
+
+Bulk deployment by tag covers applications and services assigned to that tag.
+
+---
+
+## Manage and deploy tagged resources
+
+<CoolIconCardGrid
+  columns={3}
+  surface
+  cards={[
+    {
+      title: 'Manage tags',
+      description: 'Create, assign, reuse, and remove tags from applications and services.',
+      href: '/core/automation/tags/manage-tags',
+      icon: Settings,
+    },
+    {
+      title: 'Deploy by tag',
+      description: 'Review a tag and redeploy every assigned application and service.',
+      href: '/core/automation/tags/deploy-by-tag',
+      icon: Rocket2,
+    },
+    {
+      title: 'Use deploy webhooks',
+      description: 'Trigger a tag deployment from CI, another platform, or your own automation.',
+      href: '/core/automation/deploy-webhooks',
+      icon: Tags,
+    },
+  ]}
+/>

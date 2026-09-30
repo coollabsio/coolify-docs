@@ -1,0 +1,15 @@
+---
+title: Databases
+description: Use Coolify MCP to list and inspect standalone databases and their backup schedules.
+---
+
+# Databases
+
+| Tool | Purpose |
+| :--- | :--- |
+| `list_databases` | List standalone databases with project, environment, server, status, and name filters. |
+| `get_database` | Inspect one database by UUID. |
+| `list_database_backups` | List backup schedules for a database. |
+| `list_backup_executions` | List executions for a scheduled database backup. |
+
+Backup execution messages require `read:sensitive` and are best-effort redacted.

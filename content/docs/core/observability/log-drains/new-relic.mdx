@@ -1,0 +1,223 @@
+---
+title: New Relic
+description: Send Coolify application, database, and service container logs to New Relic Logs.
+---
+
+import {
+  ArrowsRight,
+  Box2,
+  Globe3,
+  Server,
+  Settings,
+} from 'reicon-react';
+
+# Send logs to New Relic
+
+Coolify's built-in New Relic log drain sends opted-in resource logs to the New Relic Log API.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Copy an ingest license key, choose the Log API endpoint for your New Relic region, save both values on the server's **Log Drains** page, then enable **Drain Logs** and restart each resource you want to forward.
+
+</CoolCallout>
+
+---
+
+## Before you start
+
+<CoolIconCardGrid
+  surface
+  cards={[
+    {
+      title: 'Ingest license key',
+      description: 'Use a New Relic ingest license key, not a user key or another API key type.',
+      icon: Settings,
+    },
+    {
+      title: 'Regional endpoint',
+      description: 'Choose the complete HTTPS Log API URL for the region where the account stores data.',
+      icon: Globe3,
+    },
+    {
+      title: 'Validated server',
+      description: 'Use the server that runs the resources and confirm it can reach the selected endpoint on port 443.',
+      icon: Server,
+    },
+  ]}
+/>
+
+Create or copy a New Relic [ingest license key](https://docs.newrelic.com/docs/apis/intro-apis/new-relic-api-keys/#ingest-license-key). Coolify accepts letters, numbers, underscores, hyphens, and periods in **License Key**.
+
+---
+
+## Choose the endpoint
+
+<CoolCompare
+  id="new-relic-log-endpoints"
+  className="not-prose"
+  icon={Globe3}
+  title="New Relic Log API endpoints"
+  description="Use the endpoint for the region where your New Relic account stores data."
+>
+<CoolCompareColumn
+  title="United States"
+  code="https://log-api.newrelic.com/log/v1"
+  items={[
+    'Use for accounts in the United States data region',
+    'Keep the complete HTTPS URL, including `/log/v1`',
+  ]}
+/>
+<CoolCompareColumn
+  title="European Union"
+  code="https://log-api.eu.newrelic.com/log/v1"
+  items={[
+    'Use for accounts in the European Union data region',
+    'Keep the complete HTTPS URL, including `/log/v1`',
+  ]}
+/>
+</CoolCompare>
+
+Coolify requires **Endpoint** to be a valid URL.
+
+---
+
+## Configure New Relic in Coolify
+
+<CoolFlow
+  id="configure-new-relic-log-drain"
+  icon={Globe3}
+  title="Connect the server to New Relic"
+  description="Keep the drain disabled while editing its fields, then enable it after the values are saved."
+  steps={[
+    'Open the server Log Drains page',
+    'Enter the license key',
+    'Enter the regional endpoint',
+    'Save the New Relic settings',
+    'Enable the drain',
+  ]}
+  list={[
+    <>Open <strong>Servers</strong>, select the server that runs the resources, then open <strong>Configuration &gt; Log Drains</strong>.</>,
+    <>In <strong>New Relic</strong>, leave <strong>Enabled</strong> off and paste the ingest license key into <strong>License Key</strong>.</>,
+    <>Enter the regional Log API URL in <strong>Endpoint</strong>.</>,
+    <>Select <strong>Save</strong> in the New Relic section.</>,
+    <>Turn on <strong>Enabled</strong>. Coolify starts the server's <code>coolify-log-drain</code> container.</>,
+  ]}
+  endnote="Only one server-level log drain can be enabled at a time. Disable another active destination before enabling New Relic."
+/>
+
+<CoolCallout type="info" title="Enabling the drain is not an ingestion test">
+
+Coolify checks the required field formats and starts Fluent Bit. It does not verify the license key or send a test event to the New Relic endpoint.
+
+</CoolCallout>
+
+---
+
+## Enable a resource
+
+Follow [Enable log draining for a resource](/core/observability/log-drains/overview#enable-log-draining-for-a-resource), then restart or redeploy the resource.
+
+The built-in New Relic configuration flushes records every five seconds.
+
+---
+
+## Identify logs
+
+The built-in configuration adds fields that help you filter records.
+
+<CoolCompare
+  id="new-relic-log-fields"
+  className="not-prose"
+  icon={Box2}
+  title="Built-in log identification"
+  description="The server label is automatic. The resource label is added only when the resource provides COOLIFY_APP_NAME."
+>
+<CoolCompareColumn
+  title="Server label"
+  code="coolify.server_name"
+  items={[
+    'Added automatically to every record',
+    'Identifies the Coolify server that forwarded the record',
+  ]}
+/>
+<CoolCompareColumn
+  title="Resource label"
+  code="coolify.app_name"
+  items={[
+    'Created from the resource environment variable `COOLIFY_APP_NAME`',
+    'Available after you save the variable and restart the resource',
+  ]}
+/>
+</CoolCompare>
+
+For example, add this environment variable to the resource:
+
+```dotenv
+COOLIFY_APP_NAME=worker
+```
+
+The built-in filter excludes log records whose message contains `127.0.0.1`. Local health-check requests may therefore be absent from New Relic.
+
+---
+
+## Verify delivery
+
+1. Cause the resource to write a recognizable message to `stdout` or `stderr`.
+2. Wait at least five seconds.
+3. Open New Relic Logs and search recent events for the message, `coolify.server_name`, or `coolify.app_name`.
+
+Verification in New Relic is required because Coolify does not perform a provider connection test.
+
+---
+
+## Update the endpoint or license key
+
+1. Turn off **Enabled** in the New Relic section.
+2. Update **License Key** or **Endpoint**.
+3. Select **Save**.
+4. Turn on **Enabled** again.
+5. Generate a new resource log and confirm that it arrives in New Relic.
+
+---
+
+## Fix missing logs
+
+1. Confirm New Relic is the enabled server drain and the resource's **Drain Logs** setting is on.
+2. Confirm you restarted or redeployed the resource after enabling the setting.
+3. Confirm the key is an ingest license key for the same New Relic account and region as the endpoint.
+4. Confirm the server can reach the selected endpoint on port `443`.
+5. Inspect the Fluent Bit container on the resource server:
+
+```sh
+docker ps --filter name=coolify-log-drain
+docker logs --tail 100 coolify-log-drain
+```
+
+Authentication, endpoint, and network errors appear in the Fluent Bit output.
+
+---
+
+## Continue with log drains
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Log drains overview',
+      href: '/core/observability/log-drains/overview',
+      description: 'Review the server-level pipeline, resource setup, and delivery checks.',
+      icon: Server,
+    },
+    {
+      title: 'Use Axiom',
+      href: '/core/observability/log-drains/axiom',
+      description: 'Send opted-in workload logs to an existing Axiom dataset.',
+      icon: Globe3,
+    },
+    {
+      title: 'Use custom Fluent Bit',
+      href: '/core/observability/log-drains/custom-fluent-bit',
+      description: 'Supply a complete Fluent Bit configuration for another destination.',
+      icon: Settings,
+    },
+  ]}
+/>

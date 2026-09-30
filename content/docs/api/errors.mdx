@@ -1,0 +1,95 @@
+---
+title: Errors
+description: Interpret Coolify API status codes and diagnose authentication, authorization, validation, and rate-limit failures.
+---
+
+# API errors
+
+Coolify uses HTTP status codes to distinguish successful requests from authentication, authorization, validation, conflict, and rate-limit failures. Check the response documented for the specific endpoint because available statuses and response fields vary by operation.
+
+## Error responses
+
+Most API errors return a JSON object with a `message` field:
+
+```json
+{
+  "message": "Unauthenticated."
+}
+```
+
+Validation failures can also include an `errors` object keyed by request field:
+
+```json
+{
+  "message": "Validation error.",
+  "errors": {
+    "name": ["The name field is required."]
+  }
+}
+```
+
+Do not parse the human-readable message to decide whether a request succeeded. Use the HTTP status code, then log the message and field errors for diagnosis.
+
+---
+
+## Status codes
+
+| Status | Meaning | Client action |
+| :--- | :--- | :--- |
+| `200 OK` | The request succeeded. | Read the response body for the operation result. |
+| `201 Created` | Coolify created the requested resource. | Store the returned identifier and verify the resource state when required. |
+| `400 Bad Request` | The request or token is invalid for the operation. | Check the endpoint schema, parameters, and complete token value. |
+| `401 Unauthenticated` | Coolify could not authenticate the request. | Replace a missing, invalid, expired, or revoked token. |
+| `403 Forbidden` | The authenticated caller cannot perform the operation. | Check token permissions, team role, API access, and the source-IP allowlist. |
+| `404 Not Found` | The route or requested resource is unavailable to the caller. | Check the URL, resource identifier, and token team. |
+| `409 Conflict` | The requested change conflicts with existing state, such as an existing domain. | Read the response and resolve the conflicting state before retrying. |
+| `422 Unprocessable Content` | One or more request fields failed validation. | Correct the fields listed in `errors`, then send a new request. |
+| `429 Too Many Requests` | A request limit, deployment queue, or upstream provider rejected the request temporarily. | Follow `Retry-After` and the [rate-limit guidance](/api/rate-limits#handle-a-429-response). |
+
+Each operation page under **Endpoints** lists its documented responses.
+
+---
+
+## Diagnose authentication and authorization failures
+
+For `401 Unauthenticated`, confirm that:
+
+- the header uses `Authorization: Bearer <api-token>`
+- the complete token value, including the ID and `|` separator, is present
+- the token has not expired or been revoked
+- the token owner still belongs to the token's team
+
+A password change revokes that user's issued API tokens. Create a replacement token when this happens.
+
+For `403 Forbidden`, confirm that:
+
+- the token has the endpoint's required `read`, `write`, or `deploy` permission
+- the token owner still has an administrator or owner role when using `write` or `root`
+- **API Access** is enabled on a self-hosted instance
+- the caller matches **Allowed IPs for API Access** when an allowlist is configured
+
+Token permissions cannot be changed after creation. Create a replacement token with the required permissions and revoke the previous token.
+
+### IP allowlist rejections
+
+On a self-hosted instance, a request from an address outside **Allowed IPs for API Access** returns `403 Forbidden`:
+
+```json
+{
+  "success": true,
+  "message": "You are not allowed to access the API."
+}
+```
+
+Treat the HTTP `403` status as the failure signal even though this response contains `"success": true`. Add the caller's exact source IP address or network to the allowlist, then make the request again. Follow [Restrict API access by IP address](/api/ip-allowlist#restrict-api-access-by-ip-address) for supported values and configuration steps.
+
+---
+
+## Missing or redacted data
+
+A successful request can still omit expected resources or redact sensitive values.
+
+- If a resource is missing, confirm that it belongs to the team recorded when the token was created. Create a separate token for another team.
+- If passwords, private keys, environment values, logs, or Compose content are redacted, use a token with `read:sensitive` in addition to the endpoint's required permission.
+
+Read [Authorization](/api/authorization) for the complete request and access-check flow.

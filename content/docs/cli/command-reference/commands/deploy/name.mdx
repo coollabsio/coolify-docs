@@ -1,0 +1,30 @@
+---
+title: "Name"
+description: "Deploy by resource name"
+---
+
+# Name
+
+Deploy by resource name
+
+## Usage
+
+```sh
+coolify deploy name <resource_name>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--docker-tag` | `string` | No | — | Docker image tag override for the deployment |
+| `--force` | `boolean` | No | `false` | Force deployment |
+| `--pull-request-id` | `integer` | No | `0` | Pull request ID for preview deployments |
+
+## Get current help
+
+```sh
+coolify deploy name --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

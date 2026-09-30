@@ -1,0 +1,33 @@
+---
+title: "Env update"
+description: "Update an existing environment variable. Identify it by UUID or key name."
+---
+
+# Env update
+
+Update an existing environment variable. Identify it by UUID or key name.
+
+## Usage
+
+```sh
+coolify database env update <database_uuid> <env_uuid_or_key>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--comment` | `string` | No | — | Comment for the environment variable |
+| `--is-literal` | `boolean` | No | `false` | Treat value as literal |
+| `--is-multiline` | `boolean` | No | `false` | Value is multiline |
+| `--is-shown-once` | `boolean` | No | `false` | Only show value once |
+| `--key` | `string` | No | — | New environment variable key (rename) |
+| `--value` | `string` | Yes | — | New environment variable value (required) |
+
+## Get current help
+
+```sh
+coolify database env update --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

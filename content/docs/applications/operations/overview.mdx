@@ -1,0 +1,143 @@
+---
+title: Overview
+description: Monitor, troubleshoot, maintain, and protect a running application.
+---
+
+import { BrowserTerminal, CalendarAdd, Refresh23 } from 'reicon-react';
+
+# Operate applications
+
+After an application is deployed, Coolify provides separate views for deployment activity, container output, terminal access, backups, and runtime metrics.
+
+Start with the page that matches what you are trying to understand or change. Deployment logs and application logs answer different questions.
+
+## Know where to look
+
+| <span className="inline-block min-w-36 whitespace-nowrap">Page</span> | Use it to |
+| :--- | :--- |
+| **Configuration** | Change the source, build, runtime, storage, health, resource limits, and other application settings. |
+| **Deployments** | Follow current and previous deployment operations, including source checkout, image build or pull, and container replacement. |
+| **Backups** | Configure and inspect scheduled archives for eligible application volume and directory mounts. |
+| **Logs** | Read stdout and stderr from the application's current containers. |
+| **Terminal** | Open an interactive shell in a selected running container. |
+
+**Logs** can show containers across the application's functional deployment servers, including preview containers. **Terminal** appears only when terminal access is enabled, your team role can use it, and the application has an eligible running container. It is not available from an application deployed to Docker Swarm.
+
+## Choose a lifecycle action
+
+| Goal | Action | What Coolify does |
+| :--- | :--- | :--- |
+| Deploy the application for the first time | **Deploy** | Starts the configured deployment flow. |
+| Apply source, image, build-time, or deployment changes | **Redeploy** | Runs the normal deployment flow again and uses a [rolling update](/applications/deployments/rolling-updates) when supported. |
+| Recreate the runtime without intentionally rebuilding | **Restart** | Runs the restart path through the deployment queue. A Docker Image application pulls its saved image reference again. |
+| Rebuild a Coolify-generated source image without build cache | **Force deploy (without cache)** | Starts a deployment with the generated build cache disabled. A custom Docker Compose build command controls its own cache behavior. |
+| Take the application offline without deleting its configuration | **Stop** | Stops its containers and removes non-persistent container data. Persistent mounts and the Coolify resource remain. |
+
+Use **Restart** after a runtime-only change when a rebuild is unnecessary. Use **Redeploy** when source code, the selected image, build arguments, or build-time variables changed.
+
+Follow [Deploy applications](/applications/deployments/overview) for deployment history and action details.
+
+## Diagnose an application problem
+
+<Steps>
+<Step>
+
+### Check the application status
+
+Confirm whether the application is running, stopped, unhealthy, or repeatedly restarting. A restart indicator beside **Logs** shows when Coolify has recorded container restarts.
+
+</Step>
+<Step>
+
+### Inspect the latest deployment
+
+Open **Deployments** when the problem began during a deploy, redeploy, or restart. Start with the first failing command rather than the final failure summary.
+
+A build or image-pull failure is visible here, not in the runtime application logs.
+
+</Step>
+<Step>
+
+### Read the container output
+
+Open **Logs**, find the affected server and container, then inspect the output around the failure time.
+
+Use these logs for application exceptions, crashes, failed startup, connection errors, and process output. When no containers are listed, confirm that the deployment server is functional and the application has a running container.
+
+</Step>
+<Step>
+
+### Inspect the running container when necessary
+
+Open **Terminal**, select the container, and connect. Use it to check files, environment variables, DNS resolution, network connections, processes, or a health-check command from inside the container.
+
+Do not treat terminal changes as configuration. Files installed or edited only inside the container can disappear after a restart or deployment. Put lasting changes in the source, image, environment variables, or persistent storage.
+
+</Step>
+<Step>
+
+### Check resource usage
+
+Open **Configuration > Metrics** when the application is slow, being terminated for resource use, or behaving differently under load.
+
+Application metrics require Sentinel and are not available for Docker Compose applications. Follow [Metrics](/core/observability/monitoring/metrics) for enablement, sampling, and retention.
+
+</Step>
+</Steps>
+
+## Protect application state
+
+<Callout type="warning" title="A container filesystem is temporary">
+
+Data written outside a persistent mount can disappear when Coolify replaces or removes the container. Store uploads, generated files, and other required state in persistent storage, a database, or an external object store.
+
+</Callout>
+
+Persistent storage keeps data outside a replaceable container, but it is not a backup. Use the path that matches the data:
+
+- [Persistent storage](/core/persistent-storage/storage-mounts/overview) explains volume, directory, and file mounts.
+- [Storage mount backups](/core/persistent-storage/storage-mounts/backups) covers scheduled archives for eligible application mounts.
+- [Database backups](/databases/backups) covers database-aware backup commands and schedules.
+
+Keep at least one tested backup outside the deployment server. A local backup on the same server does not protect against losing that server.
+
+## Run recurring work
+
+Use **Configuration > Scheduled Tasks** for commands that must run inside an application container on a schedule, such as a framework scheduler, queue maintenance, or cache cleanup.
+
+A disabled task does not start scheduled executions. An enabled execution fails when the application has no running container or the deployment server is not functional. Follow [Application scheduled tasks](/applications/operations/scheduled-tasks) to configure the command, frequency, timeout, and target container.
+
+Use [Tags](/core/automation/tags/overview) to group related resources across projects and environments.
+
+## Remove or move an application
+
+Use **Stop** when the application should remain configured but offline. Use **Configuration > Danger Zone** only when you intend to permanently remove the resource; review [Danger Zone](/applications/operations/danger-zone) before deleting it.
+
+Use [Resource Operations](/applications/operations/resource-operations) to clone an application to another destination or move it between projects and environments on the same Coolify instance.
+
+To move the application and its state to another Coolify control plane, follow [Migrate an application](/applications/operations/migrate-between-instances).
+
+## Continue operating the application
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Schedule application work',
+      href: '/applications/operations/scheduled-tasks',
+      description: 'Run recurring commands inside an application container.',
+      icon: CalendarAdd,
+    },
+    {
+      title: 'Clone or move an application',
+      href: '/applications/operations/resource-operations',
+      description: 'Change where an application is organized or deployed.',
+      icon: Refresh23,
+    },
+    {
+      title: 'Migrate between instances',
+      href: '/applications/operations/migrate-between-instances',
+      description: 'Recreate the application and move each stateful dependency.',
+      icon: BrowserTerminal,
+    },
+  ]}
+/>

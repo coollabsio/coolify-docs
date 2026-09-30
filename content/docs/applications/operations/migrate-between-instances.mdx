@@ -1,0 +1,670 @@
+---
+title: Migrate an Application
+description: Migrate one application and its persistent state to another Coolify instance.
+---
+
+# Migrate an application
+
+This guide moves one application from a source Coolify instance to a destination Coolify instance. It does not migrate the Coolify control plane, team members, servers, projects, or instance settings.
+
+Coolify does not provide a single export and import operation for an application. Recreate the application on the destination instance, verify it with a temporary domain, move every stateful dependency, then transfer production traffic.
+
+<Callout type="warning" title="Plan a maintenance window for the final copy">
+
+Data can change while the source application is running. Stop writes or stop the source application before the final database dump or file copy. Keep the source unchanged until the destination is confirmed stable.
+
+</Callout>
+
+## Before you start
+
+Make sure you can access:
+
+- both Coolify instances
+- the source and destination deployment servers over SSH when files or Docker volumes must be transferred
+- the Git repository or image registry used by the application
+- DNS for the production domain
+- credentials for databases, object storage, email, OAuth, and other external services
+
+Record the configuration from the source application:
+
+| Source page | Record |
+| :--- | :--- |
+| **Configuration > General** | Source or image reference, branch, build pack, base directory, build-file locations, commands, domains, internal ports, and host port mappings |
+| **Configuration > Environment Variables** | Production variables, build-time settings, preview variables, and shared-variable references |
+| **Configuration > Persistent Storage** | Mount type, volume or source path, destination path, file content, and read-only setting |
+| **Configuration > Advanced** | Deployment, Git, proxy, container, and operational settings that differ from the defaults |
+| Other configuration pages | Health check, resource limits, scheduled tasks, webhooks, servers, tags, and preview settings |
+
+Also list every database, cache, queue, storage bucket, callback URL, and third-party dependency used by the application. Coolify cannot discover all state held outside the container.
+
+## Choose how each type of state moves
+
+One application can use several of these paths.
+
+| State | Migration path |
+| :--- | :--- |
+| No persistent application data | Recreate the configuration and deploy from the same source or image. |
+| Database | Create a logical backup with the database engine's supported tool, transfer it, then restore it into the destination database. |
+| Docker volume | Stop writes, archive the named volume, transfer the archive, and extract it into the destination volume. |
+| Directory or bind mount | Copy the exact source directory to the destination server while preserving ownership and permissions. |
+| Coolify-managed File Mount | Recreate the file and its destination path in the destination application. |
+| Host File Mount | Copy or independently recreate the host file at the required destination-server path. |
+| External object storage or managed service | Keep the existing dependency or migrate it with that provider's supported process, then update the destination variables. |
+
+Do not copy a running database's Docker volume as a substitute for a database-aware backup. Live database files can produce an inconsistent or unusable copy.
+
+## Recreate and test the application
+
+<Steps>
+<Step>
+
+### Prepare the destination
+
+Add and validate the destination deployment server. Confirm that its proxy is running, it can reach required registries and external dependencies, and it has enough CPU, memory, and storage for the application.
+
+Create required private keys, Git integrations, registry authentication, S3 destinations, and shared variables on the destination instance. These instance and team resources are not copied with the application.
+
+</Step>
+<Step>
+
+### Recreate the application
+
+Create a new application with the same deployment method and enter the recorded configuration.
+
+Use a temporary domain and non-production credentials for the first deployment. Do not assign the production domain or change production DNS yet.
+
+If the source application references shared variables, recreate those variables first or replace each reference with the intended destination value.
+
+</Step>
+<Step>
+
+### Verify the application without production state
+
+Deploy the destination application and confirm that Coolify builds or pulls the intended image, starts the container, and passes its health check.
+
+Open the temporary domain and verify the internal port, environment variables, outbound network access, and connection to non-production dependencies. Resolve build, proxy, or network failures before moving production data.
+
+</Step>
+</Steps>
+
+## Move application state
+
+Create destination mounts before restoring data. Then use each path that matches the application's state. One application can use several paths.
+
+### Databases and external dependencies
+
+Create a logical database backup with the database engine's supported tool. Transfer and restore it into the destination database, then update the destination application variables with the new connection details.
+
+For a Coolify-managed database, create the recovery file with [Database backups](/databases/backups), then follow [Restore a database](/databases/restore) when the destination engine supports Coolify's import workflow. Verify required tables or records before the destination application uses the database.
+
+Move object storage, queues, caches, and other external state through the provider's supported process. A cache usually does not need migration unless the application treats it as durable data.
+
+Do not copy a running database's Docker volume as a substitute for a database-aware backup. Live database files can produce an inconsistent or unusable copy.
+
+### Persistent files
+
+Use the subsection below that matches each mount, then confirm the destination container user can read and write the restored content.
+
+## Cut over to the destination
+
+<Steps>
+<Step>
+
+### Perform the final synchronization
+
+Stop writes or stop the source application. Create a final database dump and copy any files changed since the test migration.
+
+Restore that final state on the destination, then redeploy or restart the destination application so it uses the final variables and mounts.
+
+</Step>
+<Step>
+
+### Transfer production traffic
+
+Test the destination through its temporary domain first. Verify login, reads, writes, uploads, background jobs, email, OAuth, webhooks, and other critical integrations.
+
+Assign the production domain to the destination application and update DNS when the domain points to a different server. Confirm TLS issuance and routing before declaring the migration complete.
+
+</Step>
+<Step>
+
+### Reconnect automation
+
+Update manual Git webhooks, authenticated deploy webhooks, CI secrets, scheduled tasks, registry credentials, monitoring, and external callback URLs that still reference the source instance or server.
+
+Trigger one test deployment and one scheduled or background operation.
+
+</Step>
+</Steps>
+
+## Move a Docker volume
+
+<Tabs id="docker-volume-migration-method" items={['Scheduled backup', 'Manual']}>
+<Tab value="Scheduled backup">
+
+Use the scheduled [storage mount backup](/core/persistent-storage/storage-mounts/backups) workflow when it supports the source mount. Download the resulting `.tar.gz` archive before the migration because the dashboard does not restore storage archives.
+
+</Tab>
+<Tab value="Manual">
+
+<Steps>
+<Step>
+
+<ZoomImage src="/docs/images/applications/operations/migrate-between-instances/1.webp" alt="Bind mounts use a chosen server filesystem path while Docker volumes use Docker-managed storage" />
+
+### Backup and restore overview
+The [Docker-recommended process](https://docs.docker.com/engine/storage/volumes/#back-up-restore-or-migrate-data-volumes) for volume migration looks like this:
+
+<ZoomImage src="/docs/images/applications/operations/migrate-between-instances/2.webp" alt="Screenshot of Migrate Apps Different Host" />
+
+1. **Mount** your volume into a temporary container.
+2. **Archive** the volume’s contents into a tarball.
+3. **Copy** the tarball from the container to your host and then delete the temporary container.
+4. **Transfer** the tarball to the new server.
+5. **Create** a fresh volume on the destination.
+6. **Mount** the transferred tarball into a temporary container.
+7. **Extract** the archive into the new volume.
+
+This series of steps ensures a consistent, safe backup and restore. Below, we’ll provide ready-to-use scripts and detailed instructions.
+
+---
+
+
+<Callout type="info" title="Note">
+
+  The steps below include scripts to help you back up, transfer, and restore volumes easily and interactively. 
+  
+  They also include checks to ensure volumes and backups exist, to prevent mistakes like restoring to the wrong volume.
+
+</Callout>
+
+</Step>
+<Step>
+
+### Backup the volume
+
+1. **SSH into your server** where you have the Docker volume.
+2. **Create a script** named `backup.sh`:
+    ```bash
+    touch backup.sh && chmod +x backup.sh
+    ```
+3. **Open** `backup.sh` in your editor and paste the following:
+
+    ```bash
+    #!/bin/bash
+    
+    # === INPUT PROMPTS ===
+    # Prompt for the Docker volume name and set the variable
+    read -p "[ Backup Agent ] [ INPUT ] Please enter the Docker volume name to back up: " VOLUME_NAME
+    
+    # Inform the user of the set volume name
+    echo "[ Backup Agent ] [ INFO ] Backup Volume is set to $VOLUME_NAME"
+    
+    # Check if the entered volume exists
+    if ! docker volume ls --quiet | grep -q "^$VOLUME_NAME$"; then
+        echo "[ Backup Agent ] [ ERROR ] Volume '$VOLUME_NAME' doesn't exist, aborting backup."
+        echo "[ Backup Agent ] [ ERROR ] Backup Failed!"
+        exit 1  # Exit if volume doesn't exist
+    else
+        echo "[ Backup Agent ] [ INFO ] Volume '$VOLUME_NAME' exists, continuing backup..."
+    fi
+    
+    # Prompt for the directory to save the backup
+    read -p "[ Backup Agent ] [ INPUT ] Please enter the directory to save the backup (Optional: press enter to use ./volume-backup): " BACKUP_DIR
+    # If no directory is entered, default to './volume-backup'
+    BACKUP_DIR=${BACKUP_DIR:-./volume-backup}
+    
+    # Inform the user of the backup location
+    echo "[ Backup Agent ] [ INFO ] Backup location is set to $BACKUP_DIR"
+    
+    # Set the backup file name based on the volume name
+    BACKUP_FILE="${VOLUME_NAME}-backup.tar.gz"
+    
+    # Inform the user of the backup file name
+    echo "[ Backup Agent ] [ INFO ] Backup file name is set to $BACKUP_FILE"
+    
+    # === SCRIPT START ===
+    # Check if the backup directory exists
+    if [ -d "$BACKUP_DIR" ]; then
+        echo "[ Backup Agent ] [ INFO ] Directory '$BACKUP_DIR' already exists, skipping directory creation."
+    else
+        echo "[ Backup Agent ] [ INFO ] Directory '$BACKUP_DIR' does not exist, creating directory."
+        # Create the backup directory, exit if creation fails
+        mkdir -p "$BACKUP_DIR" || { 
+            echo "[ Backup Agent ] [ ERROR ] Failed to create directory '$BACKUP_DIR', aborting backup."
+            echo "[ Backup Agent ] [ ERROR ] Backup Failed!"
+            exit 1
+        }
+    fi
+    
+    # Perform the backup operation
+    echo "[ Backup Agent ] [ INFO ] Backing up volume: $VOLUME_NAME to $BACKUP_DIR/$BACKUP_FILE"
+    
+    # Run the Docker container to create the backup
+    docker run --rm \
+      -v "$VOLUME_NAME":/volume \
+      -v "$(pwd)/$BACKUP_DIR":/backup \
+      busybox \
+      tar czf /backup/"$BACKUP_FILE" -C /volume . || { 
+        # If the backup fails, print an error message and exit
+        echo "[ Backup Agent ] [ ERROR ] Backup process failed, aborting."
+        echo "[ Backup Agent ] [ ERROR ] Backup Failed!"
+        exit 1
+    }
+    
+    # If everything succeeds, notify the user
+    echo "[ Backup Agent ] [ SUCCESS ] Backup completed!"
+    ```
+
+4. **Find the volume name** by running:
+
+   ```bash
+   docker volume ls
+   ```
+
+   Or from Coolify’s **Persistent Storage** page (see below).
+   
+<ZoomImage src="/docs/images/applications/operations/migrate-between-instances/3.webp" alt="Screenshot of Migrate Apps Different Host" />
+5. **Stop your application** to perform a clean backup.
+6. **Run** the script:
+
+   ```bash
+   ./backup.sh
+   ```
+
+   * When prompted, paste the volume name.
+   * Press **Enter** to accept the default backup directory (`./volume-backup`), or type a custom path.
+7. **Verify** that you now have a directory (e.g., `volume-backup`) containing `<VOLUME_NAME>-backup.tar.gz`.
+
+---
+
+</Step>
+<Step>
+
+### Transfer the backup to the new server
+
+<Callout type="success" title="Tip">
+
+  If you already know how to manually transfer the backup file, feel free to move on to the next step.
+
+</Callout>
+
+
+1. **Create** a second script named `transfer.sh`:
+   ```bash
+   touch transfer.sh && chmod +x transfer.sh
+   ```
+   
+2. **Open** `transfer.sh` in your editor and paste the following:
+
+    ```bash
+    #!/bin/bash
+    
+    # =============== CONFIG VARIABLES ===============
+    SSH_PORT=22
+    SSH_USER="root"
+    SSH_IP="192.168.1.222"
+    SSH_KEY="$HOME/.ssh/local-vm"
+    SOURCE_PATH="./volume-backup"
+    DESTINATION_PATH="/root/backups/volume-backup"
+    MAX_RETRIES=3  # Max number of password attempts
+    
+    echo "[ Transfer Agent ] [ INFO ] Starting transfer..."
+    echo "[ Transfer Agent ] [ INFO ] Trying SSH key: $SSH_KEY"
+    echo "[ Transfer Agent ] [ INFO ] Transfer from: $SOURCE_PATH"
+    echo "[ Transfer Agent ] [ INFO ] Transfer to: $SSH_USER@$SSH_IP:$DESTINATION_PATH"
+    
+    # If SSH key file doesn’t exist, fall back to password mode
+    if [ ! -f "$SSH_KEY" ]; then
+      echo "[ Transfer Agent ] [ WARN ] SSH key '$SSH_KEY' not found. Falling back to password authentication."
+      SSH_KEY=""
+    fi
+    
+    # If we need password-based auth, ensure Expect is installed
+    if [ -z "$SSH_KEY" ] && ! command -v expect >/dev/null 2>&1; then
+      echo "[ Transfer Agent ] [ ERROR ] The package expect is required for password authentication but not installed (Install it manually using sudo apt install expect and try again). Aborting."
+      exit 1
+    fi
+    
+    # ---------------------------------------------
+    # Helper: test whether $1 (the password) is valid by doing “ssh … exit”
+    # Returns 0 if OK, 1 if “Permission denied” (or any other failure)
+    test_password_with_expect() {
+      local PW="$1"
+    
+      expect -c "
+        log_user 0
+        set timeout 15
+        spawn ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_IP exit
+        expect {
+          \"*?assword:\" {
+            send -- \"$PW\r\"
+            expect {
+              \"Permission denied\" { exit 1 }
+              eof { exit [lindex [wait] 3] }
+            }
+          }
+          eof {
+            exit [lindex [wait] 3]
+          }
+        }
+      " >/dev/null 2>&1
+    
+      return $?
+    }
+    
+    # Prompt up to $MAX_RETRIES times for a correct password
+    get_password() {
+      local retries=0
+      while [ $retries -lt $MAX_RETRIES ]; do
+        read -s -p "[ Transfer Agent ] [ INPUT ] Please enter the SSH password for $SSH_USER@$SSH_IP: " SSHPASS
+        echo ""
+        test_password_with_expect "$SSHPASS"
+        if [ $? -eq 0 ]; then
+          # Password is correct
+          return 0
+        else
+          echo "[ Transfer Agent ] [ ERROR ] Invalid password. Please try again."
+          retries=$((retries + 1))
+        fi
+      done
+    
+      echo "[ Transfer Agent ] [ ERROR ] Maximum retries reached. Aborting."
+      exit 1
+    }
+    
+    # ---------------------------------------------
+    # STEP 0: Attempt SSH-key authentication (if a key is set)
+    if [ -n "$SSH_KEY" ]; then
+      # Use BatchMode to prevent falling back to password prompt
+      ssh -i "$SSH_KEY" -o BatchMode=yes -o StrictHostKeyChecking=no -p "$SSH_PORT" \
+        "$SSH_USER@$SSH_IP" exit >/dev/null 2>&1
+      RC=$?
+      if [ $RC -eq 0 ]; then
+        echo "[ Transfer Agent ] [ INFO ] SSH key is valid!"
+        USING_KEY=true
+      else
+        echo "[ Transfer Agent ] [ WARN ] SSH key authentication failed. Falling back to password authentication."
+        SSH_KEY=""
+        USING_KEY=false
+      fi
+    else
+      USING_KEY=false
+    fi
+    
+    # If key auth failed (or no key), prompt for password
+    if [ "$USING_KEY" = false ]; then
+      get_password
+      echo "[ Transfer Agent ] [ INFO ] Password is valid!"
+    fi
+    
+    # ---------------------------------------------
+    # STEP 1: Ensure the full DESTINATION_PATH exists on the remote side.
+    echo "[ Transfer Agent ] [ INFO ] Ensuring remote directory '$DESTINATION_PATH' exists..."
+    if [ -n "$SSH_KEY" ]; then
+      ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no -p "$SSH_PORT" \
+        "$SSH_USER@$SSH_IP" "mkdir -p $DESTINATION_PATH" >/dev/null 2>&1
+      MKRC=$?
+    else
+      expect -c "
+        log_user 0
+        set timeout 5
+        spawn ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_IP mkdir -p $DESTINATION_PATH
+        expect {
+          \"*?assword:\" {
+            send -- \"$SSHPASS\r\"
+            exp_continue
+          }
+          eof {
+            exit [lindex [wait] 3]
+          }
+        }
+      " >/dev/null 2>&1
+      MKRC=$?
+    fi
+    
+    if [ $MKRC -ne 0 ]; then
+      echo "[ Transfer Agent ] [ ERROR ] Failed to create remote directory. Aborting."
+      exit 1
+    fi
+    
+    # ---------------------------------------------
+    # STEP 2: Copy only the contents of local “volume-backup” into that folder.
+    echo "[ Transfer Agent ] [ INFO ] Initiating file transfer..."
+    
+    # Capture any SCP stderr in a temp file so we can surface it if something goes wrong
+    SCP_LOG="$(mktemp)"
+    if [ -n "$SSH_KEY" ]; then
+      # Suppress stdout, capture only stderr
+      scp -i "$SSH_KEY" -o StrictHostKeyChecking=no -P "$SSH_PORT" -r \
+          "$SOURCE_PATH"/. "$SSH_USER@$SSH_IP:$DESTINATION_PATH" > /dev/null 2> "$SCP_LOG"
+      SCP_RC=$?
+    else
+      expect -c "
+        log_user 0
+        set timeout -1
+        spawn scp -o StrictHostKeyChecking=no -P $SSH_PORT -r $SOURCE_PATH/. $SSH_USER@$SSH_IP:$DESTINATION_PATH
+        expect {
+          \"*?assword:\" {
+            send -- \"$SSHPASS\r\"
+            exp_continue
+          }
+          eof {
+            exit [lindex [wait] 3]
+          }
+        }
+      " 2> "$SCP_LOG"
+      SCP_RC=$?
+    fi
+    
+    if [ $SCP_RC -eq 0 ]; then
+      echo "[ Transfer Agent ] [ SUCCESS ] Transfer completed."
+      rm -f "$SCP_LOG"
+      exit 0
+    else
+      echo "[ Transfer Agent ] [ ERROR ] Transfer failed."
+      while IFS= read -r line; do
+        echo "[ Transfer Agent ]    $line"
+      done < "$SCP_LOG"
+      rm -f "$SCP_LOG"
+      exit 1
+    fi
+    ```
+    
+3. **Adjust** the variables at the top (`SSH_IP`, `SSH_USER`, `SSH_KEY`, `DESTINATION_PATH`) to match your new server.
+4. **Run** the transfer:
+
+   ```bash
+   ./transfer.sh
+   ```
+
+   * If key-based authentication succeeds, the backup folder copies over via SCP.
+   * Otherwise, you’ll be prompted for the SSH password.
+
+---
+
+</Step>
+<Step>
+
+### Restore the backup on the new server
+
+
+<Callout type="info" title="Note">
+
+  In this example, we’ll use [Umami Analytics](https://umami.is/?utm_source=coolify.io) (PostgreSQL) to show how you restore a database-backed app. Adjust paths and volume names for your own database.
+
+</Callout>
+
+
+1. **Deploy your application** on the new server with Coolify, then **stop it** so volumes will be created but won't be in use.
+2. **SSH into** the new server and **create** a script called `restore.sh`:
+
+   ```bash
+   touch restore.sh && chmod +x restore.sh
+   ```
+3. **Paste** the following into `restore.sh`:
+    ```bash
+    #!/bin/bash
+    
+    # === VOLUME NAME INPUT ===
+    # Prompt for the target Docker volume name to restore into
+    read -p "[ Restore Agent ] [ INPUT ] Enter the target Docker volume name to restore into: " TARGET_VOLUME
+    
+    # === VOLUME CHECK ===
+    # Check if the target volume exists
+    if ! docker volume ls --quiet | grep -q "^$TARGET_VOLUME$"; then
+      echo "[ Restore Agent ] [ ERROR ] Volume '$TARGET_VOLUME' doesn't exist."
+    
+      # Ask if the user wants to create the volume
+      read -p "[ Restore Agent ] [ INPUT ] Do you want to create a new volume with the name '$TARGET_VOLUME'? (y/N): " create_volume
+      if [[ "$create_volume" == "y" ]]; then
+        echo "[ Restore Agent ] [ INFO ] Creating volume '$TARGET_VOLUME'..."
+        docker volume create "$TARGET_VOLUME" || { 
+          echo "[ Restore Agent ] [ ERROR ] Failed to create volume '$TARGET_VOLUME', aborting restore."
+          echo "[ Restore Agent ] [ ERROR ] Restore Failed!"
+          exit 1
+        }
+        echo "[ Restore Agent ] [ INFO ] Volume '$TARGET_VOLUME' created successfully."
+      else
+        echo "[ Restore Agent ] [ INFO ] Volume '$TARGET_VOLUME' doesn't exist and user opted not to create it. Aborting restore."
+        echo "[ Restore Agent ] [ ERROR ] Restore Failed!"
+        exit 1
+      fi
+    else
+      echo "[ Restore Agent ] [ INFO ] Volume '$TARGET_VOLUME' exists, continuing..."
+    fi
+    
+    # === BACKUP DIRECTORY INPUT ===
+    # Prompt for the backup directory (default: ./volume-backup)
+    read -p "[ Restore Agent ] [ INPUT ] Enter the backup directory (default: ./volume-backup): " BACKUP_DIR
+    BACKUP_DIR=${BACKUP_DIR:-./volume-backup}
+    
+    # === BACKUP DIRECTORY CHECK ===
+    # Check if the backup directory exists
+    if [[ ! -d "$BACKUP_DIR" ]]; then
+      echo "[ Restore Agent ] [ ERROR ] Backup directory not found: $BACKUP_DIR"
+      echo "[ Restore Agent ] [ ERROR ] Restore Failed!"
+      exit 1
+    fi
+    echo "[ Restore Agent ] [ INFO ] Backup directory '$BACKUP_DIR' found, continuing..."
+    
+    # === BACKUP FILE INPUT ===
+    # Prompt for the backup file name
+    read -p "[ Restore Agent ] [ INPUT ] Enter the backup file name (e.g., abc123_postgresql.tar.gz): " BACKUP_FILE
+    
+    # === BACKUP FILE CHECK ===
+    # Check if the backup file exists
+    if [[ ! -f "$BACKUP_DIR/$BACKUP_FILE" ]]; then
+      echo "[ Restore Agent ] [ ERROR ] Backup file not found: $BACKUP_DIR/$BACKUP_FILE"
+      echo "[ Restore Agent ] [ ERROR ] Restore Failed!"
+      exit 1
+    fi
+    echo "[ Restore Agent ] [ INFO ] Backup file '$BACKUP_FILE' found, continuing..."
+    
+    # === SAFETY CONFIRMATION ===
+    echo "[ Restore Agent ] [ INFO ] Make sure containers using '$TARGET_VOLUME' are stopped!"
+    read -p "[ Restore Agent ] [ INPUT ] Proceed with restore? (y/N): " confirm
+    if [[ "$confirm" != "y" ]]; then
+      echo "[ Restore Agent ] [ ERROR ] Restore Failed: cancelled by user."
+      exit 1
+    fi
+    
+    # === RESTORE START ===
+    # Inform the user that restore is starting
+    echo "[ Restore Agent ] [ INFO ] Restoring $BACKUP_FILE into volume: $TARGET_VOLUME"
+    
+    # Run the Docker container to restore the backup
+    docker run --rm \
+      -v "$TARGET_VOLUME":/volume \
+      -v "$(pwd)/$BACKUP_DIR":/backup \
+      busybox \
+      sh -c "cd /volume && tar xzf /backup/$BACKUP_FILE" || { 
+        # If the restore process fails, print an error message and exit
+        echo "[ Restore Agent ] [ ERROR ] Docker restore process failed, aborting."
+        echo "[ Restore Agent ] [ ERROR ] Restore Failed!"
+        exit 1
+    }
+    
+    # If everything succeeds, notify the user
+    echo "[ Restore Agent ] [ SUCCESS ] Restore completed!"
+    ```
+
+4. **Run** the script:
+
+   ```bash
+   ./restore.sh
+   ```
+
+   * Enter the **volume name** (from `docker volume ls` command or Coolify's Persistent Storage page).
+   * Press **Enter** to accept `./volume-backup`, or type a custom backup path.
+   * Enter the backup filename (e.g., `umami_postgresql-backup.tar.gz`).
+   * Confirm you want to proceed by typing `y`.
+   
+---
+
+</Step>
+<Step>
+
+### Start your application
+Once the restore finishes, go to Coolify’s dashboard and click **Deploy**. 
+
+Your application should now use the migrated data. If it does not, or if logs show errors then repeat the restore step to ensure all files copied correctly.
+
+
+<Callout type="warn" title="Note">
+
+  If the database credentials (username, database name or password) are different on the new server, update them in Coolify’s dashboard to match those from the old server.
+  
+<ZoomImage src="/docs/images/applications/operations/migrate-between-instances/4.webp" alt="Screenshot of Migrate Apps Different Host" />
+
+</Callout>
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+## Move a directory, bind mount, or host file
+
+Find the exact source-server path under **Configuration > Persistent Storage**. Stop writes, then copy the contents while preserving ownership and permissions.
+
+For a directory, run from the source server:
+
+```sh
+rsync -a --numeric-ids -e "ssh -p <ssh-port>" \
+  <source-path>/ \
+  <ssh-user>@<destination-server>:<destination-path>/
+```
+
+The trailing `/` on `<source-path>/` copies the directory contents into `<destination-path>/`.
+
+Create the same mount in the destination application with the destination server's source path and the container's original **Destination Path**. For one Host File Mount, copy the file instead of the directory and confirm its destination-server path before starting the application.
+
+For a Coolify-managed File Mount, recreate its content in the destination dashboard rather than copying a generated internal path.
+
+## Verify the migration
+
+Confirm all of the following on the destination:
+
+- the production domain serves the destination application with valid TLS
+- the intended source revision or image is running
+- health checks and application logs show a stable runtime
+- login, reads, writes, uploads, and downloads work
+- databases contain the expected final records
+- scheduled tasks, queues, webhooks, email, OAuth, and external callbacks work
+- backups run and create a usable destination copy
+
+Monitor the destination until it is confirmed stable. Keep the source application stopped but unchanged, and retain the final backups for the rollback period you selected.
+
+## Roll back the cutover
+
+If the destination fails after traffic moves:
+
+1. stop writes to the destination
+2. determine whether production data changed on the destination after cutover
+3. restore or synchronize those changes back to the source dependencies when required
+4. return the production domain or DNS record to the source application
+5. start the source application and verify its critical user flow
+
+Do not send traffic back to an older source database without accounting for writes accepted by the destination. DNS rollback changes routing; it does not merge data.

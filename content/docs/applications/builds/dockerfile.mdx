@@ -1,0 +1,198 @@
+---
+title: Dockerfile
+description: Build an application image from a repository-owned Dockerfile or a Dockerfile entered directly in Coolify.
+---
+
+import { BranchUp, Code } from 'reicon-react';
+
+# Dockerfile
+
+Use a Dockerfile when you need exact control over the base image, installed packages, copied files, build stages, runtime user, and default container command.
+
+Coolify can read the Dockerfile from a Git repository or store one directly without Git. During deployment, Coolify builds an image from its instructions, then creates a container with the application's domains, environment variables, storage, networks, health checks, and runtime settings.
+
+## Choose where the Dockerfile is stored
+
+| Path | Use it when | Dockerfile location |
+| :--- | :--- | :--- |
+| Git repository | The build needs application source or other repository files. | The path formed by **Base Directory** and **Dockerfile Location**. |
+| Dockerfile without Git | The instructions can build an image without checking out repository files. | Stored in Coolify under **Configuration > General > Dockerfile**. |
+
+A Dockerfile entered without Git has no repository build context. Its `COPY` and `ADD` instructions cannot read application files from a repository.
+
+## Deploy from a Dockerfile
+
+Choose the path that matches where the Dockerfile and its build context are stored.
+
+<Tabs id="dockerfile-source" items={['Git repository', 'Without Git']}>
+<Tab value="Git repository" icon={BranchUp}>
+
+A repository-owned Dockerfile can copy application files from the repository and can use Git-based automatic deployments.
+
+<Steps>
+<Step>
+
+### Connect the repository
+
+Open the target project and environment, then select **+ New**.
+
+<ZoomImage src="/docs/images/builds/packs/dockerfile/1.webp" alt="Create New Resource button in a Coolify project" />
+
+Choose a public repository, deploy key, or supported Git App.
+
+<ZoomImage src="/docs/images/builds/packs/dockerfile/2.webp" alt="Git repository source options for a Dockerfile application" />
+
+For a public repository, paste its HTTPS URL and select **Check Repository**.
+
+<ZoomImage src="/docs/images/builds/packs/dockerfile/3.webp" alt="Public repository URL field for a Dockerfile application" />
+
+</Step>
+<Step>
+
+### Select Dockerfile
+
+Choose **Dockerfile** as the **Build Pack**.
+
+<ZoomImage src="/docs/images/builds/packs/dockerfile/4.webp" alt="Dockerfile option in the Build Pack selector" />
+
+</Step>
+<Step>
+
+### Configure the build context
+
+Set **Base Directory** to the repository directory Docker should use as the build context. Set **Dockerfile Location** to the Dockerfile path relative to that directory.
+
+<ZoomImage src="/docs/images/builds/packs/dockerfile/5.webp" alt="Branch and Base Directory fields for a Dockerfile application" />
+
+</Step>
+<Step>
+
+### Configure the runtime
+
+Continue to the application and set **Ports Exposes** to the internal port used by the process.
+
+The process must listen on `0.0.0.0`, not only `127.0.0.1`, for the Coolify proxy to reach it.
+
+<ZoomImage src="/docs/images/builds/packs/dockerfile/6.webp" alt="Domain and exposed port settings for a Dockerfile application" />
+
+Add the required domain, environment variables, and persistent storage. Do not copy production secrets into the Dockerfile or image layers.
+
+<ZoomImage src="/docs/images/builds/packs/dockerfile/7.webp" alt="Environment Variables page for a Dockerfile application" />
+
+</Step>
+<Step>
+
+### Deploy and verify
+
+Select **Deploy** and inspect the Docker build stages in the deployment log.
+
+After the container starts, verify the application logs, internal port, health, and public domain.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Without Git" icon={Code}>
+
+Use this path when the complete image can be built from Dockerfile instructions without application files from a repository.
+
+<Steps>
+<Step>
+
+### Select Dockerfile
+
+Open the target project and environment, select **+ New**, then select **Dockerfile**.
+
+</Step>
+<Step>
+
+### Enter the Dockerfile
+
+Paste the complete Dockerfile into the editor. For example:
+
+```dockerfile
+FROM nginx:alpine
+RUN printf '<h1>Hello from Coolify</h1>' > /usr/share/nginx/html/index.html
+EXPOSE 80
+```
+
+Select **Save**. Coolify creates an Application and opens its configuration.
+
+Coolify uses the first `EXPOSE` instruction as the initial **Ports Exposes** value. When the Dockerfile has no `EXPOSE` instruction, the initial port is `80`.
+
+</Step>
+<Step>
+
+### Configure the application
+
+Open **Configuration > General** to edit the stored **Dockerfile** or correct **Ports Exposes**.
+
+Add the required domain, runtime environment variables, storage, health check, and resource limits. These runtime settings are not added to the image.
+
+</Step>
+<Step>
+
+### Deploy and verify
+
+Select **Deploy** and inspect the Docker build stages in the deployment log.
+
+Confirm that the container starts, then verify the application logs, internal port, health, and public domain.
+
+</Step>
+</Steps>
+
+This application has no Git source, so Git push events and pull-request previews do not apply. Edit the stored Dockerfile and redeploy when its image instructions change.
+
+</Tab>
+</Tabs>
+
+## Build arguments
+
+Coolify can inject configured build variables as Docker build arguments.
+
+Disable **Configuration > Advanced > Inject Build Args to Dockerfile** when the Dockerfile declares and consumes every required `ARG` itself.
+
+For Git-based Dockerfile applications, `SOURCE_COMMIT` is excluded from the build by default so commits with unchanged layers can reuse cache. Enable **Include Source Commit in Build** only when the image contents need the commit value.
+
+Use **Use Docker Build Secrets** for sensitive build-time values when Docker BuildKit is available. Read [Environment variables](/applications/configuration/environment-variables#build-and-runtime-scope) before passing credentials to a build.
+
+## Image health checks
+
+A Dockerfile can define:
+
+```dockerfile
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD curl --fail http://localhost:3000/health || exit 1
+```
+
+The image must contain the command used by the check.
+
+Alternatively, configure the application under **Configuration > Healthcheck**. Read [Health checks](/applications/configuration/health-checks) for precedence and routing behavior.
+
+## Deployment commands
+
+**Pre-deployment** runs in the current application container before replacement. **Post-deployment** runs in the newly deployed container.
+
+<ZoomImage src="/docs/images/builds/packs/dockerfile/8.webp" alt="Pre-deployment and post-deployment command fields" />
+
+Coolify skips the pre-deployment command when no current container exists, including the first deployment. A failing pre-deployment command stops the deployment.
+
+Coolify marks the deployment complete before running the post-deployment command. A failing post-deployment command is recorded in the deployment log but does not change the successful deployment status.
+
+Use commands that can be run more than once, and test database migrations and other stateful operations against a non-production environment first.
+
+## Node.js multi-core scaling
+
+A plain Node.js process uses one CPU core. Read [Node.js multi-core scaling](/knowledge-base/nodejs-multi-core-scaling) when a Node.js or Bun application should use multiple cores from one Dockerfile deployment.
+
+## Troubleshoot the runtime
+
+If the build succeeds but the domain fails:
+
+1. inspect **Logs** for a process exit or bind error
+2. confirm the process listens on `0.0.0.0`
+3. confirm **Ports Exposes** contains the internal listening port
+4. verify the health-check request inside **Terminal**
+5. follow [No available server](/troubleshoot/applications/no-available-server) when the proxy has no healthy target
+
+<ZoomImage src="/docs/images/builds/packs/dockerfile/9.webp" alt="Port configuration for an application that is unavailable through its domain" />

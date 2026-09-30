@@ -1,0 +1,68 @@
+---
+title: Authorization
+description: Authenticate Coolify API requests with a Bearer token and understand the access checks applied to each request.
+---
+
+# API Authorization
+
+Coolify authenticates protected API requests with Bearer tokens. Each token belongs to the user and active team that created it and includes the permissions selected during creation.
+
+## Before you make a request
+
+Follow [API Tokens](/core/security/credentials/api-tokens) to:
+
+- create a token for the correct active team
+- choose permissions and an expiration period
+- copy the token into the caller's secret store
+
+Use a separate token for each integration and team. Do not place tokens in source code, query strings, or deployment logs.
+
+Coolify Cloud API access is already enabled, so Cloud users only need to create a token. On a self-hosted instance, an administrator must also [enable API access](/api/ip-allowlist#api-access-controls).
+
+---
+
+## Send a Bearer token
+
+Include the complete token in the `Authorization` header of every protected request:
+
+```sh
+export COOLIFY_URL="https://coolify.shadowarcanist.com"
+export COOLIFY_TOKEN="<api-token>"
+
+curl --fail-with-body \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  "$COOLIFY_URL/api/v1/teams/current"
+```
+
+The header format is:
+
+```txt
+Authorization: Bearer <api-token>
+```
+
+The token includes an ID, a `|` separator, and the secret value. Send the complete value exactly as Coolify displayed it when the token was created.
+
+A successful request returns the team bound to the token.
+
+---
+
+## Authorization checks
+
+A protected request passes through these checks:
+
+1. The token exists, has not expired, and authenticates a user.
+2. The user still belongs to the team recorded when the token was created.
+3. On a self-hosted instance, [API Access](/api/ip-allowlist) is enabled and the caller matches the IP allowlist when one is set.
+4. The token has the permission required by the endpoint, unless it has `root`.
+5. A token using `write` or `root` still belongs to a team administrator or owner.
+
+| Status | Typical meaning |
+| :--- | :--- |
+| `401` | Unauthenticated. The token is missing, invalid, expired, revoked, or no longer belongs to a current team member. |
+| `403` | Forbidden. API access or the caller's IP is blocked, the token lacks the required permission, or the token owner lacks the required role. |
+
+See [API errors](/api/errors) for other status codes and response-handling guidance.
+
+---
+
+Review [Permissions](/api/permissions) before choosing token abilities. Read the [API overview](/api/overview) for base URLs and the other API reference sections.
