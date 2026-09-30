@@ -31,7 +31,7 @@ function SponsorCard({ sponsor, size }: { sponsor: Sponsor; size: 'huge' | 'big'
               <img
                 src={imageUrl}
                 alt={`${sponsor.name} logo`}
-                className="max-h-28 max-w-72 object-contain"
+                className="max-h-28 max-w-full object-contain"
               />
             ) : null}
           </div>
@@ -59,7 +59,7 @@ function SponsorCard({ sponsor, size }: { sponsor: Sponsor; size: 'huge' | 'big'
             <img
               src={imageUrl}
               alt={`${sponsor.name} logo`}
-              className="max-h-20 max-w-48 object-contain"
+              className="max-h-20 max-w-full object-contain"
             />
           ) : null}
         </div>
