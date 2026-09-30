@@ -37,7 +37,7 @@ Run the command for the server's operating system.
 <Tab value="Ubuntu or Debian">
 
 ```sh
-useradd --create-home --user-group --shell /bin/bash cooluser
+useradd --create-home --user-group --shell /bin/bash --password 'NP' cooluser
 ```
 
 </Tab>
@@ -46,21 +46,21 @@ useradd --create-home --user-group --shell /bin/bash cooluser
 Use this for CentOS, RHEL, Rocky Linux, AlmaLinux, Fedora, Amazon Linux, Oracle Linux, or TencentOS.
 
 ```sh
-useradd --create-home --user-group --shell /bin/bash cooluser
+useradd --create-home --user-group --shell /bin/bash --password 'NP' cooluser
 ```
 
 </Tab>
 <Tab value="SUSE">
 
 ```sh
-useradd --create-home --user-group --shell /bin/bash cooluser
+useradd --create-home --user-group --shell /bin/bash --password 'NP' cooluser
 ```
 
 </Tab>
 <Tab value="Arch Linux">
 
 ```sh
-useradd --create-home --user-group --shell /bin/bash cooluser
+useradd --create-home --user-group --shell /bin/bash --password 'NP' cooluser
 ```
 
 </Tab>
@@ -73,34 +73,20 @@ adduser -D -s /bin/ash cooluser
 </Tab>
 </Tabs>
 
-Confirm that the account exists:
+<Callout type="info" title="Why --password 'NP'">
+`--password 'NP'` leaves the account unlocked while keeping password login disabled (`NP` is not a valid hash). A brand-new account otherwise has a locked password (`!` in `/etc/shadow`), and OpenSSH refuses key-based logins to a locked account, so Coolify's server validation fails.
+
+Alpine's busybox `adduser` has no equivalent flag, so its account stays locked. Alpine's OpenSSH is built without PAM and still accepts key-based logins, so no change is needed. If your Alpine build uses PAM, unlock the account with `apk add shadow && usermod -p 'NP' cooluser`.
+</Callout>
+
+Confirm the account exists and is not locked:
 
 ```sh
 id cooluser
-```
-
-The command should print the user's ID and group information.
-
-</Step>
-<Step>
-
-### Unlock the account for key-based login
-
-A brand-new account has no password, so its password is locked (`!` in `/etc/shadow`). OpenSSH refuses key-based logins to a locked account, so Coolify's server validation fails.
-
-Give the account a placeholder that keeps password login disabled but leaves the account unlocked. On Alpine, install the `shadow` package first with `apk add shadow`.
-
-```sh
-usermod -p 'NP' cooluser
-```
-
-Confirm the account is no longer locked:
-
-```sh
 passwd -S cooluser
 ```
 
-The status field (second column) should be `P`, not `L`.
+`id` prints the user's ID and group information. In `passwd -S`, the status field (second column) should be `P`, not `L`.
 
 </Step>
 <Step>
