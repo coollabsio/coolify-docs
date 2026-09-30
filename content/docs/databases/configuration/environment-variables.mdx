@@ -15,6 +15,10 @@ Use **Normal view** to add or edit variables individually. Use **Developer view*
 
 Each variable has a key and value. Treat passwords, tokens, and connection strings as secrets. Do not put a secret in a database image, custom configuration that is committed to Git, or a public URL.
 
+## External secret managers
+
+Link Doppler, Infisical, or HashiCorp Vault and reference a remote value with `{{vault.KEY}}`. Restart or redeploy the database after the provider value changes. Follow [Use a secret manager](/integrations/security/using-secret-managers).
+
 ## Database variables and General settings
 
 Environment variables are separate from the credentials and engine fields on **Configuration > General**. Some database images use environment variables during initialization, while other settings are generated from the General form.

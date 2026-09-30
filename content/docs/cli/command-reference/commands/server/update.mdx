@@ -26,12 +26,13 @@ coolify server update <uuid>
 | `--dynamic-timeout` | `integer` | No | `0` | Dynamic timeout |
 | `--instant-validate` | `boolean` | No | `false` | Validate server after update |
 | `--ip` | `string` | No | — | Server IP address |
-| `--is-build-server` | `boolean` | No | `false` | Mark as build server |
+| `--is-build-server` | `boolean` | No | `false` | Deprecated: use --server-role build (true) or --server-role both (false) |
 | `--is-terminal-enabled` | `boolean` | No | `false` | Enable terminal access |
 | `--name` | `string` | No | — | Server name |
 | `--port` | `integer` | No | `22` | SSH port |
 | `--private-key-uuid` | `string` | No | — | Private key UUID |
 | `--proxy-type` | `string` | No | — | Proxy type (e.g. TRAEFIK, CADDY, NGINX) |
+| `--server-role` | `string` | No | — | Server role (deployment\|build\|both): 'deployment' requires another usable build server |
 | `--user` | `string` | No | — | SSH user |
 
 ## Get current help
