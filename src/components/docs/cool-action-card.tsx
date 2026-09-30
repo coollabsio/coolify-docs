@@ -1,7 +1,7 @@
 import type React from 'react';
-import Link from 'fumadocs-core/link';
 import { ArrowRight, Check } from 'reicon-react';
 import { cn } from '@/lib/ui/cn';
+import { CoolLink } from './cool-link';
 import type { CoolActionType, CoolIcon } from './cool-types';
 
 type CoolActionCardProps = Omit<React.ComponentProps<'a'>, 'title'> & {
@@ -77,7 +77,7 @@ export function CoolActionCard({
 
   if (href) {
     return (
-      <Link
+      <CoolLink
         href={href}
         onClick={onClick}
         className={cn(
@@ -88,7 +88,7 @@ export function CoolActionCard({
         {...props}
       >
         {content}
-      </Link>
+      </CoolLink>
     );
   }
 

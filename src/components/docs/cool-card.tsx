@@ -1,7 +1,7 @@
 import type React from 'react';
-import Link from 'fumadocs-core/link';
 import { ArrowRight, Check } from 'reicon-react';
 import { cn } from '@/lib/ui/cn';
+import { CoolLink } from './cool-link';
 import type { CoolActionType, CoolIcon } from './cool-types';
 
 type CoolCardButton = {
@@ -65,7 +65,7 @@ export function CoolCard({
       {...props}
     >
       {href ? (
-        <Link
+        <CoolLink
           href={href}
           aria-label={linkLabel ?? (typeof title === 'string' ? title : undefined)}
           className="absolute inset-0 z-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-fd-primary focus:ring-offset-2 focus:ring-offset-fd-background"
@@ -97,14 +97,14 @@ export function CoolCard({
       {visibleButtons.length > 0 ? (
         <div className="relative z-20 mt-5 flex flex-wrap gap-2">
           {visibleButtons.map((button) => (
-            <Link
+            <CoolLink
               key={`${button.href}-${String(button.label)}`}
               href={button.href}
               className={`method-button method-button-${button.type ?? type} inline-flex w-fit items-center gap-2 border px-3 py-2 text-sm font-semibold transition`}
             >
               {button.label}
               <ArrowRight className="size-4" aria-hidden={true} />
-            </Link>
+            </CoolLink>
           ))}
         </div>
       ) : null}

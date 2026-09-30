@@ -8,10 +8,10 @@ description: Return a self-hosted Coolify instance to an earlier release from th
 Downgrading Coolify replaces the version of the self-hosted Coolify control plane. It does not roll back your applications, databases, services, managed servers, or their data.
 
 <Callout type="warn" title="Self-hosted instances only">
-The Coolify team manages instance versions for Coolify Cloud. You must wait for the Coolify team to downgrade the instance if the latest version causes a serious issue.
+The Coolify team manages instance versions for Coolify Cloud. You must wait for the Coolify team to downgrade the instance if the latest version causes a serious issue. If you are experiencing any issues with Coolify, [contact the Coolify team](/support).
 </Callout>
 
-The dashboard and automatic updates only install newer releases. To downgrade, use the terminal; the **Upgrade** action does not install older versions.
+You have to use the terminal to downgrade Coolify. The dashboard and automatic updates only install newer releases.
 
 ## Before you downgrade
 
@@ -35,11 +35,17 @@ Changing the version does not restore the earlier database state. If the downgra
 
 Prevent Coolify from returning to the newest release after the downgrade.
 
-Open **Settings** in the left sidebar, choose **Configuration**, then select **Updates**. Under **Auto Update**, turn off **Enabled**.
+Open **Settings** in the left sidebar, then select **Updates**.
 
-If you cannot change **Enabled**, Coolify reads the automatic-update setting from `/data/coolify/source/.env`. On the Coolify server, open that file and set `AUTOUPDATE` to `false`:
+<ZoomableImage src="/docs/images/core/instance-management/downgrade/updates-settings-overview.webp" alt="Settings and Updates navigation, with the Automatic updates control visible" />
 
-The installer saves a timestamped copy of the existing `.env` file before changing it during the downgrade. Keep your separate backup for recovery.
+Under **Automatic updates**, choose **Disabled**. This setting saves immediately.
+
+<ZoomableImage src="/docs/images/core/instance-management/downgrade/updates-automatic-updates.webp" alt="Automatic updates selector in Updates settings, currently set to Enabled" />
+
+If you cannot change **Automatic updates**, check whether `/data/coolify/source/.env` contains the `AUTOUPDATE` environment variable. If it does, set it to `false`.
+
+The upgrade script saves a timestamped backup of `.env` before changing it. Save your own copy of `/data/coolify/source/.env` before downgrading in case anything goes wrong.
 
 </Step>
 
@@ -53,21 +59,17 @@ Connect to the Coolify server over SSH:
 ssh root@<server-ip>
 ```
 
-Replace `<server-ip>` with your server's IP address. If you normally sign in with a non-root account, use that account and run the installer command with `sudo`.
+Replace `<server-ip>` with your server's IP address. If you normally sign in with a non-root account, run `sudo -i` first to open a root shell.
 
-Run the installer with the exact target version:
+Run the upgrade script with the exact target version:
 
 ```sh
-curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash -s <version>
+curl -fsSL https://cdn.coollabs.io/coolify/upgrade.sh | bash -s 4.3.21
 ```
 
-Replace `<version>` with the version from the release you selected, for example `4.1.2`.
+Replace `4.3.21` with the version from the release you selected.
 
-The installer downloads the current Coolify configuration files, pulls the target Coolify image, then restarts the Coolify containers in the background. Wait for the restart confirmation before closing the SSH session.
-
-<Callout type="info" title="Do not use the dashboard upgrade action">
-The dashboard **Upgrade** action and scheduled updater compare the target with the running version and prevent a lower version from being installed. They cannot be used to perform downgrades.
-</Callout>
+The upgrade script downloads the Coolify configuration files, pulls the target Coolify image, then restarts the Coolify containers in the background. Wait for the restart confirmation before closing the SSH session.
 
 </Step>
 
@@ -75,13 +77,13 @@ The dashboard **Upgrade** action and scheduled updater compare the target with t
 
 ### Verify the downgrade
 
-After the installer completes, wait for the dashboard to be available again, then confirm:
+After the upgrade script completes, wait for the dashboard to be available again, then confirm:
 
 - the dashboard opens and shows the expected Coolify version
 - you can see your projects and resources
 - managed servers still connect
 
-The installer writes a timestamped log such as `/data/coolify/source/upgrade-2026-07-11-12-00-00.log`. Review the newest `upgrade-*.log` file if the dashboard is still unavailable or a container fails to start.
+The upgrade script writes a timestamped log such as `/data/coolify/source/upgrade-2026-07-11-12-00-00.log`. Review the newest `upgrade-*.log` file if the dashboard is still unavailable or a container fails to start.
 
 </Step>
 </Steps>

@@ -209,7 +209,7 @@ docker compose --env-file /data/coolify/source/.env \
 
 The command prints nothing when the configuration is valid. If you do not have `docker-compose.custom.yml`, you do not need this check.
 
-Continue only when the command finishes without an error. Then remove the check directory and update Coolify from **Settings > Update**:
+Continue only when the command finishes without an error. Then remove the check directory and update Coolify from **Settings > Configuration > Updates**:
 
 ```sh
 rm -rf /tmp/coolify-compose-check
@@ -256,7 +256,7 @@ The update downloads the new Compose files first and stops before it changes any
      config --quiet
    ```
 
-3. Start the update again from **Settings > Update**.
+3. Start the update again from **Settings > Configuration > Updates**.
 
 ### The `coolify` container stays unhealthy
 
