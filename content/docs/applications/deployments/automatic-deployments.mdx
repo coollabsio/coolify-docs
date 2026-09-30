@@ -119,7 +119,7 @@ Store the webhook URL and API token as secrets in the external CI system.
 Add the request after the workflow's tests, build, or approval steps:
 
 ```sh
-curl --fail --request GET "$COOLIFY_WEBHOOK" \
+curl --fail --request POST "$COOLIFY_WEBHOOK" \
   --header "Authorization: Bearer $COOLIFY_TOKEN"
 ```
 

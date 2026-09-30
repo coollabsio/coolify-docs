@@ -229,8 +229,8 @@ const clientLoader = browserCollections.docs.createClientLoader({
         toc={toc}
         breadcrumb={{ enabled: false }}
         footer={{ enabled: !hideFooter && !hidePageChrome }}
-        tableOfContent={hidePageChrome ? { enabled: false } : { style: 'clerk', footer: pageActions }}
-        tableOfContentPopover={hidePageChrome ? { enabled: false } : { style: 'clerk', footer: pageActions }}
+        tableOfContent={{ style: 'clerk', footer: pageActions }}
+        tableOfContentPopover={{ style: 'clerk', footer: pageActions }}
       >
         <DocsBody>
           <MDX components={useMDXComponents()} />
