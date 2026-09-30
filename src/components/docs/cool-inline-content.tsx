@@ -1,5 +1,5 @@
 import type React from 'react';
-import Link from 'fumadocs-core/link';
+import { CoolLink } from './cool-link';
 
 const inlineTokenPattern = /(`([^`]+)`)|\[([^\]]+)\]\(([^)\s]+)\)/g;
 const urlPattern = /^https?:\/\/[^\s]+$/;
@@ -36,9 +36,9 @@ export function renderCoolInlineContent(content: React.ReactNode): React.ReactNo
       );
     } else if (label && href) {
       parts.push(
-        <Link key={`${href}-${match.index}`} {...linkProps(href)}>
+        <CoolLink key={`${href}-${match.index}`} {...linkProps(href)}>
           {label}
-        </Link>,
+        </CoolLink>,
       );
     }
 
@@ -54,7 +54,7 @@ export function renderCoolInlineContent(content: React.ReactNode): React.ReactNo
 
 export function renderCoolLinkValue(content: React.ReactNode): React.ReactNode {
   if (typeof content === 'string' && urlPattern.test(content)) {
-    return <Link {...linkProps(content)}>{content}</Link>;
+    return <CoolLink {...linkProps(content)}>{content}</CoolLink>;
   }
 
   return renderCoolInlineContent(content);

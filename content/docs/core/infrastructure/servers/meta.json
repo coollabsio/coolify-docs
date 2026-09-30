@@ -10,6 +10,7 @@
     "firewall",
     "non-root-user",
     "build-servers",
+    "github-actions-runners",
     "server-patching",
     "automated-docker-cleanup",
     "web-terminal"
