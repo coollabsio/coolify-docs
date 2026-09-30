@@ -19,6 +19,7 @@ Prepare the application and servers before attaching another deployment destinat
 
 - Add and validate every server in Coolify. Follow [Add Server](/core/infrastructure/servers/add-server) for each new server.
 - Use servers with the same CPU architecture, such as AMD64 or ARM64, so every server can run the same image.
+- Use the same [proxy](/core/networking/proxy/overview) type, Traefik or Caddy, on every server that has a proxy. Coolify generates the proxy labels for the primary server and uses them on every server, so Traefik labels do not work on a Caddy server and the reverse. A server without a proxy can still be attached.
 - Make application state available outside the containers. Use shared or external services for databases, sessions, queues, caches, and uploaded files.
 - Create a Docker registry repository that the primary server, any build server, and every additional server can access.
 - Authenticate the SSH user configured in Coolify to that registry on every server that must push or pull the image. See [Docker registries](/applications/builds/docker-registries#authenticate-a-private-registry).
@@ -47,6 +48,8 @@ Coolify requires **Docker Image** before it can deploy an application to additio
 The server originally selected for the application remains the **Primary Server**. Each attached server appears under **Additional Server(s)**.
 
 If no server is available to attach, confirm that the candidate server is validated, usable, belongs to the same team, and has a standalone Docker destination. A server already attached to the application is not shown again.
+
+Coolify rejects a server that uses a different proxy type than the primary server. If an application already has such a server, each deployment log shows a warning, and the application domains do not work through the proxy on that server. Change the proxy type on that server to match the primary server, then deploy again.
 
 ## Deploy and verify
 

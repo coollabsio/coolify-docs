@@ -53,7 +53,7 @@ Coolify refreshes this information when it validates or checks the server. Use i
 
 ## Link an existing server to a cloud provider
 
-If you added a Hetzner, DigitalOcean, or Vultr server manually, you can link its Coolify record to the matching provider machine.
+If you added a Hetzner, DigitalOcean, Vultr, or Hostinger server manually, you can link its Coolify record to the matching provider machine.
 
 Linking lets Coolify read provider status and display provider-backed actions such as **Power On** when the machine is stopped. It does not create a new machine.
 
@@ -72,7 +72,7 @@ Follow [Cloud Tokens](/core/security/credentials/cloud-tokens) to add a token fo
 1. Open **Servers** and select the server.
 2. Open **Configuration > General**.
 3. Select **Link Cloud Provider**.
-4. Choose **Hetzner**, **DigitalOcean**, or **Vultr**.
+4. Choose **Hetzner**, **DigitalOcean**, **Vultr**, or **Hostinger**.
 5. Select the matching provider token.
 
 </Step>
@@ -84,12 +84,21 @@ Search using the provider's server ID or the server IP address.
 
 Confirm that **Match Found** shows the intended machine, then select **Link This Server**.
 
+For Hostinger, the flow is different:
+
+1. Select **Link Provider**, then select **Hostinger**.
+2. Select the Hostinger token.
+3. Enter the Virtual Machine ID, or select **Search By Server IP**.
+4. Select **Link Resource**.
+
 </Step>
 <Step>
 
 ### Confirm the link
 
 Return to the server page and confirm that provider status is shown. If the status is stale, refresh it before taking a provider-backed action.
+
+A linked Hostinger server shows a `Hostinger · <state>` badge. Select **Refresh Status** to update it. If the VPS is stopped, you can start it from Coolify. Coolify does not validate the server over SSH while the VPS is stopped or suspended.
 
 </Step>
 </Steps>
