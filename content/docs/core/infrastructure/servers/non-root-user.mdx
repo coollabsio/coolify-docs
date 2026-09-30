@@ -84,6 +84,27 @@ The command should print the user's ID and group information.
 </Step>
 <Step>
 
+### Unlock the account for key-based login
+
+A brand-new account has no password, so its password is locked (`!` in `/etc/shadow`). OpenSSH refuses key-based logins to a locked account, so Coolify's server validation fails.
+
+Give the account a placeholder that keeps password login disabled but leaves the account unlocked. On Alpine, install the `shadow` package first with `apk add shadow`.
+
+```sh
+usermod -p 'NP' cooluser
+```
+
+Confirm the account is no longer locked:
+
+```sh
+passwd -S cooluser
+```
+
+The status field (second column) should be `P`, not `L`.
+
+</Step>
+<Step>
+
 ### Open the Coolify dashboard
 
 <ZoomImage src="/docs/images/core/infrastructure/servers/private-keys/private-keys-page.webp" alt="Private Keys page with the Add button in Coolify" />
@@ -180,6 +201,7 @@ After validation, the server's **General** page should report **Server is reacha
 If validation fails:
 
 - Run `su - cooluser -c 'sudo -n true'` again. A password prompt means the sudo rule is incorrect.
+- Run `passwd -S cooluser` and confirm the status is `P`. An `L` (locked) account rejects key-based logins.
 - Confirm the public key is in `/home/cooluser/.ssh/authorized_keys`.
 - Confirm **User** is `cooluser` in Coolify.
 - Check the [OpenSSH](/core/infrastructure/servers/openssh) settings and [firewall](/core/infrastructure/servers/firewall) rule for the SSH port.
