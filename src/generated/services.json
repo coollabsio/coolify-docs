@@ -942,6 +942,13 @@
     "category": "Productivity"
   },
   {
+    "name": "Kestra",
+    "slug": "kestra",
+    "icon": "/docs/images/services/kestra-logo.svg",
+    "description": "Open-source orchestration platform for data, infrastructure and AI workflows.",
+    "category": "Automation"
+  },
+  {
     "name": "Keycloak",
     "slug": "keycloak",
     "icon": "/docs/images/services/keycloak-logo.svg",
