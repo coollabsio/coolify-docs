@@ -3,6 +3,7 @@
   "pages": [
     "instance-settings",
     "update",
+    "reverb-migration",
     "update-coolify-database",
     "downgrade",
     "uninstallation"
