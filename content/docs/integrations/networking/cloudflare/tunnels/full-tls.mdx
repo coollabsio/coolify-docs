@@ -362,6 +362,26 @@ Next, update the service URL as follows:
 Change the type from `http://localhost:80` to `https://localhost:443`
 
 
+### Troubleshooting: Bad Gateway (502) after switching to HTTPS
+
+If you get a **502 Bad Gateway** from Cloudflare right after changing the service URL to `https://localhost:443`, this is usually a TLS hostname mismatch, not a broken origin.
+
+Your Origin Certificate is issued for your domain (e.g. `shadowarcanist.com` / `*.shadowarcanist.com`), but the tunnel is now connecting to `https://localhost:443`. When `cloudflared` verifies the certificate, it expects the certificate to match `localhost`, but the certificate only covers your domain. Verification fails and Cloudflare returns a 502.
+
+**Fix:** tell `cloudflared` which hostname to expect from the certificate.
+
+1. In the Cloudflare dashboard, go to **Zero Trust** → **Networks** → **Tunnels & Mesh**, then select your tunnel.
+2. Click the **Published application routes** tab.
+3. To edit an existing route, click its "..." menu and select **Edit**. To create a new one, click **Add a published application route**, and under **Service** set **Type** to `HTTPS` and **URL** to `localhost:443`.
+4. Expand **Origin request and connection settings**, then expand **TLS**.
+5. In the **Origin Server Name** field, enter the hostname your Origin Certificate covers, e.g. `shadowarcanist.com`.
+6. Save. Repeat for any other routes (e.g. a `*.shadowarcanist.com` wildcard route), using the same Origin Server Name value.
+
+<Callout type="info">
+  This **Origin Server Name** field lives under **Zero Trust → Networks → Tunnels & Mesh**, not the newer simplified **Networking → Tunnels** dashboard. That view currently only exposes Hostname, Path, and Service URL, with no origin/TLS options.
+</Callout>
+
+
 ## 5. Update URLs from HTTP to HTTPS
 
 Now, update all URLs from **HTTP** to **HTTPS** in Coolify, including resources and the instance domain on the settings page.
