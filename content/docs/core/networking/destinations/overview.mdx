@@ -12,7 +12,7 @@ A destination represents a Docker network on one of your servers. Selecting a de
 Each destination belongs to one server. A server can have more than one destination, and a destination can be used by multiple resources.
 
 <Callout type="info" title="Start with the default destination">
-Coolify creates a destination named `coolify` during installation. Applications use this destination by default. Docker Compose applications are the exception: they use their own resource-specific network unless you enable **Connect To Predefined Network**.
+Coolify creates for every server a Destination named `coolify`. Unless you added and selected a different Destination during the Resource creation, this will be the choosen Destination. Docker Compose applications are the exception: they use their own resource-specific network unless you enable **Connect To Predefined Network**.
 </Callout>
 
 ## What a destination controls
