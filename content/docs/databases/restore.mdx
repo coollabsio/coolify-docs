@@ -62,6 +62,19 @@ For a service database, the same suffixes are under `/services/{uuid}/databases/
 
 Uploading and starting an import require `write`. A server-path import also requires `deploy`. Options include `replace_existing`, `keep_owners`, `restore_mysql_users`, and `sqlite_database`. Concurrent database operations return `409`; invalid requests return `422`. Use the [API reference](/api) for source fields and upload formats.
 
+### Example: import a server file
+
+After stopping application writes and backing up the target, start an import using the backup's absolute path on the database server:
+
+```sh
+curl --request POST "https://coolify.example.com/api/v1/databases/<database-uuid>/imports" \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Content-Type: application/json" \
+  --data '{"source":"server","path":"/var/backups/database.sql.gz","dump_all":false,"replace_existing":false}'
+```
+
+Use a token with the required `write` and `deploy` abilities. Poll the activity endpoint with the returned activity ID and verify the result before resuming writes. Upload imports use `source: "upload"` and `upload_id`; S3 imports use `source: "s3"`, `s3_storage_uuid`, and `path`.
+
 ## Verify the result
 
 1. Confirm the database is running and healthy and review its logs.
