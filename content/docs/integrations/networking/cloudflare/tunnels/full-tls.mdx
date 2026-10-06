@@ -364,21 +364,21 @@ Change the type from `http://localhost:80` to `https://localhost:443`
 
 ### Troubleshooting: Bad Gateway (502) after switching to HTTPS
 
-If you get a **502 Bad Gateway** from Cloudflare right after changing the service URL to `https://localhost:443`, this is usually a TLS hostname mismatch, not a broken origin.
+If you get a **502 Bad Gateway** after changing the service URL to `https://localhost:443`, check the cloudflared logs for a certificate hostname mismatch. Other origin connection failures can also produce a 502.
 
 Your Origin Certificate is issued for your domain (e.g. `shadowarcanist.com` / `*.shadowarcanist.com`), but the tunnel is now connecting to `https://localhost:443`. When `cloudflared` verifies the certificate, it expects the certificate to match `localhost`, but the certificate only covers your domain. Verification fails and Cloudflare returns a 502.
 
 **Fix:** tell `cloudflared` which hostname to expect from the certificate.
 
-1. In the Cloudflare dashboard, go to **Zero Trust** → **Networks** → **Tunnels & Mesh**, then select your tunnel.
-2. Click the **Published application routes** tab.
-3. To edit an existing route, click its "..." menu and select **Edit**. To create a new one, click **Add a published application route**, and under **Service** set **Type** to `HTTPS` and **URL** to `localhost:443`.
-4. Expand **Origin request and connection settings**, then expand **TLS**.
-5. In the **Origin Server Name** field, enter the hostname your Origin Certificate covers, e.g. `shadowarcanist.com`.
-6. Save. Repeat for any other routes (e.g. a `*.shadowarcanist.com` wildcard route), using the same Origin Server Name value.
+1. In the Cloudflare dashboard, go to **Networking → Tunnels**, then select your tunnel.
+2. On **Routes**, select **Edit route** for the published application.
+3. Keep the service URL set to `https://localhost:443`.
+4. Expand **Additional application settings**, then **TLS**.
+5. Set **Origin Server Name** to a hostname covered by the certificate, for example `coolify.shadowarcanist.com`. Use a concrete hostname, not `*.shadowarcanist.com`.
+6. Keep **Disable TLS certificate verification** turned off and save the route. Repeat for other HTTPS routes, using a hostname covered by the certificate their origin serves.
 
 <Callout type="info">
-  This **Origin Server Name** field lives under **Zero Trust → Networks → Tunnels & Mesh**, not the newer simplified **Networking → Tunnels** dashboard. That view currently only exposes Hostname, Path, and Service URL, with no origin/TLS options.
+  For more diagnostics, see [Cloudflare's HTTPS origin troubleshooting guide](https://developers.cloudflare.com/tunnel/troubleshooting/https-origins/). Changing the zone's SSL/TLS mode does not fix a hostname mismatch between cloudflared and the origin.
 </Callout>
 
 
