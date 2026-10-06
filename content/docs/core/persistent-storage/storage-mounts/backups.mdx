@@ -80,6 +80,7 @@ Open **Executions** and wait for the run to finish. A usable result shows **Succ
 - **S3 Storage** means the archive was uploaded to the selected S3 destination.
 - **Success (S3 Warning)** means the local archive succeeded but its S3 upload failed. Read the execution message and correct the S3 problem before relying on the remote copy.
 - **Failed** means the archive was not completed. Read the execution message before retrying.
+- **Needs attention** means recovery requires action. Read the reason, correct it, and use the retry button. Failed recovery does not indefinitely block new backups.
 
 <Callout type="warning" title="Coolify does not restore storage archives from this page">
 The storage backup workflow creates, downloads, and deletes archives, but it does not provide a dashboard restore action. Before relying on a schedule, download an archive and test your restore procedure in a separate environment.

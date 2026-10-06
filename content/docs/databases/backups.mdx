@@ -169,3 +169,9 @@ A failed S3 upload does not necessarily mean the local database dump failed. Rea
     },
   ]}
 />
+
+## Scheduling and failed executions
+
+Due database backups are dispatched every minute independently of other schedule types. A scheduled backup whose queued job was lost is queued again after 60 minutes. A backup is skipped while the database starts, restarts, or imports, and a backup that exceeds its timeout fails with the timeout error.
+
+For backups of several databases, each database has its own result and finish time. All-database PostgreSQL, MySQL, and MariaDB backups fail if the dump command fails rather than retaining an incomplete archive. Review every result before relying on a backup set.
