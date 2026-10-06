@@ -16,12 +16,12 @@ Start with the page that matches what you are trying to understand or change. De
 | <span className="inline-block min-w-36 whitespace-nowrap">Page</span> | Use it to |
 | :--- | :--- |
 | **Settings pages** | Use the application sidebar to change the source, build, runtime, storage, health, resource limits, and other application settings. |
-| **Deployments** | Follow current and previous deployment operations, including source checkout, image build or pull, and container replacement. |
+| **Deployment Logs** | Follow current and previous deployment operations, including source checkout, image build or pull, and container replacement. |
 | **Backups** | Configure and inspect scheduled archives for eligible application volume and directory mounts. |
-| **Logs** | Read stdout and stderr from the application's current containers. |
+| **Runtime Logs** | Read stdout and stderr from the application's current containers. |
 | **Terminal** | Open an interactive shell in a selected running container. |
 
-**Logs** can show containers across the application's functional deployment servers, including preview containers. **Terminal** appears only when terminal access is enabled, your team role can use it, and the application has an eligible running container. It is not available from an application deployed to Docker Swarm.
+**Runtime Logs** can show containers across the application's functional deployment servers, including preview containers. **Terminal** appears only when terminal access is enabled, your team role can use it, and the application has an eligible running container. It is not available from an application deployed to Docker Swarm.
 
 ## Choose a lifecycle action
 
@@ -44,7 +44,7 @@ Follow [Deploy applications](/applications/deployments/overview) for deployment 
 
 ### Check the application status
 
-Confirm whether the application is running, stopped, unhealthy, or repeatedly restarting. A restart indicator beside **Logs** shows when Coolify has recorded container restarts.
+Confirm whether the application is running, stopped, unhealthy, or repeatedly restarting. A restart indicator beside **Runtime Logs** shows when Coolify has recorded container restarts.
 
 </Step>
 <Step>
@@ -60,7 +60,7 @@ A build or image-pull failure is visible here, not in the runtime application lo
 
 ### Read the container output
 
-Open **Logs**, find the affected server and container, then inspect the output around the failure time.
+Open **Runtime Logs**, find the affected server and container, then inspect the output around the failure time.
 
 Use these logs for application exceptions, crashes, failed startup, connection errors, and process output. When no containers are listed, confirm that the deployment server is functional and the application has a running container.
 
