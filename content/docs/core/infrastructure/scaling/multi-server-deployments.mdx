@@ -60,7 +60,7 @@ Deploy the application after attaching all required servers.
 3. Open **Configuration** > **Servers** and confirm that the primary and additional servers show a running status.
 4. Test every server through the origin path you plan to use before adding it to a load balancer.
 
-If an additional server cannot pull the image, sign in to the registry on that server with the same SSH user configured for the server in Coolify, then deploy again.
+If an additional server cannot pull the image, log in from that server’s **Registries** page, then deploy again. Additional servers pull the primary server’s published image instead of building it; commit, rollback, and image tag match the primary deployment. Coolify sends one deployment notification after all servers finish.
 
 ## Manage deployment servers
 
@@ -71,7 +71,7 @@ The **Servers** page provides actions for each attached server:
 - **Promote to Primary** makes an additional server the primary deployment destination. The former primary server becomes an additional server.
 - **Remove from server** stops the application on that server and removes the deployment destination after you confirm the server name.
 
-Normal application-wide deploy, restart, and stop actions include the primary and additional servers. A pull request preview is not deployed to the additional destinations.
+Normal application-wide deploy, restart, and stop actions include the primary and additional servers. Stop attempts every server even if one is unreachable. Existing configurations that combine multiple servers with persistent storage or Compose receive a deployment-log warning. A pull request preview is not deployed to the additional destinations.
 
 ## What multi-server deployment does not provide
 
