@@ -5,7 +5,7 @@ description: Choose which deployment, backup, scheduled task, container, and ser
 
 # Notification events
 
-Coolify lets you choose events separately for email, Discord, Telegram, Slack, Pushover, and webhook notifications. Open **Notifications**, select a channel, then use **Notification Settings** to change that channel's event selections.
+Coolify lets you choose events separately for email, Discord, Telegram, Slack, Pushover, and webhook notifications. Open **Notifications**, select a channel, then use the dropdowns under **Notification events** to change that channel's event selections. Events are grouped into **Deployments**, **Resources**, **Backups**, **Scheduled tasks**, and **Servers** (**Server** on Email).
 
 Changing an event for one channel does not change the other channels.
 
@@ -15,7 +15,8 @@ Changing an event for one channel does not change the other channels.
 | :--- | :--- |
 | **Deployment Success** | An application deployment completes successfully. |
 | **Deployment Failure** | An application deployment fails. |
-| **Container Status Changes** | An application or resource container stops unexpectedly, restarts automatically, or reaches its automatic restart limit. |
+| **Resource status changes** | An application or resource container stops unexpectedly or restarts automatically. |
+| **Restart limit reached** | A resource reaches its automatic restart limit and is stopped. |
 
 Pull request preview deployments use the same **Deployment Success** and **Deployment Failure** selections as regular application deployments.
 
@@ -49,7 +50,7 @@ When Coolify creates the local backup but cannot upload its S3 copy, it sends a 
 | :--- | :--- |
 | **Docker Cleanup Success** | An automatic Docker cleanup job completes successfully. |
 | **Docker Cleanup Failure** | An automatic Docker cleanup job fails. |
-| **Server Disk Usage** | Server disk usage exceeds the threshold configured for that server. |
+| **Disk usage warning** (**Server disk usage** on Email) | Server disk usage exceeds the threshold configured for that server. |
 | **Server Reachable** | A previously unreachable server becomes reachable again. |
 | **Server Unreachable** | Coolify cannot reach a server after two consecutive checks. |
 | **Server Patching** | Coolify finds operating system updates during a patch check, or the patch check fails. |
@@ -61,8 +62,8 @@ When Coolify creates the local backup but cannot upload its S3 copy, it sends a 
 
 After you configure a channel, select its test action:
 
-- Email uses **Send Test Email** and asks for a recipient address.
-- Discord, Telegram, Slack, Pushover, and webhook channels use **Send Test Notification**.
+- Email uses **Send test** and asks for a recipient address.
+- Discord, Telegram, Slack, Pushover, and webhook channels use **Send test**.
 
 A test confirms that the current channel credentials can deliver a message. It does not trigger or verify every selected event.
 

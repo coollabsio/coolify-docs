@@ -29,28 +29,28 @@ For an initial test, use a development endpoint or request inspector where you c
 
 ### Add the endpoint
 
-Open **Notifications > Webhook**, enter the endpoint in **Webhook URL (POST)**, and select **Save**.
+Open **Notifications > Webhook**, enter the endpoint in **Webhook URL**, and select **Save changes**.
 
 </Step>
 <Step>
 
 ### Enable the channel
 
-Turn on **Enabled**. Coolify requires a valid webhook URL before it enables the channel.
+Select **Enable**. Coolify requires a valid webhook URL before it enables the channel.
 
 </Step>
 <Step>
 
 ### Choose events
 
-Under **Notification Settings**, select the events to send to the endpoint. See [Notification events](/core/notifications/events) for each trigger.
+Under **Notification events**, select the events to send to the endpoint. See [Notification events](/core/notifications/events) for each trigger.
 
 </Step>
 <Step>
 
 ### Send a test
 
-Select **Send Test Notification** and inspect the request received by your endpoint.
+Select **Send test** and inspect the request received by your endpoint.
 
 Confirm all of the following:
 
@@ -104,4 +104,4 @@ If the test does not reach your endpoint:
 5. Confirm that the endpoint accepts `POST` with a JSON body and responds promptly.
 6. If a private IP is used, confirm that the Coolify instance has a route to that private network.
 
-If the test succeeds but a production event does not arrive, confirm that the event is enabled under **Notification Settings** and compare the receiver's parser with the [payload for that event](/core/notifications/channels/webhook/payload-reference).
+If the test succeeds but a production event does not arrive, confirm that the event is enabled under **Notification events** and compare the receiver's parser with the [payload for that event](/core/notifications/channels/webhook/payload-reference).
