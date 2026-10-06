@@ -23,7 +23,7 @@ The integration receives provider events for Coolify, so you do not need to copy
 
 ### Enable automatic deployments
 
-Open the application, select **Configuration > Advanced > Deployment & Git**, then enable **Auto Deploy**.
+Open the application, select **Advanced > Deployment**, then choose **Deploy on push (webhooks)** in **Auto deploy**.
 
 </Step>
 <Step>
@@ -37,7 +37,7 @@ Push a commit to the branch selected for the application. A push to another bran
 
 ### Verify the deployment
 
-Open **Deployments** and confirm a webhook deployment appears for the pushed commit.
+Open **Deployment Logs** and confirm a webhook deployment appears for the pushed commit.
 
 If no deployment appears, inspect the provider integration and confirm the application still has access to the repository.
 
@@ -56,7 +56,7 @@ These source types can clone the repository but do not automatically configure p
 
 ### Copy the provider webhook URL
 
-Open the application, select **Configuration > Webhooks**, then copy the URL for the repository provider under **Manual Git Webhooks**.
+Open the application, select **Webhooks**, then copy the URL for the repository provider under **Manual Git Webhooks**.
 
 </Step>
 <Step>
@@ -81,9 +81,9 @@ Follow [Manual Git webhooks](/applications/deployments/manual-webhooks) for prov
 
 ### Enable and verify automatic deployments
 
-Open **Configuration > Advanced > Deployment & Git**, enable **Auto Deploy**, then push a commit to the configured branch.
+Open **Advanced > Deployment**, choose **Deploy on push (webhooks)** in **Auto deploy**, then push a commit to the configured branch.
 
-Open **Deployments** and confirm a webhook deployment appears.
+Open **Deployment Logs** and confirm a webhook deployment appears.
 
 </Step>
 </Steps>
@@ -93,7 +93,7 @@ Open **Deployments** and confirm a webhook deployment appears.
 
 Use this method when CI should run tests, approvals, or an external image build before it tells Coolify to deploy.
 
-The authenticated **Deploy Webhook** starts a deployment directly. **Auto Deploy** does not need to be enabled for this method.
+The authenticated **Deploy Webhook** starts a deployment directly. **Auto deploy** does not need to be set to deploy on push for this method.
 
 <Steps>
 <Step>
@@ -107,7 +107,7 @@ Create a Coolify [API token](/core/security/credentials/api-tokens) with permiss
 
 ### Copy the deploy webhook
 
-Open the application, select **Configuration > Webhooks**, then copy **Deploy Webhook (auth required)**.
+Open the application, select **Webhooks**, then copy **Deploy Webhook (auth required)**.
 
 Store the webhook URL and API token as secrets in the external CI system.
 
@@ -142,7 +142,7 @@ If the request fails, inspect the CI response and confirm that the webhook URL a
 
 ## Limit deployments by changed paths
 
-Use **Watch Paths** under **Configuration > General > Build** when a monorepo should deploy only after matching files change.
+Use **Watch Paths** under **General > Build** when a monorepo should deploy only after matching files change.
 
 Patterns are evaluated in order and support `*`, `**`, `?`, and negation with `!`. The last matching pattern wins.
 
@@ -160,6 +160,6 @@ Test the patterns with a documentation-only commit before relying on them for pr
 
 ## Disable automatic Git deployments
 
-Turn off **Configuration > Advanced > Deployment & Git > Auto Deploy** to keep the source connection while ignoring automatic commit deployments from Git provider events.
+Choose **Manual deployments only** under **Advanced > Deployment > Auto deploy** to keep the source connection while ignoring automatic commit deployments from Git provider events.
 
 You can still select **Deploy** or **Redeploy**, or call the authenticated **Deploy Webhook** from an external workflow.

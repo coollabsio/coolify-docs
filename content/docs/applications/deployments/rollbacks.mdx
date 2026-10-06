@@ -7,23 +7,23 @@ description: Redeploy an older application image that is still available on the 
 
 A rollback deploys an older application image retained on the server. It does not reverse database migrations, restore persistent storage, or change external services.
 
-Open the application and select **Configuration > Rollback** to see the images Coolify can still use.
+Open the application and select **Rollback** to see the images Coolify can still use.
 
 ## Before rolling back
 
 Confirm:
 
-- the image for the version you want to restore appears under **Configuration > Rollback**
+- the image for the version you want to restore appears under **Rollback**
 - the current environment variables and runtime settings are compatible with that image
 - any database schema changes are backward compatible
 - persistent data has a separate restore plan when the release changed it
 
 ## Deploy an older image
 
-1. Open **Configuration > Rollback**.
+1. Open **Rollback**.
 2. Identify the image for the previous working deployment.
 3. Select the rollback action for that image.
-4. Open **Deployments** and follow the new operation.
+4. Open **Deployment Logs** and follow the new operation.
 5. Verify the application domain, logs, health check, and critical user flow.
 
 The rollback uses current Coolify runtime configuration with the selected older image. If a variable or mount changed after that image was built, review it before starting.

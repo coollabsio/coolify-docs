@@ -47,7 +47,7 @@ Follow [Health checks](/applications/configuration/health-checks) to configure a
 
 ## Configure graceful shutdown
 
-Open **Configuration > Advanced > Operations** and set **Stop Grace Period (seconds)** to the maximum time the application should need after receiving its termination signal.
+Open **Advanced > Operations** and set **Stop Grace Period (seconds)** to the maximum time the application should need after receiving its termination signal.
 
 The default is 30 seconds. Coolify accepts values from 1 to 3600 seconds.
 
@@ -60,7 +60,7 @@ The old and replacement containers must be able to run at the same time. Coolify
 | Condition | Why the containers cannot overlap |
 | :--- | :--- |
 | A port is published on the host | Both containers cannot bind the same host port. |
-| **Consistent Container Names** is enabled | Both containers would use the same Docker container name. |
+| **Container naming** is **Consistent name (no rolling updates)** | Both containers would use the same Docker container name. |
 | A **Custom Container Name** is configured | Both containers would use the same custom name. |
 | `--ip` or `--ip6` assigns a custom IP | Both containers would require the same network address. |
 | The deployment is a pull-request preview | Coolify does not use its application-level rolling update path for preview deployments. |

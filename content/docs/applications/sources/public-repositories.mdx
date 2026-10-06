@@ -45,7 +45,7 @@ Coolify loads the repository and branch information. If the URL contains a GitHu
 
 ### Configure and deploy
 
-Choose the [**Build Pack**](/applications/builds/overview), base directory, and required build settings. Configure the internal port and a domain when the application should be public.
+Choose the [**Build pack**](/applications/builds/overview), base directory, and required build settings. Configure the internal port and a domain when the application should be public.
 
 Select **Deploy** and inspect the deployment log.
 
@@ -59,7 +59,7 @@ Connecting a public repository by URL does not configure automatic deployments. 
 <Tabs id="public-repository-automatic-deployment" items={['Repository webhook', 'External workflow']}>
 <Tab value="Repository webhook">
 
-Add a [manual Git webhook](/applications/deployments/manual-webhooks), then enable **Configuration > Advanced > Auto Deploy**. The provider can then notify Coolify when the configured branch changes.
+Add a [manual Git webhook](/applications/deployments/manual-webhooks), then choose **Deploy on push (webhooks)** under **Advanced > Deployment > Auto deploy**. The provider can then notify Coolify when the configured branch changes.
 
 Use a [GitHub App](/applications/sources/github/app) instead when you want GitHub repository selection and webhook configuration through one integration.
 

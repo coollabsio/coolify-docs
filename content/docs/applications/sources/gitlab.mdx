@@ -100,11 +100,11 @@ Read [Deploy keys](/applications/sources/deploy-keys) for the complete setup and
 
 For an application created from a public URL or deploy key:
 
-1. Open **Configuration > Webhooks** in the Coolify application.
+1. Open **Webhooks** in the Coolify application.
 2. Copy the **GitLab** webhook URL and save a **GitLab Webhook Secret**.
 3. In GitLab, open **Settings > Webhooks** and enter the same URL and secret.
 4. Enable push events and, when using preview deployments, merge-request events.
-5. Enable **Configuration > Advanced > Auto Deploy** in Coolify.
+5. Open **Advanced > Deployment** and choose **Deploy on push (webhooks)** in **Auto deploy** in Coolify.
 
 Test the webhook from GitLab, then push to the configured branch and inspect **Deployments** in Coolify.
 
