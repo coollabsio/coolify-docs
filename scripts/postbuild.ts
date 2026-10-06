@@ -3,7 +3,7 @@ import { dirname, resolve } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
 import { loader, multiple, source as createSource } from 'fumadocs-core/source';
 import { openapiPlugin, openapiSource } from 'fumadocs-openapi/server';
-import { getDocEntries, getDocSourceFiles } from './lib/content';
+import { getAllDocEntries, getDocSourceFiles } from './lib/content';
 import { openapi } from '../src/lib/config/openapi';
 import { getDocMarkdownPath, getDocOgPath } from '../src/lib/config/site';
 import { getManifestKey } from '../src/lib/docs/docs-manifest';
@@ -109,7 +109,7 @@ function renderOgSvg(title: string, description: string, logoDataUri: string): s
 }
 
 async function writeOgImages() {
-  const docs = await getDocEntries();
+  const docs = await getAllDocEntries();
   const outputRoot = resolve(currentDir, '../.output/public');
   const logoDataUri = await loadCoolifyLogoDataUri();
 
@@ -132,7 +132,7 @@ async function writeOgImages() {
 }
 
 async function writeSitemap() {
-  const docs = await getDocEntries();
+  const docs = await getAllDocEntries();
   const outputRoot = resolve(currentDir, '../.output/public');
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
