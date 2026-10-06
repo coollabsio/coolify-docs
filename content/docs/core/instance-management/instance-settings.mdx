@@ -1,10 +1,9 @@
 ---
 title: Instance settings
-description: Configure self-hosted Coolify instance settings for URL, access, updates, backups, email, authentication, and scheduled jobs.
+description: Configure self-hosted Coolify instance settings for URL, access, updates, backups, email, authentication.
 ---
 
 import {
-  Calendar,
   CloudStorage,
   Database,
   Mailbox,
@@ -38,7 +37,7 @@ https://coolify.shadowarcanist.com/settings
 
 <ZoomableImage src="/docs/images/core/instance-management/instance-settings/general-settings-tab.webp" alt="Settings page with General selected in the instance settings navigation" />
 
-The Settings page groups options under **Configuration** (General, Advanced, and Updates) and **Instance** (Backup, Email, Authentication, and Scheduled Jobs). Select a section from the Settings navigation, then use **Save changes** to apply your edits.
+The Settings page groups options under **Configuration** (General, Advanced, and Updates) and **Instance** (Backup, Email, and Authentication). Select a section from the Settings navigation, then use **Save changes** to apply your edits.
 
 ## Configuration
 
@@ -435,7 +434,7 @@ Choose the registry Coolify uses to pull its images. Switch registries if the cu
 
 ## Instance
 
-<Tabs id="instance-settings-instance" items={['Backup', 'Email', 'Authentication', 'Scheduled Jobs']}>
+<Tabs id="instance-settings-instance" items={['Backup', 'Email', 'Authentication']}>
 <Tab value="Backup" icon={Database}>
 
 <ZoomableImage src="/docs/images/core/instance-management/instance-settings/backup-settings-overview.webp" alt="Settings selected, then Backup in the instance settings navigation" />
@@ -614,6 +613,8 @@ Create an API key in Resend and enter it in **API key**. The key is required whe
 
 The **Authentication** page lists the OAuth providers supported by Coolify. Each provider has its own section with an **Enable** action, credentials, a redirect URI, and any additional fields that provider requires.
 
+The page also controls password registration while OAuth is enabled. Each provider can auto-join newly created users to the Root team as members. For OIDC user creation and verification controls, see [OpenID Connect](/core/security/authentication/sso/oidc).
+
 ### OAuth providers
 
 <ZoomableImage src="/docs/images/core/instance-management/instance-settings/authentication-providers.webp" alt="OAuth provider list in Authentication settings" />
@@ -712,41 +713,14 @@ Enter the provider base URL, then click **Save changes**.
 
 Stores tenant information for providers that support or require tenant scoping.
 
-For Azure, enter the required tenant value. For Google, optionally enter a hosted domain to show a login hint.
+For Azure, enter the required tenant value. Google uses a **Hosted domain** field that restricts sign-in to the configured Workspace domain; `*` allows any Workspace account.
 
 **Accepted values:**
 
 - Azure: required tenant value.
-- Google: optional hosted domain value, for example `shadowarcanist.com`.
+- Google: optional allowed Workspace domain, for example `shadowarcanist.com`, or `*`.
 </Tab>
 
-<Tab value="Scheduled Jobs" icon={Calendar}>
 
-<ZoomableImage src="/docs/images/core/instance-management/instance-settings/scheduled-jobs-overview.webp" alt="Scheduled Jobs page in instance settings, with Failures, Scheduler runs, and Skipped tabs" />
-
-The **Scheduled Jobs** page shows activity from the scheduler running on this Coolify instance. This includes scheduled database and volume backups, tasks, and Docker cleanup for resources on managed servers. It shows scheduler activity and job results; configure each backup, task, or cleanup in its own settings. Activity is grouped into **Failures**, **Scheduler runs**, and **Skipped**; you can search, filter, sort, refresh, and page through each list.
-
-### Failures
-
-<ZoomableImage src="/docs/images/core/instance-management/instance-settings/scheduled-jobs-failures.webp" alt="Failures tab in Scheduled Jobs" />
-
-Shows scheduled backup, task, and cleanup executions that did not complete successfully. Review the job type, resource, server, timing, and error details. Search or filter the list, and refresh it after resolving a failure.
-
----
-
-### Scheduler runs
-
-<ZoomableImage src="/docs/images/core/instance-management/instance-settings/scheduled-jobs-runs.webp" alt="Scheduler runs tab showing recent scheduler activity" />
-
-Shows when the Coolify instance scheduler ran, its message and duration, and how many jobs it dispatched or skipped. Search, filter, sort, refresh, and paginate through the run history.
-
----
-
-### Skipped
-
-<ZoomableImage src="/docs/images/core/instance-management/instance-settings/scheduled-jobs-skipped.webp" alt="Skipped tab showing skipped scheduled jobs and their reasons" />
-
-Shows scheduled work that the Coolify instance scheduler did not dispatch, with the job type, resource, and reason. Review the reason, resolve the related issue, then refresh the list.
-</Tab>
 
 </Tabs>

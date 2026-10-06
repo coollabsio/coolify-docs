@@ -7,10 +7,10 @@ description: Prepare a self-hosted Coolify instance for the migration from the s
 
 New Coolify releases run Laravel Reverb and the web terminal server inside the main `coolify` container. They no longer use the separate `coolify-realtime` container.
 
-Most installations do not need a manual change. You must check your configuration before the update if you use a custom Compose override, custom realtime ports, a firewall, or a Cloudflare Tunnel.
+Most installations do not need a manual change. Review your configuration before the update if you use a custom Compose override, custom realtime ports, a firewall, or a Cloudflare Tunnel.
 
-<Callout type="warning" title="Check custom Compose files before the update">
-The new release has no `soketi` service. An override in `docker-compose.custom.yml` that still configures `soketi` makes the Compose configuration invalid, and the update stops. Automatic updates fail in the same way until you change the override. Update the override right before you update Coolify.
+<Callout type="info" title="Legacy overrides remain compatible">
+The update accepts a `soketi` override in `docker-compose.custom.yml`. Existing proxy routes and port settings remain compatible. You can move custom port bindings to `coolify` to make the override reflect the new container layout.
 </Callout>
 
 ## What changes
@@ -59,7 +59,7 @@ fi
 grep -nE '^[[:space:]]*soketi:' docker-compose.custom.yml 2>/dev/null || true
 ```
 
-If the command prints a line, migrate the override as shown in the next section.
+If the command prints a line, review the override. Migrating it as shown below is optional; legacy `soketi` overrides are still accepted.
 
 </Step>
 <Step>
@@ -190,30 +190,11 @@ PUSHER_BACKEND_PORT=6001
 
 The Cloudflare route still connects to origin port `6001`, but Reverb now handles that port in the `coolify` container.
 
-## Validate and update
+## Update
 
-The Compose files in `/data/coolify/source` still belong to your current release. They still define `soketi`, so they cannot show a problem with your override. Validate your override against the Compose files of the new release instead:
+Update Coolify from **Settings > Configuration > Updates**. Existing realtime routes, port settings, and legacy `soketi` overrides remain compatible. Keep the configuration backups until you have verified the dashboard, realtime updates, and terminal.
 
-```sh
-mkdir -p /tmp/coolify-compose-check
-cd /tmp/coolify-compose-check
-curl -fsSL https://cdn.coollabs.io/coolify/docker-compose.yml -o docker-compose.yml
-curl -fsSL https://cdn.coollabs.io/coolify/docker-compose.prod.yml -o docker-compose.prod.yml
-
-docker compose --env-file /data/coolify/source/.env \
-  -f docker-compose.yml \
-  -f docker-compose.prod.yml \
-  -f /data/coolify/source/docker-compose.custom.yml \
-  config --quiet
-```
-
-The command prints nothing when the configuration is valid. If you do not have `docker-compose.custom.yml`, you do not need this check.
-
-Continue only when the command finishes without an error. Then remove the check directory and update Coolify from **Settings > Configuration > Updates**:
-
-```sh
-rm -rf /tmp/coolify-compose-check
-```
+If you choose to migrate an override manually, check that all required port bindings are now on `coolify`. Review the update log in `/data/coolify/source/upgrade-*.log` if the update reports a configuration error.
 
 ## Verify the migration
 
@@ -237,26 +218,6 @@ Confirm that:
 You can also open `/realtime` in two browser tabs and send a test event.
 
 ## Troubleshooting
-
-### The update stopped with "Failed to parse docker-compose configuration"
-
-Your custom Compose file still contains a `soketi` service. The update log in `/data/coolify/source/upgrade-*.log` shows the error, and `docker compose config` reports that `service "soketi" has neither an image nor a build context specified`.
-
-The update downloads the new Compose files first and stops before it changes any container. Your current Coolify version keeps running.
-
-1. Move the required port bindings to `coolify` and remove the `soketi` block, as described in [Migrate a custom Compose override](#migrate-a-custom-compose-override).
-2. Validate the files. The Compose files in `/data/coolify/source` now belong to the new release:
-
-   ```sh
-   cd /data/coolify/source
-   docker compose --env-file .env \
-     -f docker-compose.yml \
-     -f docker-compose.prod.yml \
-     -f docker-compose.custom.yml \
-     config --quiet
-   ```
-
-3. Start the update again from **Settings > Configuration > Updates**.
 
 ### The `coolify` container stays unhealthy
 
