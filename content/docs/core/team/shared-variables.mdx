@@ -151,3 +151,7 @@ Deleting a shared variable does not remove its references from resource configur
 Docker Compose resources can reference shared variables in their Compose configuration. The placement depends on whether the value configures Compose interpolation or a container environment variable.
 
 Follow [Environment variables in Docker Compose](/applications/builds/docker-compose#environment-variables) for the supported patterns and examples.
+
+## Copying resolved values
+
+Resource environment-variable pages can copy resolved shared values. Locked shared-variable references remain references and cannot be copied as secret values. Rename invalid keys to follow `[A-Za-z_][A-Za-z0-9_.]*`, then update their references.

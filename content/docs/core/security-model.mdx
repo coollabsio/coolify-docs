@@ -248,3 +248,9 @@ Use the detailed guides to apply the security model to your Coolify instance and
     },
   ]}
 />
+
+## Configuration validation and secrets
+
+Coolify validates Git refs, Git-based Compose definitions, container names, network names, image references, storage paths, and proxy configurations before using them. Correct validation errors rather than trying to bypass them with shell syntax.
+
+Queued remote commands are encrypted and removed after the task ends. Commands and resolved secrets are excluded or redacted from failure logs and notifications. Team ownership controls which credentials and resources can be selected, including when teams change in another browser tab.

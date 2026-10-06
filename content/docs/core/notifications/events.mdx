@@ -67,3 +67,5 @@ After you configure a channel, select its test action:
 A test confirms that the current channel credentials can deliver a message. It does not trigger or verify every selected event.
 
 For webhook event identifiers and fields, see the [webhook payload reference](/core/notifications/channels/webhook/payload-reference).
+
+High-disk alerts default to a 24-hour repeat interval per server; configure the interval under the server’s **Advanced** settings. A proxy stuck in a restart loop sends at most one container-restarted notification per hour.

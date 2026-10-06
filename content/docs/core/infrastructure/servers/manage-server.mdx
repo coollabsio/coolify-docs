@@ -23,11 +23,11 @@ Before changing the IP address, domain, SSH user, port, or connection timeout, c
 | **Port** | The SSH port. |
 | **SSH Connection Timeout (s)** | How long Coolify waits for the SSH connection, from 1 to 300 seconds. |
 | **Server Timezone** | The timezone used for scheduled operations such as backups and cron jobs. |
-| **Use it as a build server?** | Makes the server available for application builds and prevents resources from being deployed to it. |
+| **Server role** | Choose **Deployments only**, **Builds only**, or **Deployments and builds**. See [Server roles](/core/infrastructure/servers/build-servers#server-roles). |
 
 Select **Save** after changing fields that do not save automatically. If you changed the connection, run the server validation again to confirm Coolify can still reach it.
 
-The build-server setting is unavailable while the server has managed resources. Move or delete those resources first. Read [Build Servers](/core/infrastructure/servers/build-servers) before changing the role.
+You cannot switch a server with managed resources to **Builds only**. Move or delete those resources first. The role cannot change while GitHub Actions runners are enabled. Read [Build Servers](/core/infrastructure/servers/build-servers) before changing the role.
 
 ### Wildcard domain
 
@@ -53,7 +53,7 @@ Coolify refreshes this information when it validates or checks the server. Use i
 
 ## Link an existing server to a cloud provider
 
-If you added a Hetzner, DigitalOcean, or Vultr server manually, you can link its Coolify record to the matching provider machine.
+If you added a Hetzner, DigitalOcean, Vultr, or Hostinger server manually, you can link its Coolify record to the matching provider machine.
 
 Linking lets Coolify read provider status and display provider-backed actions such as **Power On** when the machine is stopped. It does not create a new machine.
 
@@ -72,7 +72,7 @@ Follow [Cloud Tokens](/core/security/credentials/cloud-tokens) to add a token fo
 1. Open **Servers** and select the server.
 2. Open **Configuration > General**.
 3. Select **Link Cloud Provider**.
-4. Choose **Hetzner**, **DigitalOcean**, or **Vultr**.
+4. Choose **Hetzner**, **DigitalOcean**, **Vultr**, or **Hostinger**.
 5. Select the matching provider token.
 
 </Step>
@@ -84,12 +84,21 @@ Search using the provider's server ID or the server IP address.
 
 Confirm that **Match Found** shows the intended machine, then select **Link This Server**.
 
+For Hostinger, the flow is different:
+
+1. Select **Link Provider**, then select **Hostinger**.
+2. Select the Hostinger token.
+3. Enter the Virtual Machine ID, or select **Search By Server IP**.
+4. Select **Link Resource**.
+
 </Step>
 <Step>
 
 ### Confirm the link
 
 Return to the server page and confirm that provider status is shown. If the status is stale, refresh it before taking a provider-backed action.
+
+A linked Hostinger server shows a `Hostinger · <state>` badge. Select **Refresh Status** to update it. If the VPS is stopped, you can start it from Coolify. Coolify does not validate the server over SSH while the VPS is stopped or suspended.
 
 </Step>
 </Steps>
@@ -127,3 +136,9 @@ Select **Save** after changing these values.
 <Callout type="info" title="Limits are per server">
 The concurrent-build count and queue limit apply to each server independently. A dedicated [build server](/core/infrastructure/servers/build-servers) has its own limits, so raising them there does not affect deployments on other servers.
 </Callout>
+
+## Disk usage notifications
+
+Set the high-disk notification interval under **Advanced**. Alerts repeat at most once per interval per server, with a default of 24 hours. If usage falls at least five percentage points below the threshold and later rises above it, Coolify can alert sooner. The API field is `server_disk_usage_notification_interval_hours`.
+
+A server becomes unreachable after two consecutive failed connection checks. A single failed check does not mark every resource as exited; deployment attempts recheck servers marked unreachable before failing.

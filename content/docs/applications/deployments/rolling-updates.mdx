@@ -65,6 +65,8 @@ The old and replacement containers must be able to run at the same time. Coolify
 | `--ip` or `--ip6` assigns a custom IP | Both containers would require the same network address. |
 | The deployment is a pull-request preview | Coolify does not use its application-level rolling update path for preview deployments. |
 
+An optional generated **Container Name Prefix** retains a deployment-specific timestamp and does not disable rolling updates. See [Container naming](/applications/configuration/advanced#container-name-prefix).
+
 When Coolify detects one of these conditions, the deployment log explains why rolling updates are not supported. Stopping the current container before starting its replacement causes an interruption while the replacement starts.
 
 ## Docker Compose and Docker Swarm

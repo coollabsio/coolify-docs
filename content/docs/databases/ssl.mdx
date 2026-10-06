@@ -25,7 +25,7 @@ Applications use SSL only when their connection configuration enables it. Copy t
 
 Coolify creates a database certificate signed by the CA certificate for the database's server. If no server CA certificate exists, Coolify attempts to generate one. The certificate status and expiration date appear on the database's General page.
 
-To regenerate a database certificate, use **Regenerate SSL Certificates** on the General page, then restart the database. A regenerated certificate can require the connecting application to trust the server CA again.
+To regenerate a database certificate, use **Regenerate SSL Certificates** on the General page, then restart the database. PostgreSQL, MySQL, MariaDB, Redis, KeyDB, and Dragonfly use separate `server.crt` and `server.key` files. New and regenerated certificates use a P-256 key, including for compatibility with Electron-based clients such as MongoDB Compass. The CA file on the server matches the signing CA. A regenerated certificate can require the connecting application to trust the server CA again.
 
 ## SSL modes
 

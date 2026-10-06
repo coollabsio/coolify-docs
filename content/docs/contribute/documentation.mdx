@@ -197,4 +197,9 @@ Open an issue for repository-specific problems, or ask in the contribute channel
 </CoolActionCardGrid>
 </CoolCallout>
 
+
+## API schema for unreleased docs
+
+The API reference reads `config/openapi.json`. The fetch script defaults to upstream Coolify `main`; set `COOLIFY_OPENAPI_URL` to a raw schema URL for the intended release revision when documenting unreleased features. Check generated endpoint routes and redirects after refreshing the schema. Network failures preserve the local spec, so confirm that it contains the expected endpoints before committing API changes.
+
 </CoolDocsPage>

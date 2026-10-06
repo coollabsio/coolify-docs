@@ -28,6 +28,7 @@
     "redis",
     "dragonfly",
     "keydb",
-    "clickhouse"
+    "clickhouse",
+    "sqlite"
   ]
 }

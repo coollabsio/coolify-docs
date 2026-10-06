@@ -76,7 +76,7 @@ Use a manual cleanup to confirm the settings before relying on the schedule:
 2. Select **Trigger Manual Cleanup**.
 3. Wait for the execution to finish.
 
-A manual cleanup starts immediately. It does not wait for the schedule or disk threshold.
+A manual cleanup does not wait for the schedule or disk threshold. If another cleanup is running, it waits for that execution instead of being dropped. Only one cleanup runs per server at a time.
 
 </Step>
 <Step>
@@ -95,3 +95,7 @@ Confirm that:
 
 </Step>
 </Steps>
+
+## Cleanup after resource operations
+
+Stopping or deleting a resource triggers Docker cleanup only when disk usage is at or above the configured cleanup threshold and no cleanup has completed in the last hour. Scheduled cleanup is dispatched every minute by its own scheduler process. Lost queued cleanup jobs are recorded as failed and the team is notified.

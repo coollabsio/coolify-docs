@@ -1,13 +1,13 @@
 ---
 title: Backups
-description: Schedule, retain, and store PostgreSQL, MySQL, MariaDB, MongoDB, and ClickHouse database backups in Coolify.
+description: Schedule, retain, and store PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, and SQLite database backups in Coolify.
 ---
 
 import { BranchUp, Refresh23, Server } from 'reicon-react';
 
 # Backups
 
-Coolify can create scheduled, engine-aware database backups for PostgreSQL, MySQL, MariaDB, MongoDB, and ClickHouse. Each backup schedule creates a backup on the database's server, and can upload a copy to an S3-compatible storage provider.
+Coolify can create scheduled, engine-aware database backups for PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, and SQLite. Each backup schedule creates a backup on the database's server, and can upload a copy to an S3-compatible storage provider.
 
 Redis, Dragonfly, and KeyDB do not support this scheduled database backup workflow. Use the engine's persistence and backup tools for those databases, or deploy a backup-capable service separately.
 
@@ -26,6 +26,8 @@ A successful backup only proves that Coolify created a file. [Restore a copy](/d
 5. Select **Save**.
 
 The schedule runs on the server where the database is deployed. The **Timezone** field is read-only: it uses the server timezone when one is configured, otherwise the Coolify instance timezone.
+
+SQLite backups use its configured database files. See [SQLite](/databases/sqlite) for application connections and file recovery.
 
 A backup job runs only while the database is running. If the database is stopped when the schedule fires, Coolify skips that execution.
 
@@ -167,3 +169,9 @@ A failed S3 upload does not necessarily mean the local database dump failed. Rea
     },
   ]}
 />
+
+## Scheduling and failed executions
+
+Due database backups are dispatched every minute independently of other schedule types. A scheduled backup whose queued job was lost is queued again after 60 minutes. A backup is skipped while the database starts, restarts, or imports, and a backup that exceeds its timeout fails with the timeout error.
+
+For backups of several databases, each database has its own result and finish time. All-database PostgreSQL, MySQL, and MariaDB backups fail if the dump command fails rather than retaining an incomplete archive. Review every result before relying on a backup set.

@@ -1,0 +1,40 @@
+---
+title: Traffic Analytics
+description: Enable proxy traffic analytics for Traefik and Caddy and configure collection and retention.
+---
+
+# Traffic analytics
+
+Coolify's Rust-based Sentinel agent reads JSON proxy access logs and stores aggregate rollups for traffic analytics. Traefik and Caddy are supported. Collection is off by default and enabled per server.
+
+## Enable collection
+
+1. Open **Servers > [server] > Analytics**.
+2. Enable traffic analytics and review the restart confirmation.
+3. Wait for the proxy and Sentinel to restart. Traffic can be briefly interrupted.
+4. For Caddy, redeploy applications and service stacks after enabling or disabling analytics so their logging labels are updated.
+5. Send requests through the proxy, then check the analytics view.
+
+Caddy requires caddy-docker-proxy 2.9 or newer. New Coolify configurations use 2.13. If the page reports an unsupported configuration or outdated image, resolve it before enabling collection.
+
+## Configure collection
+
+| Setting | Effect |
+| :--- | :--- |
+| Top-N cap | Maximum distinct values retained per dimension, such as paths or countries. Overflow is grouped as Other. |
+| Sample threshold | Events per second above which Sentinel samples traffic. `0` disables sampling. |
+| Hourly retention | Days to retain fine-grained hourly rollups. |
+| Daily retention | Days to retain daily rollups. |
+| Geolocation | Enable or disable visitor country enrichment. |
+| GeoIP refresh interval | Days between GeoIP database update checks. |
+| MaxMind GeoIP license key | Optional key for downloading GeoLite2. GeoIP works without a key using the default database source. |
+
+Save the settings after editing. Raw access logs are rotated on the server; Coolify's analytics stores aggregates rather than raw request logs.
+
+## View analytics
+
+Use the dashboard widget, the global **Analytics** page, the server's **Analytics** page, or an application's or service's **Analytics** tab. The global page supports server and application filters.
+
+Views include request count, bandwidth, unique visitors, and p95 latency with sparklines, a requests chart, status-code breakdown, a country globe and country list, and device, path, host, referrer, and browser breakdowns. The 24-hour range supports optional live refresh.
+
+Traffic analytics measures requests reaching the supported proxy. CPU and memory history are separate [metrics](/core/observability/monitoring/metrics). For Caddy views with no data, check the proxy version and redeploy resources after changing collection.

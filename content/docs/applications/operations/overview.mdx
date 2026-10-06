@@ -141,3 +141,15 @@ To move the application and its state to another Coolify control plane, follow [
     },
   ]}
 />
+
+## Resource action buttons
+
+The primary resource action is a one-click button. Use the adjacent dropdown for secondary actions. Confirm destructive actions in the Coolify modal and review the listed effects before continuing.
+
+## Follow a running operation
+
+Use **Deploying… View log** to reopen a running deployment or startup log. Selecting Deploy, Start, or Restart while an operation runs reopens its log. The running-deployments indicator appears in the sidebar, in the top bar on mobile, and on the dashboard.
+
+The container log viewer separates **Time**, **Type**, and **Message**. Expand a row to view pretty-printed JSON. If containers cannot be loaded, read the displayed error instead of treating it as proof that none are running.
+
+Viewing container logs requires permission to update the resource. API log requests require `read:sensitive` or `root`.

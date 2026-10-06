@@ -170,6 +170,10 @@ Read Docker’s [Compose application model](https://docs.docker.com/compose/intr
 
 ---
 
+## Resource labels
+
+Coolify identifies resource containers with UUID labels: `coolify.applicationUuid`, `coolify.serviceUuid`, `coolify.service.subUuid`, and `coolify.databaseUuid`. Existing containers remain compatible and receive the new labels on their next deploy or restart. Update scripts that rely on the old numeric ID labels to use the corresponding UUID label.
+
 ## From configuration to running containers
 
 <CoolFlow

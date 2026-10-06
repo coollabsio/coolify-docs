@@ -25,7 +25,7 @@ Open the application, select **Configuration > Advanced > Deployment**, then ena
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/1.webp" alt="Preview Deployments and Allow Public PR Deployments settings" />
 
-With **Allow Public PR Deployments** disabled, Coolify blocks pull requests from forks unless the author is a repository owner, member, or collaborator. Enable it only when anyone should be allowed to trigger a preview.
+With **Allow Public PR Deployments** disabled, Coolify blocks pull requests from forks unless the author is a repository owner, member, or collaborator. Enable it only when anyone should be allowed to trigger a preview. GitLab, Gitea, and Bitbucket pull requests from other repositories require public preview deployments to be enabled.
 
 ## Connect pull-request events
 
@@ -260,3 +260,20 @@ Depending on the preview state, you can:
 3. Open the preview domain and test the proposed change.
 4. Close or merge the request.
 5. Confirm that Coolify removes the automatically created preview.
+
+## Manage previews through the API
+
+Use `GET /applications/{uuid}/previews` to list previews and `GET /applications/{uuid}/previews/{pull_request_id}` to inspect one. Creating or redeploying a preview requires `deploy`:
+
+```sh
+curl --request POST "https://coolify.example.com/api/v1/applications/<application-uuid>/previews" \
+  --header "Authorization: Bearer $COOLIFY_TOKEN" \
+  --header "Content-Type: application/json" \
+  --data '{"pull_request_id":42,"git_type":"github","force":false}'
+```
+
+Use the provider that hosts the request. Bitbucket also requires a `commit` SHA. Pull request IDs must be positive integers no greater than `2147483647`; invalid IDs return a validation error, including in the MCP deploy tool.
+
+`POST /deploy` with `pull_request_id` also deploys the pull-request ref for deploy-key and public-repository applications. Gitea previews use the pull request's head commit. The UI's pull-request listing and status updates are available for GitHub App sources.
+
+Inspect deployment history after the request is accepted. Closing or deleting a preview removes only its own containers and Coolify-created networks and volumes.

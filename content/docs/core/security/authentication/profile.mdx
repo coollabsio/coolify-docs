@@ -1,0 +1,22 @@
+---
+title: Profile and Account Deletion
+description: Manage your Coolify profile, linked identity, and account deletion.
+---
+
+# Profile and account deletion
+
+Open the user menu and select **Profile** to manage your account and [two-factor authentication](/core/security/authentication/2fa). Linked SSO identities are displayed here. When your email is managed by a provider, change it at the provider; Coolify does not allow editing it locally.
+
+For an account with a linked OAuth identity, destructive actions use typed confirmation without requiring a Coolify password. Review every action listed by the confirmation before proceeding.
+
+## Delete your account
+
+Use the account-deletion action on **Profile** and complete the confirmation. Deleting an account:
+
+- deletes teams where you are the only member
+- removes you from all other teams
+- revokes your API tokens and sessions
+
+Deletion is blocked for the root user, while a team you own alone still has servers, projects, or Git sources, and when leaving a shared team would leave it without an administrator or owner.
+
+Before retrying a blocked deletion, remove the remaining resources or arrange the required ownership and administration in each team. Account deletion is separate from removing a member through team administration; see [Remove a member](/core/team/members/remove-a-member).

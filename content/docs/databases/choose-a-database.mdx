@@ -15,6 +15,7 @@ Choose the database engine that matches the data model and workload your applica
 | [MySQL](/databases/mysql) | Relational applications and the MySQL ecosystem. | `3306` | Yes |
 | [MariaDB](/databases/mariadb) | MySQL-compatible relational workloads. | `3306` | Yes |
 | [MongoDB](/databases/mongodb) | Document data and flexible schemas. | `27017` | Yes |
+| [SQLite](/databases/sqlite) | File-based databases mounted into an application on the same server; experimental. | None | Yes |
 | [Redis](/databases/redis) | Caches, queues, streams, and key-value data. | `6379` | No |
 | [Dragonfly](/databases/dragonfly) | Redis-compatible workloads using a multithreaded datastore. | `6379` | No |
 | [KeyDB](/databases/keydb) | Redis-compatible workloads using multithreading. | `6379` | No |
@@ -47,7 +48,7 @@ After creating the database:
 1. Open **Configuration > General** and confirm the image, credentials, database name, and internal port.
 2. Confirm the persistent storage mount under **Configuration > Persistent Storage**.
 3. Start the database and check its status and logs.
-4. Connect an application on the same destination with the **Internal URL**.
+4. Connect an application on the same destination with the **Internal URL**, or mount the data volume for SQLite.
 5. Configure [backups](/databases/backups) for a supported engine and verify the [restore workflow](/databases/restore).
 
 If your application uses a different engine or requires a cluster, do not force it into a one-click resource. Use a Compose service or an external database provider instead.

@@ -128,7 +128,7 @@ For Git deployments that use Nixpacks, Railpack, Static, or Dockerfile, Coolify 
 
 Use **Force deploy (without cache)** when you need Coolify to rebuild the image without Docker's build cache.
 
-A dedicated build server separates build load from the deployment server. Using a build server requires a registry image name so the deployment server can pull the completed image. Read [Build Server](/core/infrastructure/servers/build-servers) for the server and registry requirements.
+Server roles determine whether a machine can build, deploy, or do both. A deployment-only server never builds locally. A dedicated build server separates build load from the deployment server. Using a build server requires a registry image name so the deployment server can pull the completed image. Read [Build Server](/core/infrastructure/servers/build-servers) for the server and registry requirements.
 
 ---
 

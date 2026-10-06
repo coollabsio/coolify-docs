@@ -9,6 +9,20 @@ A build server builds application images on a separate machine. The completed im
 
 By default, Coolify builds an application on the same server where the application will be deployed. Add a build server when builds use too much CPU, memory, or disk space on the deployment server.
 
+## Server roles
+
+Set **Server role** in the server's **General** settings:
+
+| Role | Behavior | API value |
+| :--- | :--- | :--- |
+| Deployments only | Runs resources; images must be built elsewhere. Applications need a Docker image name. | `deployment` |
+| Builds only | Builds images for other servers; cannot host resource deployments. Required for GitHub Actions runners. | `build` |
+| Deployments and builds | Builds images and runs resources on this server. | `both` |
+
+The API uses `server_role`. The deprecated `is_build_server` field remains compatible, but use `server_role` for new integrations.
+
+Under **Team**, configure **Build server fallback** to choose whether builds may fall back to a deployment server when no build server is usable. The server must have a role that allows builds. Disable fallback if builds must stay off deployment machines.
+
 ## What you need
 
 Before you start, make sure you have:
@@ -57,7 +71,7 @@ Complete [Create and authorize an SSH key](/core/infrastructure/servers/add-serv
 ### Add the build server
 
 1. Enter the server name, IP address or domain, SSH port, user, and private key.
-2. Enable **Use it as a build server?**.
+2. Set **Server role** to **Builds only**.
 3. Select **Continue**.
 
 Coolify adds the server and opens its **General** page.
@@ -97,7 +111,7 @@ If the server has managed resources, move or delete them before continuing. Cool
 <ZoomImage src="/docs/images/core/infrastructure/servers/build-servers/existing-server-build-setting.webp" alt="Build server setting on an existing server General page" />
 
 1. Open **Configuration > General** for the server.
-2. Enable **Use it as a build server?**.
+2. Set **Server role** to **Builds only**.
 
 The setting saves immediately. The server can no longer be selected as a deployment destination while it remains a build server.
 
@@ -111,9 +125,15 @@ The setting saves immediately. The server can no longer be selected as a deploym
 When more than one usable build server is available, Coolify selects one at random for each build.
 </Callout>
 
+<Callout type="idea" title="Run GitHub Actions jobs">
+Build servers can also run the GitHub Actions workflow jobs of your organization. Refer to [GitHub Actions runners](/core/infrastructure/servers/github-actions-runners).
+</Callout>
+
 ---
 
 ## Sign in to the container registry
+
+Use **Servers > [server] > Registries** to log in on the build server and deployment server. See [Registry login](/applications/builds/docker-registries#authenticate-a-private-registry) for presets and credential updates. The SSH procedure below remains available.
 
 <Steps>
 <Step>
@@ -206,7 +226,7 @@ Wait for the deployment to finish, then confirm:
 2. the application runs on its deployment server
 3. the application opens from its configured domain
 
-If no usable build server is available, Coolify reports **No suitable build server found. Using the deployment server.** and performs the build on the deployment server.
+If no usable build server is available, Coolify builds on the deployment server only when the team enables **Build server fallback** and that server permits builds. A **Deployments only** server never builds images itself.
 
 </Step>
 </Steps>

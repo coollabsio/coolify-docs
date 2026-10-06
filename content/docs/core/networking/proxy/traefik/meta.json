@@ -3,6 +3,7 @@
   "pages": [
     "[Overview](/core/networking/proxy/traefik/overview)",
     "basic-auth",
+    "tls-certificates",
     "custom-ssl-certs",
     "dashboard",
     "custom-middlewares",

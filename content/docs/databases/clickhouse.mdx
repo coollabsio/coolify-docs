@@ -108,3 +108,7 @@ Coolify's default health check runs `clickhouse-client` inside the container and
 - [ClickHouse source](https://github.com/ClickHouse/ClickHouse)
 - [ClickHouse Docker image](https://hub.docker.com/r/clickhouse/clickhouse-server)
 - [ClickHouse backup and restore](https://clickhouse.com/docs/operations/backup)
+
+## Existing data volumes with file mounts
+
+If an older ClickHouse resource with a file mount was affected by the data-volume issue, Coolify keeps its existing data and asks you to adopt it before the next start. Review the volume and take a backup before confirming; do not replace it with an empty volume.

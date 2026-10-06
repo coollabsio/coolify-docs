@@ -1,6 +1,8 @@
 {
   "title": "Security",
   "pages": [
+    "secret-managers",
+    "using-secret-managers",
     "cloudflare"
   ]
 }

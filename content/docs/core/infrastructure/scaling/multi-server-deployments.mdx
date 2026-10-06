@@ -19,6 +19,7 @@ Prepare the application and servers before attaching another deployment destinat
 
 - Add and validate every server in Coolify. Follow [Add Server](/core/infrastructure/servers/add-server) for each new server.
 - Use servers with the same CPU architecture, such as AMD64 or ARM64, so every server can run the same image.
+- Use the same [proxy](/core/networking/proxy/overview) type, Traefik or Caddy, on every server that has a proxy. Coolify generates the proxy labels for the primary server and uses them on every server, so Traefik labels do not work on a Caddy server and the reverse. A server without a proxy can still be attached.
 - Make application state available outside the containers. Use shared or external services for databases, sessions, queues, caches, and uploaded files.
 - Create a Docker registry repository that the primary server, any build server, and every additional server can access.
 - Authenticate the SSH user configured in Coolify to that registry on every server that must push or pull the image. See [Docker registries](/applications/builds/docker-registries#authenticate-a-private-registry).
@@ -48,6 +49,8 @@ The server originally selected for the application remains the **Primary Server*
 
 If no server is available to attach, confirm that the candidate server is validated, usable, belongs to the same team, and has a standalone Docker destination. A server already attached to the application is not shown again.
 
+Coolify rejects a server that uses a different proxy type than the primary server. If an application already has such a server, each deployment log shows a warning, and the application domains do not work through the proxy on that server. Change the proxy type on that server to match the primary server, then deploy again.
+
 ## Deploy and verify
 
 Deploy the application after attaching all required servers.
@@ -57,7 +60,7 @@ Deploy the application after attaching all required servers.
 3. Open **Configuration** > **Servers** and confirm that the primary and additional servers show a running status.
 4. Test every server through the origin path you plan to use before adding it to a load balancer.
 
-If an additional server cannot pull the image, sign in to the registry on that server with the same SSH user configured for the server in Coolify, then deploy again.
+If an additional server cannot pull the image, log in from that server’s **Registries** page, then deploy again. Additional servers pull the primary server’s published image instead of building it; commit, rollback, and image tag match the primary deployment. Coolify sends one deployment notification after all servers finish.
 
 ## Manage deployment servers
 
@@ -68,7 +71,7 @@ The **Servers** page provides actions for each attached server:
 - **Promote to Primary** makes an additional server the primary deployment destination. The former primary server becomes an additional server.
 - **Remove from server** stops the application on that server and removes the deployment destination after you confirm the server name.
 
-Normal application-wide deploy, restart, and stop actions include the primary and additional servers. A pull request preview is not deployed to the additional destinations.
+Normal application-wide deploy, restart, and stop actions include the primary and additional servers. Stop attempts every server even if one is unreachable. Existing configurations that combine multiple servers with persistent storage or Compose receive a deployment-log warning. A pull request preview is not deployed to the additional destinations.
 
 ## What multi-server deployment does not provide
 

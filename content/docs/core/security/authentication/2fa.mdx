@@ -5,10 +5,10 @@ description: Configure two-factor authentication, save recovery codes, and manag
 
 # Two-factor authentication
 
-Two-factor authentication (2FA) adds an authenticator-code challenge after a successful email-and-password sign-in. Each Coolify user configures 2FA for their own account from the profile page.
+Two-factor authentication (2FA) adds an authenticator-code challenge after a successful password, OAuth, or SSO sign-in. Each Coolify user configures 2FA for their own account from the profile page.
 
-<Callout type="info" title="OAuth sign-in uses the provider's security controls">
-Coolify's 2FA challenge applies to email-and-password sign-ins. When you sign in through OAuth or SSO, require multi-factor authentication at the external identity provider.
+<Callout type="info" title="2FA also protects OAuth and SSO sign-in">
+Coolify requests its 2FA challenge after provider authentication when 2FA is enabled for the account. SSO users can enable 2FA without a Coolify password.
 </Callout>
 
 ## Configure 2FA
@@ -58,7 +58,7 @@ Do not keep the only copy in the browser, on the Coolify server, or on the same 
 
 ## Sign in with 2FA
 
-After Coolify accepts your email and password, enter the current six-digit code from the authenticator application.
+After Coolify accepts your password or completes provider sign-in, enter the current six-digit code from the authenticator application.
 
 To use a recovery code instead, select **Use Recovery Code Instead**, enter a saved recovery code, and continue. Return to an authenticator code with **Use Authenticator Code Instead**.
 
