@@ -51,7 +51,7 @@ Coolify creates the resource and opens **General**. Review the image, root passw
 
 ### Start MySQL
 
-Select **Start** and follow the startup output. Wait until MySQL is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+Select **Start** and follow the startup output. Wait until MySQL is running and healthy, then copy the **MySQL URL (internal)** into applications on the same destination network.
 
 </Step>
 </Steps>
@@ -73,13 +73,13 @@ The root password and normal-user password are generated when the resource is cr
 
 ## Connect to MySQL
 
-Use the **Internal URL** for an application on the same Coolify destination network:
+Use the **MySQL URL (internal)** for an application on the same Coolify destination network:
 
 ```sh
 mysql://<user>:<password>@<database-container>:3306/<database>
 ```
 
-When **Public access > Access** is **Public through TCP proxy**, Coolify shows a **Public URL** using the server address and **Public port**. Keep MySQL private unless an external client requires direct access.
+When **Public access > Access** is **Public through TCP proxy**, Coolify shows a **MySQL URL (public)** using the server address and **Public port**. Keep MySQL private unless an external client requires direct access.
 
 Read [Databases](/databases) for port mappings, the public TCP proxy, and firewall considerations.
 
@@ -91,7 +91,7 @@ Use the image version that matches your application and backup/restore tooling. 
 
 ## Back up and restore MySQL
 
-Coolify uses `mysqldump` for scheduled backups. Selected databases are dumped directly; **Backup All Databases** creates a gzip-compressed all-database dump. Multiple selected database names are comma-separated.
+Coolify uses `mysqldump` for scheduled backups. Selected databases are dumped directly; **Database selection > All databases** creates a gzip-compressed all-database dump. For **Specific databases**, type each name and press Enter in **Databases to back up**.
 
 Configure schedules, retention, and S3 storage under [Database backups](/databases/backups). The built-in **Import Backup** form accepts MySQL backups while the database is running; follow [Restore a database](/databases/restore) for the import workflow.
 

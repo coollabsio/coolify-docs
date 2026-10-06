@@ -51,7 +51,7 @@ Coolify creates the resource and opens **General**. Review the image, root passw
 
 ### Start MariaDB
 
-Select **Start** and follow the startup output. Wait until MariaDB is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+Select **Start** and follow the startup output. Wait until MariaDB is running and healthy, then copy the **MariaDB URL (internal)** into applications on the same destination network.
 
 </Step>
 </Steps>
@@ -73,13 +73,13 @@ The root password and normal-user password are generated when the resource is cr
 
 ## Connect to MariaDB
 
-MariaDB uses a MySQL-compatible connection URL. Use the **Internal URL** for an application on the same Coolify destination network:
+MariaDB uses a MySQL-compatible connection URL. Use the **MariaDB URL (internal)** for an application on the same Coolify destination network:
 
 ```sh
 mysql://<user>:<password>@<database-container>:3306/<database>
 ```
 
-Coolify shows a **Public URL** only after **Public access > Access > Public through TCP proxy** and **Public port** are configured. Keep the database private unless an external client requires direct access.
+Coolify shows a **MariaDB URL (public)** only after **Public access > Access > Public through TCP proxy** and **Public port** are configured. Keep the database private unless an external client requires direct access.
 
 ## Configure MariaDB
 
@@ -87,7 +87,7 @@ Open **General** to change the image, credentials, **Port mappings**, public pro
 
 ## Back up and restore MariaDB
 
-Coolify uses `mariadb-dump` for scheduled backups. Selected databases are dumped directly. **Backup All Databases** passes `--compress` to `mariadb-dump`, but Coolify does not pipe the output through `gzip`; do not assume the resulting file is a gzip stream. Multiple selected database names are comma-separated.
+Coolify uses `mariadb-dump` for scheduled backups. Selected databases are dumped directly. **Database selection > All databases** passes `--compress` to `mariadb-dump`, but Coolify does not pipe the output through `gzip`; do not assume the resulting file is a gzip stream. For **Specific databases**, type each name and press Enter in **Databases to back up**.
 
 Use [Database backups](/databases/backups) to configure schedules, retention, and S3 storage. The built-in **Import Backup** form accepts MariaDB backups while the database is running; follow [Restore a database](/databases/restore) for the import workflow.
 

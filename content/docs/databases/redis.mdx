@@ -51,7 +51,7 @@ Coolify creates the resource and opens **General**. Review the image, username, 
 
 ### Start Redis
 
-Select **Start** and follow the startup output. Wait until Redis is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+Select **Start** and follow the startup output. Wait until Redis is running and healthy, then copy the **Redis URL (internal)** into applications on the same destination network.
 
 </Step>
 </Steps>
@@ -72,13 +72,13 @@ Coolify stores the Redis username and password as runtime environment variables.
 
 ## Connect to Redis
 
-Use the **Internal URL** for an application on the same Coolify destination network:
+Use the **Redis URL (internal)** for an application on the same Coolify destination network:
 
 ```sh
 redis://:<password>@<database-container>:6379/0
 ```
 
-When SSL is enabled, Coolify uses the `rediss` scheme and TLS port `6380`. When **Public access > Access** is **Public through TCP proxy**, copy the generated **Public URL** instead of changing the host manually.
+When SSL is enabled, Coolify uses the `rediss` scheme and TLS port `6380`. When **Public access > Access** is **Public through TCP proxy**, copy the generated **Redis URL (public)** instead of changing the host manually.
 
 ## Configure Redis
 

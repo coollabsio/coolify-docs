@@ -51,7 +51,7 @@ Coolify creates the resource and opens **General**. Review the image, administra
 
 ### Start ClickHouse
 
-Select **Start** and follow the startup output. Wait until ClickHouse is running and healthy, then copy the **Internal URL** into clients on the same destination network.
+Select **Start** and follow the startup output. Wait until ClickHouse is running and healthy, then copy the **Clickhouse URL (internal)** into clients on the same destination network.
 
 </Step>
 </Steps>
@@ -70,13 +70,13 @@ Select **Start** and follow the startup output. Wait until ClickHouse is running
 | SSL | Not available in the standalone database interface |
 
 
-Coolify's generated **Internal URL** uses the native protocol and port `9000`:
+Coolify's generated **Clickhouse URL (internal)** uses the native protocol and port `9000`:
 
 ```sh
 clickhouse://<username>:<password>@<database-container>:9000/<database>
 ```
 
-If an HTTP client or GUI needs the HTTP interface, map the container's `8123` port with **Port mappings**. When **Public access > Access** is **Public through TCP proxy**, use the generated **Public URL** for the native protocol; configure an HTTP mapping separately when the client requires HTTP.
+If an HTTP client or GUI needs the HTTP interface, map the container's `8123` port with **Port mappings**. When **Public access > Access** is **Public through TCP proxy**, use the generated **Clickhouse URL (public)** for the native protocol; configure an HTTP mapping separately when the client requires HTTP.
 
 For example, map `8123:8123` and connect an HTTP client to `http://<server-ip>:8123` with the ClickHouse administrator username and password. Map `9000:9000` when a client uses the native TCP protocol, such as `clickhouse-client`.
 

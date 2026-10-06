@@ -51,7 +51,7 @@ Coolify creates the resource and opens **General**. Review the image, generated 
 
 ### Start KeyDB
 
-Select **Start** and follow the startup output. Wait until KeyDB is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+Select **Start** and follow the startup output. Wait until KeyDB is running and healthy, then copy the **KeyDB URL (internal)** into applications on the same destination network.
 
 </Step>
 </Steps>
@@ -72,13 +72,13 @@ KeyDB uses the Redis protocol and does not expose a username field in the Coolif
 
 ## Connect to KeyDB
 
-Use the **Internal URL** for an application on the same Coolify destination network:
+Use the **KeyDB URL (internal)** for an application on the same Coolify destination network:
 
 ```sh
 redis://:<password>@<database-container>:6379/0
 ```
 
-With SSL enabled, use the generated `rediss` URL and TLS port `6380`. When **Public access > Access** is **Public through TCP proxy**, use the generated **Public URL**.
+With SSL enabled, use the generated `rediss` URL and TLS port `6380`. When **Public access > Access** is **Public through TCP proxy**, use the generated **KeyDB URL (public)**.
 
 ## Configure KeyDB
 

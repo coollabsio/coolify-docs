@@ -51,7 +51,7 @@ Coolify creates the resource and opens **General**. Review the image, root usern
 
 ### Start MongoDB
 
-Select **Start** and follow the startup output. Wait until MongoDB is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+Select **Start** and follow the startup output. Wait until MongoDB is running and healthy, then copy the **Mongo URL (internal)** into applications on the same destination network.
 
 </Step>
 </Steps>
@@ -73,7 +73,7 @@ If you change the root username, password, or initial database inside MongoDB, u
 
 ## Connect to MongoDB
 
-Use the **Internal URL** for an application on the same Coolify destination network:
+Use the **Mongo URL (internal)** for an application on the same Coolify destination network:
 
 ```sh
 mongodb://<username>:<password>@<database-container>:27017/?directConnection=true
@@ -81,7 +81,7 @@ mongodb://<username>:<password>@<database-container>:27017/?directConnection=tru
 
 Coolify's generated internal URL includes `/?directConnection=true` after the port. Copy the generated URL when possible instead of rebuilding it manually. SSL adds `tls=true` and the CA path; `verify-full` also adds the server certificate path. See [Database SSL](/databases/ssl) for those paths.
 
-Coolify shows a **Public URL** only after **Public access > Access > Public through TCP proxy** and **Public port** are configured. Keep MongoDB private unless an external client requires direct access.
+Coolify shows a **Mongo URL (public)** only after **Public access > Access > Public through TCP proxy** and **Public port** are configured. Keep MongoDB private unless an external client requires direct access.
 
 ## Configure MongoDB
 
@@ -89,7 +89,7 @@ Open **General** to change the image, root credentials, **Port mappings**, publi
 
 ## Back up MongoDB
 
-Coolify uses `mongodump` and stores a gzip-compressed archive. An empty **Databases To Include** field includes all databases and collections.
+Coolify uses `mongodump` and stores a gzip-compressed archive. An empty **Databases to include** field includes all databases and collections.
 
 To exclude collections, use this format:
 

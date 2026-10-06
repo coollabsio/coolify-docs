@@ -58,7 +58,7 @@ Coolify creates the resource and opens **General**. Review the image, username, 
 
 ### Start PostgreSQL
 
-Select **Start** and follow the startup output. Wait until PostgreSQL is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+Select **Start** and follow the startup output. Wait until PostgreSQL is running and healthy, then copy the **Postgres URL (internal)** into applications on the same destination network.
 
 </Step>
 </Steps>
@@ -82,13 +82,13 @@ The password is generated when the resource is created. If you change the userna
 
 ## Connect to PostgreSQL
 
-Use the **Internal URL** for an application on the same Coolify destination network:
+Use the **Postgres URL (internal)** for an application on the same Coolify destination network:
 
 ```sh
 postgres://<username>:<password>@<database-container>:5432/<database>
 ```
 
-When **Public access > Access** is **Public through TCP proxy**, Coolify also shows a **Public URL** using the server address and **Public port**. Do not expose port `5432` unless an external client requires it; prefer private networking for application connections.
+When **Public access > Access** is **Public through TCP proxy**, Coolify also shows a **Postgres URL (public)** using the server address and **Public port**. Do not expose port `5432` unless an external client requires it; prefer private networking for application connections.
 
 Read [Databases](/databases) for port mappings, the public TCP proxy, and firewall considerations.
 
@@ -159,7 +159,7 @@ pg_dump --format=custom --no-acl --no-owner
 
 When **Database selection** is **All databases**, Coolify uses `pg_dumpall` and stores a gzip-compressed dump. Configure the schedule, retention, and S3 destination in [Database backups](/databases/backups). Follow [Restore a database](/databases/restore) for the built-in PostgreSQL import workflow.
 
-The built-in **Import Backup** form accepts PostgreSQL backups while the database is running. A custom-format dump is restored with `pg_restore`; a plain SQL dump requires a matching custom import command such as `psql`.
+The built-in **Import Backup** form accepts PostgreSQL backups while the database is running. Coolify detects the dump format and generates the appropriate restore command using `pg_restore` or `psql`. Review the read-only **Import command** before starting the restore.
 
 <Callout type="warning" title="Match the dump format to the restore command">
 

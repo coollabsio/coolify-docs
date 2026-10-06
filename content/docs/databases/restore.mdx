@@ -40,7 +40,7 @@ PostgreSQL restores run in one transaction. Replace restores of SQL backups swap
 1. Open **Import Backup** on the running target database.
 2. Select a source:
    - Upload a backup from your computer.
-   - Enter the backup's absolute server path and select **Check File**.
+   - Enter the backup's absolute server path and select **Check file**.
    - Select available team **S3 storage**, enter the file path within the bucket, and check the file.
 3. Review file information, backup contents, restore options, and the generated import command.
 4. Start the restore and complete its confirmation.
@@ -60,7 +60,7 @@ For a standalone database, use:
 
 For a service database, the same suffixes are under `/services/{uuid}/databases/{database_uuid}/imports`.
 
-Uploading and starting an import require `write`. A server-path import also requires `deploy`. Options include `replace_existing`, `keep_owners`, `restore_mysql_users`, and `sqlite_database`. Concurrent database operations return `409`; invalid requests return `422`. Use the [API reference](/api) for source fields and upload formats.
+Uploading and starting an import require `write`. A server-path import also requires `deploy`. Options include `replace_existing`, `keep_owners`, `restore_mysql_users`, and `sqlite_database`. Concurrent database operations return `409`; invalid requests return `422`. Use the [API reference](/api/overview) for source fields and upload formats.
 
 ### Example: import a server file
 

@@ -21,6 +21,8 @@ Open a database resource, then select **General**. The page contains common reso
 | **Proxy timeout** | How long the public proxy keeps an idle connection open. The default is `3600`; the minimum is `1`. |
 | **Custom engine configuration** | Optional configuration text mounted or passed to the selected database image. |
 
+Connection fields include the engine name, such as **Postgres URL (internal)** and **Postgres URL (public)**. The public URL becomes available after configuring public access.
+
 Coolify does not expose a public database endpoint by default. Prefer the **Internal URL** for applications on the same destination network. Read [Network access](/databases#network-access) before enabling public access.
 
 ## Engine-specific settings
