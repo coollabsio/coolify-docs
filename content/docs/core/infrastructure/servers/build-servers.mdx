@@ -62,8 +62,8 @@ Complete [Create and authorize an SSH key](/core/infrastructure/servers/add-serv
 
 1. Open the Coolify dashboard.
 2. Select **Servers** in the sidebar.
-3. Select **+ Add**.
-4. Select **Manual**.
+3. Select **New server**.
+4. Select **IP address or domain**.
 
 </Step>
 <Step>
@@ -71,7 +71,7 @@ Complete [Create and authorize an SSH key](/core/infrastructure/servers/add-serv
 ### Add the build server
 
 1. Enter the server name, IP address or domain, SSH port, user, and private key.
-2. Set **Server role** to **Builds only**.
+2. Expand **Advanced settings** and set **Server role** to **Builds only**.
 3. Select **Continue**.
 
 Coolify adds the server and opens its **General** page.
@@ -81,7 +81,7 @@ Coolify adds the server and opens its **General** page.
 
 ### Validate the build server
 
-1. Select **Validate Server & Install Docker Engine**.
+1. Select **Validate connection**.
 2. Keep the page open while Coolify validates the SSH connection and prepares Docker.
 3. Wait for the page to show **Server is reachable and validated**.
 
@@ -111,7 +111,7 @@ If the server has managed resources, move or delete them before continuing. Cool
 <ZoomImage src="/docs/images/core/infrastructure/servers/build-servers/existing-server-build-setting.webp" alt="Build server setting on an existing server General page" />
 
 1. Open **General** for the server.
-2. Set **Server role** to **Builds only**.
+2. Expand **Advanced settings** and set **Server role** to **Builds only**.
 
 The setting saves immediately. The server can no longer be selected as a deployment destination while it remains a build server.
 
