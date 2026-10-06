@@ -70,16 +70,16 @@ The main difference is that in the manual setup, you install cloudflared yoursel
   <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/server-ssh/automated/0.webp" />
   
   1. In your Coolify Dashboard, go to **Keys & Tokens**
-  2. Click on **Private Keys** tab
-  2. Click the **+ Add** button
+  2. Open **Private Keys**.
+  3. Select **New private key**.
   
-  You will be prompted to choose a key type, along with providing a name and description for the key.
+  Choose **Generate ED25519** or **Generate RSA**. Coolify generates and saves the key immediately.
   
   <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/server-ssh/automated/1.webp" />
   
-  1. Click on Generate new **ED25519** or **RSA** button to generate a new SSH key.
-  2. Copy the public key and save it somewhere safe (you'll need it in the next step). 
-  3. Click **Continue** button.
+  1. Open the saved key's edit icon and enter a name and optional description.
+  2. Select **Save changes**.
+  3. Copy **Public key** for the next step.
   
   ## 2. Add Public Key to Your Server [!toc]
   
@@ -100,7 +100,7 @@ The main difference is that in the manual setup, you install cloudflared yoursel
   <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/server-ssh/automated/2.webp" />
   
   1. In your Coolify Dashboard, go to **Servers**
-  2. Click the **+ Add** button
+  2. Select **New server**, then **IP address or domain**.
   
   You will be prompted to enter details about your server. Make sure the information you provide is accurate, as Coolify will use these details to access your server.
   
@@ -108,15 +108,15 @@ The main difference is that in the manual setup, you install cloudflared yoursel
   
   1. **Name** - Choose a name to easily identify your server in the dashboard.
   2. **Description** - (Optional) Provide a description for your server.
-  3. **IP Address/Domain** - Enter the public IP address of your server.
-  4. **Port** - Enter the port number your server uses for SSH connections.
-  5. **User** - Enter the username Coolify will use (it should have root privileges on the server).
+  3. **IP address or domain** - Enter the public IP address of your server.
+  4. Under **Advanced settings**, **Port** - Enter the port number your server uses for SSH connections.
+  5. Under **Advanced settings**, **User** - Enter the username Coolify will use (it should have root privileges on the server).
   6. **Private key** - Select the private key you created in Step 1
   7. After filling in the details, click the **Continue** button.
   
   ## 4. Validate your Server on Coolify [!toc]
   
-  To validate your server, simply click the **Validate connection** button.
+  Select **Validate connection** to open the validation panel and follow its checks.
   
   <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/server-ssh/automated/4.webp" />
   
@@ -152,9 +152,9 @@ The main difference is that in the manual setup, you install cloudflared yoursel
 
   <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/server-ssh/automated/9.webp" />
 
-  1. In your Coolify Dashboard, go to **Cloudflare Tunnel**
-  2. Under manual section enter your **Cloudflare Token** and **SSH Domain**
-  3. Click on **Continue** button
+  1. Open the server and select **Cloudflare Tunnel** in its sidebar.
+  2. Under **Automated setup**, enter **Cloudflare token** and **SSH domain**.
+  3. Select **Configure tunnel**.
 
   <Callout type="success" title="TIP">
   
@@ -234,16 +234,16 @@ The following data is used as an example in this guide. Please replace it with y
   <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/server-ssh/manual/0.webp" />
   
   1. In your Coolify Dashboard, go to **Keys & Tokens**
-  2. Click on **Private Keys** tab
-  2. Click the **+ Add** button
+  2. Open **Private Keys**.
+  3. Select **New private key**.
   
-  You will be prompted to choose a key type, along with providing a name and description for the key.
+  Choose **Generate ED25519** or **Generate RSA**. Coolify generates and saves the key immediately.
   
   <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/server-ssh/manual/1.webp" />
   
-  1. Click on Generate new **ED25519** or **RSA** button to generate a new SSH key.
-  2. Copy the public key and save it somewhere safe (you'll need it in the next step). 
-  3. Click **Continue** button.
+  1. Open the saved key's edit icon and enter a name and optional description.
+  2. Select **Save changes**.
+  3. Copy **Public key** for the next step.
   
   ## 2. Add Public Key to Your Server [!toc]
   
@@ -264,7 +264,7 @@ The following data is used as an example in this guide. Please replace it with y
   <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/server-ssh/manual/2.webp" />
   
   1. In your Coolify Dashboard, go to **Servers**
-  2. Click the **+ Add** button
+  2. Select **New server**, then **IP address or domain**.
   
   You will be prompted to enter details about your server.
   
@@ -272,9 +272,9 @@ The following data is used as an example in this guide. Please replace it with y
   
   1. **Name** - Choose a name to easily identify your server in the dashboard.
   2. **Description** - (Optional) Provide a description for your server.
-  3. **IP Address/Domain** - Enter the SSH domain that you want to acesss the server via Cloudflare tunnels.
-  4. **Port** - Enter the port number your server uses for SSH connections.
-  5. **User** - Enter the username Coolify will use (it should have root privileges on the server).
+  3. **IP address or domain** - Enter the SSH domain that you want to acesss the server via Cloudflare tunnels.
+  4. Under **Advanced settings**, **Port** - Enter the port number your server uses for SSH connections.
+  5. Under **Advanced settings**, **User** - Enter the username Coolify will use (it should have root privileges on the server).
   6. **Private key** - Select the private key you created in Step 1
   7. After filling in the details, click the **Continue** button.
 
@@ -283,8 +283,8 @@ The following data is used as an example in this guide. Please replace it with y
 
   <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/server-ssh/manual/4.webp" />
 
-  1. In your Coolify Dashboard, go to **Cloudflare Tunnel**
-  2. Click the **"here"** text on the information message you see on the dashboard
+  1. Open the server and select **Cloudflare Tunnel** in its sidebar.
+  2. Complete the tunnel installation and route configuration in the following steps before marking the manual setup as complete.
 
 
   ## 5. Create a Cloudflare Tunnel [!toc]
@@ -348,7 +348,10 @@ The following data is used as an example in this guide. Please replace it with y
   <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/server-ssh/manual/13.webp" />
 
   ## 7. Validate server on Coolify [!toc]
-  To validate your server, simply click the **Validate connection** button.
+
+  Return to the server's **Cloudflare Tunnel** page. For an unvalidated server, select **mark a manual configuration as complete**. If the server is already validated, use **I configured the tunnel manually** under **Manual setup** and complete the confirmation.
+
+  Open **General**. Select **Validate connection** to open the validation panel and follow its checks.
   
   <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/server-ssh/manual/14.webp" />
   
