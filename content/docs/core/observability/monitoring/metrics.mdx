@@ -82,9 +82,9 @@ Open **Servers** and select the eligible connected server.
 </Step>
 <Step>
 
-### Open the Metrics page
+### Open the Charts page
 
-Open **Configuration > Metrics** and select **Enable Metrics**.
+Open **Charts** and select **Enable Metrics**.
 
 </Step>
 <Step>
@@ -121,7 +121,7 @@ Server and resource charts use different memory units.
 
 ### Server metrics
 
-Open **Servers > [server] > Configuration > Metrics**.
+Open **Servers > [server] > Charts**.
 
 - **CPU Usage** is the percentage of total server CPU in use.
 - **Memory Usage** is the percentage of total server memory in use.
@@ -132,7 +132,7 @@ Open **Servers > [server] > Configuration > Metrics**.
 
 ### Application and database metrics
 
-Open the application or standalone database, then select **Configuration > Metrics**.
+Open the application or standalone database, then select **Charts**.
 
 - **CPU Usage** is the percentage of CPU used by the resource container.
 - **Memory Usage** is the memory used by the resource container in MB.
@@ -155,20 +155,24 @@ The live ranges ask Coolify for new chart data every five seconds. The Sentinel 
 
 ## Sampling and retention
 
-Open **Servers > [server] > Sentinel > Configuration** to change these values:
+Open **Servers > [server] > Charts** to change these values:
 
-- **Metrics rate (seconds)** controls the collection interval. The default is `10`, and the minimum is `1`.
-- **Metrics history (days)** controls local retention. The default is `7`, and the minimum is `1`.
+- **Collection rate** controls the collection interval. The default is `10`, and the minimum is `1`.
+- **History retention** controls local retention. The default is `7`, and the minimum is `1`.
+
+- **Push interval** controls health-report frequency. The default is `60` seconds, and the minimum is `10`.
+
+Save the settings to apply them. Chart tooltips show both your local time and UTC.
 
 Sentinel stores this history under `/data/coolify/sentinel` on the connected server. A lower collection interval creates more points and uses more disk space.
 
-The chart can offer a longer range than the retained data. For example, a 30-day chart shows only the available history when **Metrics history (days)** remains at its seven-day default.
+The chart can offer a longer range than the retained data. For example, a 30-day chart shows only the available history when **History retention** remains at its seven-day default.
 
 ---
 
 ## Disable metrics
 
-Open the server **Metrics** page and select **Disable Metrics**. Coolify restarts Sentinel with the collector disabled.
+Open the server **Charts** page and select **Disable Metrics**. Coolify restarts Sentinel with the collector disabled.
 
 Disabling metrics does not disable Sentinel itself. Server heartbeats, container state, health information, and disk usage reporting can continue without CPU and memory history.
 
@@ -196,7 +200,7 @@ Resource metrics are not currently available for Docker Compose applications or 
 
 <Accordion title="The selected range has missing history">
 
-Compare the selected chart range with **Metrics history (days)**. Data older than the configured retention period is unavailable.
+Compare the selected chart range with **History retention**. Data older than the configured retention period is unavailable.
 
 For example, the 30-day chart shows only seven days of history while the retention setting remains at its seven-day default.
 
