@@ -132,7 +132,7 @@ Resolved file: /deploy/compose.yaml
 
 These fields are read-only. Edit the Compose file in the Git repository, then reload it in Coolify.
 
-Enable **Preserve Repository During Deployment** when the repository content under **Base Directory** must also be copied into the deployment directory. This is useful when the Compose definition uses repository-relative files at runtime rather than only during an image build.
+Enable **Preserve repository during deployment** when the repository content under **Base Directory** must also be copied into the deployment directory. This is useful when the Compose definition uses repository-relative files at runtime rather than only during an image build.
 
 **Custom Build Command** and **Custom Start Command** replace the generated Compose commands. Coolify adds the Compose-file and environment-file flags unless the command already supplies its own `-f` or `--env-file` flag. When an override is entered, **Final Build Command (Preview)** or **Final Start Command (Preview)** shows the command Coolify will execute.
 

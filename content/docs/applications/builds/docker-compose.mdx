@@ -388,7 +388,7 @@ Coolify also supports `is_directory: true` and `content:` extensions for reposit
 
 <Callout type="warning" title="A file bind source must exist">
 
-For a file bind mount, create the source file before deployment or use `content:` so Coolify creates it. When the file comes from the Git repository, enable **General > Preserve Repository During Deployment** so it remains available in the deployment directory.
+For a file bind mount, create the source file before deployment or use `content:` so Coolify creates it. When the file comes from the Git repository, enable **Preserve repository during deployment** under **General > Build pipeline** so it remains available in the deployment directory.
 
 If Docker receives a missing file source, it can create a directory at that path. The container then fails to start with an error such as `not a directory: unknown`.
 
@@ -483,9 +483,9 @@ Coolify also generates the proxy labels needed for domains configured in the app
 
 For a Git-based Docker Compose Application, Coolify can inject application build variables as Docker build arguments for services that use `build:`.
 
-Disable **Advanced > Inject Build Args to Dockerfile** when the service Dockerfiles declare and consume every required `ARG` themselves.
+Under **Advanced > Build**, set **Build arguments** to **Managed manually in Dockerfile** when the service Dockerfiles declare and consume every required `ARG` themselves.
 
-`SOURCE_COMMIT` is excluded from the build by default so commits with unchanged layers can reuse cache. Enable **Include Source Commit in Build** only when the image contents need the commit value.
+`SOURCE_COMMIT` is excluded from the build by default so commits with unchanged layers can reuse cache. Under **Advanced > Build**, set **Source commit availability** to **Available during build** only when the image contents need the commit value.
 
 ## Application Compose commands
 

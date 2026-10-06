@@ -49,7 +49,7 @@ A runtime-only change can reuse an existing image. Changes to the Dockerfile, Co
 
 Docker reuses unchanged build layers when caching is available. Under **Advanced**, **Disable Build Cache** forces every build step to run again.
 
-Coolify excludes `SOURCE_COMMIT` from the build by default so different commits can reuse unchanged layers. Enable **Include Source Commit in Build** only when the build itself requires the commit value.
+Coolify excludes `SOURCE_COMMIT` from the build by default so different commits can reuse unchanged layers. Under **Advanced > Build**, set **Source commit availability** to **Available during build** only when the build itself requires the commit value.
 
 Use **Force deploy (without cache)** for one deployment that must run a Coolify-generated build without cached layers. A custom Docker Compose build command controls its own cache flags.
 
