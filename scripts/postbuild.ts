@@ -227,6 +227,11 @@ async function copyBaseScopedPublicAssets() {
   await cp(publicImages, docsImages, { recursive: true, force: true });
   await cp(publicBrand, docsBrand, { recursive: true, force: true });
   await cp(publicManifest, docsManifest, { force: true });
+  await cp(
+    resolve(currentDir, '../public/404.html'),
+    resolve(currentDir, '../.output/public/docs/404.html'),
+    { force: true },
+  );
 }
 
 async function cleanupNonStaticOutput() {
