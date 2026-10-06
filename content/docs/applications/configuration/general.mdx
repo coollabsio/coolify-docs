@@ -83,7 +83,7 @@ Under **Build pipeline**, choose **Static** in **Site type** when the build crea
 
 - Choose **SPA (single-page application)** in **Site type** when client-side routes must fall back to the entry page.
 - **Publish Directory** with the build-output directory, such as `/dist` or `/build`. This field is required when static-site mode is enabled.
-- **Custom Nginx Configuration** when the generated static-site configuration does not meet the application's routing or header requirements.
+- **Custom Nginx configuration** when the generated static-site configuration does not meet the application's routing or header requirements.
 
 </Tab>
 <Tab value="Static" icon={BrowserCode}>
@@ -92,7 +92,7 @@ The **Static** build pack serves repository files without running a framework bu
 
 **Web server** selects the container image used to serve the files. The currently selectable image is `nginx:alpine`.
 
-**Base Directory** selects the repository directory that contains the files to serve. **Custom Nginx Configuration** replaces the generated server configuration. **Generate Default Nginx Configuration** overwrites the current custom value with the configuration Coolify generates for the selected static-site behavior.
+**Base Directory** selects the repository directory that contains the files to serve. **Custom Nginx configuration** replaces the generated server configuration. **Generate default** overwrites the current custom value with the configuration Coolify generates for the selected static-site behavior.
 
 </Tab>
 <Tab value="Dockerfile" icon={Code}>

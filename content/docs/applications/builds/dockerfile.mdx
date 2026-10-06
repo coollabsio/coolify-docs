@@ -154,7 +154,7 @@ Disable **Advanced > Inject Build Args to Dockerfile** when the Dockerfile decla
 
 For Git-based Dockerfile applications, `SOURCE_COMMIT` is excluded from the build by default so commits with unchanged layers can reuse cache. Enable **Include Source Commit in Build** only when the image contents need the commit value.
 
-Use **Use Docker Build Secrets** for sensitive build-time values when Docker BuildKit is available. Read [Environment variables](/applications/configuration/environment-variables#build-and-runtime-scope) before passing credentials to a build.
+Use **Build secrets > Docker BuildKit secrets** for sensitive build-time values when Docker BuildKit is available. Read [Environment variables](/applications/configuration/environment-variables#build-and-runtime-scope) before passing credentials to a build.
 
 ## Image health checks
 

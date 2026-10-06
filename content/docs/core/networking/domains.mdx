@@ -114,7 +114,7 @@ The domain form separates **Protocol**, **Domain**, **Port**, and **Path**. The 
 | Route a path to container port `80` | `https://app.example.com/api` |
 | Route a path to container port `8080` | `https://app.example.com:8080/api` |
 
-When a domain value does not include a port, Coolify routes traffic to port `80` inside the container. Add the container port to the URL when the application listens on a different port.
+When **Port** is empty, a standard application uses the first value in **Ports exposes**, and a static site uses port `80`. Docker Compose routes use the selected service's detected port when available. Set **Port** explicitly when the detected default does not match the application.
 
 Add multiple hostnames with **Add domain**, one at a time. Coolify normalizes application domains and rejects duplicate entries.
 
@@ -131,9 +131,9 @@ The port in a domain value selects the port inside the container. It does not cr
 
 | Domain value | Proxy behavior |
 | :--- | :--- |
-| `https://app.shadowarcanist.com` | Send requests for the hostname to port `80` inside the container. |
+| `https://app.shadowarcanist.com` | Send requests for the hostname to the resource's default container port. |
 | `https://app.shadowarcanist.com:3000` | Send requests for the hostname to port `3000` inside the container. |
-| `https://shadowarcanist.com/api` | Send requests beginning with `/api` to port `80` inside the container. |
+| `https://shadowarcanist.com/api` | Send requests beginning with `/api` to the resource's default container port. |
 | `https://shadowarcanist.com:8080/api` | Send requests beginning with `/api` to port `8080` inside the container. |
 
 Path-based routes let several resources share one hostname. For example, one application can use `https://shadowarcanist.com`, while another uses `https://shadowarcanist.com/api`.

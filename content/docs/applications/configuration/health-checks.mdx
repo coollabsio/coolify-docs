@@ -28,7 +28,7 @@ For a non-Compose Dockerfile application, Coolify detects the image's `HEALTHCHE
 
 ## Configure a health check in Coolify
 
-Open the application, select **Healthcheck**, then choose **HTTP** or **CMD** under **Type**.
+Open the application, select **Healthcheck**, then choose **HTTP** or **CMD** under **Check type**.
 
 <Callout type="warning" title="HTTP checks require curl or wget inside the container">
 
@@ -94,7 +94,7 @@ Replace `3000` and `/health` with the values entered in the health-check form. T
 
 <Callout type="info" title="Current response validation">
 
-The generated HTTP check currently uses the `curl` or `wget` exit status to determine health. Although **Return Code** and **Response Text** appear in the form, the generated check does not compare the response against those two fields.
+The generated HTTP check currently uses the `curl` or `wget` exit status to determine health. Although **Expected code** and **Expected response text** appear in the form, the generated check does not compare the response against those two fields.
 
 </Callout>
 
@@ -157,16 +157,16 @@ These settings apply to both HTTP and CMD checks:
 
 | Setting | Behavior |
 | :--- | :--- |
-| **Interval (s)** | Time between health-check attempts. Must be at least one second. |
-| **Timeout (s)** | Maximum time allowed for one attempt. Must be at least one second. |
+| **Interval (seconds)** | Time between health-check attempts. Must be at least one second. |
+| **Timeout (seconds)** | Maximum time allowed for one attempt. Must be at least one second. |
 | **Retries** | Consecutive failed attempts required before Docker marks the container unhealthy. Must be at least one. |
-| **Start Period (s)** | Startup period before failures count toward the retry limit. |
+| **Start period (seconds)** | Startup period before failures count toward the retry limit. |
 
-Give slow-starting applications enough **Start Period (s)** to complete migrations, cache loading, or other required initialization.
+Give slow-starting applications enough **Start period (seconds)** to complete migrations, cache loading, or other required initialization.
 
 ### Save and enable the check
 
-Select **Save**, then select **Enable Healthcheck**.
+Select **Save changes**, then select **Enable** and confirm **Enable healthcheck**.
 
 If the application is already running, restart or redeploy it so Coolify recreates the container with the health-check configuration. Disabling a check also requires the container configuration to be recreated before Docker stops running it.
 

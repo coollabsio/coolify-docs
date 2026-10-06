@@ -88,7 +88,7 @@ Use the **Install Command**, **Build Command**, and **Start Command** fields und
 
 ## Railpack environment variables
 
-Railpack build variables use the `RAILPACK_` prefix. Add them under **Environment Variables** with **Build Variable** enabled.
+Railpack build variables use the `RAILPACK_` prefix. Add them under **Environment Variables** with **Build time** set to **Available during build**.
 
 | Variable | Purpose |
 | :--- | :--- |
@@ -137,7 +137,7 @@ Refer to the [Railpack configuration-file reference](https://railpack.com/config
 
 When **Site type** is **Static** or **SPA (single-page application)**, Railpack builds the application and Coolify copies the selected publish directory into an Nginx image.
 
-Use **General > Nginx Configuration** only when the default static-server configuration is insufficient. Redeploy after saving a change because Coolify copies the configuration into the final static image during the image build.
+Use **General > Build pipeline > Custom Nginx configuration** only when the default static-server configuration is insufficient. Redeploy after saving a change because Coolify copies the configuration into the final static image during the image build.
 
 ## Choose Railpack or Nixpacks
 
