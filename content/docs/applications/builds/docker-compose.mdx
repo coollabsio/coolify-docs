@@ -47,7 +47,7 @@ For a public repository, paste its HTTPS URL and select **Check Repository**.
 
 ### Select Docker Compose
 
-Under **Configuration > General**, select **Docker Compose** as the **Build Pack**.
+Under **General > Build pipeline**, select **Compose** as the **Build strategy**.
 
 <ZoomImage src="/docs/images/builds/packs/compose/4.webp" alt="Docker Compose option in the Build Pack selector" />
 
@@ -74,7 +74,7 @@ Confirm every service has the required image or build definition, environment re
 
 ### Configure public services
 
-For each HTTP service that should be public, enter a domain in the service's **Domains** field.
+Open **Domains**, select **Add domain**, choose the receiving **Service**, and enter the protocol, hostname, internal port, and optional path for each HTTP service that should be public.
 
 If the service listens on port `3000`, include that internal port in the value:
 
@@ -89,7 +89,7 @@ The public request still uses normal HTTP or HTTPS ports. The suffix tells the C
 
 ### Deploy and verify
 
-Select **Deploy**. Open **Deployments** and wait for the operation to complete.
+Select **Deploy**. Open **Deployment Logs** and wait for the operation to complete.
 
 Verify each public domain and inspect **Logs** for services that do not start or become healthy.
 
@@ -378,7 +378,7 @@ volumes:
   app-data:
 ```
 
-Coolify displays parsed storage under **Configuration > Persistent Storage**, but Compose-owned fields are read-only there. Change them in the Compose definition.
+Coolify displays parsed storage under **Persistent Storage**, but Compose-owned fields are read-only there. Change them in the Compose definition.
 
 Volumes marked `external: true` use their declared Docker names. Existing resources retain previously renamed volumes; review the deployment log and storage page before migrating data to the external volume. Preview deployments retain their own volume. Coolify preserves `driver`, `driver_opts`, and `labels` when renaming managed volumes.
 
@@ -388,7 +388,7 @@ Coolify also supports `is_directory: true` and `content:` extensions for reposit
 
 <Callout type="warning" title="A file bind source must exist">
 
-For a file bind mount, create the source file before deployment or use `content:` so Coolify creates it. When the file comes from the Git repository, enable **Configuration > General > Preserve Repository During Deployment** so it remains available in the deployment directory.
+For a file bind mount, create the source file before deployment or use `content:` so Coolify creates it. When the file comes from the Git repository, enable **General > Preserve Repository During Deployment** so it remains available in the deployment directory.
 
 If Docker receives a missing file source, it can create a directory at that path. The container then fails to start with an error such as `not a directory: unknown`.
 
@@ -448,7 +448,7 @@ Use `exclude_from_hc: true` for a one-time service, such as a migration containe
 
 Coolify creates a resource-specific network for the Compose resource. Services in the definition can reach one another by service name and internal port.
 
-Enable **Configuration > Advanced > Connect To Predefined Network** only when the Compose services must communicate with resources on the selected Coolify destination. Names can be prefixed to prevent collisions, so verify the generated container or service name before using it as a hostname.
+Under **Advanced > Docker compose > Predefined network**, choose **Connect to predefined network** only when the Compose services must communicate with resources on the selected Coolify destination. Names can be prefixed to prevent collisions, so verify the generated container or service name before using it as a hostname.
 
 <ZoomImage src="/docs/images/builds/packs/compose/6.webp" alt="Connect To Predefined Network option for a Docker Compose application" />
 
@@ -456,7 +456,7 @@ Do not publish a service with `ports:` unless it must be reachable directly on a
 
 ## Raw Compose deployment for an Application
 
-For a Git-based Docker Compose Application, **Raw Compose Deployment** applies the definition without most Coolify modifications. You must provide the proxy labels, networking, and other behavior that the normal deployment path generates.
+For a Git-based Docker Compose Application, choosing **Raw (deploy file as-is)** under **Advanced > Docker compose > Compose deployment** applies the definition without most Coolify modifications. You must provide the proxy labels, networking, and other behavior that the normal deployment path generates.
 
 <ZoomImage src="/docs/images/builds/packs/compose/7.webp" alt="Raw Compose Deployment option" />
 
@@ -477,13 +477,13 @@ labels:
   - coolify.type=application
 ```
 
-Coolify also generates the proxy labels needed for domains configured in the application. Define and maintain proxy labels yourself only when using **Raw Compose Deployment**.
+Coolify also generates the proxy labels needed for domains configured in the application. Define and maintain proxy labels yourself only when **Compose deployment** is **Raw (deploy file as-is)**.
 
 ## Application build arguments
 
 For a Git-based Docker Compose Application, Coolify can inject application build variables as Docker build arguments for services that use `build:`.
 
-Disable **Configuration > Advanced > Inject Build Args to Dockerfile** when the service Dockerfiles declare and consume every required `ARG` themselves.
+Disable **Advanced > Inject Build Args to Dockerfile** when the service Dockerfiles declare and consume every required `ARG` themselves.
 
 `SOURCE_COMMIT` is excluded from the build by default so commits with unchanged layers can reuse cache. Enable **Include Source Commit in Build** only when the image contents need the commit value.
 

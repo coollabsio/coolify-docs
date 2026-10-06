@@ -40,19 +40,19 @@ For a static application, Nixpacks builds the frontend and Coolify copies the se
 
 ## Configure Nixpacks
 
-Coolify shows the detected **Install Command**, **Build Command**, and **Start Command** under **Configuration > General**. Override only the command the application needs to change.
+Coolify shows the detected **Install Command**, **Build Command**, and **Start Command** under **General**. Override only the command the application needs to change.
 
 Nixpacks can also read `nixpacks.toml` or `nixpacks.json` from the application source directory. Use a configuration file when the build needs packages, phases, or behavior that cannot be expressed through the Coolify command fields.
 
-Nixpacks environment variables use the `NIXPACKS_` prefix. Add build configuration under **Configuration > Environment Variables** and keep **Build Variable** enabled.
+Nixpacks environment variables use the `NIXPACKS_` prefix. Add build configuration under **Environment Variables** and keep **Build Variable** enabled.
 
 Refer to the [Nixpacks configuration documentation](https://nixpacks.com/docs/configuration/file?utm_source=coolify.io) for the supported file schema.
 
 ## Static applications
 
-When **Is it a static site?** is enabled, Coolify serves the selected publish directory through Nginx.
+When **Site type** is **Static** or **SPA (single-page application)**, Coolify serves the selected publish directory through Nginx.
 
-Use **Configuration > General > Nginx Configuration** only when the default static-server configuration is insufficient. Redeploy after saving a change because Coolify copies the configuration into the final static image during the image build.
+Use **General > Nginx Configuration** only when the default static-server configuration is insufficient. Redeploy after saving a change because Coolify copies the configuration into the final static image during the image build.
 
 ## Node.js versions
 
