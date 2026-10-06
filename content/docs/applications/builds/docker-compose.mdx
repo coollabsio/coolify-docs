@@ -350,6 +350,10 @@ volumes:
 
 Coolify displays parsed storage under **Configuration > Persistent Storage**, but Compose-owned fields are read-only there. Change them in the Compose definition.
 
+Volumes marked `external: true` use their declared Docker names. Existing resources retain previously renamed volumes; review the deployment log and storage page before migrating data to the external volume. Preview deployments retain their own volume. Coolify preserves `driver`, `driver_opts`, and `labels` when renaming managed volumes.
+
+Relative bind sources resolve from the resource directory, including supported `../` sources. Storage paths are validated; managed file paths must remain within the resource directory. Preview deletion removes only networks and volumes Coolify created for that preview.
+
 Coolify also supports `is_directory: true` and `content:` extensions for repository-relative bind sources. Use these only when the deployment must create the directory or file.
 
 <Callout type="warning" title="A file bind source must exist">
@@ -468,3 +472,7 @@ If a domain shows **No Available Server**:
 3. confirm the domain includes the service's internal listening port when it is not `80`
 4. confirm the process listens on `0.0.0.0`, not only `127.0.0.1`
 5. follow [No available server](/troubleshoot/applications/no-available-server) for proxy checks
+
+## Variables in network names
+
+Compose network names support interpolation such as `${NETWORK:-coolify}` and `${COMPOSE_PROJECT_NAME}_default`, including service `networks:` entries. A network name consisting of a single variable is added as an editable environment variable.

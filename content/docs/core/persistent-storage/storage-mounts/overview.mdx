@@ -28,12 +28,12 @@ Only data written under a mounted destination path is persistent. Adding a mount
 
 ## Choose a storage mount
 
-Coolify shows four choices under **Persistent Storage**. A **Volume Mount** can also work in two ways, depending on whether you enter a **Source Path**. These dashboard workflows map to two underlying Docker storage types: named volumes and bind mounts.
+Coolify shows four choices under **Persistent Storage**. New **Volume Mounts** use named Docker volumes, including on Swarm. Existing volume records that use a bind source retain it as a read-only **Source Path**. These dashboard workflows map to two underlying Docker storage types: named volumes and bind mounts.
 
 | Choice in Coolify | Storage location | Use it for |
 | :--- | :--- | :--- |
-| **Volume Mount** without a **Source Path** | A named Docker volume managed on the deployment server | Application data, uploads, and database files when you do not need a specific server path |
-| **Volume Mount** with a **Source Path** | The exact directory you choose on the deployment server | Data you need to inspect, copy, or manage directly from the server filesystem |
+| **Volume Mount** | A named Docker volume managed on the deployment server | Application data, uploads, and database files when you do not need a specific server path |
+| Existing **Volume Mount** with a **Source Path** | The exact directory you choose on the deployment server | Data you need to inspect, copy, or manage directly from the server filesystem |
 | **Directory Mount** | The exact directory you choose on the deployment server | A server directory that Coolify creates when needed and shows under **Directories** |
 | **File Mount** | A Coolify-managed file on the deployment server | A single configuration file mounted at one exact path inside the container |
 | **Host File Mount** | An existing file at the exact path you choose on the deployment server | A file that Coolify mounts without creating, editing, changing permissions, or deleting it |
