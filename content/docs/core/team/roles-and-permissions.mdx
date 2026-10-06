@@ -109,3 +109,9 @@ An Owner or Admin role in another team does not make a person an instance admini
 Use the lowest role that provides the access the person needs. You can update another person's role from **Teams > Members**. Follow [Manage Members](/core/team/members/manage-members) for the role-change rules and verification steps.
 
 Team administrators and owners can review [Audit Log](/core/team/audit-log) events. Members cannot read the team audit log.
+
+## Sensitive content in the dashboard
+
+Users without permission to update a resource cannot view container logs, scheduled-task commands/output, Compose or file-mount content, hardcoded Compose environment values, proxy configuration, server shared values, or protected credentials such as basic-auth passwords, log-drain keys, and the Sentinel token. Sensitive API responses have an additional token-permission check; see [API permissions](/api/permissions).
+
+The team Danger Zone is visible only to its owner. Impersonation and the team admin view require an instance administrator. Credentials such as private keys, Git sources, S3 storage, and integration tokens must belong to the team that owns the resource.
