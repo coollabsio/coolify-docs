@@ -101,3 +101,7 @@ Configure the Docker health check under **Configuration > Healthcheck** and rest
 - [KeyDB documentation](https://docs.keydb.dev/)
 - [KeyDB source](https://github.com/EQ-Alpha/KeyDB)
 - [KeyDB Docker image](https://hub.docker.com/r/eqalpha/keydb)
+
+## Password environment variable
+
+For a new database, `REDIS_PASSWORD` controls the server password and connection URLs. Databases created before this release keep their stored password unless the variable references a secret manager. After changing a remote secret, restart the database and verify connections.

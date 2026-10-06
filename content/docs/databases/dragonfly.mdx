@@ -101,3 +101,7 @@ Configure the Docker health check under **Configuration > Healthcheck** and rest
 - [Dragonfly documentation](https://www.dragonflydb.io/docs)
 - [Dragonfly source](https://github.com/dragonflydb/dragonfly)
 - [Dragonfly Docker image](https://hub.docker.com/r/dragonflydb/dragonfly)
+
+## Password environment variable
+
+For a new database, `REDIS_PASSWORD` controls the server password and connection URLs. Databases created before this release keep their stored password unless the variable references a secret manager. After changing a remote secret, restart the database and verify connections.
