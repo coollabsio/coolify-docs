@@ -66,7 +66,7 @@ Redeploy each changed resource and verify the certificate presented by the domai
 Use this only when one application handles arbitrary tenant subdomains.
 
 1. Keep the wildcard DNS record and certificate configuration above.
-2. Disable **Readonly labels** for the application.
+2. Set **Label management** to **Managed manually (edit labels yourself)** for the application.
 3. Use the configuration that matches the Traefik image version shown in **Servers > your server > Proxy > Configuration**.
 
 New Coolify proxy configurations use Traefik v3.7. Keep the Traefik v2 rule syntax only when the server still runs a v2 image.
@@ -113,7 +113,7 @@ The `letsencrypt` value must match the certificate resolver name in the proxy co
 Redeploy the application and test at least two subdomains.
 
 <Callout type="warning" title="Manual labels are your responsibility">
-After disabling **Readonly labels**, Coolify no longer repairs the application labels automatically. Use **Reset Labels to Defaults** to recover the generated route if the application becomes unreachable.
+After choosing manual label management, Coolify no longer repairs the application labels automatically. Use **Reset to defaults** to recover the generated route if the application becomes unreachable.
 </Callout>
 
 </Tab>

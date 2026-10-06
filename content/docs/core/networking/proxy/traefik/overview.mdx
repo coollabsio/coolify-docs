@@ -35,7 +35,7 @@ Coolify configures:
 The main configuration is stored at `/data/coolify/proxy/docker-compose.yml`. Traefik file-provider configuration is stored under `/data/coolify/proxy/dynamic/` and mounted at `/traefik/dynamic/` inside the proxy container.
 
 <Callout type="warning" title="Keep generated routing intact">
-Resetting the proxy configuration removes custom changes from the main Docker Compose file. Editing application labels after disabling **Readonly labels** also makes you responsible for preserving every generated route and middleware label.
+Resetting the proxy configuration removes custom changes from the main Docker Compose file. Editing application labels after choosing manual label management also makes you responsible for preserving every generated route and middleware label.
 </Callout>
 
 ---
