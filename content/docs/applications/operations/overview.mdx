@@ -51,7 +51,7 @@ Confirm whether the application is running, stopped, unhealthy, or repeatedly re
 
 ### Inspect the latest deployment
 
-Open **Deployments** when the problem began during a deploy, redeploy, or restart. Start with the first failing command rather than the final failure summary.
+Open **Deployment Logs** when the problem began during a deploy, redeploy, or restart. Start with the first failing command rather than the final failure summary.
 
 A build or image-pull failure is visible here, not in the runtime application logs.
 
@@ -78,7 +78,7 @@ Do not treat terminal changes as configuration. Files installed or edited only i
 
 ### Check resource usage
 
-Open **Configuration > Metrics** when the application is slow, being terminated for resource use, or behaving differently under load.
+Open **Metrics** when the application is slow, being terminated for resource use, or behaving differently under load.
 
 Application metrics require Sentinel and are not available for Docker Compose applications. Follow [Metrics](/core/observability/monitoring/metrics) for enablement, sampling, and retention.
 
@@ -103,7 +103,7 @@ Keep at least one tested backup outside the deployment server. A local backup on
 
 ## Run recurring work
 
-Use **Configuration > Scheduled Tasks** for commands that must run inside an application container on a schedule, such as a framework scheduler, queue maintenance, or cache cleanup.
+Use **Scheduled Tasks** for commands that must run inside an application container on a schedule, such as a framework scheduler, queue maintenance, or cache cleanup.
 
 A disabled task does not start scheduled executions. An enabled execution fails when the application has no running container or the deployment server is not functional. Follow [Application scheduled tasks](/applications/operations/scheduled-tasks) to configure the command, frequency, timeout, and target container.
 
@@ -111,7 +111,7 @@ Use [Tags](/core/automation/tags/overview) to group related resources across pro
 
 ## Remove or move an application
 
-Use **Stop** when the application should remain configured but offline. Use **Configuration > Danger Zone** only when you intend to permanently remove the resource; review [Danger Zone](/applications/operations/danger-zone) before deleting it.
+Use **Stop** when the application should remain configured but offline. Use **Danger Zone** only when you intend to permanently remove the resource; review [Danger Zone](/applications/operations/danger-zone) before deleting it.
 
 Use [Resource Operations](/applications/operations/resource-operations) to clone an application to another destination or move it between projects and environments on the same Coolify instance.
 

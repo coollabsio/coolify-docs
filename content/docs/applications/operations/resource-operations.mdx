@@ -5,10 +5,11 @@ description: Clone an application to another destination or move it between proj
 
 # Clone or move an application
 
-**Configuration > Resource Operations** provides two different placement actions:
+**Resource Operations** provides these placement actions:
 
-- **Clone Resource** creates another application on a selected server and network destination.
-- **Move Resource** changes which project and environment contain the existing application.
+- **Clone to another destination** creates another application on a selected server and network destination.
+- **Clone to another environment** copies the application into another project environment on the current server and network.
+- **Move resource** changes which project and environment contain the existing application.
 
 Neither action moves an application to another Coolify instance. Follow [Migrate an application](/applications/operations/migrate-between-instances) for that process.
 
@@ -41,14 +42,14 @@ Configure any repository, registry, proxy, DNS, and external-service access requ
 
 ### Open Clone Resource
 
-Open the application and select **Configuration > Resource Operations**. Under **Clone Resource**, choose **Select Server**.
+Open the application and select **Resource Operations**. Under **Clone to another destination**, choose **Server**.
 
 </Step>
 <Step>
 
 ### Select the network destination
 
-Choose **Select Network Destination** for the selected server, then select **Clone Resource**.
+Choose **Network destination** for the selected server, then select **Clone resource**.
 
 Coolify creates a stopped application in the current project and environment with a name beginning with `clone-of-`.
 
@@ -78,28 +79,32 @@ Deploy the cloned application with a temporary domain. Verify the image, health 
 </Step>
 </Steps>
 
+### Clone into another environment
+
+Under **Clone to another environment**, select **Project** and **Environment**, then select **Clone resource**. This keeps the current server and network destination. Review the copied configuration and persistent-storage requirements before deploying the clone.
+
 </Tab>
 <Tab value="Move resource">
 
 Move the application when it belongs in another project or environment on the same Coolify instance. The application keeps its server, network destination, configuration, domain, and running containers.
 
-Use **Clone Resource** instead when the application must run on another server or network destination.
+Use **Clone resource** instead when the application must run on another server or network destination.
 
 <Steps>
 <Step>
 
 ### Choose the target location
 
-Open **Configuration > Resource Operations**. Under **Move Resource**, choose **Select Target Project**.
+Open **Resource Operations**. Under **Move resource**, choose **Project**.
 
-Select **Select Target Environment**. Coolify excludes the application's current environment from the available targets.
+Select **Environment**. Coolify excludes the application's current environment from the available targets.
 
 </Step>
 <Step>
 
 ### Move the resource
 
-Select **Move Resource**. Coolify changes the application's project and environment without stopping the running application.
+Select **Move resource**. Coolify changes the application's project and environment without stopping the running application.
 
 </Step>
 <Step>
