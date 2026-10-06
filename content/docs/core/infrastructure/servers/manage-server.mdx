@@ -23,11 +23,11 @@ Before changing the IP address, domain, SSH user, port, or connection timeout, c
 | **Port** | The SSH port. |
 | **SSH Connection Timeout (s)** | How long Coolify waits for the SSH connection, from 1 to 300 seconds. |
 | **Server Timezone** | The timezone used for scheduled operations such as backups and cron jobs. |
-| **Use it as a build server?** | Makes the server available for application builds and prevents resources from being deployed to it. |
+| **Server role** | Choose **Deployments only**, **Builds only**, or **Deployments and builds**. See [Server roles](/core/infrastructure/servers/build-servers#server-roles). |
 
 Select **Save** after changing fields that do not save automatically. If you changed the connection, run the server validation again to confirm Coolify can still reach it.
 
-The build-server setting is unavailable while the server has managed resources. Move or delete those resources first. Read [Build Servers](/core/infrastructure/servers/build-servers) before changing the role.
+You cannot switch a server with managed resources to **Builds only**. Move or delete those resources first. The role cannot change while GitHub Actions runners are enabled. Read [Build Servers](/core/infrastructure/servers/build-servers) before changing the role.
 
 ### Wildcard domain
 

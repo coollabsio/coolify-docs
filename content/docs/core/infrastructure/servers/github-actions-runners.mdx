@@ -31,7 +31,7 @@ In the **Docker (privileged, full host access)** mode, each job gets a privilege
 
 Before you start, make sure you have:
 
-- a server with the **Build** role. Refer to [Build servers](/core/infrastructure/servers/build-servers).
+- a server with the **Builds only** role. Refer to [Build servers](/core/infrastructure/servers/build-servers).
 - a GitHub App source in Coolify that belongs to a **GitHub organization**. Runners are registered at organization level, so GitHub Apps of personal accounts cannot run workflow jobs.
 - a Coolify instance that GitHub can send webhook events to.
 - outbound internet access from the build server to `github.com`, `ghcr.io` (runner image), and Docker Hub (Docker sidecar image).
@@ -125,7 +125,7 @@ Use this procedure for a GitHub App that belongs to an organization and that you
 2. Open **GitHub Runners**.
 3. Select **Enable runners**.
 
-Coolify saves the default settings and shows the runner settings. If the server does not have the **Build** role, the page shows **This server is not enabled for builds**. Change the role in the **General** settings of the server first.
+Coolify saves the default settings and shows the runner settings. If the server does not have the **Builds only** role, the page shows **This server is not enabled for builds**. Change the role in the **General** settings of the server first.
 
 </Step>
 <Step>
@@ -137,6 +137,8 @@ Coolify saves the default settings and shows the runner settings. If the server 
 | **GitHub App** | The organization GitHub App that receives the **Workflow job** events. Coolify selects the first App that has all the required permissions. |
 | **Labels** | Comma-separated custom labels, for example `coolify`. Coolify also registers `self-hosted` and `linux`. |
 | **Application builds** | **Also build applications**, or **Dedicated to runners**. A dedicated server is not used for application builds while its runners are enabled. |
+
+**Pull request jobs** defaults to **Refuse pull request jobs**. Jobs started by pull requests, including `pull_request_target` and review events, are refused before a step runs. Choose **Run pull request jobs** only when your repository and organization approval policies permit it. The setting applies to runners started after you save; push, scheduled, and manual jobs are unaffected.
 
 If Coolify shows **The GitHub App is not ready**, complete [Set up the GitHub App](#set-up-the-github-app). You can save the settings with an App that is not ready, but Coolify does not get jobs until the App has the required permissions.
 
@@ -308,7 +310,7 @@ You cannot change the role of a build server while its runners are enabled. Disa
 
 | Problem | Solution |
 |---------|----------|
-| **This server is not enabled for builds** | Set the server role to **Build** in the **General** settings of the server. |
+| **This server is not enabled for builds** | Set the server role to **Builds only** in the **General** settings of the server. |
 | The **GitHub Runners** menu does not show | Coolify does not run runners on the server that runs Coolify. Use another server. |
 | No GitHub App shows in the settings | Add a GitHub App that belongs to an organization, and install it. |
 | **The GitHub App is not ready** | Add the missing permissions or events on GitHub, then select **Refetch** on the **Permissions** page of the App. |
