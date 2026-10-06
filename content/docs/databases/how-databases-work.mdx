@@ -25,10 +25,12 @@ The supported engine determines the generated image, connection port, data path,
 2. Select the server and network destination where the database should run.
 3. Review the generated resource under **Configuration > General**, including its image, credentials, ports, connection URLs, and engine-specific settings.
 4. Confirm the persistent storage under **Configuration > Persistent Storage**.
-5. Select **Start**. Coolify prepares the container, attaches the volume and destination network, and starts the database.
+5. Select **Start**. Coolify queues the start operation, resolves secret-manager credentials when configured, and prepares the container, attaches the volume and destination network, and starts the database.
 6. Docker runs the configured health check. A healthy database can accept connections from applications and clients that can reach its network.
 
 The resource remains available in the project after deployment. Use its configuration and operation pages to change settings, view logs, open a terminal, restart it, or redeploy it.
+
+SQLite applications connect by mounting database files from the data volume on the same server rather than using an internal URL. See [SQLite](/databases/sqlite).
 
 ## What Coolify manages
 
