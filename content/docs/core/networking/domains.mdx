@@ -244,6 +244,28 @@ When **Wildcard Domain** is empty, Coolify can generate an `sslip.io` domain fro
 
 ---
 
+## Use sslip.io testing domains
+
+When a server has no [Wildcard Domain](#use-generated-domains) configured, Coolify generates an [sslip.io](https://sslip.io?utm_source=coolify.io) domain from the server IP address when you create a resource.
+
+`sslip.io` is a free, public DNS service that resolves any subdomain that contains an IP address back to that IP address. There is nothing to register, no DNS record to create, and no certificate to install — it is a *magic resolver*:
+
+- `1.2.3.4.sslip.io` resolves to `1.2.3.4`
+- `anything.1.2.3.4.sslip.io` also resolves to `1.2.3.4`
+- `myapp.staging.1.2.3.4.sslip.io` also resolves to `1.2.3.4`
+
+Because the IP address is encoded into the hostname, sslip.io answers for an unlimited number of subdomains without anyone configuring DNS in advance. This gives you a working URL on a fresh server in seconds, before you point a real domain.
+
+<Callout type="info" title="Generated sslip.io URLs stay on HTTP">
+The generated URL always uses `http://`. Do not change it to `https://`: [Let's Encrypt](https://letsencrypt.org?utm_source=coolify.io) rate-limits the entire shared `sslip.io` zone, so certificate issuance fails. Use your own domain, or a wildcard you own, when you need HTTPS.
+</Callout>
+
+<Callout type="idea" title="When to use an sslip.io domain">
+sslip.io domains are best for trying Coolify on a new server, sharing a quick preview link, and internal demos — any flow where plain HTTP and an instantly working URL are enough. Move to a custom domain, or a wildcard you own, before you need TLS, go to production, or share the link with end users.
+</Callout>
+
+---
+
 ## Resolve domain conflicts
 
 Coolify warns when the same complete domain is already assigned to another application, service, or the Coolify dashboard in the same team.
