@@ -51,7 +51,7 @@ Choose the PostgreSQL image that matches your required major version and extensi
 
 ### Review the generated configuration
 
-Coolify creates the resource and opens **Configuration > General**. Review the image, username, generated password, initial database, and connection URLs. Keep the default private networking unless an external client requires access.
+Coolify creates the resource and opens **General**. Review the image, username, generated password, initial database, and connection URLs. Keep the default private networking unless an external client requires access.
 
 </Step>
 <Step>
@@ -77,7 +77,7 @@ Select **Start** and follow the startup output. Wait until PostgreSQL is running
 
 Coolify's PostgreSQL selector includes PostgreSQL 18, 17, and 16 images, plus Supabase PostgreSQL, PostGIS, and PGVector extension images. Select the image that matches the extensions, architecture, and major version your application requires.
 
-The password is generated when the resource is created. If you change the username, password, or initial database in the running database outside Coolify, update the matching values in **Configuration > General** so connection URLs and automated backups continue to work.
+The password is generated when the resource is created. If you change the username, password, or initial database in the running database outside Coolify, update the matching values in **General** so connection URLs and automated backups continue to work.
 
 
 ## Connect to PostgreSQL
@@ -88,13 +88,13 @@ Use the **Internal URL** for an application on the same Coolify destination netw
 postgres://<username>:<password>@<database-container>:5432/<database>
 ```
 
-When **Make it publicly available** is enabled, Coolify also shows a **Public URL** using the server address and **Public Port**. Do not expose port `5432` unless an external client requires it; prefer private networking for application connections.
+When **Public access > Access** is **Public through TCP proxy**, Coolify also shows a **Public URL** using the server address and **Public port**. Do not expose port `5432` unless an external client requires it; prefer private networking for application connections.
 
 Read [Databases](/databases) for port mappings, the public TCP proxy, and firewall considerations.
 
 ## Configure PostgreSQL
 
-Open **Configuration > General**, then use the section that matches the setting you need to change.
+Open **General**, then use the section that matches the setting you need to change.
 
 <Tabs id="postgresql-configuration" items={['General', 'Initialization', 'Configuration file', 'Network & Docker']}>
 <Tab value="General">
@@ -105,14 +105,14 @@ Use **Name** and **Description** to identify the resource in Coolify. **Image** 
 
 ### Database credentials
 
-**Username**, **Password**, and **Initial Database** determine the generated connection URLs and the values used by Coolify's database operations. If you change the corresponding values inside PostgreSQL, keep the fields in Coolify synchronized.
+**Username**, **Password**, and **Initial database** determine the generated connection URLs and the values used by Coolify's database operations. If you change the corresponding values inside PostgreSQL, keep the fields in Coolify synchronized.
 
 </Tab>
 <Tab value="Initialization">
 
 ### Initial database options
 
-**Initial Database Arguments** passes arguments to PostgreSQL initialization. **Host Auth Method** controls the authentication method used by the image while it initializes a new data directory.
+**Initial database arguments** passes arguments to PostgreSQL initialization. **Host authentication method** controls the authentication method used by the image while it initializes a new data directory.
 
 These settings do not reinitialize an existing persistent data directory.
 
@@ -127,7 +127,7 @@ The PostgreSQL image runs these scripts only when it initializes an empty data d
 
 ### Custom PostgreSQL configuration
 
-Use **Custom PostgreSQL Configuration** to provide the `postgresql.conf` content used by the container. Coolify mounts the generated file and adds `listen_addresses = '*'` when the configuration does not define it.
+Use **Custom PostgreSQL configuration** to provide the `postgresql.conf` content used by the container. Coolify mounts the generated file and adds `listen_addresses = '*'` when the configuration does not define it.
 
 Review every directive against the selected PostgreSQL image before applying it. An invalid directive can prevent PostgreSQL from starting.
 
@@ -136,13 +136,13 @@ Review every directive against the selected PostgreSQL image before applying it.
 
 ### Network access
 
-Use **Ports Mappings** for direct Docker host-to-container mappings. Enable **Make it publicly available** to use Coolify's separate TCP proxy, then configure **Public Port** and **Proxy Timeout (seconds)**.
+Use **Port mappings** for direct Docker host-to-container mappings. Under **Public access**, set **Public port** and **Proxy timeout**, then choose **Public through TCP proxy** in **Access** to use Coolify's separate TCP proxy.
 
 Keep PostgreSQL private unless an external client requires direct access. Read [Network access](/databases#network-access) before publishing a database port.
 
 ### Docker options
 
-Use **Custom Docker Options** only for supported Docker run options that are not represented by another field. Invalid or conflicting options can prevent the container from starting.
+Use **Custom Docker options** only for supported Docker run options that are not represented by another field. Invalid or conflicting options can prevent the container from starting.
 
 </Tab>
 </Tabs>
@@ -157,7 +157,7 @@ Coolify's scheduled backup job uses `pg_dump` in custom format for selected data
 pg_dump --format=custom --no-acl --no-owner
 ```
 
-When **Backup All Databases** is enabled, Coolify uses `pg_dumpall` and stores a gzip-compressed dump. Configure the schedule, retention, and S3 destination in [Database backups](/databases/backups). Follow [Restore a database](/databases/restore) for the built-in PostgreSQL import workflow.
+When **Database selection** is **All databases**, Coolify uses `pg_dumpall` and stores a gzip-compressed dump. Configure the schedule, retention, and S3 destination in [Database backups](/databases/backups). Follow [Restore a database](/databases/restore) for the built-in PostgreSQL import workflow.
 
 The built-in **Import Backup** form accepts PostgreSQL backups while the database is running. A custom-format dump is restored with `pg_restore`; a plain SQL dump requires a matching custom import command such as `psql`.
 
@@ -171,7 +171,7 @@ A custom-format dump is not a plain `.sql` file. Use `pg_restore` for a custom-f
 
 PostgreSQL supports `allow`, `prefer`, `require`, `verify-ca`, and `verify-full`. The last two modes require the client to trust the Coolify CA certificate. See [Database SSL](/databases/ssl).
 
-The default health check runs inside the PostgreSQL container. Configure its interval, timeout, retries, and start period under **Configuration > Healthcheck**, then restart PostgreSQL to apply changes.
+The default health check runs inside the PostgreSQL container. Configure its interval, timeout, retries, and start period under **Healthcheck**, then restart PostgreSQL to apply changes.
 
 ## Official PostgreSQL resources
 

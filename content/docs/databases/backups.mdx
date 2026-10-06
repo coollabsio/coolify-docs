@@ -62,7 +62,7 @@ To verify or correct the configuration:
 1. Open the parent Service and select **Edit Compose File**.
 2. Find the database component and inspect its `environment` entries.
 3. Confirm that the required container-variable names in the table are present and mapped to the intended Service variables or values.
-4. To change a referenced value such as `SERVICE_PASSWORD_POSTGRES`, open **Configuration > Environment Variables**. Change a hard-coded value in the Compose file instead.
+4. To change a referenced value such as `SERVICE_PASSWORD_POSTGRES`, open **Environment Variables**. Change a hard-coded value in the Compose file instead.
 5. Restart or deploy the Service so Coolify recreates the database container with the updated environment.
 6. Confirm that the database component is running, then open its backup schedule and select **Back up now**.
 7. Inspect the execution status and message.

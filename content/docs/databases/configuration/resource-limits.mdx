@@ -5,7 +5,7 @@ description: Limit the CPU and memory available to a standalone database contain
 
 # Resource limits
 
-Open a database resource, then select **Configuration > Resource Limits** to restrict the CPU and memory available to its container.
+Open a database resource, then select **Resource Limits** to restrict the CPU and memory available to its container.
 
 Start with measured database usage and leave enough capacity for startup, backups, compaction, and query bursts. A limit that is too low can make a healthy database appear unavailable.
 
@@ -34,16 +34,16 @@ Memory fields accept `0` or a number followed by `b`, `k`, `m`, or `g`, such as 
 
 <Callout type="warning" title="Low limits can stop a database">
 
-A database that reaches its hard memory limit can be terminated by Docker. A low CPU limit can also make startup, health checks, backups, or queries time out. Review **Logs**, **Metrics**, and health status after applying a limit.
+A database that reaches its hard memory limit can be terminated by Docker. A low CPU limit can also make startup, health checks, backups, or queries time out. Review **Runtime Logs**, **Metrics**, and health status after applying a limit.
 
 </Callout>
 
 ## Apply and verify
 
-Select **Save**, then restart or redeploy the database so the container starts with the new limits.
+Select **Save changes**, then restart or redeploy the database so the container starts with the new limits.
 
 After it starts:
 
 1. Open **Metrics** and check CPU and memory usage.
-2. Open **Logs** for out-of-memory exits, repeated restarts, or failed startup messages.
+2. Open **Runtime Logs** for out-of-memory exits, repeated restarts, or failed startup messages.
 3. Run a representative application query and a backup, when supported.

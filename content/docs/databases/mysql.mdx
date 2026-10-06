@@ -44,7 +44,7 @@ Select the Docker network destination that MySQL should join.
 
 ### Review the generated configuration
 
-Coolify creates the resource and opens **Configuration > General**. Review the image, root password, normal username and password, initial database, and connection URLs. Keep the default private networking unless an external client requires access.
+Coolify creates the resource and opens **General**. Review the image, root password, normal username and password, initial database, and connection URLs. Keep the default private networking unless an external client requires access.
 
 </Step>
 <Step>
@@ -68,7 +68,7 @@ Select **Start** and follow the startup output. Wait until MySQL is running and 
 | Scheduled backups | Supported |
 | SSL | Supported with MySQL SSL modes |
 
-The root password and normal-user password are generated when the resource is created. If you change credentials or the initial database inside MySQL, update the matching values in **Configuration > General** so connection URLs and automated backups use the current values.
+The root password and normal-user password are generated when the resource is created. If you change credentials or the initial database inside MySQL, update the matching values in **General** so connection URLs and automated backups use the current values.
 
 
 ## Connect to MySQL
@@ -79,13 +79,13 @@ Use the **Internal URL** for an application on the same Coolify destination netw
 mysql://<user>:<password>@<database-container>:3306/<database>
 ```
 
-When **Make it publicly available** is enabled, Coolify shows a **Public URL** using the server address and **Public Port**. Keep MySQL private unless an external client requires direct access.
+When **Public access > Access** is **Public through TCP proxy**, Coolify shows a **Public URL** using the server address and **Public port**. Keep MySQL private unless an external client requires direct access.
 
 Read [Databases](/databases) for port mappings, the public TCP proxy, and firewall considerations.
 
 ## Configure MySQL
 
-Open **Configuration > General** to change the image, credentials, **Ports Mappings**, public proxy, custom Docker options, and **Custom Mysql Configuration**. Coolify mounts the custom configuration into the MySQL container and recreates the generated configuration when you restart the resource.
+Open **General** to change the image, credentials, **Port mappings**, public proxy, custom Docker options, and **Custom MySQL configuration**. Coolify mounts the custom configuration into the MySQL container and recreates the generated configuration when you restart the resource.
 
 Use the image version that matches your application and backup/restore tooling. Test major-version changes against a copy of the data before applying them to production.
 
@@ -105,7 +105,7 @@ Stop application writes and verify the target resource before confirming an impo
 
 MySQL supports **Prefer**, **Require**, **Verify CA**, and **Verify Full**. The verification modes require the client to trust the Coolify CA certificate. See [Database SSL](/databases/ssl).
 
-Configure the Docker health check under **Configuration > Healthcheck** and restart MySQL after saving.
+Configure the Docker health check under **Healthcheck** and restart MySQL after saving.
 
 ## Official MySQL resources
 
