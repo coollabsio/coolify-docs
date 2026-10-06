@@ -1,0 +1,88 @@
+---
+title: "Open Mercato"
+description: "Modular business platform with CRM, sales, and commerce."
+category: "Business"
+icon: "/docs/images/services/open-mercato-logo.svg"
+---
+
+# Open Mercato
+
+![Open Mercato](/docs/images/services/open-mercato-logo.svg)
+
+## What is Open Mercato?
+
+Open Mercato is an extensible business application platform with CRM, sales,
+commerce, and organization management modules.
+
+## Deployment requirements
+
+This template builds Open Mercato v0.7.0 from a pinned commit in its official
+repository. It does not require a prebuilt application image or a local checkout.
+The first deployment downloads dependencies and compiles the application, so
+plan for at least **8 GB RAM and 30 GB free disk space for the first build**.
+Keep additional space for persistent data. Later deployments can reuse
+the build cache. A small pilot can run with less memory after the image is built;
+size production capacity for your workload.
+
+The stack includes the app, PostgreSQL with pgvector, Redis for caching, and
+Meilisearch. Only the application is exposed through Coolify's proxy, on internal
+port **3000**. Use an HTTPS domain before signing in: production session cookies
+are marked Secure.
+
+## First deployment and login
+
+1. Create the Open Mercato service and set its HTTPS domain in **Domains**.
+2. Optionally set `SUPERADMIN_EMAIL` before the first deployment. Its default is
+   `superadmin@example.com`; use your own address when configuring email delivery.
+3. Deploy and allow the build and database initialization to finish.
+4. Open `/login` on the configured domain.
+5. Sign in with `SUPERADMIN_EMAIL`. The initial password is the generated
+   `SERVICE_PASSWORD_64_SUPERADMIN` value followed immediately by `aA1!`.
+   The suffix satisfies the application's default password policy.
+
+The initializer also creates the upstream admin and employee accounts. Their
+passwords use the corresponding `SERVICE_PASSWORD_64_ADMIN` and
+`SERVICE_PASSWORD_64_EMPLOYEE` values with the same `aA1!` suffix. Review the
+accounts after signing in. Example business data and self-service onboarding
+are disabled.
+
+These environment variables set passwords only during initialization. Changing
+them later does not reset an existing account's password.
+
+## Persistent data and restarts
+
+Named volumes store PostgreSQL data, attachments, the local durable job queue,
+Meilisearch data, and the initialization marker. Redis is a disposable cache.
+Workers and the scheduler run inside the application container; this template
+is intended for a single app instance.
+
+On the first start, initialization output is written to
+`/var/lib/open-mercato/bootstrap.log` with owner-only permissions because it can
+contain initial credentials. Inspect that file through the app terminal if
+initialization fails. Later starts run database migrations and synchronize role
+permissions. A failed initialization or migration prevents the app from starting.
+
+Preserve the `init-state` volume together with the database. If that marker is
+lost while the database is retained, initialization stops when existing users
+are detected; inspect and recover the state before restarting.
+
+Use **Restart** after configuration changes. The app is built locally by Compose;
+there is no application registry tag to update with **Restart (pull latest)**.
+To upgrade Open Mercato, review the target release and update the pinned source
+and matching build instructions together.
+
+## Backups and optional services
+
+Configure backups separately. Back up the database, attachments, durable queue,
+initialization state, and Coolify environment secrets. Preserve
+`SERVICE_HEX_64_ENCRYPTION`: encrypted tenant data needs this key for recovery.
+Test restoration before upgrading.
+
+Email delivery and the optional AI sidecars are not configured by this template.
+Follow the upstream documentation to enable them.
+
+## Links
+
+- [Official website](https://openmercato.com/?utm_source=coolify.io)
+- [Documentation](https://docs.openmercato.com/?utm_source=coolify.io)
+- [GitHub](https://github.com/open-mercato/open-mercato?utm_source=coolify.io)
