@@ -25,6 +25,10 @@ Copy the complete `<username>:<hash>` output. Dynamic YAML does not require Dock
 
 In the proxy configuration, enable the dashboard API in secure mode with `--api.dashboard=true`. Save the validated configuration and restart the proxy. Keep insecure mode disabled.
 
+<Callout type="warning" title="Edit the main configuration in Coolify">
+Coolify does not sync edits to `/data/coolify/proxy/docker-compose.yml` back into the UI once a proxy configuration is saved in Coolify. Make changes under **Servers > your server > Proxy > Configuration** and save them there. Starting or restarting the proxy through Coolify writes its saved configuration to disk and can overwrite disk-only edits.
+</Callout>
+
 ## Add the dashboard route
 
 Open **Servers > your server > Proxy > Dynamic Configurations**, select **Add**, and create `traefik-dashboard.yaml`:
