@@ -15,17 +15,17 @@ Confirm that the application deploys successfully from its configured branch and
 
 <Callout type="warning" title="Treat preview code as untrusted">
 
-A pull request can run code on the deployment server. Do not expose production credentials to preview deployments, and keep **Allow Public PR Deployments** disabled unless you accept the risk of running code from public contributors.
+A pull request can run code on the deployment server. Do not expose production credentials to preview deployments, and keep **PR deployment access** set to **Repository members only** unless you accept the risk of running code from public contributors.
 
 </Callout>
 
 ## Enable preview deployments
 
-Open the application, select **Configuration > Advanced > Deployment**, then enable **Preview Deployments**.
+Open the application, select **Preview Deployments** in its settings sidebar, then select **Enable preview deployments**.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/1.webp" alt="Preview Deployments and Allow Public PR Deployments settings" />
 
-With **Allow Public PR Deployments** disabled, Coolify blocks pull requests from forks unless the author is a repository owner, member, or collaborator. Enable it only when anyone should be allowed to trigger a preview. GitLab, Gitea, and Bitbucket pull requests from other repositories require public preview deployments to be enabled.
+With **PR deployment access** set to **Repository members only**, Coolify blocks pull requests from forks unless the author is a repository owner, member, or collaborator. Choose **Public (fork PRs allowed)** only when anyone should be allowed to trigger a preview. GitLab, Gitea, and Bitbucket pull requests from other repositories require public preview deployments to be enabled.
 
 ## Connect pull-request events
 
@@ -62,7 +62,7 @@ Complete the registration and install the GitHub App for the required account an
 
 ### Verify the event connection
 
-Open or update a pull request. Open **Configuration > Preview Deployments** in Coolify and confirm that the pull request appears.
+Open or update a pull request. Open **Preview Deployments** in Coolify and confirm that the pull request appears.
 
 </Step>
 </Steps>
@@ -91,7 +91,7 @@ Under **Subscribe to events**, select **Pull request**, then finish creating and
 
 ### Verify the event connection
 
-Open or update a pull request. Open **Configuration > Preview Deployments** in Coolify and confirm that the pull request appears.
+Open or update a pull request. Open **Preview Deployments** in Coolify and confirm that the pull request appears.
 
 </Step>
 </Steps>
@@ -126,7 +126,7 @@ On GitHub, set **Pull requests** to **Read and write** under **Repository permis
 
 ### Accept and verify the update
 
-Accept the permission update, then open or update a pull request. Confirm that it appears under **Configuration > Preview Deployments**.
+Accept the permission update, then open or update a pull request. Confirm that it appears under **Preview Deployments**.
 
 </Step>
 </Steps>
@@ -184,7 +184,7 @@ Open or update a pull request. Confirm that the provider reports a successful de
 
 ## Configure preview domains
 
-Open **Configuration > Preview Deployments**. **Preview URL Template** controls the generated domain:
+Open **Preview Deployments**. Under **Preview URL template**, **URL template** controls the generated domain:
 
 - `{{pr_id}}` inserts the pull-request or merge-request number.
 - `{{random}}` inserts a random value.
@@ -221,7 +221,7 @@ Follow [Environment variables](/applications/configuration/environment-variables
 
 Coolify does not automatically deploy pull requests that were open before previews were enabled.
 
-For a GitHub-based application, open **Configuration > Preview Deployments** and select **Load Pull Requests**. Select **Deploy** beside each existing pull request that needs a preview.
+For a GitHub-based application, open **Preview Deployments** and select **Load Pull Requests**. In the **Pull requests** dialog, select **Deploy preview** beside each request that needs a preview. Use **Configure** to prepare a preview without deploying it.
 
 ## GitHub pull-request comments
 
@@ -233,18 +233,18 @@ Manual repository webhooks can trigger previews, but automated pull-request comm
 
 ## Deploy a Docker Image preview manually
 
-For a [Docker Image application](/applications/deployments/docker-image), open **Configuration > Preview Deployments** and use **Manual Preview Deployment**.
+For a [Docker Image application](/applications/deployments/docker-image), open **Preview Deployments** and use **Manual preview**.
 
 Enter:
 
-- **Pull Request Id:** an identifier used in the preview name, domain, logs, and cleanup
+- **Preview ID:** an identifier used in the preview name, domain, logs, and cleanup
 - **Docker Tag:** the image tag to deploy, for example `pr_1234`
 
 Select **Deploy Preview**. This path is useful when an external CI system builds one image tag for each pull request.
 
 ## Manage a preview
 
-Open **Configuration > Preview Deployments** to view each preview and its domain, Git request, deployment logs, and application logs.
+Open **Preview Deployments** to view each preview. Use **Preview links** to open its domain or Git request, **Preview logs** for deployment and runtime logs, and **Preview actions** for lifecycle actions.
 
 Depending on the preview state, you can:
 

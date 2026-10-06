@@ -7,13 +7,13 @@ import { BranchUp, Pulse, Settings } from 'reicon-react';
 
 # Configure an application
 
-Open an application and select **Configuration** to change how Coolify prepares its images, starts its containers, exposes traffic, and operates the workload.
+Open an application and use its settings sidebar to change how Coolify prepares its images, starts its containers, exposes traffic, and operates the workload.
 
 The available pages depend on the application type and destination. For example, **Git Source** appears only for Git-based applications, **Swarm** appears only for a Docker Swarm destination, and the application **Healthcheck** page is not used for Docker Compose.
 
 <CoolCallout icon={Settings} title="The short version">
 
-Use **General** for the primary source, build, domain, and port settings. Use the remaining configuration pages for environment variables, storage, source authentication, automation, health, limits, and operations.
+Use **General** for build, image, and port settings, and **Domains** for public routing. Use the remaining configuration pages for environment variables, storage, source authentication, automation, health, limits, and operations.
 
 </CoolCallout>
 
@@ -23,11 +23,14 @@ Use **General** for the primary source, build, domain, and port settings. Use th
 
 | <span className="whitespace-nowrap">Configuration page</span> | What it controls | Guide |
 | :--- | :--- | :--- |
-| **General** | Application identity, build method, domains, image settings, ports, container labels, and deployment commands. | [Review General settings](/applications/configuration/general) |
-| **Advanced** | Build cache, container naming, automatic and preview deployments, Git clone options, proxy behavior, restart limits, log drains, and GPU access. | [Review Advanced settings](/applications/configuration/advanced) |
+| **General** | Application identity, build strategy, access summary, image settings, ports, container labels, and deployment commands. | [Review General settings](/applications/configuration/general) |
+| **Domains** | Public domains, target ports, paths, redirects, and indexing. | [Configure domains](/core/networking/domains) |
+| **Advanced** | Build cache, container naming, automatic deployments, Git clone options, proxy behavior, restart limits, log drains, and GPU access. | [Review Advanced settings](/applications/configuration/advanced) |
 | **Swarm** | Docker Swarm service settings for applications deployed to a Swarm destination. | [Configure Docker Swarm](/core/infrastructure/scaling/docker-swarm) |
 | **Environment Variables** | Build-time and runtime values passed to the application. | [Configure environment variables](/applications/configuration/environment-variables) |
 | **Persistent Storage** | Volume, directory, and file mounts attached outside the replaceable container filesystem. | [Configure application persistent storage](/applications/configuration/persistent-storage) |
+| **Deployment Logs** | Build and deployment history and output. | [Deployment overview](/applications/deployments/overview) |
+| **Runtime Logs** | Output from the running application containers. | [Observability overview](/core/observability/monitoring/overview) |
 | **Git Source** | The connected Git source or deploy key for a Git-based application. | [Configure a source](/applications/sources/overview) |
 | **Servers** | The servers selected to run the application. | [Configure multi-server deployments](/core/infrastructure/scaling/multi-server-deployments) |
 | **Scheduled Tasks** | Commands that Coolify runs inside the application container on a schedule. | [Configure application scheduled tasks](/applications/operations/scheduled-tasks) |

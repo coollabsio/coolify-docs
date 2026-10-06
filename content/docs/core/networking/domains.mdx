@@ -13,7 +13,7 @@ The domain's DNS record points to the server running the resource. The Coolify p
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-Complete the [DNS setup](/core/networking/dns), enter the complete `http://` or `https://` URL in **Domains**, and redeploy the resource.
+Complete the [DNS setup](/core/networking/dns), add the hostname on **Domains**, choose **http** or **https** in **Protocol**, and redeploy the resource.
 
 Use `https://` for automatic TLS. Add a port to target a specific port inside the container, or add a path to share one hostname between resources.
 
@@ -74,13 +74,14 @@ Before starting, [point the domain to the resource server and verify its DNS rec
 
 ### Enter the domain in Coolify
 
-Open the application or the web-facing application inside a service, then open its **General** configuration.
+Open the application or Service, then select **Domains** in its settings sidebar.
 
-Enter the complete URL in **Domains**, including `http://` or `https://`. For example, enter `https://app.shadowarcanist.com`.
-
-For a Docker Compose application, Coolify shows a separate **Domains for `<service-name>`** field for each non-database service. Add the domain to the service that receives the request.
-
-Select **Save**.
+1. Select **Add domain**.
+2. Choose **https** or **http** in **Protocol**.
+3. Enter the hostname in **Domain**, for example `app.shadowarcanist.com`.
+4. Set **Port** when the proxy must target a specific container port, and **Path** when routing a prefix such as `/api`.
+5. For Docker Compose, choose the non-database **Service** that receives the request.
+6. Select **Add domain** to save the route. Review any DNS or domain-conflict warning before proceeding.
 
 </Step>
 <Step>
@@ -103,9 +104,9 @@ If DNS was changed recently, you may need to wait for the previous record's TTL 
 
 ### Supported domain formats
 
-The **Domains** field accepts one or more complete URLs.
+The domain form separates **Protocol**, **Domain**, **Port**, and **Path**. The examples below show the resulting URLs; add each hostname as a separate domain.
 
-| Goal | Value in **Domains** |
+| Goal | Resulting URL |
 | :--- | :--- |
 | Route one hostname | `https://app.example.com` |
 | Route multiple hostnames | `https://app.example.com,https://www.example.com` |
@@ -115,7 +116,7 @@ The **Domains** field accepts one or more complete URLs.
 
 When a domain value does not include a port, Coolify routes traffic to port `80` inside the container. Add the container port to the URL when the application listens on a different port.
 
-Separate multiple URLs with commas. Coolify converts application domains to lowercase and removes duplicate entries when you save them.
+Add multiple hostnames with **Add domain**, one at a time. Coolify normalizes application domains and rejects duplicate entries.
 
 When a value contains both a port and a path, put the port before the path:
 
@@ -143,7 +144,7 @@ Coolify creates a path-prefix route from the value. More specific paths take pri
 
 By default, Coolify strips the configured prefix before forwarding the request. A request to `https://shadowarcanist.com/api/users` reaches the application as `/users`.
 
-Disable **Strip Prefixes** in the resource's advanced settings when the application expects to receive `/api/users` instead.
+For an application, open **Advanced > Proxy** and choose **Keep paths as-is** in **Path prefixes** when it expects to receive `/api/users` instead.
 
 <Callout type="warning" title="Do not depend on the root route as a fallback">
 Keep every resource serving a shared hostname running and healthy. If a path route is unavailable, the result depends on the remaining proxy routes and application responses.
@@ -165,11 +166,11 @@ If the browser shows a certificate warning, follow [Let's Encrypt not working](/
 
 ### Redirect www and non-www
 
-For a non-Docker Compose application, add both hostnames to **Domains** and create DNS records for both. Then use **Direction** to choose the canonical hostname.
+Add both hostnames on **Domains** and create DNS records for both. Edit a domain, then use **www redirect** to choose the canonical hostname. For a Compose application, this choice applies to all domains of the selected service.
 
-| **Direction** | Behavior |
+| **www redirect** | Behavior |
 | :--- | :--- |
-| **Allow www & non-www** | Serve both configured hostnames without a Coolify-managed redirect. |
+| **No redirect** | Serve both configured hostnames without a Coolify-managed redirect. |
 | **Redirect to www** | Redirect the non-www hostname to the configured `www` hostname. |
 | **Redirect to non-www** | Redirect the `www` hostname to the configured non-www hostname. |
 
@@ -187,9 +188,9 @@ X-Robots-Tag: noindex, nofollow
 
 A resource with several domains can keep its production domain indexable while marking a staging or temporary domain as noindex.
 
-1. Open the application or Service and select **Configuration > Domains**.
-2. Find the domain under **Search engine indexing**.
-3. Select **Noindex**. Select **Indexable** to remove the header.
+1. Open the application or Service and select **Domains** in its settings sidebar.
+2. Edit the domain.
+3. Choose **Noindex** in **Search engine indexing**, then save. Choose **Indexable** to remove the header.
 4. Redeploy the resource to apply the updated proxy configuration.
 5. Check the response header:
 
@@ -209,7 +210,7 @@ Preview deployment domains are always served as noindex. Removing a domain also 
 Search crawlers can choose whether to honor this header, and anyone who knows the URL can still open it. Use authentication or network restrictions when access must be limited.
 </Callout>
 
-For applications, the selector is available while **Readonly Container Labels** is enabled. When you disable that setting and manage container labels yourself, add the equivalent `X-Robots-Tag` response header in your custom proxy labels.
+For applications, the selector is available while **General > Container labels > Label management** is set to **Managed by Coolify (auto-generated)**. When you choose manual label management, add the equivalent `X-Robots-Tag` response header in your custom proxy labels.
 
 ---
 
@@ -231,7 +232,7 @@ In Coolify, open **Servers**, select the server, and open **General**. Enter `ht
 
 ### Generate an application domain
 
-Open an application on that server and select **Generate Domain** beside **Domains**.
+Open an application on that server, select **Domains**, then **Add domain**. Use **Generate domain** in the form, review the generated values, and add the domain.
 
 Coolify generates a hostname such as `https://<application-id>.shadowarcanist.com`. Open the generated URL after redeploying the application to confirm it works.
 
@@ -280,7 +281,7 @@ Open the resource linked in the conflict message and remove or change its domain
 
 ## Set the Coolify dashboard domain
 
-Self-hosted users can assign a domain to the Coolify dashboard from **Settings > Configuration > General**.
+Self-hosted users can assign a domain to the Coolify dashboard from **Settings > General**.
 
 Set **URL** to a complete value such as `https://coolify.shadowarcanist.com` only after you [point its DNS record to the server running Coolify](/core/networking/dns#point-a-domain-to-the-server). Do not reuse an application or service domain for the dashboard.
 
