@@ -48,13 +48,26 @@ Do not edit the generated `docker-compose.prod.yml` to change one of these defau
 
 Changing `.env` does not update an existing container's environment. Recreate the Coolify container using your installation's Compose configuration; a plain `docker restart coolify` does not reload these variables.
 
-For an installer-managed instance, rerun the installer:
+For a standard self-hosted installation, run these commands in Bash from the source folder:
 
 ```bash
-curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+cd /data/coolify/source || exit 1
+coolify_image=$(docker inspect --format '{{.Config.Image}}' coolify) || exit 1
+compose_files=(-f docker-compose.yml -f docker-compose.prod.yml)
+if [ -f docker-compose.custom.yml ]; then
+  compose_files+=(-f docker-compose.custom.yml)
+fi
+
+docker compose "${compose_files[@]}" -f - up -d --no-deps --force-recreate coolify <<EOF
+services:
+  coolify:
+    image: "$coolify_image"
+EOF
 ```
 
-This can also update Coolify. To keep a specific version, follow the [manual installation instructions](/start-with-self-hosted#manual-installation), using the same image version and Compose files as your current installation. Include `docker-compose.custom.yml` if you use an override. See [Compose overrides](/start-with-self-hosted#compose-overrides) for the complete configuration.
+The final inline override keeps the running Coolify image instead of falling back to the Compose file's default image tag. The command also includes `docker-compose.custom.yml` if present. See [Compose overrides](/start-with-self-hosted#compose-overrides) for details.
+
+You do not need to run `docker compose down` first. `--force-recreate` replaces the Coolify container, while `--no-deps` leaves PostgreSQL and Redis running. The dashboard is briefly unavailable while Coolify restarts.
 
 ## Verify the configuration
 
