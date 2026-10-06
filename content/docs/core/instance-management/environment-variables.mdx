@@ -1,0 +1,85 @@
+---
+title: Instance Environment Variables
+description: Configure PHP memory and worker settings for a self-hosted Coolify instance, apply environment changes, and verify the running configuration.
+---
+
+# Instance environment variables
+
+Self-hosted Coolify reads its instance environment from `/data/coolify/source/.env`. Use this file for settings such as PHP memory and worker configuration that are not exposed in the dashboard.
+
+These settings affect the Coolify instance. To configure a deployed application, use that application's [environment variables](/applications/configuration/environment-variables) and image configuration instead.
+
+## PHP memory and worker settings
+
+The standard production Compose configuration supplies these defaults when the corresponding variable is unset:
+
+| Variable | Coolify default | Purpose |
+| :--- | :--- | :--- |
+| `PHP_MEMORY_LIMIT` | `256M` | PHP memory limit for an individual script. |
+| `PHP_FPM_PM_CONTROL` | `dynamic` | PHP-FPM process-manager mode. The image supports `dynamic`, `ondemand`, and `static`. |
+| `PHP_FPM_PM_START_SERVERS` | `1` | Number of workers started when using `dynamic` mode. |
+| `PHP_FPM_PM_MIN_SPARE_SERVERS` | `1` | Minimum idle workers maintained in `dynamic` mode. |
+| `PHP_FPM_PM_MAX_SPARE_SERVERS` | `10` | Maximum idle workers maintained in `dynamic` mode. |
+
+`PHP_MEMORY_LIMIT` is separate from Docker's container memory limit. Raising it does not allocate more RAM to the container or server. PHP workers and other processes still share the available memory.
+
+Keep worker settings consistent with the selected process-manager mode and the server's resources. Additional image-supported settings are listed in the [Server Side Up PHP environment reference](https://serversideup.net/open-source/docker-php/docs/reference/environment-variable-specification). Coolify's own configuration can override image defaults, so verify the effective value after making changes.
+
+## Change a setting
+
+Connect to the server where the Coolify instance runs. Back up the existing environment file, then edit it:
+
+```bash
+cp /data/coolify/source/.env /data/coolify/source/.env.backup
+nano /data/coolify/source/.env
+```
+
+For example, to raise the PHP memory limit to `512M`, add or update this line:
+
+```dotenv
+PHP_MEMORY_LIMIT=512M
+```
+
+Update the existing entry rather than adding duplicate keys. Keep the instance's other values, including `APP_KEY`, unchanged. Store the backup securely: it contains instance credentials.
+
+Do not edit the generated `docker-compose.prod.yml` to change one of these defaults. Installer and update scripts can replace that file.
+
+## Apply the changes
+
+Changing `.env` does not update an existing container's environment. Recreate the Coolify container using your installation's Compose configuration; a plain `docker restart coolify` does not reload these variables.
+
+For an installer-managed instance, rerun the installer:
+
+```bash
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+```
+
+This can also update Coolify. To keep a specific version, follow the [manual installation instructions](/start-with-self-hosted#manual-installation), using the same image version and Compose files as your current installation. Include `docker-compose.custom.yml` if you use an override. See [Compose overrides](/start-with-self-hosted#compose-overrides) for the complete configuration.
+
+## Verify the configuration
+
+Check the PHP memory limit inside the recreated container:
+
+```bash
+docker exec coolify php -r 'echo ini_get("memory_limit"), PHP_EOL;'
+```
+
+For the example above, the result should be `512M`. To inspect the effective PHP-FPM pool configuration, run:
+
+```bash
+docker exec coolify php-fpm -tt
+```
+
+Confirm the dashboard still loads and review container logs if startup fails:
+
+```bash
+docker logs --tail 100 coolify
+```
+
+## When to use a Compose override
+
+Use `.env` for parameters supported by the instance configuration or its container image. Use `/data/coolify/source/docker-compose.custom.yml` for Compose attributes such as `mem_limit`, CPU limits, port bindings, and additional file mounts.
+
+An arbitrary environment variable does not automatically become a PHP setting. If a parameter has no environment-variable support, it needs the image's supported configuration-file mechanism. Coolify also provides its own PHP configuration, so check the loaded configuration before assuming an image setting took effect.
+
+Read [Compose override examples](/start-with-self-hosted#examples) for container limits and mount configuration.
