@@ -258,6 +258,26 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 
 ## Known issues and Solutions
 
+### Realtime or terminal connections fail with localhost
+
+On some servers, `localhost` resolves to the IPv6 loopback address `::1`, while the origin port is reachable only through IPv4. If the dashboard loads but realtime updates or terminal connections fail, check the cloudflared logs for an origin connection error and try an explicit IPv4 loopback address.
+
+For the single-route setup above, change the tunnel service URL from `http://localhost:80` to `http://127.0.0.1:80`.
+
+If you use the legacy separate routes, keep their order and change only the origin address:
+
+| Route | IPv4 service URL |
+| :--- | :--- |
+| Dashboard hostname with `/terminal/ws` | `http://127.0.0.1:6002` |
+| Separate realtime hostname | `http://127.0.0.1:6001` |
+| Dashboard hostname | `http://127.0.0.1:8000` |
+
+For an HTTPS origin, use `https://127.0.0.1:443` and keep **Origin Server Name** set to the certificate's hostname, as described in [HTTPS tunnel troubleshooting](/integrations/networking/cloudflare/tunnels/full-tls#troubleshooting-bad-gateway-502-after-switching-to-https).
+
+Save the route, reload Coolify, and test realtime updates and the terminal again. If the connection still fails, inspect the origin listener, tunnel logs, and WebSocket requests. This workaround addresses loopback address selection; other connection failures and gateway timeouts need separate diagnosis.
+
+### An existing DNS record prevents the route from working
+
 When you create a new routes in [Step 5](/integrations/networking/cloudflare/tunnels/single-resource#5-configure-tunnel-routes), Cloudflare will create a DNS record for the hostname.
 
 However, if a DNS record for the hostname already exists, Cloudflare won’t update existing record.
