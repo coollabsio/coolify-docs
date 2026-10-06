@@ -63,6 +63,13 @@
     "category": "Development"
   },
   {
+    "name": "Archon",
+    "slug": "archon",
+    "icon": "/docs/images/services/archon-logo.svg",
+    "description": "Open-source workflow engine for AI coding agents. Define multi-step development workflows in YAML and run them reliably from the CLI, web UI, Slack, Telegram, GitHub, or Discord.",
+    "category": "AI"
+  },
+  {
     "name": "Argilla",
     "slug": "argilla",
     "icon": "/docs/images/services/argilla-logo.svg",
