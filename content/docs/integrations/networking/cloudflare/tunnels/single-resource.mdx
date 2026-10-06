@@ -174,6 +174,8 @@ There’s no need to create a separate tunnel for each resources, simply create 
 
 You can expose the Coolify dashboard, realtime updates, and terminal connections through a single tunnel route to the Coolify proxy.
 
+Make sure the Coolify proxy is running on the server where your Coolify instance is installed. The tunnel connects to this proxy on port `80`.
+
 ### 1. Set the Coolify instance URL [!toc]
 
 In Coolify, open **Settings > Configuration > General** and set [URL](/core/instance-management/instance-settings#url) to your dashboard domain, for example `https://coolify.shadowarcanist.com`.
@@ -198,6 +200,12 @@ Follow [Step 5](/integrations/networking/cloudflare/tunnels/single-resource#5-co
 | `coolify.shadowarcanist.com` | `http://localhost:80` | Coolify dashboard, realtime updates, and terminal |
 
 You do not need separate tunnel routes for ports `6001` and `6002`. You also do not need to set `PUSHER_HOST`, `PUSHER_PORT`, `TERMINAL_HOST`, or `TERMINAL_PORT` for this setup.
+
+If you are switching from separate routes, remove obsolete `PUSHER_HOST`, `PUSHER_PORT`, `TERMINAL_HOST`, and `TERMINAL_PORT` overrides from `/data/coolify/source/.env`. Existing overrides take precedence over automatic hostname and port detection. After changing `.env`, restart Coolify to apply the changes:
+
+```bash
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+```
 
 ### 3. Verify the Setup [!toc]
 
