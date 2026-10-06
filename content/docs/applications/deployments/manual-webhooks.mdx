@@ -11,7 +11,7 @@ Applications connected through an official Git App receive provider events throu
 
 <Callout type="info" title="The deploy webhook is different">
 
-**Deploy Webhook (auth required)** starts a deployment when an external workflow calls Coolify with an API token. It is not a repository webhook. Follow [Automatic deployments](/applications/deployments/automatic-deployments) and choose **External workflow** when CI should call Coolify directly.
+**Deploy webhook URL** starts a deployment when an external workflow calls Coolify with an API token. It is not a repository webhook. Follow [Automatic deployments](/applications/deployments/automatic-deployments) and choose **External workflow** when CI should call Coolify directly.
 
 </Callout>
 
@@ -38,7 +38,7 @@ Open the application, select **Advanced > Deployment**, then choose **Deploy on 
 
 ### Copy the GitHub webhook details
 
-Open **Webhooks**. Enter a long random value in **GitHub Webhook Secret**, select **Save**, then copy the **GitHub** URL under **Manual Git Webhooks**.
+Open **Webhooks**. Enter a long random value in **Webhook secret** in the **GitHub** section, select **Save changes**, then copy the **GitHub** URL under **Manual Git webhooks**.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/auto-deploy/webhooks/2.webp" alt="GitHub manual webhook URL and secret in Coolify" />
 
@@ -92,7 +92,7 @@ GitHub also shows the webhook and its recent deliveries under **Settings > Webho
 
 ### Copy the GitLab webhook details
 
-Open **Webhooks** in Coolify. Enter a long random value in **GitLab Webhook Secret**, select **Save**, then copy the **GitLab** URL.
+Open **Webhooks** in Coolify. Enter a long random value in **Webhook secret** in the **GitLab** section, select **Save changes**, then copy the **GitLab** URL.
 
 </Step>
 <Step>
@@ -126,7 +126,7 @@ Open **Advanced > Deployment** and choose **Deploy on push (webhooks)** in **Aut
 
 ### Copy the Bitbucket webhook details
 
-Open **Webhooks** in Coolify. Enter a long random value in **Bitbucket Webhook Secret**, select **Save**, then copy the **Bitbucket** URL.
+Open **Webhooks** in Coolify. Enter a long random value in **Webhook secret** in the **Bitbucket** section, select **Save changes**, then copy the **Bitbucket** URL.
 
 </Step>
 <Step>
@@ -169,7 +169,7 @@ Open **Advanced > Deployment** and choose **Deploy on push (webhooks)** in **Aut
 
 ### Copy the Gitea webhook details
 
-Open **Webhooks** in Coolify. Enter a long random value in **Gitea Webhook Secret**, select **Save**, then copy the **Gitea** URL.
+Open **Webhooks** in Coolify. Enter a long random value in **Webhook secret** in the **Gitea** section, select **Save changes**, then copy the **Gitea** URL.
 
 </Step>
 <Step>

@@ -56,14 +56,14 @@ These source types can clone the repository but do not automatically configure p
 
 ### Copy the provider webhook URL
 
-Open the application, select **Webhooks**, then copy the URL for the repository provider under **Manual Git Webhooks**.
+Open the application, select **Webhooks**, then copy the URL for the repository provider under **Manual Git webhooks**.
 
 </Step>
 <Step>
 
 ### Configure the secret
 
-Enter a long random value in the matching **Webhook Secret** field and select **Save**.
+Enter a long random value in the matching **Webhook secret** field and select **Save changes**.
 
 Create the webhook in the repository provider with the copied Coolify URL and the same secret. Do not reuse an account password, API token, or deploy key.
 
@@ -107,7 +107,7 @@ Create a Coolify [API token](/core/security/credentials/api-tokens) with permiss
 
 ### Copy the deploy webhook
 
-Open the application, select **Webhooks**, then copy **Deploy Webhook (auth required)**.
+Open the application, select **Webhooks**, then copy **Deploy webhook URL**.
 
 Store the webhook URL and API token as secrets in the external CI system.
 
