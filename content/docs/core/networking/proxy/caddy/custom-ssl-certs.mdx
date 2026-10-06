@@ -1,0 +1,94 @@
+---
+title: Custom SSL Certificates
+description: Mount your certificate and private key into Coolify's Caddy proxy and configure the resource's TLS label.
+---
+
+# Custom SSL certificates
+
+Caddy normally obtains certificates automatically for HTTPS domains. Use a custom certificate when your organization or another certificate provider manages TLS certificates for you.
+
+Caddy supports `tls <certificate-file> <key-file>`, as shown in its [TLS directive examples](https://caddyserver.com/docs/caddyfile/directives/tls#examples). Coolify uses [caddy-docker-proxy](https://github.com/lucaslorentz/caddy-docker-proxy#labels-to-caddyfile-conversion), so you add the equivalent label to the resource's existing Caddy route.
+
+## Prepare the certificate files
+
+You need:
+
+- a PEM-encoded certificate, including any required intermediate certificates, whose subject alternative names cover the domain
+- the matching unencrypted private key
+- shell access to every server whose Caddy proxy serves the domain
+
+On each server, create a certificate directory:
+
+```bash
+sudo install -d -m 700 /data/coolify/proxy/caddy/certs
+```
+
+Copy the files from your computer to the server. Replace the paths and server address:
+
+```bash
+scp /path/to/example.com.crt root@<server-address>:/data/coolify/proxy/caddy/certs/example.com.crt
+scp /path/to/example.com.key root@<server-address>:/data/coolify/proxy/caddy/certs/example.com.key
+```
+
+Restrict access to the private key:
+
+```bash
+sudo chmod 600 /data/coolify/proxy/caddy/certs/example.com.key
+```
+
+<Callout type="warning" title="Protect the private key">
+Transfer the key over an encrypted connection. Never commit it to Git or paste its contents into the Coolify dashboard. If you run Caddy as a non-root user, ensure that user can read the files without making the key publicly readable.
+</Callout>
+
+## Mount the files into Caddy
+
+Open **Servers > your server > Proxy > Configuration**. Add this mount to the existing `volumes` list under the `caddy` service, keeping all other configuration:
+
+```yaml
+services:
+  caddy:
+    volumes:
+      # Keep the existing mounts.
+      - /data/coolify/proxy/caddy/certs:/certs:ro
+```
+
+Select **Save changes**, then **Restart Proxy** to apply the new mount. Caddy will read the files at `/certs/example.com.crt` and `/certs/example.com.key` inside the proxy container.
+
+## Configure the resource's certificate
+
+Configure an HTTPS domain for the resource, such as `https://example.com`, before adding the certificate label.
+
+For a standard application, open **General > Container labels**. Set **Label management** to **Managed manually (edit labels yourself)**. Keep the generated routing labels and add:
+
+```ini
+caddy_0.tls=/certs/example.com.crt /certs/example.com.key
+```
+
+Use the prefix of the existing HTTPS domain label. For example, if `caddy_1=https://example.com`, use `caddy_1.tls` instead. Replace an existing `tls` value for that route rather than adding a second one.
+
+For a Docker Compose application, add the same label to the service that receives traffic:
+
+```yaml
+services:
+  app:
+    labels:
+      # Keep the existing routing labels.
+      - 'caddy_0.tls=/certs/example.com.crt /certs/example.com.key'
+```
+
+Save and redeploy the resource. The label produces this Caddyfile directive within the existing site block:
+
+```caddyfile
+https://example.com {
+    tls /certs/example.com.crt /certs/example.com.key
+    # Existing routing directives remain here.
+}
+```
+
+This is an illustration of the generated configuration. Configure the label on the existing route so you preserve Coolify's upstream routing.
+
+## Verify and renew
+
+Open the HTTPS domain and inspect its certificate issuer, hostname coverage, and expiration date. Check **Servers > your server > Proxy > Logs** if Caddy cannot read the files or continues serving another certificate.
+
+Caddy does not automatically renew certificates supplied this way. Replace the certificate and key files before expiration, then restart the proxy to load them. Certificates from a private CA also require clients to trust that CA.
