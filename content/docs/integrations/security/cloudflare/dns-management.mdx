@@ -1,0 +1,28 @@
+---
+title: DNS Management
+description: Add a Cloudflare integration token and manage application DNS records from Coolify.
+---
+
+# Cloudflare DNS management
+
+Coolify can create DNS records for application and service domains using a team's Cloudflare integration tokens. It matches each hostname to an accessible Cloudflare zone and points the record at the resource's server.
+
+## Add a token
+
+1. Create a Cloudflare API token with **Zone > DNS > Edit** and **Zone > Zone > Read** for the zones you want Coolify to manage.
+2. In Coolify, open **Keys & Tokens > Integration Tokens** and add a Cloudflare token.
+3. Give it a recognizable name, paste the API token, and select the **DNS** capability.
+4. Optionally enable **Automatically configure DNS**. New domains are configured automatically when there is one unambiguous matching credential.
+5. Validate and save the token. Review its accessible zones; refresh zones after changing provider permissions.
+
+Integration tokens belong to a team. Add the token to the team that owns the resource. This token workflow is separate from configuring a proxy's DNS challenge for certificate issuance.
+
+## Manage a domain
+
+Open an application's or service's **Domains** page and add the hostname. Coolify matches it to zones available through the team's tokens and offers DNS configuration for that server.
+
+If a record already points elsewhere, review the existing value before using the replace action. Records created through this workflow show **Managed by Coolify**. Removing a managed domain offers deletion of its DNS record after confirmation; review other uses of the hostname before approving deletion.
+
+Re-check DNS after changing a record. Coolify replaces the previous check result, including checks for preview domains. IPv6 addresses are compared by value rather than their written form.
+
+If no zone matches, check the token's zone scope and permissions, refresh accessible zones, or configure records manually using [DNS](/core/networking/dns).
