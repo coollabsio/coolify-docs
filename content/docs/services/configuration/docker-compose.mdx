@@ -84,6 +84,12 @@ Coolify recognizes `SERVICE_<TYPE>_<ID>` variable names in Compose and can gener
 
 The Supabase-specific variables are generated only when the Service also defines `SERVICE_PASSWORD_JWT`.
 
+### Underscores in variable names
+
+Ordinary variable names such as `DATABASE_PASSWORD` can contain underscores. For generated usernames, passwords, and random values, keep `<ID>` as one token: use `SERVICE_PASSWORD_DBPASSWORD` or `SERVICE_PASSWORD_64_DBPASSWORD`, not `SERVICE_PASSWORD_DB_PASSWORD`.
+
+URL/FQDN variables use the normalized Compose service name, so `my-api` becomes `MY_API`. Their final numeric segment represents an internal port, as in `SERVICE_URL_API_3000`. See the [annotated naming examples](/applications/builds/docker-compose#naming-generated-variables) for the differences between types, identifiers, sizes, and ports.
+
 Use the same complete name in several components to reuse one stored value:
 
 ```yaml

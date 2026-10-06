@@ -283,6 +283,36 @@ Coolify can generate a domain, username, password, or random value when the Comp
 | `SERVICE_HEX_64_<ID>` | Random hexadecimal string. | 64 characters |
 | `SERVICE_HEX_128_<ID>` | Random hexadecimal string. | 128 characters |
 
+#### Naming generated variables
+
+Underscores are allowed in ordinary environment variable names, such as `DATABASE_PASSWORD`. In Coolify's magic variables, some underscores separate parts that the parser uses to choose what to generate:
+
+```text
+SERVICE_PASSWORD_64_DB
+│       │        │  └─ Identifier: DB
+│       │        └──── Size: 64 characters
+│       └───────────── Type: PASSWORD
+└───────────────────── Coolify magic-variable prefix
+
+SERVICE_URL_API_3000
+│       │   │   └───── Internal port: 3000
+│       │   └───────── Compose service: api
+│       └───────────── Type: URL
+└───────────────────── Coolify magic-variable prefix
+```
+
+For generated usernames, passwords, and random values, keep `<ID>` as a single token without underscores. Use `DBPASSWORD`, for example, rather than `DB_PASSWORD`. Adding an underscore can change the parsed type or size instead of extending the identifier.
+
+| Example | Meaning |
+| :--- | :--- |
+| `DATABASE_PASSWORD` | Ordinary variable. Underscores are allowed; Coolify does not generate a value from this name. |
+| `SERVICE_PASSWORD_DBPASSWORD` | Generates a password for identifier `DBPASSWORD`. |
+| `SERVICE_PASSWORD_64_DBPASSWORD` | Generates a 64-character password for that identifier. |
+| `SERVICE_PASSWORD_DB_PASSWORD` | Incorrect password-generator name: `DB_PASSWORD` is not a single identifier token. |
+| `SERVICE_URL_API_3000` | Generates a URL for Compose service `api`, routed to internal port `3000`. |
+
+URL and FQDN names follow service-name normalization instead: a Compose service named `my-api` or `my.api` is represented as `MY_API` in the variable name. This is separate from the identifier rule for generated credentials. A final numeric segment in a URL/FQDN name is interpreted as a port.
+
 Generate and reuse credentials by referencing the generated names:
 
 ```yaml
