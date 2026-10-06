@@ -10,10 +10,10 @@ Coolify can create DNS records for application and service domains using a team'
 ## Add a token
 
 1. Create a Cloudflare API token with **Zone > DNS > Edit** and **Zone > Zone > Read** for the zones you want Coolify to manage.
-2. In Coolify, open **Keys & Tokens > Integration Tokens** and add a Cloudflare token.
-3. Give it a recognizable name, paste the API token, and select the **DNS** capability.
+2. In Coolify, open **Keys & Tokens > Integration Tokens** and select **New token**, then choose **Cloudflare** in **Provider**.
+3. Enter a **Token name**, paste the **API token**, and select the **DNS** capability.
 4. Optionally enable **Automatically configure DNS**. New domains are configured automatically when there is one unambiguous matching credential.
-5. Validate and save the token. Review its accessible zones; refresh zones after changing provider permissions.
+5. Select **Validate and add**. Open the saved token's edit icon to review **Domains this token can manage**. Use **Refresh zones** after changing provider permissions, and **Validate and save** when editing credentials.
 
 Integration tokens belong to a team. Add the token to the team that owns the resource. This token workflow is separate from configuring a proxy's DNS challenge for certificate issuance.
 
