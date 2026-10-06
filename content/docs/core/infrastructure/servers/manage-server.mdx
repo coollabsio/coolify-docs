@@ -5,7 +5,7 @@ description: Update a connected server's connection, domain, timezone, build rol
 
 # Manage a server
 
-Open **Servers**, select a server, then open **Configuration > General** to manage its identity, SSH connection, domain defaults, and role.
+Open **Servers**, select a server, then open **General** to manage its identity, SSH connection, domain defaults, and role.
 
 <Callout type="warning" title="Connection changes can make the server unreachable">
 Before changing the IP address, domain, SSH user, port, or connection timeout, confirm that the new connection works from the Coolify machine.
@@ -17,21 +17,21 @@ Before changing the IP address, domain, SSH user, port, or connection timeout, c
 | :--- | :--- |
 | **Name** | The name shown for the server in Coolify. |
 | **Description** | Optional notes about the server or its purpose. |
-| **Wildcard Domain** | The base domain Coolify can use when suggesting domains for new resources. |
-| **IP Address/Domain** | The address Coolify uses for SSH and server communication. |
-| **User** | The account Coolify uses for SSH. |
-| **Port** | The SSH port. |
-| **SSH Connection Timeout (s)** | How long Coolify waits for the SSH connection, from 1 to 300 seconds. |
-| **Server Timezone** | The timezone used for scheduled operations such as backups and cron jobs. |
+| **Wildcard domain** | The base domain Coolify can use when suggesting domains for new resources. |
+| **IP address or domain** | The address Coolify uses for SSH and server communication. |
+| **SSH user** | The account Coolify uses for SSH. |
+| **SSH port** | The SSH port. |
+| **Connection timeout** | How long Coolify waits for the SSH connection, from 1 to 300 seconds. |
+| **Server timezone** | The timezone used for scheduled operations such as backups and cron jobs. |
 | **Server role** | Choose **Deployments only**, **Builds only**, or **Deployments and builds**. See [Server roles](/core/infrastructure/servers/build-servers#server-roles). |
 
-Select **Save** after changing fields that do not save automatically. If you changed the connection, run the server validation again to confirm Coolify can still reach it.
+Select **Save changes** after changing fields that do not save automatically. If you changed the connection, run the server validation again to confirm Coolify can still reach it.
 
 You cannot switch a server with managed resources to **Builds only**. Move or delete those resources first. The role cannot change while GitHub Actions runners are enabled. Read [Build Servers](/core/infrastructure/servers/build-servers) before changing the role.
 
 ### Wildcard domain
 
-For example, setting **Wildcard Domain** to `https://example.com` lets Coolify suggest a domain such as `https://<application-id>.example.com` for a new resource.
+For example, setting **Wildcard domain** to `https://example.com` lets Coolify suggest a domain such as `https://<application-id>.example.com` for a new resource.
 
 Create a DNS record for `*.example.com` that points to this server. Changing the setting does not create DNS records or update domains already assigned to resources.
 
@@ -70,7 +70,7 @@ Follow [Cloud Tokens](/core/security/credentials/cloud-tokens) to add a token fo
 ### Open the linking flow
 
 1. Open **Servers** and select the server.
-2. Open **Configuration > General**.
+2. Open **General**.
 3. Select **Link Cloud Provider**.
 4. Choose **Hetzner**, **DigitalOcean**, **Vultr**, or **Hostinger**.
 5. Select the matching provider token.
@@ -123,15 +123,15 @@ If the connection fails, restore the previous settings or use the provider conso
 
 ## Build and deployment limits
 
-Open **Configuration > Advanced** to control how many deployments a server runs at once and how long each deployment may run.
+Open **Advanced** to control how many deployments a server runs at once and how long each deployment may run.
 
 | Setting | What it controls | Default |
 | :--- | :--- | :--- |
-| **Number of concurrent builds** | How many build and deployment processes run at the same time on this server. Raise it to deploy more resources in parallel; lower it to protect a small server from resource exhaustion during builds. | `2` |
-| **Deployment timeout (sec)** | The maximum time a single deployment may run before Coolify cancels it. Increase it for large images or slow builds that legitimately exceed the limit. | `3600` |
-| **Deployment queue limit** | The maximum number of deployments allowed to wait in the queue. When the limit is reached, Coolify rejects new deployments with an HTTP `429` response. | — |
+| **Concurrent builds** | How many build and deployment processes run at the same time on this server. Raise it to deploy more resources in parallel; lower it to protect a small server from resource exhaustion during builds. | `2` |
+| **Deployment timeout** | The maximum time a single deployment may run before Coolify cancels it. Increase it for large images or slow builds that legitimately exceed the limit. | `3600` |
+| **Queue limit** | The maximum number of deployments allowed to wait in the queue. When the limit is reached, Coolify rejects new deployments with an HTTP `429` response. | — |
 
-Select **Save** after changing these values.
+Select **Save changes** after changing these values.
 
 <Callout type="info" title="Limits are per server">
 The concurrent-build count and queue limit apply to each server independently. A dedicated [build server](/core/infrastructure/servers/build-servers) has its own limits, so raising them there does not affect deployments on other servers.
