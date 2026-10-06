@@ -724,3 +724,11 @@ For Azure, enter the required tenant value. Google uses a **Hosted domain** fiel
 
 
 </Tabs>
+
+## Instance environment settings
+
+Set `HORIZON_ALLOWED_EMAILS` in the instance environment to grant additional users access to Laravel Horizon. See [Coolify development](/contribute/coolify) for the Horizon URL.
+
+`SSH_COMMAND_TIMEOUT` defaults to `3600` seconds. A value of `0` or an invalid value uses that default rather than disabling the timeout.
+
+`PROXY_CONNECT_NETWORKS_INTERVAL_SECONDS` and `NIGHTWATCH_ENABLED` are removed. Proxy networks are connected during destination creation, deployment, and proxy startup/restart. Laravel Nightwatch no longer runs inside the Coolify container.

@@ -122,3 +122,7 @@ There is no restore action for a deleted server record.
 If the Linux machine still exists, follow [Add Server](/core/infrastructure/servers/add-server) and validate it again. This creates a new Coolify server record.
 
 Applications, databases, and services from the deleted record do not automatically return, even if their containers or files remain on the machine. Recreate or redeploy each resource that Coolify should manage.
+
+## Provider deletion through the API
+
+For Hetzner, Vultr, or DigitalOcean, `DELETE /servers/{uuid}?delete_from_provider=true` also deletes the linked provider machine. Review the provider link before requesting deletion. The default is `false`. Use `force=true` only when you also intend to delete all resources. Deleting a server marks its queued deployments as failed.

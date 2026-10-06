@@ -136,3 +136,9 @@ Select **Save** after changing these values.
 <Callout type="info" title="Limits are per server">
 The concurrent-build count and queue limit apply to each server independently. A dedicated [build server](/core/infrastructure/servers/build-servers) has its own limits, so raising them there does not affect deployments on other servers.
 </Callout>
+
+## Disk usage notifications
+
+Set the high-disk notification interval under **Advanced**. Alerts repeat at most once per interval per server, with a default of 24 hours. If usage falls at least five percentage points below the threshold and later rises above it, Coolify can alert sooner. The API field is `server_disk_usage_notification_interval_hours`.
+
+A server becomes unreachable after two consecutive failed connection checks. A single failed check does not mark every resource as exited; deployment attempts recheck servers marked unreachable before failing.
