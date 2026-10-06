@@ -16,7 +16,7 @@ The available controls depend on the application's source and build method. A se
 | Application type | Additional settings shown |
 | :--- | :--- |
 | Git-based application | Automatic deployments, submodules, Git LFS, and clone depth. Preview controls are on **Preview Deployments**. |
-| Docker Compose application | **Raw Compose Deployment** and **Connect To Predefined Network**. GPU controls are hidden. |
+| Docker Compose application | **Compose deployment** and **Predefined network**. GPU controls are hidden. |
 | Non-Compose application | GPU controls. |
 | Every application | Build, container name, proxy, shutdown, restart, and log-drain controls. |
 
@@ -259,7 +259,7 @@ Give the process enough time to finish in-flight work after receiving its shutdo
 
 ### Apply changes
 
-Most dropdowns save immediately. Edited fields such as the container name, stop grace period, restart count, and GPU configuration use **Save changes**.
+Most dropdowns, **Stop grace period (seconds)**, and **Max restart count** save immediately. Edited container-name fields and GPU configuration use **Save changes**.
 
 Redeploy or restart the application after changing a setting that affects the image, container name, proxy labels, network, shutdown behavior, logging, or GPU access.
 
@@ -289,23 +289,23 @@ Under **GPU > GPU access**, choose **Enabled** to add GPU access to the applicat
 
 ### GPU Driver
 
-**GPU Driver** selects the container runtime's GPU driver. Enter the driver configured on the deployment server.
+**GPU driver** selects the container runtime's GPU driver. Enter the driver configured on the deployment server.
 
 ---
 
 ### GPU Count and device IDs
 
-Use **GPU Count** to request a number of GPUs. Leave it empty to make all available GPUs accessible to the container.
+Use **GPU count** to request a number of GPUs. Leave it empty to make all available GPUs accessible to the container.
 
-Use **GPU Device Ids** to select specific devices as a comma-separated list, such as `0,2`.
+Use **GPU device ids** to select specific devices as a comma-separated list, such as `0,2`.
 
-Do not set **GPU Count** and **GPU Device Ids** together. Coolify rejects the configuration and clears both values when both are provided.
+Do not set **GPU count** and **GPU device ids** together. Coolify rejects the configuration and clears both values when both are provided.
 
 ---
 
 ### GPU Options
 
-**GPU Options** accepts additional driver-specific runtime options. Add only options supported by the GPU driver and container runtime installed on the deployment server.
+**GPU options** accepts additional driver-specific runtime options. Add only options supported by the GPU driver and container runtime installed on the deployment server.
 
 Select **Save changes**, then redeploy or restart the application and verify GPU access from inside the container.
 
