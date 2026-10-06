@@ -27,6 +27,7 @@
     "team/members",
     "team/roles-and-permissions",
     "team/shared-variables",
+    "team/audit-log",
     "---Security---",
     "security/authentication",
     "security/credentials",
