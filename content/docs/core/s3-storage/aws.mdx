@@ -199,11 +199,11 @@ AWS does not show the secret access key again after you close this page. If you 
 
 ### Set up Amazon S3 in Coolify
 
-In the Coolify dashboard, open **S3 Storages** from the sidebar.
+In the Coolify dashboard, open **S3 Storage** from the sidebar.
 
 <ZoomImage src="/docs/images/aws-s3/20.webp" alt="S3 Storages section in the Coolify sidebar" />
 
-Select **Add**.
+Select **New storage**.
 
 <ZoomImage src="/docs/images/aws-s3/21.webp" alt="New S3 Storage form in Coolify" />
 
@@ -211,7 +211,7 @@ Complete the form:
 
 1. Enter a name for the S3 storage. This name only identifies it in Coolify.
 2. Enter an optional description.
-3. Enter the endpoint without the bucket name, such as `https://s3.YOUR_REGION_NAME.amazonaws.com`.
+3. Set **Protocol** to `https` and **Host** to `s3.YOUR_REGION_NAME.amazonaws.com`. Leave **Port** and **Path** empty for the standard AWS endpoint. Keep the bucket name separate.
 4. Enter the S3 bucket name.
 5. Enter the bucket's AWS Region.
 6. Enter the IAM **Access Key**.
