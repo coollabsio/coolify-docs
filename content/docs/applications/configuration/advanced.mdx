@@ -167,11 +167,24 @@ Leave it disabled when the application depends on [rolling updates](/application
 
 ### Custom Container Name
 
-**Custom Container Name** appears when **Consistent Container Names** is disabled. Enter a recognizable fixed name when another system must address the container by that exact runtime name.
+**Custom Container Name** appears when **Consistent Container Names** is enabled. Enter a recognizable fixed name when another system must address the container by that exact runtime name.
 
 Coolify converts the value to slug format when you save it. The name must be unique among applications on the same deployment server.
 
-A custom name also disables rolling updates because the current and replacement containers cannot use it simultaneously. Leave the field empty to keep Coolify's generated deployment-specific names.
+A custom name also disables rolling updates because the current and replacement containers cannot use it simultaneously. Disable consistent naming to use generated deployment-specific names.
+
+### Container name prefix
+
+With consistent naming disabled, set an optional **Container Name Prefix** to make generated names readable while retaining rolling updates. Coolify slugifies the prefix, limits it to 30 characters, and requires it to be unique per server.
+
+| Application | Generated name with prefix `shop-api` |
+| :--- | :--- |
+| Single container | `shop-api-20260908T141530` |
+| Compose service `web` | `web-shop-api-20260908T141530` |
+
+Without a prefix, generated names use the application UUID followed by the timestamp. Old timestamp suffixes remain recognized. In consistent mode, a custom name produces `shop-api` for a single container or `web-shop-api` for the Compose service.
+
+The API field is `custom_container_name_prefix`. Setting `custom_internal_name` enables consistent naming; combining it with `is_consistent_container_name_enabled: false` returns `422`. Applications whose stored custom names were previously applied despite consistent naming being disabled are migrated to consistent mode to preserve their names.
 
 </Tab>
 <Tab value="Proxy" icon={Globe3}>
