@@ -731,4 +731,17 @@ Set `HORIZON_ALLOWED_EMAILS` in the instance environment to grant additional use
 
 `SSH_COMMAND_TIMEOUT` defaults to `3600` seconds. A value of `0` or an invalid value uses that default rather than disabling the timeout.
 
+`SCHEDULED_JOBS_DISPATCH_MODE` controls how the scheduler checks every minute which database backups, tasks, volume backups, and Docker cleanups are due:
+
+| Value | Behavior |
+| :--- | :--- |
+| `sequential` | One process checks all four job types, one after another. This uses the least CPU and memory. A slow job type can delay the other types. |
+| `concurrent` | One process for each job type, all at the same time. A slow job type cannot delay the other types, but each process loads Coolify, so CPU and memory usage are higher every minute. |
+
+When the variable is not set, or has another value, self-hosted instances use `sequential`. Use `concurrent` only when many backups or tasks are due at the same minute and one slow job type delays the others. To change the mode, add the variable to `/data/coolify/source/.env`, for example `SCHEDULED_JOBS_DISPATCH_MODE=concurrent`, then recreate the Coolify containers:
+
+```sh
+docker compose --env-file /data/coolify/source/.env -f /data/coolify/source/docker-compose.yml -f /data/coolify/source/docker-compose.prod.yml up -d --pull always --remove-orphans --force-recreate
+```
+
 `PROXY_CONNECT_NETWORKS_INTERVAL_SECONDS` and `NIGHTWATCH_ENABLED` are removed. Proxy networks are connected during destination creation, deployment, and proxy startup/restart. Laravel Nightwatch no longer runs inside the Coolify container.
