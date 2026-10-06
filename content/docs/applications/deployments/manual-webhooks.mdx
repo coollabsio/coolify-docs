@@ -17,7 +17,7 @@ Applications connected through an official Git App receive provider events throu
 
 ## Choose the repository provider
 
-Each provider uses its own URL and secret from **Configuration > Webhooks > Manual Git Webhooks**. Configure only the provider that hosts the repository.
+Each provider uses its own URL and secret from **Configuration > Webhooks > Manual Git Webhooks**. Configure only the provider that hosts the repository. New or changed secrets must contain at least 16 characters. Use the generator beside the secret field to create a random value, then save the same value at the Git provider.
 
 For production deployments, select the provider's push event and enable **Configuration > Advanced > Deployment > Auto Deploy**. For [preview deployments](/applications/deployments/preview-deployments), also select the pull-request or merge-request events shown below.
 
@@ -210,3 +210,5 @@ Open the webhook's recent deliveries in the repository provider, then check:
 6. the pushed branch matches the branch configured for the application
 
 A pull-request or merge-request event creates a preview only when **Preview Deployments** is enabled.
+
+Repeated distinct signature failures are throttled per client address, repository, and branch. Correctly signed deliveries remain accepted. Webhook responses do not reveal matching applications; verify deployment history instead.
