@@ -63,13 +63,13 @@ For project, environment, or server scope, select the specific item that should 
 
 ### Add the variable
 
-Select **+ Add**, then enter:
+Select **Add variable**, then enter:
 
 - **Name**: the variable key, such as `NODE_ENV`
 - **Value**: the value to reuse, such as `production`
 - **Comment**: optional context about what uses the value
 
-Enable **Is Multiline?** when the value contains line breaks. Select **Save**.
+Set **Value type** to **Multiline** when the value contains line breaks. Select **Add variable**.
 
 The new entry appears on the selected scope page.
 
@@ -122,12 +122,12 @@ Verify inside the workload or through its behavior that the environment variable
 
 ## Manage variables in Developer view
 
-Select **Developer view** on a scope page to edit ordinary shared variables as `KEY=value` lines. Select **Save All Environment Variables** to apply the complete editor contents.
+Select **Developer view** on a scope page to edit ordinary shared variables as `KEY=value` lines. Select **Save changes** to apply the complete editor contents.
 
 Lines beginning with `#` are treated as comments. Developer view can create new variables, update existing ordinary values, and delete variables omitted from the editor.
 
 <Callout type="warning" title="Developer view saves the complete list">
-Removing a variable's line and saving deletes that shared variable. Review the entire editor before selecting **Save All Environment Variables**.
+Removing a variable's line and saving deletes that shared variable. Review the entire editor before selecting **Save changes**.
 </Callout>
 
 Locked and multiline variables appear as placeholders in Developer view and cannot be changed there. Edit multiline variables in **Normal view**. To change a locked value, delete the variable and create it again.
@@ -136,7 +136,7 @@ Locked and multiline variables appear as placeholders in Developer view and cann
 
 ## Update or delete a shared variable
 
-In **Normal view**, open the variable entry to change its name, value, comment, or multiline setting, then select **Update**.
+In **Normal view**, open the variable entry to change its name, value, comment, or **Value type**, then select **Update variable**.
 
 References use the variable name. If you rename a shared variable, update every `{{scope.VARIABLE_NAME}}` reference that used the previous name.
 
