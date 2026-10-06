@@ -41,3 +41,5 @@ A passing health check confirms only that the configured probe passed. It does n
 Set **Start Period (s)** high enough for the database to initialize on the selected server and storage. A short start period can mark a slow first startup unhealthy even when the database would become ready later.
 
 </Callout>
+
+MongoDB health checks ping the database, so a running container whose database cannot respond is no longer treated as healthy automatically. Review container logs when the check fails.
