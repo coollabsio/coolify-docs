@@ -1,0 +1,30 @@
+---
+title: "Registry login"
+description: "Log in to a Docker registry on one or more servers"
+---
+
+# Registry login
+
+Log in to a Docker registry on one or more servers
+
+## Usage
+
+```sh
+coolify server registry login <server_uuid> [<server_uuid>...]
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--password-stdin` | `boolean` | No | `false` | Read the password or access token from stdin |
+| `--registry` | `string` | Yes | — | Registry host, optionally with a port (e.g. ghcr.io, registry.example.com:5000, docker.io for Docker Hub) (required) |
+| `--username (-u)` | `string` | Yes | — | Registry username (required) |
+
+## Get current help
+
+```sh
+coolify server registry login --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.
