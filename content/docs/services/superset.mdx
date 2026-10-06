@@ -45,9 +45,9 @@ You can find the video instructions for this process in [Coolify's GitHub reposi
 
 ### Connecting to Other Databases on the Coolify Network
 
-If you wish to connect to databases hosted on Coolify but external to the Superset service template, you will need to enable the option [Connect to Predefined Networks](https://coolify.io/docs/knowledge-base/docker/compose#connect-to-predefined-networks).
+To connect to databases hosted on Coolify but external to the Superset service template, enable [Connect To Predefined Network](/applications/builds/docker-compose#connect-to-predefined-networks). Use the database's internal hostname and port for the connection.
 
-However, this may result in hostname conflicts with other services on the network. It is highly recommended that you [create a new Coolify destination](https://coolify.io/docs/knowledge-base/destinations/create) and deploy your Superset service and other databases to that destination instead.
+For network isolation, you can [create a separate destination](/core/networking/destinations/create) and deploy Superset and the databases it needs to that destination. You still need to enable **Connect To Predefined Network** for Superset: service stacks use their own network by default. Containers on the shared network use generated names, so verify the database hostname rather than assuming a generic name such as `postgres`.
 
 ### Configuring Superset
 
