@@ -1,11 +1,11 @@
 ---
 title: Instance Environment Variables
-description: Configure PHP memory and worker settings for a self-hosted Coolify instance, apply environment changes, and verify the running configuration.
+description: Configure PHP memory, workers, and scheduled job dispatch for a self-hosted Coolify instance and apply environment changes.
 ---
 
 # Instance environment variables
 
-Self-hosted Coolify reads its instance environment from `/data/coolify/source/.env`. Use this file for settings such as PHP memory and worker configuration that are not exposed in the dashboard.
+Self-hosted Coolify reads its instance environment from `/data/coolify/source/.env`. Use this file for settings such as PHP memory, workers, and scheduled job dispatch that are not exposed in the dashboard.
 
 These settings affect the Coolify instance. To configure a deployed application, use that application's [environment variables](/applications/configuration/environment-variables) and image configuration instead.
 
@@ -24,6 +24,25 @@ The standard production Compose configuration supplies these defaults when the c
 `PHP_MEMORY_LIMIT` is separate from Docker's container memory limit. Raising it does not allocate more RAM to the container or server. PHP workers and other processes still share the available memory.
 
 Keep worker settings consistent with the selected process-manager mode and the server's resources. Additional image-supported settings are listed in the [Server Side Up PHP environment reference](https://serversideup.net/open-source/docker-php/docs/reference/environment-variable-specification). Coolify's own configuration can override image defaults, so verify the effective value after making changes.
+
+## Scheduled job dispatch
+
+`SCHEDULED_JOBS_DISPATCH_MODE` controls how the scheduler checks every minute which database backups, tasks, volume backups, and Docker cleanups are due:
+
+| Value | Behavior |
+| :--- | :--- |
+| `sequential` | One process checks all four job types, one after another. This uses the least CPU and memory. A slow job type can delay the other types. |
+| `concurrent` | One process for each job type, all at the same time. A slow job type cannot delay the other types, but each process loads Coolify, so CPU and memory usage are higher every minute. |
+
+When the variable is not set, or has another value, self-hosted instances use `sequential`. Use `concurrent` when many backups or tasks are due at the same minute and one slow job type delays the others.
+
+To change the mode, add or update this entry in `/data/coolify/source/.env`:
+
+```dotenv
+SCHEDULED_JOBS_DISPATCH_MODE=concurrent
+```
+
+Then follow [Apply the changes](#apply-the-changes) below to recreate the Coolify container while preserving its current image and any custom Compose overrides.
 
 ## Change a setting
 
