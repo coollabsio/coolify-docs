@@ -1,5 +1,5 @@
 ---
-title: Introduction
+title: Databases
 description: Deploy and operate standalone PostgreSQL, MySQL, MariaDB, MongoDB, Redis, Dragonfly, KeyDB, and ClickHouse databases on Coolify.
 ---
 
@@ -33,7 +33,7 @@ Scheduled backup support means that Coolify can run an engine-specific dump job 
 1. Open a project and select **Create New Resource**.
 2. Select a database from the database list.
 3. Select the server and destination where the database should run.
-4. Review the generated credentials and settings under **Configuration > General**.
+4. Review the generated credentials and settings under **General**.
 5. Select **Start**.
 
 Coolify creates the database container on the selected destination. The database does not receive a public network endpoint by default.
@@ -56,12 +56,12 @@ Coolify provides two ways to expose a database port:
 
 | Method | What it does | When to use it |
 | :--- | :--- | :--- |
-| **Ports Mappings** | Adds a Docker host-to-container port mapping to the database container. | A fixed host port or a client that connects directly to the server. |
-| **Make it publicly available** | Runs a separate Nginx TCP proxy on the selected **Public Port**. | A public connection that you want to change without changing the database container's port mappings. |
+| **Port mappings** | Adds a Docker host-to-container port mapping to the database container. | A fixed host port or a client that connects directly to the server. |
+| **Public access > Access > Public through TCP proxy** | Runs a separate Nginx TCP proxy on the selected **Public port**. | A public connection that you want to change without changing the database container's port mappings. |
 
 A port mapping uses the format `host-port:container-port`, for example `15432:5432`. You can enter multiple comma-separated mappings. The database container is recreated when its generated configuration changes.
 
-The public TCP proxy requires the database to be running and a **Public Port** between `1` and `65535`. **Proxy Timeout (seconds)** defaults to `3600` and must be at least `1`. The proxy is separate from the database container, so changes to the public port or timeout update the proxy rather than the database process.
+The public TCP proxy requires the database to be running and a **Public port** between `1` and `65535`. **Proxy timeout** defaults to `3600` and must be at least `1`. The proxy is separate from the database container, so changes to the public port or timeout update the proxy rather than the database process.
 
 <Callout type="warning" title="Keep database ports private by default">
 
@@ -86,16 +86,16 @@ Coolify creates a named Docker volume when it creates a standalone database. The
 
 Persistent storage is not a database-aware backup. Use [database backups](/databases/backups) for supported engines and test [restoring a database](/databases/restore) before relying on it.
 
-Open **Configuration > Persistent Storage** to add or change storage mounts. Changing or removing a mount can make existing data unavailable to the container, so verify the source and destination before saving.
+Open **Persistent Storage** to add or change storage mounts. Changing or removing a mount can make existing data unavailable to the container, so verify the source and destination before saving.
 
 ## Database health
 
-Coolify can attach a Docker health check to every standalone database. Open **Configuration > Healthcheck** to configure:
+Coolify can attach a Docker health check to every standalone database. Open **Healthcheck** to configure:
 
-- **Interval (s)**: time between checks; minimum `1`.
-- **Timeout (s)**: maximum time for one check; minimum `1`.
+- **Interval (seconds)**: time between checks; minimum `1`.
+- **Timeout (seconds)**: maximum time for one check; minimum `1`.
 - **Retries**: failed checks before Docker marks the container unhealthy; minimum `1`.
-- **Start Period (s)**: startup time before failed checks count; minimum `0`.
+- **Start period (seconds)**: startup time before failed checks count; minimum `0`.
 
 Health checks are enabled by default in current Coolify versions. Save the settings, enable or disable the check, then restart the database to apply the generated container configuration.
 

@@ -54,7 +54,7 @@ Copy or reset the **Client Secret**, then store the complete value securely. Res
 
 ### Configure Discord in Coolify
 
-Open **Settings > OAuth** and find **Discord**.
+Open **Settings > Authentication** and find **Discord**.
 
 | Coolify field | Discord value |
 | :--- | :--- |
@@ -73,7 +73,7 @@ Coolify identifies an existing user by email address. The email address on the D
 
 Open the Coolify login page in a private browser window and select **Login with Discord**. Authorize the application, then confirm that Coolify opens the account with the matching email address.
 
-If the email addresses do not match and **Registration Allowed** is enabled, Coolify creates a new user with the email address returned by Discord instead of signing in to the existing account. If registration is disabled, Coolify rejects the sign-in.
+An existing account can be linked only when Discord returns a verified email address. New accounts follow the registration settings. See [OAuth sign-in behavior](/core/security/authentication/oauth/overview).
 
 </Step>
 </Steps>

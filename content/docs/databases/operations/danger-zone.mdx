@@ -5,7 +5,7 @@ description: Permanently delete a standalone database and choose which related D
 
 # Delete a database
 
-Open the database and select **Configuration > Danger Zone** to permanently remove the database resource. Deletion cannot be undone from Coolify.
+Open the database and select **Danger Zone** to permanently remove the database resource. Deletion cannot be undone from Coolify.
 
 <Callout type="danger" title="Back up the database before deleting it">
 
@@ -48,3 +48,5 @@ The database may remain visible briefly while the deletion job finishes. Do not 
 4. If you recreate the database, use a supported image and restore the verified backup before reconnecting applications.
 
 Coolify does not manage DNS records at your DNS provider. Remove obsolete DNS records separately.
+
+When the server is unreachable, resource deletion warns that Docker resources remain on the server. The team is notified afterwards. Clean those resources up when server access returns.

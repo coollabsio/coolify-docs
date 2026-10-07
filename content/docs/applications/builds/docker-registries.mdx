@@ -27,7 +27,7 @@ A digest identifies fixed image content. A tag can resolve to different content 
 
 ## Push an image built by Coolify
 
-Open **Configuration > General > Docker Registry**.
+Open **General > Docker Registry**.
 
 | Field | Purpose |
 | :--- | :--- |
@@ -40,7 +40,21 @@ Deploy the application and confirm the registry contains the expected image and 
 
 ## Authenticate a private registry
 
-Connect to the deployment or build server through SSH as the user configured for that Coolify server, then authenticate:
+Open **Registries** in the main sidebar, or **Servers > [server] > Registries**. The page lists saved server logins and registries required by applications.
+
+1. Select **Log in** and choose the target server or servers when using the global page.
+2. Choose a provider preset: Docker Hub, GHCR, GitLab, Google Artifact Registry, Azure ACR, AWS ECR, or a custom registry.
+3. Enter the registry, username, and password or token. Google Artifact Registry can use a service-account JSON key.
+4. Select **Log in**. Coolify runs `docker login` for the configured server user.
+5. Check the login before deploying. Use **Update login** to replace credentials or **Log out** to remove a login.
+
+Coolify does not store the token in its database. Docker stores the server login in `~/.docker/config.json`; those credentials are encoded, not encrypted. Authenticate every deployment and build server that needs the image.
+
+The API provides `GET /servers/{uuid}/registries`, `POST /servers/{uuid}/registries`, `POST /servers/{uuid}/registries/{registry}/check`, and `DELETE /servers/{uuid}/registries/{registry}`. Listing registry logins requires `read:sensitive`.
+
+### Authenticate through SSH
+
+You can also connect through SSH as the configured server user and authenticate:
 
 ```bash
 docker login <registry-host>

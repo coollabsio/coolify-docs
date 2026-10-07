@@ -9,7 +9,7 @@ import { ReiconMarkdownCopyButton } from '@/components/docs/markdown-copy-button
 import { MobileDrawerHeaderActions } from '@/components/layout/mobile-header-controls';
 import { PageSwitcherGuide } from '@/components/layout/page-switcher-guide';
 import { DocsLayout, type DocsSlots } from 'fumadocs-ui/layouts/notebook';
-import { DocsBody, DocsPage } from 'fumadocs-ui/layouts/notebook/page';
+import { DocsBody, DocsPage, DocsTitle } from 'fumadocs-ui/layouts/notebook/page';
 import { useMDXComponents } from '@/components/docs/mdx';
 import { CarbonAds } from '@/components/layout/carbon-ads';
 import { ViewOptionsPopover } from '@/components/layout/page-actions';
@@ -36,6 +36,8 @@ const hiddenSidebarSlots: DocsSlots['sidebar'] = {
 };
 
 const servicePageUrls = new Set(services.map((service) => `/services/${service.slug}`));
+// These components render their own H1, which is not included in the MDX TOC.
+const pagesWithCustomTitle = new Set(['team.mdx', 'sponsors.mdx']);
 
 function toPublicDocUrl(url: string): string {
   if (url === '/') return site.docsBasePath;
@@ -200,6 +202,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
     { hideFooter, markdownUrl, path }: { hideFooter?: boolean; markdownUrl: string; path: string },
   ) {
     const hidePageChrome = path.includes('choose-your-path');
+    const showTitle = !pagesWithCustomTitle.has(path) && !toc.some((item) => item.depth === 1);
     const pageActions = (
       <PageActions
         className="mt-4 border-t pt-4 max-xl:mb-4 max-xl:ps-2"
@@ -233,6 +236,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
         tableOfContentPopover={{ style: 'clerk', footer: pageActions }}
       >
         <DocsBody>
+          {showTitle ? <DocsTitle>{frontmatter.title}</DocsTitle> : null}
           <MDX components={useMDXComponents()} />
         </DocsBody>
       </DocsPage>
@@ -257,6 +261,7 @@ function Page() {
     content = (
       <DocsPage full tableOfContent={{ enabled: false }} breadcrumb={{ enabled: false }}>
         <DocsBody>
+          <DocsTitle>{data.title}</DocsTitle>
           <ClientAPIPage {...data.props} />
         </DocsBody>
       </DocsPage>

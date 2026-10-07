@@ -16,13 +16,13 @@ Add the deploy key's public key to the repository before creating the private ap
 
 ## Configure automatic deployments
 
-1. Open **Configuration > Webhooks** in the Coolify application.
+1. Open **Webhooks** in the Coolify application.
 2. Copy the **Gitea** URL.
-3. Enter and save **Gitea Webhook Secret**.
+3. Enter **Webhook secret** in the **Gitea** section, then select **Save changes**.
 4. In Gitea, open the repository webhook settings.
 5. Enter the URL and the same secret.
 6. Enable **Push**.
 7. Enable pull-request events when using preview deployments.
-8. Enable **Configuration > Advanced > Auto Deploy** in Coolify.
+8. Open **Advanced > Deployment** and choose **Deploy on push (webhooks)** in **Auto deploy** in Coolify.
 
-Verify a push deployment first. Then open or update a pull request and inspect **Configuration > Preview Deployments**.
+Verify a push deployment first. Then open or update a pull request and inspect **Preview Deployments**.

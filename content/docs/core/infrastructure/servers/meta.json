@@ -10,7 +10,9 @@
     "firewall",
     "non-root-user",
     "build-servers",
+    "github-actions-runners",
     "server-patching",
+    "docker-images",
     "automated-docker-cleanup",
     "web-terminal"
   ]

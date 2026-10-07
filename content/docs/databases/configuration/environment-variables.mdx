@@ -7,19 +7,23 @@ description: Configure runtime environment variables passed to a standalone data
 
 Database environment variables pass configuration to the database container at runtime.
 
-Open the database resource, then select **Configuration > Environment Variables**.
+Open the database resource, then select **Environment Variables**.
 
 ## Add or edit a variable
 
-Use **Normal view** to add or edit variables individually. Use **Developer view** to review or edit the production variable list as text. The exact controls depend on your team permissions.
+Use **Normal view** to add or edit variables individually. Select **Add**, fill in **Name** and **Value**, choose **Value type** and **Interpolation** as needed, then select **Add variable**. To edit a variable, select its name or edit icon and select **Update variable** after making changes. Use **Developer view** to review or edit the production variable list as text. The exact controls depend on your team permissions.
 
 Each variable has a key and value. Treat passwords, tokens, and connection strings as secrets. Do not put a secret in a database image, custom configuration that is committed to Git, or a public URL.
 
+## External secret managers
+
+Link Doppler, Infisical, or HashiCorp Vault and reference a remote value with `{{vault.KEY}}`. Restart or redeploy the database after the provider value changes. Follow [Use a secret manager](/integrations/security/using-secret-managers).
+
 ## Database variables and General settings
 
-Environment variables are separate from the credentials and engine fields on **Configuration > General**. Some database images use environment variables during initialization, while other settings are generated from the General form.
+Environment variables are separate from the credentials and engine fields on **General**. Some database images use environment variables during initialization, while other settings are generated from the General form.
 
-When both pages control the same value, keep them synchronized. This is especially important for Redis-family databases: if `REDIS_USERNAME` or `REDIS_PASSWORD` changes, update the matching value shown in **General** so connection URLs and Coolify automation continue to work.
+On new KeyDB and Dragonfly resources, `REDIS_PASSWORD` sets both the server password and connection URLs. Resources created before this release keep their stored password unless the variable uses a secret-manager reference. Review the engine-specific behavior before changing an existing resource’s credentials.
 
 ## Apply changes
 
@@ -27,7 +31,7 @@ Saving a variable updates the stored resource configuration. Restart or redeploy
 
 After it starts:
 
-1. Open the database **Logs** and confirm the process starts without an environment-variable error.
+1. Open the database **Runtime Logs** and confirm the process starts without an environment-variable error.
 2. Check the database status and health check.
 3. Connect using the updated **Internal URL** or the client configuration that uses the variable.
 
@@ -36,3 +40,9 @@ After it starts:
 Many database images use environment variables only when the data directory is initialized. Changing an initialization variable does not necessarily change an existing database. Follow the engine documentation and use a deliberate migration or SQL command for an already-initialized data directory.
 
 </Callout>
+
+## Names and copying values
+
+New environment variable names must match `[A-Za-z_][A-Za-z0-9_.]*`: begin with a letter or underscore, then use letters, numbers, underscores, or dots. Existing invalid runtime-only names, such as `my-var`, deploy with a warning and suggested name. Invalid build-time names stop the image build.
+
+Use the copy button to copy a resolved value. Shared-variable and `$SERVICE_*` references resolve to their actual values. Locked variables have no copy button, and references to locked shared variables remain references rather than exposing the secret.

@@ -44,14 +44,14 @@ Select the Docker network destination that Redis should join.
 
 ### Review the generated configuration
 
-Coolify creates the resource and opens **Configuration > General**. Review the image, username, generated password, SSL settings, and connection URLs. Keep the default private networking unless an external client requires access.
+Coolify creates the resource and opens **General**. Review the image, username, generated password, SSL settings, and connection URLs. Keep the default private networking unless an external client requires access.
 
 </Step>
 <Step>
 
 ### Start Redis
 
-Select **Start** and follow the startup output. Wait until Redis is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+Select **Start** and follow the startup output. Wait until Redis is running and healthy, then copy the **Redis URL (internal)** into applications on the same destination network.
 
 </Step>
 </Steps>
@@ -65,26 +65,26 @@ Select **Start** and follow the startup output. Wait until Redis is running and 
 | Username | `default` |
 | Data mount | `/data` |
 | Scheduled database backups | Not supported by Coolify |
-| SSL | Supported with **Enable SSL** |
+| SSL | Supported with **SSL** |
 
-Coolify stores the Redis username and password as runtime environment variables. If you change `REDIS_USERNAME` or `REDIS_PASSWORD` in Redis or under **Configuration > Environment Variables**, keep the values synchronized with the credentials shown in the resource configuration.
+Coolify stores the Redis username and password as runtime environment variables. If you change `REDIS_USERNAME` or `REDIS_PASSWORD` in Redis or under **Environment Variables**, keep the values synchronized with the credentials shown in the resource configuration.
 
 
 ## Connect to Redis
 
-Use the **Internal URL** for an application on the same Coolify destination network:
+Use the **Redis URL (internal)** for an application on the same Coolify destination network:
 
 ```sh
 redis://:<password>@<database-container>:6379/0
 ```
 
-When SSL is enabled, Coolify uses the `rediss` scheme and TLS port `6380`. When **Make it publicly available** is enabled, copy the generated **Public URL** instead of changing the host manually.
+When SSL is enabled, Coolify uses the `rediss` scheme and TLS port `6380`. When **Public access > Access** is **Public through TCP proxy**, copy the generated **Redis URL (public)** instead of changing the host manually.
 
 ## Configure Redis
 
-Open **Configuration > General** to change the image, credentials, **Ports Mappings**, public proxy, **Custom Redis Configuration**, and supported custom Docker options. When **Custom Redis Configuration** is set, Coolify writes it as the Redis configuration file and starts Redis with that file. Include persistence and authentication directives you need; Coolify adds the password only when the file does not already define `requirepass`.
+Open **General** to change the image, credentials, **Port mappings**, public proxy, **Custom Redis configuration**, and supported custom Docker options. When **Custom Redis configuration** is set, Coolify writes it as the Redis configuration file and starts Redis with that file. Include persistence and authentication directives you need; Coolify adds the password only when the file does not already define `requirepass`.
 
-Open **Configuration > Persistent Storage** to manage the `/data` volume. Persistent storage keeps Redis data across container recreation, but it is not a scheduled backup.
+Open **Persistent Storage** to manage the `/data` volume. Persistent storage keeps Redis data across container recreation, but it is not a scheduled backup.
 
 ## Backups and persistence
 
@@ -92,9 +92,9 @@ Redis, Dragonfly, and KeyDB do not support Coolify's scheduled database backup p
 
 ## SSL and health checks
 
-Redis exposes **Enable SSL** without an SSL mode selector. The generated TLS URL uses the `rediss` scheme and port `6380`; configure CA verification in the client library when required. See [Database SSL](/databases/ssl) before connecting an application with TLS.
+Redis exposes **SSL** without an SSL mode selector. The generated TLS URL uses the `rediss` scheme and port `6380`; configure CA verification in the client library when required. See [Database SSL](/databases/ssl) before connecting an application with TLS.
 
-Configure the Docker health check under **Configuration > Healthcheck** and restart Redis after saving.
+Configure the Docker health check under **Healthcheck** and restart Redis after saving.
 
 ## Official Redis resources
 

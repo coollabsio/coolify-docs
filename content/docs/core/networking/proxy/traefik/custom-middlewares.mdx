@@ -9,8 +9,8 @@ Traefik middleware changes a request before it reaches a resource. Common uses i
 
 How you attach middleware depends on the resource type. Standard applications can use generated labels or manually edited labels. Docker Compose applications and services can use Coolify's `coolify.traefik.middlewares` shorthand.
 
-<Callout type="warning" title="Keep Readonly labels enabled when possible">
-Disabling **Readonly labels** stops Coolify from regenerating application labels. You become responsible for every router, middleware, service, and certificate label for the application. Use dynamic configuration with a small reference label when it can meet the requirement.
+<Callout type="warning" title="Keep labels managed by Coolify when possible">
+Choosing **Managed manually (edit labels yourself)** in **Label management** stops Coolify from regenerating application labels. You become responsible for every router, middleware, service, and certificate label for the application. Use dynamic configuration with a small reference label when it can meet the requirement.
 </Callout>
 
 ## Define reusable middleware
@@ -67,7 +67,7 @@ The `@file` suffix identifies middleware loaded from Traefik's file provider.
 <Tabs items={['Standard application', 'Docker Compose or service']}>
 <Tab value="Standard application">
 
-Open the application **General** page and find **Container Labels**. Disable **Readonly labels**, then append the middleware names to the existing HTTPS router label:
+Open the application **General** page and find **Container labels**. Set **Label management** to **Managed manually (edit labels yourself)**, then append the middleware names to the existing HTTPS router label:
 
 ```ini
 traefik.http.routers.https-0-<resource-id>.middlewares=gzip # [!code --][!code focus]
@@ -76,7 +76,7 @@ traefik.http.routers.https-0-<resource-id>.middlewares=gzip,app-rate-limit@file,
 
 Keep every existing middleware name. Save and redeploy the application.
 
-If the route breaks, select **Reset Labels to Defaults**, re-enable **Readonly labels**, and redeploy before trying again.
+If the route breaks, select **Reset to defaults**, set **Label management** back to **Managed by Coolify (auto-generated)**, and redeploy before trying again.
 
 </Tab>
 <Tab value="Docker Compose or service">
@@ -117,15 +117,15 @@ Choose the redirect that matches the result you need.
 <Tabs id="traefik-redirect-type" items={['www and non-www', 'One domain to another']}>
 <Tab value="www and non-www">
 
-Standard applications have a built-in **Direction** setting. Add both domains to **Domains**, keep **Readonly labels** enabled, then choose one of:
+Standard applications have a built-in **www redirect** setting on **Domains**. Add both hostnames, keep labels managed by Coolify, then choose one of:
 
-| Direction | Result |
+| www redirect | Result |
 |---|---|
-| **Allow www & non-www.** | Both configured hostnames remain available. |
-| **Redirect to www.** | The non-`www` hostname redirects to the configured `www` hostname. |
-| **Redirect to non-www.** | The `www` hostname redirects to the configured non-`www` hostname. |
+| **No redirect** | Both configured hostnames remain available. |
+| **Redirect to www** | The non-`www` hostname redirects to the configured `www` hostname. |
+| **Redirect to non-www** | The `www` hostname redirects to the configured non-`www` hostname. |
 
-Select **Set Direction**, confirm the change, and redeploy if the running container does not yet have the regenerated labels. Both hostnames also need DNS records that point to the server.
+Select **Save changes** and redeploy if the running container does not yet have the regenerated labels. Both hostnames also need DNS records that point to the server.
 
 ### Docker Compose applications and services
 

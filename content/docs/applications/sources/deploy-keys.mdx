@@ -14,9 +14,9 @@ A deploy key grants one SSH key access to one private repository. Use it when yo
 
 ### Generate a key in Coolify
 
-Open **Keys & Tokens > Private Keys**, select **+ Add**, and generate an ED25519 or RSA key.
+Open **Keys & Tokens > Private Keys**, select **New private key**, then **Generate ED25519** or **Generate RSA**. Coolify saves the key immediately.
 
-Give the key a name that identifies the repository. Copy the public key and save the private key in Coolify.
+Open the saved key's edit icon to give it a name that identifies the repository, select **Save changes**, and copy **Public key**.
 
 </Step>
 <Step>
@@ -66,7 +66,7 @@ The SSH key only provides repository access. Choose how the deployment starts.
 <Tabs id="deploy-key-automatic-deployment" items={['Repository webhook', 'External workflow']}>
 <Tab value="Repository webhook">
 
-Add a [manual Git webhook](/applications/deployments/manual-webhooks), then enable **Configuration > Advanced > Auto Deploy**. The provider can then notify Coolify when the configured branch changes.
+Add a [manual Git webhook](/applications/deployments/manual-webhooks), then choose **Deploy on push (webhooks)** under **Advanced > Deployment > Auto deploy**. The provider can then notify Coolify when the configured branch changes.
 
 Use a [GitHub App](/applications/sources/github/app) instead when you want GitHub repository selection and webhook configuration through one integration.
 
@@ -82,4 +82,4 @@ The deployment step in the [GitHub Actions example](/applications/sources/github
 
 ## Key scope
 
-Prefer a separate deploy key for each repository. If a key is exposed, remove it from the repository and Coolify, create a replacement, attach the new key under **Configuration > Git Source**, and redeploy.
+Prefer a separate deploy key for each repository. If a key is exposed, remove it from the repository and Coolify, create a replacement, attach the new key under **Git Source**, and redeploy.

@@ -25,7 +25,7 @@ A build server cannot be selected as a deployment destination. If you still need
 <ZoomImage src="/docs/images/destinations/create-destination.webp" alt="Destinations page with the Add button in Coolify" />
 
 1. Select **Destinations** in the Coolify sidebar.
-2. Select **+ Add**.
+2. Select **New destination**.
 
 You can also open **Servers**, select a server, open **Destinations**, and select **+ Add**. Coolify uses the selected server in the form.
 
@@ -59,7 +59,7 @@ Review the generated values before continuing:
       <td>The Docker network name. Keep the generated value or enter a name that starts with a letter or number and contains only letters, numbers, periods, hyphens, and underscores.</td>
     </tr>
     <tr>
-      <td className="whitespace-nowrap"><strong>Select a server</strong></td>
+      <td className="whitespace-nowrap"><strong>Server</strong></td>
       <td>The validated, reachable server where the Docker network should exist.</td>
     </tr>
   </tbody>
@@ -72,7 +72,7 @@ The **Network** value can contain up to 255 characters and must be unique among 
 
 ### Create and verify the destination
 
-Select **Continue**.
+Select **Create destination**.
 
 Coolify records the destination, creates the Docker network when it does not already exist, and connects the Coolify Proxy to the networks it needs on the server.
 
@@ -95,7 +95,7 @@ Use the server's destination scanner when the Docker network already exists but 
 1. Select **Servers** in the Coolify sidebar.
 2. Select the server that owns the Docker network.
 3. Open **Destinations**.
-4. Select **Scan for Destinations**.
+4. Select **Scan networks**.
 
 Coolify excludes the built-in `bridge`, `host`, and `none` networks, along with networks already registered as destinations.
 
@@ -104,9 +104,9 @@ Coolify excludes the built-in `bridge`, `host`, and `none` networks, along with 
 
 ### Add the discovered network
 
-Under **Found Destinations**, select **Add &lt;network-name&gt;** for the network you want to use.
+Under **Discovered networks**, select **Add &lt;network-name&gt;** for the network you want to use.
 
-Coolify adds the network under **Available Destinations** and connects the Coolify Proxy to the server networks it needs. Select the destination and confirm that its **Docker Network** value matches the existing network name.
+Coolify adds the network under **Destinations** and connects the Coolify Proxy to the server networks it needs. Select the destination and confirm that its **Docker Network** value matches the existing network name.
 
 </Step>
 </Steps>

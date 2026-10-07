@@ -101,16 +101,16 @@ Always specify a port. Caddy proxy cannot automatically determine every service 
 <CoolCallout icon={Database} title="Docker Compose" contentClassName="!p-0">
 <CoolPanel>
 
-Use Coolify magic variables for generated values, storage, and user-provided configuration.
+Use Coolify magic variables for generated values and user-provided configuration. Declare the storage mounts the service needs.
 
 ```yaml
 services:
   app:
-    image: your-service-image:tag
+    image: your-service-image:1.2.3
     environment:
       - DATABASE_URL=${COOLIFY_DATABASE_URL}
     volumes:
-      - ${COOLIFY_VOLUME_APP}:/data
+      - app-data:/data
 ```
 
 </CoolPanel>
@@ -137,6 +137,24 @@ services:
 ```
 
 Do not use <CoolInlineValue>latest</CoolInlineValue> or other floating tags. Pin the image to a specific version.
+
+</CoolPanel>
+<CoolPanel withDivider>
+
+### Configuration Coolify adds
+
+For a normal service template, Coolify generates part of the deployment configuration:
+
+| Configuration | What to include in the template |
+| :--- | :--- |
+| `container_name` | Omit it. Coolify generates names from the Compose service name and resource UUID. |
+| `restart` | Omit it to use Coolify's `unless-stopped` default. Set it explicitly only when the service needs different behavior, such as `restart: "no"` for a one-time setup container. |
+| Top-level `volumes` | You can omit empty declarations for ordinary named volumes. Coolify adds declarations for the named volumes referenced by the services. Keep explicit declarations when they contain options such as `external`, `name`, or driver configuration. |
+| Default network | Coolify creates a resource-specific network and connects the proxy. Declare custom networks only when the template requires them. |
+
+The example above still needs `app-data:/data` under the service's `volumes`: Coolify cannot infer which container paths need persistent storage. It generates the named-volume declaration from that mount; it does not make every container directory persistent.
+
+Test the parsed deployment through **Docker Compose Empty**. These additions apply to Coolify's normal service parsing, not to running the template directly with Docker Compose or using an application's raw Compose deployment mode.
 
 </CoolPanel>
 </CoolCallout>

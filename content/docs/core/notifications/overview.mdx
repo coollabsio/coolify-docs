@@ -12,7 +12,7 @@ Coolify sends team notifications when selected deployment, backup, scheduled tas
 A notification requires both parts of the configuration:
 
 1. An enabled channel with valid connection details.
-2. The event selected under that channel's **Notification Settings**.
+2. The event selected under that channel's **Notification events**.
 
 Coolify stores notification settings for the current team. Team members with permission to update notification settings can change a channel, while sending a test notification requires the corresponding permission.
 
@@ -40,9 +40,9 @@ The exact fields differ by channel, but the main flow is the same:
 1. Open **Notifications** in the Coolify sidebar.
 2. Select a channel.
 3. Enter and save the channel's connection details.
-4. Turn on **Enabled**.
-5. Under **Notification Settings**, select the events to send through this channel.
-6. Send a test notification and confirm that it arrives at the destination.
+4. Select **Enable**.
+5. Under **Notification events**, open each event-group dropdown and select the events to send through this channel.
+6. Select **Send test** and confirm that it arrives at the destination.
 
 If the test does not arrive, keep the channel enabled while you check its credentials, destination permissions, and provider logs.
 

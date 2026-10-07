@@ -18,7 +18,7 @@ Choose the method that matches the input you already maintain. The deployment me
 
 ## Use a Git repository
 
-Connect the repository through a public URL, deploy key, or supported Git App, then select its **Build Pack**.
+Connect the repository through a public URL, deploy key, or supported Git App, then select its **Build strategy**.
 
 - Use [Nixpacks](/applications/builds/nixpacks/overview) or [Railpack](/applications/builds/railpack) when automatic framework and command detection is sufficient.
 - Use [Static](/applications/builds/static) when the repository already contains the finished website files.
@@ -35,7 +35,7 @@ This path stores the Dockerfile in Coolify and does not check out application so
 
 ## Use Docker Compose from Git
 
-Select **Docker Compose** as the **Build Pack** when a Git repository contains the Compose definition for an Application.
+Select **Docker Compose** as the **Build strategy** when a Git repository contains the Compose definition for an Application.
 
 The Compose file becomes the source of truth for the services it defines. Do not expect every standard application setting to override Compose-owned configuration.
 
@@ -55,8 +55,8 @@ Enter an image with a tag such as `ghcr.io/example/api:1.4.0` or a SHA256 digest
 
 After creating the application:
 
-1. Under **Configuration > General**, confirm the repository and build method, stored Dockerfile, Compose location, or image reference used by the selected path.
+1. Under **General**, confirm the repository and build method, stored Dockerfile, Compose location, or image reference used by the selected path.
 2. For a non-Compose Application, set **Ports Exposes** to the port where the process listens. For Docker Compose, configure the domain and internal port on each public service.
 3. Deploy the application.
-4. Open **Deployments** and confirm the operation succeeds.
+4. Open **Deployment Logs** and confirm the operation succeeds.
 5. Open the configured domain or test the exposed service.

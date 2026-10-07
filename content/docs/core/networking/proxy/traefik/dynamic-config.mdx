@@ -64,3 +64,7 @@ A YAML syntax error or a missing referenced object can leave affected routes una
 ## When to restart the proxy
 
 Dynamic files are watched and normally do not require a restart. Restart the proxy when you change the main `/data/coolify/proxy/docker-compose.yml`, including Traefik command flags, environment variables, ports, volumes, or the proxy image.
+
+<Callout type="warning" title="Edit the main configuration in Coolify">
+Coolify does not sync edits to `/data/coolify/proxy/docker-compose.yml` back into the UI once a proxy configuration is saved in Coolify. Make changes under **Servers > your server > Proxy > Configuration** and save them there. Starting or restarting the proxy through Coolify writes its saved configuration to disk and can overwrite disk-only edits.
+</Callout>

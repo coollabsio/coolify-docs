@@ -5,7 +5,7 @@ description: Expose the Traefik dashboard through a dedicated authenticated doma
 
 # Traefik dashboard
 
-Coolify enables Traefik's dashboard API in secure mode, but does not publish it on a domain. Create a dynamic router to access the dashboard through HTTPS and protect it with basic authentication.
+New proxy configurations do not expose the Traefik dashboard. The upgrade removes the legacy dashboard router from saved configurations; restart the proxy to apply that change. Create a dynamic router to access the dashboard through HTTPS and protect it with basic authentication.
 
 <Callout type="warning" title="Use a dedicated dashboard hostname">
 Do not route the Traefik dashboard at `/api` on the same hostname as the Coolify dashboard. Traefik's dashboard uses `/api`, which conflicts with Coolify's API routes. Use a separate hostname such as `traefik.example.com`.
@@ -20,6 +20,14 @@ htpasswd -nbB <username> '<password>'
 ```
 
 Copy the complete `<username>:<hash>` output. Dynamic YAML does not require Docker Compose dollar-sign escaping.
+
+## Enable the dashboard API
+
+In the proxy configuration, enable the dashboard API in secure mode with `--api.dashboard=true`. Save the validated configuration and restart the proxy. Keep insecure mode disabled.
+
+<Callout type="warning" title="Edit the main configuration in Coolify">
+Coolify does not sync edits to `/data/coolify/proxy/docker-compose.yml` back into the UI once a proxy configuration is saved in Coolify. Make changes under **Servers > your server > Proxy > Configuration** and save them there. Starting or restarting the proxy through Coolify writes its saved configuration to disk and can overwrite disk-only edits.
+</Callout>
 
 ## Add the dashboard route
 
@@ -62,7 +70,7 @@ Open `https://traefik.example.com/dashboard/` and sign in with the configured cr
 
 ## Do not use insecure mode on a public server
 
-Setting `--api.insecure=true` exposes the dashboard directly on Traefik's API port without authentication. Coolify maps port `8080` in the default Traefik configuration, so enabling insecure mode can publish the dashboard through the server firewall.
+Setting `--api.insecure=true` exposes the dashboard directly on Traefik's API port without authentication. If your proxy configuration publishes port `8080`, enabling insecure mode can expose the dashboard through the server firewall.
 
 Use the authenticated HTTPS route above instead. If you temporarily enable insecure mode for isolated debugging, restrict port `8080` at the firewall and remove `--api.insecure=true` immediately afterward.
 

@@ -94,7 +94,7 @@ The upgrade script writes a timestamped log such as `/data/coolify/source/upgrad
 
 <Accordion title="Coolify upgrades again after the downgrade">
 
-Return to **Settings > Configuration > Updates** and confirm **Auto Update > Enabled** is off.
+Return to **Settings > Updates** and confirm **Automatic updates** is set to **Disabled**.
 
 If the control is unavailable because `AUTOUPDATE` is set in `/data/coolify/source/.env`, change it to `AUTOUPDATE=false` and rerun the target-version command.
 
@@ -104,7 +104,9 @@ If the control is unavailable because `AUTOUPDATE` is set in `/data/coolify/sour
 
 Review the newest `/data/coolify/source/upgrade-*.log` file first.
 
-Check that the `coolify`, `coolify-db`, `coolify-redis`, and `coolify-realtime` containers are running and healthy. Then make sure your firewall still allows access to the dashboard.
+Check that the `coolify`, `coolify-db`, and `coolify-redis` containers are running and healthy. Then make sure your firewall still allows access to the dashboard.
+
+Releases before the [Reverb migration](/core/instance-management/reverb-migration) also start a `coolify-realtime` container. A downgrade to one of those releases brings that container back, and ports `6001` and `6002` move to it again.
 
 </Accordion>
 

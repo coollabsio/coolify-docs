@@ -24,7 +24,7 @@ This page covers the application workflow. The [Scheduled Tasks section in Core]
 
 ### Open the application page
 
-Open the application and select **Configuration > Scheduled Tasks**.
+Open the application and select **Scheduled Tasks**.
 
 </Step>
 <Step>
@@ -38,7 +38,7 @@ Select **+ Add** to start a task, or select an existing task to manage it. Follo
 
 ### Run the first execution
 
-Open the task and select **Execute Now** while the application is running.
+Open the task and select **Execute now** while the application is running.
 
 Open the new record under **Recent executions**. Confirm that it finishes successfully and that its output or effect matches what the command should produce.
 
@@ -53,7 +53,7 @@ Before following the detailed guide, check these application-specific requiremen
 
 - Test commands that change or delete data through the application **Terminal** first.
 - Enter the command as it should run inside the container; do not include `docker exec`.
-- Set **Container name** when the application has more than one container.
+- Set **Container** when the application has more than one container.
 - The schedule uses the timezone configured for the application's deployment server.
 - **Timeout (seconds)** accepts `60` to `36000` and defaults to `300`.
 

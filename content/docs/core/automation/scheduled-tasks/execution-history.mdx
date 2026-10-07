@@ -10,7 +10,7 @@ Coolify records each scheduled and manual task run under **Recent executions**. 
 ## Open execution history
 
 1. Open the application or service.
-2. Select **Configuration > Scheduled Tasks**.
+2. Select **Scheduled Tasks**.
 3. Select a task.
 4. Scroll to **Recent executions**.
 
@@ -32,6 +32,8 @@ Completed records also show the start time, end time, and duration. Times are di
 
 ## Inspect and download output
 
+Users need permission to update the resource to see scheduled commands and output. API access to task output requires `read:sensitive`.
+
 Click an execution record to expand its captured output.
 
 For long output, click **Load More** to reveal another group of lines or **Load All** to show the complete captured output. Click **Download Logs** to save non-empty output as a `.log` file.
@@ -45,7 +47,7 @@ An execution can succeed without printing output. Verify the actual result of th
 <Accordions type="multiple">
 <Accordion title="The execution stays In Progress">
 
-Wait until the configured timeout has passed, then refresh the task page. If the command regularly needs more time, increase **Timeout** and run it again. The dashboard accepts up to `36000` seconds.
+Executions that exceed their timeout are marked failed with the timeout error. Lost queued scheduled tasks are recorded as failed and the team is notified. Refresh the task page to review the result. If the command regularly needs more time, increase **Timeout** and run it again. The dashboard accepts up to `36000` seconds.
 
 </Accordion>
 <Accordion title="No output was recorded">

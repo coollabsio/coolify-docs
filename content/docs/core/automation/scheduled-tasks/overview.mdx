@@ -11,7 +11,7 @@ Scheduled tasks let Coolify run a command inside an application or service conta
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-Add a task from an application's or service's **Configuration > Scheduled Tasks** page. Choose the command, schedule, timeout, and target container. Coolify records the result and output of each run.
+Add a task from an application's or service's **Scheduled Tasks** page. Choose the command, schedule, timeout, and target container. Coolify records the result and output of each run.
 
 </CoolCallout>
 
@@ -33,9 +33,13 @@ Read [Cron Syntax](/core/automation/cron-syntax) for supported fields, named sch
 
 ## How a task runs
 
+Scheduled tasks, database backups, volume backups, and Docker cleanups each have their own scheduler process that dispatches due work every minute. A busy queue or slow schedule type does not delay dispatch of the others.
+
 Coolify evaluates the schedule in the timezone configured for the server that runs the resource. When the task is due, Coolify runs the command in a shell inside the selected running container.
 
 A scheduled execution is skipped when the task is disabled, the application or service is not running, or the connected server is not functional. A task with multiple containers also needs the correct container or service name.
+
+Fixed-time schedules run once when daylight saving time repeats an hour. One failing schedule does not prevent other due schedules from being dispatched.
 
 After Coolify starts a command, **Recent executions** shows its status, start and end times, duration, and captured output.
 

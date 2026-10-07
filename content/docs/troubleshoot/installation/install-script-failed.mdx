@@ -208,8 +208,11 @@ tcp   LISTEN  0  4096  *:8000  *:*  users:(("some-app",pid=1234,fd=3))
 You can check the other Coolify ports the same way:
 
 ```bash
-# Port 6001 (Soketi/Real-time)
+# Port 6001 (Reverb realtime updates)
 sudo ss -tulpn | grep :6001
+
+# Port 6002 (web terminal)
+sudo ss -tulpn | grep :6002
 
 # Port 5432 (PostgreSQL - usually internal only)
 sudo ss -tulpn | grep :5432
@@ -259,8 +262,7 @@ You should see these containers:
 
 | Container Name     | Status | Purpose                    |
 | ------------------ | ------ | -------------------------- |
-| `coolify`          | Up     | Main Coolify application   |
-| `coolify-realtime` | Up     | Real-time updates (Soketi) |
+| `coolify`          | Up     | Main application, realtime updates, and web terminal |
 | `coolify-db`       | Up     | PostgreSQL database        |
 | `coolify-redis`    | Up     | Redis cache                |
 
@@ -277,7 +279,6 @@ If containers are **stopped** or **exited**, check their logs:
 ```bash
 # View logs for specific container
 docker logs coolify
-docker logs coolify-realtime
 docker logs coolify-db
 docker logs coolify-redis
 
@@ -311,7 +312,6 @@ You should see at least:
 
 - `ghcr.io/coollabsio/coolify` (or your custom registry)
 - `ghcr.io/coollabsio/coolify-helper`
-- `ghcr.io/coollabsio/coolify-realtime`
 
 If images are missing, there may have been a network issue during installation. Try pulling them manually:
 
@@ -319,7 +319,6 @@ If images are missing, there may have been a network issue during installation. 
 # Pull the latest Coolify images
 docker pull ghcr.io/coollabsio/coolify:latest
 docker pull ghcr.io/coollabsio/coolify-helper:latest
-docker pull ghcr.io/coollabsio/coolify-realtime:latest
 
 # Then restart Coolify
 cd /data/coolify/source

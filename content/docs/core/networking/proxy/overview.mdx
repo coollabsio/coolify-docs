@@ -86,7 +86,7 @@ The running proxy must be stopped before Coolify allows you to switch it. Plan a
 
 Confirm that applications and services have labels for the target proxy.
 
-For an application with **Readonly labels** enabled, open its **General** page and use **Reset Labels to Defaults** if its generated labels are outdated. For a Docker Compose application or service, save the Compose configuration so Coolify can generate the current proxy labels.
+For an application with **Label management** set to **Managed by Coolify (auto-generated)**, open its **General** page and use **Reset to defaults** if its generated labels are outdated. For a Docker Compose application or service, save the Compose configuration so Coolify can generate the current proxy labels.
 
 </Step>
 <Step>
@@ -151,3 +151,9 @@ If a route fails, inspect **Servers > your server > Proxy > Logs** and the resou
     },
   ]}
 />
+
+## Network connections and configuration changes
+
+Coolify connects the proxy to a destination network when the destination is created, a resource is deployed, or the proxy starts or restarts. It no longer reconnects all networks on hourly checks or server validation. If a required network connection is missing, redeploy the resource or restart the proxy.
+
+Proxy configurations are validated before saving. New configurations use Traefik v3.7 or caddy-docker-proxy 2.13; existing custom configurations should be reviewed before changing their image version.
