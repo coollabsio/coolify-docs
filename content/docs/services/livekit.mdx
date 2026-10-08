@@ -1,0 +1,43 @@
+---
+title: LiveKit
+description: "Self-host a LiveKit real-time audio and video server."
+og:
+  description: "Deploy a single-node LiveKit server with Coolify."
+category: "Communication"
+icon: "/docs/images/services/livekit.svg"
+---
+
+# LiveKit
+
+LiveKit is a real-time audio and video server. This Coolify service deploys one LiveKit server and a private Redis instance. It does not include a meeting interface, agents, ingress, egress, or SIP workers.
+
+## Before deploying
+
+Use a Linux server with a public IPv4 address. Configure a domain that resolves to the server and has a trusted HTTPS certificate in Coolify. The LiveKit endpoint for clients is `wss://your-domain.example`. Coolify's default HTTP `sslip.io` URL is not a suitable production WebSocket endpoint.
+
+Allow inbound TCP 7881 and UDP 7882 through 7889 in both your provider firewall and the host firewall. Port 7880 is routed through Coolify's HTTPS proxy. These fixed media ports permit one default LiveKit installation per host. If those ports are in use, the Compose mappings and LiveKit configuration must be changed together.
+
+## Deploy and connect
+
+Select **LiveKit** in Coolify's service catalog, assign the HTTPS domain to the LiveKit service, and deploy. Coolify generates `SERVICE_USER_LIVEKIT` as the API key and `SERVICE_PASSWORD_64_LIVEKIT` as its secret. Retrieve both from the service environment variables and keep the secret private. The Redis password is generated separately and Redis has no published host port.
+
+Install the [LiveKit CLI](https://docs.livekit.io/home/cli/) on your own computer. Set the following variables to the values shown in Coolify, then create a room token:
+
+```sh
+export LIVEKIT_API_KEY='your SERVICE_USER_LIVEKIT value'
+export LIVEKIT_API_SECRET='your SERVICE_PASSWORD_64_LIVEKIT value'
+lk token create --api-key "$LIVEKIT_API_KEY" --api-secret "$LIVEKIT_API_SECRET" --join --room test-room --identity test-user --valid-for 1h
+```
+
+Use that token and `wss://your-domain.example` with a LiveKit client or the [LiveKit Meet example](https://meet.livekit.io/). Create another token with a different identity for a second participant.
+
+## Media connectivity
+
+Coolify's proxy handles HTTPS and WebSocket signaling on port 7880. WebRTC media reaches LiveKit directly over UDP 7882 through 7889, with TCP 7881 as a fallback. The template asks LiveKit to discover the public IP with STUN. If the host has multiple interfaces or NAT prevents correct discovery, set `LIVEKIT_USE_EXTERNAL_IP=false` and `LIVEKIT_NODE_IP` to the reachable public IPv4 address in the service environment, then redeploy.
+
+This template does not configure embedded TURN or TURN/TLS. Networks that block both direct UDP and TCP 7881 need a separately configured TURN/TLS route with its own certificate. A running container and a successful WebSocket connection alone do not prove that media can flow; test a call from two different networks.
+
+## Links
+
+- [LiveKit self-hosting guide](https://docs.livekit.io/transport/self-hosting/)
+- [LiveKit ports and firewall](https://docs.livekit.io/transport/self-hosting/ports-firewall/)
