@@ -15,7 +15,13 @@ Create a new app with `npx @farm.js/create-app@latest`. See the [Farm.js documen
 
 - Set **Build strategy** to `nixpacks`.
 
-Nixpacks runs `npm run build` and starts the app with the `start` script. Apps created with `@farm.js/create-app` 0.1.2 or later already have `"start": "farm start"` in `package.json`. For an older app, add that script.
+Nixpacks runs `npm run build` and starts the app with the `start` script in `package.json`. Make sure it runs the server that `farm build` creates:
+
+```json
+"start": "node .farm/.output/server/index.mjs"
+```
+
+If your app uses `"start": "farm start"`, that also works with Nixpacks, because Nixpacks keeps devDependencies installed.
 
 The server listens on port `3000` by default, which matches the default `Ports Exposes` value.
 
