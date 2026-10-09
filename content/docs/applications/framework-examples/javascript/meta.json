@@ -5,6 +5,7 @@
     "vite",
     "vuejs",
     "nuxt",
-    "svelte-kit"
+    "svelte-kit",
+    "farmjs"
   ]
 }

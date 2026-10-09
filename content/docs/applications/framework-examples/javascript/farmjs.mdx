@@ -1,0 +1,59 @@
+---
+title: Farm.js
+description: Deploy Farm.js applications on Coolify as a Node.js server, using Nixpacks or a custom Dockerfile.
+---
+
+# Farm.js
+
+Farm.js is a full-stack framework with typed file routing, server actions, and streaming server rendering. It uses React by default and also supports Preact, Solid, Vue, and Svelte.
+
+Create a new app with `npx @farm.js/create-app@latest`. See the [Farm.js documentation](https://farmjs.dev/docs) for more.
+
+## Deploy with Nixpacks
+
+### Server build (NodeJS)
+
+- Set **Build strategy** to `nixpacks`.
+
+Nixpacks runs `npm run build` and starts the app with the `start` script in `package.json`. Make sure it runs the server that `farm build` creates:
+
+```json
+"start": "node .farm/.output/server/index.mjs"
+```
+
+If your app uses `"start": "farm start"`, that also works with Nixpacks, because Nixpacks keeps devDependencies installed.
+
+The server listens on port `3000` by default, which matches the default `Ports Exposes` value.
+
+If `farm.config.ts` sets `deploy.target` to another platform, such as `vercel`, remove it or set it to `node`. A platform target builds output that only that platform can serve. Without one, `farm build` creates a Node.js server.
+
+## Deploy with Dockerfile
+
+If you are having problems with Nixpacks or want more control over the building stage, you can use a Dockerfile to deploy your Farm.js application.
+
+### Prerequisites
+
+1. Set `Ports Exposes` field to `3000`.
+2. Create a `Dockerfile` in the root of your project with the content below.
+3. Set the **Build strategy** to `Dockerfile`.
+
+```dockerfile
+FROM node:22-slim AS build
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . ./
+RUN npm run build
+
+FROM node:22-slim
+
+WORKDIR /app
+COPY --from=build /app/.farm/.output ./.farm/.output
+
+ENV NODE_ENV=production
+EXPOSE 3000
+CMD ["node", ".farm/.output/server/index.mjs"]
+```
+
+`farm build` writes a self-contained server to `.farm/.output`, so the final image only needs that folder and does not need `node_modules`.
