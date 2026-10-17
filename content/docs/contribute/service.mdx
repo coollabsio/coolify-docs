@@ -25,7 +25,7 @@ Services in Coolify are templates made from normal Docker Compose files with Coo
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-Add the compose file and logo, test it through **Docker Compose Empty**, open the template pull request against `next`, and open the matching service docs pull request before the template can be merged.
+Add the compose file and logo, test it through **Docker Compose Empty**, open the template pull request against the current `release/v4.x` branch, and open the matching service docs pull request before the template can be merged.
 
 </CoolCallout>
 
@@ -182,7 +182,7 @@ Put the logo in the Coolify repository and reference it from the compose metadat
 
 <CoolCallout icon={Clipboard} title="Pull request checklist">
 
-- Open the template pull request against the Coolify repository's `next` branch.
+- Open the template pull request against the Coolify repository's current `release/v4.x` branch (for example, `release/v4.5` while production is `4.4.x`).
 - Add `templates/compose/<service>.yaml`.
 - Add `svgs/<service>.svg` and reference that same path in the compose metadata.
 - Test the template through the Docker Compose Empty deployment flow.
