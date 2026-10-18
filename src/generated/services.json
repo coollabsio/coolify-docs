@@ -1,5 +1,12 @@
 [
   {
+    "name": "9Router",
+    "slug": "9router",
+    "icon": "/docs/images/services/9router.svg",
+    "description": "AI coding gateway that routes requests from coding tools to multiple LLM providers.",
+    "category": "AI"
+  },
+  {
     "name": "ActivePieces",
     "slug": "activepieces",
     "icon": "/docs/images/services/activepieces-logo.png",
@@ -226,6 +233,13 @@
     "category": "Media"
   },
   {
+    "name": "Celld",
+    "slug": "celld",
+    "icon": "/docs/images/services/deno-kv.svg",
+    "description": "Self-hosted, distributed Durable Objects powered by Deno.",
+    "category": "Development"
+  },
+  {
     "name": "Change Detection",
     "slug": "changedetection",
     "icon": "/docs/images/services/changedetection-logo.png",
@@ -402,6 +416,13 @@
     "category": "Development"
   },
   {
+    "name": "Docling",
+    "slug": "docling",
+    "icon": "/docs/images/services/docling.png",
+    "description": "Document processing service that converts PDFs, office documents, images, and HTML to Markdown, JSON, and other formats.",
+    "category": "AI"
+  },
+  {
     "name": "Docmost",
     "slug": "docmost",
     "icon": "/docs/images/services/docmost-logo.png",
@@ -547,6 +568,13 @@
     "icon": "/docs/images/services/excalidraw-logo.svg",
     "description": "Virtual whiteboard for sketching hand-drawn like diagrams.",
     "category": "Productivity"
+  },
+  {
+    "name": "Executor",
+    "slug": "executor",
+    "icon": "/docs/images/services/executor.png",
+    "description": "Self-hosted server for AI agent integrations and code execution.",
+    "category": "Development"
   },
   {
     "name": "Faraday",
@@ -844,6 +872,13 @@
     "category": "Administration"
   },
   {
+    "name": "Honcho",
+    "slug": "honcho",
+    "icon": "/docs/images/services/honcho.svg",
+    "description": "Memory and reasoning tools for building personalized AI agents with stateful conversations.",
+    "category": "AI"
+  },
+  {
     "name": "Hoppscotch",
     "slug": "hoppscotch",
     "icon": "/docs/images/services/hoppscotch-logo.png",
@@ -897,6 +932,13 @@
     "slug": "it-tools",
     "icon": "/docs/images/services/ittools-logo.svg",
     "description": "Collection of handy online tools for developers.",
+    "category": "Development"
+  },
+  {
+    "name": "Jean",
+    "slug": "jean",
+    "icon": "/docs/images/services/jean.png",
+    "description": "Open-source desktop and server client for orchestrating AI coding agents.",
     "category": "Development"
   },
   {
@@ -1909,6 +1951,13 @@
     "icon": "/docs/images/services/nexus-logo.png",
     "description": "A repository manager that allows you to store, manage, and distribute your software artifacts.",
     "category": "Development"
+  },
+  {
+    "name": "Spacebot",
+    "slug": "spacebot",
+    "icon": "/docs/images/services/spacebot.png",
+    "description": "AI agent system with specialized processes for thinking, working, and remembering.",
+    "category": "AI"
   },
   {
     "name": "SparkyFitness",
