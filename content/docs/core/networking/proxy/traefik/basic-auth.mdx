@@ -130,6 +130,14 @@ Use only the `htpasswd` output in the Traefik label. Store the plaintext passwor
 </Tab>
 </Tabs>
 
+## Configure bcrypt cost
+
+For a standard application, open **General > Security > Authentication > Password hashing**. Traefik supports bcrypt for the generated authentication middleware. **Cost** defaults to `10` and accepts `4` to `14`. The API field is `http_basic_auth_bcrypt_cost`.
+
+Each extra cost step increases the work required to check the password. Traefik checks authentication on every request, so a higher cost can slow protected requests. Save, redeploy, and verify request performance after changing it.
+
+Argon2id is available for compatible Caddy proxies; generated Traefik labels continue to use bcrypt. See [Caddy password hashing](/core/networking/proxy/caddy/basic-auth#choose-password-hashing).
+
 ## Troubleshooting
 
 <Accordions type="multiple">
