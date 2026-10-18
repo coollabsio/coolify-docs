@@ -90,6 +90,12 @@ The backup is now stored at `/data/backups/coolify-db-manual-backup.dmp`. Copy i
 
 ---
 
+## Back up before Coolify updates
+
+After configuring the instance backup, find **Backup before update** on **Settings > Backup**. **Database backup** is enabled by default. Coolify runs this backup before manual updates started from the dashboard and before automatic updates, even outside the normal backup schedule.
+
+The update waits for the backup result. A failed database backup prevents the update from starting. Correct the failure in **Executions**, then retry the update. This setting requires an existing instance backup configuration and does not cover a direct invocation of `upgrade.sh`. See [Update Coolify](/core/instance-management/update#back-up-before-an-update).
+
 ## Save the instance encryption key
 
 Coolify encrypts saved credentials and private keys before storing them in its database. The `APP_KEY` in `/data/coolify/source/.env` is the key used for that encryption. A database backup does not include this file.

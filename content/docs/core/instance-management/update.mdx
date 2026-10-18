@@ -28,6 +28,14 @@ Read the [Reverb migration guide](/core/instance-management/reverb-migration) be
 
 ---
 
+## Back up before an update
+
+In **Settings > Backup**, configure the instance backup, then leave **Backup before update > Database backup** set to **Enabled**. This option is enabled by default. Once an instance backup is configured, Coolify runs it before dashboard-triggered and automatic updates, in addition to its normal schedule.
+
+Coolify waits for the backup to finish. If the database backup fails, the update does not start. Review the failed execution in **Settings > Backup**, fix the problem, and retry the update. An S3 upload warning can leave a successful local backup; check which copies are available.
+
+The option does not create a backup configuration for you. Without a configured instance backup, the update proceeds without this backup step. Running `upgrade.sh` directly also requires you to [create a backup yourself](/core/backup-and-recovery/instance-backup). Keep the instance `APP_KEY` separately so you can restore encrypted data.
+
 ## Choose an update path
 
 <Tabs id="coolify-update-path" items={['Automatic', 'Dashboard', 'Terminal']}>
@@ -96,7 +104,7 @@ Review the current and new version in the modal. Check that no deployments are p
 
 <ZoomableImage src="/docs/images/core/instance-management/update/dashboard-upgrade-progress.webp" alt="Upgrading modal showing Preparing, Helper, Image, and Restart stages" />
 
-An update usually takes less than a minute. It can take longer depending on network conditions and server resources. Coolify restarts while applying the update, so the dashboard may be unavailable briefly.
+An update can take longer while the configured instance backup runs. The remaining update time depends on network conditions and server resources. Coolify restarts while applying the update, so the dashboard may be unavailable briefly.
 
 If the progress modal remains on **Restart** for more than five minutes, refresh the page. Coolify may have finished updating but failed to reload the page automatically. If you see a **Gateway Timeout** or **Bad Gateway** error, wait two minutes before refreshing. If the error remains after refreshing, check the update logs under `/data/coolify/source/upgrade-*`.
 
