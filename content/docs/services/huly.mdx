@@ -1,0 +1,32 @@
+---
+title: "Huly"
+description: "Open-source all-in-one project management and team collaboration platform."
+og:
+  description: "Deploy Huly on Coolify as an open-source alternative to Linear, Jira, and Slack with issue tracking, real-time collaboration, and workspace management."
+category: "Productivity"
+icon: "/docs/images/services/huly.svg"
+---
+
+<ZoomImage src="/docs/images/services/huly.svg" alt="Huly logo" />
+
+## What is Huly?
+
+Huly is an open-source, all-in-one project management and team collaboration platform designed as an alternative to Linear, Jira, Slack, and Notion. It brings issue tracking, team chat, document management, and real-time collaboration into an integrated workspace.
+
+The Coolify service template deploys the modern Huly platform architecture including:
+
+- **Frontend & Routing** - Single Nginx reverse-proxy gateway exposing port 80 and forwarding WebSocket and API traffic to internal services.
+- **Application Services** - Core Huly microservices for accounts, transactor, real-time collaboration, workspace lifecycle, content intelligence, full-text search indexing, and stats.
+- **Data & Storage** - Production dependencies including CockroachDB for transactional data, Redpanda for high-performance messaging/event queuing, MinIO for S3-compatible file storage, and Elasticsearch for fast full-text search.
+
+## Deployment Notes
+
+- Huly is a resource-intensive stack. A server with at least 4 vCPUs and 8 GB of RAM is recommended for optimal performance.
+- When deploying over HTTPS, Coolify automatically generates and provisions SSL certificates via its built-in proxy (Traefik or Caddy). WebSocket connections (`wss://`) for transactor and collaborator are automatically handled.
+
+## Links
+
+- [Official Website](https://huly.io/?utm_source=coolify.io)
+- [GitHub Repository](https://github.com/hcengineering/platform?utm_source=coolify.io)
+- [Documentation](https://docs.huly.io/?utm_source=coolify.io)
+- [Self-hosting Guide](https://docs.huly.io/getting-started/self-hosting?utm_source=coolify.io)
