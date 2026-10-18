@@ -14,7 +14,9 @@ Open **Settings > Advanced**. Under **API and MCP**, the page contains:
 - **API access**, which allows or blocks authenticated REST API requests
 - **Allowed API IPs**, which accepts exact IP addresses and networks in CIDR notation
 
-When **API access** is off, protected API requests return `403 Forbidden` even when the Bearer token is valid.
+When **API access** is off, protected REST API requests return `403 Forbidden` even when the Bearer token is valid. Enable REST API access through the dashboard; `POST /api/v1/enable` has been removed.
+
+MCP has its own **MCP server** switch and can remain enabled while REST API access is off. **Allowed API IPs** applies to both REST API and MCP requests, including API/MCP control endpoints. See [Set up MCP](/mcp/setup).
 
 ---
 

@@ -35,3 +35,5 @@
 /docs/api/endpoints/servers/import-server-transfer-bundle	/docs/api/overview
 /docs/api-reference/api/operations/migrate-server-between-instances	/docs/api/overview
 /docs/api/endpoints/servers/migrate-server-between-instances	/docs/api/overview
+/docs/api-reference/api/operations/enable-api	/docs/api/ip-allowlist#api-access-controls
+/docs/api/endpoints/system/enable-api	/docs/api/ip-allowlist#api-access-controls
