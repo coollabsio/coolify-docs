@@ -147,13 +147,13 @@ A value of `0` makes that limit unlimited. The limits work independently, and Co
 
 {/* <ZoomableImage src="shadow-to-do" alt="S3 backup and S3 Storage Retention settings" /> */}
 
-Under **S3 storage**, select a validated **S3 storage** target, select **Enable S3**, then select **Save changes**. If no validated target exists, add and validate a storage target first.
+Under **S3 storage**, choose one or more validated targets in **S3 storages**, select **Enable S3**, then select **Save changes**. Each backup is uploaded to every selected destination. If no validated target exists, add and validate a storage target first.
 
-When S3 is enabled, **Retention > S3 backups** provides the same three independent limits for S3 copies.
+When S3 is enabled, **Retention > S3 backups** provides the same three independent limits, evaluated separately for each S3 destination.
 
-Set **Local copy** to **Delete after S3 upload** only when S3 should be the sole backup location. Keep **Keep local backup** to retain both copies. Coolify deletes the local file after a successful upload. If an S3 upload fails, Coolify keeps the local file and marks the execution **Success (S3 Warning)**.
+Set **Local copy** to **Delete after S3 upload** when you want to retain only the remote copies. Keep **Keep local backup** to retain the local file as well. Coolify deletes the local file only after every selected destination has a successful copy. If any upload fails, Coolify keeps the local file and marks the execution **S3 warning**.
 
-The dashboard cannot download a remote-only file. Download the backup from your S3 storage provider instead.
+Select **Download** to retrieve a retained local file or an available S3 copy. Remote downloads use links that expire after 15 minutes; request a new download if the link expires.
 
 </Step>
 </Steps>
@@ -162,7 +162,7 @@ The dashboard cannot download a remote-only file. Download the backup from your 
 
 ## Verify and manage backups
 
-**Executions** shows the status, database name, size, location, and storage availability for each backup.
+**Executions** shows the status, database name, size, location, and storage availability for each backup. Each S3 destination has its own upload status and error message.
 
 <ZoomableImage src="/docs/images/knowledge-base/how-tos/backup-restore-coolify/3.webp" alt="Successful backup execution with its file location and storage availability" />
 
@@ -170,8 +170,8 @@ For a usable backup, confirm that the execution shows **Success** and that at le
 
 The available actions depend on the execution:
 
-- **Download** saves the local backup to your computer.
-- **Delete** removes the local backup and can also remove its S3 copy when one exists.
+- **Download** saves a local backup or redirects to an available S3 copy. If the instance uses S3 for file downloads, wait while Coolify prepares the local file for download.
+- **Delete** removes the local backup and can also remove its copies from every S3 destination when selected.
 - **Clean failed backups** removes failed execution records.
 - **Clean deleted entries** removes execution records already marked as deleted from local storage. It does not delete backup files.
 

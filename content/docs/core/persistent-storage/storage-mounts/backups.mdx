@@ -5,7 +5,7 @@ description: Schedule local and S3 backups for application volume and directory 
 
 # Back up storage mounts
 
-Coolify can create scheduled file-level archives of eligible storage mounts attached to an application. Coolify first creates each compressed `.tar.gz` archive on the application's deployment server. It can then send a copy to S3-compatible storage and, if configured, remove the local archive after a successful upload.
+Coolify can create scheduled file-level archives of eligible storage mounts attached to an application. Coolify first creates each compressed `.tar.gz` archive on the application's deployment server. It can then send a copy to S3-compatible storage and, if configured, remove the local archive after every selected destination has a successful copy.
 
 <Callout type="warning" title="A file-level archive can contain inconsistent data">
 If the application changes files while Coolify creates the archive, the backup may be inconsistent or corrupted. This is especially important for databases. Use an application-aware backup when one is available, or stop application writes during the archive step.
@@ -57,10 +57,10 @@ To create an off-server copy:
 
 1. Configure and validate an [S3-compatible storage destination](/core/s3-storage/overview) for the current team.
 2. Open the storage backup schedule and select **S3** to open **S3 storage**.
-3. Select the **S3 storage** destination, then select **Enable S3**.
+3. Select one or more destinations in **S3 storages**, then select **Enable S3**.
 4. Select **Save changes**.
 
-Set **Local copy** to **Delete after S3 upload** only when S3 should hold the only retained copy. Coolify deletes the local archive after a successful S3 upload. If the S3 upload fails, the execution shows **Success (S3 Warning)** and Coolify keeps the local archive.
+Set **Local copy** to **Delete after S3 upload** when you want to retain only the remote copies. Each backup is uploaded to every selected destination. Coolify deletes the local archive only after all uploads succeed. If any upload fails, the execution shows **S3 warning** and Coolify keeps the local archive.
 
 ## Set retention limits
 
@@ -70,17 +70,19 @@ Under **Retention**, local and S3 archives each have three independent limits:
 - **Days to keep**
 - **Maximum storage (GB)**
 
-A value of `0` makes that limit unlimited. When several limits are configured, reaching any one of them triggers cleanup of the oldest successful archives in that location. The default number of local and S3 backups to keep is `7`; the day and storage limits default to `0`.
+A value of `0` makes that limit unlimited. When several limits are configured, reaching any one of them triggers cleanup of the oldest successful archives in that location. S3 retention is evaluated separately for each destination. The default number of local and S3 backups to keep is `7`; the day and storage limits default to `0`.
 
 ## Verify and download a backup
 
 Open **Executions** and wait for the run to finish. A usable result shows **Success** and at least one available location under **Backup Availability**.
 
-- **Local Storage** means the archive still exists on the deployment server. Select **Download** to save this local archive to your computer.
-- **S3 Storage** means the archive was uploaded to the selected S3 destination.
-- **Success (S3 Warning)** means the local archive succeeded but its S3 upload failed. Read the execution message and correct the S3 problem before relying on the remote copy.
+- **Local Storage** means the archive still exists on the deployment server. Select **Download** to save the archive to your computer.
+- Each S3 destination has its own badge showing whether its copy uploaded, failed, or was deleted.
+- **S3 warning** means the local archive succeeded but at least one S3 upload failed. Read each destination's result before relying on the remote copies.
 - **Failed** means the archive was not completed. Read the execution message before retrying.
 - **Needs attention** means recovery requires action. Read the reason, correct it, and use the retry button. Failed recovery does not indefinitely block new backups.
+
+**Download** uses the local archive when available and can fall back to a retained S3 copy. S3 links expire after 15 minutes. An instance configured with S3 for file downloads can first prepare local archives in that storage. Wait for preparation to finish. Downloads require an Admin or Owner role.
 
 <Callout type="warning" title="Coolify does not restore storage archives from this page">
 The storage backup workflow creates, downloads, and deletes archives, but it does not provide a dashboard restore action. Before relying on a schedule, download an archive and test your restore procedure in a separate environment.
@@ -88,6 +90,6 @@ The storage backup workflow creates, downloads, and deletes archives, but it doe
 
 ## Delete a backup or schedule
 
-Deleting one execution removes its local archive. When an S3 copy exists, select the S3 deletion option if you also want to remove that copy.
+Deleting one execution removes its local archive. When an S3 copy exists, select the S3 deletion option if you also want to remove the copies from every S3 destination.
 
 Deleting the scheduled backup is broader: it permanently deletes the schedule and every local and S3 archive created by it. A volume or Directory Mount with a schedule cannot be deleted until you remove the schedule and its archives.
