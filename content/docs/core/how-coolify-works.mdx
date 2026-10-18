@@ -33,8 +33,6 @@ You can run the Coolify server yourself or use Coolify Cloud. With self-hosted C
 
 ---
 
-Use [Canvas views](/core/canvas-views) to explore projects, environments, servers, and resource relationships visually, or prepare resource creation with the deploy canvas.
-
 ## The control path and traffic path
 
 Coolify sends deployment and management commands through the control path. Your users reach running HTTP resources through the application traffic path.
@@ -241,6 +239,14 @@ Use the detailed Core pages to follow each part of the model.
     },
   ]}
   groups={[
+    {
+      title: 'Use the dashboard',
+      description: 'Explore resources and prepare deployments through the dashboard.',
+      icon: Settings,
+      links: [
+        { title: 'Canvas views', href: '/core/canvas-views' },
+      ],
+    },
     {
       title: 'Choose the control plane',
       description: 'Compare who operates the Coolify instance before choosing a setup.',
