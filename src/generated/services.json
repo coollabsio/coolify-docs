@@ -1,5 +1,12 @@
 [
   {
+    "name": "9Router",
+    "slug": "9router",
+    "icon": "/docs/images/services/9router.svg",
+    "description": "AI coding gateway that routes requests from coding tools to multiple LLM providers.",
+    "category": "AI"
+  },
+  {
     "name": "ActivePieces",
     "slug": "activepieces",
     "icon": "/docs/images/services/activepieces-logo.png",
@@ -89,6 +96,14 @@
     "icon": "/docs/images/services/autobase-logo.svg",
     "description": "Open-source alternative to cloud-managed databases for PostgreSQL (self-hosted DBaaS).",
     "category": "Database"
+  },
+  {
+    "name": "Azimutt",
+    "slug": "azimutt",
+    "icon": "/docs/images/services/azimutt.png",
+    "description": "Database schema design, exploration, documentation, and analysis tool.",
+    "category": "Productivity",
+    "disabled": true
   },
   {
     "name": "BabyBuddy",
@@ -226,6 +241,13 @@
     "category": "Media"
   },
   {
+    "name": "Celld",
+    "slug": "celld",
+    "icon": "/docs/images/services/deno-kv.svg",
+    "description": "Self-hosted, distributed Durable Objects powered by Deno.",
+    "category": "Development"
+  },
+  {
     "name": "Change Detection",
     "slug": "changedetection",
     "icon": "/docs/images/services/changedetection-logo.png",
@@ -317,6 +339,14 @@
     "category": "Development"
   },
   {
+    "name": "Coder",
+    "slug": "coder",
+    "icon": "/docs/images/services/coder.svg",
+    "description": "Platform for creating and managing development environments on your own infrastructure.",
+    "category": "Development",
+    "disabled": true
+  },
+  {
     "name": "CodiMD",
     "slug": "codimd",
     "icon": "/docs/images/services/codimd-logo.png",
@@ -381,6 +411,14 @@
     "category": "Development"
   },
   {
+    "name": "Dify",
+    "slug": "dify",
+    "icon": "/docs/images/services/dify.png",
+    "description": "Open-source platform for building LLM applications with workflows, retrieval-augmented generation, and AI agents.",
+    "category": "AI",
+    "disabled": true
+  },
+  {
     "name": "Directus",
     "slug": "directus",
     "icon": "/docs/images/services/directus-logo.svg",
@@ -400,6 +438,13 @@
     "icon": "/docs/images/services/docker-registry-logo.png",
     "description": "A Docker registry to store and manage your Docker images.",
     "category": "Development"
+  },
+  {
+    "name": "Docling",
+    "slug": "docling",
+    "icon": "/docs/images/services/docling.png",
+    "description": "Document processing service that converts PDFs, office documents, images, and HTML to Markdown, JSON, and other formats.",
+    "category": "AI"
   },
   {
     "name": "Docmost",
@@ -470,6 +515,14 @@
     "icon": "/docs/images/services/easyappointments-logo.png",
     "description": "Open-source appointment scheduler.",
     "category": "Business"
+  },
+  {
+    "name": "EdgeDB",
+    "slug": "edgedb",
+    "icon": "/docs/images/services/edgedb.svg",
+    "description": "Database built on PostgreSQL with a relational query engine and an object-oriented data model.",
+    "category": "Database",
+    "disabled": true
   },
   {
     "name": "Elasticsearch",
@@ -547,6 +600,13 @@
     "icon": "/docs/images/services/excalidraw-logo.svg",
     "description": "Virtual whiteboard for sketching hand-drawn like diagrams.",
     "category": "Productivity"
+  },
+  {
+    "name": "Executor",
+    "slug": "executor",
+    "icon": "/docs/images/services/executor.png",
+    "description": "Self-hosted server for AI agent integrations and code execution.",
+    "category": "Development"
   },
   {
     "name": "Faraday",
@@ -773,6 +833,13 @@
     "category": "Home"
   },
   {
+    "name": "HashiCorp Vault",
+    "slug": "vault",
+    "icon": "/docs/images/services/vault-logo.svg",
+    "description": "Secret management service for securely storing secrets and controlling access to them.",
+    "category": "Security"
+  },
+  {
     "name": "Hatchet",
     "slug": "hatchet",
     "icon": "/docs/images/services/hatchet-logo.svg",
@@ -844,11 +911,26 @@
     "category": "Administration"
   },
   {
+    "name": "Honcho",
+    "slug": "honcho",
+    "icon": "/docs/images/services/honcho.svg",
+    "description": "Memory and reasoning tools for building personalized AI agents with stateful conversations.",
+    "category": "AI"
+  },
+  {
     "name": "Hoppscotch",
     "slug": "hoppscotch",
     "icon": "/docs/images/services/hoppscotch-logo.png",
     "description": "Open-source API development ecosystem.",
     "category": "Development"
+  },
+  {
+    "name": "Huly",
+    "slug": "huly",
+    "icon": "/docs/images/services/huly-logo.svg",
+    "description": "Open-source platform for project management and team collaboration.",
+    "category": "Project Management",
+    "disabled": true
   },
   {
     "name": "Imgcompress",
@@ -900,6 +982,13 @@
     "category": "Development"
   },
   {
+    "name": "Jean",
+    "slug": "jean",
+    "icon": "/docs/images/services/jean.png",
+    "description": "Open-source desktop and server client for orchestrating AI coding agents.",
+    "category": "Development"
+  },
+  {
     "name": "Jellyfin",
     "slug": "jellyfin",
     "icon": "/docs/images/services/jellyfin-logo.svg",
@@ -912,6 +1001,13 @@
     "icon": "/docs/images/services/jenkins-logo.svg",
     "description": "Open-source automation server.",
     "category": "Development"
+  },
+  {
+    "name": "Jitsi Meet",
+    "slug": "jitsi",
+    "icon": "/docs/images/services/jitsi.svg",
+    "description": "Open-source video conferencing platform for self-hosted meetings.",
+    "category": "Communication"
   },
   {
     "name": "Joomla",
@@ -1040,6 +1136,13 @@
     "category": "Bookmarks"
   },
   {
+    "name": "Linkwarden",
+    "slug": "linkwarden",
+    "icon": "/docs/images/services/linkwarden.svg",
+    "description": "Collaborative bookmark manager for collecting, organizing, and preserving web pages.",
+    "category": "Bookmarks"
+  },
+  {
     "name": "Listmonk",
     "slug": "listmonk",
     "icon": "/docs/images/services/listmonk-logo.svg",
@@ -1081,6 +1184,14 @@
     "icon": "/docs/images/services/lowcoder-logo.svg",
     "description": "Open-source low-code platform for building internal tools.",
     "category": "Development"
+  },
+  {
+    "name": "macOS",
+    "slug": "macos",
+    "icon": "/docs/images/services/macos.svg",
+    "description": "Run macOS in a containerized environment using the Dockur macOS project.",
+    "category": "Utilities",
+    "disabled": true
   },
   {
     "name": "Mage AI",
@@ -1438,6 +1549,13 @@
     "category": "Analytics"
   },
   {
+    "name": "OpenWA",
+    "slug": "openwa",
+    "icon": "/docs/images/services/openwa.png",
+    "description": "Open-source, self-hosted WhatsApp API gateway with a bundled dashboard.",
+    "category": "Messaging"
+  },
+  {
     "name": "OpnForm",
     "slug": "opnform",
     "icon": "/docs/images/services/opnform.svg",
@@ -1463,7 +1581,8 @@
     "slug": "osticket",
     "icon": "/docs/images/services/osticket-logo.png",
     "description": "Open-source help desk ticketing system.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "Outline",
@@ -1522,11 +1641,26 @@
     "category": "Business"
   },
   {
+    "name": "PeerTube",
+    "slug": "peertube",
+    "icon": "/docs/images/services/peertube-logo.svg",
+    "description": "Free, open-source, decentralized video hosting platform.",
+    "category": "Media"
+  },
+  {
     "name": "Penpot",
     "slug": "penpot",
     "icon": "/docs/images/services/penpot-logo.svg",
     "description": "Open Source design & prototyping platform.",
     "category": "Design"
+  },
+  {
+    "name": "Peppermint",
+    "slug": "peppermint",
+    "icon": "/docs/images/services/peppermint.png",
+    "description": "Open-source help desk and ticket management system for support teams.",
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "PG Back Web",
@@ -1608,6 +1742,13 @@
     "category": "Development"
   },
   {
+    "name": "Portabase",
+    "slug": "portabase",
+    "icon": "/docs/images/services/portabase.svg",
+    "description": "Open-source platform for automated database backups, secure storage, and on-demand recovery.",
+    "category": "Backup"
+  },
+  {
     "name": "Portainer",
     "slug": "portainer",
     "icon": "/docs/images/services/portainer-logo.png",
@@ -1662,8 +1803,7 @@
     "slug": "pterodactyl",
     "icon": "/docs/images/services/pterodactyl-logo.png",
     "description": "Game server management panel with Wings daemon for hosting Minecraft, CS:GO, ARK and more.",
-    "category": "Gaming",
-    "disabled": true
+    "category": "Gaming"
   },
   {
     "name": "Pydio Cells",
@@ -1755,6 +1895,14 @@
     "icon": "/docs/images/services/rocketchat-logo.svg",
     "description": "Open source team chat software.",
     "category": "Communication"
+  },
+  {
+    "name": "RustFS",
+    "slug": "rustfs",
+    "icon": "/docs/images/services/rustfs.png",
+    "description": "Distributed object storage system built with Rust and compatible with Amazon S3 APIs.",
+    "category": "Storage",
+    "disabled": true
   },
   {
     "name": "Rybbit",
@@ -1890,6 +2038,14 @@
     "category": "Development"
   },
   {
+    "name": "SonarQube",
+    "slug": "sonarqube",
+    "icon": "/docs/images/services/sonarqube-logo.svg",
+    "description": "Code analysis platform for finding code quality and security issues.",
+    "category": "Development",
+    "disabled": true
+  },
+  {
     "name": "Sonarr",
     "slug": "sonarr",
     "icon": "/docs/images/services/sonarr-logo.svg",
@@ -1902,6 +2058,13 @@
     "icon": "/docs/images/services/nexus-logo.png",
     "description": "A repository manager that allows you to store, manage, and distribute your software artifacts.",
     "category": "Development"
+  },
+  {
+    "name": "Spacebot",
+    "slug": "spacebot",
+    "icon": "/docs/images/services/spacebot.png",
+    "description": "AI agent system with specialized processes for thinking, working, and remembering.",
+    "category": "AI"
   },
   {
     "name": "SparkyFitness",
@@ -1993,6 +2156,13 @@
     "icon": "/docs/images/services/teable-logo.png",
     "description": "No-code database built on PostgreSQL.",
     "category": "Database"
+  },
+  {
+    "name": "Termix",
+    "slug": "termix",
+    "icon": "/docs/images/services/termix-logo.svg",
+    "description": "Self-hosted application for managing SSH connections and remote desktops.",
+    "category": "Development"
   },
   {
     "name": "Terraria Server",
@@ -2170,6 +2340,14 @@
     "category": "Development"
   },
   {
+    "name": "Windows",
+    "slug": "windows",
+    "icon": "/docs/images/services/windows.svg",
+    "description": "Run Windows in a containerized environment using the Dockur Windows project.",
+    "category": "Utilities",
+    "disabled": true
+  },
+  {
     "name": "Wings",
     "slug": "wings",
     "icon": "/docs/images/services/pterodactyl-logo.png",
@@ -2196,6 +2374,14 @@
     "icon": "/docs/images/services/yamtrack-logo.svg",
     "description": "Self-hosted music scrobble database.",
     "category": "Media"
+  },
+  {
+    "name": "Zep",
+    "slug": "zep",
+    "icon": "/docs/images/services/zep.png",
+    "description": "Memory service that helps AI agents learn from user interactions and personalize responses.",
+    "category": "AI",
+    "disabled": true
   },
   {
     "name": "Zero",
