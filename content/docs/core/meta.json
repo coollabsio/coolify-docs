@@ -15,6 +15,7 @@
     "backup-and-recovery",
     "---Persistent Storage---",
     "persistent-storage/storage-mounts",
+    "persistent-storage/file-browser",
     "s3-storage",
     "---Infrastructure---",
     "infrastructure/servers",

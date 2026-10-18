@@ -363,6 +363,12 @@ Choose **Local storage** or a configured S3-compatible storage destination, then
 
 Optionally sets the public CDN URL for profile pictures and project icons stored on S3. Enter the URL provided by your CDN, then click **Save changes**.
 
+## File downloads
+
+In **Advanced > File downloads**, set **Download method** to **Stream through Coolify** or a usable S3 storage from the instance team. Streaming supports file-browser downloads up to 1 GiB. S3 supports up to 5 GiB and also handles local backup downloads; larger backups stream through Coolify.
+
+S3 download storage must be private, reachable by servers and browsers, and support bucket lifecycle rules. Links expire after 15 minutes and temporary objects are scheduled for deletion after six hours. See [Container file browser](/core/persistent-storage/file-browser#configure-s3-downloads) for setup.
+
 </Tab>
 
 <Tab value="Updates" icon={Refresh23}>
