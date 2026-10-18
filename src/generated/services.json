@@ -801,6 +801,13 @@
     "category": "Home"
   },
   {
+    "name": "HashiCorp Vault",
+    "slug": "vault",
+    "icon": "/docs/images/services/vault-logo.svg",
+    "description": "Secret management service for securely storing secrets and controlling access to them.",
+    "category": "Security"
+  },
+  {
     "name": "Hatchet",
     "slug": "hatchet",
     "icon": "/docs/images/services/hatchet-logo.svg",
@@ -956,6 +963,13 @@
     "category": "Development"
   },
   {
+    "name": "Jitsi Meet",
+    "slug": "jitsi",
+    "icon": "/docs/images/services/jitsi.svg",
+    "description": "Open-source video conferencing platform for self-hosted meetings.",
+    "category": "Communication"
+  },
+  {
     "name": "Joomla",
     "slug": "joomla",
     "icon": "/docs/images/services/Joomla-Logo.svg",
@@ -1079,6 +1093,13 @@
     "slug": "linkding",
     "icon": "/docs/images/services/linkding-logo.svg",
     "description": "A self-hosted bookmark manager designed to be minimal, fast, and easy to set up.",
+    "category": "Bookmarks"
+  },
+  {
+    "name": "Linkwarden",
+    "slug": "linkwarden",
+    "icon": "/docs/images/services/linkwarden.svg",
+    "description": "Collaborative bookmark manager for collecting, organizing, and preserving web pages.",
     "category": "Bookmarks"
   },
   {
@@ -1480,6 +1501,13 @@
     "category": "Analytics"
   },
   {
+    "name": "OpenWA",
+    "slug": "openwa",
+    "icon": "/docs/images/services/openwa.png",
+    "description": "Open-source, self-hosted WhatsApp API gateway with a bundled dashboard.",
+    "category": "Messaging"
+  },
+  {
     "name": "OpnForm",
     "slug": "opnform",
     "icon": "/docs/images/services/opnform.svg",
@@ -1562,6 +1590,13 @@
     "icon": "/docs/images/services/paymenter-logo.svg",
     "description": "Open-Source Billing, Built for Hosting Providers.",
     "category": "Business"
+  },
+  {
+    "name": "PeerTube",
+    "slug": "peertube",
+    "icon": "/docs/images/services/peertube-logo.svg",
+    "description": "Free, open-source, decentralized video hosting platform.",
+    "category": "Media"
   },
   {
     "name": "Penpot",
@@ -2049,6 +2084,13 @@
     "icon": "/docs/images/services/teable-logo.png",
     "description": "No-code database built on PostgreSQL.",
     "category": "Database"
+  },
+  {
+    "name": "Termix",
+    "slug": "termix",
+    "icon": "/docs/images/services/termix-logo.svg",
+    "description": "Self-hosted application for managing SSH connections and remote desktops.",
+    "category": "Development"
   },
   {
     "name": "Terraria Server",
