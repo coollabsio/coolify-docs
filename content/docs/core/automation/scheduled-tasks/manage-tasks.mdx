@@ -13,7 +13,9 @@ Each application and service keeps its own scheduled tasks. Open a task to chang
 2. Select **Scheduled Tasks**.
 3. Select the task you want to manage.
 
-The task page shows its configuration and recent executions.
+The task opens in an **Edit scheduled task** modal on the resource's task list. Use **General** for configuration and enable/disable controls, **Executions** for recent runs and output, and **Danger Zone** to delete it.
+
+The address includes `task_uuid` while a task is open, so a link can reopen that task on the list. Existing task links also redirect to this view.
 
 ---
 
@@ -39,7 +41,7 @@ Disabling a task does not stop an execution that is already running.
 
 When the application or service is running, click **Execute now** to dispatch the task immediately. Manual execution uses the saved command, container, and timeout, but it does not change the task's next scheduled time.
 
-Open the new record under **Recent executions** to verify the result.
+Select **Executions** and open the new record under **Recent executions** to verify the result.
 
 If **Execute now** is not shown, start the resource first.
 
@@ -52,11 +54,11 @@ Deleting a scheduled task removes its configuration from the resource, and its e
 </Callout>
 
 1. Open the task.
-2. Click **Delete**.
+2. Select **Danger Zone**, then **Delete task**.
 3. Enter the scheduled task name shown in the confirmation dialog.
-4. Click **Permanently Delete**.
+4. Select **Permanently delete**.
 
-Coolify returns to the resource's **Scheduled Tasks** list, and the deleted task no longer runs.
+The modal closes and the task disappears from the resource's **Scheduled Tasks** list. The deleted task no longer runs.
 
 ---
 
