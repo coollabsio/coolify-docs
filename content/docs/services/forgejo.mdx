@@ -50,7 +50,13 @@ Forgejo is available in four deployment configurations in Coolify:
 
 Forgejo has available a first party "actions runner" to [execute task jobs on a repository](https://forgejo.org/docs/latest/user/actions/), much like [GitHub Actions](https://docs.github.com/en/actions) or [GitLab CI](https://docs.gitlab.com/ee/ci/index.html).
 
-Coolify includes Forgejo services with a single runner, using [Docker-in-Docker](https://hub.docker.com/_/docker) to handle and report task jobs.
+<Callout type="error" title="Runner templates disabled">
+
+All four Forgejo templates that bundle an Actions runner are currently disabled in Coolify’s one-click service catalog. The regular Forgejo templates without a bundled runner remain available.
+
+</Callout>
+
+The runner templates use [Docker-in-Docker](https://hub.docker.com/_/docker) to handle and report task jobs. The setup notes below remain available for existing deployments.
 
 Due to the alpha status of the Forgejo runner, rebooting the Forejo application container after the initial setup is required to fully register the shared secret into Forejo for runners to validate:
 
