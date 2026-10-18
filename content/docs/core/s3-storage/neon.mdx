@@ -1,0 +1,86 @@
+---
+title: Neon Object Storage
+description: Configure Neon Object Storage as an S3-compatible backup destination using your branch endpoint, bucket, region, and access keys.
+---
+
+# Neon Object Storage
+
+Neon Object Storage exposes an S3-compatible endpoint that you can use with Coolify backups.
+
+<Callout type="info" title="Buckets belong to a branch">
+Neon Object Storage buckets are scoped to a Neon branch, and each branch has its own S3 endpoint. Pick the branch that should keep your backups, usually your production branch, and use the endpoint and credentials from that branch.
+</Callout>
+
+## Configure Neon Object Storage
+
+<Steps>
+<Step>
+
+### Create the bucket
+
+In the [Neon Console](https://console.neon.tech), open your project, select the branch, and open the **Object storage** tab. Select **+ Create bucket**, enter a name, keep the access level **private**, and select **Create**.
+
+You can also create the bucket with [the Neon CLI](https://neon.com/docs/storage/buckets#create-a-bucket):
+
+```bash
+neon buckets create coolify-backups
+```
+
+</Step>
+<Step>
+
+### Copy the S3 connection details
+
+Select **Connect** and open the **Storage** tab. Choose **.env** tab and copy these four values:
+
+| Neon value | Example |
+|---|---|
+| `AWS_ENDPOINT_URL_S3` | `https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech` |
+| `AWS_ACCESS_KEY_ID` | `nak_live_...` |
+| `AWS_SECRET_ACCESS_KEY` | `nsk_live_...` |
+| `AWS_REGION` | `us-east-2` |
+
+To create a separate access key pair for Coolify, use the Neon CLI instead:
+
+```bash
+neon credentials create --scope storage:read --scope storage:write --name coolify
+```
+
+Use `token_id` as the access key and `s3_secret_access_key` as the secret key.
+
+<Callout type="success" title="Save both keys">
+Save the access key and secret key somewhere secure.
+</Callout>
+
+</Step>
+<Step>
+
+### Add Neon Object Storage to Coolify
+
+In Coolify, open **S3 Storage** and select **New storage**. Enter:
+
+| Coolify field | Neon value |
+|---|---|
+| **Protocol** | `https`. |
+| **Host** | The hostname from `AWS_ENDPOINT_URL_S3`, without `https://`. For example, `br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech`. |
+| **Port** | Leave empty. |
+| **Path** | Leave empty. |
+| **Bucket** | The bucket created in Neon. |
+| **Region** | The `AWS_REGION` value, for example `us-east-2`. |
+| **Access Key** | The `AWS_ACCESS_KEY_ID` value. |
+| **Secret Key** | The `AWS_SECRET_ACCESS_KEY` value. |
+
+Select **Validate Connection & Continue**.
+
+<Callout type="warning" title="Do not add the bucket to the endpoint">
+Enter only the branch hostname in **Host** and the bucket name in **Bucket**. Do not append the bucket name to the endpoint.
+</Callout>
+
+</Step>
+</Steps>
+
+## Verify the connection
+
+Coolify verifies the connection with a `ListObjectsV2` request, so the bucket must already exist before validation.
+
+Neon Object Storage supports the S3 operations Coolify uses for backups: listing, uploads (including multipart uploads), downloads for restores, and deletes.
