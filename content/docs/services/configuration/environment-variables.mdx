@@ -103,3 +103,7 @@ Read [Docker Compose generated Service values](/services/configuration/docker-co
 5. Verify the behavior that consumes the value.
 
 Do not paste production secrets into support messages or screenshots. Team members can have restricted access to secret values even when they can view the Service.
+
+## Environment values in logs
+
+Owners and Admins can set **Environment values in logs** to **Hide all values** (the default) or **Hide locked values only**. Locked variables and recognized secret formats remain protected in either mode. This applies to supported deployment/task output and copied, downloaded, API, or MCP logs; live log streaming is unchanged. See [Log redaction behavior](/applications/configuration/environment-variables#environment-values-in-logs) for limits and API settings.
