@@ -1,0 +1,61 @@
+---
+title: "Portabase"
+description: "Open-source platform for automated database backups, secure storage, and on-demand recovery."
+og:
+  description: "Secure your data with Portabase, an open-source backup and recovery platform."
+category: "Backup"
+icon: "/docs/images/services/portabase.svg"
+---
+
+# Portabase
+
+<ZoomImage src="/docs/images/services/portabase.svg" alt="Portabase logo" />
+
+## What is Portabase?
+
+Portabase is a free, open-source, self-hosted backup and recovery platform designed to simplify data protection across your infrastructure.
+
+With a centralized dashboard and lightweight agents, Portabase allows you to automate backups, manage retention policies, securely store your data, and restore databases on demand.
+
+It supports multiple database engines, storage providers, and deployment environments, making it suitable for both personal projects and production infrastructures.
+
+<Callout type="info" title="Agent setup required">
+
+    Portabase uses agents to connect to your data sources and perform backup and restore operations. After deploying the dashboard, you must configure at least one agent.
+
+    Follow the [Agent setup documentation](https://portabase.io/docs/agent/setup?utm_source=coolify.io) to get started.
+
+</Callout>
+
+## Screenshots
+
+<ZoomImage src="/docs/images/services/portabase-screenshot.png" alt="Portabase dashboard" />
+
+## Supported data sources
+
+- MySQL
+- MariaDB
+- PostgreSQL
+- MongoDB (self-hosted and MongoDB Atlas)
+- Redis / Valkey
+- SQLite
+- Firebird
+- Microsoft SQL Server (on-premises and Azure SQL Database)
+- Docker volumes
+
+## Features
+
+- **Centralized management:** Manage multiple agents, data sources, backup jobs, and storage destinations from a single web dashboard.
+- **Automated backups:** Schedule recurring backups with configurable retention policies, including GFS rotation.
+- **Multiple storage backends:** Store backups locally or on external storage providers, including S3-compatible storage, Azure Blob Storage, SFTP.
+- **Encryption:** Protect backup data with encryption and secure credential management.
+- **On-demand recovery:** Restore data sources directly from the dashboard.
+- **Monitoring and alerts:** Review detailed logs, and receive notifications through Slack, Discord, Telegram, Gotify, email, webhooks, and other providers.
+- **Access control:** Secure access with OIDC, OAuth2, and Two-Factor Authentication (2FA).
+- **API and integrations:** Automate operations through the REST API, command-line interface (CLI), and MCP server.
+
+## Links
+
+- [The official website](https://portabase.io/?utm_source=coolify.io)
+- [Documentation](https://portabase.io/docs?utm_source=coolify.io)
+- [GitHub](https://github.com/portabase/portabase?utm_source=coolify.io)

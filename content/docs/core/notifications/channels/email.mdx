@@ -99,7 +99,7 @@ Choose SMTP or Resend when this team should use its own email provider instead o
 Enter the connection details supplied by your SMTP provider.
 
 1. Open **Notifications > Email** and set **Email service** to **Use team email settings**.
-2. Enter **From name** and a valid **From address**.
+2. Enter **From name** and a valid **From address**. Both are required. If either is empty, saving fails with an error such as `From Address is required. (and 1 more error)`.
 3. Under **SMTP server**, enter the connection details supplied by your email provider:
 
    | Field | Value |
@@ -110,6 +110,7 @@ Enter the connection details supplied by your SMTP provider.
    | **SMTP username** | Authentication username, when required. |
    | **SMTP password** | Authentication password, when required. |
    | **Timeout** | Optional send timeout in seconds. |
+   | **EHLO domain** | Optional fully qualified domain Coolify sends in the SMTP `EHLO` command, such as `coolify.example.com`. Leave it empty to use the system default. |
 
 4. Check the values against your provider's documentation. A mismatched port and encryption option prevents Coolify from connecting.
 5. Select **Save changes** in the **SMTP server** section.
@@ -127,7 +128,7 @@ Create a Resend API key and use a sender address that Resend has verified.
 1. Create an API key in the [Resend dashboard](https://resend.com/api-keys).
 2. Verify the domain or sender address that Coolify will use in Resend.
 3. Open **Notifications > Email** and set **Email service** to **Use team email settings**.
-4. Enter **From name** and the verified **From address**.
+4. Enter **From name** and the verified **From address**. Resend also requires both fields.
 5. Under **Resend**, enter the **API key** and select **Save changes**.
 6. Set **Resend delivery** to **Enabled** and select **Save changes**. Coolify disables SMTP when Resend is enabled.
 

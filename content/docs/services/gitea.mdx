@@ -15,36 +15,11 @@ Git with a cup of tea! Painless self-hosted all-in-one software development serv
 
 ## Deployment Variants
 
-Gitea is available in four deployment configurations in Coolify:
-
-### Gitea (Default)
-- **Database:** SQLite (embedded)
-- **Use case:** Simple deployments, personal projects, or testing
-- **Components:** Single Gitea container with built-in SQLite database
-
-### Gitea with PostgreSQL
-- **Database:** PostgreSQL
-- **Use case:** Production deployments requiring PostgreSQL compatibility and better performance
-- **Components:**
-  - Gitea container
-  - PostgreSQL 16 container
-  - Automatic database configuration and health checks
-
-### Gitea with MySQL
-- **Database:** MySQL
-- **Use case:** Production deployments with MySQL preference
-- **Components:**
-  - Gitea container
-  - MySQL container
-  - Automatic database configuration and health checks
-
-### Gitea with MariaDB
-- **Database:** MariaDB
-- **Use case:** Production deployments with MariaDB preference
-- **Components:**
-  - Gitea container
-  - MariaDB container
-  - Automatic database configuration and health checks
+- **Gitea:** Uses the embedded SQLite database.
+- **Gitea with PostgreSQL:** Includes a PostgreSQL database.
+- **Gitea with MySQL:** Includes a MySQL database.
+- **Gitea with MariaDB:** Includes a MariaDB database.
+- **Gitea Runner:** Standalone Actions runner for an existing Gitea instance.
 
 ## Links
 
