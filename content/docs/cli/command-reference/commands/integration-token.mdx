@@ -1,0 +1,31 @@
+---
+title: "Create"
+description: "Create and validate a secret manager integration token"
+---
+
+# Create
+
+Create and validate a secret manager integration token
+
+## Usage
+
+```sh
+coolify integration-token create
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--metadata` | `string` | No | — | Provider metadata as a JSON object (required for infisical and vault) |
+| `--name` | `string` | Yes | — | Friendly token name (required) |
+| `--provider` | `string` | Yes | — | Secret manager provider: doppler, infisical, vault (required) |
+| `--provider-token-stdin` | `boolean` | No | `false` | Read the provider token from stdin |
+
+## Get current help
+
+```sh
+coolify integration-token create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.
