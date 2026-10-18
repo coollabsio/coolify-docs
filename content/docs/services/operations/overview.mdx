@@ -9,8 +9,6 @@ import { BranchUp, BrowserTerminal, Refresh23 } from 'reicon-react';
 
 After a Service is deployed, Coolify provides stack lifecycle actions, deployment output, container logs, terminal access, scheduled tasks, component controls, and resource operations.
 
-Open **Files** to [browse and manage files inside a running container](/core/persistent-storage/file-browser). File access requires terminal permission. Changes affect the running container; use persistent mounts for files that must survive replacement.
-
 ## Know where to look
 
 | Page or control | Use it to |
@@ -19,6 +17,7 @@ Open **Files** to [browse and manage files inside a running container](/core/per
 | **Deployment output** | Follow image pulls, generated configuration, Compose startup, and command failures for the current operation. |
 | **Logs** | Read stdout and stderr from the Service containers. |
 | **Terminal** | Open a shell in a selected running container when your role can access terminals. |
+| **Files** | [Browse and manage files in a running container](/core/container-file-browser). Requires an Owner or Admin role; edits affect the container filesystem. |
 | **Component Settings** | Change domains, image, public database access, status exclusion, or log-drain behavior for one component. |
 | **Update Service** | Change image versions and merge required Compose or environment updates. |
 | **Troubleshooting** | Diagnose a failed deployment, degraded component, configuration difference, connection failure, or domain error. |

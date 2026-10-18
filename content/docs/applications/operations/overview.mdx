@@ -11,8 +11,6 @@ After an application is deployed, Coolify provides separate views for deployment
 
 Start with the page that matches what you are trying to understand or change. Deployment logs and application logs answer different questions.
 
-Open **Files** to [browse and manage files inside a running container](/core/persistent-storage/file-browser). File access requires terminal permission. Changes affect the running container; use persistent mounts for files that must survive replacement.
-
 ## Know where to look
 
 | <span className="inline-block min-w-36 whitespace-nowrap">Page</span> | Use it to |
@@ -22,6 +20,7 @@ Open **Files** to [browse and manage files inside a running container](/core/per
 | **Backups** | Configure and inspect scheduled archives for eligible application volume and directory mounts. |
 | **Runtime Logs** | Read stdout and stderr from the application's current containers. |
 | **Terminal** | Open an interactive shell in a selected running container. |
+| **Files** | [Browse and manage files in a running container](/core/container-file-browser). Requires an Owner or Admin role; edits affect the container filesystem. |
 
 **Runtime Logs** can show containers across the application's functional deployment servers, including preview containers. **Terminal** appears only when terminal access is enabled, your team role can use it, and the application has an eligible running container. It is not available from an application deployed to Docker Swarm.
 

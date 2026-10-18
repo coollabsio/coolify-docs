@@ -9,8 +9,6 @@ import { BrowserTerminal, Refresh23 } from 'reicon-react';
 
 After a database is deployed, Coolify provides separate views for configuration, backups, logs, terminal access, and runtime metrics. Use the page that matches the task you need to perform.
 
-Open **Files** to [browse and manage files inside a running container](/core/persistent-storage/file-browser). File access requires terminal permission. Changes affect the running container; use persistent mounts for files that must survive replacement.
-
 ## Know where to look
 
 | Page | Use it to |
@@ -19,6 +17,7 @@ Open **Files** to [browse and manage files inside a running container](/core/per
 | **Backups** | Schedule and inspect engine-specific backups for PostgreSQL, MySQL, MariaDB, MongoDB, and ClickHouse. |
 | **Runtime Logs** | Read output from the database container. |
 | **Terminal** | Run a command inside the running database container when your team and server allow terminal access. |
+| **Files** | [Browse and manage files in a running container](/core/container-file-browser). Requires an Owner or Admin role; edits affect the container filesystem. |
 | **Metrics** | View CPU and memory usage when Sentinel & Metrics is enabled on the server and the container is running. |
 | **Resource Operations** | Clone the database to another server or destination, or move it to another project or environment. |
 | **Danger Zone** | Flush all data on Redis, KeyDB, or Dragonfly, or delete the database resource and selected Docker resources. |

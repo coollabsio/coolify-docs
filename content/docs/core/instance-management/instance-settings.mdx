@@ -367,7 +367,15 @@ Optionally sets the public CDN URL for profile pictures, team avatars, and proje
 
 In **Advanced > File downloads**, set **Download method** to **Stream through Coolify** or a usable S3 storage from the instance team. Streaming supports file-browser downloads up to 1 GiB. S3 supports up to 5 GiB and also handles local backup downloads; larger backups stream through Coolify.
 
-S3 download storage must be private, reachable by servers and browsers, and support bucket lifecycle rules. Links expire after 15 minutes and temporary objects are scheduled for deletion after six hours. See [Container file browser](/core/persistent-storage/file-browser#configure-s3-downloads) for setup.
+To configure S3 downloads:
+
+1. Add and validate a private S3 bucket in the instance team. The endpoint must be reachable from both the managed servers and users' browsers.
+2. Open **Settings > Advanced > File downloads**.
+3. Set **Download method** to the S3 storage. The selection is saved automatically.
+
+The provider must support bucket lifecycle rules, and its credentials must allow Coolify to configure them. Coolify rejects buckets that permit anonymous listing and endpoints that use internal Docker hostnames. It adds a lifecycle rule for `coolify-file-downloads/` with a one-day expiry as a fallback for the six-hour cleanup job. Download links expire after 15 minutes.
+
+This setting applies to file-browser downloads and local backup downloads across the instance. It does not change upload limits or the S3 destinations selected on backup schedules. See [Container file browser](/core/container-file-browser) for the resource workflow.
 
 </Tab>
 
