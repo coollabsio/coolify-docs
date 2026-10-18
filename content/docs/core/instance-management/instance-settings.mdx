@@ -37,7 +37,7 @@ https://coolify.shadowarcanist.com/settings
 
 <ZoomableImage src="/docs/images/core/instance-management/instance-settings/general-settings-tab.webp" alt="Settings page with General selected in the instance settings navigation" />
 
-The Settings page groups options under **Configuration** (General, Advanced, and Updates) and **Instance** (Backup, Email, and Authentication). Select a section from the Settings navigation, then use **Save changes** to apply your edits.
+The Settings page groups options under **Configuration** (General, Advanced, and Updates) and **Instance** (Authentication, Email, and Backup). Select a section from the Settings navigation, then use **Save changes** to apply your edits.
 
 ## Configuration
 
@@ -174,6 +174,12 @@ Controls whether users can create their own accounts from the registration page.
 - Keep registration disabled unless you intentionally want public self-registration.
 
 ---
+
+### Passkeys
+
+Set **Passkeys** to **Enabled** to let users register and sign in with passkeys. Users need the configured HTTPS instance domain; an IP address is not supported. Disabling this option preserves registered passkeys.
+
+Changing the instance domain requires users to register new passkeys. See [Passkeys](/core/security/authentication/passkeys) for account setup and troubleshooting.
 
 ### Destructive action confirmation
 
