@@ -46,24 +46,25 @@ Forgejo is available in four deployment configurations in Coolify:
   - MariaDB container
   - Automatic database configuration and health checks
 
+## SSH Access
+
+Git over SSH uses a port on the server, because the proxy routes only HTTP and HTTPS by domain. The default port is `22222`, and Forgejo shows it in the SSH clone URL.
+
+To run more than one Forgejo instance on the same server, set the `FORGEJO_SSH_PORT` environment variable to a free port for each instance, then redeploy. Cloning over HTTPS always works through the domain.
+
 ## Forgejo Actions Runner
 
 Forgejo has available a first party "actions runner" to [execute task jobs on a repository](https://forgejo.org/docs/latest/user/actions/), much like [GitHub Actions](https://docs.github.com/en/actions) or [GitLab CI](https://docs.gitlab.com/ee/ci/index.html).
 
-<Callout type="error" title="Runner templates disabled">
+Coolify includes Forgejo services with a single runner, using [Docker-in-Docker](https://hub.docker.com/_/docker) to run the jobs. They are available with SQLite, PostgreSQL, MySQL, and MariaDB, like the variants above.
 
-All four Forgejo templates that bundle an Actions runner are currently disabled in Coolify’s one-click service catalog. The regular Forgejo templates without a bundled runner remain available.
+The runner is ready after the deployment. No manual setup is necessary:
 
-</Callout>
+- Coolify generates the shared secret (`SERVICE_HEX_64_RUNNER`) that the runner uses to register.
+- The Forgejo installation is completed for you. Log in with the administrator credentials from the `SERVICE_USER_ADMIN` and `SERVICE_PASSWORD_ADMIN` environment variables. Set `FORGEJO_ADMIN_EMAIL` to change the administrator email before the first deployment.
+- Jobs can use the labels `docker` (Node.js 22), `ubuntu-latest`, and `ubuntu-22.04`. A job can also use Docker commands, for example to build images.
 
-The runner templates use [Docker-in-Docker](https://hub.docker.com/_/docker) to handle and report task jobs. The setup notes below remain available for existing deployments.
-
-Due to the alpha status of the Forgejo runner, rebooting the Forejo application container after the initial setup is required to fully register the shared secret into Forejo for runners to validate:
-
-1. In the **Environment Variables** section of the service configuration, you may set as `RUNNER_SHARED_SECRET` a random 40-character hexagesimal string. The command `openssl rand -hex 20` creates something you can copy and paste.
-2. After successfully setting up Forejo, **reboot the `forgejo` service** and wait some seconds until the runner appears in Forgejo _Actions_ Configuration section.
-
-Forejo is also compatible with third-party CI apps and platforms. Forgejo is a Gitea-fork, so instructions to incorporate these CI may be the same for both.
+Forgejo is also compatible with third-party CI apps and platforms. Forgejo is a Gitea-fork, so instructions to incorporate these CI may be the same for both.
 
 ## Demo
 
