@@ -98,6 +98,14 @@
     "category": "Database"
   },
   {
+    "name": "Azimutt",
+    "slug": "azimutt",
+    "icon": "/docs/images/services/azimutt.png",
+    "description": "Database schema design, exploration, documentation, and analysis tool.",
+    "category": "Productivity",
+    "disabled": true
+  },
+  {
     "name": "BabyBuddy",
     "slug": "babybuddy",
     "icon": "/docs/images/services/babybuddy-logo.png",
@@ -331,6 +339,14 @@
     "category": "Development"
   },
   {
+    "name": "Coder",
+    "slug": "coder",
+    "icon": "/docs/images/services/coder.svg",
+    "description": "Platform for creating and managing development environments on your own infrastructure.",
+    "category": "Development",
+    "disabled": true
+  },
+  {
     "name": "CodiMD",
     "slug": "codimd",
     "icon": "/docs/images/services/codimd-logo.png",
@@ -393,6 +409,14 @@
     "icon": "/docs/images/services/denolookingup-logo.svg",
     "description": "Deno's built-in key-value database service.",
     "category": "Development"
+  },
+  {
+    "name": "Dify",
+    "slug": "dify",
+    "icon": "/docs/images/services/dify.png",
+    "description": "Open-source platform for building LLM applications with workflows, retrieval-augmented generation, and AI agents.",
+    "category": "AI",
+    "disabled": true
   },
   {
     "name": "Directus",
@@ -491,6 +515,14 @@
     "icon": "/docs/images/services/easyappointments-logo.png",
     "description": "Open-source appointment scheduler.",
     "category": "Business"
+  },
+  {
+    "name": "EdgeDB",
+    "slug": "edgedb",
+    "icon": "/docs/images/services/edgedb.svg",
+    "description": "Database built on PostgreSQL with a relational query engine and an object-oriented data model.",
+    "category": "Database",
+    "disabled": true
   },
   {
     "name": "Elasticsearch",
@@ -893,6 +925,14 @@
     "category": "Development"
   },
   {
+    "name": "Huly",
+    "slug": "huly",
+    "icon": "/docs/images/services/huly-logo.svg",
+    "description": "Open-source platform for project management and team collaboration.",
+    "category": "Project Management",
+    "disabled": true
+  },
+  {
     "name": "Imgcompress",
     "slug": "imgcompress",
     "icon": "/docs/images/services/imgcompress-logo.webp",
@@ -1144,6 +1184,14 @@
     "icon": "/docs/images/services/lowcoder-logo.svg",
     "description": "Open-source low-code platform for building internal tools.",
     "category": "Development"
+  },
+  {
+    "name": "macOS",
+    "slug": "macos",
+    "icon": "/docs/images/services/macos.svg",
+    "description": "Run macOS in a containerized environment using the Dockur macOS project.",
+    "category": "Utilities",
+    "disabled": true
   },
   {
     "name": "Mage AI",
@@ -1606,6 +1654,14 @@
     "category": "Design"
   },
   {
+    "name": "Peppermint",
+    "slug": "peppermint",
+    "icon": "/docs/images/services/peppermint.png",
+    "description": "Open-source help desk and ticket management system for support teams.",
+    "category": "Business",
+    "disabled": true
+  },
+  {
     "name": "PG Back Web",
     "slug": "pgbackweb",
     "icon": "/docs/images/services/pgbackweb-logo.png",
@@ -1841,6 +1897,14 @@
     "category": "Communication"
   },
   {
+    "name": "RustFS",
+    "slug": "rustfs",
+    "icon": "/docs/images/services/rustfs.png",
+    "description": "Distributed object storage system built with Rust and compatible with Amazon S3 APIs.",
+    "category": "Storage",
+    "disabled": true
+  },
+  {
     "name": "Rybbit",
     "slug": "rybbit",
     "icon": "/docs/images/services/rybbit.svg",
@@ -1972,6 +2036,14 @@
     "icon": "/docs/images/services/soketi-app-manager-logo.svg",
     "description": "Manage Soketi apps with application configuration and WebSocket server administration interface.",
     "category": "Development"
+  },
+  {
+    "name": "SonarQube",
+    "slug": "sonarqube",
+    "icon": "/docs/images/services/sonarqube-logo.svg",
+    "description": "Code analysis platform for finding code quality and security issues.",
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "Sonarr",
@@ -2268,6 +2340,14 @@
     "category": "Development"
   },
   {
+    "name": "Windows",
+    "slug": "windows",
+    "icon": "/docs/images/services/windows.svg",
+    "description": "Run Windows in a containerized environment using the Dockur Windows project.",
+    "category": "Utilities",
+    "disabled": true
+  },
+  {
     "name": "Wings",
     "slug": "wings",
     "icon": "/docs/images/services/pterodactyl-logo.png",
@@ -2294,6 +2374,14 @@
     "icon": "/docs/images/services/yamtrack-logo.svg",
     "description": "Self-hosted music scrobble database.",
     "category": "Media"
+  },
+  {
+    "name": "Zep",
+    "slug": "zep",
+    "icon": "/docs/images/services/zep.png",
+    "description": "Memory service that helps AI agents learn from user interactions and personalize responses.",
+    "category": "AI",
+    "disabled": true
   },
   {
     "name": "Zero",
