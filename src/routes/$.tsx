@@ -14,6 +14,7 @@ import { useMDXComponents } from '@/components/docs/mdx';
 import { CarbonAds } from '@/components/layout/carbon-ads';
 import { ViewOptionsPopover } from '@/components/layout/page-actions';
 import { type DocsManifest, getManifestKey, type LoaderData } from '@/lib/docs/docs-manifest';
+import { getDiscordEmbedScript } from '@/lib/docs/discord-embed';
 import { createDocsLayoutTabs } from '@/lib/docs/docs-layout-tabs';
 import { baseOptions } from '@/lib/ui/layout.shared';
 import { prepareHomeSidebarPageTree, preparePageTree } from '@/lib/docs/page-tree';
@@ -120,6 +121,21 @@ export const Route = createFileRoute('/$')({
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],
       scripts: [
+        {
+          id: 'discord:component-embed',
+          type: 'application/json',
+          children: getDiscordEmbedScript({
+            title: data.isIndex ? site.title : data.title,
+            description,
+            url: canonicalUrl,
+            ...(data.type === 'docs'
+              ? {
+                  markdownUrl: absoluteUrl(data.markdownUrl),
+                  githubUrl: getDocGithubPath(data.path),
+                }
+              : {}),
+          }),
+        },
         {
           type: 'application/ld+json',
           children: JSON.stringify(structuredData),
