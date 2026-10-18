@@ -67,5 +67,5 @@ export function getDocMarkdownPath(slugs: string[]): string {
 }
 
 export function getDocGithubPath(path: string): string {
-  return `https://github.com/coollabsio/coolify-docs/blob/next/docs/${path.replace(/\.mdx$/, '.md')}`;
+  return `https://github.com/coollabsio/coolify-docs/blob/main/content/docs/${path.split('/').map(encodeURIComponent).join('/')}`;
 }
