@@ -1,0 +1,32 @@
+---
+title: "List"
+description: "List audit events, newest first"
+---
+
+# List
+
+List audit events, newest first
+
+## Usage
+
+```sh
+coolify audit list
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--action` | `string` | No | — | Filter by action, e.g. created, updated, deleted (all = every action) |
+| `--page` | `integer` | No | `1` | Page number |
+| `--per-page` | `integer` | No | `25` | Events per page (1-100) |
+| `--search` | `string` | No | — | Search text |
+| `--source` | `string` | No | — | Filter by source: all, ui, api, mcp, webhook, system, scheduler |
+
+## Get current help
+
+```sh
+coolify audit list --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.
