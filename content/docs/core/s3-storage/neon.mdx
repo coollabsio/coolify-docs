@@ -84,3 +84,7 @@ Enter only the branch hostname in **Host** and the bucket name in **Bucket**. Do
 Coolify verifies the connection with a `ListObjectsV2` request, so the bucket must already exist before validation.
 
 Neon Object Storage supports the S3 operations Coolify uses for backups: listing, uploads (including multipart uploads), downloads for restores, and deletes.
+
+<Callout type="warning" title="Maximum backup file size: 5 GiB">
+Neon Object Storage limits each object to **5 GiB**, including multipart uploads. Coolify uploads each backup file as a single object, so files larger than 5 GiB cannot be stored in Neon, even when connection validation succeeds. Use another S3-compatible provider if your backup files can exceed this limit. See [Neon's storage limits](https://neon.com/docs/storage/overview#limits).
+</Callout>
