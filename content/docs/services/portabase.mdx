@@ -1,8 +1,8 @@
 ---
 title: "Portabase"
-description: "A free, open-source and self-hosted tool from a non-profit organization that helps you automate backups and restore your databases on demand."
+description: "Open-source platform for automated database backups, secure storage, and on-demand recovery."
 og:
-  description: "A free, open-source and self-hosted tool from a non-profit organization that helps you automate backups and restore your databases on demand."
+  description: "Secure your data with Portabase, an open-source backup and recovery platform."
 category: "Backup"
 icon: "/docs/images/services/portabase.svg"
 ---
@@ -13,11 +13,17 @@ icon: "/docs/images/services/portabase.svg"
 
 ## What is Portabase?
 
-Portabase is an open-source, self-hosted tool from a non-profit organization that helps you automate backups and restore your databases on demand.
+Portabase is a free, open-source, self-hosted backup and recovery platform designed to simplify data protection across your infrastructure.
+
+With a centralized dashboard and lightweight agents, Portabase allows you to automate backups, manage retention policies, securely store your data, and restore databases on demand.
+
+It supports multiple database engines, storage providers, and deployment environments, making it suitable for both personal projects and production infrastructures.
 
 <Callout type="info" title="Agent setup required">
 
-Before Portabase can back up your databases, you must configure an agent. See the [Agent setup documentation](https://portabase.io/docs/agent/setup?utm_source=coolify.io) for instructions.
+    Portabase uses agents to connect to your data sources and perform backup and restore operations. After deploying the dashboard, you must configure at least one agent.
+
+    Follow the [Agent setup documentation](https://portabase.io/docs/agent/setup?utm_source=coolify.io) to get started.
 
 </Callout>
 
@@ -25,45 +31,28 @@ Before Portabase can back up your databases, you must configure an agent. See th
 
 <ZoomImage src="/docs/images/services/portabase-screenshot.png" alt="Portabase dashboard" />
 
-## Supported Databases
+## Supported data sources
 
 - MySQL
-- PostgreSQL
-- MongoDB
-- Redis
-- SQLite
 - MariaDB
-- Valkey
+- PostgreSQL
+- MongoDB (self-hosted and MongoDB Atlas)
+- Redis / Valkey
+- SQLite
 - Firebird
-- MSSQL
+- Microsoft SQL Server (on-premises and Azure SQL Database)
 - Docker volumes
-
-and many more databases.
 
 ## Features
 
-- Easy to use and set up with interactive web interface.
-- Supports multiple databases and storage backends.
-- Provides automated backup scheduling and retention policies.
-- Offers secure backup storage with encryption and access control.
-- Supports backup restoration on demand with a simple click.
-- Provides detailed logs and notifications for backup and restore operations.
-- Notifications and alerts for backup failures or issues.
-- Provides a REST API for integration with other tools and services.
-- Provides a command-line interface (CLI) for advanced users and automation.
-- SSO (Single Sign-On) support for user authentication and access control.
-- OIDC (OpenID Connect), OAuth2 support for secure authentication and authorization.
-- 2FA (Two-Factor Authentication) support for enhanced security.
-- RBAC (Role-Based Access Control) support for fine-grained access control and permissions.
-- MCP server to automate your operations, connect external tools, and interact with Portabase from AI agents.
-
-and many more features.
-
-## Partners
-
-| Partner | Website |
-|---------|-------------|
-| IONOS CLOUD | https://cloud.ionos.fr |
+- **Centralized management:** Manage multiple agents, data sources, backup jobs, and storage destinations from a single web dashboard.
+- **Automated backups:** Schedule recurring backups with configurable retention policies, including GFS rotation.
+- **Multiple storage backends:** Store backups locally or on external storage providers, including S3-compatible storage, Azure Blob Storage, SFTP.
+- **Encryption:** Protect backup data with encryption and secure credential management.
+- **On-demand recovery:** Restore data sources directly from the dashboard.
+- **Monitoring and alerts:** Review detailed logs, and receive notifications through Slack, Discord, Telegram, Gotify, email, webhooks, and other providers.
+- **Access control:** Secure access with OIDC, OAuth2, and Two-Factor Authentication (2FA).
+- **API and integrations:** Automate operations through the REST API, command-line interface (CLI), and MCP server.
 
 ## Links
 

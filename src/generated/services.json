@@ -1745,7 +1745,7 @@
     "name": "Portabase",
     "slug": "portabase",
     "icon": "/docs/images/services/portabase.svg",
-    "description": "A free, open-source and self-hosted tool from a non-profit organization that helps you automate backups and restore your databases on demand.",
+    "description": "Open-source platform for automated database backups, secure storage, and on-demand recovery.",
     "category": "Backup"
   },
   {
