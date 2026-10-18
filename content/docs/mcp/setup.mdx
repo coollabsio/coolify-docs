@@ -10,7 +10,7 @@ Set up Coolify MCP by enabling the instance endpoint, confirming team access, cr
 ## Before you begin
 
 - Use Coolify Cloud or a self-hosted Coolify instance with a public HTTPS URL.
-- On self-hosted Coolify, enable **API access** in **Settings > Advanced**.
+- On self-hosted Coolify, allow the client's source address in **Settings > Advanced > Allowed API IPs**, if an allowlist is configured. MCP has its own enable switch and works while REST **API access** is disabled.
 - Choose the team whose resources the client must access.
 - Create an API token with the smallest required permissions. See [API tokens](/core/security/credentials/api-tokens).
 
@@ -54,7 +54,7 @@ MCP must also be enabled in the current team's settings. Open **Team > General**
 </Tab>
 <Tab value="API">
 
-On a self-hosted instance, use a `root` API token to enable or disable the instance endpoint. Replace the example URL with your instance's domain:
+On a self-hosted instance, use a token belonging to the instance team (team `0`) with `write` or `root` permission to enable or disable the instance endpoint. The source IP must match **Allowed API IPs** when configured. Replace the example URL with your instance's domain:
 
 ```sh
 export COOLIFY_URL="https://coolify.example.com"
@@ -67,7 +67,7 @@ curl --fail-with-body --request POST \
 
 The endpoint returns `MCP server enabled.`. Disable it with `POST /api/v1/mcp/disable`.
 
-These endpoints require a `root` token. A `read` or `write` token cannot change the instance MCP setting.
+A token from another team cannot change the instance MCP setting, even with `root` permission. These control endpoints remain available while REST **API access** is disabled.
 
 </Tab>
 </Tabs>
@@ -77,13 +77,14 @@ These endpoints require a `root` token. A `read` or `write` token cannot change 
 
 ### Create an MCP token
 
-Create a token from **Keys & Tokens > API Tokens** while the required team is active.
+Create a token from **Security > API Tokens** while the required team is active.
 
 Coolify displays the complete token only once. Copy it into the client's secret configuration before leaving the API Tokens page.
 
 - Use `read` for inventory and inspection.
 - Add `read:sensitive` only for supported sensitive data or log summaries.
-- Add `deploy` for deploy, start, stop, restart, or cancel operations.
+- Add `deploy` for deploy, start, stop, restart, cancel, or rollback operations.
+- Add `write` for creating resources or changing their configuration. Immediate deployment can also require `deploy`.
 - Do not use `root` for normal MCP clients.
 
 MCP endpoint URL:

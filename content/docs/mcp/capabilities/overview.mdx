@@ -28,10 +28,25 @@ Coolify MCP exposes tools, resources, and prompts for the team associated with t
 | [Services](/mcp/capabilities/services) | Services and their application or database components. |
 | [Deployments](/mcp/capabilities/deployments) | Deployment history, deploy, cancel, start, stop, and restart operations. |
 | [Logs](/mcp/capabilities/logs) | Container logs and deployment log summaries. |
-| [Environment and storage](/mcp/capabilities/environment-and-storage) | Environment-variable names and storage mounts. |
-| [Integrations](/mcp/capabilities/integrations) | GitHub Apps, repositories, and branches. |
-| [Automation](/mcp/capabilities/automation) | Scheduled tasks, executions, health hints, and unhealthy resources. |
+| [Environment and storage](/mcp/capabilities/environment-and-storage) | Environment variables, shared variables, storage mounts, and volume backups. |
+| [Integrations](/mcp/capabilities/integrations) | Git sources, keys, registries, S3 storage, and cloud provisioning. |
+| [Automation](/mcp/capabilities/automation) | Scheduled tasks, notifications, audit events, and resource health. |
 | [Prompts and resources](/mcp/capabilities/prompts-and-resources) | Read-only MCP resources and guided prompts. |
 | [Pagination](/mcp/capabilities/pagination) | Page arguments and continuation responses. |
 
-All list tools return paginated data. Read [Pagination](/mcp/capabilities/pagination) before iterating through large results.
+Read [Pagination](/mcp/capabilities/pagination) for the `page` and `per_page` arguments on inventory list tools. Management actions use the related REST endpoint's request and response shape.
+
+## Create and change resources
+
+Creation and management tools accept an `action`, resource identifiers, and a `data` object containing the related REST API request fields. For example, `manage_project` can create a project:
+
+```json
+{
+  "action": "create",
+  "data": { "name": "storefront", "description": "Production storefront" }
+}
+```
+
+Use `coolify_help` to discover the tools available to the current token and recipes such as `deploy_app_from_git` and `add_database_to_app`. Only permitted tools and actions are advertised.
+
+Resource changes generally require `write`; deploying requires `deploy`. Some operations need both. Actions that require confirmation reject the request until `confirm=true` is supplied. Review the change before confirming it; see [MCP security](/mcp/security).

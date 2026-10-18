@@ -1,6 +1,6 @@
 ---
 title: Services
-description: Use Coolify MCP to inspect one-click services and their application or database components.
+description: Use Coolify MCP to inspect, create, and manage one-click services and their components.
 ---
 
 # Services
@@ -13,5 +13,8 @@ description: Use Coolify MCP to inspect one-click services and their application
 | `get_service_application` | Inspect one service application component. |
 | `list_service_databases` | List database components in a service. |
 | `get_service_database` | Inspect one service database component. |
+| `list_service_templates` | Browse one-click service templates with `read` before creating a service. |
+| `create_service` | Create from a template or base64-encoded Compose file. Requires `write`; `instant_deploy` also needs `deploy`. |
+| `manage_service` | Update, delete, clone, move, update a child component, or import a child database. Requires `write`; immediate deployment and server-path imports also need `deploy`. |
 
 Use `get_logs` with the appropriate child resource when a service has multiple containers.

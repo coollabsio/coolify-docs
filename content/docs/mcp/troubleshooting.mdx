@@ -13,7 +13,7 @@ Set **MCP server** to **Enabled** in **Settings > Advanced > API and MCP**, then
 </Accordion>
 <Accordion title="The MCP endpoint returns 403">
 
-Open **Team > General** for the token's team. Set **MCP server** to **Enabled for this team**, then select **Save changes**.
+Open **Team > General** for the token's team. Set **MCP server** to **Enabled for this team**, then select **Save changes**. On a self-hosted instance, also check that the client's source address matches **Settings > Advanced > Allowed API IPs**.
 
 </Accordion>
 <Accordion title="The client returns 401 or authentication fails">
@@ -28,7 +28,7 @@ Confirm the URL ends with `/mcp`, the instance is reachable from the client mach
 </Accordion>
 <Accordion title="A tool reports missing permissions">
 
-Use `read` for inspection, `read:sensitive` for supported sensitive output, and `deploy` for deployment or lifecycle operations. The token owner must retain the required team role for restricted operations.
+Use `read` for inspection, `read:sensitive` for supported sensitive output, `write` for configuration changes, and `deploy` for deployment or lifecycle operations. Tools or individual actions may be hidden when the token lacks their permission. The token owner must retain the required team role for restricted operations.
 
 </Accordion>
 <Accordion title="A resource is missing">
@@ -39,6 +39,16 @@ MCP returns only resources owned by the token's team. Create or use a token for 
 <Accordion title="Logs are unavailable">
 
 `get_logs` requires `read:sensitive`, a running container, and a reachable server. For a failed deployment, call `get_deployment` first and request an optional log summary only when needed.
+
+</Accordion>
+<Accordion title="Environment values are missing">
+
+Use `list_env_keys` for names only. To retrieve values, use `get_env_values` with both `read` and `read:sensitive`; the token owner must be an Admin or Owner of the team. Locked values are never returned.
+
+</Accordion>
+<Accordion title="An action requires confirmation">
+
+Review the target and the action's effect, then allow the client to retry with `confirm=true` if you intend that change. This applies to destructive actions, some operations that interrupt workloads, and paid cloud-server provisioning.
 
 </Accordion>
 </Accordions>
