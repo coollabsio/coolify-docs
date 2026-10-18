@@ -155,3 +155,7 @@ Use **Deploying… View log** to reopen a running deployment or startup log. Sel
 The container log viewer separates **Time**, **Type**, and **Message**. Expand a row to view pretty-printed JSON. If containers cannot be loaded, read the displayed error instead of treating it as proof that none are running.
 
 Viewing container logs requires permission to update the resource. API log requests require `read:sensitive` or `root`.
+
+## Show a maintenance page
+
+Open **Domains > Maintenance mode** to return a maintenance page with HTTP `503` while the containers keep running. The change applies without redeployment on supported Traefik and Caddy servers. See [Maintenance and error pages](/core/networking/proxy/maintenance-and-error-pages).

@@ -2,6 +2,7 @@
   "title": "Proxy",
   "pages": [
     "[Overview](/core/networking/proxy/overview)",
+    "maintenance-and-error-pages",
     "traefik",
     "caddy",
     "custom"
