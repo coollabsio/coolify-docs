@@ -1,6 +1,6 @@
 ---
 title: Overview
-description: Understand how Coolify monitors server availability, container state, disk usage, backups, and CPU and memory metrics.
+description: Understand how Coolify monitors server availability, container state, disk usage, backups, and CPU, memory, disk, network, and load metrics.
 ---
 
 import {
@@ -19,7 +19,7 @@ Coolify tracks the state of connected servers and the workloads running on them.
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-[Sentinel](/core/observability/monitoring/sentinel) provides the preferred server-to-Coolify status path on supported servers. [Metrics](/core/observability/monitoring/metrics) adds historical CPU and memory charts. Metrics can be disabled while Sentinel continues to report server and container health.
+[Sentinel](/core/observability/monitoring/sentinel) provides the preferred server-to-Coolify status path on supported servers. [Metrics](/core/observability/monitoring/metrics) adds historical CPU, memory, disk, network, and load charts. Metrics can be disabled while Sentinel continues to report server and container health.
 
 </CoolCallout>
 
@@ -44,7 +44,7 @@ Monitoring in Coolify covers server state, workload state, resource usage, opera
     },
     {
       title: 'Disk checks and metrics',
-      description: 'Checks disk usage and records CPU and memory metrics.',
+      description: 'Checks disk usage and records CPU, memory, disk, network, and load metrics.',
       icon: Layers,
     },
     {
@@ -73,7 +73,7 @@ Built-in monitoring provides platform and container visibility, but it is not a 
   items={[
     'Server reachability, validation state, and disk usage checks',
     'Container state and Docker health information',
-    'Historical CPU and memory charts when Sentinel metrics are enabled',
+    'Historical CPU, memory, disk, network, and load charts when Sentinel metrics are enabled',
     'Selected operational notifications and workload log forwarding',
   ]}
 />
@@ -109,7 +109,7 @@ Log drains forward workload container output. They do not forward Coolify deploy
     {
       title: 'Enable metrics',
       href: '/core/observability/monitoring/metrics',
-      description: 'Collect and view CPU and memory history for servers and supported resources.',
+      description: 'Collect and view CPU, memory, disk, network, and load history for servers and supported resources.',
       icon: Layers,
     },
     {
