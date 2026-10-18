@@ -122,3 +122,7 @@ echo "$GITLAB_REGISTRY_TOKEN" | \
 ```
 
 Use the complete image reference, including its tag, in a Docker Image or Docker Compose application. Read [Docker registries](/applications/builds/docker-registries) for server authentication and build-server requirements.
+
+## Detect build configuration
+
+The GitLab App creation form includes [Smart Scan](/applications/builds/smart-scan). Review detected Dockerfiles or Compose files, internal ports, and environment-template imports before continuing. Set **Base directory** and scan again when deploying a subdirectory.

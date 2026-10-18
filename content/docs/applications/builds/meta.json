@@ -2,6 +2,7 @@
   "title": "Builds",
   "pages": [
     "overview",
+    "smart-scan",
     "nixpacks",
     "railpack",
     "static",
