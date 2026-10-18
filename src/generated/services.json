@@ -1581,7 +1581,8 @@
     "slug": "osticket",
     "icon": "/docs/images/services/osticket-logo.png",
     "description": "Open-source help desk ticketing system.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "Outline",
@@ -1802,8 +1803,7 @@
     "slug": "pterodactyl",
     "icon": "/docs/images/services/pterodactyl-logo.png",
     "description": "Game server management panel with Wings daemon for hosting Minecraft, CS:GO, ARK and more.",
-    "category": "Gaming",
-    "disabled": true
+    "category": "Gaming"
   },
   {
     "name": "Pydio Cells",
