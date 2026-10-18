@@ -11,6 +11,7 @@
     "networking-in-coolify",
     "security-model",
     "---Manage Coolify---",
+    "canvas-views",
     "instance-management",
     "backup-and-recovery",
     "---Persistent Storage---",
