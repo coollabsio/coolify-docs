@@ -1,32 +1,112 @@
 ---
 title: Databases
-description: Deploy and operate standalone PostgreSQL, MySQL, MariaDB, MongoDB, Redis, Dragonfly, KeyDB, and ClickHouse databases on Coolify.
+description: Self-host PostgreSQL, MySQL, MariaDB, MongoDB, Redis, Dragonfly, KeyDB, ClickHouse, or SQLite on Coolify, with scheduled backups and restore where the engine supports them.
 ---
 
 import { Box2, BranchUp, Settings } from 'reicon-react';
 
 # Databases
 
-Coolify deploys standalone databases as containers on the server and network you select. Each database resource includes generated credentials, a persistent data volume, an internal connection URL, and controls for networking, health checks, storage, and resource limits.
+The easiest way to self-host a database with backups is to install Coolify on a server you control, create a one-click database, and add a backup schedule that can upload to S3-compatible storage. PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, and experimental SQLite can take scheduled backups; dashboard restore works for every one of those except ClickHouse. Redis, Dragonfly, and KeyDB do not support scheduled backups or dashboard restore, and you still own server security and regular restore tests.
 
-Use the one-click database list when you want Coolify to create the container configuration for a supported engine. You can also deploy a database with Docker Compose when you need an engine or topology that is not in this list.
+Coolify deploys each standalone database as a container on the server and network you select. The resource includes generated credentials, a persistent data volume, an internal connection URL, and controls for networking, health checks, storage, and resource limits. Use a one-click database when the engine is in the list below. Use Docker Compose when you need an engine or topology that is not.
 
-If you are new to Coolify databases, start with [What is a database](/databases/what-is-a-database), [How databases work](/databases/how-databases-work), and [Choose a database](/databases/choose-a-database). Then follow [Deploy your first database](/deploy-your-first-database).
+If you are new to Coolify databases, start with [What is a database](/databases/what-is-a-database), [How databases work](/databases/how-databases-work), and [Choose a database](/databases/choose-a-database). The backup path is [below](#self-host-a-database-with-backups). A first deployment that only needs a running container is [Deploy your first database](/deploy-your-first-database); that guide uses Redis, which does not have scheduled backups.
 
-## Choose a database
+## Supported engines
 
-| Database | Best suited for | Built-in scheduled backups | Default internal port |
-| :--- | :--- | :---: | :---: |
-| [PostgreSQL](/databases/postgresql) | Relational data, extensions, and transactional workloads | Yes | `5432` |
-| [MySQL](/databases/mysql) | Relational applications and broad ecosystem support | Yes | `3306` |
-| [MariaDB](/databases/mariadb) | MySQL-compatible relational workloads | Yes | `3306` |
-| [MongoDB](/databases/mongodb) | Document-oriented data and flexible schemas | Yes | `27017` |
-| [Redis](/databases/redis) | Caching, queues, streams, and key-value data | No | `6379` |
-| [Dragonfly](/databases/dragonfly) | Redis-compatible workloads on a multithreaded datastore | No | `6379` |
-| [KeyDB](/databases/keydb) | Redis-compatible workloads with multithreading | No | `6379` |
-| [ClickHouse](/databases/clickhouse) | Analytical and column-oriented workloads | Yes | `9000` |
+| Database | Best suited for | Scheduled backups | Dashboard restore | Default internal port |
+| :--- | :--- | :---: | :---: | :---: |
+| [PostgreSQL](/databases/postgresql) | Relational data, extensions, and transactional workloads | Yes | Yes | `5432` |
+| [MySQL](/databases/mysql) | Relational applications and broad ecosystem support | Yes | Yes | `3306` |
+| [MariaDB](/databases/mariadb) | MySQL-compatible relational workloads | Yes | Yes | `3306` |
+| [MongoDB](/databases/mongodb) | Document-oriented data and flexible schemas | Yes | Yes | `27017` |
+| [Redis](/databases/redis) | Caching, queues, streams, and key-value data | No | No | `6379` |
+| [Dragonfly](/databases/dragonfly) | Redis-compatible workloads on a multithreaded datastore | No | No | `6379` |
+| [KeyDB](/databases/keydb) | Redis-compatible workloads with multithreading | No | No | `6379` |
+| [ClickHouse](/databases/clickhouse) | Analytical and column-oriented workloads | Yes | No | `9000` |
+| [SQLite](/databases/sqlite) | File-based databases on the same server; experimental | Yes | Yes | None |
 
-Scheduled backup support means that Coolify can run an engine-specific dump job from the database's **Backups** page. Redis, Dragonfly, and KeyDB still have persistent storage, but they do not expose Coolify's scheduled database backup workflow.
+Scheduled backups means Coolify can run an engine-specific dump from the database's **Backups** page. Dashboard restore means **Import Backup** can load a backup while the database is running. Redis, Dragonfly, KeyDB, and ClickHouse still open an **Import Backup** page, and that page reports that restore is not supported. Redis, Dragonfly, and KeyDB do not show **Backups**. They still have persistent storage.
+
+ClickHouse and SQLite schedules apply to the standalone database resource. A PostgreSQL, MySQL, MariaDB, or MongoDB database inside a [Service](/services) can use the same scheduled backup workflow. See [Back up a database inside a service](/databases/backups#back-up-a-database-inside-a-service).
+
+## Self-host a database with backups
+
+1. Install Coolify if you do not already run it. Follow [Start with self-hosted](/start-with-self-hosted). [Coolify Cloud](/start-with-cloud) hosts the Coolify instance only. In both cases the database runs on a server you provide.
+2. Open a project and select **Create New Resource**, then choose an engine that has scheduled backups in the table above. Pick the server and Docker network. Build servers cannot be selected because they do not host running database resources. Image choices follow the current Coolify release; see [Choose a database](/databases/choose-a-database) before you change a major version.
+3. Review the generated credentials and persistent volume, then select **Start**. Wait until the database is running and healthy. Copy the **Internal URL** into applications on the same destination network. A new database has no public endpoint. Read [Network access](#network-access) and [Database SSL](/databases/ssl) before you publish a port.
+4. Open **Backups**, select **+ Add**, and enter a five-field cron expression or one of these names: `every_minute`, `hourly`, `daily`, `weekly`, `monthly`, `yearly`. The schedule uses the server timezone, or the Coolify instance timezone when the server has none. If the database is stopped when the schedule fires, Coolify skips that run. Scope and per-engine dump commands are in [Database backups](/databases/backups).
+5. Set retention. **Backups to keep**, **Days to keep**, and **Maximum storage (GB)** each use `0` for no limit. The limits work independently: Coolify deletes a backup when any configured limit is reached, keeping the most recent backups first. S3 retention uses the same three fields and is independent of the local limits. Local files are written under `/data/coolify/backups` on the database server.
+6. Send a copy off the server. Add and validate an [S3-compatible storage](/core/s3-storage/overview). The bucket must already exist. Coolify has setup guides for Amazon S3, Cloudflare R2, Neon Object Storage, and Supabase Storage, and also supports DigitalOcean Spaces, MinIO, Backblaze B2, Scaleway Object Storage, Hetzner S3 Storage, Wasabi Hot Cloud Storage, Vultr, CloudPe Object Storage, and IDrive e2. On the schedule, select the storage and **Enable S3**. **Delete after S3 upload** removes the local file only after the upload succeeds.
+7. Select **Back up now** while the database is running. Confirm the execution status is **Success**, the database names match the scope you chose, the file size is greater than zero, and the S3 upload succeeded when S3 is enabled.
+8. Restore a copy before you trust the backup. **Import Backup** accepts a file from your computer, an absolute path on the server, or an object in S3 storage for PostgreSQL, MySQL, MariaDB, MongoDB, and SQLite. Stop application writes and take a separate backup of the target first. ClickHouse has no built-in import; restore that archive with a ClickHouse client. Follow [Restore a database](/databases/restore).
+
+## What you still own
+
+Coolify creates the database resource and the backup files. It does not take over the server or prove that a backup can be restored.
+
+- **Server security.** Operating system updates, firewall rules, and SSH access stay with you, including when you use Coolify Cloud. Coolify can notify you when a patch check finds operating system updates. See [Firewall](/core/infrastructure/servers/firewall) and [Notification events](/core/notifications/events).
+- **Restore tests.** A successful backup only proves that Coolify created a file. Restore a copy into a disposable database and check that the application can read it.
+- **Off-server copies.** Local backups live on the same server as the database. Enable S3 so a lost server does not take the only copy with it.
+- **The Coolify instance backup.** An [instance backup](/core/backup-and-recovery/instance-backup) saves Coolify's projects and settings. It does not back up data stored inside your databases.
+- **One container, not a cluster.** A one-click database is a single container. Replication, failover, and multi-node topologies are not part of that resource. Use a Compose [Service](/databases/choose-a-database) or an external database when you need them.
+- **Major version upgrades.** Do not change a production database image to another major version without the engine's upgrade procedure and a verified backup.
+- **What metrics cover.** Enable metrics on the server to collect CPU and memory samples through Sentinel. Those charts do not include query performance. See [Metrics](/core/observability/monitoring/metrics).
+
+## FAQ
+
+<Accordions type="multiple">
+
+<Accordion title="Which databases can Coolify back up on a schedule?">
+
+PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, and experimental SQLite. Redis, Dragonfly, and KeyDB do not show the **Backups** page. A PostgreSQL, MySQL, MariaDB, or MongoDB database inside a Service can be scheduled too. Details and dump commands are on [Database backups](/databases/backups).
+
+</Accordion>
+
+<Accordion title="Which databases can I restore from the dashboard?">
+
+PostgreSQL, MySQL, MariaDB, MongoDB, and SQLite. **Import Backup** can take a file from your computer, a path on the server, or S3 storage. Redis, Dragonfly, KeyDB, and ClickHouse open the same page and report that restore is not supported. See [Restore a database](/databases/restore).
+
+</Accordion>
+
+<Accordion title="Can I send backups to Amazon S3, Cloudflare R2, or Backblaze B2?">
+
+Yes. Coolify uploads to S3-compatible storage. Setup guides cover Amazon S3, Cloudflare R2, Neon Object Storage, and Supabase Storage. Backblaze B2 is in the supported provider list, with DigitalOcean Spaces, MinIO, Scaleway Object Storage, Hetzner S3 Storage, Wasabi Hot Cloud Storage, Vultr, CloudPe Object Storage, and IDrive e2. The bucket must exist before you validate it. See [S3 storage](/core/s3-storage/overview).
+
+</Accordion>
+
+<Accordion title="How long are backups kept?">
+
+You choose. Local and S3 retention are separate. Each has **Backups to keep**, **Days to keep**, and **Maximum storage (GB)**. `0` means no limit. Coolify deletes a backup when any configured limit is reached, keeping the most recent backups first.
+
+</Accordion>
+
+<Accordion title="Is this point-in-time recovery?">
+
+No. A scheduled backup is a dump or archive taken when the job runs: `pg_dump` or `pg_dumpall` for PostgreSQL, `mysqldump` for MySQL, `mariadb-dump` for MariaDB, `mongodump` for MongoDB, `BACKUP DATABASE` for ClickHouse, and `VACUUM INTO` for SQLite. Restoring it returns that copy, not an arbitrary moment between runs.
+
+</Accordion>
+
+<Accordion title="Is the database exposed to the internet?">
+
+Not by default. A new database has no public endpoint. Applications on the same Coolify network use the internal URL. If an outside client must connect, use a port mapping or **Public through TCP proxy**, restrict the port with a firewall, and use SSL where the engine supports it. See [Network access](#network-access) and [Database SSL](/databases/ssl).
+
+</Accordion>
+
+<Accordion title="Does Coolify Cloud host the database?">
+
+No. With self-hosted Coolify and Coolify Cloud, applications, databases, services, and persistent data run on your servers. See [Self-hosted vs Coolify Cloud](/core/selfhosted-cloud-comparison).
+
+</Accordion>
+
+<Accordion title="Will an instance backup save my database data?">
+
+No. An instance backup saves Coolify's own projects, resources, settings, and deployment history. Database data needs the database backup schedule described above. See [Instance backup](/core/backup-and-recovery/instance-backup).
+
+</Accordion>
+
+</Accordions>
 
 ## Deploy a database
 
@@ -109,7 +189,7 @@ The database resource navigation separates configuration from day-to-day operati
 | **Environment Variables** | Manage runtime variables passed to the database container. | [Environment variables](/databases/configuration/environment-variables) |
 | **Servers** | Review or change the selected server and destination. | [Configure multi-server deployments](/core/infrastructure/scaling/multi-server-deployments) |
 | **Persistent Storage** | Manage the named volumes and mounts that keep database data across container recreation. | [Persistent storage](/databases/configuration/persistent-storage) |
-| **Import Backup** | Restore a supported PostgreSQL, MySQL, MariaDB, or MongoDB backup while the database is running. | [Restore a database](/databases/restore) |
+| **Import Backup** | Restore a supported PostgreSQL, MySQL, MariaDB, MongoDB, or SQLite backup while the database is running. Other engines show that restore is not supported. | [Restore a database](/databases/restore) |
 | **Webhooks** | Create authenticated requests for database operations from external automation. | [Deploy webhooks](/core/automation/deploy-webhooks) |
 | **Healthcheck** | Configure the Docker readiness and liveness probe. | [Health checks](/databases/configuration/health-checks) |
 | **Resource Limits** | Set CPU and memory limits for the database container. | [Resource limits](/databases/configuration/resource-limits) |

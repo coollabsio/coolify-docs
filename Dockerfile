@@ -57,6 +57,24 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 # Copy custom redirects NGINX configuration
 COPY nginx/redirects.conf /etc/nginx/conf.d/redirects.conf
 
+# Safe default (no X-Robots-Tag). Replaced below when this image is built for a preview host.
+COPY nginx/preview-robots.conf /etc/nginx/conf.d/preview-robots.conf
+
+# Same site URL as the builder stage. Redeclared here because Docker ARGs do not cross stages.
+# Only an exact coolify.io build stays indexable. Every other host (next.coolify.io included)
+# gets X-Robots-Tag on the responses from this image, and the HTML build emits a matching meta tag.
+ARG VITE_SITE_URL=https://coolify.io/docs/
+USER root
+RUN host=$(printf '%s' "$VITE_SITE_URL" | sed -E 's#^[a-zA-Z][a-zA-Z0-9+.-]*://([^/:]+).*#\1#') && \
+    case "$host" in \
+      coolify.io) \
+        printf '# Indexable docs host (%s). No sitewide X-Robots-Tag.\n' "$host" > /etc/nginx/conf.d/preview-robots.conf ;; \
+      *) \
+        printf 'add_header X-Robots-Tag "noindex, nofollow" always;\n' > /etc/nginx/conf.d/preview-robots.conf ;; \
+    esac && \
+    chmod 644 /etc/nginx/conf.d/preview-robots.conf
+USER nginx
+
 # Expose port 80
 EXPOSE 80
 
