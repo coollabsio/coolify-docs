@@ -9,6 +9,7 @@ import { getDocMarkdownPath, getDocOgPath } from '../src/lib/config/site';
 import { getManifestKey } from '../src/lib/docs/docs-manifest';
 import { preparePageTree } from '../src/lib/docs/page-tree';
 import { absoluteUrl, site } from './lib/site';
+import { resolveDocSeo } from '../src/lib/docs/seo';
 import { currentDirFromMetaUrl } from './lib/runtime-path';
 
 const currentDir = currentDirFromMetaUrl(import.meta.url);
@@ -118,7 +119,15 @@ async function writeOgImages() {
       const outputPath = resolve(outputRoot, doc.ogOutputPath);
       await mkdir(dirname(outputPath), { recursive: true });
 
-      const svg = renderOgSvg(doc.title, doc.description, logoDataUri);
+      const seo = resolveDocSeo({
+        url: doc.routePath,
+        title: doc.title,
+        description: doc.description,
+        isIndex: doc.routeSegments.length === 0,
+        siteTitle: site.title,
+        siteDescription: site.description,
+      });
+      const svg = renderOgSvg(seo.title, seo.description, logoDataUri);
       const png = new Resvg(svg, {
         font: {
           loadSystemFonts: true,
@@ -153,6 +162,8 @@ ${docs
 
 async function writeRobots() {
   const outputRoot = resolve(currentDir, '../.output/public');
+  // Preview hosts stay crawlable. noindex is on the pages; a Disallow would stop
+  // Google from seeing it and dropping URLs it has already indexed.
   const robots = `User-agent: *
 Allow: /
 

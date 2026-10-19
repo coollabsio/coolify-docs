@@ -6,7 +6,12 @@ export const Route = createFileRoute('/llms-full.txt')({
     handlers: {
       GET: async () => {
         const pages = await Promise.all(source.getPages().map(getLLMText));
-        return new Response(pages.join('\n\n'));
+        return new Response(pages.join('\n\n'), {
+          headers: {
+            'content-type': 'text/plain; charset=utf-8',
+            'x-robots-tag': 'noindex',
+          },
+        });
       },
     },
   },
