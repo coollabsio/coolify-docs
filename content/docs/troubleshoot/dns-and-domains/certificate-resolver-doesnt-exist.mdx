@@ -1,11 +1,13 @@
 ---
 title: "Certificate Resolver Not Found on Coolify Proxy"
-description: Fix Traefik 'letsencrypt cert resolver not found' errors by setting correct acme.json file permissions using chmod 600 for non-root Coolify users.
+description: Fix Traefik 'letsencrypt cert resolver not found' errors caused by acme.json permissions for non-root Coolify users, or by a removed letsencrypt resolver.
 ---
 
 
 # Certificate Resolver Not Found on Coolify Proxy
 If you see the error message `Cert resolver doesn't exist letsencrypt` in the Coolify proxy logs, it typically means that your domain is missing an SSL certificate. This issue often occurs when Coolify is using a non-root user account.
+
+If the logs show `Router uses a nonexistent certificate resolver` and you removed the `letsencrypt` resolver from the Traefik configuration on purpose, go to [Resolver removed from the Traefik configuration](#resolver-removed-from-the-traefik-configuration).
 
 
 ## Symptoms
@@ -47,3 +49,22 @@ sudo chmod 600 /data/coolify/proxy/acme.json
 
 ### What Does `sudo chmod 600` Do?
 The `chmod 600` command changes the file permissions of `/data/coolify/proxy/acme.json` so that only the owner of the file (the user account used by Coolify) can read and write to it. This prevents anyone else from accessing or modifying the file while still allowing Traefik to use it.
+
+
+## Resolver removed from the Traefik configuration
+You can remove the `--certificatesresolvers.letsencrypt.*` options from the Traefik configuration when Traefik uses your own certificates, for example Cloudflare Origin CA certificates. If the generated routes still use the `letsencrypt` resolver, Traefik logs an error for each route:
+
+```text
+ERR Router uses a nonexistent certificate resolver certificateResolver=letsencrypt routerName=https-0-<uuid>@docker
+```
+
+Your domains can still work with your own certificates, but the errors continue.
+
+### Solution
+Remove the resolver from the generated routes with the [certificate resolver](/core/networking/proxy/traefik/certificate-resolver) setting (Coolify v4.4.7 or above):
+
+1. Open **Servers > your server > Proxy > Configuration**.
+2. Clear **Certificate resolver** in **Routing behavior** and save.
+3. Redeploy the resources on this server.
+
+To keep Let's Encrypt for other resources on the server, keep the resolver in the Traefik configuration and set **Certificate resolver** to **None** only on the resources that use your own certificates.
