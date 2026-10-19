@@ -1,6 +1,7 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { extname, join, relative, resolve, sep } from 'node:path';
 import matter from 'gray-matter';
+import { loadGitLastModified } from './git-last-modified';
 import { site } from './site';
 import { currentDirFromMetaUrl } from './runtime-path';
 
@@ -41,6 +42,12 @@ export interface DocMetaSourceFile {
 }
 
 const docsDir = resolve(currentDirFromMetaUrl(import.meta.url), '../../content/docs');
+const repoRoot = resolve(docsDir, '../..');
+const gitLastModified = loadGitLastModified(repoRoot);
+
+function lastModifiedFor(repoRelativePath: string, mtime: Date): string {
+  return gitLastModified.get(toPosix(repoRelativePath)) ?? mtime.toISOString().slice(0, 10);
+}
 
 async function walk(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -112,7 +119,7 @@ export async function getDocEntries(): Promise<DocEntry[]> {
           title: typeof parsed.data.title === 'string' ? parsed.data.title : fallbackTitle,
           description:
             typeof parsed.data.description === 'string' ? parsed.data.description : site.description,
-          lastModified: fileStat.mtime.toISOString(),
+          lastModified: lastModifiedFor(`content/docs/${toPosix(relativeFilePath)}`, fileStat.mtime),
         } satisfies DocEntry;
       }),
   );
@@ -141,7 +148,7 @@ export async function getOpenApiEntries(): Promise<DocEntry[]> {
     ogImagePath: `${site.docsBasePath}/og/${page.slugs.join('/')}.png`,
     title: page.data.title ?? 'API Reference',
     description: page.data.description ?? site.description,
-    lastModified: schemaStat.mtime.toISOString(),
+    lastModified: lastModifiedFor('config/openapi.json', schemaStat.mtime),
   }));
 }
 

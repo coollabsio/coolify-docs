@@ -591,3 +591,8 @@
 /docs/knowledge-base/proxy/traefik/overview
 /docs/knowledge-base/proxy/traefik/redirects
 /docs/troubleshoot/overview
+
+# Removed create-dockercompose-application operation. The catch-all used to land on a 404.
+/docs/api/endpoints/applications/create-dockercompose-application
+/docs/api/applications/create-dockercompose-application
+/docs/api-reference/api/applications/create-dockercompose-application
