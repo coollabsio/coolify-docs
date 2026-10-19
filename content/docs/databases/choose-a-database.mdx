@@ -9,19 +9,19 @@ Choose the database engine that matches the data model and workload your applica
 
 ## Choose an engine
 
-| Engine | Use it for | Default port | Coolify scheduled backups |
-| :--- | :--- | :---: | :---: |
-| [PostgreSQL](/databases/postgresql) | Relational data, transactions, and PostgreSQL extensions. | `5432` | Yes |
-| [MySQL](/databases/mysql) | Relational applications and the MySQL ecosystem. | `3306` | Yes |
-| [MariaDB](/databases/mariadb) | MySQL-compatible relational workloads. | `3306` | Yes |
-| [MongoDB](/databases/mongodb) | Document data and flexible schemas. | `27017` | Yes |
-| [SQLite](/databases/sqlite) | File-based databases mounted into an application on the same server; experimental. | None | Yes |
-| [Redis](/databases/redis) | Caches, queues, streams, and key-value data. | `6379` | No |
-| [Dragonfly](/databases/dragonfly) | Redis-compatible workloads using a multithreaded datastore. | `6379` | No |
-| [KeyDB](/databases/keydb) | Redis-compatible workloads using multithreading. | `6379` | No |
-| [ClickHouse](/databases/clickhouse) | Analytical queries and column-oriented data. | `9000` | Yes |
+| Engine | Use it for | Default port | Scheduled backups | Dashboard restore |
+| :--- | :--- | :---: | :---: | :---: |
+| [PostgreSQL](/databases/postgresql) | Relational data, transactions, and PostgreSQL extensions. | `5432` | Yes | Yes |
+| [MySQL](/databases/mysql) | Relational applications and the MySQL ecosystem. | `3306` | Yes | Yes |
+| [MariaDB](/databases/mariadb) | MySQL-compatible relational workloads. | `3306` | Yes | Yes |
+| [MongoDB](/databases/mongodb) | Document data and flexible schemas. | `27017` | Yes | Yes |
+| [SQLite](/databases/sqlite) | File-based databases mounted into an application on the same server; experimental. | None | Yes | Yes |
+| [Redis](/databases/redis) | Caches, queues, streams, and key-value data. | `6379` | No | No |
+| [Dragonfly](/databases/dragonfly) | Redis-compatible workloads using a multithreaded datastore. | `6379` | No | No |
+| [KeyDB](/databases/keydb) | Redis-compatible workloads using multithreading. | `6379` | No | No |
+| [ClickHouse](/databases/clickhouse) | Analytical queries and column-oriented data. | `9000` | Yes | No |
 
-Backup support means that the database resource exposes Coolify's engine-specific backup workflow. It does not mean that the engine cannot create its own backups.
+Scheduled backups means the database resource exposes Coolify's engine-specific backup workflow. Dashboard restore means **Import Backup** can load a backup. ClickHouse can be backed up on a schedule, and its **Import Backup** page reports that restore is not supported. Redis, Dragonfly, and KeyDB do not expose either workflow. Backup support does not mean that the engine cannot create its own backups. The deployment and backup path for every engine is on [Databases](/databases#self-host-a-database-with-backups).
 
 ## Choose a one-click database or a service
 

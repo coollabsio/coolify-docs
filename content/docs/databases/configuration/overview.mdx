@@ -9,7 +9,7 @@ import { BranchUp, Pulse, Settings } from 'reicon-react';
 
 Open a database resource and choose a page from the resource sidebar. **General** contains engine settings, credentials, and networking; storage, health checks, environment variables, and resource limits have their own pages.
 
-The available pages depend on the database engine and the resource state. For example, **Backups** is available only for engines supported by Coolify's database backup workflow, while **Import Backup** is available only for supported restore paths.
+The available pages depend on the database engine and the resource state. For example, **Backups** is available only for engines supported by Coolify's database backup workflow, while **Import Backup** is shown for every database and restores only PostgreSQL, MySQL, MariaDB, MongoDB, and SQLite.
 
 ## Configuration pages
 
@@ -19,7 +19,7 @@ The available pages depend on the database engine and the resource state. For ex
 | **Environment Variables** | Runtime variables passed to the database container. | [Configure environment variables](/databases/configuration/environment-variables) |
 | **Servers** | The server and destination where the database runs. | [Configure multi-server deployments](/core/infrastructure/scaling/multi-server-deployments) |
 | **Persistent Storage** | Volumes, directories, and files mounted into the database container. | [Configure persistent storage](/databases/configuration/persistent-storage) |
-| **Import Backup** | Restore a supported PostgreSQL, MySQL, MariaDB, or MongoDB backup. The page is also shown for unsupported engines, where Coolify displays that restore is not supported. | [Restore a database](/databases/restore) |
+| **Import Backup** | Restore a supported PostgreSQL, MySQL, MariaDB, MongoDB, or SQLite backup. The page is also shown for unsupported engines, where Coolify displays that restore is not supported. | [Restore a database](/databases/restore) |
 | **Webhooks** | Authenticated requests for database operations from external automation. | [Deploy webhooks](/core/automation/deploy-webhooks) |
 | **Healthcheck** | The Docker health probe used to report database health. | [Configure health checks](/databases/configuration/health-checks) |
 | **Resource Limits** | CPU and memory limits applied to the database container. | [Configure resource limits](/databases/configuration/resource-limits) |

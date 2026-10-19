@@ -87,7 +87,7 @@ Open **General** to change the image, credentials, **Port mappings**, public pro
 
 ## Back up and restore MariaDB
 
-Coolify uses `mariadb-dump` for scheduled backups. Selected databases are dumped directly. **Database selection > All databases** passes `--compress` to `mariadb-dump`, but Coolify does not pipe the output through `gzip`; do not assume the resulting file is a gzip stream. For **Specific databases**, type each name and press Enter in **Databases to back up**.
+Coolify uses `mariadb-dump` for scheduled backups. Selected databases are dumped directly. **Database selection > All databases** runs `mariadb-dump --all-databases` and compresses the output with `pigz` when it is available, otherwise `gzip`. The all-database file name ends in `.gz`. For **Specific databases**, type each name and press Enter in **Databases to back up**.
 
 Use [Database backups](/databases/backups) to configure schedules, retention, and S3 storage. The built-in **Import Backup** form accepts MariaDB backups while the database is running; follow [Restore a database](/databases/restore) for the import workflow.
 
