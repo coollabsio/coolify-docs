@@ -59,7 +59,29 @@ function sectionTitle(folderPath: string[], separator: string | null): string {
   return [...folderPath, separator].filter(Boolean).join(' / ') || 'Overview';
 }
 
-export function renderLlmsTxt(docs: Pick<DocsSource, 'getPageTree' | 'getNodePage'>): string {
+function folderIndexItem(docs: Pick<DocsSource, 'getPage'>, folder: Folder): Item | undefined {
+  if (folder.index) return folder.index;
+
+  const ref = folder.$ref;
+  if (typeof ref !== 'string' || !ref.endsWith('meta.json')) return undefined;
+
+  const slugs = ref.replace(/\/?meta\.json$/, '').split('/').filter(Boolean);
+  if (slugs.length === 0) return undefined;
+
+  const page = docs.getPage(slugs);
+  if (!page) return undefined;
+
+  const data = page.data as DocsPageData;
+  return {
+    type: 'page',
+    name: (typeof data.title === 'string' && data.title.trim()) || folder.name,
+    url: page.url,
+    description: typeof data.description === 'string' ? data.description : undefined,
+    $ref: page.path,
+  };
+}
+
+export function renderLlmsTxt(docs: Pick<DocsSource, 'getPageTree' | 'getNodePage' | 'getPage'>): string {
   const sections: Array<{ title: string; lines: string[] }> = [];
   const seen = new Set<string>();
 
@@ -101,7 +123,8 @@ export function renderLlmsTxt(docs: Pick<DocsSource, 'getPageTree' | 'getNodePag
       const folder: Folder = node;
       const folderName = nodeLabel(folder.name) || 'Section';
       const nextPath = [...folderPath, ...(!folder.root && separator ? [separator] : []), folderName];
-      if (folder.index) addPage(folder.index, nextPath.join(' / '));
+      const index = folderIndexItem(docs, folder);
+      if (index) addPage(index, nextPath.join(' / '));
       walk(folder.children, nextPath);
     }
   };
