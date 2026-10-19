@@ -5,7 +5,7 @@ description: Remove a server from Coolify, optionally delete its resources, and 
 
 # Remove a server
 
-Deleting a server always removes it's details from the Coolify database. Depending on the options you choose, Coolify can also delete its managed resources and its linked Hetzner, DigitalOcean, or Vultr machine.
+Deleting a server always removes it's details from the Coolify database. Depending on the options you choose, Coolify can also delete its managed resources and its linked Hetzner, DigitalOcean, Vultr, or Hostinger machine.
 
 The **localhost** server in a self-hosted Coolify installation cannot be deleted.
 
@@ -21,9 +21,15 @@ Before opening the deletion dialog, choose the required outcome.
 | :--- | :--- |
 | **Only delete server from Coolify** | Removes the server from Coolify. The Linux machine, Docker installation, and files remain. |
 | **Delete all resources** | Starts deletion for every resource Coolify manages on this server, then removes the server from database. |
-| **Also delete server/droplet from the provider** | Sends a deletion request for the linked Hetzner server, Vultr instance, or DigitalOcean Droplet. |
+| **Also delete server/droplet from the provider** | Sends a deletion request for the linked Hetzner server, Vultr instance, or DigitalOcean Droplet. For a Hostinger VPS, turns off auto-renewal so Hostinger deletes the VPS at the end of the paid period. |
 
 Provider deletion is not selected by default. If you leave it disabled, the provider continues billing for a machine that still exists.
+
+<Callout type="warning" title="Hostinger deletes the VPS at the end of the paid period">
+Hostinger has no API to delete a VPS immediately. If you select the Hostinger option, Coolify turns off auto-renewal. The VPS keeps running until the paid period ends. Then Hostinger deletes the VPS and all its data.
+
+To delete the VPS now, or to request a refund in the 30-day money-back period, cancel the VPS in [hPanel](https://hpanel.hostinger.com/) under **Billing > Subscriptions**.
+</Callout>
 
 ---
 
@@ -54,7 +60,7 @@ If resources remain, the confirmation dialog offers **Delete all resources** and
 
 ### Check the provider link
 
-If the server is linked to Hetzner, DigitalOcean, or Vultr, decide whether the actual provider machine should also be deleted.
+If the server is linked to Hetzner, DigitalOcean, Vultr, or Hostinger, decide whether the actual provider machine should also be deleted.
 
 Keep the provider option disabled if you need the machine, its files, or console access after removing it from Coolify.
 
@@ -85,6 +91,7 @@ When applicable:
 - enable **Also delete server from Hetzner Cloud** only if the linked Hetzner server should be permanently deleted
 - enable **Also delete server from Vultr** only if the linked Vultr instance should be permanently deleted
 - enable **Also delete droplet from DigitalOcean** only if the linked DigitalOcean Droplet should be permanently deleted
+- enable **Also delete VPS from Hostinger (at the end of the paid period)** only if the linked Hostinger VPS should be deleted when its paid period ends
 
 Enter the required confirmation value and complete the deletion.
 
@@ -96,6 +103,8 @@ Enter the required confirmation value and complete the deletion.
 Confirm that the server no longer appears on the **Servers** page.
 
 If you selected provider deletion, open the provider console and confirm that the machine was deleted. If it still exists, delete it through the provider console to prevent unexpected charges.
+
+For Hostinger, open hPanel and confirm that auto-renewal is off. The VPS stays active until the end of the paid period.
 
 </Step>
 </Steps>
@@ -113,3 +122,7 @@ There is no restore action for a deleted server record.
 If the Linux machine still exists, follow [Add Server](/core/infrastructure/servers/add-server) and validate it again. This creates a new Coolify server record.
 
 Applications, databases, and services from the deleted record do not automatically return, even if their containers or files remain on the machine. Recreate or redeploy each resource that Coolify should manage.
+
+## Provider deletion through the API
+
+For Hetzner, Vultr, or DigitalOcean, `DELETE /servers/{uuid}?delete_from_provider=true` also deletes the linked provider machine. Review the provider link before requesting deletion. The default is `false`. Use `force=true` only when you also intend to delete all resources. Deleting a server marks its queued deployments as failed.

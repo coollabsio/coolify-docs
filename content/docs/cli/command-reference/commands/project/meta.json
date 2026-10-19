@@ -5,6 +5,7 @@
     "delete",
     "environments-create",
     "environments-delete",
+    "environments-get",
     "environments-list",
     "environments-update",
     "get",

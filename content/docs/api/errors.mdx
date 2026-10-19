@@ -93,3 +93,9 @@ A successful request can still omit expected resources or redact sensitive value
 - If passwords, private keys, environment values, logs, or Compose content are redacted, use a token with `read:sensitive` in addition to the endpoint's required permission.
 
 Read [Authorization](/api/authorization) for the complete request and access-check flow.
+
+## Database imports and log requests
+
+Concurrent database start, restart, or import operations can return `409`. Wait for the current operation and inspect its result before retrying. Database create requests return `422` for invalid input, accept numeric resource limits, and interpret `instant_deploy` as a boolean.
+
+`GET /applications/{uuid}/logs` supports `service_name` to select a Compose container and returns `404` when no running container matches. Server domain requests can filter an application with `GET /servers/{uuid}/domains?uuid=<application-uuid>`.

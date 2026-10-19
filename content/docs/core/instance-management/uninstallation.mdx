@@ -55,7 +55,13 @@ Replace `<server-ip>` with your server's IP address. If you normally sign in wit
 ### Remove Coolify containers
 
 ```sh
-docker rm -f coolify coolify-db coolify-redis coolify-realtime coolify-sentinel
+docker rm -f coolify coolify-db coolify-redis coolify-sentinel
+```
+
+Installations from before the [Reverb migration](/core/instance-management/reverb-migration) also have a `coolify-realtime` container. Remove it as well if it exists:
+
+```sh
+docker rm -f coolify-realtime
 ```
 
 Application, database, and service containers keep running.
@@ -131,10 +137,15 @@ Remove the default Coolify images to free disk space:
 ```sh
 docker rmi ghcr.io/coollabsio/coolify:latest
 docker rmi ghcr.io/coollabsio/coolify-helper:latest
-docker rmi ghcr.io/coollabsio/coolify-realtime:1.0.16
 docker rmi ghcr.io/coollabsio/sentinel:1.0.1
 docker rmi postgres:15-alpine
 docker rmi redis:7-alpine
+```
+
+If you removed a `coolify-realtime` container, remove its image too:
+
+```sh
+docker rmi ghcr.io/coollabsio/coolify-realtime:1.0.16
 ```
 
 If you used the default Traefik proxy, remove its image too:

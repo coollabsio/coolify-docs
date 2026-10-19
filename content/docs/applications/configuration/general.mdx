@@ -7,9 +7,9 @@ import { Box2, BrowserCode, Code, Globe3, Layers, Package, Rocket2, Settings, Ta
 
 # General settings
 
-Open an application, then select **Configuration > General**. This page contains the settings that determine what Coolify builds or pulls, where it finds source files, which container ports receive traffic, and how the resulting container starts.
+Open an application, then select **General** in the application settings sidebar. This page contains the settings that determine what Coolify builds or pulls, where it finds source files, which container ports receive traffic, and how the resulting container starts.
 
-The controls change according to the application's source, **Build Pack**, and deployment destination. A setting that does not apply to the selected method is hidden rather than disabled.
+The controls change according to the application's source, **Build strategy**, and deployment destination. A setting that does not apply to the selected method is hidden rather than disabled.
 
 ## Settings available by deployment method
 
@@ -20,64 +20,47 @@ Use this table to identify which part of **General** applies to the application:
 | Nixpacks or Railpack | Build commands, repository paths, static-site controls, publish directory, domains, registry output, network settings, and container labels. |
 | Static | Static server image, repository root, custom Nginx configuration, domains, registry output, network settings, and container labels. |
 | Dockerfile from Git | Repository root, Dockerfile path, optional build stage, domains, registry output, network settings, and container labels. |
-| Dockerfile without Git | The Dockerfile stored in Coolify, optional build stage, domains, registry output, network settings, and container labels. The **Build Pack** selector is not shown. |
+| Dockerfile without Git | The Dockerfile stored in Coolify, optional build stage, domains, registry output, network settings, and container labels. The **Build strategy** selector is not shown. |
 | Docker Compose from Git | Compose file paths, per-service domains, parsed Compose content, repository preservation, optional Compose commands, and label escaping. |
-| Docker Image | Image name, tag or hash, container options, domains, network settings, and container labels. The **Build Pack** selector is not shown. |
+| Docker Image | Image name, tag or hash, container options, domains, network settings, and container labels. The **Build strategy** selector is not shown. |
 
-Docker Compose applications do not use the single-container **Network**, **HTTP Basic Authentication**, or editable **Container Labels** controls on this page. Configure ports, health checks, service environment entries, volumes, and labels in the Compose definition.
+Docker Compose applications do not use the single-container **Network**, **HTTP Basic Authentication**, or editable **Active labels** controls on this page. Configure ports, health checks, service environment entries, volumes, and labels in the Compose definition.
 
 <Tabs id="application-general-configuration" items={['General', 'Build', 'Network', 'Labels', 'Deployment']}>
 <Tab value="General" icon={Settings}>
 
-General contains the application's identity and public domain configuration.
+General contains the application's identity and an **Access** summary linking to its domain configuration.
 
 ### Application details
 
 **Name** identifies the application throughout the Coolify dashboard. It is required. **Description** is optional and can record the workload's purpose, owner, or other team context.
 
-Select **Details** to view the application UUID and other resource information.
+Use the resource menu in the top bar to navigate between applications in the active environment.
 
 ---
 
 ### Domains
 
-For a non-Compose application, **Domains** contains the public URLs that Coolify Proxy routes to the container. Separate multiple domains with commas.
+Select **Domains** in the application settings sidebar, or use the domain-management action in **Access**. Add and edit individual domains there rather than entering a comma-separated list on General.
 
-```plaintext
-https://app.example.com
-https://example.com/api
-https://example.com:3000
-https://example.com:8080/api
-```
+Choose **Add domain**, then enter **Protocol**, **Domain**, optional internal **Port**, and optional **Path**. For Docker Compose applications, also choose the receiving **Service**.
 
-A port in the domain tells Coolify Proxy which port to use inside the container. It does not expose that port directly on the deployment server. For example, `https://example.com:3000` is opened by visitors as `https://example.com`, while the proxy forwards the request to port `3000` in the container.
+A domain port selects a port inside the container; it does not publish that port on the server. For example, HTTPS with domain `example.com` and port `3000` serves visitors at `https://example.com` while forwarding to container port `3000`.
 
-For Docker Compose, Coolify shows a separate **Domains for `<service>`** field for each parsed non-database service. Add the internal port to the domain when that service does not listen on port `80`.
+Edit a domain to set **www redirect** and **Search engine indexing**. The Domains page also provides **Redirect HTTP to HTTPS** when an HTTPS domain is configured.
 
-**Generate Domain** creates a domain from the wildcard domain configured for the deployment server.
-
-#### Redirect www traffic
-
-**Direction** controls how Coolify handles `www` and non-`www` versions of a domain:
-
-- **Allow www & non-www.** serves both versions.
-- **Redirect to www.** redirects the non-`www` version to `www`.
-- **Redirect to non-www.** redirects the `www` version to the root domain.
-
-Add both domain forms under **Domains** and create their DNS records before selecting a redirect direction.
-
-The **Domains** and **Direction** controls become read-only when manual container-label editing is enabled. In that mode, the proxy labels become the source of routing behavior.
-
-Read [Domains](/core/networking/domains) before changing production routing.
+When labels are managed manually, configure routing in the labels instead. Read [Domains](/core/networking/domains) before changing production routing.
 
 </Tab>
 <Tab value="Build" icon={Code}>
 
 Build contains the source, image, repository, and registry settings used to prepare the application.
 
-### Build Pack
+<span id="build-pack" />
 
-**Build Pack** selects how Coolify prepares an application from Git source:
+### Build strategy
+
+**Build strategy** selects how Coolify prepares an application from Git source:
 
 - [Nixpacks](/applications/builds/nixpacks/overview) detects the codebase and generates an image build plan.
 - [Railpack](/applications/builds/railpack) detects the codebase and builds an image with Railpack.
@@ -96,20 +79,20 @@ When overriding a command, keep the corresponding Nixpacks or Railpack configura
 
 **Base Directory** selects the repository directory Coolify treats as the application root. Use `/` for the repository root or a path such as `/apps/api` for a monorepo application.
 
-Enable **Is it a static site?** when the build creates files that a web server should serve instead of starting a long-running application process. Then configure:
+Under **Build pipeline**, choose **Static** in **Site type** when the build creates files that a web server should serve instead of starting a long-running application process. Then configure:
 
-- **Is it a SPA (Single Page Application)?** when client-side routes must fall back to the entry page.
+- Choose **SPA (single-page application)** in **Site type** when client-side routes must fall back to the entry page.
 - **Publish Directory** with the build-output directory, such as `/dist` or `/build`. This field is required when static-site mode is enabled.
-- **Custom Nginx Configuration** when the generated static-site configuration does not meet the application's routing or header requirements.
+- **Custom Nginx configuration** when the generated static-site configuration does not meet the application's routing or header requirements.
 
 </Tab>
 <Tab value="Static" icon={BrowserCode}>
 
 The **Static** build pack serves repository files without running a framework build command.
 
-**Static Image** selects the container image used to serve the files. The currently selectable image is `nginx:alpine`.
+**Web server** selects the container image used to serve the files. The currently selectable image is `nginx:alpine`.
 
-**Base Directory** selects the repository directory that contains the files to serve. **Custom Nginx Configuration** replaces the generated server configuration. **Generate Default Nginx Configuration** overwrites the current custom value with the configuration Coolify generates for the selected static-site behavior.
+**Base Directory** selects the repository directory that contains the files to serve. **Custom Nginx configuration** replaces the generated server configuration. **Generate default** overwrites the current custom value with the configuration Coolify generates for the selected static-site behavior.
 
 </Tab>
 <Tab value="Dockerfile" icon={Code}>
@@ -149,7 +132,7 @@ Resolved file: /deploy/compose.yaml
 
 These fields are read-only. Edit the Compose file in the Git repository, then reload it in Coolify.
 
-Enable **Preserve Repository During Deployment** when the repository content under **Base Directory** must also be copied into the deployment directory. This is useful when the Compose definition uses repository-relative files at runtime rather than only during an image build.
+Enable **Preserve repository during deployment** when the repository content under **Base Directory** must also be copied into the deployment directory. This is useful when the Compose definition uses repository-relative files at runtime rather than only during an image build.
 
 **Custom Build Command** and **Custom Start Command** replace the generated Compose commands. Coolify adds the Compose-file and environment-file flags unless the command already supplies its own `-f` or `--env-file` flag. When an override is entered, **Final Build Command (Preview)** or **Final Start Command (Preview)** shows the command Coolify will execute.
 
@@ -160,9 +143,9 @@ Read [Docker Compose deployments](/applications/builds/docker-compose) for envir
 </Tab>
 <Tab value="Docker Image" icon={Box2}>
 
-**Docker Image** contains the registry image name, such as `nginx` or `ghcr.io/example/api`.
+**Image** contains the registry image name, such as `nginx` or `ghcr.io/example/api`.
 
-**Docker Image Tag or Hash** accepts a tag such as `latest` or `v1.2.3`, or an image hash in the format shown by Coolify. Pin a version or digest when deployments must use an immutable image instead of whatever a moving tag references.
+**Tag** accepts a tag such as `latest` or `v1.2.3`, or an image hash in the format shown by Coolify. Pin a version or digest when deployments must use an immutable image instead of whatever a moving tag references.
 
 **Custom Docker Options** adds supported options to the command used to start the container. Use [Custom Docker options](/applications/builds/custom-docker-options) to check supported flags before adding capabilities, devices, mounts, or runtime settings.
 
@@ -173,7 +156,7 @@ Read [Docker Compose deployments](/applications/builds/docker-compose) for envir
 
 ### Build servers and container options
 
-**Use a Build Server?** appears for non-Compose source builds. Enable it only after configuring another server as a [build server](/core/infrastructure/servers/build-servers). Coolify builds the image there, pushes it to the configured registry, and the deployment server pulls it. A registry image name is required for this path.
+**Builder selection** appears for non-Compose source builds. Choose a dedicated builder only after configuring another server as a [build server](/core/infrastructure/servers/build-servers). Coolify builds the image there, pushes it to the configured registry, and the deployment server pulls it. A registry image name is required for this path.
 
 **Custom Docker Options** also appears for Nixpacks, Railpack, Static, Dockerfile, and Docker Image applications. The options affect how Coolify starts the container; they do not change the image build. Docker Compose applications define equivalent runtime configuration in the Compose file.
 
@@ -191,11 +174,11 @@ Patterns are evaluated in order, support `*`, `**`, `?`, and `!`, and use the la
 
 ### Docker registry
 
-The **Docker Registry** section does not appear for Docker Compose applications because each service's `image:` or `build:` configuration belongs in the Compose definition.
+The **Container image** section does not appear for Docker Compose applications because each service's `image:` or `build:` configuration belongs in the Compose definition.
 
-For a Docker Image application, **Docker Image** and **Docker Image Tag or Hash** identify the image Coolify pulls.
+For a Docker Image application, **Image** and **Tag** identify the image Coolify pulls.
 
-For a source build, **Docker Image** names an image Coolify can push after building it. Include the registry hostname for a private registry, for example `ghcr.io/example/api`. If **Docker Image Tag** is set, Coolify pushes that tag in addition to the commit-based tag.
+For a source build, **Image** names an image Coolify can push after building it. Include the registry hostname for a private registry, for example `ghcr.io/example/api`. If **Tag** is set, Coolify pushes that tag in addition to the commit-based tag.
 
 An output image name is required when the application uses Docker Swarm, additional deployment servers, or a separate build server. Those destinations must be able to pull the built image from a registry.
 
@@ -264,7 +247,7 @@ Labels contains proxy authentication and the container metadata Coolify uses for
 
 ### HTTP Basic Authentication
 
-Enable **HTTP Basic Authentication** to place a proxy username and password in front of a non-Compose application. Enter **Username** and **Password**, then redeploy or restart the application so the proxy configuration is refreshed.
+Under **Security**, choose **HTTP Basic Authentication** in **Authentication** to place a proxy username and password in front of a non-Compose application. Enter **Username** and **Password**, then redeploy or restart the application so the proxy configuration is refreshed.
 
 For Docker Compose, define the required proxy middleware through the Compose labels instead of this control.
 
@@ -272,29 +255,29 @@ For Docker Compose, define the required proxy middleware through the Compose lab
 
 ### Container labels
 
-Coolify normally generates **Container Labels** for domain routing and other managed container behavior.
+Coolify normally generates **Active labels** for domain routing and other managed container behavior.
 
-With **Readonly labels** enabled:
+With **Label management** set to **Managed by Coolify (auto-generated)**:
 
 - the label editor is read-only
-- **Domains**, **Direction**, and **Ports Exposes** remain the primary controls
+- **Domains**, **www redirect**, and **Ports Exposes** remain the primary controls
 - Coolify regenerates the corresponding labels when configuration changes
 
-Disable **Readonly labels** only when you need to own the complete label configuration. In manual mode:
+Choose **Managed manually (edit labels yourself)** in **Label management** only when you need to own the complete label configuration. In manual mode:
 
-- **Container Labels** becomes editable
-- **Domains**, **Direction**, and **Ports Exposes** become read-only
+- **Active labels** becomes editable
+- **Domains**, **www redirect**, and **Ports Exposes** become read-only
 - Coolify does not repair incomplete proxy labels when the container is recreated
 
 <Callout type="warning" title="Manual labels replace Coolify's generated routing">
 
-Before disabling **Readonly labels**, copy the generated labels and understand the proxy configuration they implement. Missing or invalid routing labels can make the application unreachable after a restart or deployment.
+Before switching to manual label management, copy the generated labels and understand the proxy configuration they implement. Missing or invalid routing labels can make the application unreachable after a restart or deployment.
 
 </Callout>
 
-Re-enabling **Readonly labels** restores Coolify's generated labels. **Reset Labels to Defaults** also replaces all custom proxy labels with the current Coolify defaults.
+Choosing **Managed by Coolify (auto-generated)** restores Coolify's generated labels. **Reset to defaults** also replaces all custom proxy labels with the current Coolify defaults.
 
-**Escape special characters in labels?** converts characters such as `$` to their escaped form before the labels are stored. Disable it when a label intentionally contains an environment-variable reference that the container platform must expand.
+Choose **Escape special characters ($ becomes $$)** in **Special characters** to convert characters such as `$` to their escaped form before the labels are stored. Choose **Keep unescaped (allow env variables)** when a label intentionally contains an environment-variable reference that the container platform must expand.
 
 Docker Compose applications do not show the standalone label editor. Define their labels in the Compose file; the **Escape special characters in labels?** setting still controls escaping.
 
@@ -329,7 +312,7 @@ Use this command for work that depends on the newly deployed version, such as wa
 
 ### Apply changes
 
-Select **Save** for fields that use the page-level action. Some switches save immediately.
+Select **Save changes** for edited fields. Dropdowns that save immediately do not need this action.
 
 Redeploy after changing the build method, build commands, source paths, image, Dockerfile, Compose location, build-time values, or registry output. Restart or redeploy after changing runtime ports, labels, authentication, or deployment commands so Coolify recreates the container and its proxy configuration.
 

@@ -8,22 +8,18 @@ description: Understand OAuth sign-in behavior in Coolify and choose a provider-
 OAuth lets people sign in to a self-hosted Coolify instance through a supported external provider instead of entering their Coolify password.
 
 <Callout type="info" title="OAuth configuration is for self-hosted Coolify">
-Coolify Cloud manages its own sign-in providers. On a self-hosted instance, a root team administrator or owner can configure providers under **Settings > OAuth**.
+Coolify Cloud manages its own sign-in providers. On a self-hosted instance, a root team administrator or owner can configure providers under **Settings > Authentication**.
 </Callout>
 
 ## How OAuth sign-in works
 
-After the provider authenticates a person, it returns an email address to Coolify.
+Coolify links an account to the provider identity returned at sign-in. On the first OAuth login after upgrading, an existing account is linked only if the provider verifies its email address. An exception applies to passwordless accounts created by OAuth before this release.
 
-- If a Coolify account already uses that email address, Coolify signs in to that account.
-- If no account uses that email address and **Registration Allowed** is enabled, Coolify creates an account.
-- If no account uses that email address and registration is disabled, Coolify rejects the sign-in.
+Each account links to one OAuth provider. If you previously used several providers with the same email address, use the provider you want to keep on your first sign-in after upgrading. Subsequent sign-ins use the linked identity rather than email matching alone.
 
-Email matching is case-insensitive. Coolify does not maintain a separate provider-to-account link in this flow, so only enable providers you trust to return the correct account email address.
+New accounts follow the registration settings. Linked identities appear on **Profile**, and provider-managed email addresses cannot be changed in Coolify. A denied sign-in displays the reason on the login page.
 
-<Callout type="warning" title="Require multi-factor authentication at the provider">
-Coolify's 2FA challenge applies to email-and-password sign-ins. OAuth callbacks authenticate through the external provider, so require multi-factor authentication and appropriate access policies at that provider.
-</Callout>
+When Coolify 2FA is enabled, OAuth sign-in also requires the Coolify authenticator or recovery code. Users without a password can enable 2FA from their profile. See [Two-factor authentication](/core/security/authentication/2fa).
 
 ## Choose an OAuth provider
 
@@ -43,11 +39,19 @@ For Authentik, Clerk, and Zitadel, use the [SSO guides](/core/security/authentic
 
 ## Control account creation
 
-On a self-hosted instance, open **Settings > Configuration > Advanced** and use **Registration Allowed** to control whether a first-time OAuth sign-in may create a Coolify account.
+Use **Settings > Authentication** to disable password registration while an OAuth provider is enabled. The login page then shows **Only OAuth registration is enabled**. The OIDC provider has an **Allow OIDC user creation** setting that can permit account creation when password registration is disabled.
 
-Turning registration off does not prevent an existing matching account from signing in through an enabled provider. It prevents a provider email address with no matching Coolify account from creating one.
+Each provider can **Auto-join new users to Root team** as members instead of creating a personal team. This applies to newly created users. Coolify does not map provider groups or claims to team roles; manage those roles in Coolify.
 
-OAuth does not map provider groups or claims to Coolify teams and roles. Manage team membership and roles in Coolify after the account exists.
+## Keep linked identities working after a provider change
+
+If you change a self-hosted GitLab, Authentik, Clerk, or Zitadel host, or change the Azure tenant, rekey existing identities from the Coolify server:
+
+```sh
+docker exec coolify php artisan oauth:rekey <provider> --from=<old-URL-or-tenant>
+```
+
+Replace `<provider>` with `gitlab`, `authentik`, `clerk`, `zitadel`, or `azure`. Keep the old URL or tenant value before changing the settings.
 
 ## Test safely
 

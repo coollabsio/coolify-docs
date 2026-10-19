@@ -13,7 +13,7 @@ Updating Coolify changes the self-hosted Coolify control plane. It does not upda
 If you use **Coolify Cloud**, the Coolify team manages instance updates. You must wait for the Coolify team to update the instance.
 </Callout>
 
-For a self-hosted instance, open **Settings** in the left sidebar, choose **Configuration**, then select **Updates**.
+For a self-hosted instance, open **Settings** in the left sidebar, select **Updates**.
 
 
 ## Before you update
@@ -21,6 +21,10 @@ For a self-hosted instance, open **Settings** in the left sidebar, choose **Conf
 - [Create an instance backup](/core/backup-and-recovery/instance-backup).
 - Review the [release notes](https://github.com/coollabsio/coolify/releases) for the version you plan to install.
 - Check for active deployments; they can fail during the update process.
+
+<Callout type="info" title="Updating from a release that uses Soketi?">
+Read the [Reverb migration guide](/core/instance-management/reverb-migration) before you update if you use custom Compose overrides, realtime ports, firewall rules, or Cloudflare Tunnels.
+</Callout>
 
 ---
 

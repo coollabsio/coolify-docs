@@ -24,14 +24,14 @@ Choose the path that matches how the resource is deployed.
 
 #### Open the application settings
 
-Open the application, select **Configuration > General**, then find **HTTP Basic Authentication**.
+Open the application, select **General**, then find **Security > Authentication**.
 
 </Step>
 <Step>
 
 #### Add the credentials
 
-Enable **HTTP Basic Authentication**, then enter a **Username** and **Password**. Save the application settings.
+Choose **HTTP Basic Authentication** in **Authentication**, then enter a **Username** and **Password**. Save the application settings.
 
 Coolify hashes the password and adds a `caddy_<index>.basicauth.<username>` label for each generated Caddy route.
 
@@ -57,7 +57,7 @@ Redeploy the application. Open its domain in a private browser window and confir
 </Step>
 <Step>
 #### Add the label
-Open the application **General** page, find **Container Labels**, then disable **Readonly labels**. Add one `basicauth` label matching the index Coolify already generated for you domain:
+Open the application **General** page, find **Container labels**, then set **Label management** to **Managed manually (edit labels yourself)**. Add one `basicauth` label matching the index Coolify already generated for you domain:
 
 ```ini
 caddy_0.basicauth.<username>="<bcrypt-hash>" # [!code ++][!code focus]

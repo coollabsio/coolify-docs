@@ -19,13 +19,21 @@ import {
 
 # Adding a new service template to Coolify
 
+<CoolCallout icon={Warning22} title="External contributions are temporarily paused" type="danger">
+
+External contributions are temporarily paused due to a high volume of low-quality pull request spam. There is **no ETA** for resuming external contributions.
+
+Please wait until contributions reopen before submitting an external pull request. The workflow below remains available for reference.
+
+</CoolCallout>
+
 Services in Coolify are templates made from normal Docker Compose files with Coolify metadata, magic environment variables, storage handling, and one-click deployment behavior.
 
 <CoolDocsPage>
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-Add the compose file and logo, test it through **Docker Compose Empty**, open the template pull request against `next`, and open the matching service docs pull request before the template can be merged.
+Add the compose file and logo, test it through **Docker Compose Empty**, open the template pull request against the current `release/v4.x` branch, and open the matching service docs pull request before the template can be merged.
 
 </CoolCallout>
 
@@ -101,16 +109,16 @@ Always specify a port. Caddy proxy cannot automatically determine every service 
 <CoolCallout icon={Database} title="Docker Compose" contentClassName="!p-0">
 <CoolPanel>
 
-Use Coolify magic variables for generated values, storage, and user-provided configuration.
+Use Coolify magic variables for generated values and user-provided configuration. Declare the storage mounts the service needs.
 
 ```yaml
 services:
   app:
-    image: your-service-image:tag
+    image: your-service-image:1.2.3
     environment:
       - DATABASE_URL=${COOLIFY_DATABASE_URL}
     volumes:
-      - ${COOLIFY_VOLUME_APP}:/data
+      - app-data:/data
 ```
 
 </CoolPanel>
@@ -139,6 +147,24 @@ services:
 Do not use <CoolInlineValue>latest</CoolInlineValue> or other floating tags. Pin the image to a specific version.
 
 </CoolPanel>
+<CoolPanel withDivider>
+
+### Configuration Coolify adds
+
+For a normal service template, Coolify generates part of the deployment configuration:
+
+| Configuration | What to include in the template |
+| :--- | :--- |
+| `container_name` | Omit it. Coolify generates names from the Compose service name and resource UUID. |
+| `restart` | Omit it to use Coolify's `unless-stopped` default. Set it explicitly only when the service needs different behavior, such as `restart: "no"` for a one-time setup container. |
+| Top-level `volumes` | You can omit empty declarations for ordinary named volumes. Coolify adds declarations for the named volumes referenced by the services. Keep explicit declarations when they contain options such as `external`, `name`, or driver configuration. |
+| Default network | Coolify creates a resource-specific network and connects the proxy. Declare custom networks only when the template requires them. |
+
+The example above still needs `app-data:/data` under the service's `volumes`: Coolify cannot infer which container paths need persistent storage. It generates the named-volume declaration from that mount; it does not make every container directory persistent.
+
+Test the parsed deployment through **Docker Compose Empty**. These additions apply to Coolify's normal service parsing, not to running the template directly with Docker Compose or using an application's raw Compose deployment mode.
+
+</CoolPanel>
 </CoolCallout>
 
 ---
@@ -164,7 +190,7 @@ Put the logo in the Coolify repository and reference it from the compose metadat
 
 <CoolCallout icon={Clipboard} title="Pull request checklist">
 
-- Open the template pull request against the Coolify repository's `next` branch.
+- Open the template pull request against the Coolify repository's current `release/v4.x` branch (for example, `release/v4.5` while production is `4.4.x`).
 - Add `templates/compose/<service>.yaml`.
 - Add `svgs/<service>.svg` and reference that same path in the compose metadata.
 - Test the template through the Docker Compose Empty deployment flow.

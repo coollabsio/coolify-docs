@@ -195,8 +195,6 @@ services:
   coolify:
     ports: !override
       - "127.0.0.1:${APP_PORT:-8000}:8080"
-  soketi:
-    ports: !override
       - "127.0.0.1:${SOKETI_PORT:-6001}:6001"
       - "127.0.0.1:6002:6002"
 ```
@@ -209,8 +207,6 @@ Use this example when the Coolify proxy is configured for the dashboard and you 
 ```yaml
 services:
   coolify:
-    ports: !override []
-  soketi:
     ports: !override []
 ```
 

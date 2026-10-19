@@ -17,7 +17,7 @@ Coolify's built-in New Relic log drain sends opted-in resource logs to the New R
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-Copy an ingest license key, choose the Log API endpoint for your New Relic region, save both values on the server's **Log Drains** page, then enable **Drain Logs** and restart each resource you want to forward.
+Copy an ingest license key, choose the Log API endpoint for your New Relic region, save both values on the server's **Log Drains** page, then configure **Log drain** as described in [Enable log draining for a resource](/core/observability/log-drains/overview#enable-log-draining-for-a-resource) and restart each resource you want to forward.
 
 </CoolCallout>
 
@@ -46,7 +46,7 @@ Copy an ingest license key, choose the Log API endpoint for your New Relic regio
   ]}
 />
 
-Create or copy a New Relic [ingest license key](https://docs.newrelic.com/docs/apis/intro-apis/new-relic-api-keys/#ingest-license-key). Coolify accepts letters, numbers, underscores, hyphens, and periods in **License Key**.
+Create or copy a New Relic [ingest license key](https://docs.newrelic.com/docs/apis/intro-apis/new-relic-api-keys/#ingest-license-key). Coolify accepts letters, numbers, underscores, hyphens, and periods in **License key**.
 
 ---
 
@@ -96,11 +96,11 @@ Coolify requires **Endpoint** to be a valid URL.
     'Enable the drain',
   ]}
   list={[
-    <>Open <strong>Servers</strong>, select the server that runs the resources, then open <strong>Configuration &gt; Log Drains</strong>.</>,
-    <>In <strong>New Relic</strong>, leave <strong>Enabled</strong> off and paste the ingest license key into <strong>License Key</strong>.</>,
+    <>Open <strong>Servers</strong>, select the server that runs the resources, then open <strong>Log Drains</strong>.</>,
+    <>In <strong>New Relic</strong>, leave <strong>Status</strong> set to <strong>Disabled</strong> and paste the ingest license key into <strong>License key</strong>.</>,
     <>Enter the regional Log API URL in <strong>Endpoint</strong>.</>,
-    <>Select <strong>Save</strong> in the New Relic section.</>,
-    <>Turn on <strong>Enabled</strong>. Coolify starts the server's <code>coolify-log-drain</code> container.</>,
+    <>Select <strong>Save changes</strong> in the New Relic section.</>,
+    <>Set <strong>Status</strong> to <strong>Enabled</strong>. Coolify starts the server's <code>coolify-log-drain</code> container.</>,
   ]}
   endnote="Only one server-level log drain can be enabled at a time. Disable another active destination before enabling New Relic."
 />
@@ -172,17 +172,17 @@ Verification in New Relic is required because Coolify does not perform a provide
 
 ## Update the endpoint or license key
 
-1. Turn off **Enabled** in the New Relic section.
-2. Update **License Key** or **Endpoint**.
-3. Select **Save**.
-4. Turn on **Enabled** again.
+1. Set **Status** to **Disabled** in the New Relic section.
+2. Update **License key** or **Endpoint**.
+3. Select **Save changes**.
+4. Set **Status** to **Enabled** again.
 5. Generate a new resource log and confirm that it arrives in New Relic.
 
 ---
 
 ## Fix missing logs
 
-1. Confirm New Relic is the enabled server drain and the resource's **Drain Logs** setting is on.
+1. Confirm New Relic is the enabled server drain and the resource's **Log drain** setting is on.
 2. Confirm you restarted or redeployed the resource after enabling the setting.
 3. Confirm the key is an ingest license key for the same New Relic account and region as the endpoint.
 4. Confirm the server can reach the selected endpoint on port `443`.

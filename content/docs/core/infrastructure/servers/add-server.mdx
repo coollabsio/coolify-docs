@@ -5,7 +5,7 @@ description: Connect an existing Linux server to Coolify with SSH and prepare it
 
 # Add a server manually
 
-Use the **Manual** server flow when you already have a Linux server. Coolify connects to it through SSH and prepares it to run applications, databases, and services.
+Use the **IP address or domain** server flow when you already have a Linux server. Coolify connects to it through SSH and prepares it to run applications, databases, and services.
 
 To purchase and create a server from the Coolify dashboard instead, follow [Provision a Cloud Server](/core/infrastructure/servers/provision-cloud-server).
 
@@ -38,11 +38,10 @@ Coolify must have a private key whose public key is authorized for the server ac
 ### Create the key in Coolify
 
 1. Open **Keys & Tokens > Private Keys**.
-2. Select **+ Add**.
-3. Select **Generate new ED25519 SSH Key**.
-4. Enter a recognizable name.
-5. Copy the complete **Public Key**.
-6. Select **Continue**.
+2. Open **New private key** and select **Generate ED25519**.
+3. Select the generated key's **Edit** icon.
+4. Give it a recognizable name and select **Save changes**.
+5. Copy the complete **Public key**.
 
 Do not add a passphrase. Coolify must use the private key without an interactive prompt.
 
@@ -80,7 +79,7 @@ chmod 600 ~/.ssh/authorized_keys
 </Step>
 </Steps>
 
-You can also generate or import a private key from the **+ Add** menu beside **Private Key** in the server form. The matching public key must still be present in the server user's `~/.ssh/authorized_keys` file before validation.
+You can also generate or import a private key from the **New key** menu beside **Private key** in the server form. The matching public key must still be present in the server user's `~/.ssh/authorized_keys` file before validation.
 
 ---
 
@@ -89,11 +88,11 @@ You can also generate or import a private key from the **+ Add** menu beside **P
 <Steps>
 <Step>
 
-### Open the Manual server form
+### Open the server form
 
 1. Select **Servers** in the Coolify sidebar.
-2. Select **+ Add**.
-3. Select **Manual**.
+2. Select **New server**.
+3. Select **IP address or domain**.
 
 </Step>
 <Step>
@@ -104,12 +103,13 @@ You can also generate or import a private key from the **+ Add** menu beside **P
 | :--- | :--- |
 | **Name** | A name you will recognize, such as `production-server`. |
 | **Description** | Optional information about the server's purpose. |
-| **IP Address/Domain** | A reachable IP address or hostname. Do not include `http://` or `https://`. |
+| **IP address or domain** | A reachable IP address or hostname. Do not include `http://` or `https://`. |
 | **Port** | The SSH port, usually `22`. |
 | **User** | Enter `root` for this guide. |
-| **Private Key** | Select the key whose public key you authorized on the server. |
+| **Private key** | Select the key whose public key you authorized on the server. |
+| **Server role** | Select **Deployments and builds**, **Deployments only**, or **Builds only** according to the server's purpose. |
 
-Leave **Use it as a build server?** disabled for a server that will run applications, databases, or services.
+Expand **Advanced settings** to access **User**, **Port**, and **Server role**. Choose **Deployments and builds** for a server that builds and runs resources, or **Deployments only** to keep builds on other servers. Choose **Builds only** for a dedicated build server. See [Server roles](/core/infrastructure/servers/build-servers#server-roles).
 
 Select **Continue**. Coolify creates the server record and opens its **General** page.
 
@@ -118,7 +118,7 @@ Select **Continue**. Coolify creates the server record and opens its **General**
 
 ### Validate the server
 
-Select **Validate Server & Install Docker Engine**. Depending on the server state, the button may be labeled **Validate Server**.
+Select **Validate connection** to open the validation panel. After a successful validation, the action is **Revalidate connection**.
 
 During validation, Coolify:
 
@@ -151,7 +151,7 @@ If validation reports an SSH error:
 
 ## Set a wildcard domain
 
-After validation, you can set **Wildcard Domain** under **Configuration > General**.
+After validation, you can set **Wildcard Domain** under **General**.
 
 For example, `https://example.com` lets Coolify suggest a domain such as `https://<application-id>.example.com` for a new resource. Create a DNS record for `*.example.com` that points to this server before using the generated domains.
 

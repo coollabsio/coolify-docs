@@ -18,7 +18,7 @@ Coolify's built-in Axiom log drain sends opted-in resource logs to an existing A
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-Create an Axiom dataset and ingest-capable API token, save both values on the server's **Log Drains** page, enable the Axiom drain, then enable **Drain Logs** and restart each resource you want to forward.
+Create an Axiom dataset and ingest-capable API token, save both values on the server's **Log Drains** page, enable the Axiom drain, then configure **Log drain** as described in [Enable log draining for a resource](/core/observability/log-drains/overview#enable-log-draining-for-a-resource) and restart each resource you want to forward.
 
 </CoolCallout>
 
@@ -68,11 +68,11 @@ The built-in integration sends data to `api.axiom.co` on port `443`. This endpoi
     'Enable the drain',
   ]}
   list={[
-    <>Open <strong>Servers</strong>, select the server that runs the resources, then open <strong>Configuration &gt; Log Drains</strong>.</>,
-    <>In <strong>Axiom</strong>, leave <strong>Enabled</strong> off and paste the Axiom token into <strong>API Key</strong>.</>,
-    <>Enter the exact dataset name in <strong>Dataset Name</strong>.</>,
-    <>Select <strong>Save</strong> in the Axiom section.</>,
-    <>Turn on <strong>Enabled</strong>. Coolify starts the server's <code>coolify-log-drain</code> container.</>,
+    <>Open <strong>Servers</strong>, select the server that runs the resources, then open <strong>Log Drains</strong>.</>,
+    <>In <strong>Axiom</strong>, leave <strong>Status</strong> set to <strong>Disabled</strong> and paste the Axiom token into <strong>API key</strong>.</>,
+    <>Enter the exact dataset name in <strong>Dataset name</strong>.</>,
+    <>Select <strong>Save changes</strong> in the Axiom section.</>,
+    <>Set <strong>Status</strong> to <strong>Enabled</strong>. Coolify starts the server's <code>coolify-log-drain</code> container.</>,
   ]}
   endnote="Only one server-level log drain can be enabled at a time. Disable another active destination before enabling Axiom."
 />
@@ -144,17 +144,17 @@ Verification in Axiom is required because Coolify does not perform a provider co
 
 ## Update the dataset or token
 
-1. Turn off **Enabled** in the Axiom section.
-2. Update **API Key** or **Dataset Name**.
-3. Select **Save**.
-4. Turn on **Enabled** again.
+1. Set **Status** to **Disabled** in the Axiom section.
+2. Update **API key** or **Dataset name**.
+3. Select **Save changes**.
+4. Set **Status** to **Enabled** again.
 5. Generate a new resource log and confirm that it arrives in the expected dataset.
 
 ---
 
 ## Fix missing logs
 
-1. Confirm Axiom is the enabled server drain and the resource's **Drain Logs** setting is on.
+1. Confirm Axiom is the enabled server drain and the resource's **Log drain** setting is on.
 2. Confirm you restarted or redeployed the resource after enabling the setting.
 3. Confirm the token can ingest into the exact dataset name entered in Coolify.
 4. Confirm the server can reach `api.axiom.co:443`.

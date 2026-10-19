@@ -16,7 +16,7 @@ Coolify can read the Dockerfile from a Git repository or store one directly with
 | Path | Use it when | Dockerfile location |
 | :--- | :--- | :--- |
 | Git repository | The build needs application source or other repository files. | The path formed by **Base Directory** and **Dockerfile Location**. |
-| Dockerfile without Git | The instructions can build an image without checking out repository files. | Stored in Coolify under **Configuration > General > Dockerfile**. |
+| Dockerfile without Git | The instructions can build an image without checking out repository files. | Stored in Coolify under **General > Dockerfile**. |
 
 A Dockerfile entered without Git has no repository build context. Its `COPY` and `ADD` instructions cannot read application files from a repository.
 
@@ -51,7 +51,7 @@ For a public repository, paste its HTTPS URL and select **Check Repository**.
 
 ### Select Dockerfile
 
-Choose **Dockerfile** as the **Build Pack**.
+Choose **Dockerfile** in **Build pack** during creation. After creation, this choice is **Build strategy** under **General > Build pipeline**.
 
 <ZoomImage src="/docs/images/builds/packs/dockerfile/4.webp" alt="Dockerfile option in the Build Pack selector" />
 
@@ -125,7 +125,7 @@ Coolify uses the first `EXPOSE` instruction as the initial **Ports Exposes** val
 
 ### Configure the application
 
-Open **Configuration > General** to edit the stored **Dockerfile** or correct **Ports Exposes**.
+Open **General** to edit the stored **Dockerfile** or correct **Ports Exposes**.
 
 Add the required domain, runtime environment variables, storage, health check, and resource limits. These runtime settings are not added to the image.
 
@@ -150,11 +150,11 @@ This application has no Git source, so Git push events and pull-request previews
 
 Coolify can inject configured build variables as Docker build arguments.
 
-Disable **Configuration > Advanced > Inject Build Args to Dockerfile** when the Dockerfile declares and consumes every required `ARG` itself.
+Under **Advanced > Build**, set **Build arguments** to **Managed manually in Dockerfile** when the Dockerfile declares and consumes every required `ARG` itself.
 
-For Git-based Dockerfile applications, `SOURCE_COMMIT` is excluded from the build by default so commits with unchanged layers can reuse cache. Enable **Include Source Commit in Build** only when the image contents need the commit value.
+For Git-based Dockerfile applications, `SOURCE_COMMIT` is excluded from the build by default so commits with unchanged layers can reuse cache. Under **Advanced > Build**, set **Source commit availability** to **Available during build** only when the image contents need the commit value.
 
-Use **Use Docker Build Secrets** for sensitive build-time values when Docker BuildKit is available. Read [Environment variables](/applications/configuration/environment-variables#build-and-runtime-scope) before passing credentials to a build.
+Use **Build secrets > Docker BuildKit secrets** for sensitive build-time values when Docker BuildKit is available. Read [Environment variables](/applications/configuration/environment-variables#build-and-runtime-scope) before passing credentials to a build.
 
 ## Image health checks
 
@@ -167,7 +167,7 @@ HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
 
 The image must contain the command used by the check.
 
-Alternatively, configure the application under **Configuration > Healthcheck**. Read [Health checks](/applications/configuration/health-checks) for precedence and routing behavior.
+Alternatively, configure the application under **Healthcheck**. Read [Health checks](/applications/configuration/health-checks) for precedence and routing behavior.
 
 ## Deployment commands
 
@@ -189,7 +189,7 @@ A plain Node.js process uses one CPU core. Read [Node.js multi-core scaling](/kn
 
 If the build succeeds but the domain fails:
 
-1. inspect **Logs** for a process exit or bind error
+1. inspect **Runtime Logs** for a process exit or bind error
 2. confirm the process listens on `0.0.0.0`
 3. confirm **Ports Exposes** contains the internal listening port
 4. verify the health-check request inside **Terminal**

@@ -18,7 +18,7 @@ The deployment server must be able to resolve and reach the Git host.
 
 The manual provider webhooks in Coolify have provider-specific payload and signature handling for GitHub, GitLab, Bitbucket, and Gitea.
 
-For another provider, use its CI or workflow system to call **Deploy Webhook (auth required)** after the required checks pass:
+For another provider, use its CI or workflow system to call **Deploy webhook URL** after the required checks pass:
 
 ```bash
 curl --fail --request POST "$COOLIFY_WEBHOOK" \

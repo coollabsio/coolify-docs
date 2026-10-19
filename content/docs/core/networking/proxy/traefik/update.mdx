@@ -1,0 +1,57 @@
+---
+title: Update Traefik
+description: Review Traefik release notes, change the proxy image version in Coolify, and restart the proxy.
+---
+
+# Update Traefik
+
+When Coolify shows **Traefik patch update available** or **New Traefik minor version available**, update the proxy by changing its image version in the UI, saving the configuration, and restarting the proxy.
+
+## Check compatibility first
+
+Open the [Traefik releases](https://github.com/traefik/traefik/releases) and review the release notes between your current version and the version you want to use. Follow any linked migration guides to check whether configuration options have changed or been removed.
+
+Users with Coolify's default proxy configuration can usually update without additional configuration changes. If you have modified the default configuration, check your custom command flags, environment variables, routing rules, middleware, and dynamic files against the new version before updating. Major-version upgrades can require additional migration steps.
+
+Keep a copy of the current configuration and image version so you can restore them if needed. Restarting the proxy briefly interrupts traffic to resources routed through it.
+
+<Steps>
+<Step>
+
+### Open the proxy configuration
+
+Open **Servers**, select the server, then open **Proxy > Configuration**.
+
+</Step>
+<Step>
+
+### Change the image version
+
+In **Configuration file**, find `image` under `services.traefik` and replace its tag with the version you reviewed. For example:
+
+```yaml
+services:
+  traefik:
+    image: traefik:v3.7.14
+    # Keep the rest of your existing configuration.
+```
+
+The version above is an example. Use the release you selected and keep the rest of your configuration, applying any changes required by its release notes. Use an explicit version tag so future updates are deliberate.
+
+<Callout type="info" title="Make the change in Coolify">
+Edits made directly to `/data/coolify/proxy/docker-compose.yml` do not sync back into the UI once Coolify has a saved proxy configuration. A restart through Coolify can overwrite disk-only edits.
+</Callout>
+
+</Step>
+<Step>
+
+### Save and restart
+
+Select **Save changes**, then **Restart Proxy** to apply the new image version.
+
+Wait for the proxy to report that it is running. Check **Proxy > Logs** for startup or configuration errors, then open your application domains and verify HTTPS and any custom routing or middleware.
+
+If the new version fails, restore the previous image tag and configuration in the UI, save, and restart the proxy again.
+
+</Step>
+</Steps>

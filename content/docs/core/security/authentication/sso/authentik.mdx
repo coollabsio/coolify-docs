@@ -49,6 +49,14 @@ Configure the provider as a confidential authorization-code client:
 | **Authorization flow** | Select the flow your users should complete. |
 | **Signing key** | Use the signing key required by your Authentik policy. |
 
+For Authentik 2025.10 and later, linking an existing Coolify account requires the email scope to return `email_verified: true`. Under **Customization > Property Mappings**, add a scope mapping for `email` with this expression:
+
+```python
+return {"email": request.user.email, "email_verified": True}
+```
+
+Use it on the provider instead of the default email mapping. Only assert verification for users whose email addresses your organization trusts.
+
 Save the provider and application.
 
 Use Authentik policies, groups, or application bindings to restrict who may access the Coolify application.
@@ -67,7 +75,7 @@ The **Base URL** for Coolify is the Authentik instance origin, such as `https://
 
 ### Configure Authentik in Coolify
 
-Open **Settings > OAuth** and find **Authentik**.
+Open **Settings > Authentication** and find **Authentik**.
 
 | Coolify field | Authentik value |
 | :--- | :--- |

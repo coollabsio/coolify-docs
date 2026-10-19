@@ -44,14 +44,14 @@ Select the Docker network destination that ClickHouse should join.
 
 ### Review the generated configuration
 
-Coolify creates the resource and opens **Configuration > General**. Review the image, administrator username, generated password, native port, and connection URL. Keep the default private networking unless an external client requires access.
+Coolify creates the resource and opens **General**. Review the image, administrator username, generated password, native port, and connection URL. Keep the default private networking unless an external client requires access.
 
 </Step>
 <Step>
 
 ### Start ClickHouse
 
-Select **Start** and follow the startup output. Wait until ClickHouse is running and healthy, then copy the **Internal URL** into clients on the same destination network.
+Select **Start** and follow the startup output. Wait until ClickHouse is running and healthy, then copy the **Clickhouse URL (internal)** into clients on the same destination network.
 
 </Step>
 </Steps>
@@ -70,19 +70,19 @@ Select **Start** and follow the startup output. Wait until ClickHouse is running
 | SSL | Not available in the standalone database interface |
 
 
-Coolify's generated **Internal URL** uses the native protocol and port `9000`:
+Coolify's generated **Clickhouse URL (internal)** uses the native protocol and port `9000`:
 
 ```sh
 clickhouse://<username>:<password>@<database-container>:9000/<database>
 ```
 
-If an HTTP client or GUI needs the HTTP interface, map the container's `8123` port with **Ports Mappings**. When **Make it publicly available** is enabled, use the generated **Public URL** for the native protocol; configure an HTTP mapping separately when the client requires HTTP.
+If an HTTP client or GUI needs the HTTP interface, map the container's `8123` port with **Port mappings**. When **Public access > Access** is **Public through TCP proxy**, use the generated **Clickhouse URL (public)** for the native protocol; configure an HTTP mapping separately when the client requires HTTP.
 
 For example, map `8123:8123` and connect an HTTP client to `http://<server-ip>:8123` with the ClickHouse administrator username and password. Map `9000:9000` when a client uses the native TCP protocol, such as `clickhouse-client`.
 
 ## Configure ClickHouse
 
-Open **Configuration > General** to change the image, administrator credentials, **Ports Mappings**, public proxy, and supported custom Docker options. The current standalone ClickHouse form does not expose a database-name field; the generated URL uses the resource's configured database value, which defaults to `default`. Coolify creates a persistent volume at `/var/lib/clickhouse` when it creates the resource.
+Open **General** to change the image, administrator credentials, **Port mappings**, public proxy, and supported custom Docker options. The current standalone ClickHouse form does not expose a database-name field; the generated URL uses the resource's configured database value, which defaults to `default`. Coolify creates a persistent volume at `/var/lib/clickhouse` when it creates the resource.
 
 ClickHouse does not expose a custom configuration editor or SSL selector in the standalone database interface. Use a Docker Compose deployment when you need to manage a custom ClickHouse topology or configuration files directly.
 
@@ -100,7 +100,7 @@ The backup archive is created through ClickHouse's backup workflow. Test an arch
 
 ## Health checks
 
-Coolify's default health check runs `clickhouse-client` inside the container and executes a simple query. Configure the interval, timeout, retries, and start period under **Configuration > Healthcheck**, then restart ClickHouse after saving.
+Coolify's default health check runs `clickhouse-client` inside the container and executes a simple query. Configure the interval, timeout, retries, and start period under **Healthcheck**, then restart ClickHouse after saving.
 
 ## Official ClickHouse resources
 
@@ -108,3 +108,7 @@ Coolify's default health check runs `clickhouse-client` inside the container and
 - [ClickHouse source](https://github.com/ClickHouse/ClickHouse)
 - [ClickHouse Docker image](https://hub.docker.com/r/clickhouse/clickhouse-server)
 - [ClickHouse backup and restore](https://clickhouse.com/docs/operations/backup)
+
+## Existing data volumes with file mounts
+
+If an older ClickHouse resource with a file mount was affected by the data-volume issue, Coolify keeps its existing data and asks you to adopt it before the next start. Review the volume and take a backup before confirming; do not replace it with an empty volume.

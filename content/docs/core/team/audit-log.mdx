@@ -1,0 +1,20 @@
+---
+title: Audit Log
+description: Search team activity and review resource changes in Coolify's audit log.
+---
+
+# Team audit log
+
+Team administrators and owners can open **Team > Audit Log** to review activity from the UI, API, MCP, and webhooks. Search and filter events to find an actor, resource, or action.
+
+Events cover resource changes, deployments, backups, proxy controls, membership, API tokens, integrations, account security, and server, application, service, and instance settings. Each entry records actor, resource, and request context where available.
+
+## Review changes
+
+Select **View changes** to compare previous and new values for changed fields. Changes are encrypted at rest. Secrets, commands, and configuration content are excluded, and sensitive request metadata is redacted. The audit log is an activity record rather than a configuration backup.
+
+Events are pruned after 90 days. Export events through the API if your team needs a separate archive beyond that window.
+
+## API access
+
+Use `GET /audit-events` with a token owned by a team administrator or owner. Actor email, token context, metadata, changes, IP address, and user agent are returned only with `read:sensitive` or `root`. See the [API reference](/api) for filters and pagination and [API permissions](/api/permissions) for token abilities.

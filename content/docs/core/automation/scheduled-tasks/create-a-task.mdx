@@ -27,7 +27,7 @@ If the command changes or deletes data, test it inside the intended container be
 
 ### Open Scheduled Tasks
 
-Open the application or service, select **Configuration**, then select **Scheduled Tasks**.
+Open the application or service, select **Scheduled Tasks** in the resource sidebar.
 
 </Step>
 <Step>
@@ -79,7 +79,7 @@ Choose a value longer than the task's normal runtime, but short enough to stop a
 
 ### Select the container
 
-For an application with one container, you can leave **Container name** empty. If the application has multiple containers, select or enter the container that contains the command.
+For an application with one container, you can leave **Container** empty. If the application has multiple containers, select or enter the container that contains the command.
 
 For a service, select the service component. If you enter it manually later, use the component name from the Docker Compose definition, such as `mysql`, without Coolify's generated resource suffix.
 
@@ -88,7 +88,7 @@ For a service, select the service component. If you enter it manually later, use
 
 ### Save the task
 
-Click **Save**. Coolify creates the task as enabled and adds it to the **Scheduled Tasks** list.
+Click **Add task**. Coolify creates the task as enabled and adds it to the **Scheduled Tasks** list.
 
 </Step>
 </Steps>
@@ -97,7 +97,7 @@ Click **Save**. Coolify creates the task as enabled and adds it to the **Schedul
 
 ## Verify the task
 
-Open the new task. If the resource is running, click **Execute Now**.
+Open the new task. If the resource is running, click **Execute now**.
 
 Under **Recent executions**, open the new execution and confirm that:
 
@@ -119,12 +119,12 @@ Use a valid five-field expression or one of Coolify's named schedules. The named
 </Accordion>
 <Accordion title="The task reports that more than one container exists">
 
-Open the task and set **Container name** to the application container or service component that should run the command.
+Open the task and set **Container** to the application container or service component that should run the command.
 
 </Accordion>
 <Accordion title="The task reports that no containers are running">
 
-Start the application or service, confirm that its target container is running, then click **Execute Now** again.
+Start the application or service, confirm that its target container is running, then click **Execute now** again.
 
 </Accordion>
 </Accordions>

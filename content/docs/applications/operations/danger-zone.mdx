@@ -7,7 +7,7 @@ description: Permanently delete an application and choose which related Docker r
 
 Deleting an application removes it from Coolify, stops its production and preview containers, and removes its environment variables. The deletion cannot be undone.
 
-Open the application, then select **Configuration > Danger Zone**.
+Open the application, then select **Danger Zone**.
 
 ## Before deletion
 
@@ -76,3 +76,5 @@ Coolify does not manage DNS records at your DNS provider. Remove or update obsol
 Coolify cannot restore a deleted application record from the Danger Zone. Create a new application, configure its source and environment variables, attach new or restored storage, and deploy it.
 
 Use [Persistent storage backups](/core/persistent-storage/storage-mounts/backups) to restore data from a backup created before deletion.
+
+When the server is unreachable, resource deletion warns that Docker resources remain on the server. The team is notified afterwards. Clean those resources up when server access returns.

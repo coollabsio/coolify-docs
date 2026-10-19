@@ -49,7 +49,7 @@ For a public repository, paste its HTTPS URL and select **Check Repository**.
 
 ### Select Static
 
-Select **Static** as the **Build Pack**.
+Select **Static** in **Build pack** during creation. After creation, this choice is **Build strategy** under **General > Build pipeline**.
 
 <ZoomImage src="/docs/images/builds/packs/static/4.webp" alt="Static option in the Build Pack selector" />
 
@@ -80,7 +80,7 @@ Coolify uses Nginx to serve the static files.
 
 ### Configure the domain
 
-Enter the domain where the site should be available. Separate multiple domains with commas.
+Open **Domains**, select **Add domain**, and enter the protocol, hostname, and any target port or path. Add each additional hostname separately. See [Domains](/core/networking/domains).
 
 <ZoomImage src="/docs/images/builds/packs/static/7.webp" alt="Domains field for a Static application" />
 
@@ -102,7 +102,7 @@ Open the domain and verify a document, asset, and client-side route used by the 
 
 Coolify provides a default Nginx configuration for the static image.
 
-Open **Configuration > General**, generate the configuration, and edit it only when the site needs behavior such as single-page application fallback, custom headers, or caching rules.
+Open **General**, generate the configuration, and edit it only when the site needs behavior such as single-page application fallback, custom headers, or caching rules.
 
 <ZoomImage src="/docs/images/builds/packs/static/9.webp" alt="Generate button and Nginx configuration editor for a Static application" />
 
@@ -110,6 +110,6 @@ Save the change and redeploy the application. Coolify copies the Nginx configura
 
 <Callout type="info" title="Building a frontend in Coolify">
 
-If the repository contains source files rather than final assets, [deploy with Nixpacks](/applications/builds/nixpacks/deploy) or use [Railpack](/applications/builds/railpack), enable **Is it a static site?**, and set the build output as **Publish Directory**.
+If the repository contains source files rather than final assets, [deploy with Nixpacks](/applications/builds/nixpacks/deploy) or use [Railpack](/applications/builds/railpack), choose **Static** in **Site type**, and set the build output as **Publish Directory**.
 
 </Callout>

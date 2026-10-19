@@ -40,7 +40,7 @@ Select the repository and branch.
 
 ### Select Nixpacks
 
-Choose **Nixpacks** as the **Build Pack**.
+Choose **Nixpacks** in **Build pack** during creation. After creation, this choice is **Build strategy** under **General > Build pipeline**.
 
 <ZoomImage src="/docs/images/builds/packs/nixpacks/4.webp" alt="Nixpacks option in the Build Pack selector" />
 
@@ -51,9 +51,11 @@ Set **Base Directory** to the directory Nixpacks should inspect. Use `/` for the
 
 ### Choose the application type
 
+After creation, use **General > Build pipeline > Site type** to choose **Dynamic**, **Static**, or **SPA (single-page application)**.
+
 For static output:
 
-- enable **Is it a static site?**
+- choose **Static site** in **Output type** during creation
 - enter **Publish Directory**, such as `/dist`
 - keep the generated Nginx port `80`
 
@@ -61,7 +63,7 @@ For static output:
 
 For a server application:
 
-- leave **Is it a static site?** disabled
+- choose **Web application** in **Output type** during creation
 - enter the internal port where the process listens
 
 <ZoomImage src="/docs/images/builds/packs/nixpacks/8.webp" alt="Server application settings for a Nixpacks build" />
@@ -71,9 +73,9 @@ For a server application:
 
 ### Add environment variables
 
-Continue to the application and open **Configuration > Environment Variables**.
+Continue to the application and open **Environment Variables**.
 
-Add the values required by the application. Enable **Build Variable** for values that the build command must read.
+Add the values required by the application. Choose **Available during build** in **Build time** for values that the build command must read.
 
 <ZoomImage src="/docs/images/builds/packs/nixpacks/9.webp" alt="Environment Variables page for a Nixpacks application" />
 
@@ -82,7 +84,7 @@ Add the values required by the application. Enable **Build Variable** for values
 
 ### Review the detected commands
 
-Open **Configuration > General** and review the detected **Install Command**, **Build Command**, and **Start Command**.
+Open **General** and review the detected **Install Command**, **Build Command**, and **Start Command**.
 
 Override a command only when detection is incorrect or the codebase requires a custom command.
 
@@ -108,7 +110,7 @@ Coolify uses Nginx to serve a static Nixpacks build.
 
 <ZoomImage src="/docs/images/builds/packs/nixpacks/6.webp" alt="Nginx selected for a static Nixpacks application" />
 
-Use **Configuration > General > Nginx Configuration** only when the site needs behavior such as single-page application fallback, custom headers, or caching rules.
+Use **General > Build pipeline > Custom Nginx configuration** only when the site needs behavior such as single-page application fallback, custom headers, or caching rules.
 
 <ZoomImage src="/docs/images/builds/packs/nixpacks/7.webp" alt="Generate button and Nginx configuration editor for a static Nixpacks application" />
 

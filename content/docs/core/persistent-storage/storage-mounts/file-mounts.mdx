@@ -64,7 +64,7 @@ Verify that the container can read the file and that the application loads the e
 Coolify does not create, edit, load, change permissions on, or delete the source file used by a Host File Mount. If the source file is missing or unreadable, correct it directly on the deployment server.
 </Callout>
 
-If the source path does not exist, Docker can create a directory where the file should be. A deployment can then fail with `not a directory: unknown`. Remove the incorrectly created directory, create the expected file at the same path, and redeploy the resource.
+Coolify writes managed content files before containers start. If Docker previously created a directory at the file path, Coolify preserves the configured content when preparing the file. For an unmanaged host file, verify that the source exists as a file before deployment.
 
 ## Define file mounts in Docker Compose
 
@@ -113,3 +113,7 @@ Deleting a managed **File Mount** can also delete its source file from the deplo
 4. Redeploy after removing the mount so the next container no longer expects it.
 
 Deleting a **Host File Mount** removes only the mount configuration. Coolify leaves the source file on the deployment server. Redeploy the resource so its next container starts without the mount.
+
+## Relative paths and permissions
+
+Relative file and directory sources resolve inside the resource directory rather than the SSH user’s home directory. File-storage paths must stay within the permitted resource directory; Coolify does not write through symbolic links there or delete unrelated host paths. API requests for mounts outside the resource directory require `deploy` permission.

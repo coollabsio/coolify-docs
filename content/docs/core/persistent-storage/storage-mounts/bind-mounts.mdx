@@ -22,14 +22,14 @@ Use a [volume mount](/core/persistent-storage/storage-mounts/volume-mounts) when
 
 ## Bind mount options
 
-Coolify provides two ways to create a directory bind mount for standard applications and standalone databases:
+Coolify displays existing bind-backed volume records and provides directory mounts for standard applications and standalone databases:
 
 | Workflow | Fields | <span className="whitespace-nowrap">Dashboard location</span> | Behavior |
 | :--- | :--- | :--- | :--- |
-| **Volume Mount** with a **Source Path** | **Name**, **Source Path**, **Destination Path** | **Volumes** | Uses the source directory instead of creating a named Docker volume |
+| Existing **Volume Mount** with a **Source Path** | **Name**, **Source Path**, **Destination Path** | **Volumes** | Keeps the existing source directory; Source Path is read-only |
 | **Directory Mount** | **Source Directory**, **Destination Directory** | **Directories** | Creates the source directory when needed and lets Coolify manage the directory record separately |
 
-Both workflows produce a Docker bind mount. Use **Volume Mount** with a source path when you want the mapping grouped with the resource's other volumes. Use **Directory Mount** when you want it listed with Coolify-managed files and directories.
+Use **Directory Mount** for a new directory bind mount. New **Volume Mounts** create named Docker volumes and do not accept a host source path.
 
 ## Add a bind mount
 
@@ -39,11 +39,10 @@ This example maps `/srv/my-app/uploads` on the deployment server to `/app/upload
 2. Set its owner and permissions for the user that the application image runs as.
 3. Open the application or database in Coolify.
 4. Select **Configuration** > **Persistent Storage**.
-5. Select **Add** > **Volume Mount**.
-6. Enter a **Name**, such as `uploads`.
-7. Enter `/srv/my-app/uploads` as the **Source Path**.
-8. Enter `/app/uploads` as the **Destination Path** only if the application writes uploads there.
-9. Select **Add**, then redeploy the resource.
+5. Select **Add** > **Directory Mount**.
+6. Enter `/srv/my-app/uploads` as the **Source Directory**.
+7. Enter `/app/uploads` as the **Destination Directory** only if the application writes uploads there.
+8. Select **Add**, then redeploy the resource.
 
 Upload or create a test file through the application. Confirm that it appears under `/srv/my-app/uploads` on the deployment server. Redeploy once more and confirm that the application can still read it.
 
@@ -81,7 +80,7 @@ For repository-relative directories, read the [Docker Compose storage guide](/ap
 
 ## Back up and move bind-mounted data
 
-For an application, Coolify can schedule file-level archives for both bind mount workflows on this page: a **Volume Mount** with a **Source Path** and a **Directory Mount**. Read [Storage mount backups](/core/persistent-storage/storage-mounts/backups) to configure local archives, an optional S3 copy, and retention.
+For an application, Coolify can schedule file-level archives for both bind mount workflows on this page: a Existing **Volume Mount** with a **Source Path** and a **Directory Mount**. Read [Storage mount backups](/core/persistent-storage/storage-mounts/backups) to configure local archives, an optional S3 copy, and retention.
 
 For a manual backup or server move, copy the source directory on the deployment server. The container destination is only another view of those same files.
 

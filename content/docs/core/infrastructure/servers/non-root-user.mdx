@@ -97,7 +97,7 @@ passwd -S cooluser
 
 1. Select **Keys & Tokens** in the sidebar.
 2. Select **Private Keys**.
-3. Select **+ Add**.
+3. Open **New private key**.
 
 </Step>
 <Step>
@@ -106,10 +106,10 @@ passwd -S cooluser
 
 <ZoomImage src="/docs/images/core/infrastructure/servers/private-keys/new-private-key-form.webp" alt="New Private Key form in Coolify" />
 
-1. Select **Generate new ED25519 SSH Key**.
-2. Enter a name such as `cooluser-key`.
-3. Copy the complete value shown in **Public Key**.
-4. Select **Continue** to save the key.
+1. Select **Generate ED25519**. Coolify generates and saves the key.
+2. Select its **Edit** icon and enter a name such as `cooluser-key`.
+3. Copy the complete **Public key**.
+4. Select **Save changes**.
 
 Do not add a passphrase to the private key. Coolify must use it without an interactive prompt.
 
@@ -194,3 +194,5 @@ If validation fails:
 
 </Step>
 </Steps>
+
+Coolify supports proxy operations, database starts/backups, deployments, log drains, and volume clones when the SSH user cannot directly write to `/data/coolify`. Keep the documented sudo access available rather than making resource data broadly writable.

@@ -39,7 +39,7 @@ Save the **Access Key ID**, **Secret Access Key**, and **S3 endpoint**. You need
 
 ### Add Cloudflare R2 to Coolify
 
-Open **S3 Storages** in the Coolify sidebar, select **Add**, and enter the bucket name, endpoint, and credentials from the previous steps. Leave **Region** at its default value for R2.
+Open **S3 Storage** in the Coolify sidebar, select **New storage**, and enter the bucket name, endpoint, and credentials from the previous steps. Set **Protocol** to `https` and **Host** to the hostname from the R2 S3 endpoint, without `https://`. Leave **Port** and **Path** empty for the standard endpoint. Leave **Region** at its default value for R2.
 
 Select **Validate Connection & Continue**. Coolify verifies the connection by listing objects in the bucket.
 

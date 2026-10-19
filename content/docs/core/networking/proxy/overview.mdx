@@ -7,9 +7,9 @@ import { ArrowsRight, Layers, Route, ShieldSecurity2 } from 'reicon-react';
 
 # Proxy overview
 
-Coolify runs one `coolify-proxy` container on each server connected to Coolify. The proxy accepts public HTTP and HTTPS requests, matches each request to a configured domain, and forwards it to the correct resource container over a Docker network.
+With an integrated proxy selected, Coolify runs a `coolify-proxy` container on each server that hosts resources. The proxy accepts public HTTP and HTTPS requests, matches each request to a configured domain, and forwards it to the correct resource container over a Docker network.
 
-[Traefik](https://traefik.io/) is the default proxy in Coolify. You can select [Caddy](https://caddyserver.com/) instead, or select **Custom (None)** and operate your own proxy without Coolify-managed routing.
+[Traefik](https://traefik.io/) is the default proxy in Coolify. You can select [Caddy](https://caddyserver.com/) instead, or select [Custom (None)](/core/networking/proxy/custom/overview) and operate your own proxy without Coolify-managed routing.
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
@@ -86,7 +86,7 @@ The running proxy must be stopped before Coolify allows you to switch it. Plan a
 
 Confirm that applications and services have labels for the target proxy.
 
-For an application with **Readonly labels** enabled, open its **General** page and use **Reset Labels to Defaults** if its generated labels are outdated. For a Docker Compose application or service, save the Compose configuration so Coolify can generate the current proxy labels.
+For an application with **Label management** set to **Managed by Coolify (auto-generated)**, open its **General** page and use **Reset to defaults** if its generated labels are outdated. For a Docker Compose application or service, save the Compose configuration so Coolify can generate the current proxy labels.
 
 </Step>
 <Step>
@@ -129,6 +129,8 @@ If a route fails, inspect **Servers > your server > Proxy > Logs** and the resou
 
 ## Configure the selected proxy
 
+For an external proxy, read [Custom proxy](/core/networking/proxy/custom/overview) for setup, feature trade-offs, and workarounds. [ShadowArcanist's nginx case study](/core/networking/proxy/custom/nginx) shows the decisions and issues involved in one migration.
+
 <CoolNextSteps
   cards={[
     {
@@ -151,3 +153,9 @@ If a route fails, inspect **Servers > your server > Proxy > Logs** and the resou
     },
   ]}
 />
+
+## Network connections and configuration changes
+
+Coolify connects the proxy to a destination network when the destination is created, a resource is deployed, or the proxy starts or restarts. It no longer reconnects all networks on hourly checks or server validation. If a required network connection is missing, redeploy the resource or restart the proxy.
+
+Proxy configurations are validated before saving. New configurations use Traefik v3.7 or caddy-docker-proxy 2.13; existing custom configurations should be reviewed before changing their image version.

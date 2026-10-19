@@ -44,14 +44,14 @@ Select the Docker network destination that MariaDB should join.
 
 ### Review the generated configuration
 
-Coolify creates the resource and opens **Configuration > General**. Review the image, root password, normal username and password, initial database, and connection URLs. Keep the default private networking unless an external client requires access.
+Coolify creates the resource and opens **General**. Review the image, root password, normal username and password, initial database, and connection URLs. Keep the default private networking unless an external client requires access.
 
 </Step>
 <Step>
 
 ### Start MariaDB
 
-Select **Start** and follow the startup output. Wait until MariaDB is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+Select **Start** and follow the startup output. Wait until MariaDB is running and healthy, then copy the **MariaDB URL (internal)** into applications on the same destination network.
 
 </Step>
 </Steps>
@@ -66,28 +66,28 @@ Select **Start** and follow the startup output. Wait until MariaDB is running an
 | Initial database | `default` |
 | Data mount | `/var/lib/mysql` |
 | Scheduled backups | Supported |
-| SSL | Supported with **Enable SSL** |
+| SSL | Supported with **SSL** |
 
-The root password and normal-user password are generated when the resource is created. If you change credentials or the initial database in MariaDB, update the matching values in **Configuration > General** so connection URLs and automated backups continue to work.
+The root password and normal-user password are generated when the resource is created. If you change credentials or the initial database in MariaDB, update the matching values in **General** so connection URLs and automated backups continue to work.
 
 
 ## Connect to MariaDB
 
-MariaDB uses a MySQL-compatible connection URL. Use the **Internal URL** for an application on the same Coolify destination network:
+MariaDB uses a MySQL-compatible connection URL. Use the **MariaDB URL (internal)** for an application on the same Coolify destination network:
 
 ```sh
 mysql://<user>:<password>@<database-container>:3306/<database>
 ```
 
-Coolify shows a **Public URL** only after **Make it publicly available** and **Public Port** are configured. Keep the database private unless an external client requires direct access.
+Coolify shows a **MariaDB URL (public)** only after **Public access > Access > Public through TCP proxy** and **Public port** are configured. Keep the database private unless an external client requires direct access.
 
 ## Configure MariaDB
 
-Open **Configuration > General** to change the image, credentials, **Ports Mappings**, public proxy, custom Docker options, and **Custom Mariadb Configuration**. Restart the resource after changing generated container configuration.
+Open **General** to change the image, credentials, **Port mappings**, public proxy, custom Docker options, and **Custom MariaDB configuration**. Restart the resource after changing generated container configuration.
 
 ## Back up and restore MariaDB
 
-Coolify uses `mariadb-dump` for scheduled backups. Selected databases are dumped directly. **Backup All Databases** passes `--compress` to `mariadb-dump`, but Coolify does not pipe the output through `gzip`; do not assume the resulting file is a gzip stream. Multiple selected database names are comma-separated.
+Coolify uses `mariadb-dump` for scheduled backups. Selected databases are dumped directly. **Database selection > All databases** passes `--compress` to `mariadb-dump`, but Coolify does not pipe the output through `gzip`; do not assume the resulting file is a gzip stream. For **Specific databases**, type each name and press Enter in **Databases to back up**.
 
 Use [Database backups](/databases/backups) to configure schedules, retention, and S3 storage. The built-in **Import Backup** form accepts MariaDB backups while the database is running; follow [Restore a database](/databases/restore) for the import workflow.
 
@@ -99,9 +99,9 @@ Stop application writes and verify the target resource before confirming an impo
 
 ## SSL and health checks
 
-MariaDB exposes **Enable SSL** without an SSL mode selector. Coolify configures the database TLS listener; configure the MariaDB client with its SSL options when connecting. See [Database SSL](/databases/ssl) for the CA certificate workflow.
+MariaDB exposes **SSL** without an SSL mode selector. Coolify configures the database TLS listener; configure the MariaDB client with its SSL options when connecting. See [Database SSL](/databases/ssl) for the CA certificate workflow.
 
-Configure the Docker health check under **Configuration > Healthcheck** and restart MariaDB after saving.
+Configure the Docker health check under **Healthcheck** and restart MariaDB after saving.
 
 ## Official MariaDB resources
 

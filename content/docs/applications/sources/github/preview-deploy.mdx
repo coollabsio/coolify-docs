@@ -82,7 +82,7 @@ Follow [Set up a GitHub App](/applications/sources/github/app) first.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/github-app/1.webp" alt="Preview Deployments permission during automated GitHub App installation" />
 
-Enable **Preview Deployments** before selecting **Register Now**. Coolify requests read-and-write pull-request access and subscribes the app to pull-request events.
+Set **Preview deployment access** to **Read and update pull requests** before selecting **Register with GitHub**. Coolify requests read-and-write pull-request access and subscribes the app to pull-request events.
 
 </Tab>
 <Tab value="Manual installation">
@@ -116,9 +116,9 @@ When creating the app on GitHub:
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/webhook/1.webp" alt="GitHub manual webhook URL and secret in Coolify" />
 
-1. Open **Configuration > Webhooks**.
-2. Enter and save a random **GitHub Webhook Secret**.
-3. Copy the GitHub URL under **Manual Git Webhooks**.
+1. Open **Webhooks**.
+2. Enter a random **Webhook secret** in the **GitHub** section and select **Save changes**.
+3. Copy the GitHub URL under **Manual Git webhooks**.
 
 <Callout type="warning" title="Protect the webhook secret">
 

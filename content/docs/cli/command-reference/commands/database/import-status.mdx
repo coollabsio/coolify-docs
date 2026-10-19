@@ -1,0 +1,29 @@
+---
+title: "Import status"
+description: "Show the status of an import"
+---
+
+# Import status
+
+Show the status of an import
+
+## Usage
+
+```sh
+coolify database import status <database_uuid> <activity_id>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--poll-interval` | `duration` | No | `3s` | Status polling interval when --wait is set |
+| `--wait` | `boolean` | No | `false` | Wait until the import finishes; exits non-zero if it fails |
+
+## Get current help
+
+```sh
+coolify database import status --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

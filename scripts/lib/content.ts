@@ -120,6 +120,43 @@ export async function getDocEntries(): Promise<DocEntry[]> {
   return docs.sort((left, right) => left.routePath.localeCompare(right.routePath));
 }
 
+export async function getOpenApiEntries(): Promise<DocEntry[]> {
+  const { loader } = await import('fumadocs-core/source');
+  const { openapiSource } = await import('fumadocs-openapi/server');
+  const { openapi } = await import('../../src/lib/config/openapi');
+  const apiSource = loader(
+    await openapiSource(openapi, {
+      baseDir: 'api/endpoints',
+      groupBy: 'tag',
+    }),
+    { baseUrl: site.docsBasePath },
+  );
+  const schemaStat = await stat(resolve(docsDir, '../../config/openapi.json'));
+
+  return apiSource.getPages().map((page) => ({
+    filePath: page.path,
+    routeSegments: page.slugs,
+    routePath: page.url,
+    ogOutputPath: `og/${page.slugs.join('/')}.png`,
+    ogImagePath: `${site.docsBasePath}/og/${page.slugs.join('/')}.png`,
+    title: page.data.title ?? 'API Reference',
+    description: page.data.description ?? site.description,
+    lastModified: schemaStat.mtime.toISOString(),
+  }));
+}
+
+export async function getAllDocEntries(): Promise<DocEntry[]> {
+  const [docs, apiDocs] = await Promise.all([getDocEntries(), getOpenApiEntries()]);
+  const seen = new Set<string>();
+
+  return [...docs, ...apiDocs].filter((doc) => {
+    const key = doc.routePath.replace(/\/$/, '');
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).sort((left, right) => left.routePath.localeCompare(right.routePath));
+}
+
 export async function getDocSourceFiles() {
   const files = await walk(docsDir);
   const pages: DocPageSourceFile[] = [];

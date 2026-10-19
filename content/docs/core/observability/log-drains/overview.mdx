@@ -19,7 +19,7 @@ Coolify log drains forward workload container output to an external logging dest
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-Enable Axiom, New Relic, or a custom Fluent Bit configuration on the server. Then turn on **Drain Logs** for each application, database, or service component and restart or redeploy it.
+Enable Axiom, New Relic, or a custom Fluent Bit configuration on the server. Then turn on **Log drain** for each application, database, or service component and restart or redeploy it.
 
 </CoolCallout>
 
@@ -90,9 +90,9 @@ A server can have only one Coolify-managed log drain enabled at a time. Follow t
 ## Configure the server
 
 1. Open **Servers** and select the validated server that runs the resources.
-2. Open **Configuration > Log Drains**.
-3. Enter and save the settings for one destination while **Enabled** is off.
-4. Turn on **Enabled** to start `coolify-log-drain`.
+2. Open **Log Drains**.
+3. Enter and save the settings for one destination while **Status** is **Disabled**.
+4. Set **Status** to **Enabled** to start `coolify-log-drain`.
 
 <CoolCallout type="info" title="Verify delivery in the logging provider">
 
@@ -104,11 +104,11 @@ Coolify checks the required field formats but does not validate provider authent
 
 ## Enable log draining for a resource
 
-The server drain must be enabled first. Otherwise, Coolify turns the resource's **Drain Logs** setting off again.
+The server drain must be enabled first. Otherwise, Coolify turns the resource's **Log drain** setting off again.
 
 <CoolCallout type="warning" icon={Warning22} title="Restart the resource after changing Drain Logs">
 
-Coolify applies the Docker logging driver when it creates the resource container. Restart or redeploy the resource after turning **Drain Logs** on or off.
+Coolify applies the Docker logging driver when it creates the resource container. Restart or redeploy the resource after turning **Log drain** on or off.
 
 </CoolCallout>
 
@@ -120,14 +120,14 @@ Coolify applies the Docker logging driver when it creates the resource container
 
 ### Open the application
 
-Open the application, then select **Configuration > Advanced**. This also applies to Docker Compose applications.
+Open the application, then select **Advanced**. This also applies to Docker Compose applications.
 
 </Step>
 <Step>
 
 ### Enable Drain Logs
 
-Under **Logs**, turn on **Drain Logs**.
+Under **Logs**, set **Log drain** to **Send logs to the log drain endpoint**.
 
 </Step>
 <Step>
@@ -148,14 +148,14 @@ Restart or redeploy the application.
 
 ### Open the database
 
-Open the standalone database, then select **Configuration > General**.
+Open the standalone database, then select **General**.
 
 </Step>
 <Step>
 
 ### Enable Drain Logs
 
-Under **Advanced**, turn on **Drain Logs**.
+Under **Log delivery**, set **Log drain** to **Forward logs to the server drain**.
 
 </Step>
 <Step>
@@ -176,14 +176,14 @@ Restart the database.
 
 ### Open the component
 
-Open the application or database component inside the one-click service.
+Open the application or database component inside the one-click service and find **Advanced**.
 
 </Step>
 <Step>
 
 ### Enable Drain Logs
 
-Under **Advanced**, turn on **Drain Logs**.
+Set **Log drain** to **Send logs to drain**.
 
 </Step>
 <Step>
@@ -219,4 +219,4 @@ The built-in Axiom and New Relic destinations flush every five seconds. A custom
 
 - A server can use only one Coolify-managed log drain at a time.
 - Retention, queries, dashboards, and log-based alerts are managed by the external provider.
-- Disabling the server drain stops forwarding but does not clear the saved **Drain Logs** settings on resources.
+- Disabling the server drain stops forwarding but does not clear the saved **Log drain** settings on resources.

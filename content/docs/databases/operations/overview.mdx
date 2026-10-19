@@ -13,9 +13,9 @@ After a database is deployed, Coolify provides separate views for configuration,
 
 | Page | Use it to |
 | :--- | :--- |
-| **Configuration** | Change the image, credentials, networking, storage, health check, environment variables, and resource limits. |
+| **General** | Change the image, credentials, engine settings, and networking. Storage, health checks, environment variables, and resource limits have separate sidebar pages. |
 | **Backups** | Schedule and inspect engine-specific backups for PostgreSQL, MySQL, MariaDB, MongoDB, and ClickHouse. |
-| **Logs** | Read output from the database container. |
+| **Runtime Logs** | Read output from the database container. |
 | **Terminal** | Run a command inside the running database container when your team and server allow terminal access. |
 | **Metrics** | View CPU and memory usage when Sentinel & Metrics is enabled on the server and the container is running. |
 | **Resource Operations** | Clone the database to another server or destination, or move it to another project or environment. |
@@ -71,3 +71,15 @@ Keep at least one verified backup outside the database server. For Redis, Dragon
     },
   ]}
 />
+
+## Resource action buttons
+
+The primary resource action is a one-click button. Use the adjacent dropdown for secondary actions. Confirm destructive actions in the Coolify modal and review the listed effects before continuing.
+
+## Follow a running operation
+
+Use **Deploying… View log** to reopen a running deployment or startup log. Selecting Deploy, Start, or Restart while an operation runs reopens its log. The running-deployments indicator appears in the sidebar, in the top bar on mobile, and on the dashboard.
+
+The container log viewer separates **Time**, **Type**, and **Message**. Expand a row to view pretty-printed JSON. If containers cannot be loaded, read the displayed error instead of treating it as proof that none are running.
+
+Viewing container logs requires permission to update the resource. API log requests require `read:sensitive` or `root`.

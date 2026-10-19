@@ -1,0 +1,20 @@
+---
+title: TLS Certificates
+description: Manage Traefik ACME certificates and restore backups of acme.json.
+---
+
+# Traefik TLS certificates
+
+Open **Servers > [server] > Proxy > TLS Certificates** to view certificates stored in Traefik's `acme.json`. This page manages Traefik ACME storage; for certificates you provide yourself, use [Custom SSL certificates](/core/networking/proxy/traefik/custom-ssl-certs).
+
+## Delete a certificate
+
+Review the domains covered by a certificate before deleting it. Deleting its entry removes it from local ACME storage; it does not revoke the certificate at the certificate authority.
+
+After a change, Coolify indicates that the proxy needs a restart. Restart the proxy to apply the updated storage. Traefik may need to obtain a replacement certificate for domains that still require one.
+
+## Restore ACME storage
+
+Coolify backs up `acme.json` before every change and retains the last 10 backups. On the same page, choose a backup to restore or delete.
+
+Restoring a backup restores the ACME storage file, which can affect several certificates. Review the backup before confirming and restart the proxy when Coolify indicates it is required.

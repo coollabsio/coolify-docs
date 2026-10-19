@@ -8,12 +8,12 @@ description: Fix common Coolify MCP connection, authentication, permission, and 
 <Accordions type="multiple">
 <Accordion title="The MCP endpoint returns 404">
 
-Enable **MCP server** in **Settings > Configuration > Advanced**. The instance endpoint returns `404` while this setting is disabled.
+Set **MCP server** to **Enabled** in **Settings > Advanced > API and MCP**, then select **Save changes**. The instance endpoint returns `404` while this setting is disabled.
 
 </Accordion>
 <Accordion title="The MCP endpoint returns 403">
 
-Check the team settings for the token's team. The team must have **MCP server** set to **Enabled for this team**.
+Open **Team > General** for the token's team. Set **MCP server** to **Enabled for this team**, then select **Save changes**.
 
 </Accordion>
 <Accordion title="The client returns 401 or authentication fails">

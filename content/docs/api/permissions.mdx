@@ -51,3 +51,13 @@ Add `read:sensitive` only when the integration needs supported sensitive fields.
 - Use `root` only when the integration must call endpoints across permission levels or manage instance-wide API functions.
 
 Follow [API Tokens](/core/security/credentials/api-tokens) to create, store, rotate, and revoke credentials. Each endpoint under **Endpoints** identifies the permission required for that operation.
+
+## Operation-specific checks
+
+- Container log endpoints and scheduled-task output require `read:sensitive` or `root`, rather than ordinary `read`.
+- Saved proxy configuration and server validation logs are returned only with `read:sensitive` or `root`.
+- Database import uploads and starts require `write`; server-path imports also require `deploy`.
+- Creating a resource with `instant_deploy` requires `deploy` in addition to its creation permission.
+- API mounts outside the resource directory require `deploy`.
+
+Only recognized token permissions are accepted. Resource and credential ownership is checked against the resource's team, even if the user switches teams in another browser tab.

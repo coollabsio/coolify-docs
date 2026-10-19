@@ -172,73 +172,82 @@ There’s no need to create a separate tunnel for each resources, simply create 
 
 <Tab value="Tunnel Coolify">
 
-Tunneling Coolify itself to make it accessible over a domain requires a bit more manual configuration. Here's how you can set it up:
+You can expose the Coolify dashboard, realtime updates, and terminal connections through a single tunnel route to the Coolify proxy.
 
-### 1. Create routes in Cloudflare Tunnel [!toc]
+Make sure the Coolify proxy is running on the server where your Coolify instance is installed. The tunnel connects to this proxy on port `80`.
 
-Follow [Step 5](/integrations/networking/cloudflare/tunnels/single-resource#5-configure-tunnel-routes) to create routes for each service Coolify exposes. Use the following mapping:
+### 1. Set the Coolify instance URL [!toc]
 
-<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/15.webp" />
+In Coolify, open **Settings > General** and set [URL](/core/instance-management/instance-settings#url) to your dashboard domain, for example `https://coolify.shadowarcanist.com`.
 
-| Domain / Path                              | Service            | Purpose              |
-|--------------------------------------------|-------------------|----------------------|
-| `coolify.shadowarcanist.com/terminal/ws`     | `http://localhost:6002`    | WebSocket terminal   |
-| `coolify-realtime.shadowarcanist.com`        | `http://localhost:6001`    | Realtime server      |
-| `coolify.shadowarcanist.com`                 | `http://localhost:8000`    | Coolify dashboard    |
+Then disable [Redirect HTTP to HTTPS](/core/instance-management/instance-settings#redirect-http-to-https). Cloudflare Tunnel connects to the proxy over HTTP, so the redirect would create a redirect loop.
 
+Coolify uses the instance URL to generate the proxy routes for the dashboard:
 
-<Callout type="warn" title="HEADS UP!">
-
-The order of the routes matters! Be sure to match it exactly as shown above.
-
-</Callout>
-
-
----
-
-### 2. Update Coolify’s `.env` File [!toc]
-
-After creating public hostnames, update the `.env` file in your Coolify instance located at `/data/coolify/source` to enable connections to the realtime server. Add the following lines:
-
-```bash
-APP_ID=<random string>
-APP_KEY=<random string>
-APP_NAME=Coolify
-DB_PASSWORD=<random string>
-PUSHER_APP_ID=<random string>
-PUSHER_APP_KEY=<random string>
-PUSHER_APP_SECRET=<random string>
-REDIS_PASSWORD=<random string>
-
-###########
-# Add these lines
-PUSHER_HOST=coolify-realtime.shadowarcanist.com
-PUSHER_PORT=443
-###########
+```text
+/app/*       -> coolify:6001
+/apps/*      -> coolify:6001
+/terminal/ws -> coolify:6002
+/*           -> coolify:8080
 ```
 
-This ensures that Coolify uses the Cloudflare Tunnel for its realtime server.
+### 2. Create a route in Cloudflare Tunnel [!toc]
 
-### 3. Restart Coolify [!toc]
+Follow [Step 5](/integrations/networking/cloudflare/tunnels/single-resource#5-configure-tunnel-routes) and use the following mapping:
 
-Run the following command to restart Coolify and apply the changes:
+| Domain | Service | Purpose |
+|---|---|---|
+| `coolify.shadowarcanist.com` | `http://localhost:80` | Coolify dashboard, realtime updates, and terminal |
+
+You do not need separate tunnel routes for ports `6001` and `6002`. You also do not need to set `PUSHER_HOST`, `PUSHER_PORT`, `TERMINAL_HOST`, or `TERMINAL_PORT` for this setup.
+
+If you are switching from separate routes, remove obsolete `PUSHER_HOST`, `PUSHER_PORT`, `TERMINAL_HOST`, and `TERMINAL_PORT` overrides from `/data/coolify/source/.env`. Existing overrides take precedence over automatic hostname and port detection. After changing `.env`, restart Coolify to apply the changes:
 
 ```bash
 curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 ```
 
-### 4. Verify the Setup [!toc]
+### 3. Verify the Setup [!toc]
 
 1. Access your Coolify dashboard at `https://coolify.shadowarcanist.com`.
 2. Test the realtime functionality by visiting `https://coolify.shadowarcanist.com/realtime` in another browser tab. You should see a notification about a test event.
-3. If you know what are you doing, you can check the network tab as well. Search for a websocket connection.
+3. In your browser's network tab, confirm the realtime and terminal WebSocket connections use the Coolify dashboard hostname.
 
 
 <Callout type="warn" title="HEADS UP!">
 
-If you use a firewall, ensure that the required ports (e.g., `8000`, `6001`, `6002`) are open for internal communication but not exposed to the public internet.  
+Cloudflare Tunnel connects to the Coolify proxy from inside the server. Ports `8000`, `6001`, and `6002` do not need to be exposed publicly.
 
 </Callout>
+
+### Separate realtime hostname [!toc]
+
+Existing tunnels that route Coolify's realtime and terminal services separately keep working:
+
+<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/15.webp" />
+
+| Domain / Path | Service | Purpose |
+|---|---|---|
+| `coolify.shadowarcanist.com/terminal/ws` | `http://localhost:6002` | WebSocket terminal |
+| `coolify-realtime.shadowarcanist.com` | `http://localhost:6001` | Realtime updates (Reverb) |
+| `coolify.shadowarcanist.com` | `http://localhost:8000` | Coolify dashboard |
+
+Keep the path-specific terminal route above the dashboard route so Cloudflare matches it first. All three origin ports belong to the `coolify` container. See the [Reverb migration guide](/core/instance-management/reverb-migration) for details.
+
+This setup needs a separate realtime hostname in `/data/coolify/source/.env`:
+
+```bash
+PUSHER_HOST=coolify-realtime.shadowarcanist.com
+PUSHER_PORT=443
+```
+
+This tells the browser where to open the realtime WebSocket connection. Server-side event delivery stays inside the `coolify` container, so do not set `PUSHER_BACKEND_HOST` to this hostname.
+
+After changing `.env`, run the following command to restart Coolify:
+
+```bash
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+```
 
 </Tab>
 </Tabs>
@@ -248,6 +257,26 @@ If you use a firewall, ensure that the required ports (e.g., `8000`, `6001`, `60
 
 
 ## Known issues and Solutions
+
+### Realtime or terminal connections fail with localhost
+
+On some servers, `localhost` resolves to the IPv6 loopback address `::1`, while the origin port is reachable only through IPv4. If the dashboard loads but realtime updates or terminal connections fail, check the cloudflared logs for an origin connection error and try an explicit IPv4 loopback address.
+
+For the single-route setup above, change the tunnel service URL from `http://localhost:80` to `http://127.0.0.1:80`.
+
+If you use the legacy separate routes, keep their order and change only the origin address:
+
+| Route | IPv4 service URL |
+| :--- | :--- |
+| Dashboard hostname with `/terminal/ws` | `http://127.0.0.1:6002` |
+| Separate realtime hostname | `http://127.0.0.1:6001` |
+| Dashboard hostname | `http://127.0.0.1:8000` |
+
+For an HTTPS origin, use `https://127.0.0.1:443` and keep **Origin Server Name** set to the certificate's hostname, as described in [HTTPS tunnel troubleshooting](/integrations/networking/cloudflare/tunnels/full-tls#troubleshooting-bad-gateway-502-after-switching-to-https).
+
+Save the route, reload Coolify, and test realtime updates and the terminal again. If the connection still fails, inspect the origin listener, tunnel logs, and WebSocket requests. This workaround addresses loopback address selection; other connection failures and gateway timeouts need separate diagnosis.
+
+### An existing DNS record prevents the route from working
 
 When you create a new routes in [Step 5](/integrations/networking/cloudflare/tunnels/single-resource#5-configure-tunnel-routes), Cloudflare will create a DNS record for the hostname.
 

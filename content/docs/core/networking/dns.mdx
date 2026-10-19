@@ -91,7 +91,7 @@ Preview deployments can generate additional subdomains from the application's pr
 
 Coolify can check application domains and the self-hosted instance URL against public DNS. DNS validation is enabled by default.
 
-Open **Settings > Configuration > Advanced** to manage:
+Open **Settings > Advanced** to manage:
 
 - **DNS Validation**: enables or disables the check.
 - **Custom DNS Servers**: sets the resolvers used for the check. The default is `1.1.1.1`. Enter a comma-separated list of IPv4 or IPv6 resolver addresses, such as `1.1.1.1,8.8.8.8`, or leave the field empty to use the system resolvers.
@@ -132,3 +132,7 @@ For example, use `xn--mnchen-3ya.example.com` for `münchen.example.com`. Some D
 />
 
 If DNS resolves correctly but HTTPS still fails, follow [Let's Encrypt troubleshooting](/troubleshoot/dns-and-domains/lets-encrypt-not-working).
+
+## Cloudflare managed records
+
+With a team Cloudflare integration token, Coolify can create, replace, and remove managed DNS records from resource Domains pages. Follow [Cloudflare DNS management](/integrations/security/cloudflare/dns-management) for token permissions and record lifecycle.

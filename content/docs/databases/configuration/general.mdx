@@ -5,7 +5,7 @@ description: Configure a database image, credentials, engine settings, ports, an
 
 # General settings
 
-Open a database resource, then select **Configuration > General**. The page contains common resource settings and controls specific to the selected database engine.
+Open a database resource, then select **General**. The page contains common resource settings and controls specific to the selected database engine.
 
 ## Common settings
 
@@ -15,11 +15,13 @@ Open a database resource, then select **Configuration > General**. The page cont
 | **Description** | Optional information about the database or its owner. |
 | **Image** | The Docker image and tag used to run the database. |
 | **Credentials and initial database** | The account and database values used by the engine's entrypoint and Coolify's connection details. The labels vary by engine. |
-| **Ports Mappings** | Docker host-to-container mappings such as `15432:5432`. |
-| **Make it publicly available** | Starts a separate TCP proxy for external clients. |
-| **Public Port** | The server port used by the public TCP proxy. |
-| **Proxy Timeout (seconds)** | How long the public proxy keeps an idle connection open. The default is `3600`; the minimum is `1`. |
+| **Port mappings** | Docker host-to-container mappings such as `15432:5432`. |
+| **Public access > Access** | Choose **Private** or **Public through TCP proxy**. The public option starts a separate TCP proxy for external clients after a **Public port** is set. |
+| **Public port** | The server port used by the public TCP proxy. |
+| **Proxy timeout** | How long the public proxy keeps an idle connection open. The default is `3600`; the minimum is `1`. |
 | **Custom engine configuration** | Optional configuration text mounted or passed to the selected database image. |
+
+Connection fields include the engine name, such as **Postgres URL (internal)** and **Postgres URL (public)**. The public URL becomes available after configuring public access.
 
 Coolify does not expose a public database endpoint by default. Prefer the **Internal URL** for applications on the same destination network. Read [Network access](/databases#network-access) before enabling public access.
 
@@ -46,7 +48,7 @@ Redis, Dragonfly, and KeyDB apply authentication through container configuration
 
 ## Apply changes
 
-Select **Save**, then restart or redeploy the database when Coolify marks the configuration as changed. Confirm the database starts successfully and copy the updated **Internal URL** from the resource after changing connection values.
+Select **Save changes**, then restart or redeploy the database when Coolify marks the configuration as changed. Confirm the database starts successfully and copy the updated **Internal URL** from the resource after changing connection values.
 
 <Callout type="warning" title="Do not change a production image without a migration plan">
 

@@ -13,6 +13,13 @@ Remove a server
 coolify server remove <uuid>
 ```
 
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--delete-from-provider` | `boolean` | No | `false` | Also delete the server from its cloud provider (Hetzner, Vultr or DigitalOcean). This cannot be undone |
+| `--force` | `boolean` | No | `false` | Also delete all resources on the server |
+
 ## Get current help
 
 ```sh

@@ -1,0 +1,27 @@
+---
+title: SQLite
+description: Create an experimental SQLite database and mount its files into an application on the same server.
+---
+
+# SQLite
+
+SQLite support is experimental. Coolify runs a standalone database resource using a `peakimages/sqlite` image and persistent data volume. Applications access database files through a volume mount rather than a network connection URL.
+
+## Create the database
+
+1. In a project environment, select **New Resource > Databases > SQLite**.
+2. Select the server and destination.
+3. Review the image and **File names** under **General**.
+4. Start the database to create its files and volume.
+
+## Connect an application
+
+Under the database's **General > Connect application** section, select an application on the same server, choose the container **Mount path**, and select **Mount volume**. Configure the application to open the database file at that path and redeploy it. The application must run as user `65532` or root to access the files.
+
+For a Docker Compose application, Coolify shows the volume lines to add to the service that uses SQLite. Copy them into the application's Compose file and redeploy. Start the SQLite database first because Compose does not create the external volume.
+
+Coolify protects connected volumes. Use **Unlink** to remove a managed application connection; for Compose connections, remove the volume reference from the Compose file. Review application configuration before unlinking so it does not continue writing to an unintended local file.
+
+## Backups and recovery
+
+SQLite supports manual and scheduled [database backups](/databases/backups). Use [Import Backup](/databases/restore) to restore a backup and choose the database file under **Restore into**. Stop application writes before replacing a file and verify the application after recovery.

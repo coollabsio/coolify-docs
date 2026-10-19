@@ -21,3 +21,17 @@
 /docs/api-reference/api/operations/get-current-team-members	/docs/api/endpoints/teams/get-token-team-members
 /docs/api-reference/api/operations/create-dockercompose-application	/docs/api/endpoints/services/create-service
 /docs/api-reference/api/applications/list-applications	/docs/api/endpoints/applications/list-applications
+
+# Removed server transfer operations fall back to the API overview.
+/docs/api-reference/api/operations/claim-server	/docs/api/overview
+/docs/api/endpoints/servers/claim-server	/docs/api/overview
+/docs/api-reference/api/operations/complete-server-transfer	/docs/api/overview
+/docs/api/endpoints/servers/complete-server-transfer	/docs/api/overview
+/docs/api-reference/api/operations/export-server-transfer-bundle	/docs/api/overview
+/docs/api/endpoints/servers/export-server-transfer-bundle	/docs/api/overview
+/docs/api-reference/api/operations/export-server-transfer-mailbox	/docs/api/overview
+/docs/api/endpoints/servers/export-server-transfer-mailbox	/docs/api/overview
+/docs/api-reference/api/operations/import-server-transfer-bundle	/docs/api/overview
+/docs/api/endpoints/servers/import-server-transfer-bundle	/docs/api/overview
+/docs/api-reference/api/operations/migrate-server-between-instances	/docs/api/overview
+/docs/api/endpoints/servers/migrate-server-between-instances	/docs/api/overview

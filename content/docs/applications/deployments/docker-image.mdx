@@ -78,7 +78,7 @@ Select **Save** to create the application.
 
 ### Configure the runtime
 
-Open **Configuration > General** and set **Ports Exposes** to the internal port where the image's process listens. Docker Image applications start with port `80`; replace it when the image listens on another port.
+Open **General** and set **Ports Exposes** to the internal port where the image's process listens. Docker Image applications start with port `80`; replace it when the image listens on another port.
 
 Add the required domain, runtime environment variables, persistent storage, health check, and resource limits. These settings apply when Coolify starts the container; they do not change the image.
 
@@ -87,7 +87,7 @@ Add the required domain, runtime environment variables, persistent storage, heal
 
 ### Deploy and verify
 
-Select **Deploy**, then open **Deployments** and inspect the operation log.
+Select **Deploy**, then open **Deployment Logs** and inspect the operation log.
 
 Confirm that Coolify pulls the intended image reference, starts the container, and reports a successful deployment. Open the application logs and configured domain to verify that the process listens on the expected port.
 
@@ -96,7 +96,7 @@ Confirm that Coolify pulls the intended image reference, starts the container, a
 
 ## Change the deployed image
 
-Open **Configuration > General > Docker Registry**.
+Open **General > Docker Registry**.
 
 - **Docker Image** contains the registry and repository name.
 - **Docker Image Tag or Hash** contains the selected tag or a digest stored as `sha256-<64-character-digest>`.

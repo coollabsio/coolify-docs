@@ -5,12 +5,13 @@ description: Clone a standalone database to another destination or move it betwe
 
 # Clone or move a database
 
-Open a database and select **Configuration > Resource Operations**. This page has two different actions:
+Open a database and select **Resource Operations**. This page provides these actions:
 
-- **Clone Resource** creates a second database resource on another server or network destination.
+- **Clone to another destination** creates a second database resource on another server or network destination.
+- **Clone to another environment** copies the configuration into another project environment on the same server and network.
 - **Move Resource** changes the project and environment of the existing database on the same Coolify instance.
 
-Neither action is a database migration. A clone starts with a separate persistent volume, and a move changes organization without copying data.
+These placement actions do not migrate database contents. A clone starts with a separate persistent volume, and a move changes organization without copying data.
 
 <Tabs id="database-resource-operations" items={['Clone resource', 'Move resource']}>
 <Tab value="Clone resource">
@@ -35,7 +36,7 @@ Confirm that the target server can host resources and has the network destinatio
 
 ### Select the destination
 
-Open **Configuration > Resource Operations**. Under **Clone Resource**, choose **Select Server**, then **Select Network Destination**.
+Open **Resource Operations**. Under **Clone to another destination**, choose **Server**, then **Network destination**.
 
 </Step>
 <Step>
@@ -48,6 +49,10 @@ Give the clone a distinct domain or port mapping. Do not point production applic
 
 </Step>
 </Steps>
+
+### Clone into another environment
+
+Under **Clone to another environment**, select **Project** and **Environment**, then select **Clone resource**. Review the stopped clone and restore any required data before starting it.
 
 </Tab>
 <Tab value="Move resource">
@@ -65,14 +70,14 @@ The running database is not stopped and its data is not copied. To run a second 
 
 ### Choose the target project
 
-Open **Configuration > Resource Operations**. Under **Move Resource**, choose **Select Target Project**.
+Open **Resource Operations**. Under **Move Resource**, choose **Project**.
 
 </Step>
 <Step>
 
 ### Choose the target environment
 
-Choose **Select Target Environment**. Coolify excludes the database's current environment. Select an environment in the current project or another project.
+Choose **Environment**. Coolify excludes the database's current environment. Select an environment in the current project or another project.
 
 </Step>
 <Step>

@@ -36,19 +36,19 @@ Replace them with your own name and public Coolify URL.
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/1.webp" alt="Sources page in Coolify with the Add button" />
 
 1. Open **Sources** from the Coolify sidebar.
-2. Select **+ Add** to create a source.
+2. Select **New source > GitHub App**.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/2.webp" alt="New GitHub App source form in Coolify" />
 
 3. Enter a name for the source.
 4. Enter the GitHub organization name when the app belongs to an organization. Leave **Organization** empty for a personal account.
-5. Select **Continue**.
+5. Under **Use this App for**, select **Pull request previews** if you need preview deployments. Select **Continue**.
 
 For self-hosted GitHub Enterprise, expand **Self-hosted / Enterprise GitHub** and enter its HTML URL, API URL, Git user, and Git port.
 
 <Callout type="warning" title="System-wide access affects every team">
 
-On self-hosted Coolify, **System Wide** makes the GitHub App available to every team on the instance. Leave it disabled when only the current team should use the app.
+On self-hosted Coolify, **System wide** makes the GitHub App available to every team on the instance. Leave it disabled when only the current team should use the app.
 
 Coolify Cloud does not offer this setting because a source cannot be shared with other Cloud customers.
 
@@ -58,9 +58,9 @@ Coolify Cloud does not offer this setting because a source cannot be shared with
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/3.webp" alt="GitHub App installation choices and webhook endpoint settings in Coolify" />
 
-Choose **Automated Installation**.
+Use the **Automated installation** section.
 
-Select the public endpoint GitHub should use for webhook events. Enable **Use custom webhook endpoint** when GitHub must call a different public URL, such as a domain exposed through a tunnel.
+In **Webhook endpoint**, choose **Use an instance endpoint** and select an **Instance endpoint**. Choose **Use a custom endpoint** and enter **Custom endpoint** when GitHub must call a different public URL, such as a domain exposed through a tunnel.
 
 Enter only the base URL, such as `https://coolify.example.com`. Do not append `/webhooks`.
 
@@ -72,11 +72,11 @@ Repository access can work while automatic and preview deployments fail if GitHu
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/4.webp" alt="Preview Deployments permission and Register Now button" />
 
-Keep **Preview Deployments** enabled when Coolify should add deployment information to pull requests. This grants read-and-write access to pull requests.
+Set **Preview deployment access** to **Read and update pull requests** when Coolify should add deployment information to pull requests. This grants read-and-write access to pull requests.
 
 The mandatory permissions grant read access to repository contents, metadata, and email addresses.
 
-Select **Register Now**.
+Select **Register with GitHub**.
 
 ### 3. Register the app on GitHub
 
@@ -91,7 +91,7 @@ GitHub returns you to Coolify after creating the app. Coolify stores the generat
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/6.webp" alt="Install Repositories on GitHub action in Coolify" />
 
-Select **Install Repositories on GitHub**.
+Select **Install repositories** in the repository-access prompt shown after registration.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/7.webp" alt="GitHub App repository-access selection" />
 
@@ -140,11 +140,11 @@ Choose a repository and select **Load Repository**.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/14.webp" alt="Branch and build configuration for a GitHub App application" />
 
-Choose the branch, **Build Pack**, base directory, internal port, and any required build settings. Read [Build applications](/applications/builds/overview) when you need help choosing a build method.
+Choose the branch, **Build pack**, base directory, internal port, and any required build settings. Read [Build applications](/applications/builds/overview) when you need help choosing a build method.
 
 Select **Continue**, configure the application domain and variables, then deploy it.
 
-Open **Deployments** and confirm that Coolify clones the selected repository and commit.
+Open **Deployment Logs** and confirm that Coolify clones the selected repository and commit.
 
 </Tab>
 <Tab value="Manual installation">
@@ -164,17 +164,17 @@ You will transfer these values to Coolify:
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/15.webp" alt="Sources page in Coolify with the Add button" />
 
-Open **Sources**, select **+ Add**, and choose GitHub.
+Open **Sources** and select **New source > GitHub App**.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/16.webp" alt="New GitHub App source name and organization fields" />
 
 Enter the source name and optional organization, then select **Continue**.
 
-The same **System Wide** and self-hosted GitHub settings described in the automated path apply.
+The same **System wide** and self-hosted GitHub settings described in the automated path apply.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/17.webp" alt="Manual Installation choice for a GitHub App source" />
 
-Choose **Manual Installation**, then select **Continue**. Coolify opens the source fields where you will later enter the GitHub App credentials.
+In **Manual installation**, select **Continue manually**. Coolify opens the source fields where you will later enter the GitHub App credentials.
 
 ### 2. Open GitHub App settings
 
@@ -282,21 +282,21 @@ Copy the numeric Installation ID from the URL after `/installations/`.
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/33.webp" alt="Private Keys page under Keys and Tokens in Coolify" />
 
 1. Open **Keys & Tokens > Private Keys**.
-2. Select **+ Add**.
+2. Select **New private key > Add manually**.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/34.webp" alt="New private key form in Coolify" />
 
 3. Give the key a descriptive name.
 4. Paste the complete contents of the `.pem` file.
-5. Save the private key.
+5. Select **Continue** to save the private key.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/35.webp" alt="GitHub App credential fields in Coolify" />
 
-6. Return to **Sources** and open the GitHub App.
+6. Return to **Sources**, open the GitHub App, and select **General**.
 7. Enter the App ID, Installation ID, Client ID, Client Secret, and the same Webhook Secret configured on GitHub.
 8. Select the private key you added.
-9. Save the source.
-10. Select **Sync Name**. A successful sync confirms that Coolify can authenticate as the GitHub App.
+9. Select **Save changes**.
+10. Select **Sync name**. A successful sync confirms that Coolify can authenticate as the GitHub App.
 
 ### 7. Create and deploy an application
 
@@ -324,7 +324,7 @@ Choose the repository and select **Load Repository**.
 
 Choose the branch and build settings, then continue to the application configuration and deploy it.
 
-Confirm the repository clone and selected commit in **Deployments**.
+Confirm the repository clone and selected commit in **Deployment Logs**.
 
 </Tab>
 </Tabs>
@@ -333,6 +333,6 @@ Confirm the repository clone and selected commit in **Deployments**.
 
 ## Change repository access
 
-Open **Sources**, select the GitHub App, then select **Update Repositories**. Change the installation's repository access on GitHub and return to Coolify.
+Open **Sources**, select the GitHub App, open **General**, then select **Repositories**. Change the installation's repository access on GitHub and return to Coolify.
 
 Refresh the repository list before creating another application. Removing repository access prevents new clones and webhook deployments for applications that use that repository.

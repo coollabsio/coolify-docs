@@ -55,13 +55,13 @@ Authenticate the deployment server before using a private image.
 On a self-hosted Coolify instance:
 
 1. Open **Settings**.
-2. Select **Configuration > Advanced**.
-3. Enable **API Access**.
-4. Save the setting.
+2. Select **Advanced**.
+3. In **API and MCP**, set **API access** to **Enabled**.
+4. Select **Save changes**.
 
 <Callout type="info" title="Coolify Cloud">
 
-Coolify Cloud has API access enabled by default. Cloud users cannot access the self-hosted **API Access** settings, so skip this step.
+Coolify Cloud has API access enabled by default. Cloud users cannot access the self-hosted **API access** settings, so skip this step.
 
 </Callout>
 
@@ -73,10 +73,10 @@ Coolify Cloud has API access enabled by default. Cloud users cannot access the s
 <ZoomImage src="/docs/images/applications/ci-cd/github/actions/3.webp" alt="New Coolify API token with Deploy permission" />
 
 1. Open **Keys & Tokens > API Tokens**.
-2. Select **+ Add**.
-3. Give the token a descriptive name.
-4. Enable the deployment permission required by the authenticated deploy webhook.
-5. Create the token.
+2. Enter a **Description** that identifies the workflow.
+3. Choose **Expires in** to set the token lifetime.
+4. Open **Permissions** and select **Deploy**.
+5. Select **Create token**.
 6. Copy the token immediately.
 
 Store it in a password manager until it has been added to GitHub.
@@ -89,8 +89,8 @@ Store it in a password manager until it has been added to GitHub.
 <ZoomImage src="/docs/images/applications/ci-cd/github/actions/4.webp" alt="Authenticated Deploy Webhook in an application configuration" />
 
 1. Open the application.
-2. Select **Configuration > Webhooks**.
-3. Copy **Deploy Webhook (auth required)**.
+2. Select **Webhooks**.
+3. Copy **Deploy webhook URL**.
 
 The URL identifies the application. The API token authorizes the request.
 

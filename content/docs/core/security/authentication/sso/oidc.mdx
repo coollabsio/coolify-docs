@@ -1,0 +1,41 @@
+---
+title: OpenID Connect
+description: Connect an OpenID Connect identity provider to Coolify and control account creation.
+---
+
+# OpenID Connect
+
+Use a generic OpenID Connect (OIDC) provider for sign-in to a self-hosted Coolify instance. Configure it as a root team administrator or owner under **Settings > Authentication > OpenID Connect**.
+
+## Configure the provider
+
+1. Create a confidential web application at your identity provider.
+2. Copy the **Redirect URI** displayed by Coolify into the provider's allowed redirect URIs. Keep an exact match, including the scheme and path.
+3. Enter the **Issuer URL**, **Client ID**, and **Client secret** in Coolify. Coolify discovers the authorization, token, userinfo, and JWKS endpoints from the issuer.
+4. Set **Scopes** to include `openid`. Include `email` and `profile` when supported. Request any additional scopes your provider requires.
+5. Configure **Use PKCE**, **Require verified email**, and **Clock skew (seconds)** for your provider. You can customize the **Login button label**.
+6. Save the settings and enable the provider.
+
+Configure the instance URL before setup so Coolify generates the correct default callback URL.
+
+## Registration and team membership
+
+**Allow OIDC user creation** permits a successful OIDC login to create a user when password registration is disabled. Disable it when only existing users should sign in. **Auto-join new users to Root team** adds newly created users as members without creating a personal team.
+
+Under **Settings > Authentication**, you can disable password registration while OAuth is enabled. Review [OAuth account linking](/core/security/authentication/oauth/overview) before linking existing users. Existing-account linking requires a verified email address; disabling the OIDC verification setting does not bypass that requirement.
+
+## Microsoft Entra ID
+
+Use this issuer URL, replacing the tenant placeholder:
+
+```text
+https://login.microsoftonline.com/<tenant-ID>/v2.0
+```
+
+In the app registration, add the optional ID token claims `email` and `xms_edov`. Coolify accepts `xms_edov` as evidence of email verification. Register the OIDC callback displayed by Coolify, rather than the callback for the separate Microsoft OAuth integration.
+
+## Verify sign-in
+
+Test in a private browser window with an approved non-root user. Confirm that the expected account and team open, new account creation follows your policy, and Coolify requests a 2FA code when enabled. Linked identities appear on **Profile**; provider-managed email addresses cannot be edited there.
+
+If login fails, read the reason on the login page and check the issuer, callback, scopes, and email-verification claims. Keep an administrator recovery sign-in available while testing.

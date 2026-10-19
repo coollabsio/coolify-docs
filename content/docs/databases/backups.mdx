@@ -1,13 +1,13 @@
 ---
 title: Backups
-description: Schedule, retain, and store PostgreSQL, MySQL, MariaDB, MongoDB, and ClickHouse database backups in Coolify.
+description: Schedule, retain, and store PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, and SQLite database backups in Coolify.
 ---
 
 import { BranchUp, Refresh23, Server } from 'reicon-react';
 
 # Backups
 
-Coolify can create scheduled, engine-aware database backups for PostgreSQL, MySQL, MariaDB, MongoDB, and ClickHouse. Each backup schedule creates a backup on the database's server, and can upload a copy to an S3-compatible storage provider.
+Coolify can create scheduled, engine-aware database backups for PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, and SQLite. Each backup schedule creates a backup on the database's server, and can upload a copy to an S3-compatible storage provider.
 
 Redis, Dragonfly, and KeyDB do not support this scheduled database backup workflow. Use the engine's persistence and backup tools for those databases, or deploy a backup-capable service separately.
 
@@ -21,11 +21,13 @@ A successful backup only proves that Coolify created a file. [Restore a copy](/d
 
 1. Open a supported database.
 2. Select **Backups** in the resource navigation.
-3. Select **+ Add** next to **Scheduled Backups**.
+3. Select **+ Add** next to **Database backups**.
 4. Enter a cron expression or a supported human-readable frequency.
-5. Select **Save**.
+5. Select **Add schedule**.
 
 The schedule runs on the server where the database is deployed. The **Timezone** field is read-only: it uses the server timezone when one is configured, otherwise the Coolify instance timezone.
+
+SQLite backups use its configured database files. See [SQLite](/databases/sqlite) for application connections and file recovery.
 
 A backup job runs only while the database is running. If the database is stopped when the schedule fires, Coolify skips that execution.
 
@@ -60,28 +62,28 @@ To verify or correct the configuration:
 1. Open the parent Service and select **Edit Compose File**.
 2. Find the database component and inspect its `environment` entries.
 3. Confirm that the required container-variable names in the table are present and mapped to the intended Service variables or values.
-4. To change a referenced value such as `SERVICE_PASSWORD_POSTGRES`, open **Configuration > Environment Variables**. Change a hard-coded value in the Compose file instead.
+4. To change a referenced value such as `SERVICE_PASSWORD_POSTGRES`, open **Environment Variables**. Change a hard-coded value in the Compose file instead.
 5. Restart or deploy the Service so Coolify recreates the database container with the updated environment.
-6. Confirm that the database component is running, then open its backup schedule and select **Backup Now**.
+6. Confirm that the database component is running, then open its backup schedule and select **Back up now**.
 7. Inspect the execution status and message.
 
 Read [Service environment variables](/services/configuration/environment-variables) for details about generated, referenced, and hard-coded Compose values.
 
-A missing MySQL or MariaDB database-name variable can stop the job before Coolify creates a normal execution entry. If **Backup Now** produces no execution, confirm that the database is running and recheck the variables in the table.
+A missing MySQL or MariaDB database-name variable can stop the job before Coolify creates a normal execution entry. If **Back up now** produces no execution, confirm that the database is running and recheck the variables in the table.
 
 ## Set the backup scope
 
-Open a schedule to configure the databases included in each execution.
+Open a schedule and use **General > Backup schedule** to configure the databases included in each execution. Select **Enable backup** or **Disable backup** to control scheduled runs, and **Save changes** after editing fields.
 
 | Database | Scope controls | Backup created by Coolify |
 | :--- | :--- | :--- |
-| PostgreSQL | **Backup All Databases** or **Databases To Backup** | `pg_dump` custom format for selected databases; `pg_dumpall` gzip output when all databases are selected. |
-| MySQL | **Backup All Databases** or **Databases To Backup** | `mysqldump` output; all-database dumps use gzip compression. |
-| MariaDB | **Backup All Databases** or **Databases To Backup** | `mariadb-dump` output; all-database dumps pass the command's `--compress` option but are not piped through `gzip` by Coolify. |
-| MongoDB | **Databases To Include** | `mongodump` gzip archive. Empty includes all databases and collections. |
-| ClickHouse | **Databases To Backup** | A ClickHouse backup archive created with the database's backup command. |
+| PostgreSQL | **Database selection** (**All databases** or **Specific databases**) and **Databases to back up** | `pg_dump` custom format for selected databases; `pg_dumpall` gzip output when all databases are selected. |
+| MySQL | **Database selection** (**All databases** or **Specific databases**) and **Databases to back up** | `mysqldump` output; all-database dumps use gzip compression. |
+| MariaDB | **Database selection** (**All databases** or **Specific databases**) and **Databases to back up** | `mariadb-dump` output; all-database dumps pass the command's `--compress` option but are not piped through `gzip` by Coolify. |
+| MongoDB | **Databases to include** | `mongodump` gzip archive. Empty includes all databases and collections. |
+| ClickHouse | **Databases to back up** | A ClickHouse backup archive created with the database's backup command. |
 
-For PostgreSQL, MySQL, MariaDB, and ClickHouse, enter multiple database names as a comma-separated list. An empty field uses the database configured in the resource.
+For PostgreSQL, MySQL, and MariaDB, select **Specific databases**, then type each database name and press Enter in **Databases to back up**. For ClickHouse, enter a comma-separated list. An empty field uses the database configured in the resource.
 
 For MongoDB, use `database:collection1,collection2|database2` to exclude collections from each database. For example:
 
@@ -112,8 +114,8 @@ Coolify writes local database backups under `/data/coolify/backups` on the deplo
 
 Local retention can remove successful backup files after an execution completes. In **Retention**, set any of these values to `0` for no limit:
 
-- **Number of backups to keep**
-- **Days to keep backups**
+- **Backups to keep**
+- **Days to keep**
 - **Maximum storage (GB)**
 
 The limits work independently. Coolify deletes a backup when any configured limit is reached, keeping the most recent backups first.
@@ -121,17 +123,17 @@ The limits work independently. Coolify deletes a backup when any configured limi
 ## Upload backups to S3
 
 1. Configure and validate an S3-compatible storage under [S3 storage](/core/s3-storage/overview).
-2. Open the database schedule and select the **S3** section.
-3. Enable S3, select the validated storage, and select **Save**.
-4. Optionally enable **Disable Local Backup**.
+2. Open the database schedule and open **S3 storage**.
+3. Select the validated **S3 storage**, select **Enable S3**, and select **Save changes**.
+4. Optionally set **Local copy** to **Delete after S3 upload**.
 
 Coolify uploads the local backup file to the selected S3 storage after the local dump succeeds. If the upload fails, the local backup can still remain available and the execution reports the S3 warning.
 
-**Disable Local Backup** removes the local file after a successful S3 upload. It does not remove the S3 copy. Set S3 retention separately; local and S3 retention rules are independent.
+**Local copy > Delete after S3 upload** removes the local file after a successful S3 upload. It does not remove the S3 copy. Set S3 retention separately; local and S3 retention rules are independent.
 
 ## Run and verify a backup
 
-Open a schedule and select **Backup Now** while the database is running. Coolify queues the backup job and shows the execution in the schedule.
+Open a schedule and select **Back up now** while the database is running. Coolify queues the backup job and shows the execution in the schedule.
 
 Open the execution to verify:
 
@@ -139,7 +141,7 @@ Open the execution to verify:
 - the database names match the intended scope
 - the file size is greater than zero
 - S3 upload status is successful when S3 is enabled
-- the local copy still exists unless **Disable Local Backup** was enabled
+- the local copy still exists unless **Local copy** was set to **Delete after S3 upload**
 
 A failed S3 upload does not necessarily mean the local database dump failed. Read the execution message and notification to identify which copy is available.
 
@@ -167,3 +169,9 @@ A failed S3 upload does not necessarily mean the local database dump failed. Rea
     },
   ]}
 />
+
+## Scheduling and failed executions
+
+Due database backups are dispatched every minute independently of other schedule types. A scheduled backup whose queued job was lost is queued again after 60 minutes. A backup is skipped while the database starts, restarts, or imports, and a backup that exceeds its timeout fails with the timeout error.
+
+For backups of several databases, each database has its own result and finish time. All-database PostgreSQL, MySQL, and MariaDB backups fail if the dump command fails rather than retaining an incomplete archive. Review every result before relying on a backup set.

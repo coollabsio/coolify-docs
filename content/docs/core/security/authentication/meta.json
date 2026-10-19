@@ -3,6 +3,7 @@
   "pages": [
     "oauth",
     "sso",
-    "2fa"
+    "2fa",
+    "profile"
   ]
 }

@@ -23,12 +23,14 @@ The supported engine determines the generated image, connection port, data path,
 
 1. Select an engine from **New Resource > Databases** inside a project and environment.
 2. Select the server and network destination where the database should run.
-3. Review the generated resource under **Configuration > General**, including its image, credentials, ports, connection URLs, and engine-specific settings.
-4. Confirm the persistent storage under **Configuration > Persistent Storage**.
-5. Select **Start**. Coolify prepares the container, attaches the volume and destination network, and starts the database.
+3. Review the generated resource under **General**, including its image, credentials, ports, connection URLs, and engine-specific settings.
+4. Confirm the persistent storage under **Persistent Storage**.
+5. Select **Start**. Coolify queues the start operation, resolves secret-manager credentials when configured, and prepares the container, attaches the volume and destination network, and starts the database.
 6. Docker runs the configured health check. A healthy database can accept connections from applications and clients that can reach its network.
 
 The resource remains available in the project after deployment. Use its configuration and operation pages to change settings, view logs, open a terminal, restart it, or redeploy it.
+
+SQLite applications connect by mounting database files from the data volume on the same server rather than using an internal URL. See [SQLite](/databases/sqlite).
 
 ## What Coolify manages
 
@@ -58,14 +60,14 @@ Applications on the same Coolify destination network should use the database's *
 
 | Connection location | Use |
 | :--- | :--- |
-| Same destination network | The **Internal URL** from **Configuration > General**. |
-| Another server or external client | A configured port mapping or **Make it publicly available** TCP proxy, plus the generated public connection details. |
+| Same destination network | The **Internal URL** from **General**. |
+| Another server or external client | A configured port mapping or **Public access > Access > Public through TCP proxy** TCP proxy, plus the generated public connection details. |
 
 Coolify does not publish a database endpoint by default. Read [Network access](/databases#network-access) before exposing one.
 
 ## Health checks show database readiness
 
-The database health check is a Docker health check, not a backup or a data-integrity check. Configure it under **Configuration > Healthcheck** with **Interval (s)**, **Timeout (s)**, **Retries**, and **Start Period (s)**. A successful health check means the configured probe passed; it does not confirm that an application query or replication setup is correct.
+The database health check is a Docker health check, not a backup or a data-integrity check. Configure it under **Healthcheck** with **Interval (seconds)**, **Timeout (seconds)**, **Retries**, and **Start period (seconds)**. A successful health check means the configured probe passed; it does not confirm that an application query or replication setup is correct.
 
 ## Backups are engine-specific
 

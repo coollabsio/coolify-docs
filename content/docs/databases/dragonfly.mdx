@@ -44,14 +44,14 @@ Select the Docker network destination that Dragonfly should join.
 
 ### Review the generated configuration
 
-Coolify creates the resource and opens **Configuration > General**. Review the image, generated password, SSL settings, and connection URLs. Keep the default private networking unless an external client requires access.
+Coolify creates the resource and opens **General**. Review the image, generated password, SSL settings, and connection URLs. Keep the default private networking unless an external client requires access.
 
 </Step>
 <Step>
 
 ### Start Dragonfly
 
-Select **Start** and follow the startup output. Wait until Dragonfly is running and healthy, then copy the **Internal URL** into applications on the same destination network.
+Select **Start** and follow the startup output. Wait until Dragonfly is running and healthy, then copy the **Dragonfly URL (internal)** into applications on the same destination network.
 
 </Step>
 </Steps>
@@ -65,24 +65,24 @@ Select **Start** and follow the startup output. Wait until Dragonfly is running 
 | Authentication | Generated password |
 | Data mount | `/data` |
 | Scheduled database backups | Not supported by Coolify |
-| SSL | Supported with **Enable SSL** |
+| SSL | Supported with **SSL** |
 
 Dragonfly uses the Redis protocol for its connection URL. It does not expose a username field in the Coolify database form.
 
 
 ## Connect to Dragonfly
 
-Use the **Internal URL** for an application on the same Coolify destination network:
+Use the **Dragonfly URL (internal)** for an application on the same Coolify destination network:
 
 ```sh
 redis://:<password>@<database-container>:6379/0
 ```
 
-With SSL enabled, use the generated `rediss` URL and TLS port `6380`. When **Make it publicly available** is enabled, use the generated **Public URL**.
+With SSL enabled, use the generated `rediss` URL and TLS port `6380`. When **Public access > Access** is **Public through TCP proxy**, use the generated **Dragonfly URL (public)**.
 
 ## Configure Dragonfly
 
-Open **Configuration > General** to change the image, password, **Ports Mappings**, public proxy, and supported custom Docker options. Open **Configuration > Persistent Storage** to manage the `/data` volume.
+Open **General** to change the image, password, **Port mappings**, public proxy, and supported custom Docker options. Open **Persistent Storage** to manage the `/data` volume.
 
 Dragonfly's image and command options control persistence behavior. Review the image's documentation before changing the startup options or assuming that in-memory data has been written to disk.
 
@@ -92,12 +92,16 @@ Coolify does not create scheduled database backups for Dragonfly. Keep the `/dat
 
 ## SSL and health checks
 
-Dragonfly exposes **Enable SSL** without an SSL mode selector. See [Database SSL](/databases/ssl) for the CA certificate mount and TLS connection workflow.
+Dragonfly exposes **SSL** without an SSL mode selector. See [Database SSL](/databases/ssl) for the CA certificate mount and TLS connection workflow.
 
-Configure the Docker health check under **Configuration > Healthcheck** and restart Dragonfly after saving.
+Configure the Docker health check under **Healthcheck** and restart Dragonfly after saving.
 
 ## Official Dragonfly resources
 
 - [Dragonfly documentation](https://www.dragonflydb.io/docs)
 - [Dragonfly source](https://github.com/dragonflydb/dragonfly)
 - [Dragonfly Docker image](https://hub.docker.com/r/dragonflydb/dragonfly)
+
+## Password environment variable
+
+For a new database, `REDIS_PASSWORD` controls the server password and connection URLs. Databases created before this release keep their stored password unless the variable references a secret manager. After changing a remote secret, restart the database and verify connections.
