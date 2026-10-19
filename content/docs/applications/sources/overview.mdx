@@ -24,8 +24,10 @@ Use HTTPS for a public repository, an SSH deploy key for one private repository,
 | Public repository | The repository is public and can be cloned over HTTPS without credentials. | [Connect a public repository](/applications/sources/public-repositories) |
 | Deploy key | One private repository needs read-only SSH access. | [Use a deploy key](/applications/sources/deploy-keys) |
 | GitHub App | GitHub repositories need scoped access, integrated webhooks, and pull-request events. | [Configure a GitHub App](/applications/sources/github/app) |
+| GitLab App | GitLab repositories need repository browsing, private HTTPS cloning, and merge-request events. | [Set up a GitLab App](/applications/sources/gitlab#set-up-a-gitlab-app) |
+| Gitea App | Gitea repositories need repository browsing, private HTTPS cloning, and pull-request events. | [Set up a Gitea App](/applications/sources/gitea#set-up-a-gitea-app) |
 
-Official Git App integrations configure provider webhooks as part of the source. Public repositories and deploy keys require [manual webhooks](/applications/deployments/manual-webhooks) for automatic deployments and previews.
+A GitHub App configures provider webhooks as part of the source. For a GitLab App or a Gitea App, add one webhook with the source's URL and secret in the provider. Public repositories and deploy keys require [manual webhooks](/applications/deployments/manual-webhooks) for automatic deployments and previews.
 
 ## Repository access and container registries are separate
 
