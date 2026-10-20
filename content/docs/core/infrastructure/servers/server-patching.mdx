@@ -1,16 +1,18 @@
 ---
 title: Server Patching
-description: Check for operating-system package updates and install selected updates from the Coolify dashboard.
+description: Check for operating-system package updates, install selected updates, and turn on automatic security updates from the Coolify dashboard.
 ---
 
 # Patch server packages
 
-**Server Patching** lets you check for operating-system package updates and install them from the Coolify dashboard.
+**Server Patching** lets you check for operating-system package updates and install them from the Coolify dashboard. Server Patching is marked **Beta**.
 
-Coolify does not install updates automatically. You choose when to update one package or all available packages.
+By default, Coolify does not install updates automatically. You choose when to update one package or all available packages. On Debian, Ubuntu, and RHEL-family servers, you can also turn on [automatic security updates](#automatic-security-updates).
+
+Coolify records package updates, reboots, and changes to the patch settings in the [audit log](/core/team/audit-log).
 
 <Callout type="error" title="Review updates before installing them">
-Docker, kernel, and system updates can restart services or require a server reboot. Back up important data and choose a maintenance window before selecting **Update All Packages**.
+Docker, kernel, and system updates can restart services or require a server reboot. Back up important data and choose a maintenance window before selecting **Update all packages**.
 
 Newer package versions, especially Docker releases, can introduce changes that break Coolify or your applications. Review the release notes carefully before updating.
 </Callout>
@@ -29,18 +31,25 @@ Newer package versions, especially Docker releases, can introduce changes that b
 1. Open **Servers** in the Coolify sidebar.
 2. Select the server you want to update.
 3. Select **Security** in the server menu.
-4. Select **Server Patching**.
+4. Select **Patching**.
 
 </Step>
 <Step>
 
 ### Check for updates
 
-Select **Check for Updates**.
+Select **Check for updates**.
 
-Coolify connects to the server and refreshes its package list. Keep the page open until the check finishes.
+Coolify runs the check in the background. The check can take several minutes. You can leave the page. Coolify saves the result and shows it with **Last checked** when you open the page again.
 
-When updates are available, the page lists the package name and the version that can be installed. If no packages appear after a successful check, the server is up to date.
+When updates are available, the **Package updates** section lists the package name, the new version, and the current version. If no updates are available, the page shows **Up to date**.
+
+Coolify marks these packages:
+
+- **Security**: the update is a security update. APT, DNF, and Zypper report security updates. APK and Pacman do not, so Coolify shows no security count for them.
+- A warning icon: the update can restart Docker and the running containers, restart core system services, or need a reboot. Hover over the icon to see the risk.
+
+If the server must reboot to apply updates, the page shows **Reboot required**.
 
 </Step>
 <Step>
@@ -64,11 +73,13 @@ If you are unsure about a package, update it during a maintenance window or leav
 Choose one of these options:
 
 - Select **Update** beside one package to install only that update.
-- Select **Update All Packages** to install everything in the list.
+- Select **Update all packages** to install everything in the list.
 
-Complete the confirmation when Coolify asks. An activity window shows the output from the server while the update runs.
+Complete the confirmation when Coolify asks. An activity window shows the output from the server while the update runs. When the update finishes, Coolify checks the server for updates again.
 
-Do not close the activity window until the command finishes.
+<Callout type="info" title="Arch Linux">
+Arch Linux does not support partial upgrades. On servers that use Pacman, you can only select **Update all packages**.
+</Callout>
 
 </Step>
 <Step>
@@ -77,14 +88,53 @@ Do not close the activity window until the command finishes.
 
 After the update finishes:
 
-1. Select **Check for Updates** again.
-2. Confirm the installed packages no longer appear.
-3. Return to **Servers** and confirm the server is reachable.
-4. Open important applications and databases hosted on the server.
-5. If the update requires a reboot, reboot the server through your normal server-management method and wait for it to reconnect to Coolify.
+1. Confirm the installed packages no longer appear in the list.
+2. Return to **Servers** and confirm the server is reachable.
+3. Open important applications and databases hosted on the server.
+4. If the page shows **Reboot required**, select **Reboot server** and enter the server name to confirm. All containers on the server stop. Containers with a restart policy start again after the reboot. Coolify checks the server for updates again five minutes later.
 
 </Step>
 </Steps>
+
+---
+
+## Automatic security updates
+
+On servers that use APT (Debian, Ubuntu) or DNF (RHEL family), the server can install security updates every day without you.
+
+- APT: Coolify installs `unattended-upgrades` and allows only the security origins.
+- DNF: Coolify installs `dnf-automatic` and sets `upgrade_type = security`.
+
+Other package managers do not support automatic security updates. The **Automatic security updates** field does not appear for them.
+
+To turn on automatic security updates:
+
+1. Open the **Patching** page of the server.
+2. In **Maintenance window**, enter the daily start time in the 24-hour format `HH:MM`, for example `03:00`. The time uses the time zone of the server.
+3. In **Automatic security updates**, select **Turn on**.
+4. Read the confirmation and select **Turn on**.
+
+<Callout type="warn" title="Automatic updates can restart your resources">
+- If Docker comes from the operating system packages (for example `docker.io` or `moby-engine`), a security update restarts Docker. All containers on the server stop and start again. Docker CE from the Docker repository, as Coolify installs it, is not updated.
+- Services that use an updated library, for example OpenSSL or glibc, can restart.
+- The server installs a new kernel but does not reboot. Coolify then shows **Reboot required**.
+</Callout>
+
+To turn off automatic security updates, select **Turn off** and confirm. Coolify removes its configuration from the server, and the server uses the default of the operating system again. Check that default if you want no automatic updates at all.
+
+---
+
+## Check frequency
+
+By default, Coolify checks connected servers for package updates once a week, on Sunday. To change this, enter a cron expression or a preset such as `daily`, `weekly`, or `monthly` in **Check frequency**, and save. A check can run at most once per hour.
+
+---
+
+## Patch status in the server list
+
+The **Servers** page shows the patch status of each server from the last check, for example **2 security updates**, **3 updates**, **Reboot required**, or **Patch check failed**. A summary line above the list shows how many servers have updates, have security updates, or need a reboot.
+
+The patch status shows only for users who can open the security pages of the server.
 
 ---
 
@@ -92,16 +142,16 @@ After the update finishes:
 
 <ZoomImage src="/docs/images/core/infrastructure/servers/server-patching/notification-setting.webp" alt="Server Patching notification setting" />
 
-Coolify checks connected servers for package updates once a week. It sends a **Server Patching** notification when updates are available or when the check fails.
+Coolify sends a **Server patching** notification when a scheduled check finds updates, or when a check starts to fail. A check that you start with **Check for updates** sends no notification for available updates.
 
 To review the notification setting:
 
 1. Open **Notifications** in Coolify.
 2. Select the notification channel you use.
-3. Find **Server Patching**.
+3. Find **Server patching**.
 4. Enable or disable the notification and save the channel settings.
 
-The weekly check only reports available updates. It does not install them.
+The scheduled check only reports available updates. It does not install them.
 
 ---
 

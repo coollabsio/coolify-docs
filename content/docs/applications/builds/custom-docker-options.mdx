@@ -75,6 +75,18 @@ It can also run an image-owned initialization script:
 
 Use one `--entrypoint` value. Put multiple command arguments inside the quoted value instead of repeating the option.
 
+## GPU access
+
+Use `--gpus` to give the container access to the GPUs of the server. Coolify converts these forms to a Docker Compose GPU device request with the `nvidia` driver:
+
+| Option | Result |
+| :--- | :--- |
+| `--gpus all` | The container can use all GPUs. |
+| `--gpus 2` | The container can use 2 GPUs. |
+| `--gpus "device=0,1"` | The container can use the GPUs with the IDs `0` and `1`. |
+
+When **GPU access** is enabled in [Advanced > GPU](/applications/configuration/advanced#enable-gpu), Coolify ignores `--gpus` and uses the GPU settings. The deployment log shows a message about this. Use one of the two methods, not both.
+
 <Callout type="warning" title="Privileged options expand container access">
 
 Options such as `--privileged`, `--device`, and added Linux capabilities weaken the container isolation boundary. Grant only the access the application requires and verify the image is trusted.
