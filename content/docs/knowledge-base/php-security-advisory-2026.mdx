@@ -1,55 +1,88 @@
 ---
 title: PHP Security Advisory 2026 (PHP2Shell)
-description: Immediate mitigation steps for CVE-2026-109618 and CVE-2026-109619 for self-hosted Coolify and Coolify Cloud users while PHP security patches are pending.
+description: Patched Coolify versions and update instructions for PHP2Shell (CVE-2026-109618 and CVE-2026-109619), with guidance for self-hosted instances, Coolify Cloud, and deployed applications.
 ---
 
 # PHP Security Advisory 2026 (PHP2Shell)
 
-**Last updated: 21 October 2026 — awaiting upstream PHP patches.**
+**Last updated: 21 October 2026 — patched releases available.**
 
-<Callout type="error" title="Self-hosted users: take action now">
-Stop your Coolify container or isolate your instance from the public internet until you can install the emergency Coolify release. Your already deployed applications will continue running.
+<Callout type="error" title="Update self-hosted Coolify immediately">
+PHP2Shell, tracked as [CVE-2026-109618](https://www.cve.org/CVERecord?id=CVE-2026-109618) and [CVE-2026-109619](https://www.cve.org/CVERecord?id=CVE-2026-109619), consists of two critical PHP remote code execution vulnerabilities. Unpatched Coolify installations across every v4 release line are affected. Install a patched version below; **v4.4.7 is recommended**.
 </Callout>
 
-## What is happening?
+## Patched Coolify versions
 
-Two reported PHP vulnerabilities, **CVE-2026-109618** and **CVE-2026-109619**, are being discussed as **PHP2Shell**, with reports of leaked exploit information and a proof of concept. They are reported to allow remote code execution, meaning an attacker could run code on an affected server. See [watchTowr's vulnerability FAQ](https://watchtowr.com/intelligence/php-cve-2026-109618-faq/) for the reported CVE details.
+The PHP fix has been backported to every v4 minor release line. If you need to stay on your current minor version, install its security release:
 
-The [PHP security team's official announcement](https://www.php.net/archive/2026.php#2026-10-20-1) schedules a security release for **Wednesday, 21 October 2026 at 14:00 UTC** to address two critical vulnerabilities, each rated **CVSS v4.0 9.2**. PHP may release earlier if vulnerability details become public or active exploitation is observed. Affected versions, fixed versions, and full technical details will be published with that release.
+| Your release line | First patched version |
+| :--- | :--- |
+| v4.0.x | [v4.0.1](https://github.com/coollabsio/coolify/releases/tag/v4.0.1) |
+| v4.1.x | [v4.1.3](https://github.com/coollabsio/coolify/releases/tag/v4.1.3) |
+| v4.2.x | [v4.2.1](https://github.com/coollabsio/coolify/releases/tag/v4.2.1) |
+| v4.3.x | [v4.3.24](https://github.com/coollabsio/coolify/releases/tag/v4.3.24) |
+| v4.4.x | [v4.4.7](https://github.com/coollabsio/coolify/releases/tag/v4.4.7) |
 
-At the time of this update, the PHP patches and the emergency Coolify release are **not yet available**. The reported exploit details and affected version ranges have not been confirmed in PHP's advance notice. Take the precautions below while waiting for the fixes.
-
-## Do not rely on configuration workarounds
-
-Community suggestions include changing PHP configuration, disabling session upload progress, and configuring a reverse proxy or WAF to block certain requests or suspected payloads. These measures are easy to misconfigure. Even when checked against PHP's source code and the PHP manual, they are **not official PHP mitigations** and must not be treated as sufficient protection for an unpatched PHP runtime.
-
-When someone suggested that disabling session upload progress might be enough, PHP core developer Gina Peter Banyard [replied](https://phpc.social/@Girgias/117476477429221001):
-
-> The only thing I can say is that the only mitigation is patching / upgrading PHP. I sadly know too much.
-
-<Callout type="warn" title="Only patching PHP fixes the vulnerabilities">
-Treat any configuration or request-filtering stopgap only as an attempt to lower risk for a few hours. Do not rely on it to keep an unpatched instance publicly accessible or delay updating. Stop or isolate Coolify as described below, and update PHP as soon as fixed builds are available. For Coolify itself, install the emergency Coolify release containing those fixes.
-</Callout>
-
-### Cloudflare WAF: stopgap protection
-
-On 21 October 2026, Cloudflare CTO Dane Knecht [announced](https://x.com/dok2001/status/2112811965735202970) that Cloudflare had deployed an initial set of WAF rules for the known exploit vectors, available to **all customers, including the Free plan**. He also reported early attacks and said Cloudflare was updating its mitigations as new vectors emerged. Cloudflare's [WAF changelog](https://developers.cloudflare.com/waf/change-log/changelog/) lists emergency updates to both its Managed and Free rulesets on that date.
-
-Cloudflare explicitly describes this protection as a **stopgap only**. It does not fix PHP or guarantee coverage of every exploit vector. WAF protection applies to [traffic proxied through Cloudflare](https://developers.cloudflare.com/dns/proxy-status/); requests that reach your origin directly bypass it.
-
-**Self-hosted users should keep Coolify stopped or isolated as described below and patch as soon as fixed builds are available.** For Coolify, install the emergency Coolify release. Update the PHP runtimes in your deployed applications separately, even if those applications are behind Cloudflare.
-
-## Coolify Cloud users
-
-The Coolify team has already **disabled the vulnerable features** in Coolify Cloud and completed a thorough security review. **Coolify Cloud has not been compromised by these vulnerabilities.** No action is required from you to isolate the Coolify Cloud dashboard; the team manages its mitigation and updates.
-
-<Callout type="warn" title="Your PHP applications need separate attention">
-These protections apply to the Coolify Cloud platform. They do not protect PHP applications you deploy on your own servers through Coolify Cloud. Review those applications separately, isolate them if necessary, and update their PHP runtimes as soon as patched versions are available.
-</Callout>
+**We recommend moving to v4.4.7 wherever possible.** Staying on an older minor line addresses PHP2Shell, but leaves out other security fixes that have not been backported.
 
 ## Self-hosted Coolify users
 
-Choose one of the following temporary isolation measures immediately. Keep it in place until you have installed the emergency Coolify release containing the PHP fixes.
+### Update v4.4 from the dashboard
+
+Open **Settings → Update → Check now → Update** and install **v4.4.7**. See the [upgrade guide](/core/instance-management/update) for the complete update process.
+
+### Stay on a stable v4.0–v4.3 release line
+
+Connect over SSH to the server running Coolify and run:
+
+```bash
+curl -fsSL https://cdn.coollabs.io/coolify/patch.sh | sudo bash
+```
+
+The script detects your current minor version and installs the corresponding security release from the table. It recreates only the **Coolify container**, leaving your deployed application containers running. It requires a **running, stable Coolify release**; beta, RC, and nightly builds are not supported.
+
+<Callout type="warn" title="Previously stopped Coolify?">
+For a stopped stable instance, you can use the [terminal upgrade process](/core/instance-management/update#manual-update-via-terminal) to install **v4.4.7** without first restarting the unpatched instance. If you need to stay on v4.0–v4.3 with `patch.sh`, [isolate Coolify from public access](#option-2-isolate-coolify-and-use-an-ssh-tunnel) before running `docker start coolify`, then run the patch script over SSH. Keep the isolation in place until patching succeeds.
+</Callout>
+
+### Move from a v4 beta or older release
+
+First install the **v4.0.1** security release from an SSH session on your Coolify server:
+
+```bash
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash -s 4.0.1
+```
+
+This version-pinned installation command is the recovery path for a v4 beta or older release. Once v4.0.1 is running, immediately continue to **v4.4.7** through **Settings → Update → Check now → Update**.
+
+### Confirm the update before restoring access
+
+Check the version shown in the dashboard, or confirm that the patch script reports a healthy container on the expected security release. If you removed the instance domain or blocked public access earlier, restore only the access you need after verifying the update. You can also keep using your SSH tunnel.
+
+## Coolify Cloud users
+
+**Coolify Cloud is already patched.** You do not need to run any of the instance update commands above; the Coolify team manages the platform's updates.
+
+<Callout type="warn" title="Your PHP applications need separate attention">
+The Cloud patch protects the Coolify platform. It does not update the PHP applications you deploy on your own servers. Update their PHP runtimes or container images separately and rebuild or redeploy them as needed. This also applies to applications managed by self-hosted Coolify.
+</Callout>
+
+## If you cannot update immediately
+
+PHP has now published configuration-specific temporary guidance in both official advisories:
+
+- [GHSA-w8hw-w9fx-j79w: RCE via OOM corruption](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w#mitigation).
+- [GHSA-6wmf-4rv5-p3rp: RCE via stale global state](https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp#mitigation).
+
+Follow the mitigation guidance in **both** advisories for your PHP configuration. These measures reduce exposure but do not cover every affected execution path. **Installing a Coolify release containing the PHP patches is the only complete mitigation for your instance.** Do not rely on a single PHP setting or request filter instead of updating.
+
+### Cloudflare WAF remains a stopgap
+
+Cloudflare [announced WAF rules for known exploit vectors](https://x.com/dok2001/status/2112811965735202970), including on its Free plan. These rules do not patch PHP or guarantee protection against every vector. They only inspect traffic passing through Cloudflare; direct access to your server bypasses them. Update Coolify and your PHP applications even if they are behind Cloudflare.
+
+### Keep an unpatched instance offline or isolated
+
+If you cannot install a patched release yet, use one of these isolation measures while you prepare the update. Keep it in place until you have verified that a patched version is running.
 
 <Tabs id="php-security-2026-isolation" items={['Stop Coolify', 'Use an SSH tunnel']}>
 <Tab value="Stop Coolify">
@@ -66,7 +99,7 @@ This stops the Coolify container and makes the dashboard and API unavailable, in
 
 **Your already deployed applications, databases, and services will continue running.** Leave Docker, the Coolify proxy, and your application containers running.
 
-Once the emergency release is available, follow the [terminal upgrade process](/core/instance-management/update) over SSH by selecting the **Terminal** tab in the upgrade guide. The upgrade process starts Coolify automatically after updating it. You do not need to start the unpatched container first, and automatic updates cannot run while Coolify is stopped.
+Use the update path above when you are ready to patch. For a stopped stable instance, the [terminal upgrade process](/core/instance-management/update#manual-update-via-terminal) can install v4.4.7 and start Coolify afterward. Automatic updates and `patch.sh` cannot run while Coolify is stopped.
 
 </Tab>
 <Tab value="Use an SSH tunnel">
@@ -106,12 +139,14 @@ Keep the terminal open and visit [http://localhost:8000](http://localhost:8000) 
 </Tab>
 </Tabs>
 
-## When patches are available
+## Other security updates in these releases
 
-The Coolify team will publish an **emergency release** after PHP releases the patches.
+The [v4.4.7 release notes](https://github.com/coollabsio/coolify/releases/tag/v4.4.7) also cover dependency updates beyond PHP:
 
-- **Coolify Cloud:** the team will update the platform. Update your own PHP applications separately.
-- **Self-hosted Coolify:** check the [Coolify release notes](https://github.com/coollabsio/coolify/releases) for the emergency release, then follow the [upgrade guide](/core/instance-management/update). If Coolify is stopped, use the terminal upgrade process and specify the announced patched Coolify version.
-- **Before restoring public access:** verify that the emergency Coolify version is running. You can then restore the instance domain and any public access you need, or continue using the SSH tunnel.
+| Component | Security update | What you need to do |
+| :--- | :--- | :--- |
+| Sentinel **1.1.2** | Fixes [CVE-2026-111943](https://www.cve.org/CVERecord?id=CVE-2026-111943). | Coolify updates Sentinel automatically. |
+| cloudflared **2026.10.3** | Addresses the [eMudhra certificate compromise](https://blog.cloudflare.com/emudhra-certificate-compromise/). | Update any Cloudflare Tunnel deployments you operate separately as well. |
+| Node.js **24.22.1** in Coolify **v4.4.7** | Includes fixes for multiple Node.js vulnerabilities. | Update runtimes in your own Node.js applications separately. |
 
-Updating Coolify does **not** update the PHP runtimes inside your deployed applications. For both self-hosted and Cloud users, review every PHP application, update its runtime or container image to a patched version, and rebuild or redeploy it as appropriate. Isolating or stopping Coolify does not isolate those applications.
+Updating Coolify does **not** update the runtimes inside your deployed applications. Review those applications separately, including PHP and Node.js workloads, and apply the appropriate runtime or image updates.
