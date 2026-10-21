@@ -1,0 +1,117 @@
+---
+title: PHP Security Advisory 2026 (PHP2Shell)
+description: Immediate mitigation steps for CVE-2026-109618 and CVE-2026-109619 for self-hosted Coolify and Coolify Cloud users while PHP security patches are pending.
+---
+
+# PHP Security Advisory 2026 (PHP2Shell)
+
+**Last updated: 21 October 2026 — awaiting upstream PHP patches.**
+
+<Callout type="error" title="Self-hosted users: take action now">
+Stop your Coolify container or isolate your instance from the public internet until you can install the emergency Coolify release. Your already deployed applications will continue running.
+</Callout>
+
+## What is happening?
+
+Two reported PHP vulnerabilities, **CVE-2026-109618** and **CVE-2026-109619**, are being discussed as **PHP2Shell**, with reports of leaked exploit information and a proof of concept. They are reported to allow remote code execution, meaning an attacker could run code on an affected server. See [watchTowr's vulnerability FAQ](https://watchtowr.com/intelligence/php-cve-2026-109618-faq/) for the reported CVE details.
+
+The [PHP security team's official announcement](https://www.php.net/archive/2026.php#2026-10-20-1) schedules a security release for **Wednesday, 21 October 2026 at 14:00 UTC** to address two critical vulnerabilities, each rated **CVSS v4.0 9.2**. PHP may release earlier if vulnerability details become public or active exploitation is observed. Affected versions, fixed versions, and full technical details will be published with that release.
+
+At the time of this update, the PHP patches and the emergency Coolify release are **not yet available**. The reported exploit details and affected version ranges have not been confirmed in PHP's advance notice. Take the precautions below while waiting for the fixes.
+
+## Do not rely on configuration workarounds
+
+Community suggestions include changing PHP configuration, disabling session upload progress, and configuring a reverse proxy or WAF to block certain requests or suspected payloads. These measures are easy to misconfigure. Even when checked against PHP's source code and the PHP manual, they are **not official PHP mitigations** and must not be treated as sufficient protection for an unpatched PHP runtime.
+
+When someone suggested that disabling session upload progress might be enough, PHP core developer Gina Peter Banyard [replied](https://phpc.social/@Girgias/117476477429221001):
+
+> The only thing I can say is that the only mitigation is patching / upgrading PHP. I sadly know too much.
+
+<Callout type="warn" title="Only patching PHP fixes the vulnerabilities">
+Treat any configuration or request-filtering stopgap only as an attempt to lower risk for a few hours. Do not rely on it to keep an unpatched instance publicly accessible or delay updating. Stop or isolate Coolify as described below, and update PHP as soon as fixed builds are available. For Coolify itself, install the emergency Coolify release containing those fixes.
+</Callout>
+
+### Cloudflare WAF: stopgap protection
+
+On 21 October 2026, Cloudflare CTO Dane Knecht [announced](https://x.com/dok2001/status/2112811965735202970) that Cloudflare had deployed an initial set of WAF rules for the known exploit vectors, available to **all customers, including the Free plan**. He also reported early attacks and said Cloudflare was updating its mitigations as new vectors emerged. Cloudflare's [WAF changelog](https://developers.cloudflare.com/waf/change-log/changelog/) lists emergency updates to both its Managed and Free rulesets on that date.
+
+Cloudflare explicitly describes this protection as a **stopgap only**. It does not fix PHP or guarantee coverage of every exploit vector. WAF protection applies to [traffic proxied through Cloudflare](https://developers.cloudflare.com/dns/proxy-status/); requests that reach your origin directly bypass it.
+
+**Self-hosted users should keep Coolify stopped or isolated as described below and patch as soon as fixed builds are available.** For Coolify, install the emergency Coolify release. Update the PHP runtimes in your deployed applications separately, even if those applications are behind Cloudflare.
+
+## Coolify Cloud users
+
+The Coolify team has already **disabled the vulnerable features** in Coolify Cloud and completed a thorough security review. **Coolify Cloud has not been compromised by these vulnerabilities.** No action is required from you to isolate the Coolify Cloud dashboard; the team manages its mitigation and updates.
+
+<Callout type="warn" title="Your PHP applications need separate attention">
+These protections apply to the Coolify Cloud platform. They do not protect PHP applications you deploy on your own servers through Coolify Cloud. Review those applications separately, isolate them if necessary, and update their PHP runtimes as soon as patched versions are available.
+</Callout>
+
+## Self-hosted Coolify users
+
+Choose one of the following temporary isolation measures immediately. Keep it in place until you have installed the emergency Coolify release containing the PHP fixes.
+
+<Tabs id="php-security-2026-isolation" items={['Stop Coolify', 'Use an SSH tunnel']}>
+<Tab value="Stop Coolify">
+
+### Option 1: Stop Coolify (recommended)
+
+Connect over SSH to the server running your Coolify instance and run:
+
+```bash
+docker stop coolify
+```
+
+This stops the Coolify container and makes the dashboard and API unavailable, including through your instance domain. You cannot manage resources through Coolify while it is stopped; webhook-triggered deployments and Coolify's background tasks will also be unavailable.
+
+**Your already deployed applications, databases, and services will continue running.** Leave Docker, the Coolify proxy, and your application containers running.
+
+Once the emergency release is available, follow the [terminal upgrade process](/core/instance-management/update) over SSH by selecting the **Terminal** tab in the upgrade guide. The upgrade process starts Coolify automatically after updating it. You do not need to start the unpatched container first, and automatic updates cannot run while Coolify is stopped.
+
+</Tab>
+<Tab value="Use an SSH tunnel">
+
+### Option 2: Isolate Coolify and use an SSH tunnel
+
+Use this option if you need to keep managing your instance while preventing public access to Coolify.
+
+1. In the Coolify dashboard, open **Settings → General**, clear the instance domain from the **URL** field, and click **Save changes**. This automatically removes the proxy route for your Coolify instance domain; no manual proxy configuration is needed for that route. See [instance URL settings](/core/instance-management/instance-settings#url).
+2. Block public inbound TCP access to ports **8000, 6001, and 6002** on the server running Coolify. These are the default dashboard, real-time updates, and web terminal ports. Also block **6000** if your setup exposes it, and any custom ports used for Coolify access.
+3. If you separately configured another way to reach Coolify, such as an external reverse proxy or Cloudflare Tunnel, disable that access too.
+4. Verify from outside your server that Coolify is unreachable through its former domain, public IP addresses, and any alternate routes. Check both IPv4 and IPv6 where configured. Keep SSH access available so you can use the tunnel below.
+
+Leave ports **80 and 443** available for your deployed applications. Clearing the instance URL in step 1 removes Coolify's domain route while keeping your application routes working.
+
+<Callout type="warn" title="Use a firewall that blocks Docker-published ports">
+Coolify uses Docker, and Docker-published ports can bypass normal UFW rules. A UFW deny rule alone may leave Coolify reachable from the internet. **Use your hosting provider's firewall** to block public access to the Coolify ports whenever one is available.
+
+If your hosting provider does not offer a firewall, use a tool such as [ufw-docker](https://github.com/chaifeng/ufw-docker) to make UFW filtering apply to Docker-published ports. Follow its installation and rule instructions, and see the [Coolify firewall guide](/core/infrastructure/servers/firewall) for more details. Verify from another machine that Coolify is unreachable. If you cannot verify that Coolify is isolated, use **Option 1**.
+</Callout>
+
+Run this command **on your own computer** to forward the Coolify ports over SSH:
+
+```bash
+echo "Opening tunnel — press Ctrl+C to stop" && \
+ssh -N -o ExitOnForwardFailure=yes \
+  -L 127.0.0.1:8000:localhost:8000 \
+  -L 127.0.0.1:6001:localhost:6001 \
+  -L 127.0.0.1:6002:localhost:6002 \
+  root@203.0.113.26
+```
+
+Replace `203.0.113.26` with your server IP address. Adjust the SSH user, SSH port, or forwarded ports if your installation uses different values. The local ports bind to `127.0.0.1` so other computers on your network cannot use your tunnel.
+
+Keep the terminal open and visit [http://localhost:8000](http://localhost:8000) in your browser. Press **Ctrl+C** to close the tunnel when you finish. Coolify keeps running on the server after the tunnel closes.
+
+</Tab>
+</Tabs>
+
+## When patches are available
+
+The Coolify team will publish an **emergency release** after PHP releases the patches.
+
+- **Coolify Cloud:** the team will update the platform. Update your own PHP applications separately.
+- **Self-hosted Coolify:** check the [Coolify release notes](https://github.com/coollabsio/coolify/releases) for the emergency release, then follow the [upgrade guide](/core/instance-management/update). If Coolify is stopped, use the terminal upgrade process and specify the announced patched Coolify version.
+- **Before restoring public access:** verify that the emergency Coolify version is running. You can then restore the instance domain and any public access you need, or continue using the SSH tunnel.
+
+Updating Coolify does **not** update the PHP runtimes inside your deployed applications. For both self-hosted and Cloud users, review every PHP application, update its runtime or container image to a patched version, and rebuild or redeploy it as appropriate. Isolating or stopping Coolify does not isolate those applications.
