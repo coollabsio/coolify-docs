@@ -67,7 +67,8 @@
     "slug": "appwrite",
     "icon": "/docs/images/services/appwrite-logo.svg",
     "description": "A backend-as-a-service platform that simplifies the web & mobile app development.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "Argilla",
@@ -110,7 +111,8 @@
     "slug": "babybuddy",
     "icon": "/docs/images/services/babybuddy-logo.png",
     "description": "It helps parents track their baby's daily activities, growth, and health with ease.",
-    "category": "Health"
+    "category": "Health",
+    "disabled": true
   },
   {
     "name": "BentoPDF",
@@ -153,7 +155,8 @@
     "slug": "bookstack",
     "icon": "/docs/images/services/bookstack-logo.png",
     "description": "Self-hosted wiki-style documentation platform.",
-    "category": "Documentation"
+    "category": "Documentation",
+    "disabled": true
   },
   {
     "name": "Browserless",
@@ -167,7 +170,8 @@
     "slug": "budge",
     "icon": "/docs/images/services/budge-logo.png",
     "description": "A budgeting personal finance app.",
-    "category": "Finance"
+    "category": "Finance",
+    "disabled": true
   },
   {
     "name": "Budibase",
@@ -238,7 +242,8 @@
     "slug": "castopod",
     "icon": "/docs/images/services/castopod-logo.svg",
     "description": "Open-source podcast hosting platform.",
-    "category": "Media"
+    "category": "Media",
+    "disabled": true
   },
   {
     "name": "Celld",
@@ -294,7 +299,8 @@
     "slug": "classicpress",
     "icon": "/docs/images/services/classicpress-logo.svg",
     "description": "A business-focused CMS with a strong community.",
-    "category": "CMS"
+    "category": "CMS",
+    "disabled": true
   },
   {
     "name": "Cloudbeaver",
@@ -329,7 +335,8 @@
     "slug": "cockpit",
     "icon": "/docs/images/services/cockpit-logo.svg",
     "description": "Headless CMS with REST & GraphQL APIs.",
-    "category": "CMS"
+    "category": "CMS",
+    "disabled": true
   },
   {
     "name": "Code Server",
@@ -472,14 +479,16 @@
     "slug": "dokuwiki",
     "icon": "/docs/images/services/dokuwiki-logo.png",
     "description": "A simple to use and highly versatile Open Source wiki software that doesn't require a database.",
-    "category": "Documentation"
+    "category": "Documentation",
+    "disabled": true
   },
   {
     "name": "Dolibarr",
     "slug": "dolibarr",
     "icon": "/docs/images/services/dolibarr.png",
     "description": "Open-source ERP and CRM software.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "Dozzle",
@@ -500,7 +509,8 @@
     "slug": "drupal",
     "icon": "/docs/images/services/drupal-logo.svg",
     "description": "Open-source content management system.",
-    "category": "CMS"
+    "category": "CMS",
+    "disabled": true
   },
   {
     "name": "Duplicati",
@@ -514,7 +524,8 @@
     "slug": "easyappointments",
     "icon": "/docs/images/services/easyappointments-logo.png",
     "description": "Open-source appointment scheduler.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "EdgeDB",
@@ -585,7 +596,8 @@
     "slug": "espocrm",
     "icon": "/docs/images/services/espocrm.svg",
     "description": "A free and open-source CRM platform.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "Evolution API",
@@ -641,7 +653,8 @@
     "slug": "firefly",
     "icon": "/docs/images/services/firefly-iii-logo.svg",
     "description": "A personal finances manager.",
-    "category": "Finance"
+    "category": "Finance",
+    "disabled": true
   },
   {
     "name": "Firefox",
@@ -697,14 +710,16 @@
     "slug": "freescout",
     "icon": "/docs/images/services/freescout-logo.png",
     "description": "Help desk and customer support application.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "Freshrss",
     "slug": "freshrss",
     "icon": "/docs/images/services/FreshRSS-logo.png",
     "description": "Free, self-hostable RSS feed aggregator.",
-    "category": "RSS"
+    "category": "RSS",
+    "disabled": true
   },
   {
     "name": "Garage",
@@ -767,7 +782,8 @@
     "slug": "glpi",
     "icon": "/docs/images/services/glpi-logo.svg",
     "description": "Free, open-source IT Service Management platform for asset management, helpdesk, and service desk operations.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "GoatCounter",
@@ -830,7 +846,8 @@
     "slug": "grocy",
     "icon": "/docs/images/services/grocy-logo.svg",
     "description": "A self-hosted groceries & household management solution for your home.",
-    "category": "Home"
+    "category": "Home",
+    "disabled": true
   },
   {
     "name": "HashiCorp Vault",
@@ -858,7 +875,8 @@
     "slug": "heimdall",
     "icon": "/docs/images/services/heimdall-logo.svg",
     "description": "An elegant solution to organize all your web applications.",
-    "category": "Administration"
+    "category": "Administration",
+    "disabled": true
   },
   {
     "name": "Hermes Agent",
@@ -972,7 +990,8 @@
     "slug": "invoice-ninja",
     "icon": "/docs/images/services/invoiceninja-logo.png",
     "description": "Invoice management system.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "It Tools",
@@ -1014,7 +1033,8 @@
     "slug": "joomla",
     "icon": "/docs/images/services/Joomla-Logo.svg",
     "description": "Open-source content management system.",
-    "category": "CMS"
+    "category": "CMS",
+    "disabled": true
   },
   {
     "name": "Joplin",
@@ -1049,7 +1069,8 @@
     "slug": "kimai",
     "icon": "/docs/images/services/kimai-logo.svg",
     "description": "An open-source time-tracking solution for teams of all sizes.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "Kuzzle",
@@ -1084,7 +1105,8 @@
     "slug": "leantime",
     "icon": "/docs/images/services/leantime-logo.svg",
     "description": "Lean project management system for innovators.",
-    "category": "Project Management"
+    "category": "Project Management",
+    "disabled": true
   },
   {
     "name": "LibreChat",
@@ -1105,7 +1127,8 @@
     "slug": "librespeed",
     "icon": "/docs/images/services/librespeed.png",
     "description": "Deploy Librespeed on Coolify for self-hosted lightweight speed test.",
-    "category": "Networking"
+    "category": "Networking",
+    "disabled": true
   },
   {
     "name": "Libretranslate",
@@ -1126,7 +1149,8 @@
     "slug": "limesurvey",
     "icon": "/docs/images/services/limesurvey-logo.svg",
     "description": "The most popular FOSS online survey tool on the web.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "Linkding",
@@ -1263,7 +1287,8 @@
     "slug": "mediawiki",
     "icon": "/docs/images/services/mediawiki-logo.svg",
     "description": "A free and open-source wiki software package.",
-    "category": "Documentation"
+    "category": "Documentation",
+    "disabled": true
   },
   {
     "name": "Meilisearch",
@@ -1342,14 +1367,16 @@
     "slug": "mixpost",
     "icon": "/docs/images/services/mixpost-logo.svg",
     "description": "Self-hosted social media management software (Buffer alternative).",
-    "category": "Social Media"
+    "category": "Social Media",
+    "disabled": true
   },
   {
     "name": "Moodle",
     "slug": "moodle",
     "icon": "/docs/images/services/moodle-logo.png",
     "description": "Open-source learning platform.",
-    "category": "Education"
+    "category": "Education",
+    "disabled": true
   },
   {
     "name": "Mosquitto",
@@ -1412,7 +1439,8 @@
     "slug": "nextcloud",
     "icon": "/docs/images/services/nextcloud-logo.svg",
     "description": "A safe home for all your data.",
-    "category": "Storage"
+    "category": "Storage",
+    "disabled": true
   },
   {
     "name": "Nitropage",
@@ -1454,7 +1482,8 @@
     "slug": "observium",
     "icon": "/docs/images/services/observium-logo.webp",
     "description": "Low-maintenance auto-discovering network monitoring platform.",
-    "category": "Monitoring"
+    "category": "Monitoring",
+    "disabled": true
   },
   {
     "name": "Obsidian",
@@ -1560,21 +1589,24 @@
     "slug": "opnform",
     "icon": "/docs/images/services/opnform.svg",
     "description": "Open-source form builder that lets you create beautiful forms and share them anywhere.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "OrangeHRM",
     "slug": "orangehrm",
     "icon": "/docs/images/services/orangehrm-logo.svg",
     "description": "Free HR management system for businesses.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "Organizr",
     "slug": "organizr",
     "icon": "/docs/images/services/organizr-logo.png",
     "description": "Homepage organizer for your server services.",
-    "category": "Administration"
+    "category": "Administration",
+    "disabled": true
   },
   {
     "name": "Osticket",
@@ -1603,7 +1635,8 @@
     "slug": "owncloud",
     "icon": "/docs/images/services/owncloud-logo.svg",
     "description": "File synchronization and sharing platform.",
-    "category": "Storage"
+    "category": "Storage",
+    "disabled": true
   },
   {
     "name": "Pairdrop",
@@ -1631,14 +1664,16 @@
     "slug": "passbolt",
     "icon": "/docs/images/services/passbolt-logo.svg",
     "description": "Open source password manager for teams.",
-    "category": "Security"
+    "category": "Security",
+    "disabled": true
   },
   {
     "name": "Paymenter",
     "slug": "paymenter",
     "icon": "/docs/images/services/paymenter-logo.svg",
     "description": "Open-Source Billing, Built for Hosting Providers.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "PeerTube",
@@ -1681,7 +1716,8 @@
     "slug": "phpmyadmin",
     "icon": "/docs/images/services/phpmyadmin-logo.svg",
     "description": "MySQL database management tool.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "Pi-hole",
@@ -1782,7 +1818,8 @@
     "slug": "privatebin",
     "icon": "/docs/images/services/privatebin-logo.svg",
     "description": "Minimalist, open-source online pastebin.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "Prowlarr",
@@ -1803,7 +1840,8 @@
     "slug": "pterodactyl",
     "icon": "/docs/images/services/pterodactyl-logo.png",
     "description": "Game server management panel with Wings daemon for hosting Minecraft, CS:GO, ARK and more.",
-    "category": "Gaming"
+    "category": "Gaming",
+    "disabled": true
   },
   {
     "name": "Pydio Cells",
@@ -1972,7 +2010,8 @@
     "slug": "shlink",
     "icon": "/docs/images/services/shlink-logo.svg",
     "description": "The open source URL shortener.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "SigNoz",
@@ -2007,14 +2046,16 @@
     "slug": "snapdrop",
     "icon": "/docs/images/services/snapdrop-logo.png",
     "description": "Local file sharing in your browser.",
-    "category": "File Sharing"
+    "category": "File Sharing",
+    "disabled": true
   },
   {
     "name": "Snipe-IT",
     "slug": "snipe-it",
     "icon": "/docs/images/services/snipe-it-logo.webp",
     "description": "A free open source IT asset/license management system.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "Soju",
@@ -2035,7 +2076,8 @@
     "slug": "soketi-app-manager",
     "icon": "/docs/images/services/soketi-app-manager-logo.svg",
     "description": "Manage Soketi apps with application configuration and WebSocket server administration interface.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "SonarQube",
@@ -2288,7 +2330,8 @@
     "slug": "vvveb",
     "icon": "/docs/images/services/vvveb-logo.png",
     "description": "Powerful website builder with drag and drop functionality.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "Wakapi",
@@ -2337,7 +2380,8 @@
     "slug": "windmill",
     "icon": "/docs/images/services/windmill-logo.svg",
     "description": "Open-source developer platform.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "Windows",
@@ -2366,7 +2410,8 @@
     "slug": "wordpress",
     "icon": "/docs/images/services/wordpress-logo.svg",
     "description": "Website and blogging platform.",
-    "category": "CMS"
+    "category": "CMS",
+    "disabled": true
   },
   {
     "name": "Yamtrack",
