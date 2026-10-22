@@ -28,8 +28,25 @@ Coolify accepts these options:
 - `--gpus`
 - `--hostname`
 - `--entrypoint`
+- `--add-host`
+- `--pids-limit`
+- `--read-only`
+- `--runtime`
+- `--tmpfs`
 
-Coolify converts only the listed options into the generated container configuration. Other Docker run options are not applied because they can conflict with the network, storage, or lifecycle configuration Coolify manages.
+Coolify converts only the listed options into the generated container configuration. Other Docker run options, such as `--network`, `--name`, `-v`, `-p`, and `-e`, are not applied because they can conflict with the network, storage, or lifecycle configuration Coolify manages. The deployment log shows a warning that lists each option Coolify did not apply.
+
+Use the dedicated Coolify settings for these values instead: **Persistent Storage** for volumes, **Environment Variables** for `-e`, and the network and port settings for networking.
+
+## Use a custom seccomp profile
+
+Put the profile file on the server, then refer to it with an absolute path:
+
+```sh
+--security-opt seccomp=/etc/docker/seccomp-profile.json
+```
+
+If the file does not exist on the server, the deployment fails with a `bind source path does not exist` error.
 
 ## Add an option
 

@@ -90,7 +90,7 @@ ClickHouse does not expose a custom configuration editor or SSL selector in the 
 
 Coolify supports scheduled ClickHouse backups. Configure a schedule under **Backups**, enter one or more comma-separated database names, and configure local or S3 retention. Coolify creates a ClickHouse backup archive and removes expired copies according to the schedule's retention rules.
 
-Use the database's **Terminal** or an approved ClickHouse client to verify the restored tables. Coolify's built-in [Import Backup workflow](/databases/restore#restore-support) does not support ClickHouse.
+Use the database's **Terminal** or an approved ClickHouse client to verify the restored tables. Coolify's built-in [Import Backup workflow](/databases/restore#supported-backups) does not support ClickHouse.
 
 <Callout type="warning" title="Verify ClickHouse backups separately">
 

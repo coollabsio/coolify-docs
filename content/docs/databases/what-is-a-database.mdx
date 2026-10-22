@@ -9,7 +9,7 @@ import { Box2, BranchUp, Rocket2 } from 'reicon-react';
 
 A database stores and organizes data for an application. In Coolify, a standalone database is a database engine that Coolify deploys and manages as a Docker container on a selected server and destination.
 
-Coolify currently provides one-click resources for PostgreSQL, MySQL, MariaDB, MongoDB, Redis, Dragonfly, KeyDB, and ClickHouse.
+Coolify currently provides one-click resources for PostgreSQL, MySQL, MariaDB, MongoDB, Redis, Dragonfly, KeyDB, ClickHouse, and experimental SQLite.
 
 ## What is a one-click database?
 
@@ -78,4 +78,4 @@ The persistent volume protects data during normal container replacement. It does
   ]}
 />
 
-SQLite is also available as an experimental standalone database. Applications on the same server mount its data volume to access database files. See [SQLite](/databases/sqlite).
+SQLite is experimental. Applications on the same server mount its data volume to access database files, instead of using an internal URL. See [SQLite](/databases/sqlite).

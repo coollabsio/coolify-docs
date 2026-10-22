@@ -1,0 +1,152 @@
+---
+title: PHP Security Advisory 2026 (PHP2Shell)
+description: Patched Coolify versions and update instructions for PHP2Shell (CVE-2026-109618 and CVE-2026-109619), with guidance for self-hosted instances, Coolify Cloud, and deployed applications.
+---
+
+# PHP Security Advisory 2026 (PHP2Shell)
+
+**Last updated: 21 October 2026 — patched releases available.**
+
+<Callout type="error" title="Update self-hosted Coolify immediately">
+PHP2Shell, tracked as [CVE-2026-109618](https://www.cve.org/CVERecord?id=CVE-2026-109618) and [CVE-2026-109619](https://www.cve.org/CVERecord?id=CVE-2026-109619), consists of two critical PHP remote code execution vulnerabilities. Unpatched Coolify installations across every v4 release line are affected. Install a patched version below; **v4.4.7 is recommended**.
+</Callout>
+
+## Patched Coolify versions
+
+The PHP fix has been backported to every v4 minor release line. If you need to stay on your current minor version, install its security release:
+
+| Your release line | First patched version |
+| :--- | :--- |
+| v4.0.x | [v4.0.1](https://github.com/coollabsio/coolify/releases/tag/v4.0.1) |
+| v4.1.x | [v4.1.3](https://github.com/coollabsio/coolify/releases/tag/v4.1.3) |
+| v4.2.x | [v4.2.1](https://github.com/coollabsio/coolify/releases/tag/v4.2.1) |
+| v4.3.x | [v4.3.24](https://github.com/coollabsio/coolify/releases/tag/v4.3.24) |
+| v4.4.x | [v4.4.7](https://github.com/coollabsio/coolify/releases/tag/v4.4.7) |
+
+**We recommend moving to v4.4.7 wherever possible.** Staying on an older minor line addresses PHP2Shell, but leaves out other security fixes that have not been backported.
+
+## Self-hosted Coolify users
+
+### Update v4.4 from the dashboard
+
+Open **Settings → Update → Check now → Update** and install **v4.4.7**. See the [upgrade guide](/core/instance-management/update) for the complete update process.
+
+### Stay on a stable v4.0–v4.3 release line
+
+Connect over SSH to the server running Coolify and run:
+
+```bash
+curl -fsSL https://cdn.coollabs.io/coolify/patch.sh | sudo bash
+```
+
+The script detects your current minor version and installs the corresponding security release from the table. It recreates only the **Coolify container**, leaving your deployed application containers running. It requires a **running, stable Coolify release**; beta, RC, and nightly builds are not supported.
+
+<Callout type="warn" title="Previously stopped Coolify?">
+For a stopped stable instance, you can use the [terminal upgrade process](/core/instance-management/update#manual-update-via-terminal) to install **v4.4.7** without first restarting the unpatched instance. If you need to stay on v4.0–v4.3 with `patch.sh`, [isolate Coolify from public access](#option-2-isolate-coolify-and-use-an-ssh-tunnel) before running `docker start coolify`, then run the patch script over SSH. Keep the isolation in place until patching succeeds.
+</Callout>
+
+### Move from a v4 beta or older release
+
+First install the **v4.0.1** security release from an SSH session on your Coolify server:
+
+```bash
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash -s 4.0.1
+```
+
+This version-pinned installation command is the recovery path for a v4 beta or older release. Once v4.0.1 is running, immediately continue to **v4.4.7** through **Settings → Update → Check now → Update**.
+
+### Confirm the update before restoring access
+
+Check the version shown in the dashboard, or confirm that the patch script reports a healthy container on the expected security release. If you removed the instance domain or blocked public access earlier, restore only the access you need after verifying the update. You can also keep using your SSH tunnel.
+
+## Coolify Cloud users
+
+**Coolify Cloud is already patched.** You do not need to run any of the instance update commands above; the Coolify team manages the platform's updates.
+
+<Callout type="warn" title="Your PHP applications need separate attention">
+The Cloud patch protects the Coolify platform. It does not update the PHP applications you deploy on your own servers. Update their PHP runtimes or container images separately and rebuild or redeploy them as needed. This also applies to applications managed by self-hosted Coolify.
+</Callout>
+
+## If you cannot update immediately
+
+PHP has now published configuration-specific temporary guidance in both official advisories:
+
+- [GHSA-w8hw-w9fx-j79w: RCE via OOM corruption](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w#mitigation).
+- [GHSA-6wmf-4rv5-p3rp: RCE via stale global state](https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp#mitigation).
+
+Follow the mitigation guidance in **both** advisories for your PHP configuration. These measures reduce exposure but do not cover every affected execution path. **Installing a Coolify release containing the PHP patches is the only complete mitigation for your instance.** Do not rely on a single PHP setting or request filter instead of updating.
+
+### Cloudflare WAF remains a stopgap
+
+Cloudflare [announced WAF rules for known exploit vectors](https://x.com/dok2001/status/2112811965735202970), including on its Free plan. These rules do not patch PHP or guarantee protection against every vector. They only inspect traffic passing through Cloudflare; direct access to your server bypasses them. Update Coolify and your PHP applications even if they are behind Cloudflare.
+
+### Keep an unpatched instance offline or isolated
+
+If you cannot install a patched release yet, use one of these isolation measures while you prepare the update. Keep it in place until you have verified that a patched version is running.
+
+<Tabs id="php-security-2026-isolation" items={['Stop Coolify', 'Use an SSH tunnel']}>
+<Tab value="Stop Coolify">
+
+### Option 1: Stop Coolify (recommended)
+
+Connect over SSH to the server running your Coolify instance and run:
+
+```bash
+docker stop coolify
+```
+
+This stops the Coolify container and makes the dashboard and API unavailable, including through your instance domain. You cannot manage resources through Coolify while it is stopped; webhook-triggered deployments and Coolify's background tasks will also be unavailable.
+
+**Your already deployed applications, databases, and services will continue running.** Leave Docker, the Coolify proxy, and your application containers running.
+
+Use the update path above when you are ready to patch. For a stopped stable instance, the [terminal upgrade process](/core/instance-management/update#manual-update-via-terminal) can install v4.4.7 and start Coolify afterward. Automatic updates and `patch.sh` cannot run while Coolify is stopped.
+
+</Tab>
+<Tab value="Use an SSH tunnel">
+
+### Option 2: Isolate Coolify and use an SSH tunnel
+
+Use this option if you need to keep managing your instance while preventing public access to Coolify.
+
+1. In the Coolify dashboard, open **Settings → General**, clear the instance domain from the **URL** field, and click **Save changes**. This automatically removes the proxy route for your Coolify instance domain; no manual proxy configuration is needed for that route. See [instance URL settings](/core/instance-management/instance-settings#url).
+2. Block public inbound TCP access to ports **8000, 6001, and 6002** on the server running Coolify. These are the default dashboard, real-time updates, and web terminal ports. Also block **6000** if your setup exposes it, and any custom ports used for Coolify access.
+3. If you separately configured another way to reach Coolify, such as an external reverse proxy or Cloudflare Tunnel, disable that access too.
+4. Verify from outside your server that Coolify is unreachable through its former domain, public IP addresses, and any alternate routes. Check both IPv4 and IPv6 where configured. Keep SSH access available so you can use the tunnel below.
+
+Leave ports **80 and 443** available for your deployed applications. Clearing the instance URL in step 1 removes Coolify's domain route while keeping your application routes working.
+
+<Callout type="warn" title="Use a firewall that blocks Docker-published ports">
+Coolify uses Docker, and Docker-published ports can bypass normal UFW rules. A UFW deny rule alone may leave Coolify reachable from the internet. **Use your hosting provider's firewall** to block public access to the Coolify ports whenever one is available.
+
+If your hosting provider does not offer a firewall, use a tool such as [ufw-docker](https://github.com/chaifeng/ufw-docker) to make UFW filtering apply to Docker-published ports. Follow its installation and rule instructions, and see the [Coolify firewall guide](/core/infrastructure/servers/firewall) for more details. Verify from another machine that Coolify is unreachable. If you cannot verify that Coolify is isolated, use **Option 1**.
+</Callout>
+
+Run this command **on your own computer** to forward the Coolify ports over SSH:
+
+```bash
+echo "Opening tunnel — press Ctrl+C to stop" && \
+ssh -N -o ExitOnForwardFailure=yes \
+  -L 127.0.0.1:8000:localhost:8000 \
+  -L 127.0.0.1:6001:localhost:6001 \
+  -L 127.0.0.1:6002:localhost:6002 \
+  root@203.0.113.26
+```
+
+Replace `203.0.113.26` with your server IP address. Adjust the SSH user, SSH port, or forwarded ports if your installation uses different values. The local ports bind to `127.0.0.1` so other computers on your network cannot use your tunnel.
+
+Keep the terminal open and visit [http://localhost:8000](http://localhost:8000) in your browser. Press **Ctrl+C** to close the tunnel when you finish. Coolify keeps running on the server after the tunnel closes.
+
+</Tab>
+</Tabs>
+
+## Other security updates in these releases
+
+The [v4.4.7 release notes](https://github.com/coollabsio/coolify/releases/tag/v4.4.7) also cover dependency updates beyond PHP:
+
+| Component | Security update | What you need to do |
+| :--- | :--- | :--- |
+| Sentinel **1.1.2** | Fixes [CVE-2026-111943](https://www.cve.org/CVERecord?id=CVE-2026-111943). | Coolify updates Sentinel automatically. |
+| cloudflared **2026.10.3** | Addresses the [eMudhra certificate compromise](https://blog.cloudflare.com/emudhra-certificate-compromise/). | Update any Cloudflare Tunnel deployments you operate separately as well. |
+| Node.js **24.22.1** in Coolify **v4.4.7** | Includes fixes for multiple Node.js vulnerabilities. | Update runtimes in your own Node.js applications separately. |
+
+Updating Coolify does **not** update the runtimes inside your deployed applications. Review those applications separately, including PHP and Node.js workloads, and apply the appropriate runtime or image updates.
