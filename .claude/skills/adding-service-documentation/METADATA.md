@@ -34,10 +34,10 @@ services:
 | Upstream YAML comment | Docs frontmatter / output |
 |---|---|
 | `documentation` | Used in the page body's `## Links` section as the official-website link |
-| `slogan` | Becomes the `description` in frontmatter (which becomes the card description and `all.md` entry) |
+| `slogan` | Becomes the `description` in frontmatter (which becomes the card description and `all.mdx` entry) |
 | `category` | Becomes `category` in frontmatter; capitalize properly (e.g., `productivity` → `Productivity`) |
 | `tags` | Not used in docs frontmatter, but useful context for writing the page |
-| `logo` | Download to `docs/public/images/services/`. If you name it `<slug>-logo.<ext>`, you don't need an `icon` field — see [IMAGES.md](./IMAGES.md) for the resolver rules |
+| `logo` | Download to `public/images/services/`. If you name it `<slug>-logo.<ext>`, you don't need an `icon` field — see [IMAGES.md](./IMAGES.md) for the resolver rules |
 | `ignore: true` | Do not create documentation for this service |
 
 ## Resulting Docs Frontmatter
@@ -69,14 +69,12 @@ icon: "/docs/images/services/appsmith-logo.svg"      # optional if logo is named
 ---
 title: "Appsmith"
 description: "A low-code application platform for building internal tools."
-og:
-  description: "Build internal tools on Coolify with Appsmith's low-code platform featuring drag-and-drop UI, database connectors, and custom business logic."
 category: "Productivity"
 icon: "/docs/images/services/appsmith-logo.svg"
 ---
 ```
 
-**Logo:** download `https://raw.githubusercontent.com/coollabsio/coolify/main/public/svgs/appsmith.svg` and save to `docs/public/images/services/appsmith-logo.svg`.
+**Logo:** download `https://raw.githubusercontent.com/coollabsio/coolify/main/public/svgs/appsmith.svg` and save to `public/images/services/appsmith-logo.svg`.
 
 ## GitHub Repository Lookup
 
@@ -100,4 +98,4 @@ The upstream `category` is lowercase. The docs use **Title Case** consistently. 
 | `business` | `Business` |
 | `file-management` | `File Management` |
 
-See [CATALOG.md](./CATALOG.md) for the complete list of categories already in use.
+See [CATALOG.md](./CATALOG.md) for how to inspect the categories currently in use.

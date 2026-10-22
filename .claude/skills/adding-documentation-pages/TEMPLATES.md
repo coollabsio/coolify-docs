@@ -1,12 +1,12 @@
 # Documentation Page Templates
 
-Ready-to-use templates for different documentation types.
+Use these examples for `.mdx` pages under `content/docs/`. The repository also provides `templates/blank.mdx`, `templates/guide.mdx`, and `templates/troubleshooting.mdx`; replace their placeholders before saving a page.
 
 ## Step-by-Step Guide
 
 For how-to guides and tutorials:
 
-```markdown
+````mdx
 ---
 title: "How to Configure X"
 description: "Learn how to configure X in Coolify for [benefit]."
@@ -31,9 +31,11 @@ Description of the first step.
 
 Description of the second step.
 
-::: tip
+<Callout type="success" title="Tip">
+
 Helpful tip for this step.
-:::
+
+</Callout>
 
 ## 3. Third Step
 
@@ -49,13 +51,13 @@ Solution to common issue.
 
 - [Related Guide](/path/to/guide)
 - [External Documentation](https://example.com?utm_source=coolify.io)
-```
+````
 
 ## Troubleshooting Article
 
 For problem-solution documentation:
 
-```markdown
+````mdx
 ---
 title: "Fix: Problem Description"
 description: "How to resolve [problem] when using Coolify."
@@ -90,13 +92,13 @@ How to avoid this issue in the future.
 ## Related Issues
 
 - [Related Problem](/troubleshoot/related)
-```
+````
 
 ## Configuration Guide
 
 For settings and configuration documentation:
 
-```markdown
+````mdx
 ---
 title: "Configuring X"
 description: "Complete guide to configuring X in Coolify."
@@ -140,13 +142,13 @@ nested:
 ## Troubleshooting
 
 Common configuration issues and solutions.
-```
+````
 
 ## Knowledge Base Article
 
 For conceptual explanations:
 
-```markdown
+````mdx
 ---
 title: "Understanding X"
 description: "Learn about X and how it works in Coolify."
@@ -175,7 +177,7 @@ Recommendations for using X effectively.
 
 - [Related Topic](/knowledge-base/related)
 - [External Resource](https://example.com?utm_source=coolify.io)
-```
+````
 
 ## Template Selection Guide
 

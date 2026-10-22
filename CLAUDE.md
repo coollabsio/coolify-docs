@@ -114,8 +114,6 @@ Service frontmatter:
 ---
 title: "Buzz"
 description: "Short description shown in the service catalog."
-og:
-  description: "Longer description for social previews."
 category: "Messaging"
 icon: "/docs/images/services/buzz-logo.svg"
 # disabled: true   # hide from the catalog but keep the page
@@ -129,6 +127,8 @@ When adding, renaming, or disabling services, update:
 | `content/docs/services/{slug}.mdx` | Service documentation |
 | `public/images/services/` | Service logo and screenshots |
 | `nginx/redirects.conf` | Redirects for renamed or removed paths |
+
+The current SEO and generated social-image pipeline reads `title` and `description`. Existing nested `og` metadata and frontmatter `image` fields do not override it.
 
 Service filenames should use kebab-case lowercase and match the service slug. Use a category that already exists in `all.mdx` so the catalog doesn't get duplicate headings.
 
