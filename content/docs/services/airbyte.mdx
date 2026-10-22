@@ -1,0 +1,42 @@
+---
+title: "Airbyte"
+description: "Open-source data movement for ELT pipelines and AI agents."
+og:
+  description: "Airbyte is an open source data replication platform and context layer for AI agents. Equip your agents to query, search, and act on your data in real-time, or replicate data from hundreds of sources into warehouses, lakes, and databases."
+category: "Analytics"
+icon: "/docs/images/services/airbyte-logo.svg"
+---
+
+# Airbyte
+
+![Airbyte](/docs/images/services/airbyte-logo.svg)
+
+## What is Airbyte?
+
+Airbyte is an open source data replication platform and context layer for AI agents. Equip your agents to query, search, and act on your data in real-time, or replicate data from hundreds of sources into warehouses, lakes, and databases.
+
+## Deployment Note
+
+Airbyte has [deprecated Docker Compose deployments in favour of `abctl`](https://docs.airbyte.com/platform/deploying-airbyte/migrating-from-docker-compose).
+
+As a result, this Coolify template is based on the community-maintained [airbyte-compose](https://github.com/nktnet1/airbyte-compose) repository rather than an officially maintained Docker Compose deployment.
+
+## Usage
+
+### Initial Setup
+
+After deploying the template, open the Web UI link and complete the setup by entering your email address and company name.
+
+You can then log in using the value set in the environment variable `SERVICE_PASSWORD_AIRBYTEADMIN`.
+
+### Connecting to Other Databases on the Coolify Network
+
+If you wish to connect to databases hosted on Coolify but external to the Airbyte service template, you will need to enable the option [Connect to Predefined Networks](https://coolify.io/docs/knowledge-base/docker/compose#connect-to-predefined-networks).
+
+However, this may result in hostname conflicts with other services on the network. It is highly recommended that you [create a new Coolify destination](https://coolify.io/docs/knowledge-base/destinations/create) and deploy your Airbyte service and other databases to that destination instead.
+
+## Links
+
+- [Official Website](https://airbyte.com)
+- [GitHub](https://github.com/airbytehq/airbyte)
+- [Airbyte Compose Template](https://github.com/nktnet1/airbyte-compose)
