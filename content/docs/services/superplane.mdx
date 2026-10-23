@@ -1,0 +1,60 @@
+---
+title: "SuperPlane"
+description: "Open-source AI software factory that turns routine development work into verified pull requests."
+category: "Automation"
+icon: "/docs/images/services/superplane-logo.svg"
+---
+
+# SuperPlane
+
+<ZoomImage src="/docs/images/services/superplane-logo.svg" alt="SuperPlane logo" />
+
+## What is SuperPlane?
+
+SuperPlane is an open-source AI software factory. It lets AI agents automate routine development work, such as focused bug fixes, test fixes, documentation updates, and small improvements, and turns that work into verified, review-ready pull requests.
+
+SuperPlane coordinates agents, source control, CI, review, approvals, and feedback in one visible system:
+
+- **Continuous scanning:** finds work in your codebase and backlog that agents can handle with high confidence.
+- **Guardrails:** you define deterministic workflow steps, and the workflow enforces the rules instead of the agent.
+- **Verification:** checks whether work is complete and sends the agent back to iterate when it is not.
+- **Open source:** works with the models you choose. The engine is licensed under Apache 2.0.
+
+The Coolify service runs SuperPlane on one server: the app, PostgreSQL, RabbitMQ, a Fleet Manager, and one runner that executes agent tasks.
+
+## After you deploy
+
+1. Open the URL of the **app** service. To use your own domain, set it on the **app** service with port `8000`.
+2. Complete owner setup to create the first administrator account.
+3. Wait for Fleet Manager to start a runner. It mints its own admin token after owner setup, so you do not need to create one.
+
+Coolify generates `ENCRYPTION_MASTER_KEYS` on the first deploy. Keep that value. SuperPlane cannot read encrypted data after the key changes.
+
+## Environment variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SUPERPLANE_VERSION` | No | SuperPlane image tag. Set a newer published tag to upgrade. |
+| `RUNNER_FLEET_ID` / `RUNNER_ARCH` | No | On ARM servers, set `e1-large-arm64` and `arm64`. |
+| `RESEND_API_KEY`, `EMAIL_FROM_NAME`, `EMAIL_FROM_ADDRESS` | No | Email delivery. You can also configure SMTP later in the SuperPlane UI. |
+| `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | No | Sign in with GitHub. |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | No | Sign in with Google. |
+
+## Persistent storage
+
+The service keeps PostgreSQL and RabbitMQ data, the OIDC signing key, uploaded files, and runner logs in named volumes.
+
+## Limits
+
+<Callout type="warning">
+  Run one SuperPlane service per server. Fleet Manager mounts the Docker socket and starts the runner container directly on the host, outside Coolify. Two SuperPlane services on the same server can remove each other's runners.
+</Callout>
+
+- The service runs one runner at a time. Each runner exits after its task, and Fleet Manager starts a new one.
+- The runner image has no Docker client, so tasks cannot use Docker execution mode.
+
+## Links
+
+- [Official website](https://superplane.com?utm_source=coolify.io)
+- [Documentation](https://docs.superplane.com/?utm_source=coolify.io)
+- [GitHub](https://github.com/superplanehq/superplane?utm_source=coolify.io)

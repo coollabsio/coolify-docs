@@ -2116,6 +2116,13 @@
     "category": "Development"
   },
   {
+    "name": "SuperPlane",
+    "slug": "superplane",
+    "icon": "/docs/images/services/superplane-logo.svg",
+    "description": "Open-source AI software factory that turns routine development work into verified pull requests.",
+    "category": "Automation"
+  },
+  {
     "name": "Superset",
     "slug": "superset",
     "icon": "/docs/images/services/superset-logo.svg",
