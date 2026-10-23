@@ -11,9 +11,16 @@ icon: "/docs/images/services/superplane-logo.svg"
 
 ## What is SuperPlane?
 
-SuperPlane is an open-source automation engine for AI-driven engineering. It runs workflows across Git, LLMs, CI/CD, and the other tools your team already uses.
+SuperPlane is an open-source AI software factory. It lets AI agents automate routine development work, such as focused bug fixes, test fixes, documentation updates, and small improvements, and turns that work into verified, review-ready pull requests.
 
-The Coolify service runs SuperPlane on one server: the app, PostgreSQL, RabbitMQ, a Fleet Manager, and one runner that executes workflow tasks.
+SuperPlane coordinates agents, source control, CI, review, approvals, and feedback in one visible system:
+
+- **Continuous scanning:** finds work in your codebase and backlog that agents can handle with high confidence.
+- **Guardrails:** you define deterministic workflow steps, and the workflow enforces the rules instead of the agent.
+- **Verification:** checks whether work is complete and sends the agent back to iterate when it is not.
+- **Open source:** works with the models you choose. The engine is licensed under Apache 2.0.
+
+The Coolify service runs SuperPlane on one server: the app, PostgreSQL, RabbitMQ, a Fleet Manager, and one runner that executes agent tasks.
 
 ## After you deploy
 
