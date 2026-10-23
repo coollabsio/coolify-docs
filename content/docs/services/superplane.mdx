@@ -1,0 +1,53 @@
+---
+title: "SuperPlane"
+description: "Open-source automation engine for AI-driven engineering."
+category: "Automation"
+icon: "/docs/images/services/superplane-logo.svg"
+---
+
+# SuperPlane
+
+<ZoomImage src="/docs/images/services/superplane-logo.svg" alt="SuperPlane logo" />
+
+## What is SuperPlane?
+
+SuperPlane is an open-source automation engine for AI-driven engineering. It runs workflows across Git, LLMs, CI/CD, and the other tools your team already uses.
+
+The Coolify service runs SuperPlane on one server: the app, PostgreSQL, RabbitMQ, a Fleet Manager, and one runner that executes workflow tasks.
+
+## After you deploy
+
+1. Open the URL of the **app** service. To use your own domain, set it on the **app** service with port `8000`.
+2. Complete owner setup to create the first administrator account.
+3. Wait for Fleet Manager to start a runner. It mints its own admin token after owner setup, so you do not need to create one.
+
+Coolify generates `ENCRYPTION_MASTER_KEYS` on the first deploy. Keep that value. SuperPlane cannot read encrypted data after the key changes.
+
+## Environment variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SUPERPLANE_VERSION` | No | SuperPlane image tag. Set a newer published tag to upgrade. |
+| `RUNNER_FLEET_ID` / `RUNNER_ARCH` | No | On ARM servers, set `e1-large-arm64` and `arm64`. |
+| `RESEND_API_KEY`, `EMAIL_FROM_NAME`, `EMAIL_FROM_ADDRESS` | No | Email delivery. You can also configure SMTP later in the SuperPlane UI. |
+| `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | No | Sign in with GitHub. |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | No | Sign in with Google. |
+
+## Persistent storage
+
+The service keeps PostgreSQL and RabbitMQ data, the OIDC signing key, uploaded files, and runner logs in named volumes.
+
+## Limits
+
+<Callout type="warning">
+  Run one SuperPlane service per server. Fleet Manager mounts the Docker socket and starts the runner container directly on the host, outside Coolify. Two SuperPlane services on the same server can remove each other's runners.
+</Callout>
+
+- The service runs one runner at a time. Each runner exits after its task, and Fleet Manager starts a new one.
+- The runner image has no Docker client, so tasks cannot use Docker execution mode.
+
+## Links
+
+- [Official website](https://superplane.com?utm_source=coolify.io)
+- [Documentation](https://docs.superplane.com/?utm_source=coolify.io)
+- [GitHub](https://github.com/superplanehq/superplane?utm_source=coolify.io)

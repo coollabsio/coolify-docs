@@ -2116,6 +2116,13 @@
     "category": "Development"
   },
   {
+    "name": "SuperPlane",
+    "slug": "superplane",
+    "icon": "/docs/images/services/superplane-logo.svg",
+    "description": "Open-source automation engine for AI-driven engineering.",
+    "category": "Automation"
+  },
+  {
     "name": "Superset",
     "slug": "superset",
     "icon": "/docs/images/services/superset-logo.svg",
