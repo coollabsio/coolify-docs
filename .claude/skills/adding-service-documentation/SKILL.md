@@ -1,171 +1,61 @@
 ---
 name: adding-service-documentation
-description: Documents new Coolify one-click services by creating markdown pages in docs/services/, downloading logos to docs/public/images/services/, and regenerating the services listing. Use when adding service documentation, creating service pages, onboarding services from templates/compose/, or refreshing the services catalog.
+description: Add or update Coolify one-click service documentation in content/docs/services/, store logos in public/images/services/, and regenerate the service catalog. Use for service pages and catalog updates; use adding-documentation-pages for other guides.
 allowed-tools: Read, Grep, Glob, Write, Bash
 ---
 
 # Add Service Documentation
 
-This skill guides you through documenting a new service in the Coolify documentation repository.
+Create service pages in the current Fumadocs content tree. Read `CLAUDE.md` for repository commands and conventions.
 
-## When to Use This Skill
+## Content Pipeline
 
-- Adding documentation for a new service from the Coolify repository
-- Creating service pages with proper formatting and images
-- Following documentation standards for service pages
+| Source or output | Purpose |
+|---|---|
+| `content/docs/services/{slug}.mdx` | Authored service page; the filename determines the slug |
+| `public/images/services/` | Local service logos and screenshots |
+| `src/generated/services.json` | Generated catalog data consumed by `src/components/data/services-list.tsx` |
+| `content/docs/services/all.mdx` | Generated categorized directory |
 
-## Architecture: Frontmatter-Driven Generation
+Both generators use `scripts/services-data.mjs`. It reads the top-level `.mdx` files in `content/docs/services/`, resolves local icons, and derives availability from frontmatter and recognized warning titles. It excludes `all.mdx`, `index.mdx`, `overview.mdx`, `how-services-work.mdx`, and `what-is-a-service.mdx`.
 
-The services listing is **generated**, not hand-edited. There is no manual catalog to maintain.
+**Do not hand-edit either generated output.** Run `bun run generate:services`. Generation also runs before `bun run dev`, `bun run build`, and `bun run types:check`. `bun run preview` serves the existing build without regenerating content.
 
-| Generator | Reads | Writes |
-|---|---|---|
-| `scripts/generate-service-list.mjs` | every `docs/services/*.md` frontmatter | `docs/.vitepress/theme/data/services.json` (consumed by `List.vue`) |
-| `scripts/generate-services-page.mjs` | every `docs/services/*.md` frontmatter | `docs/services/all.md` |
+## Workflow
 
-Both scripts share `scripts/services-data.mjs`, which:
-- Parses each markdown's YAML frontmatter
-- Auto-resolves the logo by scanning `docs/public/images/services/` for files matching `<slug>-logo`, `<slug>_logo`, `<slug>logo`, the bare `<slug>`, or the same variants of the `title`
-- Falls back to the first image referenced in the markdown body if frontmatter has no `icon` and no asset matches
-- Marks a service as disabled if frontmatter has `disabled: true` or the body contains `SERVICE HIDDEN | NOT AVAILABLE | REMOVED FROM COOLIFY | TEMPORARILY DISABLED`
+1. Check the relevant Coolify revision's `templates/compose/` YAML for the service, deployment variants, metadata, and availability. Skip new catalog entries marked `# ignore: true`; use [disabling-services](../disabling-services/SKILL.md) when updating an existing unavailable service.
+2. Download the upstream logo to `public/images/services/{slug}-logo.svg` (or its actual image extension). See [METADATA.md](./METADATA.md) and [IMAGES.md](./IMAGES.md).
+3. Create `content/docs/services/{slug}.mdx`, starting from `templates/service.mdx` or [TEMPLATES.md](./TEMPLATES.md). Replace template placeholders and add the required catalog frontmatter.
+4. Write the service description, verified setup details, and official links. Follow [DOCUMENTATION.md](./DOCUMENTATION.md).
+5. Run `bun run generate:services`. Check that the slug appears in `src/generated/services.json` and, for an enabled service, in `content/docs/services/all.mdx` under the right category.
+6. Verify the page at `http://localhost:3000/docs/services/{slug}` and its card in `/docs/services/overview`. When committing, include the authored page, any new assets, and both generated outputs.
 
-The generators run automatically on `bun run dev`, `bun run build`, and `bun run preview`. You can also run them on demand with `bun run generate:services`.
+Individual service pages are discovered by the catalog generator. Do not add every service to `content/docs/services/meta.json`; that file organizes the section's guides and catalog entry points.
 
-## Quick Start Workflow
-
-1. **Identify the service** from Coolify's GitHub repository (`templates/compose/`)
-2. **Extract metadata** from the YAML template header
-3. **Download the logo** from GitHub and save to `docs/public/images/services/` using a name the resolver will pick up
-4. **Create documentation** at `docs/services/{service-slug}.md` with the required frontmatter (`title`, `description`, `category`)
-5. **Regenerate listings** with `bun run generate:services` (or just `bun run dev` — it runs the generators first)
-6. **Commit** the new markdown, the logo, and the regenerated `services.json` and `all.md`
-
-## File Structure
-
-```
-Coolify Repository (GitHub):
-├── templates/compose/
-│   └── service-name.yaml        # Service template with metadata
-└── public/svgs/
-    └── service-logo.svg          # Service logo
-
-https://github.com/coollabsio/coolify/tree/main/templates/compose
-https://github.com/coollabsio/coolify/tree/main/public/svgs
-
-Documentation Repository:
-├── docs/
-│   ├── services/
-│   │   ├── service-name.md       # Service documentation page (you create)
-│   │   └── all.md                # Generated — DO NOT hand-edit
-│   ├── public/images/services/
-│   │   └── service-logo.svg      # Logo (you add)
-│   └── .vitepress/theme/
-│       ├── data/services.json    # Generated — DO NOT hand-edit
-│       └── components/Services/
-│           └── List.vue          # Renders services.json (no service entries inside it)
-└── scripts/
-    ├── generate-service-list.mjs
-    ├── generate-services-page.mjs
-    └── services-data.mjs
-```
-
-## Required Files for a New Service
-
-You only edit two things; the rest is generated:
-
-1. **Service documentation** (`docs/services/{slug}.md`) — with frontmatter
-2. **Service logo** (`docs/public/images/services/`)
-
-After your edits, `bun run generate:services` produces:
-- `docs/.vitepress/theme/data/services.json`
-- `docs/services/all.md`
-
-Commit all four files together.
-
-## Required Frontmatter
+## Service Frontmatter
 
 ```yaml
 ---
 title: "Service Name"
-description: "Short description used on the listing card and in all.md."
-og:
-  description: "Optional longer SEO/social-card description."
+description: "Short description for the service card and directory."
 category: "Analytics"
 icon: "/docs/images/services/service-name-logo.svg"
 ---
 ```
 
-| Field | Required | Purpose |
-|---|---|---|
-| `title` | yes | Card title; also `name` in `services.json` |
-| `description` | yes | Card description and `all.md` entry |
-| `category` | yes | Group heading in `all.md`; filter in the listing |
-| `icon` | optional | Only needed when the auto-resolver can't find a matching logo |
-| `og.description` | optional | Longer text for social cards |
-| `disabled` | optional | `true` hides the service from the listing while keeping the page accessible |
+Use an existing category where possible. `icon` is optional when the logo resolver finds a matching local file. Set `disabled: true` to hide a service from both catalogs while keeping its page reachable. See [CATALOG.md](./CATALOG.md) for resolution order and availability rules.
 
-## Detailed Instructions
+The collector reads only top-level scalar fields. Nested `og` metadata is not used for the service card; see [FRONTMATTER.md](../_shared/FRONTMATTER.md) for the current SEO behavior.
 
-**Service-specific:**
-- [METADATA.md](./METADATA.md) — Extracting service info from the upstream YAML template
-- [DOCUMENTATION.md](./DOCUMENTATION.md) — Writing the markdown body and frontmatter
-- [IMAGES.md](./IMAGES.md) — Service logo handling and the icon resolver
-- [CATALOG.md](./CATALOG.md) — Categories, the generation pipeline, and disabled services
-- [TEMPLATES.md](./TEMPLATES.md) — Ready-to-use markdown templates
+## Related References
 
-**Shared guidelines:**
-- [FRONTMATTER.md](../_shared/FRONTMATTER.md) — Title, description, Open Graph
-- [IMAGES.md](../_shared/IMAGES.md) — General image syntax
-- [LINKS.md](../_shared/LINKS.md) — Internal and external link formatting
-- [CONTAINERS.md](../_shared/CONTAINERS.md) — VitePress callout containers
-
-## Important Rules
-
-1. **Never hand-edit `docs/services/all.md` or `docs/.vitepress/theme/data/services.json`** — both are regenerated and your changes will be overwritten.
-2. **Download logos locally**: never link to external image URLs.
-3. **Skip ignored services**: if the upstream YAML has `# ignore: true`, don't document it.
-4. **Images**: use `![alt](path)` for the logo; use `<ZoomableImage>` only for screenshots.
-5. **UTM parameters**: append `?utm_source=coolify.io` to all external links.
-6. **File naming**: lowercase, kebab-case slug; the filename is the slug.
-7. **Logo naming**: name the asset so the resolver finds it without an explicit `icon` field. `<slug>.svg`, `<slug>-logo.svg`, or `<slug>_logo.svg` all work.
-
-## Testing
-
-```bash
-# Regenerate listings explicitly (optional — dev does this for you)
-bun run generate:services
-
-# Start dev server (runs generate:services first)
-bun run dev
-
-# Verify:
-# - Service appears on the listing page (/docs/services/)
-# - Logo displays
-# - Service page loads at /docs/services/{slug}
-# - Service appears under the right category in /docs/services/all
-# - Category filter includes it
-
-# Build for production
-bun run build
-```
+- [IMAGES.md](../_shared/IMAGES.md): public asset paths and supported image components.
+- [LINKS.md](../_shared/LINKS.md): internal routes and external links.
+- [CONTAINERS.md](../_shared/CONTAINERS.md): MDX callouts and other registered components.
+- [TESTING.md](../TESTING.md): isolated generator checks and page verification.
 
 ## Troubleshooting
 
-**Logo not showing:**
-- Check that the file lives in `docs/public/images/services/` and the basename matches one of the resolver candidates (`<slug>`, `<slug>-logo`, `<slug>_logo`, `<slug>logo`, `<title>`, `<title>-logo`).
-- If the auto-resolver can't be made to work, set `icon:` explicitly in frontmatter using a `/docs/images/services/...` path.
-- Path must start with `/docs/images/services/` (not `/public/`).
-
-**Service missing from the listing:**
-- Re-run `bun run generate:services` and check the resulting `services.json` and `all.md`.
-- Ensure your frontmatter has `title`, `description`, and `category`.
-- Ensure the file isn't named `all.md`, `introduction.md`, or `overview.md` — those are excluded.
-- Confirm `disabled: true` is not set, and that the body doesn't contain a hide pattern (`SERVICE HIDDEN`, `NOT AVAILABLE`, `REMOVED FROM COOLIFY`, `TEMPORARILY DISABLED`).
-
-**Wrong category grouping in `all.md`:**
-- The `category` field is matched verbatim. See [CATALOG.md](./CATALOG.md) for the existing list.
-
-## Related Commands
-
-- `/new-services` — automated service documentation generator
-- Inspect existing services in `docs/services/` for reference frontmatter shapes
+- **Missing service:** confirm the file is `content/docs/services/{slug}.mdx`, has frontmatter, and is not one of the excluded filenames. Check `disabled` and recognized warning titles before regenerating.
+- **Missing icon:** check the actual file under `public/images/services/`, use a resolver-friendly filename, or set `icon` to an existing `/docs/images/services/...` URL. The generator warns about invalid icons.
+- **Wrong grouping:** `category` is used verbatim. Inspect current categories in the generated JSON rather than creating a near-duplicate spelling.

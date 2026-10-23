@@ -1,85 +1,55 @@
 ---
 name: adding-documentation-pages
-description: Creates documentation pages for guides, tutorials, knowledge base articles, and troubleshooting content in docs/. Use when adding how-to guides, writing KB articles, creating troubleshooting docs, adding pages to get-started/, applications/, databases/, knowledge-base/, or integrations/. NOT for service pages - use adding-service-documentation for docs/services/.
+description: Create or update Coolify MDX guides, tutorials, knowledge-base articles, and troubleshooting pages in content/docs/, with section meta.json navigation. Use adding-service-documentation for individual one-click service pages.
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Add Documentation Page
 
-Create new documentation pages for the Coolify docs (guides, tutorials, KB articles, troubleshooting).
+Author pages directly in `content/docs/`. `source.config.ts` selects this tree for Fumadocs. Read `CLAUDE.md` for repository conventions; do not use the removed VitePress tree or run the one-time `generate:content` migration script.
 
-## When NOT to Use This Skill
+## Workflow
 
-**Use `adding-service-documentation` instead for:**
-- Service pages in `docs/services/`
-- One-click services from Coolify's catalog
+1. Choose the current section and a lowercase kebab-case `.mdx` filename. Inspect nearby pages before choosing a location.
+2. Start from `templates/blank.mdx`, `templates/guide.mdx`, or `templates/troubleshooting.mdx`, replacing placeholders. See [TEMPLATES.md](./TEMPLATES.md) for examples.
+3. Add a specific `title` and descriptive `description` in frontmatter. Write clear headings and verified instructions.
+4. Add the extensionless page name to the containing folder's `meta.json` when the page should appear in navigation. See [SIDEBAR.md](./SIDEBAR.md).
+5. Save images in `public/images/{section}/` and reference them as `/docs/images/...`. Use `<ZoomImage>`; `<ZoomableImage>` is a supported alias.
+6. Check the page and navigation at `http://localhost:3000/docs/{path}`. Use the relevant checks in [TESTING.md](../TESTING.md).
 
-Services use a frontmatter-driven generation pipeline (the listing and `all.md` are regenerated from each service page's frontmatter) and have specific logo handling — covered by that skill.
+## Current Sections
 
-## Quick Start
+| Content | Location |
+|---|---|
+| Getting started | Root pages such as `content/docs/choose-your-path.mdx` and `content/docs/start-with-self-hosted.mdx` |
+| Platform and infrastructure | `content/docs/core/` |
+| Applications | `content/docs/applications/` |
+| Databases | `content/docs/databases/` |
+| Knowledge base | `content/docs/knowledge-base/` |
+| Troubleshooting | `content/docs/troubleshoot/` |
+| Integrations | `content/docs/integrations/` |
+| CLI and MCP guides | `content/docs/cli/` and `content/docs/mcp/` |
 
-1. **Create file** in the appropriate section directory
-2. **Add frontmatter** with `title` and `description`
-3. **Write content** with clear headings
-4. **Update sidebar** in `docs/.vitepress/config.mts` (if needed)
-5. **Add images** using `<ZoomableImage>` component
+Individual one-click service pages use [adding-service-documentation](../adding-service-documentation/SKILL.md). The CLI command-reference pages and OpenAPI endpoints have separate generators; do not hand-edit generated reference output.
 
-## Documentation Sections
-
-| Section | Path | Content Type |
-|---------|------|--------------|
-| Get Started | `docs/get-started/` | Introduction, installation, basics |
-| Applications | `docs/applications/` | Framework deployment guides |
-| Databases | `docs/databases/` | Database deployment docs |
-| Knowledge Base | `docs/knowledge-base/` | How-tos, concepts, guides |
-| Troubleshoot | `docs/troubleshoot/` | Problem-solution articles |
-| Integrations | `docs/integrations/` | Third-party integration guides |
-
-## Required Frontmatter
+## MDX Conventions
 
 ```yaml
 ---
 title: "Page Title"
-description: "SEO-friendly description (used in meta tags)."
+description: "What the reader will learn or accomplish."
 ---
 ```
 
-## File Naming
+Use `<Callout type="info" title="Note">` for callouts, with blank lines around Markdown children. VitePress `:::` containers are unsupported. Escape literal JSX characters and braces in prose or put commands and configuration in code fences.
 
-- Use lowercase kebab-case: `my-guide.md`
-- Be descriptive but concise
+Internal links use extensionless paths without the `/docs` base, such as `/core/infrastructure/servers/ssh-keys`. Asset URLs retain the base: `/docs/images/...`.
 
-## Detailed References
+## References
 
-**Page-specific:**
-- [TEMPLATES.md](./TEMPLATES.md) - Ready-to-use page templates
-- [SIDEBAR.md](./SIDEBAR.md) - How to update sidebar configuration
+- [FRONTMATTER.md](../_shared/FRONTMATTER.md): metadata read by the current application.
+- [IMAGES.md](../_shared/IMAGES.md): asset locations, formats, and components.
+- [LINKS.md](../_shared/LINKS.md): routes, anchors, and external links.
+- [CONTAINERS.md](../_shared/CONTAINERS.md): MDX callouts, tabs, and steps.
 
-**Shared guidelines:**
-- [FRONTMATTER.md](../_shared/FRONTMATTER.md) - Title, description, Open Graph
-- [IMAGES.md](../_shared/IMAGES.md) - Image syntax and optimization
-- [LINKS.md](../_shared/LINKS.md) - Internal and external link formatting
-- [CONTAINERS.md](../_shared/CONTAINERS.md) - VitePress callout containers
-
-## Key Rules
-
-1. **Images**:
-   - Small images/icons: use standard markdown `![alt](path)`
-   - Screenshots/large images: use `<ZoomableImage>` component
-   - Format: `.webp` preferred, absolute paths (`/docs/images/...`)
-2. **Links**: Internal use absolute paths; external add `?utm_source=coolify.io`
-3. **Sidebar**: Update `docs/.vitepress/config.mts` (starts ~line 130)
-
-## Verification
-
-- [ ] Frontmatter has `title` and `description`
-- [ ] Screenshots use `<ZoomableImage>`
-- [ ] External links have UTM parameters
-- [ ] Page added to sidebar (if applicable)
-- [ ] Renders at http://localhost:5173/docs/[path]
-
-## Related Skills
-
-- `adding-service-documentation` - For `docs/services/` pages
-- `renaming-services` - Renaming service docs
-- `disabling-services` - Deprecating services
+Before committing, check the chosen content path, the relevant `meta.json`, component syntax, image URLs, and the rendered page. For renamed paths, preserve redirects and run the redirect checker as described in `CLAUDE.md`.

@@ -30,7 +30,8 @@ function titleFromDuplicateOperation(operationId: string, method: string) {
 
 function normalizeOpenAPI() {
   const schema = structuredClone(openapiSchema);
-  const document = schema as Document;
+  // Imported JSON widens schema literals and infers optional properties in unions.
+  const document = schema as unknown as Document;
 
   document.servers = [
     {

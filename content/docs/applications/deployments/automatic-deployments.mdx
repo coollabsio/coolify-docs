@@ -144,6 +144,8 @@ If the request fails, inspect the CI response and confirm that the webhook URL a
 
 Use **Watch Paths** under **General > Build** when a monorepo should deploy only after matching files change.
 
+Enter one pattern per line. Commas do not separate patterns: Coolify reads `apps/api/**,packages/shared/**` as one pattern, so it does not match either directory.
+
 Patterns are evaluated in order and support `*`, `**`, `?`, and negation with `!`. The last matching pattern wins.
 
 For example:

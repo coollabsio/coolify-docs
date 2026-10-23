@@ -7,7 +7,7 @@ import { BranchUp, Refresh23, Server } from 'reicon-react';
 
 # Backups
 
-Coolify can create scheduled, engine-aware database backups for PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, and SQLite. Each backup schedule creates a backup on the database's server, and can upload a copy to an S3-compatible storage provider.
+Coolify can create scheduled, engine-aware database backups for PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, and SQLite. Each backup schedule creates a backup on the database's server, and can upload a copy to an S3-compatible storage provider. To deploy a database and turn backups on, start with [Databases](/databases#self-host-a-database-with-backups).
 
 Redis, Dragonfly, and KeyDB do not support this scheduled database backup workflow. Use the engine's persistence and backup tools for those databases, or deploy a backup-capable service separately.
 
@@ -79,7 +79,7 @@ Open a schedule and use **General > Backup schedule** to configure the databases
 | :--- | :--- | :--- |
 | PostgreSQL | **Database selection** (**All databases** or **Specific databases**) and **Databases to back up** | `pg_dump` custom format for selected databases; `pg_dumpall` gzip output when all databases are selected. |
 | MySQL | **Database selection** (**All databases** or **Specific databases**) and **Databases to back up** | `mysqldump` output; all-database dumps use gzip compression. |
-| MariaDB | **Database selection** (**All databases** or **Specific databases**) and **Databases to back up** | `mariadb-dump` output; all-database dumps pass the command's `--compress` option but are not piped through `gzip` by Coolify. |
+| MariaDB | **Database selection** (**All databases** or **Specific databases**) and **Databases to back up** | `mariadb-dump` output. Selected databases are written directly. All-database dumps are compressed with `pigz` when it is available, otherwise `gzip`, and the file name ends in `.gz`. |
 | MongoDB | **Databases to include** | `mongodump` gzip archive. Empty includes all databases and collections. |
 | ClickHouse | **Databases to back up** | A ClickHouse backup archive created with the database's backup command. |
 

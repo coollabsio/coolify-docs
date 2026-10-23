@@ -167,7 +167,8 @@
     "slug": "budge",
     "icon": "/docs/images/services/budge-logo.png",
     "description": "A budgeting personal finance app.",
-    "category": "Finance"
+    "category": "Finance",
+    "disabled": true
   },
   {
     "name": "Budibase",
@@ -1349,7 +1350,8 @@
     "slug": "moodle",
     "icon": "/docs/images/services/moodle-logo.png",
     "description": "Open-source learning platform.",
-    "category": "Education"
+    "category": "Education",
+    "disabled": true
   },
   {
     "name": "Mosquitto",
@@ -1454,7 +1456,8 @@
     "slug": "observium",
     "icon": "/docs/images/services/observium-logo.webp",
     "description": "Low-maintenance auto-discovering network monitoring platform.",
-    "category": "Monitoring"
+    "category": "Monitoring",
+    "disabled": true
   },
   {
     "name": "Obsidian",
@@ -1567,7 +1570,8 @@
     "slug": "orangehrm",
     "icon": "/docs/images/services/orangehrm-logo.svg",
     "description": "Free HR management system for businesses.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "Organizr",
@@ -1603,7 +1607,8 @@
     "slug": "owncloud",
     "icon": "/docs/images/services/owncloud-logo.svg",
     "description": "File synchronization and sharing platform.",
-    "category": "Storage"
+    "category": "Storage",
+    "disabled": true
   },
   {
     "name": "Pairdrop",
@@ -2007,7 +2012,8 @@
     "slug": "snapdrop",
     "icon": "/docs/images/services/snapdrop-logo.png",
     "description": "Local file sharing in your browser.",
-    "category": "File Sharing"
+    "category": "File Sharing",
+    "disabled": true
   },
   {
     "name": "Snipe-IT",
@@ -2035,7 +2041,8 @@
     "slug": "soketi-app-manager",
     "icon": "/docs/images/services/soketi-app-manager-logo.svg",
     "description": "Manage Soketi apps with application configuration and WebSocket server administration interface.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "SonarQube",
@@ -2288,7 +2295,8 @@
     "slug": "vvveb",
     "icon": "/docs/images/services/vvveb-logo.png",
     "description": "Powerful website builder with drag and drop functionality.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "Wakapi",
@@ -2337,7 +2345,8 @@
     "slug": "windmill",
     "icon": "/docs/images/services/windmill-logo.svg",
     "description": "Open-source developer platform.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "Windows",
