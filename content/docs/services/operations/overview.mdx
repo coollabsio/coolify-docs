@@ -17,6 +17,7 @@ After a Service is deployed, Coolify provides stack lifecycle actions, deploymen
 | **Deployment output** | Follow image pulls, generated configuration, Compose startup, and command failures for the current operation. |
 | **Logs** | Read stdout and stderr from the Service containers. |
 | **Terminal** | Open a shell in a selected running container when your role can access terminals. |
+| **Files** | [Browse and manage files in a running container](/core/container-file-browser). Requires an Owner or Admin role; edits affect the container filesystem. |
 | **Component Settings** | Change domains, image, public database access, status exclusion, or log-drain behavior for one component. |
 | **Update Service** | Change image versions and merge required Compose or environment updates. |
 | **Troubleshooting** | Diagnose a failed deployment, degraded component, configuration difference, connection failure, or domain error. |
@@ -80,3 +81,7 @@ Follow [Scheduled tasks](/services/operations/scheduled-tasks) for frequency, ti
     },
   ]}
 />
+
+## Show a maintenance page
+
+Open **Domains > Maintenance mode** to return a maintenance page with HTTP `503` while the containers keep running. The change applies without redeployment on supported Traefik and Caddy servers. See [Maintenance and error pages](/core/networking/proxy/maintenance-and-error-pages).

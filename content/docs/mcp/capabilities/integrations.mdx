@@ -10,5 +10,9 @@ description: Use Coolify MCP to inspect GitHub integrations and browse repositor
 | `list_github_apps` | List GitHub Apps available to the team without returning secrets. |
 | `list_github_repositories` | List repositories through a team GitHub App. |
 | `list_github_branches` | List branches for a repository through a team GitHub App. |
+| `manage_git_source` | Manage GitHub Apps and GitLab integrations. Requires `write`. |
+| `manage_private_key` | Manage SSH private-key entries. Requires `write`; private-key contents are never returned. |
+| `manage_s3_storage` | List/get S3 entries with `read`, or create/update/delete/validate them with `write`. |
+| `cloud_provider` | Manage provider tokens, browse catalogs, and provision servers at Hetzner, DigitalOcean, Vultr, or Hostinger. Read actions need `read`; changes need `write`. Paid provisioning needs `confirm=true`. |
 
 Repository and branch tools register only when a usable GitHub App exists. Call `list_github_apps` first.

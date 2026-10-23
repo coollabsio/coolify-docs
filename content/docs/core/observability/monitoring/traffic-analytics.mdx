@@ -21,11 +21,12 @@ Caddy requires caddy-docker-proxy 2.9 or newer. New Coolify configurations use 2
 
 | Setting | Effect |
 | :--- | :--- |
-| Top-N cap | Maximum distinct values retained per dimension, such as paths or countries. Overflow is grouped as Other. |
+| Top-N cap | Maximum distinct values retained per dimension, such as paths, countries, or cities. Overflow is grouped as Other. |
 | Sample threshold | Events per second above which Sentinel samples traffic. `0` disables sampling. |
 | Hourly retention | Days to retain fine-grained hourly rollups. |
 | Daily retention | Days to retain daily rollups. |
-| Geolocation | Enable or disable visitor country enrichment. |
+| Geolocation | Enable or disable visitor country and city enrichment where GeoIP data is available. |
+| Client IP addresses | Keep full IP addresses, anonymize them to `/24` IPv4 and `/48` IPv6 networks, or disable storage. Disabling IP storage also disables visitor-city collection. |
 | GeoIP refresh interval | Days between GeoIP database update checks. |
 | MaxMind GeoIP license key | Optional key for downloading GeoLite2. GeoIP works without a key using the default database source. |
 
@@ -35,6 +36,25 @@ Save the settings after editing. Raw access logs are rotated on the server; Cool
 
 Use the dashboard widget, the global **Analytics** page, the server's **Analytics** page, or an application's or service's **Analytics** tab. The global page supports server and application filters.
 
-Views include request count, bandwidth, unique visitors, and p95 latency with sparklines, a requests chart, status-code breakdown, a country globe and country list, and device, path, host, referrer, and browser breakdowns. The 24-hour range supports optional live refresh.
+Views include request count, bandwidth, unique visitors, and p95 latency with sparklines, a requests chart, status-code breakdown, a globe with **Countries** and **Cities** views, and device, path, host, referrer, browser, and visitor-IP or network breakdowns. The 24-hour range supports optional live refresh.
 
 Traffic analytics measures requests reaching the supported proxy. CPU and memory history are separate [metrics](/core/observability/monitoring/metrics). For Caddy views with no data, check the proxy version and redeploy resources after changing collection.
+
+
+## Compare locations and traffic sources
+
+In the geographic section, switch between **Countries** and **Cities**. The globe and ranked list follow the selected view and time range. City markers require city data from a compatible Sentinel version and a GeoIP source that provides it. The globe can fall back to country markers when cities are unavailable.
+
+Select supported column headers in the breakdown and host tables to sort by name, requests, or bandwidth. Use the pagination controls to inspect additional rows. Sorting and pagination work on the retained aggregates; the configured Top-N cap and sampling still limit the available detail.
+
+## Visitor-IP privacy controls
+
+Open **Servers > [server] > Analytics** and review **Client IP addresses**:
+
+- **Full** keeps visitor addresses for the Top IPs breakdown.
+- **Anonymized** keeps network prefixes and labels the breakdown **Top networks**.
+- **Disabled** stores neither visitor IPs nor visitor cities.
+
+Changing this setting makes Sentinel delete stored IP data that the new setting no longer permits. It does not rewrite the proxy's raw access logs or control any logging performed by your application. GeoIP enrichment and aggregate retention have their own settings.
+
+If the Cities view is empty, check geolocation, IP-storage mode, Sentinel compatibility, and whether traffic has arrived since collection was enabled. Existing country-only history does not gain city detail retroactively.

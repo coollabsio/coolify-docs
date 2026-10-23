@@ -58,6 +58,60 @@ The same server setting controls both the global Terminal page and these resourc
 
 ---
 
+## Use console mode for a container
+
+Some containers run a main process that reads commands from its standard input (stdin), for example a game server console. For these containers, the terminal has two modes:
+
+| Mode | What it does |
+|---|---|
+| **Shell** | Starts a new shell in the container (`docker exec`). Use it to run commands such as `ls` or `cat`. |
+| **Console** | Connects to the main process of the container (`docker attach`). The commands that you send go to that process. |
+
+Console mode is not a framework console such as `php artisan tinker` or `rails console`. To use a framework console, start it in **Shell** mode.
+
+### When console mode is available
+
+Coolify shows the mode selector only when the container keeps stdin open. Coolify gets this value from the container configuration (`OpenStdin`) when you open the terminal. Server terminals always use a shell.
+
+To keep stdin open:
+
+- For a Docker Compose resource, set `stdin_open: true` on the service.
+- For a single-container application, add `-i` or `--interactive` to the [custom Docker options](/applications/builds/custom-docker-options).
+
+When the container keeps stdin open, the terminal starts in **Console** mode. If the image has no shell, the **Shell** option is not available.
+
+### Send commands in console mode
+
+1. Open the terminal for the container.
+2. To change the mode, select the mode selector next to the theme selector, then select **Shell** or **Console**. Coolify connects again in the new mode.
+3. In **Console** mode, type a command in the command box below the output. The output area is read-only.
+4. Push <kbd>Enter</kbd> or select **Send**.
+
+When the session opens, Coolify shows the last 200 log lines of the container, then the live output.
+
+Keyboard shortcuts in the command box:
+
+| Key | Action |
+|---|---|
+| <kbd>Enter</kbd> | Send the command. |
+| <kbd>Up</kbd> / <kbd>Down</kbd> | Show the previous or next command. |
+| <kbd>Esc</kbd> | Cancel a pasted text, or clear the input. |
+| <kbd>Ctrl</kbd>+<kbd>L</kbd> | Clear the visible output. Coolify does not send a command to the process. |
+
+If you paste more than one line, Coolify does not send the lines immediately. Push <kbd>Enter</kbd> to send them or <kbd>Esc</kbd> to cancel. Coolify does not send control characters.
+
+The command history is kept only for the current connection. Coolify does not save it in the browser.
+
+<Callout type="warn">
+Console mode connects to the process that keeps the container running. A command such as `stop` can stop that process and the container.
+</Callout>
+
+When you close the terminal or change the mode, Coolify disconnects from the process and does not stop it. Coolify also does not send signals such as <kbd>Ctrl</kbd>+<kbd>C</kbd> to the process.
+
+Console mode uses the same permissions as the shell: you must be a team owner or administrator, and **Terminal Access** must be enabled for the server.
+
+---
+
 ## Change terminal access
 
 Use this setting when nobody should be able to open dashboard terminals for a server or its containers.

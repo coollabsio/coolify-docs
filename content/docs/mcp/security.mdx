@@ -14,7 +14,9 @@ MCP gives an AI client access to Coolify data and, when permitted, lifecycle ope
 | Inspect resources | `read` |
 | Read supported sensitive data or log summaries | `read:sensitive` |
 | Deploy, start, stop, restart, or cancel | `deploy` |
-| Change the instance MCP setting | `root` token for the enable/disable API |
+| Create resources or change configuration | `write` |
+| Read environment values with `get_env_values` | `read` and `read:sensitive`, with an Admin or Owner role |
+| Change the instance MCP setting | Instance-team token with `write` or `root` for the enable/disable API |
 
 Do not use a `root` token for normal MCP access.
 
@@ -30,4 +32,12 @@ A token belongs to one team. MCP cannot use that token to read another team's re
 - Restrict access to the machine and user account running the client.
 - Revoke the token immediately if exposed.
 
-MCP responses never return environment values or file contents. Log and deployment summaries can still contain operational data; redaction is best effort.
+`list_env_keys` and `list_shared_env_keys` return names only. `get_env_values` can return environment values to an Admin or Owner with `read` and `read:sensitive`; locked values (`is_shown_once`) remain hidden. Management responses may include supported sensitive configuration with `read:sensitive`. Private keys, provider tokens, passwords, and webhook URLs remain excluded. Log redaction is best effort.
+
+## Approve changes deliberately
+
+Management tools can delete resources and backup files, overwrite configuration, stop workloads, or purchase cloud servers. Review the target and effects before allowing a client to submit `confirm=true` for an action that requires confirmation. A confirmation flag does not grant missing token permissions.
+
+Granting `write` also allows changes to environment variables, scheduled commands, proxy settings, and notification configuration. Use a read-only token when the client only needs to inspect resources.
+
+On self-hosted instances, MCP uses its own enable switch and the API IP allowlist. Disabling REST **API access** does not disable MCP; disable **MCP server** or revoke the token to remove MCP access.

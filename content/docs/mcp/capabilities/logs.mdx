@@ -13,3 +13,5 @@ description: Use Coolify MCP to fetch recent container logs with sensitive-data 
 `get_logs` requires a running container on a reachable server. It returns up to 500 lines and may return a structured failure reason with suggested next tools.
 
 Log redaction is best effort, not a guarantee. Do not send unrestricted production logs to an AI client unless required.
+
+Resource **Environment values in logs** settings also apply to supported MCP log output. Locked values and recognized secret formats remain redacted even when an administrator chooses **Hide locked values only**. See [Environment values in logs](/applications/configuration/environment-variables#environment-values-in-logs).

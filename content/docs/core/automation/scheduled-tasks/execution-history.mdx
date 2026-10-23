@@ -12,7 +12,7 @@ Coolify records each scheduled and manual task run under **Recent executions**. 
 1. Open the application or service.
 2. Select **Scheduled Tasks**.
 3. Select a task.
-4. Scroll to **Recent executions**.
+4. In the task modal, select **Executions**, then inspect **Recent executions**.
 
 Coolify shows the 20 most recent execution records, newest first.
 
@@ -22,7 +22,7 @@ Coolify shows the 20 most recent execution records, newest first.
 
 | <span className="inline-block min-w-28 whitespace-nowrap">Status</span> | Meaning | What to do |
 | --- | --- | --- |
-| <span className="whitespace-nowrap"><strong>In Progress</strong></span> | The command is still running. | Keep the task page open while Coolify refreshes the record. |
+| <span className="whitespace-nowrap"><strong>In Progress</strong></span> | The command is still running. | Keep the task modal open while Coolify refreshes the record. |
 | <span className="whitespace-nowrap"><strong>Success</strong></span> | The command exited without a reported error. | Open the output and confirm the command produced the intended result. |
 | <span className="whitespace-nowrap"><strong>Failed</strong></span> | The command failed, timed out, or could not run in the selected container. | Open the output and start with the first reported error. |
 
@@ -57,7 +57,7 @@ The command may not write to standard output or standard error. Check the effect
 </Accordion>
 <Accordion title="The execution failed because no valid container was found">
 
-Confirm that the resource is running and that **Container name** or **Service name** matches the intended component. Save the task, then click **Execute Now**.
+Confirm that the resource is running and that **Container name** or **Service name** matches the intended component. Save the task, then select **Execute now**.
 
 </Accordion>
 </Accordions>

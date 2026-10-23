@@ -27,12 +27,14 @@ The token is bound to one Coolify team. MCP only returns resources owned by that
 
 The instance MCP setting must be enabled before `/mcp` responds. Team owners can disable MCP for individual teams. A disabled instance returns `404`; a disabled team returns `403`.
 
+On self-hosted instances, **Allowed API IPs** applies to MCP requests. The **MCP server** switch controls `/mcp` independently of REST **API access**.
+
 ## MCP primitives
 
 <Tabs items={['Tools', 'Resources', 'Prompts']}>
 <Tab value="Tools">
 
-Tools perform Coolify queries and operations. Read tools need `read`. Deployment and lifecycle tools need `deploy`. [MCP capabilities](/mcp/capabilities/overview) groups tools by task.
+Tools perform Coolify queries and operations. Read tools need `read`; deployment and lifecycle tools need `deploy`; resource creation and configuration changes need `write`. Tools and actions are hidden when the token lacks the required permission. Management tools use the same validation, team scope, and permissions as the REST API. [MCP capabilities](/mcp/capabilities/overview) groups tools by task.
 
 </Tab>
 <Tab value="Resources">
@@ -49,4 +51,4 @@ Prompts give clients guided workflows. Coolify provides prompts for troubleshoot
 
 ## Response boundaries
 
-Coolify returns structured responses with `data` and may include `_pagination`, `_actions`, or failure details. Environment values, configuration snapshots, and full deployment logs are not returned. Log summaries are capped and best-effort redacted.
+Coolify returns structured responses with `data` and may include `_pagination`, `_actions`, or failure details. Inspection tools hide environment values and sensitive configuration. `get_env_values` explicitly reads values with `read` and `read:sensitive` for an Admin or Owner; locked values are never revealed. Some management responses include supported sensitive configuration only with `read:sensitive`. Private keys, tokens, passwords, and webhook URLs remain excluded. Full deployment logs are not returned; optional summaries are capped and best-effort redacted.

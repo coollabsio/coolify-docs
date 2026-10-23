@@ -6,6 +6,7 @@
     "provision-cloud-server",
     "manage-server",
     "remove-server",
+    "server-transfer",
     "openssh",
     "firewall",
     "non-root-user",

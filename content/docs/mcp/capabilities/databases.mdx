@@ -1,6 +1,6 @@
 ---
 title: Databases
-description: Use Coolify MCP to list and inspect standalone databases and their backup schedules.
+description: Use Coolify MCP to inspect and manage standalone databases, imports, and backups.
 ---
 
 # Databases
@@ -11,5 +11,9 @@ description: Use Coolify MCP to list and inspect standalone databases and their 
 | `get_database` | Inspect one database by UUID. |
 | `list_database_backups` | List backup schedules for a database. |
 | `list_backup_executions` | List executions for a scheduled database backup. |
+| `create_database` | Create a supported standalone database. Requires `write`; `instant_deploy` also needs `deploy`. |
+| `manage_database` | Update, delete, clone, move, or import a database. Requires `write`; a server-path import also needs `deploy`. |
+| `get_database_import` | Check import progress for a standalone or service database. Requires `read`. |
+| `manage_backup` | Create/update/delete a database backup schedule, or delete an execution. Requires `write`; `data.backup_now=true` on create/update runs a backup. |
 
 Backup execution messages require `read:sensitive` and are best-effort redacted.

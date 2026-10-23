@@ -10,7 +10,7 @@ Coolify can create DNS records for application and service domains using a team'
 ## Add a token
 
 1. Create a Cloudflare API token with **Zone > DNS > Edit** and **Zone > Zone > Read** for the zones you want Coolify to manage.
-2. In Coolify, open **Keys & Tokens > Integration Tokens** and select **New token**, then choose **Cloudflare** in **Provider**.
+2. In Coolify, open **Security > Integration Tokens** and select **New token**, then choose **Cloudflare** in **Provider**.
 3. Enter a **Token name**, paste the **API token**, and select the **DNS** capability.
 4. Optionally enable **Automatically configure DNS**. New domains are configured automatically when there is one unambiguous matching credential.
 5. Select **Validate and add**. Open the saved token's edit icon to review **Domains this token can manage**. Use **Refresh zones** after changing provider permissions, and **Validate and save** when editing credentials.
@@ -26,3 +26,7 @@ If a record already points elsewhere, review the existing value before using the
 Re-check DNS after changing a record. Coolify replaces the previous check result, including checks for preview domains. IPv6 addresses are compared by value rather than their written form.
 
 If no zone matches, check the token's zone scope and permissions, refresh accessible zones, or configure records manually using [DNS](/core/networking/dns).
+
+## Use the token for SSH tunnels
+
+To let Coolify create and manage a server SSH tunnel, also grant **Account > Cloudflare Tunnel > Edit** in Cloudflare and select **Cloudflare Tunnel** alongside **DNS** in the token's Coolify capabilities. DNS-only tokens cannot manage tunnels. See [Server SSH tunnels](/integrations/networking/cloudflare/tunnels/server-ssh) for setup, DNS-conflict handling, and cleanup.

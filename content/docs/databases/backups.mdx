@@ -124,12 +124,14 @@ The limits work independently. Coolify deletes a backup when any configured limi
 
 1. Configure and validate an S3-compatible storage under [S3 storage](/core/s3-storage/overview).
 2. Open the database schedule and open **S3 storage**.
-3. Select the validated **S3 storage**, select **Enable S3**, and select **Save changes**.
+3. Select one or more destinations in **S3 storages**, select **Enable S3**, and select **Save changes**.
 4. Optionally set **Local copy** to **Delete after S3 upload**.
 
-Coolify uploads the local backup file to the selected S3 storage after the local dump succeeds. If the upload fails, the local backup can still remain available and the execution reports the S3 warning.
+Coolify uploads the local backup file to every selected S3 storage after the local dump succeeds. The execution shows each destination and its upload result. **S3 warning** means at least one upload failed; other destinations may still contain a usable copy.
 
-**Local copy > Delete after S3 upload** removes the local file after a successful S3 upload. It does not remove the S3 copy. Set S3 retention separately under **S3 backups**. It uses **Backups to keep**, **Days to keep**, and **Maximum storage (GB)**, and `0` means no limit. Local and S3 retention rules are independent.
+**Local copy > Delete after S3 upload** removes the local file only after every selected S3 destination has a successful copy. If any upload fails, Coolify keeps the local file. It does not remove the S3 copy. Set S3 retention separately; local and S3 retention rules are independent. The S3 limits apply separately to each destination.
+
+Through the API, use `s3_storage_uuids` to select multiple destinations. The singular `s3_storage_uuid` remains supported. When sent with the list, it must be one of its entries and selects the primary destination. See the [API reference](/api/overview) for create and update behavior.
 
 ## Run and verify a backup
 
@@ -144,6 +146,14 @@ Open the execution to verify:
 - the local copy still exists unless **Local copy** was set to **Delete after S3 upload**
 
 A failed S3 upload does not necessarily mean the local database dump failed. Read the execution message and notification to identify which copy is available.
+
+## Download backup copies
+
+Open **Executions** and select **Download** on a successful backup. Coolify uses the local file when available, or redirects to a short-lived link for an available S3 copy when the local file is gone. S3 download links expire after 15 minutes; request another download if a link expires. Backup downloads require an Admin or Owner role.
+
+If the instance administrator has configured S3 for file downloads, Coolify may first prepare the local backup in that storage. Wait for preparation to finish and allow the browser to open the download.
+
+Changing a schedule's destinations affects future uploads. Existing copies remain tracked against the destinations that received them. Deleting an execution with the S3 deletion option removes its copies from every S3 destination.
 
 ## Related guides
 

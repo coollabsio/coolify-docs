@@ -1,0 +1,255 @@
+---
+title: Amazon CloudWatch Logs
+description: Send Coolify application, database, and service container logs to an Amazon CloudWatch Logs log group.
+---
+
+import {
+  ArrowsRight,
+  Box2,
+  Database,
+  Globe3,
+  Server,
+  Settings,
+} from 'reicon-react';
+
+# Send logs to Amazon CloudWatch Logs
+
+Coolify's built-in Amazon CloudWatch Logs log drain sends opted-in resource logs to a CloudWatch Logs log group. It uses the Docker `awslogs` logging driver, so the Docker daemon on the server sends the logs directly to AWS.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Give the Docker daemon on the server AWS credentials, save the log group and region on the server's **Log Drains** page, enable the Amazon CloudWatch Logs drain, then configure **Log drain** as described in [Enable log draining for a resource](/core/observability/log-drains/overview#enable-log-draining-for-a-resource) and restart each resource you want to forward.
+
+</CoolCallout>
+
+---
+
+## Before you start
+
+<CoolIconCardGrid
+  surface
+  cards={[
+    {
+      title: 'AWS credentials for Docker',
+      description: 'The Docker daemon on the server reads the credentials. Coolify does not store AWS keys.',
+      icon: Settings,
+    },
+    {
+      title: 'IAM permissions',
+      description: 'Allow the CloudWatch Logs actions that the Docker awslogs driver uses.',
+      icon: Database,
+    },
+    {
+      title: 'Validated server',
+      description: 'Use the server that runs the resources and confirm it can reach the CloudWatch Logs endpoint of the region on port 443.',
+      icon: Server,
+    },
+  ]}
+/>
+
+The CloudWatch drain does not use the `coolify-log-drain` Fluent Bit container. Coolify configures the Docker `awslogs` logging driver on each opted-in resource container instead.
+
+---
+
+## Give Docker AWS credentials
+
+The Docker daemon on the server reads the AWS credentials, not Coolify. Use one of these sources:
+
+- An IAM instance profile (instance role), if the server is an Amazon EC2 instance.
+- The `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables of the Docker service. Also set `AWS_SESSION_TOKEN` for temporary credentials.
+- The shared credentials file of the root user, `/root/.aws/credentials`.
+
+For example, to set environment variables for a Docker service that systemd manages, create `/etc/systemd/system/docker.service.d/aws-credentials.conf`:
+
+```ini
+[Service]
+Environment="AWS_ACCESS_KEY_ID=<access-key-id>"
+Environment="AWS_SECRET_ACCESS_KEY=<secret-access-key>"
+```
+
+Then reload systemd and restart Docker:
+
+```sh
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
+<CoolCallout type="warning" title="Restarting Docker restarts containers">
+
+A restart of the Docker service stops and starts the containers on the server. Do this step in a maintenance window.
+
+</CoolCallout>
+
+---
+
+## Set the IAM permissions
+
+The credentials must allow these CloudWatch Logs actions:
+
+| Action | Why the driver needs it |
+| :--- | :--- |
+| `logs:CreateLogStream` | Creates one log stream for each container. |
+| `logs:PutLogEvents` | Sends the log events. |
+| `logs:CreateLogGroup` | Creates the log group if it does not exist. Not necessary if you create the log group before you enable the drain. |
+
+Example policy:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+To limit the policy, replace `"*"` with the ARN of the log group and its log streams.
+
+---
+
+## Configure CloudWatch in Coolify
+
+<CoolFlow
+  id="configure-cloudwatch-log-drain"
+  icon={Database}
+  title="Connect the server to CloudWatch Logs"
+  description="Keep the drain disabled while editing its fields, then enable it after the values are saved."
+  steps={[
+    'Open the server Log Drains page',
+    'Enter the log group',
+    'Enter the stream prefix (optional)',
+    'Enter the region',
+    'Save the settings',
+    'Enable the drain',
+  ]}
+  list={[
+    <>Open <strong>Servers</strong>, select the server that runs the resources, then open <strong>Log Drains</strong>.</>,
+    <>In <strong>Amazon CloudWatch Logs</strong>, leave <strong>Status</strong> set to <strong>Disabled</strong> and enter the log group name in <strong>Log group</strong>, for example <code>/coolify/production</code>.</>,
+    <>Optional: enter a value in <strong>Log stream prefix</strong>, for example <code>docker/</code>.</>,
+    <>Enter the AWS region code in <strong>Region</strong>, for example <code>us-east-1</code>.</>,
+    <>Select <strong>Save changes</strong>.</>,
+    <>Set <strong>Status</strong> to <strong>Enabled</strong>. Coolify stops the <code>coolify-log-drain</code> container if it runs, because CloudWatch does not use it.</>,
+  ]}
+  endnote="Only one server-level log drain can be enabled at a time. Disable another active destination before enabling Amazon CloudWatch Logs."
+/>
+
+Coolify accepts these values:
+
+| Field | Required | Accepted value |
+| :--- | :---: | :--- |
+| **Log group** | Yes | 1 to 512 characters: letters, numbers, `.`, `-`, `_`, `/`, and `#`. |
+| **Log stream prefix** | No | Up to 256 characters: letters, numbers, `.`, `-`, `_`, `/`, and `#`. |
+| **Region** | Yes | An AWS region code, for example `us-east-1` or `eu-central-1`. Coolify does not use a default region. |
+
+<CoolCallout type="info" title="Enabling the drain is not an ingestion test">
+
+Coolify checks the field formats. It does not verify the AWS credentials, the IAM permissions, or the log group before showing the drain as enabled.
+
+</CoolCallout>
+
+---
+
+## Enable a resource
+
+Follow [Enable log draining for a resource](/core/observability/log-drains/overview#enable-log-draining-for-a-resource), then restart or redeploy the resource.
+
+Coolify sets these `awslogs` options on the container:
+
+| Option | Value |
+| :--- | :--- |
+| `awslogs-group` | The **Log group** value. |
+| `awslogs-region` | The **Region** value. |
+| `awslogs-create-group` | `true` |
+| `tag` | The **Log stream prefix** value followed by the container name. |
+| `mode` | `non-blocking` |
+
+The `non-blocking` mode prevents CloudWatch errors from blocking or stopping the container. If the driver cannot send logs, the container continues to run.
+
+---
+
+## Log groups and log streams
+
+- **Log group:** The driver creates the log group if it does not exist. This requires `logs:CreateLogGroup`.
+- **Log streams:** The driver creates one log stream for each container. The stream name is the **Log stream prefix** value followed by the container name, for example `docker/<container-name>`. Without a prefix, the stream name is the container name.
+
+The CloudWatch drain does not add the `coolify.server_name` or `coolify.app_name` fields that the Fluent Bit destinations add. Use the log stream name to identify the container.
+
+Coolify does not set a retention period on the log group. Set the retention in CloudWatch Logs.
+
+---
+
+## Verify delivery
+
+1. Cause the resource to write a recognizable message to `stdout` or `stderr`.
+2. Open CloudWatch Logs in the AWS console and select the log group and region that you entered in Coolify.
+3. Open the log stream of the container and search for the message.
+
+Verification in CloudWatch Logs is required because Coolify does not perform a provider connection test.
+
+---
+
+## Update the log group, prefix, or region
+
+1. Set **Status** to **Disabled** in the Amazon CloudWatch Logs section.
+2. Update **Log group**, **Log stream prefix**, or **Region**.
+3. Select **Save changes**.
+4. Set **Status** to **Enabled** again.
+5. Restart or redeploy the resources. Running containers keep the logging options that they had when Docker created them.
+6. Generate a new resource log and confirm that it arrives in the expected log group.
+
+---
+
+## Fix missing logs
+
+1. Confirm Amazon CloudWatch Logs is the enabled server drain and the resource's **Log drain** setting is on.
+2. Confirm you restarted or redeployed the resource after enabling the setting.
+3. Confirm the Docker daemon has AWS credentials and that they allow the IAM actions in [Set the IAM permissions](#set-the-iam-permissions).
+4. Confirm the region in Coolify is the region where you look for the log group.
+5. Confirm the container uses the `awslogs` driver:
+
+```sh
+docker inspect --format '{{.HostConfig.LogConfig.Type}}' <container-name>
+```
+
+6. Inspect the Docker daemon logs on the resource server:
+
+```sh
+journalctl -u docker --since "15 minutes ago"
+```
+
+Credential, permission, and network errors appear in the Docker daemon logs. They do not appear in a `coolify-log-drain` container, because CloudWatch does not use it.
+
+---
+
+## Continue with log drains
+
+<CoolNextSteps
+  cards={[
+    {
+      title: 'Log drains overview',
+      href: '/core/observability/log-drains/overview',
+      description: 'Review the server-level pipeline, resource setup, and delivery checks.',
+      icon: Server,
+    },
+    {
+      title: 'Use Axiom',
+      href: '/core/observability/log-drains/axiom',
+      description: 'Send opted-in workload logs to an existing Axiom dataset.',
+      icon: Globe3,
+    },
+    {
+      title: 'Use custom Fluent Bit',
+      href: '/core/observability/log-drains/custom-fluent-bit',
+      description: 'Supply a complete Fluent Bit configuration for another destination.',
+      icon: Box2,
+    },
+  ]}
+/>

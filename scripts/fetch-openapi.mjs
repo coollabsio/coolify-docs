@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUTPUT_FILE = path.resolve(__dirname, '../config/openapi.json');
 const SOURCE_URL =
-  process.env.COOLIFY_OPENAPI_URL ?? 'https://raw.githubusercontent.com/coollabsio/coolify/main/openapi.json';
+  process.env.COOLIFY_OPENAPI_URL ?? 'https://raw.githubusercontent.com/coollabsio/coolify/release/v4.5/openapi.json';
 
 async function fetchOpenAPI() {
   const response = await fetch(SOURCE_URL, { headers: { Accept: 'application/json' } });

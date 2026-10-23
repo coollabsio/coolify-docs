@@ -1,6 +1,6 @@
 ---
 title: Applications
-description: Use Coolify MCP to list and inspect applications and preview deployments.
+description: Use Coolify MCP to inspect, create, and manage applications and preview deployments.
 ---
 
 # Applications
@@ -10,5 +10,9 @@ description: Use Coolify MCP to list and inspect applications and preview deploy
 | `list_applications` | List applications with filters for tag, project, environment, server, status, or name. |
 | `get_application` | Inspect one application by UUID. |
 | `list_application_previews` | List pull-request preview deployments for an application. |
+| `create_application` | Create from a public Git repository, GitHub App, deploy key, Dockerfile, or Docker image. Requires `write`; `instant_deploy` also needs `deploy`. |
+| `manage_application` | Update, delete, clone, move, or manage additional server destinations. Requires `write`. |
+| `get_application_preview` | Inspect a preview with `read`, or fetch its container logs with `read:sensitive`. |
+| `manage_preview` | Create/redeploy a preview with `deploy`, or update/delete it with `write`. |
 
 Application details can include configuration metadata. Environment values and other sensitive fields remain subject to token permissions and redaction.

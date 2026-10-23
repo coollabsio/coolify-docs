@@ -9,7 +9,7 @@ import { LaptopCode, Settings, Sparkles } from 'reicon-react';
 
 Coolify's Model Context Protocol (MCP) server lets compatible AI clients inspect and operate resources in a Coolify team through a standard HTTP connection.
 
-MCP gives an AI client structured access to Coolify data. The client can ask about infrastructure, find resources, inspect deployments, read supported logs, and run lifecycle operations allowed by its API token.
+MCP gives an AI client structured access to Coolify data. The client can ask about infrastructure, find resources, inspect deployments, read supported logs, create and configure resources, and run lifecycle operations allowed by its API token.
 
 ## What MCP provides
 
@@ -22,7 +22,7 @@ MCP gives an AI client structured access to Coolify data. The client can ask abo
 
 ## What MCP does not do
 
-MCP does not bypass Coolify authentication, team scope, API access, token permissions, or sensitive-value redaction. Every request uses an API token and every resource belongs to the team bound to that token.
+MCP does not bypass Coolify authentication, team scope, IP restrictions, token permissions, or sensitive-value redaction. Every request uses an API token and every resource belongs to the team bound to that token.
 
 ## Continue learning
 

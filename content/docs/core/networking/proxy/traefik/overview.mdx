@@ -28,7 +28,7 @@ Coolify configures:
 - the `coolify-proxy` Traefik container on connected servers
 - public `http` and `https` entry points on ports `80` and `443`
 - Docker and file providers for generated routes and dynamic configuration
-- the `letsencrypt` TLS certificate resolver for HTTP challenge
+- the `letsencrypt` TLS certificate resolver for HTTP challenge, which you can change or turn off for each server and resource ([certificate resolver](/core/networking/proxy/traefik/certificate-resolver))
 - resource router, middleware, service, and target-port labels
 - the Docker networks that let Traefik reach routed resources
 

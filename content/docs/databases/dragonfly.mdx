@@ -105,3 +105,7 @@ Configure the Docker health check under **Healthcheck** and restart Dragonfly af
 ## Password environment variable
 
 For a new database, `REDIS_PASSWORD` controls the server password and connection URLs. Databases created before this release keep their stored password unless the variable references a secret manager. After changing a remote secret, restart the database and verify connections.
+
+## Flush all data
+
+Use **Danger Zone > Flush all data** to permanently remove every key from every logical database while the container stays running. Review [Flush Redis, KeyDB, or Dragonfly](/databases/operations/danger-zone#flush-redis-keydb-or-dragonfly) before using it; queues, sessions, and other application state can also be removed.
