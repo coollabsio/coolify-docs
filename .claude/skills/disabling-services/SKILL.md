@@ -1,219 +1,75 @@
 ---
 name: disabling-services
-description: Hides or disables a service from the documentation listing while preserving the page for SEO and bookmarks. Use when deprecating services, marking services unavailable, setting disabled:true in frontmatter, or adding warning callouts to service pages. Keeps docs/services/ pages accessible via direct URL.
+description: Hide an unavailable Coolify service from generated catalogs while keeping its content/docs/services/ page reachable. Use for temporary disablement, deprecation, removal notices, and re-enabling service documentation.
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Disable Service Documentation
 
-This skill guides you through hiding a service from the documentation listing while preserving the documentation page for SEO and users who find it via search.
+Keep the service page for existing deployments, search results, and bookmarks. Update its availability in `content/docs/services/{slug}.mdx`; do not delete it merely to hide a catalog entry.
 
-## When to Use This Skill
+## Workflow
 
-- Service is deprecated in Coolify
-- Service is temporarily unavailable
-- Service is removed from Coolify's service catalog
-- Service has been replaced by another service
+1. Verify which service templates are unavailable and why. When only some deployment variants are disabled, describe that scope accurately rather than hiding an otherwise deployable service.
+2. Add the explicit frontmatter flag `disabled: true` when the whole service should be hidden.
+3. Add a visible MDX callout immediately after frontmatter, before the rest of the body. Explain the reason and, when known, link to verified updates, an advisory, or a replacement.
+4. Preserve any existing redirects in `nginx/redirects.conf`.
+5. Run `bun run generate:services` and inspect both generated outputs. Include them with the page when committing.
 
-## Why Keep the Documentation File?
-
-**DO NOT delete the documentation file.** Keep it because:
-
-1. **SEO preservation** — users may find the page via search engines
-2. **Bookmark support** — users may have bookmarked the page
-3. **Historical reference** — users may need to understand what the service was
-4. **Future reinstatement** — service may become available again
-
-## How "Disabled" Is Detected
-
-`scripts/services-data.mjs` marks a service as disabled (and `generate-services-page.mjs` excludes it from `all.md`) if **either**:
-
-- The frontmatter contains `disabled: true`, **or**
-- The markdown body matches one of these patterns (case-insensitive):
-  - `SERVICE HIDDEN`
-  - `SERVICE NOT AVAILABLE`
-  - `SERVICE REMOVED FROM COOLIFY`
-  - `SERVICE TEMPORARILY DISABLED`
-
-This means a warning callout with one of those phrases (e.g. `::: warning SERVICE NOT AVAILABLE`) will hide the service automatically — no separate `disabled: true` is needed. Conversely, you can hide a service silently (no warning) by setting `disabled: true` alone.
-
-`List.vue` reads the generated `services.json`, sees `disabled: true`, and filters the entry out of the visible listing while leaving the page reachable by direct URL.
-
-## Step-by-Step Process
-
-### 1. Edit the Service's Frontmatter
-
-Open `docs/services/{slug}.md` and add `disabled: true`:
-
-```yaml
+```mdx
 ---
 title: "Service Name"
-description: "..."
-category: "Category"
-icon: "/docs/images/services/service-logo.svg"
-disabled: true
----
-```
-
-This is the canonical, explicit signal. Use it whenever you intend the service to be hidden, even if you also add a warning callout — explicit beats implicit.
-
-### 2. Add a Warning Callout to the Page Body
-
-Insert a warning at the **top** of the body (after frontmatter, before the H1):
-
-```markdown
----
-title: "Service Name"
-description: "..."
-category: "Category"
+description: "Short service description."
+category: "Utilities"
+icon: "/docs/images/services/service-name-logo.svg"
 disabled: true
 ---
 
-::: warning SERVICE NOT AVAILABLE
-This service is currently not available in Coolify's service catalog.
-:::
+<Callout type="warning" title="SERVICE TEMPORARILY DISABLED">
+
+This service's one-click templates are temporarily unavailable in Coolify. Explain the verified reason and any action existing users need to take.
+
+</Callout>
 
 # Service Name
 
-...
+![Service Name](/docs/images/services/service-name-logo.svg)
+
+## What is Service Name?
+
+Keep the existing service documentation here.
 ```
 
-The callout title (e.g. `SERVICE NOT AVAILABLE`) must include one of the phrases the regex looks for if you also want the body-pattern detector to catch it. Stick to one of:
+Use `<Callout type="error">` for a security or removal warning when appropriate. Supported callout types and other examples are in [CONTAINERS.md](../_shared/CONTAINERS.md). Do not use VitePress `:::` syntax.
+
+## How Availability Is Detected
+
+`scripts/services-data.mjs` sets `disabled: true` if the frontmatter flag is true or the page contains one of these case-insensitive phrases:
 
 - `SERVICE HIDDEN`
 - `SERVICE NOT AVAILABLE`
 - `SERVICE REMOVED FROM COOLIFY`
 - `SERVICE TEMPORARILY DISABLED`
 
-### 3. Add Context (Recommended)
+Use the frontmatter flag even when the callout has a recognized title. A title such as `SERVICE DEPRECATED` alone does not trigger detection.
 
-If you know why, give users a path forward:
+`src/generated/services.json` retains the service with `disabled: true`. `src/components/data/services-list.tsx` filters it out of the searchable catalog, and the directory generator omits it from `content/docs/services/all.mdx`. The page remains reachable at `/docs/services/{slug}`.
 
-```markdown
-::: warning SERVICE DEPRECATED
-This service has been deprecated and replaced by [New Service](/services/new-service).
-Please use the new service for all new deployments.
-:::
-```
+## Verification
 
-Or for temporary unavailability:
+- The original `.mdx` page and its historical redirects still exist.
+- The callout states the verified reason, scope, and any action for existing deployments.
+- `src/generated/services.json` contains the slug with `disabled: true`.
+- `content/docs/services/all.mdx` no longer links to the service.
+- At `http://localhost:3000/docs/services/overview`, the service is absent; its direct page still loads and displays the warning.
 
-```markdown
-::: warning SERVICE TEMPORARILY DISABLED
-This service is temporarily unavailable due to upstream changes.
-Check the [Coolify changelog](https://coolify.io/changelog) for updates.
-:::
-```
+See [TESTING.md](../TESTING.md) for isolated generator validation and [CATALOG.md](../adding-service-documentation/CATALOG.md) for the catalog contract. Neither generated file should be edited by hand.
 
-### 4. Keep Redirects (If Any)
+## Re-enable a Service
 
-If the service had redirects in `nginx/redirects.conf`, **keep them**. They ensure users following old URLs still land on the page.
-
-### 5. Regenerate the Listings
-
-```bash
-bun run generate:services
-```
-
-This updates `docs/.vitepress/theme/data/services.json` (the service entry now carries `disabled: true`) and `docs/services/all.md` (the entry is removed from its category section). Commit both regenerated files.
-
-## Warning Message Templates
-
-### Generic unavailable
-
-```markdown
-::: warning SERVICE NOT AVAILABLE
-This service is currently not available in Coolify's service catalog.
-:::
-```
-
-### Deprecated with replacement
-
-```markdown
-::: warning SERVICE DEPRECATED
-This service has been deprecated and replaced by [Alternative Service](/services/alternative).
-Please migrate to the new service.
-:::
-```
-
-> Note: The phrase `SERVICE DEPRECATED` is **not** in the auto-detect regex. If you use this title and don't set `disabled: true`, the service won't be hidden. Either set `disabled: true` (recommended) or use one of the recognized phrases.
-
-### Temporarily removed
-
-```markdown
-::: warning SERVICE TEMPORARILY DISABLED
-This service is temporarily unavailable. Check the [Coolify Discord](https://discord.gg/coolify) for updates.
-:::
-```
-
-### Removed due to issues
-
-```markdown
-::: danger SERVICE REMOVED FROM COOLIFY
-This service has been removed from Coolify due to [reason].
-If you were using this service, please [migration instructions or alternative].
-:::
-```
-
-## Verification Checklist
-
-After disabling, verify:
-
-- [ ] `disabled: true` added to frontmatter
-- [ ] Warning callout added at the top of the body
-- [ ] Documentation file still exists (NOT deleted)
-- [ ] Ran `bun run generate:services`
-- [ ] `docs/.vitepress/theme/data/services.json` shows `"disabled": true` for this service
-- [ ] `docs/services/all.md` no longer lists the service
-- [ ] Service no longer appears in the listing at `http://localhost:5173/docs/services/`
-- [ ] Direct URL still works: `http://localhost:5173/docs/services/{slug}`
-- [ ] Warning is visible at the top of the page
-- [ ] Both regenerated files are committed alongside the frontmatter change
-
-## Re-enabling a Service
-
-To make a service available again:
-
-1. Remove `disabled: true` from frontmatter
-2. Remove the warning callout from the markdown body (or change its title to something the auto-detect regex won't match)
-3. Run `bun run generate:services`
-4. Commit the page change plus the regenerated `services.json` and `all.md`
-
-## Example: Full Disabled Service
-
-```markdown
----
-title: "Legacy Service"
-description: "A service that is no longer available."
-category: "Utilities"
-icon: "/docs/images/services/legacy-service-logo.svg"
-disabled: true
----
-
-::: warning SERVICE NOT AVAILABLE
-This service has been deprecated as of January 2025 and is no longer available in Coolify.
-Consider using [Alternative Service](/services/alternative) instead.
-:::
-
-# Legacy Service
-
-![Legacy Service](/docs/images/services/legacy-service-logo.svg)
-
-## What was Legacy Service?
-
-Legacy Service was a tool for... [rest of documentation]
-```
-
-## What Changed
-
-This skill used to instruct you to:
-
-- Add `disabled: true` to the entry in `List.vue`
-- Manually remove the entry from `docs/services/all.md`
-
-Both `List.vue`'s services array and `all.md` are now generated from frontmatter. **Do not edit either file by hand.** The single source of truth is the service's markdown file.
+Once availability is verified, remove `disabled: true` and remove or retitle any notice matching the recognized phrases. Regenerate both catalogs and confirm that the service appears with the right category and logo. Keep any still-relevant guidance for existing deployments.
 
 ## Related Skills
 
-- `adding-service-documentation` — for creating new service docs
-- `renaming-services` — for renaming services
+- [adding-service-documentation](../adding-service-documentation/SKILL.md): create or update a service page.
+- [renaming-services](../renaming-services/SKILL.md): change a service slug and preserve old URLs.

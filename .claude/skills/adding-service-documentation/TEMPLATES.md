@@ -1,6 +1,6 @@
 # Documentation Templates
 
-Ready-to-use templates for service documentation. The frontmatter is load-bearing — the generator (`scripts/services-data.mjs`) reads `title`, `description`, `category`, optional `icon`, and optional `disabled` to build the listing.
+Create these pages as `content/docs/services/{slug}.mdx`, or start from `templates/service.mdx` and add the required catalog frontmatter. The frontmatter is load-bearing — the generator (`scripts/services-data.mjs`) reads `title`, `description`, `category`, optional `icon`, and optional `disabled` to build the listing.
 
 ## Minimal Template
 
@@ -8,12 +8,10 @@ Use for simple services without extensive features or documentation.
 
 **Example:** Ghost, Plausible, simple utilities
 
-```markdown
+```mdx
 ---
 title: "ServiceName"
-description: "Short description for the listing card and all.md."
-og:
-  description: "Optional longer SEO/social-card description."
+description: "Short description for the listing card and all.mdx."
 category: "CMS"
 ---
 
@@ -36,12 +34,10 @@ category: "CMS"
 
 ### Minimal Example (Ghost)
 
-```markdown
+```mdx
 ---
 title: "Ghost"
 description: "A professional publishing platform."
-og:
-  description: "Deploy Ghost publishing platform on Coolify for professional blogs, newsletters, memberships, and content monetization with modern editor."
 category: "CMS"
 icon: "/docs/images/services/ghost-logo.svg"
 ---
@@ -68,12 +64,10 @@ Use for complex services with many features, learning resources, or special conf
 
 **Example:** Appsmith, Authentik, development platforms
 
-```markdown
+```mdx
 ---
 title: "ServiceName"
 description: "Short description for the listing card."
-og:
-  description: "Detailed SEO/social-card description including key features and benefits."
 category: "Development"
 ---
 
@@ -128,12 +122,10 @@ ServiceName makes it easy to [key benefit]:
 
 ### Comprehensive Example (Appsmith)
 
-```markdown
+```mdx
 ---
 title: "Appsmith"
 description: "A low-code application platform for building internal tools."
-og:
-  description: "Build internal tools on Coolify with Appsmith's low-code platform featuring drag-and-drop UI, database connectors, and custom business logic."
 category: "Development"
 icon: "/docs/images/services/appsmith-logo.svg"
 ---
@@ -223,7 +215,7 @@ Replace these placeholders:
 
 ### Adding a Configuration Section
 
-```markdown
+```mdx
 ## Configuration
 
 ### Environment Variables
@@ -240,7 +232,7 @@ Replace these placeholders:
 
 ### Adding a Troubleshooting Section
 
-```markdown
+```mdx
 ## Troubleshooting
 
 ### Service won't start
@@ -252,14 +244,14 @@ Ensure the database service is running and accessible.
 
 ### Adding Screenshots
 
-```markdown
+```mdx
 ## Screenshots
 
 ### Dashboard
-<ZoomableImage src="/docs/images/services/servicename-dashboard.webp" />
+<ZoomableImage src="/docs/images/services/servicename-dashboard.webp" alt="Service dashboard" />
 
 ### Configuration Panel
-<ZoomableImage src="/docs/images/services/servicename-config.webp" />
+<ZoomableImage src="/docs/images/services/servicename-config.webp" alt="Service configuration" />
 ```
 
 ---
@@ -271,11 +263,11 @@ Before submitting:
 - [ ] Frontmatter includes `title`, `description`, and `category`
 - [ ] `category` matches an existing category (or is intentionally new)
 - [ ] Service name is consistently capitalized in `title` and the H1
-- [ ] Logo file exists in `docs/public/images/services/` with a name the resolver finds, **or** `icon` is set in frontmatter
+- [ ] Logo file exists in `public/images/services/` with a name the resolver finds, **or** `icon` is set in frontmatter
 - [ ] Logo displays using standard markdown `![alt](path)` syntax
 - [ ] "What is..." section is clear and informative
 - [ ] All external links include `?utm_source=coolify.io`
 - [ ] GitHub and website links are correct
 - [ ] No typos or grammatical errors
-- [ ] Filename is `{slug}.md` in `docs/services/`, lowercase kebab-case
-- [ ] Ran `bun run generate:services`; `services.json` and `all.md` are committed alongside the new page
+- [ ] Filename is `{slug}.mdx` in `content/docs/services/`, lowercase kebab-case
+- [ ] Ran `bun run generate:services`; `services.json` and `all.mdx` are committed alongside the new page

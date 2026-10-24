@@ -1,0 +1,39 @@
+---
+title: "Import start"
+description: "Start an import into the database"
+---
+
+# Import start
+
+Start an import into the database
+
+## Usage
+
+```sh
+coolify database import start <database_uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--dump-all` | `boolean` | No | `false` | The backup contains all databases |
+| `--file` | `string` | No | — | Local backup file to upload and import |
+| `--keep-owners` | `boolean` | No | `false` | PostgreSQL: restore object owners and privileges from a single-database archive |
+| `--poll-interval` | `duration` | No | `3s` | Status polling interval when --wait is set |
+| `--replace-existing` | `boolean` | No | `false` | PostgreSQL: drop matching objects before restoring a single-database archive |
+| `--restore-mysql-users` | `boolean` | No | `false` | MySQL/MariaDB all-databases backups: also restore users, passwords and privileges |
+| `--s3-path` | `string` | No | — | Path of the backup in the S3 storage |
+| `--s3-storage-uuid` | `string` | No | — | S3 storage UUID to import from (requires --s3-path) |
+| `--server-path` | `string` | No | — | Absolute path of the backup on the database's server |
+| `--sqlite-database` | `string` | No | — | SQLite: database file to restore into (e.g. app.db) |
+| `--upload-id` | `string` | No | — | ID of a previously uploaded backup file |
+| `--wait` | `boolean` | No | `false` | Wait until the import finishes; exits non-zero if it fails |
+
+## Get current help
+
+```sh
+coolify database import start --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

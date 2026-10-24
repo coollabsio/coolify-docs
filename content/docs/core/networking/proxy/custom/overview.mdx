@@ -1,0 +1,227 @@
+---
+title: Custom Proxy Overview
+description: Understand how custom proxies work with Coolify and which routing, certificate, and networking features you need to manage yourself.
+---
+
+# Custom proxy overview
+
+A custom proxy is a reverse proxy that you configure and operate outside Coolify. It accepts requests for your domains and forwards them to your application and service containers, while Coolify continues to build, deploy, and manage those resources.
+
+This option can be useful if you already operate a reverse proxy or have routing requirements that need a separate setup. You manage the domain routes, TLS certificates, Docker network connections, and proxy maintenance that Coolify normally handles through its Traefik or Caddy integration.
+
+<Callout type="warning" title="Use the integrated proxy unless you need a custom setup">
+
+Traefik is the default and recommended proxy for most installations. Selecting **Custom (None)** does not integrate another proxy with Coolify. Domain and proxy settings in Coolify do not configure your external proxy.
+
+Switching interrupts every route served by the current proxy. Prepare the replacement and a way to restore the previous proxy before stopping it.
+
+</Callout>
+
+## What changes
+
+| Coolify-managed feature | With a custom proxy | Workaround |
+| :--- | :--- | :--- |
+| Routes from resource domains and ports | Setting a domain on UI and API does not create a route in your proxy. | Maintain hostname, path, and internal target-port mappings yourself, or implement discovery for your proxy. |
+| Automatic HTTPS and wildcard certificates | Coolify does not obtain or renew certificates for your proxy. | Use the proxy's certificate support or an external ACME client. Schedule renewals and reload certificates after renewal. |
+| HTTP redirects, default redirects, and unknown-host handling | The integrated proxy's behavior no longer applies. | Configure HTTP-to-HTTPS redirects, canonical domains, and a default virtual host in your custom proxy. |
+| Basic authentication, middleware, and proxy response headers | Coolify does not configure authentication, middleware, or response headers for your custom proxy. | Configure authentication, forwarded headers, compression, and required response headers in your custom proxy. |
+| Preview deployment URLs | A preview deployment does not automatically get an external route. | Create a separate route and target for each preview, or automate discovery and cleanup. |
+| Docker network connections | Coolify does not automatically attach your custom proxy to resource networks. | Add a shared network to the Compose files for your custom proxy and the resources it needs to reach, or connect your custom proxy to the resource networks created by Coolify. |
+| Proxy startup, restart, configuration, and logs in Coolify | Coolify does not operate your custom proxy; you must manage it externally. | Start and restart your custom proxy, validate and reload its configuration, and view its logs outside Coolify. |
+| Integrated traffic analytics | Dashboard traffic analytics only works with Traefik or Caddy. | Set up analytics externally using the metrics provided by your custom proxy. |
+| Routing to the Coolify dashboard and realtime services | Coolify does not generate these routes for your custom proxy. | Add routes for the dashboard, realtime updates, and web terminal to your custom proxy. See the [firewall guide](/core/infrastructure/servers/firewall) for required ports and [realtime migration](/core/instance-management/reverb-migration) for paths. |
+
+Application builds, deployments, storage, environment variables, and container health checks still belong to Coolify. A healthy container does not confirm that its external route works; verify both.
+
+## Prepare your custom proxy
+
+Write down the domains, application ports, path rules, WebSocket connections, redirects, authentication settings, and certificates used by your current proxy. Include preview deployments and the Coolify dashboard if you access them through the proxy.
+
+Keep your custom proxy's Compose file, configuration, and certificates in a separate directory on the server, such as `/data/custom-proxy`. Configure your custom proxy to start automatically after a server reboot. Make sure you can restart it from the server terminal if the Coolify dashboard is unavailable.
+
+Test your custom proxy before switching traffic to it. Use a test server or ports that are not already in use so your current proxy can keep running during testing.
+
+## Connect the proxy to resources
+
+Your custom proxy can reach applications through a shared Docker network or through ports mapped to the server. A shared network lets containers on the same server communicate without publishing application ports.
+
+If you use port mappings, configure your custom proxy to connect to the server's address and the mapped port. Keep track of the ports already used by your applications: two applications cannot bind the same port on the same server address.
+
+<Callout type="warning" title="Protect mapped ports">
+
+Mapped ports can expose your applications directly, allowing clients to bypass your custom proxy. Without proper firewall rules, those applications may be accessible to anyone. Restrict access to the clients that need those ports, including your custom proxy, and follow the [firewall guide](/core/infrastructure/servers/firewall) for rules that work with Docker-published ports.
+
+</Callout>
+
+For a connection through Docker networks, choose your resource type below.
+
+<Tabs id="custom-proxy-resource-networks" items={['Applications and Databases', 'Compose and Services']}>
+<Tab value="Applications and Databases">
+
+Applications that do not use Docker Compose and one-click databases use the `coolify` network by default. If you configured the resource to use a different Docker network, connect your custom proxy to that network instead.
+
+Connect your custom proxy to the same network by adding it to your proxy's Compose file:
+
+```yaml
+services:
+  proxy:
+    # Keep your proxy image, ports, volumes, and other settings here.
+    networks:
+      - coolify
+
+networks:
+  coolify:
+    external: true
+```
+
+After starting or recreating your proxy with this configuration, use the application's internal container name or network alias and internal port as the route target. For a one-click database, Coolify shows the connection details in its **Internal URL**.
+
+Most databases use TCP protocols rather than HTTP. Proxying a database connection requires support for its protocol in your custom proxy.
+
+</Tab>
+<Tab value="Compose and Services">
+
+Docker Compose applications and service stacks each have their own Docker network by default. They are not connected to `coolify` unless you enable **Connect To Predefined Network** in the resource's settings. This adds a connection to `coolify` on a standard setup. If you configured a different predefined network for the resource, the option connects it to that network.
+
+Choose one of these network options:
+
+- Connect your custom proxy to the network Coolify created for the application or service. The example below shows how to add an existing network to your proxy's Compose file.
+- Enable **Connect To Predefined Network** for the application or service, then connect your custom proxy to `coolify`. Use the example in the **Applications and Databases** tab. If you use a different predefined network, replace `coolify` with that network's name.
+- Create a new network for your custom proxy and the applications it serves. Add this network to your custom proxy's Compose file and to the application's or service's Compose configuration in Coolify. The **Use a separate shared network** example below shows how.
+
+### Join an existing resource network
+
+Run `docker network ls` on the server to list the networks. Find the network Coolify created for your application or service; its name is based on the resource's UUID.
+
+In your custom proxy's Compose file, add the following network settings. Replace `resource-network-name` with the name of that existing network:
+
+```yaml
+services:
+  proxy:
+    # Keep your proxy image, ports, volumes, and other settings here.
+    networks:
+      - resource-network-name
+
+networks:
+  resource-network-name:
+    external: true
+```
+
+Here, `external: true` tells Docker to use the network that already exists. Start or recreate your custom proxy after saving the file so it joins that network.
+
+### Use a separate shared network
+
+Create the network once on the resource server:
+
+```sh
+docker network create custom-proxy
+```
+
+Add the network to your custom proxy's Compose file:
+
+```yaml
+services:
+  proxy:
+    # Keep your proxy image, ports, volumes, and other settings here.
+    networks:
+      - custom-proxy
+
+networks:
+  custom-proxy:
+    external: true
+```
+
+Add it to the web-facing service in the resource's Compose definition saved in Coolify:
+
+```yaml
+services:
+  web:
+    image: example/app:1.0
+    networks:
+      custom-proxy:
+        aliases:
+          - example-app-web
+
+networks:
+  custom-proxy:
+    external: true
+```
+
+These examples show only the network settings to add. Keep the other settings and networks already in your Compose files. Redeploy the application or service after saving, then configure your custom proxy to connect to `example-app-web` on the application's internal port. You do not need to map that port to the server.
+
+<Callout type="warning" title="Use a separate network and a unique alias">
+
+If you add a custom alias to the network Coolify automatically creates for an application or service, Coolify can remove that alias when it generates the deployment configuration. Add your custom alias to a separate network, such as `custom-proxy` in the example above, so Coolify keeps it.
+
+Docker also adds service and container names as network aliases. Names such as `web` can collide when several stacks share a network. Use a unique alias for each proxy target.
+
+</Callout>
+
+Only attach components that the proxy needs to reach. All containers on the shared network can reach each other's listening ports, so joining databases or other internal components broadens access unnecessarily.
+
+Read [Docker Compose networking](/applications/builds/docker-compose#compose-networking) and [Service networking](/services/configuration/networking) for more about resource networks and **Connect To Predefined Network**.
+
+</Tab>
+</Tabs>
+
+### Container names and redeploys
+
+Application container names can change on each deployment. Service container names are generally stable, but their IP addresses can still change. **Consistent container name** can stabilize an application's name; it does not preserve its IP or make deployment uninterrupted.
+
+Use stable aliases where possible, and configure your proxy to resolve target names again when their addresses change. Check that it can start while an application is offline and recover when the application returns. For an example, see [how nginx finds application containers after a redeploy](/core/networking/proxy/custom/nginx#keep-targets-stable-across-redeploys).
+
+## Switch to Custom (None)
+
+<Steps>
+<Step>
+
+### Keep a recovery path
+
+Back up `/data/coolify/proxy`, which contains the current proxy configuration and persistent data, including certificates and custom configuration files. Keep an SSH session active during the switch.
+
+If you self-host Coolify, open the dashboard directly at `http://<Server-IP>:8000` before stopping the proxy, and use that address during the switch. Stopping the proxy disables dashboard access through your domain if that domain uses the proxy you are stopping. Confirm that direct access works before continuing.
+
+On a self-hosted instance, selecting **Custom (None)** does not remove the default published dashboard and realtime ports: `8000`, `6001`, and `6002`. Custom Compose overrides may change those bindings. Review access separately after your new routes work.
+
+</Step>
+<Step>
+
+### Stop the integrated proxy
+
+Open **Servers > your server > Proxy** and select **Stop Proxy**. Wait for **Proxy Exited**. Confirm that the old proxy has released the host ports the replacement will use.
+
+</Step>
+<Step>
+
+### Select Custom
+
+Select **Switch Proxy**, confirm the warning, then choose **Custom**. Coolify stores this selection as `NONE` and leaves proxy configuration and operation to you.
+
+</Step>
+<Step>
+
+### Start the replacement
+
+Apply the intended host-port bindings and start the external proxy using its own deployment procedure. Check its logs, configuration validation, certificates, and network connections.
+
+</Step>
+<Step>
+
+### Verify routes and recovery
+
+Test your application routes, redirects, WebSockets, authentication, large requests, and certificate renewal. Redeploy an application and confirm the proxy finds its new address.
+
+If you proxy the Coolify instance, verify login, live deployment updates, and the web terminal. See [realtime migration](/core/instance-management/reverb-migration) for the UI and realtime targets.
+
+</Step>
+</Steps>
+
+## Maintain the setup
+
+Keep route configuration, certificates, renewal jobs, and backups independent of the applications they expose. Test a proxy restart and recovery after an invalid configuration change. Make sure certificate renewal still runs when any management dashboard is unavailable.
+
+Remove a route before deleting its resource. If you attached the proxy directly to a resource's UUID network, disconnect it when the route is removed. Docker cannot remove a network while another container remains attached, so the network can remain after resource deletion.
+
+To return to an integrated proxy, stop the external proxy and release its host ports first. Select Traefik or Caddy in Coolify, restore the relevant configuration, and follow the [proxy switching procedure](/core/networking/proxy/overview#switch-between-traefik-and-caddy). Verify that running resources have the correct labels and that every route works again.
+
+For a worked example of the decisions and problems involved, read [ShadowArcanist's nginx migration case study](/core/networking/proxy/custom/nginx).

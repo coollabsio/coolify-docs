@@ -5,7 +5,16 @@ og:
   description: "Deploy Drupal CMS on Coolify for enterprise content management with powerful APIs, content types, workflows, and extensive module ecosystem."
 category: "CMS"
 icon: "/docs/images/services/drupal-logo.svg"
+disabled: true
 ---
+
+<Callout type="error" title="SERVICE TEMPORARILY DISABLED">
+
+This service's one-click templates are temporarily disabled in Coolify because of the PHP security vulnerabilities **CVE-2026-109618** and **CVE-2026-109619**. New deployments from the service catalog are unavailable while patched container images are verified.
+
+See the [PHP security advisory](/knowledge-base/php-security-advisory-2026) for guidance on existing deployments and [the template disablement PR](https://github.com/coollabsio/coolify/pull/12268) for details and updates.
+
+</Callout>
 
 # Drupal
 
@@ -14,6 +23,10 @@ icon: "/docs/images/services/drupal-logo.svg"
 ## What is Drupal
 
 Drupal is a free and open-source web content management system written in PHP and distributed under the GNU General Public License.
+
+## Variants
+
+- **Drupal with PostgreSQL:** Includes a PostgreSQL database.
 
 ## Links
 

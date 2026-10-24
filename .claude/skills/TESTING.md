@@ -1,163 +1,75 @@
-# Skill Testing Guide
+# Authoring Skill Validation
 
-How to validate that skills work correctly across different Claude models.
+Check the actual content pipeline as well as the instructions. Use an isolated temporary directory for generator probes so fixtures and generated output do not enter the working tree.
 
-## Why Test Across Models?
+## Service Path Smoke Check
 
-Skills act as additions to models, so effectiveness depends on the underlying model:
+Run this from the repository root. It copies only the dependency-free service generators and a local logo, creates a page at the path prescribed by the service skill, and verifies both outputs.
 
-| Model | Characteristics | Testing Focus |
-|-------|-----------------|---------------|
-| **Haiku** | Fast, economical | Does the skill provide enough guidance? |
-| **Sonnet** | Balanced | Is the skill clear and efficient? |
-| **Opus** | Powerful reasoning | Does the skill avoid over-explaining? |
+```bash
+(
+  set -eu
+  task_fixture=$(mktemp -d)
+  trap 'rm -rf "$task_fixture"' EXIT
+  mkdir -p "$task_fixture/scripts" "$task_fixture/content/docs/services" "$task_fixture/public/images/services"
+  cp scripts/services-data.mjs scripts/generate-service-list.mjs scripts/generate-services-page.mjs "$task_fixture/scripts/"
+  cp public/images/services/appsmith-logo.svg "$task_fixture/public/images/services/"
+  cat > "$task_fixture/content/docs/services/skill-path-probe.mdx" <<'PAGE'
+---
+title: "Skill path probe"
+description: "Disposable catalog path check."
+category: "AI"
+icon: "/docs/images/services/appsmith-logo.svg"
+---
 
-What works perfectly for Opus might need more detail for Haiku.
-
-## Testing Checklist
-
-### 1. Skill Discovery
-
-Test that Claude correctly identifies when to use each skill.
-
-| Prompt | Expected Skill | Pass? |
-|--------|----------------|-------|
-| "Add documentation for the new Ghost service" | `adding-service-documentation` | |
-| "Create a troubleshooting guide for SSL issues" | `adding-documentation-pages` | |
-| "Rename the minio service to minio-s3" | `renaming-services` | |
-| "The fider service is deprecated, hide it" | `disabling-services` | |
-| "Add a how-to guide for backups" | `adding-documentation-pages` | |
-| "Document the new appwrite service from Coolify" | `adding-service-documentation` | |
-
-### 2. Skill Execution
-
-For each skill, verify Claude follows the documented steps.
-
-#### adding-service-documentation
-
-- [ ] Extracts metadata from upstream YAML template
-- [ ] Downloads logo locally (doesn't use external URL)
-- [ ] Names the logo so the icon resolver finds it (`<slug>-logo.<ext>` or similar)
-- [ ] Creates markdown file with required frontmatter (`title`, `description`, `category`)
-- [ ] Does NOT hand-edit `List.vue`, `services.json`, or `all.md`
-- [ ] Runs `bun run generate:services` (or relies on the pre-`dev`/`build` hook) and commits the regenerated `services.json` and `all.md`
-
-#### adding-documentation-pages
-
-- [ ] Creates file in correct section directory
-- [ ] Includes required frontmatter (title, description)
-- [ ] Uses `<ZoomableImage>` for screenshots
-- [ ] Adds UTM parameters to external links
-- [ ] Updates sidebar config if needed
-
-#### renaming-services
-
-- [ ] Renames the markdown file via `git mv`
-- [ ] Renames the logo asset (or pins it via `icon:` in frontmatter)
-- [ ] Adds a 301 redirect in `nginx/redirects.conf`
-- [ ] Searches for and updates internal links
-- [ ] Runs `bun run generate:services` and commits the regenerated `services.json` and `all.md`
-
-#### disabling-services
-
-- [ ] Sets `disabled: true` in the service's frontmatter
-- [ ] Adds a warning callout (using one of the recognized titles) at the top of the body
-- [ ] Does NOT delete the documentation file
-- [ ] Keeps redirects intact
-- [ ] Runs `bun run generate:services` and commits the regenerated `services.json` and `all.md`
-
-### 3. Edge Cases
-
-Test handling of unusual situations:
-
-| Scenario | Expected Behavior |
-|----------|-------------------|
-| Service YAML has `# ignore: true` | Skip documentation, inform user |
-| Logo is PNG instead of SVG | Download as-is, use correct extension |
-| Service name uses camelCase | Convert to kebab-case for filename |
-| Duplicate service name exists | Warn user, ask for clarification |
-| External link missing protocol | Add https:// prefix |
-
-### 4. Reference File Navigation
-
-Verify Claude correctly navigates to reference files when needed:
-
-| Task | Should Read |
-|------|-------------|
-| Need frontmatter format | `_shared/FRONTMATTER.md` |
-| Need image guidelines | `_shared/IMAGES.md` or skill-specific `IMAGES.md` |
-| Need to know how the listing is generated | `adding-service-documentation/CATALOG.md` |
-| Need page template | Skill-specific `TEMPLATES.md` |
-
-## Recording Test Results
-
-When testing, record:
-
-1. **Model used**: Haiku / Sonnet / Opus
-2. **Skill tested**: Which skill
-3. **Prompt given**: Exact wording
-4. **Result**: Pass / Fail / Partial
-5. **Notes**: Any unexpected behavior
-
-### Example Test Log
-
-```markdown
-## Test: 2025-01-15
-
-**Model**: Sonnet
-**Skill**: adding-service-documentation
-**Prompt**: "Add documentation for the listmonk service"
-
-**Steps Observed**:
-1. ✅ Found YAML template in templates/compose/
-2. ✅ Extracted metadata correctly
-3. ✅ Downloaded logo to correct path with resolver-friendly name
-4. ✅ Created markdown with `title`, `description`, `category` frontmatter
-5. ✅ Ran `bun run generate:services` and committed regenerated `services.json` and `all.md`
-6. ✅ Used correct image path format
-
-**Result**: Pass
-
-**Notes**: None
+# Skill path probe
+PAGE
+  node "$task_fixture/scripts/generate-service-list.mjs"
+  node "$task_fixture/scripts/generate-services-page.mjs"
+  node --input-type=module - "$task_fixture" <<'JS'
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+const root = process.argv[2];
+const services = JSON.parse(await readFile(path.join(root, 'src/generated/services.json'), 'utf8'));
+const page = await readFile(path.join(root, 'content/docs/services/all.mdx'), 'utf8');
+const service = services.find(item => item.slug === 'skill-path-probe');
+assert(service);
+assert.equal(service.category, 'AI');
+assert.equal(service.icon, '/docs/images/services/appsmith-logo.svg');
+assert(page.includes('](/services/skill-path-probe)'));
+console.log('Service appears in both generated catalogs.');
+JS
+)
 ```
 
-## Common Issues and Fixes
+For availability changes, set `disabled: true` and add the documented MDX callout in the temporary page, then rerun both generators. The record must remain in `src/generated/services.json` with `disabled: true`, while the directory link disappears and the source page stays in place. Also verify that removing the flag alone does not override a recognized warning title. Re-enabling requires clearing both signals.
 
-### Skill Not Triggered
+For a rename, move the temporary `.mdx` page and regenerate. The new slug must replace the old one in both outputs while retaining title, category, icon, and availability. Test Nginx redirects separately with `bun run check:redirects -- --base origin/next` when changing repository paths.
 
-**Symptom**: Claude doesn't recognize when to use a skill.
+## Workflow Checks
 
-**Possible causes**:
-- Description missing key trigger words
-- User prompt too vague
+| Workflow | Check |
+|---|---|
+| Add service | Page at `content/docs/services/{slug}.mdx`, local asset in `public/images/services/`, both generated outputs include the enabled service |
+| Add guide | Page in the appropriate `content/docs/` section, valid frontmatter and MDX, relevant section `meta.json` entry |
+| Disable service | Explicit flag and visible callout, JSON marked disabled, directory entry omitted, direct page preserved |
+| Rename service | New filename and cross-links, valid icon, regenerated catalogs, prefixed and stripped old URLs redirect |
 
-**Fix**: Add more trigger terms to the skill description.
+Neither catalog output is hand-edited, and individual service entries do not belong in the React listing component. Verify the source instruction and its linked references together so they do not disagree about paths or syntax.
 
-### Incomplete Execution
+## Content and Navigation
 
-**Symptom**: Claude skips steps or misses files.
+- Check that all relative skill-reference links resolve and each skill's frontmatter still identifies its workflow.
+- Compile copied MDX examples when changing their syntax; literal braces, JSX tags, and nested code fences need MDX-safe formatting.
+- Use `<Callout>` rather than VitePress containers. Preserve `/docs/images/...` asset URLs and the supported `ZoomImage` / `ZoomableImage` components.
+- For visible changes, open `http://localhost:3000/docs/{path}` after `bun run dev`. The searchable service catalog is `/docs/services/overview`; the directory is `/docs/services/all`.
+- Confirm navigation ordering against the containing folder's `meta.json`.
 
-**Possible causes**:
-- SKILL.md workflow not clear enough
-- Reference file not properly linked
+`bun run dev` and `bun run build` refresh the remote CLI reference, OpenAPI schema, and service catalogs. Inspect those generated diffs and commit them only when the task intends to update them. `bun run preview` does not regenerate them.
 
-**Fix**: Make workflow steps more explicit, add verification checklist.
+Run `bun run types:check`, `bun run check:redirects`, or `bun run build` when relevant to the change. An instruction-only path correction can be validated with the isolated generators and example compilation; it does not require rebuilding every social-preview image.
 
-### Wrong File Paths
+## Behavioral Skill Checks
 
-**Symptom**: Claude uses incorrect paths for images or files.
-
-**Possible causes**:
-- Path format inconsistent in examples
-- Confusion between `/public/` and `/docs/`
-
-**Fix**: Standardize path examples, add explicit path rules.
-
-## Iteration Process
-
-1. **Test** with representative prompts
-2. **Document** failures and partial successes
-3. **Identify** patterns in failures
-4. **Update** skill content to address gaps
-5. **Re-test** to verify fixes
-6. **Repeat** until consistent across models
+Use realistic requests such as adding a service, writing a troubleshooting guide, renaming a slug, and hiding an unavailable service. Check the actual files and generated behavior, rather than matching instruction wording. If testing across model variants, record the model, request, skill, output paths, observed behavior, and any remaining failures. Do not claim a full agent run or browser check when only the generator probe was executed.

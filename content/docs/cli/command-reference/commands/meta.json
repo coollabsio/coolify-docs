@@ -26,6 +26,8 @@
     "config",
     "version",
     "update",
+    "audit",
+    "integration-token",
     "settings"
   ]
 }

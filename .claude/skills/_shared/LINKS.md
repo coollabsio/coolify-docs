@@ -1,107 +1,44 @@
-# Link Guidelines
+# Documentation Links
 
-How to format internal and external links in documentation.
+## Internal Routes
 
-## Internal Links
-
-Use **absolute paths** from the docs root:
+Use extensionless absolute paths from the content root, without the deployment's `/docs` prefix:
 
 ```markdown
 [WordPress guide](/services/wordpress)
-[Getting started](/get-started/introduction)
-[SSH keys](/knowledge-base/server/openssh)
+[Choose your setup](/choose-your-path)
+[SSH keys](/core/infrastructure/servers/ssh-keys)
+[Laravel guide](/applications/framework-examples/php/laravel)
 ```
 
-**Rules:**
-- Always start with `/`
-- No `.md` extension needed
-- Use descriptive anchor text (not "click here")
+For example, `content/docs/services/wordpress.mdx` maps to `/services/wordpress` in authored links and `http://localhost:3000/docs/services/wordpress` in the browser. A folder's `index.mdx` maps to the folder route itself.
 
-### Section Paths
+Use a page that actually exists rather than guessing a path from its title. Check the current `content/docs/` tree and local section `meta.json` files. See [SIDEBAR.md](../adding-documentation-pages/SIDEBAR.md) for navigation entries, which use a different folder-relative format.
 
-| Section | Path Pattern |
-|---------|--------------|
-| Services | `/services/{slug}` |
-| Applications | `/applications/{framework}` |
-| Databases | `/databases/{database}` |
-| Knowledge Base | `/knowledge-base/{category}/{topic}` |
-| Troubleshoot | `/troubleshoot/{issue}` |
-| Get Started | `/get-started/{topic}` |
+Image URLs follow a different convention and retain `/docs/images/...`; see [IMAGES.md](./IMAGES.md).
 
-## External Links
+## External Resources
 
-Always add UTM tracking parameter:
+Use descriptive Markdown labels and complete HTTPS URLs. Follow the existing tracking convention for third-party documentation and project links:
 
 ```markdown
-[Official WordPress docs](https://wordpress.org/documentation/?utm_source=coolify.io)
-[GitHub repository](https://github.com/example/project?utm_source=coolify.io)
+[Official documentation](https://docs.example.com?utm_source=coolify.io)
+[Configuration reference](https://example.com/page?tab=config&utm_source=coolify.io)
 ```
 
-### UTM Format
+Preserve existing query parameters and fragments. Use `&utm_source=coolify.io` when a query string already exists. Coolify's own GitHub, Discord, and changelog links do not need tracking parameters. The MDX runtime handles link rendering; do not add manual external-link decorations.
 
-Append `?utm_source=coolify.io` to all external URLs.
-
-**If URL already has parameters:**
-```markdown
-[Link](https://example.com/page?tab=config&utm_source=coolify.io)
-```
-
-### External Link Styling
-
-VitePress automatically adds external link indicators (↗). No manual decoration needed.
-
-## Link Types
-
-### Documentation Cross-References
-
-```markdown
-See the [deployment guide](/applications/laravel) for framework-specific instructions.
-
-For more details, refer to [SSH configuration](/knowledge-base/server/openssh).
-```
-
-### Official Resources
-
-```markdown
-- [Official documentation](https://docs.example.com?utm_source=coolify.io)
-- [GitHub repository](https://github.com/example/repo?utm_source=coolify.io)
-- [Project website](https://example.com?utm_source=coolify.io)
-```
-
-### Coolify Resources
-
-```markdown
-- [Coolify Discord](https://discord.gg/coolify)
-- [Coolify GitHub](https://github.com/coollabsio/coolify)
-- [Coolify Changelog](https://coolify.io/changelog)
-```
-
-**Note:** Coolify's own resources don't need UTM parameters.
-
-## Anchor Links
-
-Link to specific sections within pages:
+## Anchors
 
 ```markdown
 [Configuration options](#configuration)
-[Troubleshooting section](/services/wordpress#troubleshooting)
+[WordPress troubleshooting](/services/wordpress#troubleshooting)
 ```
 
-**Rules:**
-- Use lowercase
-- Replace spaces with hyphens
-- Match the heading exactly
+Use the heading's actual generated anchor. Repeated headings and punctuation can affect the ID; inspect the rendered link when unsure.
 
-## Common Mistakes
+## Renamed Pages
 
-❌ **Don't:**
-- Use bare URLs without anchor text
-- Forget UTM parameters on external links
-- Use relative paths (`./other-page`)
-- Use "click here" or "here" as anchor text
+Update authored cross-links and preserve old public routes in `nginx/redirects.conf`. Rules must accept the optional `/docs` prefix and optional trailing slash, and redirect to the canonical `/docs/...` URL. Run `bun run check:redirects -- --base origin/next` for renamed or removed paths.
 
-✅ **Do:**
-- Use descriptive anchor text
-- Add `?utm_source=coolify.io` to external URLs
-- Use absolute paths starting with `/`
-- Link to specific sections when relevant
+For a running site, `node scripts/check-links.js <docs-url>` can check broken links. Nginx redirects do not run in the Vite development server.
