@@ -6,6 +6,7 @@ type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : n
 type BaseLoaderData = {
   description: string;
   isIndex: boolean;
+  markdownUrl: string;
   ogImagePath: string;
   pageTree: SerializedPageTree;
   title: string;
@@ -14,7 +15,6 @@ type BaseLoaderData = {
 
 export type DocsLoaderData = BaseLoaderData & {
   type: 'docs';
-  markdownUrl: string;
   path: string;
 };
 

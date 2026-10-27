@@ -44,5 +44,13 @@ export async function getLLMText(page: InferPageType<typeof source>) {
   }
 
   const processed = await page.data.getText('processed');
-  return `# ${page.data.title} (${pageUrl})\n\n${rewritePageLinks(processed, page.url)}`;
+  // Most pages have their own H1, sometimes after a callout. The header below replaces it.
+  const lines = rewritePageLinks(processed, page.url).split('\n');
+  let inCode = false;
+  const h1 = lines.findIndex((line) => {
+    if (/^(```|~~~)/.test(line)) inCode = !inCode;
+    return !inCode && line.startsWith('# ');
+  });
+  if (h1 !== -1) lines.splice(h1, 1);
+  return `# ${page.data.title}\n\nSource: ${pageUrl}\n\n${lines.join('\n').trim()}\n`;
 }
