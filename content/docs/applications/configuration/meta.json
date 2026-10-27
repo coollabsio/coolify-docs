@@ -3,6 +3,7 @@
   "pages": [
     "overview",
     "general",
+    "recommended-settings",
     "advanced",
     "environment-variables",
     "persistent-storage",

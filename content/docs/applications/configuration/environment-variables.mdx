@@ -66,9 +66,22 @@ DATABASE_URL=postgres://db:5432/app
 
 Set **Build time** to **Not available during build** for a secret that the application only reads after the container starts.
 
-<Callout type="warning" title="Build arguments can remain visible">
+### Build secrets
 
-Traditional Docker build arguments can appear in image metadata. Set **Build secrets** to **Docker BuildKit secrets** for sensitive build-time values when the build server supports Docker BuildKit. If BuildKit is unavailable, Coolify falls back to build arguments.
+**Build secrets** controls how build-time variables get to the build:
+
+| Option | How values get to the build | Values in the image |
+| :--- | :--- | :--- |
+| **Docker BuildKit secrets** | Coolify mounts each value as a BuildKit secret on every `RUN` instruction, as an environment variable with the same name. | Not saved. |
+| **Standard build arguments** | Coolify passes each value as `--build-arg` and adds `ARG` lines after each `FROM`. | Docker saves the values in the image history. Anyone who can pull the image can read them. |
+
+New applications use **Docker BuildKit secrets**. Applications created before this default keep their setting. The [Recommended settings](/applications/configuration/recommended-settings) page recommends build secrets for them.
+
+If the build server does not support Docker BuildKit secrets, Coolify uses build arguments for that deployment.
+
+<Callout type="warning" title="Values are available only inside RUN">
+
+With build secrets, a Dockerfile can read the values only in `RUN` instructions. Instructions such as `FROM node:${NODE_VERSION}`, `COPY --chown=$APP_USER`, or `WORKDIR $APP_DIR` get empty values, and the deployment log shows a warning. A `# syntax=docker/dockerfile:1.x` line must use version 1.10 or later. To use these variables outside `RUN`, set **Build secrets** to **Standard build arguments**.
 
 </Callout>
 
