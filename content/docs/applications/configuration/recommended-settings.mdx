@@ -1,0 +1,35 @@
+---
+title: Recommended settings
+description: See the settings that Coolify recommends for an application, apply them with one click, or dismiss them.
+---
+
+# Recommended settings
+
+Open an application, then select **Recommended settings** in the application settings sidebar. The page lists the settings that Coolify recommends for this application and that it does not use yet.
+
+The number next to **Recommended settings** in the sidebar shows how many recommendations are open. When there are no open recommendations, the page shows **No recommendations** and the sidebar shows no number.
+
+## Recommendations
+
+| Recommendation | Shown when | One-click fix |
+| :--- | :--- | :--- |
+| **Use build secrets** | The application builds with Dockerfile, Nixpacks, or Docker Compose, has at least one build-time variable, and uses standard build arguments. The recommendation is red when the application pushes its image to a registry. | **Turn on build secrets** sets [Build secrets](/applications/configuration/environment-variables#build-secrets) to **Docker BuildKit secrets**. |
+| **Switch from Nixpacks to Railpack** | The application builds with Nixpacks, which is deprecated. | **Switch to Railpack** changes the build pack to [Railpack](/applications/builds/railpack) after a confirmation. |
+
+A fix changes the setting only. Redeploy the application to build it with the new setting.
+
+<Callout type="warning" title="Check the build before you apply a fix">
+
+With build secrets, build-time values are available only inside `RUN` instructions. Railpack reads `RAILPACK_*` variables and `railpack.json`, not `NIXPACKS_*` variables or `nixpacks.toml`. Check the deployment log after the next deployment.
+
+</Callout>
+
+## Dismiss a recommendation
+
+Select **Dismiss** when a recommendation does not fit the application, for example when a Dockerfile must read a build-time variable in a `FROM` instruction. A dismissed recommendation moves to the **Dismissed** list and does not count in the sidebar. Select **Restore** to show it again.
+
+Dismissed recommendations are copied when you clone the application and move with it in a server transfer.
+
+## Permissions
+
+Team members can read the page. Only team admins and owners can apply, dismiss, or restore a recommendation.

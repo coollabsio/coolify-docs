@@ -421,6 +421,27 @@ services:
           CREATE ROLE app;
 ```
 
+You can also create a file with the Compose [`configs`](https://docs.docker.com/reference/compose-file/configs/) top-level element. Docker Compose [interpolates](https://docs.docker.com/reference/compose-file/interpolation/) `configs.content` before the containers start. It uses the `.env` file that Coolify writes, not the `environment` of a service. To keep a variable reference in the file for the container to expand, write `$$`:
+
+```yaml
+services:
+  database:
+    image: postgres:17
+    environment:
+      - POSTGRES_PASSWORD=password
+    configs:
+      - source: roles
+        target: /docker-entrypoint-initdb.d/99-roles.sql
+
+configs:
+  roles:
+    content: |
+      \set pgpass `echo "$$POSTGRES_PASSWORD"`
+      CREATE ROLE app LOGIN PASSWORD :'pgpass';
+```
+
+The file then contains `$POSTGRES_PASSWORD`, and psql reads the value from the container environment. If you write `$POSTGRES_PASSWORD` or `${POSTGRES_PASSWORD}`, Compose puts the value from the `.env` file into the file. A fixed value such as `POSTGRES_PASSWORD=password` is not in the `.env` file, so Compose shows `The "POSTGRES_PASSWORD" variable is not set` and writes an empty string.
+
 Read [Persistent storage](/core/persistent-storage/storage-mounts/overview) before choosing paths or backup behavior.
 
 If a file bind mount fails with `not a directory: unknown`, inspect the source path on the deployment server. Confirm that it exists as a file rather than a directory, then redeploy the resource.
