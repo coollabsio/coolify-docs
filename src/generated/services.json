@@ -1173,6 +1173,13 @@
     "category": "AI"
   },
   {
+    "name": "LogChimp",
+    "slug": "logchimp",
+    "icon": "/docs/images/services/logchimp.svg",
+    "description": "Collect customer feedback, analyzes, and prioritizes feedback using LogChimp.",
+    "category": "Analytics"
+  },
+  {
     "name": "Logto",
     "slug": "logto",
     "icon": "/docs/images/services/logto-logo.png",
