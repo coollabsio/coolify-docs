@@ -29,9 +29,30 @@ LOG_LEVEL=info
 API_URL=https://api.example.com
 ```
 
-Lines beginning with `#` are ignored. Saving Developer view creates, updates, and removes entries to match its contents.
+Lines beginning with `#` are ignored, except `# coolify:` lines. Saving Developer view creates, updates, and removes entries to match its contents.
 
 Locked secrets and multiline values cannot be edited in Developer view. Change those entries in Normal view.
+
+### Set flags in Developer view
+
+To set the flags of a variable, put a `# coolify:` line directly above the variable line:
+
+```dotenv
+# coolify: literal buildtime=false
+DATABASE_URL=postgres://db:5432/app
+```
+
+| Flag | Default | Meaning |
+| :--- | :--- | :--- |
+| `literal` | `false` | Keep `$` references as text. |
+| `buildtime` | `true` | Make the variable available during the build. |
+| `runtime` | `true` | Make the variable available in the running container. |
+
+- Write a flag name alone to set it to `true`, or write `=true` or `=false`.
+- Developer view shows a `# coolify:` line only for variables whose flags are not the defaults.
+- If a variable has no `# coolify:` line, its flags do not change when you save. A new variable without this line gets the defaults.
+- The `# coolify:` line must be directly above the variable line. A blank line, another comment, or a second `# coolify:` line between them stops the save with an error. An unknown flag or a value other than `true` or `false` also stops the save. When the save stops, nothing changes.
+- A `# coolify:` line above a locked or multiline variable has no effect.
 
 ## Build and runtime scope
 
