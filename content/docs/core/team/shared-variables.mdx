@@ -124,13 +124,20 @@ Verify inside the workload or through its behavior that the environment variable
 
 Select **Developer view** on a scope page to edit ordinary shared variables as `KEY=value` lines. Select **Save changes** to apply the complete editor contents.
 
-Lines beginning with `#` are treated as comments. Developer view can create new variables, update existing ordinary values, and delete variables omitted from the editor.
+Lines beginning with `#` are treated as comments, except `# coolify:` lines. Developer view can create new variables, update existing ordinary values, and delete variables omitted from the editor.
 
 <Callout type="warning" title="Developer view saves the complete list">
 Removing a variable's line and saving deletes that shared variable. Review the entire editor before selecting **Save changes**.
 </Callout>
 
 Locked and multiline variables appear as placeholders in Developer view and cannot be changed there. Edit multiline variables in **Normal view**. To change a locked value, delete the variable and create it again.
+
+To make a shared variable literal in Developer view, put `# coolify: literal` directly above its line. Use `# coolify: literal=false` to turn it off. Shared variables support only the `literal` flag. If a variable has no `# coolify:` line, its flag does not change when you save.
+
+```dotenv
+# coolify: literal
+TEMPLATE=$NOT_A_REFERENCE
+```
 
 ---
 
