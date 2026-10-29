@@ -1,6 +1,6 @@
 ---
 title: Deployments
-description: Use Coolify MCP to inspect, queue, control, and cancel deployments.
+description: Use Coolify MCP to inspect, queue, control, cancel, and roll back deployments.
 ---
 
 # Deployments
@@ -9,10 +9,12 @@ description: Use Coolify MCP to inspect, queue, control, and cancel deployments.
 | :--- | :--- | :--- |
 | `list_deployments` | `read` | List queued, in-progress, or application deployment history. |
 | `get_deployment` | `read` | Inspect one deployment; build logs are not returned. |
-| `deploy` | `deploy` | Queue an application deployment by UUID. Supports force rebuild and preview IDs. |
+| `deploy` | `deploy` | Queue a deployment by `uuid`, or deploy every resource with a `tag`. Give one of them. A `tag` deploy needs `confirm=true`. Supports `force` rebuild and preview IDs. |
 | `cancel_deployment` | `deploy` | Cancel a queued or in-progress deployment. |
-| `control` | `deploy` | Start, stop, or restart an application, database, or service. `stop` requires `confirm=true`. |
+| `control` | `deploy` | Start, stop, or restart an application, database, service, or one service application or database (`service_uuid` with `uuid`). `stop` requires `confirm=true`. |
+| `list_rollback_images` | `read` | List the images that an application can roll back to. |
+| `rollback_application` | `deploy` | Roll back an application to an earlier image. Requires `confirm=true`. |
 
 Follow [Security](/mcp/security) before granting `deploy`.
 
-Preview pull request IDs must be positive integers no greater than `2147483647`. Invalid IDs produce a validation error. See [Preview deployments](/applications/deployments/preview-deployments#manage-previews-through-the-api) for the related API workflow.
+Preview pull request IDs must be integers from `0` to `2147483647`. `0` means no preview. Invalid IDs produce a validation error. See [Preview deployments](/applications/deployments/preview-deployments#manage-previews-through-the-api) for the related API workflow.

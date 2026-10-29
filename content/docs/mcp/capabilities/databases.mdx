@@ -13,3 +13,14 @@ description: Use Coolify MCP to list and inspect standalone databases and their 
 | `list_backup_executions` | List executions for a scheduled database backup. |
 
 Backup execution messages require `read:sensitive` and are best-effort redacted.
+
+## Create and manage databases
+
+| Tool | Actions |
+| :--- | :--- |
+| `create_database` | The action is the database type: `postgresql`, `mysql`, `mariadb`, `mongodb`, `redis`, `keydb`, `dragonfly`, `clickhouse`, `sqlite` (`write`). |
+| `manage_database` | `update` (`write`); `clone` and `move` (`write`, confirm); `delete` and `import` (`deploy`, confirm). |
+| `get_database_import` | Check the progress of an import (`read`). The import output needs `read:sensitive`. |
+| `manage_backup` | `create`, `update` (`write`); `delete` and `delete_execution` (`write`, confirm). `backup_now` needs `deploy`. |
+
+Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.

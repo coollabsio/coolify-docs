@@ -244,9 +244,11 @@ Enables the MCP endpoint at `/mcp` for authenticated clients. Use your instance 
 **Accepted values:**
 
 - **Enabled:** the instance MCP endpoint is available to authenticated clients.
-- **Disabled:** the instance MCP endpoint is unavailable.
+- **Disabled:** the instance MCP endpoint is unavailable. `/mcp` returns `404`. This is the default on self-hosted instances.
 
-For the detailed guide, follow [MCP integration](/mcp/what-is-mcp).
+On a self-hosted instance, you must enable this setting before an MCP client can connect. Coolify Cloud has it enabled. The **API access** setting does not control MCP. Each team can also turn off MCP in **Team > General**, and the **Allowed IPs** list also applies to `/mcp`.
+
+For the detailed guide, follow [Set up MCP](/mcp/setup).
 
 ---
 

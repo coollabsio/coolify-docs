@@ -13,5 +13,20 @@ description: Use Coolify MCP to inspect servers, destinations, domains, and serv
 | `get_server_resources` | List resources defined on a server. |
 | `list_destinations` | List Docker destinations; optionally filter by server. |
 | `get_destination` | Inspect one Docker destination by UUID. |
+| `get_server_metrics` | Return Sentinel metrics: CPU, memory, disk, load, and network. Set the time range with `minutes`: default `60`, maximum `43200`. Metrics must be enabled on the server. |
 
 Use `get_infrastructure_overview` first for counts and server health hints.
+
+## Manage servers
+
+| Tool | Actions |
+| :--- | :--- |
+| `manage_server` | `create`, `update`, `validate` (`write`); `delete` (`write`, confirm). |
+| `manage_proxy` | `get` (`read`); `update` (`write`, confirm); `set_configuration` and `restart` (`deploy`, confirm). |
+| `docker_cleanup` | `get` and `executions` (`read`); `update` (`write`); `run` (`deploy`, confirm). |
+| `manage_destination` | `create`, `update` (`write`); `delete` (`write`, confirm). |
+| `manage_private_key` | `list`, `get` (`read`); `create`, `update` (`write`); `delete` (`write`, confirm). Key material is never returned. |
+| `manage_registry` | `list` (`read:sensitive`); `create` (`deploy`); `check` (`write`); `delete` (`write`, confirm). |
+| `cloud_provider` | `list_tokens`, `get_token`, `catalog` (`read`); `create_token`, `update_token`, `validate_token` (`write`); `delete_token` and `provision_server` (`write`, confirm). |
+
+Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it. `provision_server` creates a paid server at the provider.

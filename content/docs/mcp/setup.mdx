@@ -10,9 +10,14 @@ Set up Coolify MCP by enabling the instance endpoint, confirming team access, cr
 ## Before you begin
 
 - Use Coolify Cloud or a self-hosted Coolify instance with a public HTTPS URL.
-- On self-hosted Coolify, enable **API access** in **Settings > Advanced**.
 - Choose the team whose resources the client must access.
 - Create an API token with the smallest required permissions. See [API tokens](/core/security/credentials/api-tokens).
+
+<Callout type="warning" title="Self-hosted: MCP is off by default">
+On a self-hosted instance, you must turn on MCP for the instance before a client can connect. Open **Settings > Advanced**, find the **API and MCP** section, and set **MCP server** to **Enabled**. Until you do this, `/mcp` returns `404`.
+
+On Coolify Cloud, MCP is already enabled. You do not have to change this setting.
+</Callout>
 
 <Callout type="warning" title="Protect the token">
 An MCP client can use every operation allowed by its token. Store the token in the client's secret configuration, never commit it, and revoke it if exposed.
@@ -44,17 +49,22 @@ Coolify Cloud already has instance MCP enabled. Skip the Dashboard and API tabs,
 
 <ZoomImage src="/docs/images/mcp/enable-mcp.webp" alt="Coolify Advanced settings with MCP server enabled" />
 
+This step is required on self-hosted instances. Only an instance admin (a member of the root team) can change it.
+
 1. Open **Settings** in the sidebar.
 2. Open **Advanced**.
-3. In **API and MCP**, set **MCP server** to **Enabled**.
-4. Select **Save changes**.
+3. In the **API and MCP** section, set **MCP server** to **Enabled**. Coolify saves the change immediately.
 
-MCP must also be enabled in the current team's settings. Open **Team > General**, set **MCP server** to **Enabled for this team**, then select **Save changes**.
+The **API access** setting does not control MCP. MCP works when the REST API is disabled.
+
+MCP must also be enabled for the team of the token. It is enabled by default. To check it, open **Team > General**, make sure **MCP server** is **Enabled for this team**, then select **Save changes**. Team admins and owners can change this setting.
+
+If you use **Allowed IPs** in **Settings > Advanced**, the list also applies to `/mcp`. Add the IP address of the machine that runs the MCP client.
 
 </Tab>
 <Tab value="API">
 
-On a self-hosted instance, use a `root` API token to enable or disable the instance endpoint. Replace the example URL with your instance's domain:
+On a self-hosted instance, use a `write` or `root` API token of the root team to enable or disable the instance endpoint. Replace the example URL with your instance's domain:
 
 ```sh
 export COOLIFY_URL="https://coolify.example.com"
@@ -67,7 +77,7 @@ curl --fail-with-body --request POST \
 
 The endpoint returns `MCP server enabled.`. Disable it with `POST /api/v1/mcp/disable`.
 
-These endpoints require a `root` token. A `read` or `write` token cannot change the instance MCP setting.
+These endpoints require a token with `write` or `root` that belongs to the root team (team ID `0`). A token of any other team receives `403`.
 
 </Tab>
 </Tabs>
@@ -83,8 +93,11 @@ Coolify displays the complete token only once. Copy it into the client's secret 
 
 - Use `read` for inventory and inspection.
 - Add `read:sensitive` only for supported sensitive data or log summaries.
-- Add `deploy` for deploy, start, stop, restart, or cancel operations.
+- Add `deploy` for deploy, start, stop, restart, cancel, and rollback operations.
+- Add `write` to create, update, or delete resources with the `create_*` and `manage_*` tools.
 - Do not use `root` for normal MCP clients.
+
+Only team admins and owners can use tokens with `read:sensitive`, `write`, `deploy`, or `root`. A team member can use only `read` tokens. MCP shows only the tools that the token's permissions allow.
 
 MCP endpoint URL:
 

@@ -29,6 +29,7 @@ export default defineConfig({
   base: '/docs/',
   server: {
     port: 3000,
+    allowedHosts: ['.ts.net'],
     watch: {
       ignored: ['**/.output/**', '**/node_modules/.nitro/**'],
       usePolling: true,

@@ -15,3 +15,13 @@ description: Use Coolify MCP to inspect one-click services and their application
 | `get_service_database` | Inspect one service database component. |
 
 Use `get_logs` with the appropriate child resource when a service has multiple containers.
+
+## Create and manage services
+
+| Tool | Actions |
+| :--- | :--- |
+| `list_service_templates` | List the one-click service templates (`read`). |
+| `create_service` | `template`, `compose` (`write`). |
+| `manage_service` | `update`, `update_application`, `update_database` (`write`); `clone` and `move` (`write`, confirm); `delete` and `import_database` (`deploy`, confirm). |
+
+Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.

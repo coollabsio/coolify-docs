@@ -11,6 +11,15 @@ description: Use Coolify MCP to list projects, inspect environments, and search 
 | `get_project` | Inspect a project, its environments, and resource counts. |
 | `get_environment` | Find an environment by name or UUID and return resource summaries. |
 | `list_resources` | List applications, services, and databases together. |
-| `search_resources` | Fuzzy-search projects and resources by name, UUID, or domain. |
+| `search_resources` | Fuzzy-search projects, servers, and resources by name, UUID, or domain. |
 | `list_tags` | List team-owned tags. |
 | `list_resource_tags` | List tags attached to an application, database, or service. |
+
+## Manage projects and tags
+
+| Tool | Actions |
+| :--- | :--- |
+| `manage_project` | `create`, `update`, `create_environment`, `update_environment` (`write`); `delete` and `delete_environment` (`write`, confirm). Only empty projects and environments can be deleted. |
+| `manage_tags` | `create`, `update`, `attach`, `detach` (`write`); `delete` (`write`, confirm). |
+
+Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.

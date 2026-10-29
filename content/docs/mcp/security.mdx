@@ -13,14 +13,17 @@ MCP gives an AI client access to Coolify data and, when permitted, lifecycle ope
 | :--- | :--- |
 | Inspect resources | `read` |
 | Read supported sensitive data or log summaries | `read:sensitive` |
-| Deploy, start, stop, restart, or cancel | `deploy` |
-| Change the instance MCP setting | `root` token for the enable/disable API |
+| Deploy, start, stop, restart, cancel, or roll back | `deploy` |
+| Create, update, or delete resources (`create_*` and `manage_*` tools) | `write` |
+| Change the instance MCP setting with the API | `write` or `root` token of the root team |
+
+Only team admins and owners can use tokens with `read:sensitive`, `write`, `deploy`, or `root`. Destructive actions need `confirm=true`. Configure your client to ask you before it calls them.
 
 Do not use a `root` token for normal MCP access.
 
 ## Team scope
 
-A token belongs to one team. MCP cannot use that token to read another team's resources. Team owners can disable MCP for their team without disabling the instance endpoint.
+A token belongs to one team. MCP cannot use that token to read another team's resources. Team admins and owners can disable MCP for their team without disabling the instance endpoint.
 
 ## Protect client configuration
 
@@ -30,4 +33,4 @@ A token belongs to one team. MCP cannot use that token to read another team's re
 - Restrict access to the machine and user account running the client.
 - Revoke the token immediately if exposed.
 
-MCP responses never return environment values or file contents. Log and deployment summaries can still contain operational data; redaction is best effort.
+MCP responses never return private keys, S3 secrets, tokens, passwords, or webhook URLs. Environment values are returned only by `get_env_values` (`read:sensitive`, team admin or owner), and never for values marked as shown once. Log and deployment summaries can still contain operational data; redaction is best effort.

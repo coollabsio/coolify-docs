@@ -9,7 +9,7 @@ Coolify exposes an MCP server at `/mcp`. An MCP-compatible client sends Streamab
 
 ## Connection flow
 
-1. Enable MCP for the Coolify instance.
+1. Enable MCP for the Coolify instance in **Settings > Advanced > API and MCP**. This step is required on self-hosted instances. Coolify Cloud has it enabled.
 2. Keep MCP enabled for the team the token belongs to.
 3. Create an API token for that team.
 4. Configure the client with the endpoint and Bearer token.
@@ -25,14 +25,14 @@ Authorization: Bearer 67|abcthisisa123dummytoken
 
 The token is bound to one Coolify team. MCP only returns resources owned by that team. Create one token per team when a client needs access to multiple teams.
 
-The instance MCP setting must be enabled before `/mcp` responds. Team owners can disable MCP for individual teams. A disabled instance returns `404`; a disabled team returns `403`.
+The instance MCP setting must be enabled before `/mcp` responds. Team admins and owners can disable MCP for individual teams. A disabled instance returns `404`; a disabled team returns `403`. On self-hosted instances, the **Allowed IPs** list in **Settings > Advanced** also applies to `/mcp`.
 
 ## MCP primitives
 
 <Tabs items={['Tools', 'Resources', 'Prompts']}>
 <Tab value="Tools">
 
-Tools perform Coolify queries and operations. Read tools need `read`. Deployment and lifecycle tools need `deploy`. [MCP capabilities](/mcp/capabilities/overview) groups tools by task.
+Tools perform Coolify queries and operations. Read tools need `read`. Deployment and lifecycle tools need `deploy`. Tools that create, update, or delete resources (`create_*` and `manage_*`) need `write`. MCP lists only the tools that the token's permissions allow. [MCP capabilities](/mcp/capabilities/overview) groups tools by task.
 
 </Tab>
 <Tab value="Resources">
@@ -49,4 +49,4 @@ Prompts give clients guided workflows. Coolify provides prompts for troubleshoot
 
 ## Response boundaries
 
-Coolify returns structured responses with `data` and may include `_pagination`, `_actions`, or failure details. Environment values, configuration snapshots, and full deployment logs are not returned. Log summaries are capped and best-effort redacted.
+Coolify returns structured responses with `data` and may include `_pagination`, `_actions`, or failure details. Configuration snapshots and full deployment logs are not returned. Environment values are returned only by `get_env_values`, which needs `read:sensitive` and a team admin or owner. Log summaries are capped and best-effort redacted.
