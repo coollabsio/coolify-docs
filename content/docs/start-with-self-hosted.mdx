@@ -838,10 +838,12 @@ nano /data/coolify/source/.env
 Add:
 
 ```sh
-ROOT_USERNAME=RootUser
-ROOT_USER_EMAIL=example@example.com
+ROOT_USERNAME='RootUser'
+ROOT_USER_EMAIL='example@example.com'
 ROOT_USER_PASSWORD='StrongPassword123!'
 ```
+
+Put each value in single quotes (use double quotes for a value that contains a single quote). If a value has a space and no quotes, Coolify cannot read the `.env` file and every page returns HTTP 500.
 
 Then run:
 
