@@ -154,8 +154,10 @@ Changing the image, port mapping, configuration, or health check marks the resou
 Coolify's scheduled backup job uses `pg_dump` in custom format for selected databases:
 
 ```sh
-pg_dump --format=custom --no-acl --no-owner
+pg_dump --format=custom
 ```
+
+The archive keeps object owners and privileges (`GRANT`s). The **Import Backup** form skips them by default. Select **Keep owners and privileges** to restore them, for example for a Supabase database, whose roles need their grants. Roles are not part of a single-database archive. A new database container of the same service image creates its roles on first start.
 
 When **Database selection** is **All databases**, Coolify uses `pg_dumpall` and stores a gzip-compressed dump. Configure the schedule, retention, and S3 destination in [Database backups](/databases/backups). Follow [Restore a database](/databases/restore) for the built-in PostgreSQL import workflow.
 

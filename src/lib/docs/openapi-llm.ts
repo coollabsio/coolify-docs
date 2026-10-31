@@ -95,7 +95,7 @@ export interface OpenApiLlmPage {
 const httpMethods = new Set(['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace']);
 
 export function renderOpenApiLlmText(page: OpenApiLlmPage): string {
-  const sections: string[] = [`# ${page.title} (${page.pageUrl})`];
+  const sections: string[] = [`# ${page.title}`, `Source: ${page.pageUrl}`];
   const operations = page.operations ?? [];
   const webhooks = page.webhooks ?? [];
   const pageDescription = cleanProse(page.description);

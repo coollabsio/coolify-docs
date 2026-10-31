@@ -5,7 +5,7 @@ description: Handle paginated Coolify MCP list responses and continue through la
 
 # Pagination
 
-List tools accept `page` and `per_page` arguments.
+Most list tools accept `page` and `per_page` arguments.
 
 | Argument | Default | Maximum |
 | :--- | :---: | :---: |
@@ -22,10 +22,17 @@ Responses include `_pagination` with totals and a `next` object when another pag
     "total": 120,
     "total_pages": 3,
     "next": {
+      "tool": "list_applications",
       "args": { "page": 2, "per_page": 50 }
     }
   }
 }
 ```
 
-Use the returned `next.args` values rather than assuming page size or total pages. Some tools use narrower input limits for specific filters.
+Call `next.tool` with the returned `next.args` values rather than assuming page size or total pages. `next.args` also repeats the filters of the first call.
+
+Exceptions:
+
+- `list_unhealthy_resources` uses a default `per_page` of `20`.
+- `search_resources` has no pages. Use `limit`: default `25`, maximum `50`.
+- These tools return all results without pages: `list_env_keys`, `list_shared_env_keys`, `list_storages`, `list_resource_tags`, `list_scheduled_tasks`, `list_database_backups`, `list_service_applications`, `list_service_databases`, `list_github_repositories`, `list_github_branches`.

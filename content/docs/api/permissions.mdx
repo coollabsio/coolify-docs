@@ -16,7 +16,7 @@ Choose the smallest permission set required by the integration.
 | `read` | List and inspect resources. | Sensitive response values remain redacted. |
 | `read:sensitive` | Read secrets, logs, passwords, private keys, environment values, and Compose content returned by supported endpoints. | Coolify also adds `read`. The token owner must be a team administrator or owner. |
 | `write` | Create, update, and delete resources through write endpoints. | The token owner must remain a team administrator or owner when the request runs. |
-| `deploy` | Trigger deployments, restarts, stops, cancellations, and deploy webhooks. | Selecting it in the dashboard creates a deploy-only token. The token owner must be a team administrator or owner. |
+| `deploy` | Trigger deployments, restarts, stops, cancellations, and [deploy webhooks](/core/automation/deploy-webhooks) (`/api/v1/deploy`). | Selecting it in the dashboard creates a deploy-only token. The token owner must be a team administrator or owner. |
 | `root` | Bypass the `read`, `write`, and `deploy` checks on API endpoints. | It remains team-bound and does not bypass instance-wide API access or the IP allowlist. The token owner must be a team administrator or owner. |
 
 Selecting `root` in the dashboard removes the other permissions because they are unnecessary. It does not provide access to resources owned by another team.
@@ -59,5 +59,6 @@ Follow [API Tokens](/core/security/credentials/api-tokens) to create, store, rot
 - Database import uploads and starts require `write`; server-path imports also require `deploy`.
 - Creating a resource with `instant_deploy` requires `deploy` in addition to its creation permission.
 - API mounts outside the resource directory require `deploy`.
+- Git provider webhook secrets (the GitHub App webhook secret, the GitLab App webhook token, and the manual webhook secrets of an application) are configuration and require `write`. A push webhook that is signed with one of these secrets can start a deployment, so give `write` only to integrations that you trust to change what a resource deploys.
 
 Only recognized token permissions are accepted. Resource and credential ownership is checked against the resource's team, even if the user switches teams in another browser tab.
