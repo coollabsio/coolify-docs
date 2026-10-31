@@ -154,7 +154,16 @@ Under **Advanced > Build**, set **Build arguments** to **Managed manually in Doc
 
 For Git-based Dockerfile applications, `SOURCE_COMMIT` is excluded from the build by default so commits with unchanged layers can reuse cache. Under **Advanced > Build**, set **Source commit availability** to **Available during build** only when the image contents need the commit value.
 
-Use **Build secrets > Docker BuildKit secrets** for sensitive build-time values when Docker BuildKit is available. Read [Environment variables](/applications/configuration/environment-variables#build-and-runtime-scope) before passing credentials to a build.
+New applications use **Build secrets > Docker BuildKit secrets**. Coolify adds the secret mounts to every `RUN` instruction, so a `RUN` instruction reads a build-time variable as a normal environment variable:
+
+```dockerfile
+FROM node:22
+WORKDIR /app
+COPY . .
+RUN npm ci && npm run build   # NEXT_PUBLIC_API_URL is set here
+```
+
+The value is not available outside `RUN` instructions and is not saved in the image. Read [Build secrets](/applications/configuration/environment-variables#build-secrets) before you use build-time variables in `FROM`, `COPY`, or other instructions.
 
 ## Image health checks
 

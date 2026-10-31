@@ -152,4 +152,6 @@ Both methods detect supported codebases, create an image, support static output,
 | Upstream development | Actively developed successor | Maintenance mode; not under active development |
 | Status in Coolify | **Beta** | Supported |
 
+To move a Nixpacks application, open its [Recommended settings](/applications/configuration/recommended-settings) page and select **Switch to Railpack**. Move `NIXPACKS_*` variables and `nixpacks.toml` settings to their Railpack equivalents first, then redeploy.
+
 Use [Dockerfile](/applications/builds/dockerfile) when the repository needs deterministic image instructions beyond either automatic builder.
