@@ -108,6 +108,81 @@ labels: # [!code ++:5][!code focus:5]
 
 Use file-based configuration when several resources share the same middleware. Use labels when the middleware belongs to one Compose service.
 
+<Callout type="warning" title="Coolify attaches every middleware that the service defines">
+Coolify adds each middleware that a `traefik.http.middlewares.<name>.*` label of the service defines to all routers that it generates for that service. The `coolify.traefik.middlewares` line in the example above is optional. You need it only for middleware that the service does not define, such as `@file` middleware. If a middleware must apply to some requests only, read [Use your own routers in Docker Compose](#use-your-own-routers-in-docker-compose).
+</Callout>
+
+## Use your own routers in Docker Compose
+
+You can add your own Traefik routers to a Compose service, for example to protect one path or one hostname with a different middleware. Coolify still generates its own routers, so two routers can match the same request.
+
+### How the routers work together
+
+For each URL in the **Domains** field of a service, Coolify generates one HTTPS router and one HTTP router. Their names start with `https-<n>-<resource-uuid>-<service>` and `http-<n>-<resource-uuid>-<service>`. Their rule is:
+
+```text
+Host(`example.com`) && PathPrefix(`/`)
+```
+
+These generated routers get every middleware that the service defines with labels. Coolify does not check whether one of your routers already uses that middleware.
+
+When more than one router matches a request, Traefik uses the router with the highest priority. If you do not set a priority, the priority is [the length of the rule](https://doc.traefik.io/traefik/reference/routing-configuration/http/routing/rules-and-priority/). For the same hostname, the rule of the generated router is usually longer than your rule, so the generated router gets the request.
+
+This has two results:
+
+- A middleware that you attach to your router also applies to the generated routers. For example, an IP allow list that is for `/admin` only also blocks all other paths of the domain.
+- If the generated router gets the request, the middleware chain of your router does not run.
+
+### Choose a setup
+
+| Goal | Setup |
+|---|---|
+| A middleware for one path or one hostname only | Define the middleware in a [dynamic configuration file](#define-reusable-middleware) and attach it to your router as `<name>@file`. Set `priority` on your router to a value that is higher than the length of every generated rule, for example `100`. |
+| Your router must be the only router for a hostname | Remove that hostname from the **Domains** field. Your router must then set `entrypoints`, `tls`, `tls.certresolver`, and `service` itself. The generated routers for the other domains of the service still get the middleware that the service defines. |
+| The same middleware on all generated routers | Define the middleware with labels. You do not have to attach it. |
+
+<Callout type="warning" title="Do not attach access rules with labels only">
+A middleware that you define with labels also applies to all generated routers. An IP allow list or a deny rule for one path then blocks the full domain. If you use `@file` middleware and your router has no `priority`, the generated router can get the request, and your access rule does not run.
+</Callout>
+
+### Example
+
+This example lets only one IP address open `/admin` on `https://example.com`. All other paths stay public. The **Domains** field of the service contains `https://example.com`.
+
+Add this dynamic configuration in **Servers > your server > Proxy > Dynamic Configurations**:
+
+```yaml
+http:
+  middlewares:
+    admin-allow:
+      ipAllowList:
+        sourceRange:
+          - '203.0.113.10/32'
+```
+
+Add the router to the service:
+
+```yaml
+services:
+  app:
+    image: nginx:alpine
+    labels:
+      - 'traefik.http.routers.app-admin.rule=Host(`example.com`) && PathPrefix(`/admin`)'
+      - 'traefik.http.routers.app-admin.entrypoints=https'
+      - 'traefik.http.routers.app-admin.tls=true'
+      - 'traefik.http.routers.app-admin.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.app-admin.priority=100'
+      - 'traefik.http.routers.app-admin.middlewares=admin-allow@file'
+```
+
+Because of `priority=100`, Traefik sends requests for `/admin` to `app-admin`, and `admin-allow@file` runs. The generated router gets all other requests without the allow list.
+
+After you deploy, run this command on the server to see the middleware chain of each router:
+
+```bash
+docker inspect <container-name> --format '{{json .Config.Labels}}' | jq 'with_entries(select(.key | endswith(".middlewares")))'
+```
+
 ---
 
 ## Redirects
@@ -196,7 +271,17 @@ Inspect **Servers > your server > Proxy > Logs** for missing middleware or YAML 
 
 <Accordion title="The middleware is defined but does not change requests">
 
-Confirm the middleware is attached to the expected router. Defining middleware without adding it to a router does not process traffic.
+Confirm the middleware is attached to the expected router. Defining `@file` middleware without adding it to a router does not process traffic.
+
+If the middleware is on one of your own routers, Traefik can send the request to a router that Coolify generated. Set `priority` on your router. See [How the routers work together](#how-the-routers-work-together).
+
+</Accordion>
+
+<Accordion title="A middleware for one router blocks the full domain">
+
+Coolify adds each middleware that a Compose service defines with labels to all routers that it generates for the service. An IP allow list for one path then also applies to the full domain, and requests return `403 Forbidden`.
+
+Define the middleware in a dynamic configuration file, attach it to your router as `<name>@file`, and set `priority` on your router. See [Use your own routers in Docker Compose](#use-your-own-routers-in-docker-compose).
 
 </Accordion>
 

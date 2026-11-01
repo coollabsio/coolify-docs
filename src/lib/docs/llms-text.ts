@@ -1,6 +1,7 @@
 import type { Folder, Item, Node, Root } from 'fumadocs-core/page-tree';
 import { site } from '@/lib/config/site';
 import { rewriteDocsMarkdownLinks, toAbsoluteDocsUrl, type DocsUrlOptions } from '@/lib/docs/absolute-docs-url';
+import services from '@/generated/services.json';
 
 const llmsTitle = 'Coolify Documentation';
 const llmsSummary =
@@ -130,6 +131,13 @@ export function renderLlmsTxt(docs: Pick<DocsSource, 'getPageTree' | 'getNodePag
   };
 
   walk((docs.getPageTree() as Root).children, []);
+
+  // The sidebar links to the catalog page only, so list each service page here.
+  for (const service of services) {
+    if ('disabled' in service && service.disabled) continue;
+    const page: Item = { type: 'page', name: service.name, url: `/services/${service.slug}` };
+    addPage(page, 'Services / Service Catalog');
+  }
 
   const lines = [`# ${llmsTitle}`, '', `> ${llmsSummary}`, ''];
   for (const section of sections) {

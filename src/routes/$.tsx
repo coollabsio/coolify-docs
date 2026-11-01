@@ -129,7 +129,10 @@ export const Route = createFileRoute('/$')({
         { name: 'twitter:description', content: description },
         { name: 'twitter:image', content: ogImageUrl },
       ],
-      links: [{ rel: 'canonical', href: canonicalUrl }],
+      links: [
+        { rel: 'canonical', href: canonicalUrl },
+        { rel: 'alternate', type: 'text/markdown', href: absoluteUrl(data.markdownUrl) },
+      ],
       scripts: [
         {
           id: 'discord:component-embed',
@@ -169,6 +172,7 @@ const serverLoader = createServerFn({
         type: 'openapi',
         description: page.data.description ?? site.description,
         isIndex: page.slugs.length === 0,
+        markdownUrl: getPageMarkdownUrl(page).url,
         ogImagePath: getDocOgPath(page.slugs),
         pageTree,
         props: await page.data.getClientAPIPageProps(),

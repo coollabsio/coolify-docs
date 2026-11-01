@@ -1,6 +1,6 @@
 ---
 title: Environment and storage
-description: Use Coolify MCP to inspect and manage environment variables, shared variables, storage mounts, and volume backups.
+description: Use Coolify MCP to inspect and change environment variables, shared variables, storage mounts, and volume backups.
 ---
 
 # Environment and storage
@@ -9,12 +9,19 @@ description: Use Coolify MCP to inspect and manage environment variables, shared
 | :--- | :--- | :--- |
 | `list_env_keys` | `read` | List environment-variable key names for an application, database, or service. Never returns values. |
 | `list_shared_env_keys` | `read` | List shared key names at project or environment scope. Never returns values. |
+| `get_env_values` | `read:sensitive` | Return environment values. The token owner must be a team admin or owner. Values marked as shown once are never returned. |
 | `list_storages` | `read` | List persistent and file storage mounts. Never returns file contents. |
-| `get_env_values` | `read` + `read:sensitive` | Read environment values for an application, database, service, or shared-variable scope. Requires an Admin or Owner role; locked values remain hidden. |
-| `manage_env` | `write` | Create, update, bulk update, or delete application, database, or service variables. |
-| `manage_shared_env` | `write` | Manage shared variables at team, project, environment, or server scope. |
-| `manage_storage` | `write` | Manage persistent/file mounts and configure, remove, or run their volume backup schedules. |
 
-The key-listing tools return names only. `get_env_values` supports application, database, service, team, project, environment, and server scopes. Management responses reveal supported values only with `read:sensitive`; locked values stay hidden.
+## Change variables and storage
 
-Storage creation and updates can write file content. Deleting a mount or removing its backup schedule requires `confirm=true`; removing a backup schedule deletes its local and S3 archives. Running a volume backup also requires confirmation because its schedule may stop the resource.
+| Tool | Actions |
+| :--- | :--- |
+| `manage_env` | `create`, `update`, `bulk_update` (`write`); `delete` (`write`, confirm). Values are returned only with `read:sensitive`. |
+| `manage_shared_env` | `create`, `update` (`write`); `delete` (`write`, confirm). |
+| `manage_storage` | `create`, `update`, `set_backup` (`write`); `delete` and `remove_backup` (`write`, confirm); `run_backup` (`deploy`, confirm). File content changes need `deploy`. |
+
+Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.
+
+`remove_backup` deletes the backup schedule and its local and S3 archives. `run_backup` can stop the resource when the schedule uses `stop_during_backup`.
+
+Task command bodies and supported sensitive fields require `read:sensitive`.

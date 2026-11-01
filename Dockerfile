@@ -1,5 +1,5 @@
-# Stage 1: Build Stage (oven/bun:1.3.6-alpine)
-FROM oven/bun:1.3.6-alpine AS builder
+# Stage 1: Build Stage (oven/bun:1.4.4-alpine)
+FROM oven/bun:1.4.4-alpine AS builder
 
 ARG VITE_ANALYTICS_DOMAIN=coolify.io/docs
 ARG VITE_SITE_URL=https://coolify.io/docs/
