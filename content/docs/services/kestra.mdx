@@ -1,0 +1,29 @@
+---
+title: "Kestra"
+description: "Open-source orchestration platform for data, infrastructure and AI workflows."
+og:
+  description: "Deploy Kestra on Coolify to build, schedule and monitor event-driven workflows in declarative YAML, with a PostgreSQL backend."
+category: "Automation"
+icon: "/docs/images/services/kestra-logo.svg"
+---
+
+<ZoomImage src="/docs/images/services/kestra-logo.svg" alt="Kestra logo" />
+
+## What is Kestra?
+
+Kestra is an open-source, event-driven orchestration platform. You define workflows in declarative YAML, from the built-in code editor or the no-code UI, and run them on a schedule, from webhooks, or in real time from message queues and file events. Kestra runs code in any language (Python, SQL, Shell, Node.js and more) and connects to databases, clouds and AI providers through its plugin catalog.
+
+## Deployment notes
+
+- `KESTRA_ADMIN_EMAIL` defaults to `admin@example.com`. Change it to your own email address before deploying, then log in with this email and the generated `SERVICE_PASSWORD_KESTRA`.
+- The template runs Kestra in standalone mode with PostgreSQL, and mounts the Docker socket so script tasks can run in containers.
+
+## Screenshots
+
+<ZoomImage src="/docs/images/services/kestra.png" alt="Kestra flow editor with code and topology views" />
+
+## Links
+
+- [Official Website](https://kestra.io)
+- [Documentation](https://kestra.io/docs)
+- [GitHub](https://github.com/kestra-io/kestra)
