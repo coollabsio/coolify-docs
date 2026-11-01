@@ -9,6 +9,10 @@ This guide moves one application from a source Coolify instance to a destination
 
 Coolify does not provide a single export and import operation for an application. Recreate the application on the destination instance, verify it with a temporary domain, move every stateful dependency, then transfer production traffic.
 
+<Callout type="info" title="Move a whole server">
+To move all resources of a server, you can transfer the server to the other instance. The resources and their data stay on the same host. Refer to [Server transfer](/core/infrastructure/servers/server-transfer).
+</Callout>
+
 <Callout type="warning" title="Plan a maintenance window for the final copy">
 
 Data can change while the source application is running. Stop writes or stop the source application before the final database dump or file copy. Keep the source unchanged until the destination is confirmed stable.

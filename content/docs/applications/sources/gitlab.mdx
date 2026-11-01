@@ -71,6 +71,8 @@ In each GitLab project that should deploy automatically, open **Settings > Webho
 
 Coolify rejects GitLab webhook requests when the secret token is missing or does not match.
 
+On a self-managed GitLab instance, an administrator can add one system hook instead of one webhook for each project. Read [Use a GitLab system hook](#use-a-gitlab-system-hook).
+
 </Step>
 <Step>
 
@@ -84,6 +86,26 @@ Verify that the deployment log clones the selected repository and checks out the
 
 </Step>
 </Steps>
+
+## Use a GitLab system hook
+
+On GitLab Self-Managed and GitLab Dedicated, an administrator can add a [system hook](https://docs.gitlab.com/administration/system_hooks/). A system hook sends events for all projects on the GitLab instance. Use it as an alternative to one webhook for each project.
+
+1. In Coolify, open the connected GitLab source and copy the **Webhook URL** and the **Webhook secret token**. The URL ends with `/webhooks/source/gitlab/events`.
+2. In GitLab, select **Admin > System hooks**, then select **Add new webhook**.
+3. Enter the Coolify URL in **URL** and the same token in **Secret token**.
+4. In **Trigger**, enable:
+   - **Push events** for branch deployments
+   - **Merge request events** for preview deployments
+5. Select **Add system hook**.
+
+Coolify uses only push and merge request events. It ignores other system hook events, such as project, user, tag push, and repository update events.
+
+The secret token identifies the GitLab source. Coolify deploys only applications that use this source and that track the GitLab project in the event. Events for other projects do not start a deployment. If the token is missing or does not match a GitLab source, Coolify rejects the request.
+
+<Callout type="info" title="Pushes with many branches">
+  By default, GitLab does not send system hook events for a push that changes more than 3 branches or tags. GitLab administrators can change this limit with the `push_event_hooks_limit` setting.
+</Callout>
 
 ## Use a deploy key
 
@@ -122,3 +144,7 @@ echo "$GITLAB_REGISTRY_TOKEN" | \
 ```
 
 Use the complete image reference, including its tag, in a Docker Image or Docker Compose application. Read [Docker registries](/applications/builds/docker-registries) for server authentication and build-server requirements.
+
+## Detect build configuration
+
+The GitLab App creation form includes [Smart Scan](/applications/builds/smart-scan). Review detected Dockerfiles or Compose files, internal ports, and environment-template imports before continuing. Set **Base directory** and scan again when deploying a subdirectory.

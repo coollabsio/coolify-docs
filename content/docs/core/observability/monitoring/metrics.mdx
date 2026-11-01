@@ -1,6 +1,6 @@
 ---
 title: Metrics
-description: Enable and view Coolify CPU and memory metrics for servers, applications, and standalone databases.
+description: Enable Sentinel metrics, inspect fleet and server resource usage, and find busy containers.
 ---
 
 import {
@@ -14,17 +14,17 @@ import {
 
 # Metrics
 
-Coolify displays CPU and memory history collected by Sentinel. Server charts show total CPU and memory usage, while resource charts show the usage of an individual application or standalone database container.
+Coolify displays resource history collected by Sentinel. The global **Metrics** page summarizes usage across your team's servers, each server has detailed charts, and supported applications and standalone databases have their own CPU and memory charts.
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-Enable metrics on an eligible server to collect CPU and memory samples through Sentinel. Sampling and retention are configured per server, and charts show only the history still stored on that server.
+Enable metrics on an eligible server to collect CPU, memory, disk, network, and load samples through Sentinel. Sampling and retention are configured per server, and charts show only the history still stored on that server.
 
 </CoolCallout>
 
 <CoolCallout type="warning" icon={Warning22} title="Resource metrics have limitations">
 
-Resource metrics are not available for Docker Compose applications or one-click service deployments. The resource container must also be running before Coolify can display its metrics.
+Dedicated resource charts are not available for Docker Compose applications or one-click service deployments. Use the fleet container table for available bulk metrics. The resource container must also be running before Coolify can display its metrics.
 
 </CoolCallout>
 
@@ -82,9 +82,9 @@ Open **Servers** and select the eligible connected server.
 </Step>
 <Step>
 
-### Open the Charts page
+### Open the Metrics page
 
-Open **Charts** and select **Enable Metrics**.
+Open **Metrics** and select **Enable Metrics**.
 
 </Step>
 <Step>
@@ -107,13 +107,30 @@ If Sentinel is disabled, the Metrics page directs you to enable it first. Enabli
 
 ---
 
-## View metrics
+## View fleet metrics
+
+Open **Metrics** from the main navigation. Select **All servers** or one server, then choose **24 hours**, **7 days**, or **30 days**. On the 24-hour range, **Live Refresh** can reload data every 60 seconds; the browser remembers your preference.
+
+The fleet view includes:
+
+- Current server availability, CPU, memory, disk, network, and container totals.
+- CPU, memory, disk, network-throughput, and load-average trend charts.
+- A **Servers** table with sortable name and usage columns. Offline servers stay at the bottom.
+- **Hottest containers**, ranked by CPU, memory, disk, or network usage. Select a ranking metric and sort the available columns to investigate busy containers.
+
+CPU is an approximate average of reporting servers' percentages rather than a CPU-core-weighted total. Memory and disk percentages use the combined used and total capacities; network throughput sums reporting servers. Offline servers do not contribute to usage totals. Missing or unavailable data should not be read as zero usage.
+
+When no servers have metrics enabled, the page can offer **Enable metrics** for eligible servers you can update. They must have Sentinel enabled, be functional, and support metrics. Wait about a minute for collection after enabling.
+
+The fleet container table uses Sentinel's bulk metrics. It can include containers that do not have a dedicated Coolify resource chart. Older Sentinel versions may lack these endpoints.
+
+## View server and resource metrics
 
 Server and resource charts use different memory units.
 
 <ZoomableImage
   src="/docs/images/core/observability/monitoring/metrics/server-metrics.webp"
-  alt="Coolify server Metrics page with an interval selector and CPU and memory charts"
+  alt="Example server metrics interval selector and CPU and memory charts"
 />
 
 <Tabs id="server-and-resource-metrics" items={['Server', 'Application and database']}>
@@ -121,10 +138,15 @@ Server and resource charts use different memory units.
 
 ### Server metrics
 
-Open **Servers > [server] > Charts**.
+Open **Servers > [server] > Metrics**.
 
 - **CPU Usage** is the percentage of total server CPU in use.
 - **Memory Usage** is the percentage of total server memory in use.
+- **Disk usage** shows root-filesystem usage, rather than a sum of mounted disks.
+- **Network throughput** shows received and transmitted traffic rates.
+- **Load average** shows system load. Load is not a CPU percentage; interpret it against the server's CPU capacity.
+
+Disk, network, and load charts require a compatible Sentinel version. Missing optional metrics do not prevent CPU and memory charts from loading.
 
 </Tab>
 
@@ -132,7 +154,7 @@ Open **Servers > [server] > Charts**.
 
 ### Application and database metrics
 
-Open the application or standalone database, then select **Charts**.
+Open the application or standalone database, then select **Metrics**.
 
 - **CPU Usage** is the percentage of CPU used by the resource container.
 - **Memory Usage** is the memory used by the resource container in MB.
@@ -140,7 +162,7 @@ Open the application or standalone database, then select **Charts**.
 </Tab>
 </Tabs>
 
-The Metrics page offers these time ranges:
+The individual server and resource Metrics pages offer these time ranges:
 
 - 5 minutes and 10 minutes, with live refresh
 - 30 minutes
@@ -153,9 +175,13 @@ The live ranges ask Coolify for new chart data every five seconds. The Sentinel 
 
 ---
 
+## Read pressure indicators
+
+The fleet usage tables highlight CPU and memory at 70% and disk usage at 80%. Values of 90% or higher receive the highest pressure highlight. These are visual triage thresholds; review trends and workload requirements before changing infrastructure.
+
 ## Sampling and retention
 
-Open **Servers > [server] > Charts** to change these values:
+Open **Servers > [server] > Metrics** to change these values:
 
 - **Collection rate** controls the collection interval. The default is `10`, and the minimum is `1`.
 - **History retention** controls local retention. The default is `7`, and the minimum is `1`.
@@ -172,7 +198,7 @@ The chart can offer a longer range than the retained data. For example, a 30-day
 
 ## Disable metrics
 
-Open the server **Charts** page and select **Disable Metrics**. Coolify restarts Sentinel with the collector disabled.
+Open the server **Metrics** page and select **Disable Metrics**. Coolify restarts Sentinel with the collector disabled.
 
 Disabling metrics does not disable Sentinel itself. Server heartbeats, container state, health information, and disk usage reporting can continue without CPU and memory history.
 
@@ -194,7 +220,7 @@ If Sentinel is out of sync, follow [Troubleshooting Sentinel](/core/observabilit
 
 Confirm that the application or standalone database is running.
 
-Resource metrics are not currently available for Docker Compose applications or one-click service deployments.
+Dedicated resource charts are not currently available for Docker Compose applications or one-click service deployments. Check **Metrics > Hottest containers** for their available bulk container metrics.
 
 </Accordion>
 
@@ -206,4 +232,9 @@ For example, the 30-day chart shows only seven days of history while the retenti
 
 </Accordion>
 
+<Accordion title="Fleet charts or container rankings have missing data">
+
+Check that each server has metrics enabled, is reachable, and runs a compatible Sentinel version. The page can still display CPU and memory when optional bulk, disk, network, or load endpoints are unavailable. Select one server to isolate missing data, then check its Sentinel status.
+
+</Accordion>
 </Accordions>

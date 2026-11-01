@@ -20,6 +20,7 @@ Start with the page that matches what you are trying to understand or change. De
 | **Backups** | Configure and inspect scheduled archives for eligible application volume and directory mounts. |
 | **Runtime Logs** | Read stdout and stderr from the application's current containers. |
 | **Terminal** | Open an interactive shell in a selected running container. |
+| **Files** | [Browse and manage files in a running container](/core/container-file-browser). Requires an Owner or Admin role; edits affect the container filesystem. |
 
 **Runtime Logs** can show containers across the application's functional deployment servers, including preview containers. **Terminal** appears only when terminal access is enabled, your team role can use it, and the application has an eligible running container. It is not available from an application deployed to Docker Swarm.
 
@@ -153,3 +154,7 @@ Use **Deploying… View log** to reopen a running deployment or startup log. Sel
 The container log viewer separates **Time**, **Type**, and **Message**. Expand a row to view pretty-printed JSON. If containers cannot be loaded, read the displayed error instead of treating it as proof that none are running.
 
 Viewing container logs requires permission to update the resource. API log requests require `read:sensitive` or `root`.
+
+## Show a maintenance page
+
+Open **Domains > Maintenance mode** to return a maintenance page with HTTP `503` while the containers keep running. The change applies without redeployment on supported Traefik and Caddy servers. See [Maintenance and error pages](/core/networking/proxy/maintenance-and-error-pages).

@@ -19,6 +19,7 @@
     "sources/other-providers",
     "---Builds---",
     "builds/overview",
+    "builds/smart-scan",
     "builds/nixpacks",
     "builds/railpack",
     "builds/static",

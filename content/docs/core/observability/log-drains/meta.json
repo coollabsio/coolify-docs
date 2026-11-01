@@ -4,6 +4,7 @@
     "overview",
     "axiom",
     "new-relic",
+    "cloudwatch",
     "custom-fluent-bit"
   ]
 }

@@ -53,4 +53,14 @@ MCP returns only resources owned by the token's team. Create or use a token for 
 `get_logs` requires `read:sensitive`, a running container, and a reachable server. For a failed deployment, call `get_deployment` first and request an optional log summary only when needed.
 
 </Accordion>
+<Accordion title="Environment values are missing">
+
+Use `list_env_keys` for names only. To retrieve values, use `get_env_values` with both `read` and `read:sensitive`; the token owner must be an Admin or Owner of the team. Locked values are never returned.
+
+</Accordion>
+<Accordion title="An action requires confirmation">
+
+Review the target and the action's effect, then allow the client to retry with `confirm=true` if you intend that change. This applies to destructive actions, some operations that interrupt workloads, and paid cloud-server provisioning.
+
+</Accordion>
 </Accordions>

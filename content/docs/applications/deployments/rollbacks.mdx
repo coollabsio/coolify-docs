@@ -32,7 +32,31 @@ The rollback uses current Coolify runtime configuration with the selected older 
 
 Rollback availability depends on image retention. Set **Images to keep** under **Image retention** and select **Save changes**. A server-level setting can disable retention and override the application value.
 
-An image removed by cleanup no longer appears as a rollback target. A registry may retain another copy, but restoring it requires deploying an available image reference rather than using a missing local rollback entry.
+When the application does not push to a Docker registry, an image removed by cleanup no longer appears as a rollback target.
+
+## Images in a Docker registry
+
+When the application pushes its images to a [Docker registry](/applications/builds/docker-registries), **Available images** also shows the commit images of the last 10 successful production deployments. Thus, you can roll back to an image that cleanup removed from the server.
+
+Coolify shows these images when:
+
+- **General > Docker Registry > Docker Image** has a value
+- the application builds from a Git source (not the Docker Image or Docker Compose build pack)
+- the application does not use a Dockerfile that you pasted into Coolify, because those deployments always push the `latest` tag
+
+Coolify counts each commit one time. Preview deployments are not included.
+
+An image that is only in the registry has the **In registry** badge, and its date shows when Coolify deployed it (**Deployed**), not when Docker built it (**Built**). When the server and the registry both have the same tag, the list shows the image on the server.
+
+When you roll back to an image that the server does not have, the deployment pulls it from the registry first. The deployment log shows `not found on the server. Pulling it from the Docker registry.` For a private registry, log in to the registry on the server before you roll back. Refer to [Authenticate a private registry](/applications/builds/docker-registries#authenticate-a-private-registry).
+
+<Callout type="info" title="Registry retention">
+
+Coolify does not check that the registry still has the image. If the pull fails, for example because the registry deleted the tag, the deployment builds that commit from the Git source again.
+
+</Callout>
+
+The API endpoint `GET /applications/{uuid}/rollback-images` returns the same list. Each image has a `source` field: `local` for an image on the server, or `registry` for an image that is only in the Docker registry.
 
 <Callout type="warning" title="Back up state separately">
 
