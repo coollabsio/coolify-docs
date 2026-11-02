@@ -78,27 +78,26 @@ Access the .htaccess file:
 
 <Accordion title="Why does the login redirect to my old domain after a domain change?">
 
-WordPress keeps its site address in the database. It saves the address that you use when you install WordPress. If you change the domain in Coolify later, the login can redirect you to the old domain.
+WordPress keeps its site address in the database. It saves the address that you use when you install WordPress. Coolify does not change this address when you change the domain of the service. If the two addresses are different, the login redirects you to the old domain.
 
-The **WordPress with MariaDB** and **WordPress with MySQL** templates set this variable in the `wordpress` service:
+To change the domain, do these steps:
 
-```yaml
-- "WORDPRESS_CONFIG_EXTRA=if (getenv('SERVICE_URL_WORDPRESS')) { define('WP_HOME', getenv('SERVICE_URL_WORDPRESS')); define('WP_SITEURL', getenv('SERVICE_URL_WORDPRESS')); }"
+1. In Coolify, add the new domain next to the old domain, separated by a comma (for example `https://old.example.com,https://new.example.com`). Then redeploy the service.
+2. In WordPress, open **Settings → General**. Set **WordPress Address (URL)** and **Site Address (URL)** to the new domain, then click **Save Changes**.
+3. In Coolify, remove the old domain and redeploy the service.
+
+If you already changed the domain and the login redirects you to the old domain, change the address in the database:
+
+1. In Coolify, open the **Terminal** of the database container (`mariadb` or `mysql`).
+2. Run this command. Replace `https://new.example.com` with your domain. For the MySQL template, use `mysql` instead of `mariadb`.
+
+```sh
+mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" -e "UPDATE wp_options SET option_value = 'https://new.example.com' WHERE option_name IN ('home', 'siteurl');"
 ```
 
-With this variable, WordPress uses the domain of the service in Coolify. When you change the domain, redeploy the service. The **WordPress Address** and **Site Address** fields in **Settings → General** then show the Coolify domain and you cannot edit them.
+3. Log in to WordPress on the new domain.
 
-If your service was created before this change, add the line above to the `environment` list of the `wordpress` service in the Compose file, then redeploy.
-
-The **WordPress without Database** template does not set this variable. For that template, change the addresses in **Settings → General** before you change the domain in Coolify.
-
-The variable does not change links that are saved in posts and pages. To change those links, use a search-and-replace tool such as `wp search-replace`.
-
-<Callout type="warn">
-
-Do not use this variable with WordPress Multisite. Remove it from the Compose file before you set up Multisite.
-
-</Callout>
+These steps do not change links that are saved in posts and pages, for example image URLs. To change those links, use a search-and-replace plugin such as Better Search Replace.
 
 </Accordion>
 
