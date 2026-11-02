@@ -2385,6 +2385,13 @@
     "category": "Media"
   },
   {
+    "name": "Zammad",
+    "slug": "zammad",
+    "icon": "/docs/images/services/zammad-logo.svg",
+    "description": "Open-source helpdesk and customer support platform.",
+    "category": "Business"
+  },
+  {
     "name": "Zep",
     "slug": "zep",
     "icon": "/docs/images/services/zep.png",
