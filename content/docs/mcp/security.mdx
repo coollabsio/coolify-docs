@@ -34,3 +34,11 @@ A token belongs to one team. MCP cannot use that token to read another team's re
 - Revoke the token immediately if exposed.
 
 MCP responses never return private keys, S3 secrets, tokens, passwords, or webhook URLs. Environment values are returned only by `get_env_values` (`read:sensitive`, team admin or owner), and never for values marked as shown once. Log and deployment summaries can still contain operational data; redaction is best effort.
+
+## Approve changes deliberately
+
+Management tools can delete resources and backup files, overwrite configuration, stop workloads, or purchase cloud servers. Review the target and effects before allowing a client to submit `confirm=true` for an action that requires confirmation. A confirmation flag does not grant missing token permissions.
+
+Granting `write` also allows changes to environment variables, scheduled commands, proxy settings, and notification configuration. Use a read-only token when the client only needs to inspect resources.
+
+On self-hosted instances, MCP uses its own enable switch and the **Allowed IPs** allowlist. Disabling REST **API access** does not disable MCP; disable **MCP server** or revoke the token to remove MCP access.

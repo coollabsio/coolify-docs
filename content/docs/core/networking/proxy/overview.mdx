@@ -75,6 +75,10 @@ An invalid proxy configuration can make every application and service on the ser
 
 ---
 
+## Maintenance and fallback responses
+
+Use a resource's **Domains > Maintenance mode** to show a 503 maintenance page while its containers keep running. Under **Servers > [server] > Proxy > Routing behavior**, customize the server's fallback error page or redirect URL. See [Maintenance and error pages](/core/networking/proxy/maintenance-and-error-pages) for scope, setup, and proxy limitations.
+
 ## Switch between Traefik and Caddy
 
 The running proxy must be stopped before Coolify allows you to switch it. Plan a maintenance window because public routes remain unavailable until the new proxy starts and the resources have compatible labels.

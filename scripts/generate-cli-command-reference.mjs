@@ -72,6 +72,8 @@ function getPageTitle(command, group) {
     .map((token) => token.replaceAll('-', ' '))
 
   if (group === 'resource' && words.length === 1 && words[0] === 'list') return 'List resources'
+  if (group === 'audit' && words.length === 1 && words[0] === 'list') return 'List audit events'
+  if (group === 'integration-token' && words.length === 1 && words[0] === 'create') return 'Create integration token'
   if (words.length > 0) {
     const title = words.join(' ')
     return title.charAt(0).toUpperCase() + title.slice(1)

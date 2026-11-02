@@ -54,6 +54,21 @@ DATABASE_URL=postgres://db:5432/app
 - The `# coolify:` line must be directly above the variable line. A blank line, another comment, or a second `# coolify:` line between them stops the save with an error. An unknown flag or a value other than `true` or `false` also stops the save. When the save stops, nothing changes.
 - A `# coolify:` line above a locked or multiline variable has no effect.
 
+## Environment values in logs
+
+An Owner or Admin can change **Environment values in logs** on the resource's **Environment Variables** page. Applications, services, and standalone databases each have this setting.
+
+| Option | Effect |
+| :--- | :--- |
+| **Hide all values** | Default. Adds the resource's environment values to log redaction. |
+| **Hide locked values only** | Allows ordinary environment values in logs while retaining redaction for locked values and recognized secret formats. |
+
+The setting applies to deployment logs, scheduled-task output, copied or downloaded logs, and logs returned through the API and MCP. It does not change live log streaming or scrub the application's own stored logs or external log drains.
+
+Redaction is best effort. Exact matching for ordinary unlocked values uses a minimum length of eight bytes; short or transformed values can remain visible. Locked and resolved remote secrets receive stricter matching, but a failed secret-provider lookup can prevent redaction of its resolved value. Avoid writing secrets to logs in the workload itself.
+
+Through the application, database, or service API, set `redact_all_env_values_in_logs` to `true` for all values or `false` for locked values only. Changing this field requires team administrator permissions.
+
 ## Build and runtime scope
 
 **Build time** and **Runtime** are independent dropdowns. New variables default to **Available during build** and **Available in the container**.

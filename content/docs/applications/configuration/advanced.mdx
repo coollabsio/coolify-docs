@@ -279,33 +279,69 @@ Coolify rejects the setting when log draining is not enabled on that server. Fol
 
 GPU controls appear only for non-Compose applications. The deployment server must already have working GPU drivers and a container runtime configured for GPU access.
 
+<span id="detected-gpus" />
+
+### Detected GPUs
+
+The **Detected GPUs** box at the top of the **GPU** section shows each server of the application: the main deployment server and each additional server. For each server, it shows the server name, the time of the last check, and the GPUs that Coolify found.
+
+Coolify finds GPUs when it collects the server details: when you validate the server, and when you select **Refresh GPUs**. Coolify runs these checks on the server:
+
+- `nvidia-smi` lists the NVIDIA GPUs. For each GPU, Coolify shows the index, the name, the memory in GB, and the UUID.
+- Coolify looks for `nvidia-container-runtime-hook` or `nvidia-ctk` to find the NVIDIA Container Toolkit.
+
+Only NVIDIA GPUs are detected. The same GPU list also shows in the server details on the server page.
+
+To update the list, select **Refresh GPUs**. The button is disabled until the server connection is validated.
+
+| Message | Meaning and action |
+| :--- | :--- |
+| **Not checked yet. Refresh to find GPUs.** | Coolify did not collect the GPU list for this server. Select **Refresh GPUs**. |
+| **No NVIDIA GPU found** | `nvidia-smi` is not installed, or it shows no GPU. Install the NVIDIA driver on the server, make sure that `nvidia-smi` shows the GPUs, then select **Refresh GPUs**. |
+| **NVIDIA Container Toolkit not found** | Coolify found GPUs, but containers cannot use them. Install the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html), configure Docker to use it, restart Docker, then select **Refresh GPUs**. |
+
 <span id="enable-gpu" />
 
 ### GPU access
 
 Under **GPU > GPU access**, choose **Enabled** to add GPU access to the application container. Additional GPU fields appear after it is enabled.
 
+Coolify adds a Docker Compose GPU device request to the container. Refer to the [Docker Compose GPU documentation](https://docs.docker.com/compose/gpu-support/) for more information.
+
+When GPU access is enabled, Coolify ignores `--gpus` in [Custom Docker Options](/applications/builds/custom-docker-options#gpu-access). The deployment log shows a message about this.
+
 ---
 
 ### GPU Driver
 
-**GPU driver** selects the container runtime's GPU driver. Enter the driver configured on the deployment server.
+**GPU driver** selects the container runtime's GPU driver, for example `nvidia`. Enter the driver configured on the deployment server.
+
+If you keep the field empty, Coolify does not set a driver, and Docker selects it.
 
 ---
 
 ### GPU Count and device IDs
 
-Use **GPU count** to request a number of GPUs. Leave it empty to make all available GPUs accessible to the container.
+**GPU count** sets the number of GPUs for the container. Enter a whole number, such as `1`, or `all`. If you keep **GPU count** and **GPU device ids** empty, the container can use all available GPUs.
 
-Use **GPU device ids** to select specific devices as a comma-separated list, such as `0,2`.
+**GPU device ids** selects specific GPUs. Enter a comma-separated list, such as `0,2`. You can use the index or the UUID from **Detected GPUs**.
 
-Do not set **GPU count** and **GPU device ids** together. Coolify rejects the configuration and clears both values when both are provided.
+Use **GPU count** or **GPU device ids**, not both. Coolify rejects the change when you set both values. If an older configuration has both values, Coolify uses **GPU count**.
 
 ---
 
 ### GPU Options
 
-**GPU options** accepts additional driver-specific runtime options. Add only options supported by the GPU driver and container runtime installed on the deployment server.
+**GPU options** sets driver-specific options. Use one of these formats:
+
+- One `key=value` pair on each line.
+- A YAML mapping, such as `key: value`.
+
+Add only options that the GPU driver and container runtime on the deployment server support.
+
+Coolify rejects the change when the value is not in one of these formats. If an older value is not valid, Coolify does not use it, and the deployment log shows a message about this.
+
+Coolify validates only the GPU values that you change. Older values that you do not change do not block other changes.
 
 Select **Save changes**, then redeploy or restart the application and verify GPU access from inside the container.
 

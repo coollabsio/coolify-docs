@@ -101,3 +101,7 @@ Configure the Docker health check under **Healthcheck** and restart Redis after 
 - [Redis documentation](https://redis.io/docs/)
 - [Redis source](https://github.com/redis/redis)
 - [Redis Docker image](https://hub.docker.com/_/redis)
+
+## Flush all data
+
+Use **Danger Zone > Flush all data** to permanently remove every key from every logical database while the container stays running. Review [Flush Redis, KeyDB, or Dragonfly](/databases/operations/danger-zone#flush-redis-keydb-or-dragonfly) before using it; queues, sessions, and other application state can also be removed.

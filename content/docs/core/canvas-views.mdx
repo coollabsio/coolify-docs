@@ -1,0 +1,63 @@
+---
+title: Canvas Views
+description: Explore Coolify resources visually, manage connections, and create resources through the deploy canvas.
+---
+
+# Canvas views
+
+Canvas views show resources and their relationships as cards. Use them to inspect a team, project, environment, or server, connect tags and shared variables, or prepare a new deployment. The canvas interface is marked **Beta**.
+
+## Open and navigate a canvas
+
+Use the view switcher on the dashboard, Projects, Servers, an environment's resource list, Tags, or a shared-variable scope to select **Canvas**. Use the same switcher to return to the available table, grid, or list view. Coolify remembers your selection for each page and user in the browser.
+
+- Pan around the canvas and use the zoom controls to change scale.
+- Use **Fit to screen** to bring the cards into view.
+- Select a card to inspect it and open its resource page.
+- Use project and environment filters where available to narrow a large view.
+- Select **Refresh** to load current status. The dashboard canvas also shows active deployments.
+
+`Cmd`/`Ctrl` with `+`, `-`, or `0` zooms in, zooms out, or resets the canvas to 100%.
+
+## Resource views
+
+| View | What it shows |
+| :--- | :--- |
+| Dashboard | Team servers, their resources, and active deployments. |
+| Projects | Resources grouped by project and environment, including empty environments. |
+| Environment | Resources in one environment, server groups, and saved resource links. |
+| Servers | Resources on servers, with project and environment filters. |
+
+Where editing is available, Owners and Admins can move resource cards or groups. Coolify saves positions, and the related overview views reuse the environment's layout. Moving a card changes the diagram layout; it does not migrate the workload to another server or environment.
+
+On an environment canvas, drag a connection point from one card to another to add a resource link. Select a link to label or remove it. These links describe relationships for your team. They do not create network access, set environment variables, or enforce deployment order.
+
+Empty-environment cards can open the deploy canvas when you have permission to create resources. A **View only** badge means the current view does not allow those edits with your permissions.
+
+## Connect tags
+
+Open **Tags**, select a tag, then choose **Connect in canvas**, or switch the Tags page to Canvas. Select a tag or resource to see its assignments and available connections.
+
+Adding a connection assigns the tag to the resource; removing it detaches the tag. These assignments affect resource filtering and bulk deployment by tag. See [Manage tags](/core/automation/tags/manage-tags).
+
+## Connect shared variables
+
+Open a team, project, environment, or server scope under **Shared Variables**, then open its canvas. The view shows variable names, resources that can use them, and existing references. It does not reveal shared-variable values.
+
+Connecting a shared variable creates an environment variable with the same key on the resource. Its value references the selected scope, such as `{{team.NODE_ENV}}`. If the resource already has that key, Coolify asks you to resolve it on the resource instead of overwriting it.
+
+Removing a connection deletes the resource variable containing that exact reference, including its application preview copy. If the reference is part of a longer value or is required by Compose, edit it on the resource instead. Missing shared variables are shown so you can repair their references.
+
+Redeploy or restart the affected resource as required to apply environment changes. See [Shared variables](/core/team/shared-variables).
+
+## Create resources with the deploy canvas
+
+Open the deploy canvas at `/canvas`, or use an empty environment's add-resource action. Build a flow from project/environment and server selection through a source, optional configuration steps, and deployment.
+
+Sources include Git repositories, Docker images, Dockerfiles, one-click services or Compose, and standalone databases. Complete each step's required fields and select the destination before running the flow.
+
+- **Save only** creates/configures resources in Coolify without starting deployment.
+- **Deploy** runs the configured flow and follows its progress and deployment logs.
+- **Reset** clears the canvas steps and settings after confirmation. Resources already created in Coolify remain available.
+
+The deploy canvas keeps the flow in the browser and omits secrets from that saved flow. Re-enter any secret fields after reloading. Resource creation, configuration, and deployment still require the same team permissions as the dashboard.

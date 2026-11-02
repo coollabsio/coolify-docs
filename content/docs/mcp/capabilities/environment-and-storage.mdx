@@ -22,4 +22,6 @@ description: Use Coolify MCP to inspect and change environment variables, shared
 
 Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.
 
+`remove_backup` deletes the backup schedule and its local and S3 archives. `run_backup` can stop the resource when the schedule uses `stop_during_backup`.
+
 Task command bodies and supported sensitive fields require `read:sensitive`.

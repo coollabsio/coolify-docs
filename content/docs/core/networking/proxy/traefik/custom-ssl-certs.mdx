@@ -65,3 +65,9 @@ openssl s_client -connect example.com:443 -servername example.com </dev/null 2>/
 ```
 
 If Traefik continues to serve another certificate, confirm that the certificate covers the requested hostname and inspect **Servers > your server > Proxy > Logs** for file or key parsing errors.
+
+## Stop Let's Encrypt requests
+
+With the default settings, Coolify still adds the `letsencrypt` certificate resolver to the route. Traefik does not request a certificate when a loaded certificate covers all domains of the route, so the custom certificate is used.
+
+To remove the resolver from the routes, set the [certificate resolver](/core/networking/proxy/traefik/certificate-resolver) to **None** on the resource, or clear it for the whole server. This is necessary if you removed the `letsencrypt` resolver from the Traefik configuration, or if you use a default certificate (`tls.stores.default.defaultCertificate`) that does not match the domain.

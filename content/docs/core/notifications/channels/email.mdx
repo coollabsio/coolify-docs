@@ -12,7 +12,7 @@ Coolify can send team notifications through a hosted email service, a team-speci
 Open **Notifications > Email** to configure the channel.
 
 <Callout type="info" title="Instance-wide email is self-hosted only">
-The **Email service > Use system-wide settings** option appears only on self-hosted Coolify. It uses the sender and SMTP or Resend provider configured under [**Settings > Email**](/core/instance-management/instance-settings#transactional-email) for the Coolify instance.
+The **Email service > Use system-wide settings** option appears only on self-hosted Coolify. It uses the sender and SMTP or Resend provider configured under [**Settings > Email**](/core/instance-management/instance-settings#sender) for the Coolify instance.
 
 Coolify Cloud shows **Use hosted email service** instead. Cloud users do not configure the instance-wide provider.
 </Callout>
@@ -50,7 +50,7 @@ The dashboard shows the option for your Coolify deployment type. It does not sho
 
 ### Configure the instance provider
 
-As an instance administrator, open [**Settings > Email**](/core/instance-management/instance-settings#transactional-email). Enter the shared sender details, configure either SMTP or Resend, enable that provider, and save it.
+As an instance administrator, open [**Settings > Email**](/core/instance-management/instance-settings#sender). Enter the shared sender details, configure either SMTP or Resend, enable that provider, and save it.
 
 Use **Send test** on the instance settings page. Continue only after that test arrives. This confirms that the instance-wide provider works before a team tries to reuse it.
 
@@ -142,6 +142,31 @@ Create a Resend API key and use a sender address that Resend has verified.
 Under **Notification events**, select the events to send by email. See [Notification events](/core/notifications/events) for the trigger behind each setting.
 
 Select **Send test**, enter a recipient address you can access, and send the test. Confirm that the message arrives. If it does not, check the provider's activity logs, sender verification, SMTP port access, and spam folder.
+
+---
+
+## Include commit details in deployment emails
+
+Deployment success and failure emails can show the commit that Coolify deployed. This setting is off by default.
+
+To enable it, open **Notifications > Email** and select **Include commit details in deployment emails** below **Notification events**. Coolify saves the change immediately. Only team admins and owners can change this setting.
+
+When the setting is on, deployment emails show:
+
+| Item | Description |
+| :--- | :--- |
+| **Commit** | The first 7 characters of the commit SHA. |
+| Commit link | The SHA links to the commit page of the Git provider when Coolify can make a link. Coolify uses the URL of the Git source, or the HTTP(S) or SSH repository URL. Bitbucket links use the `/commits/` path. If Coolify cannot make a link, the SHA shows as text. |
+| Branch | The branch of the application, after the SHA (for example, `on main`). Pull request preview deployments do not show the branch. |
+| **Commit message** | The commit message as plain text. Coolify does not render Markdown or HTML from the message, and it shortens messages that are longer than 1,000 characters. |
+
+If a deployment has no commit SHA and no commit message, the email does not show the commit block. For example, this occurs when the deployment uses `HEAD` instead of a specific commit.
+
+<Callout type="info" title="Email only">
+This setting changes only deployment emails. Discord, Telegram, Slack, Pushover, and webhook notifications do not use it.
+</Callout>
+
+To change the setting with the API, send `deployment_commit_details_email_notifications` (`true` or `false`) in a `PATCH` request to `/api/v1/notifications/email`. The API token must have the `write` permission. A `GET` request to the same endpoint returns the current value.
 
 ---
 

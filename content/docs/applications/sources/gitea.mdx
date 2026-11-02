@@ -1,20 +1,118 @@
 ---
 title: Gitea
-description: Deploy Gitea repositories and configure push and pull-request webhooks.
+description: Deploy public and private Gitea repositories with a Gitea App, deploy key, or repository URL.
 ---
 
 # Gitea
 
-Use an HTTPS URL for a [public repository](/applications/sources/public-repositories) or an SSH URL for a [private repository with a deploy key](/applications/sources/deploy-keys).
+Coolify can deploy Gitea repositories through a public HTTPS URL, an SSH deploy key, or a Gitea App.
 
-```sh
-https://gitea.example.com/example/application.git
-git@gitea.example.com:example/application.git
-```
+| Method | Best for | Repository access |
+| :--- | :--- | :--- |
+| Public repository | Public source that needs no authentication | HTTPS URL |
+| Deploy key | One private repository, or a Gitea instance where an OAuth2 application is unavailable | SSH URL and repository deploy key |
+| Gitea App | Private repositories on gitea.com or a self-hosted Gitea instance | OAuth2 application with repository browsing |
 
-Add the deploy key's public key to the repository before creating the private application.
+## Set up a Gitea App
 
-## Configure automatic deployments
+<Callout type="warning" title="Gitea App requires Coolify v4.5.0">
+  Gitea App integration is available in Coolify v4.5.0 or above.
+</Callout>
+
+A Gitea App lets Coolify list repositories and branches, clone private source over HTTPS, and receive push and pull-request events. Gitea has no installable apps like GitHub, so a Gitea App is a Gitea OAuth2 application that you connect to Coolify.
+
+<Steps>
+<Step>
+
+### Add the source in Coolify
+
+Open **Sources** and select **New Source > Gitea App**.
+
+Enter **Name**. To limit the repositories that Coolify lists, enter comma-separated organization or user names in **Organization**. For a self-hosted instance, expand **Self-hosted Gitea** and enter **Gitea URL**. Coolify fills in **API URL** (the Gitea URL with `/api/v1`). gitea.com is the default.
+
+On a self-hosted Coolify instance, enable **System wide** only when every team must be able to select this source. Otherwise, keep the source scoped to the active team.
+
+Select **Continue**. Coolify shows the redirect URI for the OAuth2 application.
+
+</Step>
+<Step>
+
+### Create the OAuth2 application in Gitea
+
+In Gitea, open **Settings > Applications** and go to **Manage OAuth2 Applications**. An organization owner can create the application in the organization settings, and an administrator can create it in **Site Administration > Applications**, when one user must not own it.
+
+Create an application with:
+
+- the exact redirect URI that Coolify shows
+- **Confidential client** selected
+
+Save the application, then copy its **Client ID** and **Client secret**.
+
+</Step>
+<Step>
+
+### Connect Coolify to Gitea
+
+Go back to the Gitea source in Coolify. Enter **Client ID** and **Client secret**, then select **Save**.
+
+Select **Connect to Gitea**. Gitea asks you to authorize the `read:user`, `read:repository`, and `read:organization` scopes. Select **Authorize Application**.
+
+After Gitea sends you back to Coolify, the source shows **Connected**. Select **Test Connection** to make sure that Coolify can call the Gitea API.
+
+</Step>
+<Step>
+
+### Configure webhooks
+
+Copy **Webhook URL** and **Webhook secret** from the connected source.
+
+In Gitea, add a webhook of type **Gitea**. You can add it in the settings of a user, an organization, or one repository. A user or organization webhook sends events for all repositories of that owner. Set:
+
+- **Target URL** to the Coolify webhook URL
+- **HTTP Method** to `POST` and **POST Content Type** to `application/json`
+- **Secret** to the Coolify webhook secret
+- **Push** events for branch deployments
+- **Pull Request** events for preview deployments
+
+Coolify rejects Gitea webhook requests when the signature is missing or does not match the secret.
+
+</Step>
+<Step>
+
+### Deploy a repository
+
+Open a Coolify project, select **+ New**, then select **Git Repository (with Gitea App)**.
+
+Choose the server and the connected Gitea App. Select a repository, select **Load Repository**, choose the branch, then configure and deploy the application.
+
+Make sure that the deployment log imports the selected repository and checks out the requested commit.
+
+</Step>
+</Steps>
+
+### Self-hosted Gitea network requirements
+
+- Coolify must reach the Gitea URL to exchange OAuth2 codes, refresh tokens, and call the API. The deployment server must reach it to clone repositories.
+- Your browser must reach the Gitea URL to authorize the application.
+- Gitea must reach the Coolify webhook URL. By default, Gitea blocks webhooks to private networks. If Coolify runs on a private address, add it to `ALLOWED_HOST_LIST` in the `[webhook]` section of the Gitea `app.ini`.
+- Set `ROOT_URL` in the Gitea `app.ini` to the URL that you enter in Coolify.
+
+Gitea OAuth2 access tokens expire after one hour. Coolify refreshes them automatically before each API call and clone.
+
+## Use a deploy key
+
+Use a deploy key when Coolify only needs one private repository, or when Coolify cannot connect to the Gitea instance through OAuth2.
+
+1. Add a private key under **Keys & Tokens > Private Keys**.
+2. Add its public key in the Gitea repository under **Settings > Deploy Keys**.
+3. Copy the repository SSH URL, such as `git@gitea.example.com:example/application.git`.
+4. In Coolify, create **Private Repository (with deploy key)** and select the stored key.
+
+Read [Deploy keys](/applications/sources/deploy-keys) for the complete setup and security guidance.
+
+## Configure a manual Gitea webhook
+
+For an application that you created from a public URL or a deploy key:
 
 1. Open **Webhooks** in the Coolify application.
 2. Copy the **Gitea** URL.
@@ -22,7 +120,7 @@ Add the deploy key's public key to the repository before creating the private ap
 4. In Gitea, open the repository webhook settings.
 5. Enter the URL and the same secret.
 6. Enable **Push**.
-7. Enable pull-request events when using preview deployments.
+7. Enable pull-request events when you use preview deployments.
 8. Open **Advanced > Deployment** and choose **Deploy on push (webhooks)** in **Auto deploy** in Coolify.
 
-Verify a push deployment first. Then open or update a pull request and inspect **Preview Deployments**.
+Test a push deployment first. Then open or update a pull request and examine **Preview Deployments**.

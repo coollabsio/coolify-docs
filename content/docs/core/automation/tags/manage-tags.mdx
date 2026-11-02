@@ -1,11 +1,25 @@
 ---
 title: Manage Tags
-description: Create, assign, reuse, and remove tags from Coolify applications and services.
+description: Create team tags, connect them to resources, and remove assignments or delete tags.
 ---
 
 # Manage tags
 
-Manage tags from the application or service that should belong to the group. Coolify creates a new team tag when the name does not exist and reuses an existing tag when it does.
+Create tags from the main **Tags** page, then connect them to resources. You can also create or assign tags from an application or service. Tags belong to the active team.
+
+## Create a tag before assigning resources
+
+1. Open **Tags** in the main sidebar.
+2. Select **New tag**.
+3. Enter a unique name of 2 to 255 characters without spaces, then select **Create tag**. Coolify stores the name in lowercase.
+
+The new tag can remain empty until you assign resources.
+
+## Connect resources from a tag
+
+Open the tag and select **Connect to resources**. Resources are grouped by project and environment. Select a resource to assign the tag; clear its selection to remove the assignment. Each change is saved immediately. You need permission to update the resource.
+
+On a wide screen, **Connect in canvas** opens a visual view of the assignments. Tags can connect to applications, services, and standalone databases. Bulk deployment by tag operates on applications and services.
 
 ## Add tags to a resource
 
@@ -59,11 +73,15 @@ Removing a tag does not stop, restart, or redeploy the resource.
 
 ---
 
-## How unused tags are removed
+## Delete a tag
 
-Coolify removes a tag from the team after it is detached from its last application or service. There is no separate delete action on the main **Tags** page.
+Removing the last assignment leaves the tag available for reuse. To remove the tag itself:
 
-If you want to keep a grouping, leave the tag assigned to at least one application or service.
+1. Open **Tags** and select the tag.
+2. Select **Delete** and review the confirmation.
+3. Enter the tag name and confirm deletion.
+
+Deleting a tag removes its assignments from every resource. The resources keep running. Only team Owners and Admins can delete team tags.
 
 ---
 
@@ -80,7 +98,7 @@ Use a name with at least two characters. Separate multiple names with spaces ins
 The resource already has that tag. Check **Assigned Tags** instead of adding the same name again.
 
 </Accordion>
-<Accordion title="The Tags page is read-only">
+<Accordion title="Tag controls are unavailable">
 
 You need permission to update the resource before you can assign or remove tags. Ask a team administrator to update your role or make the change for you.
 

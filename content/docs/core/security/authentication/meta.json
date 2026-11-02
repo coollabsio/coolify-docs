@@ -4,6 +4,7 @@
     "oauth",
     "sso",
     "2fa",
+    "passkeys",
     "profile"
   ]
 }
