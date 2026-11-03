@@ -27,7 +27,7 @@ If you are new to Coolify databases, start with [What is a database](/databases/
 | [ClickHouse](/databases/clickhouse) | Analytical and column-oriented workloads | Yes | No | `9000` |
 | [SQLite](/databases/sqlite) | File-based databases on the same server; experimental | Yes | Yes | None |
 
-Scheduled backups means Coolify can run an engine-specific dump from the database's **Backups** page. Dashboard restore means **Import Backup** can load a backup while the database is running. Redis, Dragonfly, KeyDB, and ClickHouse still open an **Import Backup** page, and that page reports that restore is not supported. Redis, Dragonfly, and KeyDB do not show **Backups**. They still have persistent storage.
+Scheduled backups means Coolify can run an engine-specific dump from the database's **Backups** page. Dashboard restore means **Import backup** on the **Backups** page can load a backup while the database is running. For ClickHouse, the **Import backup** dialog reports that restore is not supported. Redis, Dragonfly, and KeyDB do not show **Backups**, so they have no dashboard restore. They still have persistent storage.
 
 ClickHouse and SQLite schedules apply to the standalone database resource. A PostgreSQL, MySQL, MariaDB, or MongoDB database inside a [Service](/services) can use the same scheduled backup workflow. See [Back up a database inside a service](/databases/backups#back-up-a-database-inside-a-service).
 
@@ -40,7 +40,7 @@ ClickHouse and SQLite schedules apply to the standalone database resource. A Pos
 5. Set retention. **Backups to keep**, **Days to keep**, and **Maximum storage (GB)** each use `0` for no limit. The limits work independently: Coolify deletes a backup when any configured limit is reached, keeping the most recent backups first. S3 retention uses the same three fields and is independent of the local limits. Local files are written under `/data/coolify/backups` on the database server.
 6. Send a copy off the server. Add and validate an [S3-compatible storage](/core/s3-storage/overview). The bucket must already exist. Coolify has setup guides for Amazon S3, Cloudflare R2, Neon Object Storage, and Supabase Storage, and also supports DigitalOcean Spaces, MinIO, Backblaze B2, Scaleway Object Storage, Hetzner S3 Storage, Wasabi Hot Cloud Storage, Vultr, CloudPe Object Storage, and IDrive e2. On the schedule, select the storage and **Enable S3**. **Delete after S3 upload** removes the local file only after the upload succeeds.
 7. Select **Back up now** while the database is running. Confirm the execution status is **Success**, the database names match the scope you chose, the file size is greater than zero, and the S3 upload succeeded when S3 is enabled.
-8. Restore a copy before you trust the backup. **Import Backup** accepts a file from your computer, an absolute path on the server, or an object in S3 storage for PostgreSQL, MySQL, MariaDB, MongoDB, and SQLite. Stop application writes and take a separate backup of the target first. ClickHouse has no built-in import; restore that archive with a ClickHouse client. Follow [Restore a database](/databases/restore).
+8. Restore a copy before you trust the backup. **Import backup** on the **Backups** page accepts a file from your computer, an absolute path on the server, or an object in S3 storage for PostgreSQL, MySQL, MariaDB, MongoDB, and SQLite. Stop application writes and take a separate backup of the target first. ClickHouse has no built-in import; restore that archive with a ClickHouse client. Follow [Restore a database](/databases/restore).
 
 ## What you still own
 
@@ -66,7 +66,7 @@ PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, and experimental SQLite. Redis,
 
 <Accordion title="Which databases can I restore from the dashboard?">
 
-PostgreSQL, MySQL, MariaDB, MongoDB, and SQLite. **Import Backup** can take a file from your computer, a path on the server, or S3 storage. Redis, Dragonfly, KeyDB, and ClickHouse open the same page and report that restore is not supported. See [Restore a database](/databases/restore).
+PostgreSQL, MySQL, MariaDB, MongoDB, and SQLite. **Import backup** on the **Backups** page can take a file from your computer, a path on the server, or S3 storage. ClickHouse shows the same dialog and reports that restore is not supported. See [Restore a database](/databases/restore).
 
 </Accordion>
 
@@ -189,7 +189,7 @@ The database resource navigation separates configuration from day-to-day operati
 | **Environment Variables** | Manage runtime variables passed to the database container. | [Environment variables](/databases/configuration/environment-variables) |
 | **Servers** | Review or change the selected server and destination. | [Configure multi-server deployments](/core/infrastructure/scaling/multi-server-deployments) |
 | **Persistent Storage** | Manage the named volumes and mounts that keep database data across container recreation. | [Persistent storage](/databases/configuration/persistent-storage) |
-| **Import Backup** | Restore a supported PostgreSQL, MySQL, MariaDB, MongoDB, or SQLite backup while the database is running. Other engines show that restore is not supported. | [Restore a database](/databases/restore) |
+| **Backups** | Schedule backups, and use **Import backup** to restore a PostgreSQL, MySQL, MariaDB, MongoDB, or SQLite backup while the database is running. Redis, Dragonfly, and KeyDB do not show this page. | [Database backups](/databases/backups), [Restore a database](/databases/restore) |
 | **Webhooks** | Create authenticated requests for database operations from external automation. | [Deploy webhooks](/core/automation/deploy-webhooks) |
 | **Healthcheck** | Configure the Docker readiness and liveness probe. | [Health checks](/databases/configuration/health-checks) |
 | **Resource Limits** | Set CPU and memory limits for the database container. | [Resource limits](/databases/configuration/resource-limits) |
