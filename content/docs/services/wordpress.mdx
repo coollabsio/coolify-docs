@@ -76,6 +76,31 @@ Access the .htaccess file:
 
 </Accordion>
 
+<Accordion title="Why does the login redirect to my old domain after a domain change?">
+
+WordPress keeps its site address in the database. It saves the address that you use when you install WordPress. Coolify does not change this address when you change the domain of the service. If the two addresses are different, the login redirects you to the old domain.
+
+To change the domain, do these steps:
+
+1. In Coolify, add the new domain next to the old domain, separated by a comma (for example `https://old.example.com,https://new.example.com`). Then redeploy the service.
+2. In WordPress, open **Settings → General**. Set **WordPress Address (URL)** and **Site Address (URL)** to the new domain, then click **Save Changes**.
+3. In Coolify, remove the old domain and redeploy the service.
+
+If you already changed the domain and the login redirects you to the old domain, change the address in the database:
+
+1. In Coolify, open the **Terminal** of the database container (`mariadb` or `mysql`).
+2. Run this command. Replace `https://new.example.com` with your domain. For the MySQL template, use `mysql` instead of `mariadb`.
+
+```sh
+mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" -e "UPDATE wp_options SET option_value = 'https://new.example.com' WHERE option_name IN ('home', 'siteurl');"
+```
+
+3. Log in to WordPress on the new domain.
+
+These steps do not change links that are saved in posts and pages, for example image URLs. To change those links, use a search-and-replace plugin such as Better Search Replace.
+
+</Accordion>
+
 <Accordion title="How to set up WordPress Multisite?">
 
 1. **Add WordPress** with the one-click installation.
