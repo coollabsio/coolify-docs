@@ -13,6 +13,38 @@ icon: "/docs/images/services/getoutline-logo.jpeg"
 
 Outline is an open-source collaboration tool that allows you to create and share documents with your team.
 
+## Upgrade from PostgreSQL 12
+
+New Outline versions need PostgreSQL 14 or later. Before, the template used `postgres:12-alpine`. On an Outline service that you added before this change, the Outline container can restart in a loop, and the PostgreSQL log shows `syntax error at or near "TRIGGER"`.
+
+A PostgreSQL 12 data directory does not start on PostgreSQL 16. Thus, you must dump the database before you change the image, and restore it after. In the commands below, replace `<uuid>` with the UUID of the service. The container names show the UUID, for example `postgres-<uuid>`.
+
+1. On the server, dump the database:
+
+   ```bash
+   docker exec postgres-<uuid> sh -c 'pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB"' > outline.sql
+   ```
+
+2. Make sure that `outline.sql` is not empty.
+3. In Coolify, stop the service.
+4. Remove the old database volume:
+
+   ```bash
+   docker volume rm <uuid>_database-data
+   ```
+
+5. In Coolify, click **Edit Compose file**, change the `postgres` image to `postgres:16-alpine`, and save.
+6. Deploy the service.
+7. Stop the Outline container and replace the new empty database with the dump:
+
+   ```bash
+   docker stop outline-<uuid>
+   docker exec postgres-<uuid> sh -c 'dropdb -U "$POSTGRES_USER" "$POSTGRES_DB" && createdb -U "$POSTGRES_USER" "$POSTGRES_DB"'
+   docker exec -i postgres-<uuid> sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"' < outline.sql
+   ```
+
+8. In Coolify, restart the service. Outline runs its migrations on PostgreSQL 16.
+
 ## Screenshots
 
 ## Links
