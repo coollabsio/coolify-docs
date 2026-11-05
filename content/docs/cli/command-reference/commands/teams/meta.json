@@ -4,6 +4,7 @@
     "current",
     "get",
     "list",
-    "members-list"
+    "members-list",
+    "update"
   ]
 }

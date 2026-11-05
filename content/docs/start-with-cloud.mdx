@@ -149,7 +149,7 @@ The resources you need depend on your projects. If you host multiple services or
 <CoolResourceShowcase
   icon={ServerCloud}
   title="Example production setup"
-  description="ShadowArcanist runs a mixed production workload on one server with the resources below. Use this as a rough reference point, not a fixed recommendation."
+  description="ShadowArcanist runs a mixed production workload on one server with the resources below. The applications are built externally and the workloads are heavily optimized, so they run on modest resources. Use this as a rough reference point, not a fixed recommendation."
   profile={[
     {
       label: 'Hosting provider',
@@ -164,17 +164,17 @@ The resources you need depend on your projects. If you host multiple services or
     {
       label: 'Memory',
       value: '4 GB',
-      description: 'Average usage: 2.8 GB',
+      description: 'Average usage: 2.1 GB',
     },
     {
       label: 'CPU',
       value: '2 cores',
-      description: 'Average usage: 60-80%',
+      description: 'Average usage: 40-70%',
     },
     {
       label: 'Storage',
       value: '40 GB',
-      description: 'Average usage: 30 GB',
+      description: 'Average usage: 27 GB',
     },
   ]}
   supports={[
@@ -184,8 +184,7 @@ The resources you need depend on your projects. If you host multiple services or
     '4 Rust Discord bots',
     '7 Rust workers',
     '2 Valkey databases',
-    '2 PostgreSQL databases',
-    'Umami Analytics',
+    '1 PostgreSQL database',
     'Beszel',
   ]}
 />

@@ -10,9 +10,9 @@ Coolify records each scheduled and manual task run under **Recent executions**. 
 ## Open execution history
 
 1. Open the application or service.
-2. Select **Configuration > Scheduled Tasks**.
+2. Select **Scheduled Tasks**.
 3. Select a task.
-4. Scroll to **Recent executions**.
+4. In the task modal, select **Executions**, then inspect **Recent executions**.
 
 Coolify shows the 20 most recent execution records, newest first.
 
@@ -22,7 +22,7 @@ Coolify shows the 20 most recent execution records, newest first.
 
 | <span className="inline-block min-w-28 whitespace-nowrap">Status</span> | Meaning | What to do |
 | --- | --- | --- |
-| <span className="whitespace-nowrap"><strong>In Progress</strong></span> | The command is still running. | Keep the task page open while Coolify refreshes the record. |
+| <span className="whitespace-nowrap"><strong>In Progress</strong></span> | The command is still running. | Keep the task modal open while Coolify refreshes the record. |
 | <span className="whitespace-nowrap"><strong>Success</strong></span> | The command exited without a reported error. | Open the output and confirm the command produced the intended result. |
 | <span className="whitespace-nowrap"><strong>Failed</strong></span> | The command failed, timed out, or could not run in the selected container. | Open the output and start with the first reported error. |
 
@@ -31,6 +31,8 @@ Completed records also show the start time, end time, and duration. Times are di
 ---
 
 ## Inspect and download output
+
+Users need permission to update the resource to see scheduled commands and output. API access to task output requires `read:sensitive`.
 
 Click an execution record to expand its captured output.
 
@@ -45,7 +47,7 @@ An execution can succeed without printing output. Verify the actual result of th
 <Accordions type="multiple">
 <Accordion title="The execution stays In Progress">
 
-Wait until the configured timeout has passed, then refresh the task page. If the command regularly needs more time, increase **Timeout** and run it again. The dashboard accepts up to `36000` seconds.
+Executions that exceed their timeout are marked failed with the timeout error. Lost queued scheduled tasks are recorded as failed and the team is notified. Refresh the task page to review the result. If the command regularly needs more time, increase **Timeout** and run it again. The dashboard accepts up to `36000` seconds.
 
 </Accordion>
 <Accordion title="No output was recorded">
@@ -55,7 +57,7 @@ The command may not write to standard output or standard error. Check the effect
 </Accordion>
 <Accordion title="The execution failed because no valid container was found">
 
-Confirm that the resource is running and that **Container name** or **Service name** matches the intended component. Save the task, then click **Execute Now**.
+Confirm that the resource is running and that **Container name** or **Service name** matches the intended component. Save the task, then select **Execute now**.
 
 </Accordion>
 </Accordions>

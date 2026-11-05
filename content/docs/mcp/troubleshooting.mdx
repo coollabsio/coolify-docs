@@ -8,17 +8,29 @@ description: Fix common Coolify MCP connection, authentication, permission, and 
 <Accordions type="multiple">
 <Accordion title="The MCP endpoint returns 404">
 
-Enable **MCP server** in **Settings > Configuration > Advanced**. The instance endpoint returns `404` while this setting is disabled.
+This is the most common problem on self-hosted instances. MCP is disabled by default.
+
+Open **Settings > Advanced**. In the **API and MCP** section, set **MCP server** to **Enabled**. Coolify saves the change immediately. The endpoint returns `404` while this setting is disabled. Only an instance admin can see this page.
+
+The **API access** setting does not control MCP. On Coolify Cloud, MCP is always enabled.
 
 </Accordion>
 <Accordion title="The MCP endpoint returns 403">
 
-Check the team settings for the token's team. The team must have **MCP server** set to **Enabled for this team**.
+Read the message in the response:
+
+- `MCP server is disabled for this team.`: open **Team > General** for the token's team. Set **MCP server** to **Enabled for this team**, then select **Save changes**.
+- `You are not allowed to access the API.`: the client IP is not in **Allowed IPs** in **Settings > Advanced**. Add the IP address of the machine that runs the client. This check applies only to self-hosted instances.
 
 </Accordion>
 <Accordion title="The client returns 401 or authentication fails">
 
-Confirm the complete token appears after `Bearer`, has not expired or been revoked, and belongs to a team member. Confirm the client sends the header on every MCP request.
+Confirm the complete token appears after `Bearer`, has not expired or been revoked, and that its owner is still a member of the token's team. Confirm the client sends the header on every MCP request. Coolify returns `401` with `Invalid token.` in these cases.
+
+</Accordion>
+<Accordion title="The client reports error -32003 Missing required team role">
+
+The token has `read:sensitive`, `write`, `deploy`, or `root`, but its owner is a team member. Only team admins and owners can use these permissions. Use a `read` token, or ask a team owner to change your role.
 
 </Accordion>
 <Accordion title="The client cannot connect">
@@ -28,7 +40,7 @@ Confirm the URL ends with `/mcp`, the instance is reachable from the client mach
 </Accordion>
 <Accordion title="A tool reports missing permissions">
 
-Use `read` for inspection, `read:sensitive` for supported sensitive output, and `deploy` for deployment or lifecycle operations. The token owner must retain the required team role for restricted operations.
+Use `read` for inspection, `read:sensitive` for supported sensitive output, `deploy` for deployment or lifecycle operations, and `write` for `create_*` and `manage_*` tools. MCP hides tools that the token cannot use. Call `coolify_help` to see the tools that the token can use.
 
 </Accordion>
 <Accordion title="A resource is missing">
@@ -39,6 +51,16 @@ MCP returns only resources owned by the token's team. Create or use a token for 
 <Accordion title="Logs are unavailable">
 
 `get_logs` requires `read:sensitive`, a running container, and a reachable server. For a failed deployment, call `get_deployment` first and request an optional log summary only when needed.
+
+</Accordion>
+<Accordion title="Environment values are missing">
+
+Use `list_env_keys` for names only. To retrieve values, use `get_env_values` with both `read` and `read:sensitive`; the token owner must be an Admin or Owner of the team. Locked values are never returned.
+
+</Accordion>
+<Accordion title="An action requires confirmation">
+
+Review the target and the action's effect, then allow the client to retry with `confirm=true` if you intend that change. This applies to destructive actions, some operations that interrupt workloads, and paid cloud-server provisioning.
 
 </Accordion>
 </Accordions>

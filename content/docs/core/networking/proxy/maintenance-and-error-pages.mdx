@@ -1,0 +1,52 @@
+---
+title: Maintenance and Error Pages
+description: Show resource maintenance pages and customize the server proxy's fallback 503 response.
+---
+
+# Maintenance and error pages
+
+Coolify can show a maintenance page for an application's or service's domains, and a server-wide error page for requests without an available resource. Both use the integrated Traefik or Caddy proxy on a server outside Docker Swarm.
+
+| Setting | Scope | Result |
+| :--- | :--- | :--- |
+| Maintenance mode | One application or service and its domains | Returns the maintenance page with HTTP `503` while the containers keep running. |
+| Custom error page | The server's proxy fallback | Replaces the fallback response body with your HTML and keeps HTTP `503`. |
+| Redirect URL | The server's proxy fallback | Redirects visitors to that URL and takes priority over the error page. |
+
+Direct access through a published container port bypasses these proxy pages. Database connections are also outside this HTTP workflow.
+
+## Enable maintenance mode
+
+1. Open the application or service and select **Domains**.
+2. Find **Maintenance mode**.
+3. Set it to **On: show the maintenance page**.
+4. Open one of the resource's domains and confirm the maintenance page and HTTP `503` response.
+
+The change applies without redeploying. Existing containers and background jobs continue running; pause writes or jobs separately if your maintenance requires it. For a service, the setting applies across the stack's configured domains.
+
+To resume traffic, set **Maintenance mode** to **Off: serve the resource**. Verify the resource is healthy and its domains serve the expected content.
+
+### Customize the maintenance page
+
+Enter a self-contained HTML document in **Custom maintenance page (HTML)** and select **Save changes**. Use inline CSS and images; the maximum size is 1 MiB. The page keeps HTTP `503` regardless of its contents.
+
+Leave the field empty or select **Reset to default** to use Coolify's maintenance page.
+
+## Customize the server error page
+
+1. Open **Servers > [server] > Proxy**.
+2. Under **Routing behavior**, set **Unknown requests** to **Use custom request handling**.
+3. Leave **Redirect URL** empty.
+4. Enter your document in **Custom error page (HTML)** and select **Save changes**.
+
+The HTML must be self-contained, with inline CSS and images, and no larger than 1 MiB. Leave it empty or select **Reset to default** to use Coolify's default page. With a **Redirect URL** set, the redirect takes priority.
+
+Visitors can encounter this page for unknown domains or unavailable resource routes, including stopped, deploying, or unhealthy resources. It customizes the proxy's fallback `503` response; it does not replace every error returned by your application.
+
+Choose **Return the default 503 response** to stop using custom fallback handling. Docker Swarm uses the plain response rather than the custom-page container.
+
+## Diagnose an unexpected 503
+
+Check whether **Domains > Maintenance mode** is on before investigating a deployment failure. If maintenance mode is off, check the resource's status, health checks, domain, and listening port. A custom error page changes what visitors see while the underlying routing problem remains.
+
+Follow [No Available Server (503)](/troubleshoot/applications/no-available-server) to investigate unavailable backends.

@@ -1,0 +1,30 @@
+---
+title: "Previews update"
+description: "Update the domains of a preview deployment"
+---
+
+# Previews update
+
+Update the domains of a preview deployment
+
+## Usage
+
+```sh
+coolify app previews update <app_uuid> <pr_id>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--compose-domain` | `stringArray` | No | — | Docker Compose service domain in &lt;service&gt;=&lt;url&gt;[,&lt;url&gt;] format (repeatable) |
+| `--domains` | `string` | No | — | Domains (comma-separated) |
+| `--force-domain-override` | `boolean` | No | `false` | Save the domains even when another resource uses them |
+
+## Get current help
+
+```sh
+coolify app previews update --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

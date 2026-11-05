@@ -32,7 +32,7 @@ export const Route = createRootRoute({
       },
       {
         name: 'robots',
-        content: 'index,follow',
+        content: site.indexable ? 'index,follow' : 'noindex, nofollow',
       },
       {
         property: 'og:site_name',

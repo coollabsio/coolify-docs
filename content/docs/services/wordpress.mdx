@@ -7,6 +7,12 @@ category: "CMS"
 icon: "/docs/images/services/wordpress-logo.svg"
 ---
 
+<Callout type="info" title="PHP security update">
+
+This service's one-click templates have been re-enabled following the PHP security review. Updating Coolify does not update deployed service containers. For existing deployments, follow the [PHP security advisory](/knowledge-base/php-security-advisory-2026) and the service's upstream upgrade instructions to apply any required image updates.
+
+</Callout>
+
 <ZoomImage src="https://raw.githubusercontent.com/logo/wordpress/caefc9aa315eafcf8687804564a11a9c5a77a561/images/logo.svg" alt="WordPress" />
 
 ## What is WordPress?
@@ -16,25 +22,9 @@ It is used for creating websites, blogs, and applications.
 
 ## Deployment Variants
 
-WordPress is available in two deployment configurations in Coolify:
-
-### WordPress with MariaDB
-- **Database:** MariaDB
-- **Use case:** Production deployments with MariaDB preference (recommended for most users)
-- **Components:**
-  - WordPress container
-  - MariaDB container
-  - Automatic database configuration and health checks
-
-### WordPress with MySQL
-- **Database:** MySQL
-- **Use case:** Production deployments with MySQL preference
-- **Components:**
-  - WordPress container
-  - MySQL container
-  - Automatic database configuration and health checks
-
-Both variants provide equivalent functionality - choose based on your database preference or existing infrastructure.
+- **WordPress with MariaDB:** Includes a MariaDB database.
+- **WordPress with MySQL:** Includes a MySQL database.
+- **WordPress without Database:** Uses an external database that you configure separately.
 
 ## Links
 

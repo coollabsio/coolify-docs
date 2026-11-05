@@ -26,7 +26,7 @@ Keep the existing GitHub App installed until the application has deployed succes
 <ZoomImage src="/docs/images/applications/ci-cd/github/switch-apps/1.webp" alt="GitHub App source with the Update Repositories action in Coolify" />
 
 1. Open **Sources** and select the replacement GitHub App.
-2. Select **Update Repositories**.
+2. Open **General** and select **Repositories**.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/switch-apps/2.webp" alt="Repository access settings for the GitHub App installation" />
 
@@ -38,8 +38,8 @@ Keep the existing GitHub App installed until the application has deployed succes
 <ZoomImage src="/docs/images/applications/ci-cd/github/switch-apps/3.webp" alt="Change Git Source control in an application configuration" />
 
 1. Open the application.
-2. Select **Configuration > Git Source**.
-3. Under **Change Git Source**, select the replacement GitHub App.
+2. Select **Git Source**.
+3. Under **Git source**, select the replacement GitHub App.
 4. Confirm the change.
 
 ## 5. Update the repository name when needed
@@ -52,9 +52,9 @@ Skip this step when the repository owner and name did not change.
 
 ## 6. Redeploy and verify
 
-1. Save the source configuration.
+1. Select **Save changes** after editing the repository fields.
 2. Select **Redeploy**.
-3. Open **Deployments** and confirm that Coolify clones the expected repository and commit.
+3. Open **Deployment Logs** and confirm that Coolify clones the expected repository and commit.
 4. Push a test commit to the configured branch.
 5. Confirm that the replacement GitHub App delivers the webhook and Coolify starts a webhook deployment.
 

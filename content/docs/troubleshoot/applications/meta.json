@@ -4,6 +4,7 @@
     "bad-gateway",
     "no-available-server",
     "gateway-timeout",
+    "too-many-redirects",
     "failed-to-get-token"
   ]
 }

@@ -9,6 +9,10 @@ This guide moves one application from a source Coolify instance to a destination
 
 Coolify does not provide a single export and import operation for an application. Recreate the application on the destination instance, verify it with a temporary domain, move every stateful dependency, then transfer production traffic.
 
+<Callout type="info" title="Move a whole server">
+To move all resources of a server, you can transfer the server to the other instance. The resources and their data stay on the same host. Refer to [Server transfer](/core/infrastructure/servers/server-transfer).
+</Callout>
+
 <Callout type="warning" title="Plan a maintenance window for the final copy">
 
 Data can change while the source application is running. Stop writes or stop the source application before the final database dump or file copy. Keep the source unchanged until the destination is confirmed stable.
@@ -29,10 +33,10 @@ Record the configuration from the source application:
 
 | Source page | Record |
 | :--- | :--- |
-| **Configuration > General** | Source or image reference, branch, build pack, base directory, build-file locations, commands, domains, internal ports, and host port mappings |
-| **Configuration > Environment Variables** | Production variables, build-time settings, preview variables, and shared-variable references |
-| **Configuration > Persistent Storage** | Mount type, volume or source path, destination path, file content, and read-only setting |
-| **Configuration > Advanced** | Deployment, Git, proxy, container, and operational settings that differ from the defaults |
+| **General** | Source or image reference, branch, build pack, base directory, build-file locations, commands, domains, internal ports, and host port mappings |
+| **Environment Variables** | Production variables, build-time settings, preview variables, and shared-variable references |
+| **Persistent Storage** | Mount type, volume or source path, destination path, file content, and read-only setting |
+| **Advanced** | Deployment, Git, proxy, container, and operational settings that differ from the defaults |
 | Other configuration pages | Health check, resource limits, scheduled tasks, webhooks, servers, tags, and preview settings |
 
 Also list every database, cache, queue, storage bucket, callback URL, and third-party dependency used by the application. Coolify cannot discover all state held outside the container.
@@ -627,7 +631,7 @@ Your application should now use the migrated data. If it does not, or if logs sh
 
 ## Move a directory, bind mount, or host file
 
-Find the exact source-server path under **Configuration > Persistent Storage**. Stop writes, then copy the contents while preserving ownership and permissions.
+Find the exact source-server path under **Persistent Storage**. Stop writes, then copy the contents while preserving ownership and permissions.
 
 For a directory, run from the source server:
 

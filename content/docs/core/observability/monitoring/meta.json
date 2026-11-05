@@ -3,6 +3,7 @@
   "pages": [
     "overview",
     "sentinel",
-    "metrics"
+    "metrics",
+    "traffic-analytics"
   ]
 }

@@ -5,6 +5,8 @@
     "---Networking---",
     "networking/cloudflare/tunnels",
     "---Security---",
+    "security/secret-managers",
+    "security/using-secret-managers",
     "security/cloudflare/ddos-protection",
     "external:[CrowdSec](https://www.crowdsec.net/blog/securing-automated-app-deployment-crowdsec-and-coolify)"
   ]

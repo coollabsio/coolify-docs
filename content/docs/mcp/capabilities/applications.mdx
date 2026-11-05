@@ -1,6 +1,6 @@
 ---
 title: Applications
-description: Use Coolify MCP to list and inspect applications and preview deployments.
+description: Use Coolify MCP to create, inspect, change, and delete applications and preview deployments.
 ---
 
 # Applications
@@ -10,5 +10,17 @@ description: Use Coolify MCP to list and inspect applications and preview deploy
 | `list_applications` | List applications with filters for tag, project, environment, server, status, or name. |
 | `get_application` | Inspect one application by UUID. |
 | `list_application_previews` | List pull-request preview deployments for an application. |
+| `get_application_preview` | Inspect one preview (`get`, `read`) or read its container logs (`logs`, `read:sensitive`). |
+| `list_rollback_images` | List the images that `rollback_application` can use. |
 
 Application details can include configuration metadata. Environment values and other sensitive fields remain subject to token permissions and redaction.
+
+## Create and manage applications
+
+| Tool | Actions |
+| :--- | :--- |
+| `create_application` | `public`, `github_app`, `deploy_key`, `dockerfile`, `docker_image` (`write`). `instant_deploy` also needs `deploy`. |
+| `manage_application` | `update`, `clone`, `add_server` (`write`); `move` and `remove_server` (`write`, confirm); `delete` (`deploy`, confirm). |
+| `manage_preview` | `create` (`deploy`); `update` (`write`); `delete` (`deploy`, confirm). |
+
+Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it. To roll back an application, see [Deployments](/mcp/capabilities/deployments).

@@ -11,5 +11,7 @@ Team tools identify the team bound to the API token and list its members.
 | :--- | :--- |
 | `get_current_team` | Return the team associated with the token, including MCP status. |
 | `list_team_members` | List members of that team. |
+| `list_audit_events` | List audit events of the team, newest first. Only team admins and owners. Actor emails, IPs, and metadata need `read:sensitive`. |
+| `manage_notifications` | Read (`get`, `read`) or change (`update`, `write`) the settings of one notification channel. |
 
 MCP never switches teams during a request. Create a separate token for each team a client must access.

@@ -7,7 +7,7 @@ description: Build Caddy with a DNS provider module and use DNS-based ACME valid
 
 Caddy's default HTTP challenge requires public access to port `80`. Use the DNS challenge when you need wildcard certificates or cannot expose port `80` during certificate validation.
 
-Caddy DNS providers are modules compiled into the Caddy binary. Coolify's default `lucaslorentz/caddy-docker-proxy:2.8-alpine` image does not include these modules, so you must build a compatible image from the proxy Docker Compose configuration.
+Caddy DNS providers are modules compiled into the Caddy binary. Coolify's default `lucaslorentz/caddy-docker-proxy:2.13-alpine` image does not include these modules, so you must build a compatible image from the proxy Docker Compose configuration.
 
 ## What you need
 
@@ -30,7 +30,7 @@ Each example visually marks the existing image line in red and the replacement l
 ```yaml
 services:
   caddy:
-    image: 'lucaslorentz/caddy-docker-proxy:2.8-alpine' # [!code --][!code focus]
+    image: 'lucaslorentz/caddy-docker-proxy:2.13-alpine' # [!code --][!code focus]
     build: # [!code ++:9][!code focus:9]
       dockerfile_inline: |
         FROM caddy:2.11-builder AS builder
@@ -56,7 +56,7 @@ services:
 ```yaml
 services:
   caddy:
-    image: 'lucaslorentz/caddy-docker-proxy:2.8-alpine' # [!code --][!code focus]
+    image: 'lucaslorentz/caddy-docker-proxy:2.13-alpine' # [!code --][!code focus]
     build: # [!code ++:9][!code focus:9]
       dockerfile_inline: |
         FROM caddy:2.11-builder AS builder
@@ -82,7 +82,7 @@ services:
 ```yaml
 services:
   caddy:
-    image: 'lucaslorentz/caddy-docker-proxy:2.8-alpine' # [!code --][!code focus]
+    image: 'lucaslorentz/caddy-docker-proxy:2.13-alpine' # [!code --][!code focus]
     build: # [!code ++:9][!code focus:9]
       dockerfile_inline: |
         FROM caddy:2.11-builder AS builder

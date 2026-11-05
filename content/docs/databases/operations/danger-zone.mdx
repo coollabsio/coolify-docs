@@ -1,11 +1,29 @@
 ---
 title: Danger Zone
-description: Permanently delete a standalone database and choose which related Docker resources Coolify removes.
+description: Flush Redis-compatible databases or permanently delete a standalone database and its selected Docker resources.
 ---
 
-# Delete a database
+# Database danger zone
 
-Open the database and select **Configuration > Danger Zone** to permanently remove the database resource. Deletion cannot be undone from Coolify.
+<span id="delete-a-database" />
+
+Open a standalone database and select **Danger Zone**. Redis, KeyDB, and Dragonfly offer **Flush all data** as well as resource deletion. These actions cannot be undone from Coolify.
+
+## Flush Redis, KeyDB, or Dragonfly
+
+**Flush all data** removes every key from every logical database. It keeps the database container and resource running, with the same configuration and credentials. It can remove queues, sessions, and application state as well as cache entries.
+
+1. Verify that the database is running and you have an Owner or Admin role.
+2. Back up required data using the engine's tooling and pause clients that must not write during the operation. Coolify does not create a backup as part of flushing.
+3. Open **Danger Zone > Flush all data**.
+4. Review the action, enter the database name, and complete the required account confirmation.
+5. Wait for **Database flushed**, then verify the result before resuming client writes.
+
+The operation uses `FLUSHALL ASYNC`. It affects all logical databases, including keys outside the database index used in an application's connection URL. Active clients can immediately create new keys again.
+
+## Delete the resource
+
+Deletion removes the resource itself and the Docker resources you select.
 
 <Callout type="danger" title="Back up the database before deleting it">
 
@@ -48,3 +66,5 @@ The database may remain visible briefly while the deletion job finishes. Do not 
 4. If you recreate the database, use a supported image and restore the verified backup before reconnecting applications.
 
 Coolify does not manage DNS records at your DNS provider. Remove obsolete DNS records separately.
+
+When the server is unreachable, resource deletion warns that Docker resources remain on the server. The team is notified afterwards. Clean those resources up when server access returns.

@@ -7,16 +7,16 @@ How to write a service documentation page. The frontmatter is now load-bearing �
 Create the markdown file at:
 
 ```
-docs/services/{service-slug}.md
+content/docs/services/{service-slug}.mdx
 ```
 
 **Naming convention:** lowercase, hyphenated (kebab-case)
 
-- ✅ `my-service.md`
-- ❌ `MyService.md`
-- ❌ `my_service.md`
+- ✅ `my-service.mdx`
+- ❌ `MyService.mdx`
+- ❌ `my_service.mdx`
 
-The slug is the filename without `.md`. It also becomes the URL path: `/services/my-service`.
+The slug is the filename without `.mdx`. It also becomes the URL path: `/services/my-service`.
 
 ## Required Structure
 
@@ -27,9 +27,7 @@ The frontmatter is read by the generator. It must include `title`, `description`
 ```yaml
 ---
 title: "Service Name"
-description: "Short description used on the listing card and in all.md."
-og:
-  description: "Optional longer SEO/social-card description."
+description: "Short description used on the listing card and in all.mdx."
 category: "Analytics"
 icon: "/docs/images/services/service-name-logo.svg"
 ---
@@ -37,40 +35,39 @@ icon: "/docs/images/services/service-name-logo.svg"
 
 | Field | Required | Used for |
 |---|---|---|
-| `title` | yes | Card title; `name` in `services.json`; link text in `all.md` |
-| `description` | yes | Card description; `all.md` entry; default `<meta name="description">` |
-| `category` | yes | Filter pill in the listing; `## Heading` in `all.md` |
-| `icon` | optional | Card thumbnail. Omit it and the resolver will find a matching file in `docs/public/images/services/` |
-| `og.description` | optional | Override for social-card and SEO description |
+| `title` | yes | Card title; `name` in `services.json`; link text in `all.mdx` |
+| `description` | yes | Card description; `all.mdx` entry; default `<meta name="description">` |
+| `category` | yes | Filter pill in the listing; `## Heading` in `all.mdx` |
+| `icon` | optional | Card thumbnail. Omit it and the resolver will find a matching file in `public/images/services/` |
 | `disabled` | optional | `true` hides the service from the listing while keeping the page reachable |
 
 **Notes:**
 
-- Only top-level scalar keys are parsed by `services-data.mjs`. Nested keys like `og.description` are ignored by the generator (they're still picked up by VitePress for OG tags).
+- Only top-level scalar keys are parsed by `services-data.mjs`. See [FRONTMATTER.md](../_shared/FRONTMATTER.md) for the current title, description, and generated social-image behavior.
 - Quotes around values are optional and are stripped on parse.
 
 ### Page Body
 
 #### 1. Title
 
-```markdown
+```mdx
 # ServiceName
 ```
 
 #### 2. Logo (Required)
 
-```markdown
+```mdx
 ![ServiceName](/docs/images/services/service-name-logo.svg)
 ```
 
 - Use standard markdown `![alt](path)` for the logo.
-- Use `<ZoomableImage>` only for screenshots or other large images users need to zoom into.
+- Use `<ZoomImage>` or its supported `<ZoomableImage>` alias for screenshots. Markdown images use the same registered wrapper.
 - Path starts with `/docs/images/services/` (not `/public/`).
-- The body image also acts as a *fallback* for icon resolution if the resolver can't find a matching file in `docs/public/images/services/` and you didn't set `icon` in frontmatter.
+- The body image also acts as a *fallback* for icon resolution if the resolver can't find a matching file in `public/images/services/` and you didn't set `icon` in frontmatter.
 
 #### 3. What is ServiceName?
 
-```markdown
+```mdx
 ## What is ServiceName?
 
 [2–4 paragraphs describing the service, features, and use cases]
@@ -85,7 +82,7 @@ icon: "/docs/images/services/service-name-logo.svg"
 
 #### 4. Links (Required)
 
-```markdown
+```mdx
 ## Links
 
 - [The official website](https://example.com?utm_source=coolify.io)
@@ -100,7 +97,7 @@ Add when relevant:
 
 ### Features
 
-```markdown
+```mdx
 ## Features
 
 - Feature 1: Description
@@ -109,7 +106,7 @@ Add when relevant:
 
 ### Why ServiceName
 
-```markdown
+```mdx
 ## Why ServiceName
 
 - Benefit 1
@@ -118,7 +115,7 @@ Add when relevant:
 
 ### Learning Resources
 
-```markdown
+```mdx
 ## Learning Resources
 
 - [Documentation](https://docs.example.com?utm_source=coolify.io)
@@ -127,7 +124,7 @@ Add when relevant:
 
 ### Configuration
 
-```markdown
+```mdx
 ## Configuration
 
 1. Configure X
@@ -137,7 +134,7 @@ Add when relevant:
 
 ### Need Help?
 
-```markdown
+```mdx
 ## Need Help?
 
 - [Discord](https://discord.gg/invite?utm_source=coolify.io)
@@ -160,18 +157,17 @@ See [TEMPLATES.md](./TEMPLATES.md) for ready-to-use templates (minimal and compr
 
 ❌ **Don't:**
 
-- Hand-edit `docs/services/all.md` or `docs/.vitepress/theme/data/services.json` — both are regenerated
-- Omit `category` from frontmatter — the service won't appear in `all.md`
+- Hand-edit `content/docs/services/all.mdx` or `src/generated/services.json` — both are regenerated
+- Omit `category` from frontmatter — the collector falls back to `Uncategorized`
 - Use external image URLs — always download logos locally first
 - Use relative paths for images
 - Omit UTM parameters from external links
-- Use `<ZoomableImage>` for small logos (unnecessary zoom)
 
 ✅ **Do:**
 
 - Always include `title`, `description`, and `category` in frontmatter
 - Use kebab-case for the filename and the slug
-- Save logos to `docs/public/images/services/` with a name the resolver will find
+- Save logos to `public/images/services/` with a name the resolver will find
 - Use standard markdown `![alt](path)` for the logo
 - Use `<ZoomableImage>` for screenshots only
 - Append `?utm_source=coolify.io` to all external links

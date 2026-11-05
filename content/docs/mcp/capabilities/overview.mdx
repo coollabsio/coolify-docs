@@ -5,7 +5,7 @@ description: Find Coolify MCP tools, resources, and prompts by task.
 
 # Overview
 
-Coolify MCP exposes tools, resources, and prompts for the team associated with the API token.
+Coolify MCP exposes tools, resources, and prompts for the team associated with the API token. MCP lists only the tools that the token's permissions allow. `coolify_help` shows these tools and step-by-step recipes, for example `topic=deploy_app_from_git`.
 
 ## Start with these tools
 
@@ -20,18 +20,29 @@ Coolify MCP exposes tools, resources, and prompts for the team associated with t
 
 | Page | Covers |
 | :--- | :--- |
-| [Teams](/mcp/capabilities/teams) | Current team and team members. |
-| [Servers](/mcp/capabilities/servers) | Servers, Docker destinations, hosted domains, and server resources. |
-| [Projects](/mcp/capabilities/projects) | Projects, environments, resources, and tags. |
-| [Applications](/mcp/capabilities/applications) | Applications and preview deployments. |
-| [Databases](/mcp/capabilities/databases) | Standalone databases and backup schedules. |
-| [Services](/mcp/capabilities/services) | Services and their application or database components. |
-| [Deployments](/mcp/capabilities/deployments) | Deployment history, deploy, cancel, start, stop, and restart operations. |
+| [Teams](/mcp/capabilities/teams) | Current team, team members, notifications, and audit events. |
+| [Servers](/mcp/capabilities/servers) | Servers, metrics, proxy, Docker cleanup, destinations, private keys, registries, and cloud providers. |
+| [Projects](/mcp/capabilities/projects) | Projects, environments, resources, search, and tags. |
+| [Applications](/mcp/capabilities/applications) | Create, change, and delete applications and preview deployments. |
+| [Databases](/mcp/capabilities/databases) | Create, change, import, and back up standalone databases. |
+| [Services](/mcp/capabilities/services) | Create, change, and delete services and their components. |
+| [Deployments](/mcp/capabilities/deployments) | Deployment history, deploy, cancel, rollback, start, stop, and restart operations. |
 | [Logs](/mcp/capabilities/logs) | Container logs and deployment log summaries. |
-| [Environment and storage](/mcp/capabilities/environment-and-storage) | Environment-variable names and storage mounts. |
-| [Integrations](/mcp/capabilities/integrations) | GitHub Apps, repositories, and branches. |
+| [Environment and storage](/mcp/capabilities/environment-and-storage) | Environment variables, shared variables, storage mounts, and volume backups. |
+| [Integrations](/mcp/capabilities/integrations) | Git sources, repositories, branches, and S3 storages. |
 | [Automation](/mcp/capabilities/automation) | Scheduled tasks, executions, health hints, and unhealthy resources. |
 | [Prompts and resources](/mcp/capabilities/prompts-and-resources) | Read-only MCP resources and guided prompts. |
 | [Pagination](/mcp/capabilities/pagination) | Page arguments and continuation responses. |
 
-All list tools return paginated data. Read [Pagination](/mcp/capabilities/pagination) before iterating through large results.
+## Permissions
+
+| Permission | Tools |
+| :--- | :--- |
+| `read` | `list_*` and `get_*` tools, and read actions of `manage_*` tools. |
+| `read:sensitive` | Logs, environment values, command bodies, and other sensitive fields. |
+| `deploy` | `deploy`, `control`, `cancel_deployment`, `rollback_application`, and actions that run or delete workloads. |
+| `write` | `create_*` and `manage_*` tools. They use the same REST API routes, validation, and permissions as the API. |
+
+Destructive actions need `confirm=true`. Your client must ask you before it sends it.
+
+Most list tools return paginated data. Read [Pagination](/mcp/capabilities/pagination) before iterating through large results.

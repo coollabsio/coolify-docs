@@ -1,0 +1,53 @@
+---
+title: Too Many Redirects
+description: Fix ERR_TOO_MANY_REDIRECTS and Cloudflare redirect loops by checking SSL/TLS encryption mode, HTTPS redirects, and Cloudflare Tunnel settings.
+---
+
+# Too Many Redirects
+
+If your application is deployed but the browser shows **ERR_TOO_MANY_REDIRECTS**, **Too many redirects**, or **The page isn't redirecting properly**, requests are getting stuck in a redirect loop.
+
+## Cloudflare SSL/TLS mode
+
+<Callout type="info" title="Quick fix for Cloudflare-proxied domains">
+Set Cloudflare's SSL/TLS encryption mode to at least **Full**. Prefer **Full (strict)** when your Coolify proxy has a valid certificate for the application domain.
+</Callout>
+
+With **Flexible** encryption, visitors can connect to Cloudflare using HTTPS, but Cloudflare connects to your server using HTTP. If Coolify or your application redirects that request to HTTPS, Cloudflare makes another HTTP request to the server and the cycle repeats.
+
+### Change the encryption mode
+
+1. In Coolify, open your application's **Domains** page and confirm that the domain uses **HTTPS**. See [domain configuration](/core/networking/domains).
+2. Make sure the **Coolify proxy** accepts HTTPS on port **443** and presents a certificate for the domain. Your application can continue listening on its configured internal port; it does not need to serve HTTPS or listen on port 443.
+3. In the Cloudflare dashboard, select your domain and open **SSL/TLS → Overview**.
+4. Choose **Full (strict)** if the origin certificate is unexpired, matches the hostname, and is issued by a publicly trusted CA or Cloudflare Origin CA. **Full** also requires an HTTPS origin but does not validate its certificate; prefer fixing the certificate so you can use strict mode.
+5. Open your application again in a private browser window to check the result without cached browser redirects.
+
+For normal Cloudflare proxying with an HTTPS origin, you can leave Coolify's **Redirect HTTP to HTTPS** setting enabled.
+
+See Cloudflare's documentation for [Full encryption](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full/) and [Full (strict) encryption](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/).
+
+## Cloudflare Tunnel using an HTTP origin
+
+A tunnel configured with a service URL such as `http://localhost:80` still sends HTTP to Coolify, even when visitors use HTTPS. Changing the zone's SSL/TLS encryption mode does not change that tunnel service URL.
+
+On the resource's **Domains** page, set **Redirect HTTP to HTTPS** to **Disabled** when using this HTTP tunnel setup. Cloudflare provides HTTPS for visitors, while the tunnel connects to the Coolify proxy over HTTP.
+
+Follow the [Cloudflare Tunnel resource configuration guide](/integrations/networking/cloudflare/tunnels/all-resource#5-configure-your-resource-domain). To use HTTPS between the tunnel and Coolify as well, follow the [Full TLS HTTPS guide](/integrations/networking/cloudflare/tunnels/full-tls).
+
+## If the loop continues
+
+- Check Cloudflare Redirect Rules and legacy Page Rules for redirects that conflict with Coolify or the application.
+- Make sure one layer does not redirect HTTPS to HTTP while another redirects HTTP to HTTPS.
+- Check that Cloudflare, Coolify, and the application agree on whether to use `www` or the root domain.
+- If the application enforces HTTPS behind a proxy, review its trusted-proxy configuration so it recognizes the original request scheme.
+
+To inspect the redirect chain, run:
+
+```bash
+curl -sS -L -D - -o /dev/null --max-redirs 10 https://app.example.com
+```
+
+Replace `app.example.com` with your application domain. Look at the status codes and `Location` headers for a repeated URL or alternating protocols or hostnames.
+
+For more examples, see [Cloudflare's redirect-loop troubleshooting guide](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/).

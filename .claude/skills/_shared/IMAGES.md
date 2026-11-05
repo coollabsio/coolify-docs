@@ -1,111 +1,46 @@
-# Image Guidelines
+# Images in MDX
 
-How to use images in Coolify documentation.
+Store documentation assets in `public/images/{section}/` and reference them as `/docs/images/{section}/{filename}`. The `/docs` public URL prefix is valid and must not be removed when updating filesystem paths.
 
-## Quick Reference
+| File on disk | URL in MDX |
+|---|---|
+| `public/images/services/appsmith-logo.svg` | `/docs/images/services/appsmith-logo.svg` |
+| `public/images/applications/domain.webp` | `/docs/images/applications/domain.webp` |
 
-| Image Type | Syntax | When to Use |
-|------------|--------|-------------|
-| Logos/icons | `![Alt](/docs/images/path.svg)` | Small images, service logos |
-| Screenshots | `<ZoomableImage src="/docs/images/path.webp" />` | UI screenshots, large images |
-| Diagrams | Either (based on size) | Architecture diagrams, flowcharts |
+Use the exact filename, extension, and case. Prefer lowercase kebab-case for new assets. Keep related screenshots together under the existing section's image directory.
 
-## Standard Markdown Images
+## Supported Syntax
 
-Use for **small images** that don't need zoom capability:
+Markdown images are supported:
 
-```markdown
-![Service Name](/docs/images/services/service-logo.svg)
+```mdx
+![Appsmith](/docs/images/services/appsmith-logo.svg)
 ```
 
-**Best for:**
-- Service logos
-- Small icons
-- Badges and status indicators
-- Simple inline graphics
+For an explicit image component:
 
-## ZoomableImage Component
-
-Use for **large images** users may want to examine closely:
-
-```vue
-<ZoomableImage src="/docs/images/section/screenshot.webp" alt="Description" />
+```mdx
+<ZoomImage src="/docs/images/applications/domain.webp" alt="Application domain settings" />
 ```
 
-**Best for:**
-- Dashboard screenshots
-- Configuration panels
-- UI walkthroughs
-- Any image with fine details
+The legacy alias remains supported:
 
-## File Paths
-
-### Storage Location
-
-```
-docs/public/images/{section}/{filename}.{ext}
+```mdx
+<ZoomableImage src="/docs/images/applications/domain.webp" alt="Application domain settings" />
 ```
 
-**Sections:**
-- `services/` - Service logos and screenshots
-- `get-started/` - Getting started guide images
-- `applications/` - Application deployment screenshots
-- `knowledge-base/` - KB article images
-- `og/` - Open Graph social images
+`src/components/docs/mdx.tsx` maps Markdown images, `Image`, `ZoomImage`, and `ZoomableImage` to the same zoomable-image implementation. No import is needed for these registered components. Do not rewrite valid `ZoomableImage` uses just because the docs moved to MDX.
 
-### In Documentation
+## Assets and Accessibility
 
-```
-/docs/images/{section}/{filename}.{ext}
-```
+- Download service logos locally rather than depending on remote image URLs.
+- Prefer SVG for vector logos, WebP for screenshots and raster images, and PNG when needed for transparency.
+- Optimize large images while keeping UI text readable; aim for under 100 KB when practical.
+- Add meaningful alt text describing the screen, setting, or diagram.
+- Check both light and dark themes when a logo may disappear against the background.
 
-**Note:** The `/public/` part is omitted - VitePress serves from `/docs/` directly.
+## Service Icons
 
-## File Format Preferences
+The catalog resolves icons from files directly under `public/images/services/`. Name the logo `{slug}-logo.svg` (or its actual extension), or set an explicit `icon: "/docs/images/services/..."` in frontmatter.
 
-| Format | Use For | Notes |
-|--------|---------|-------|
-| SVG | Vector logos, icons | Best quality, smallest size |
-| WebP | Screenshots, photos | Modern format, great compression |
-| PNG | Logos with transparency | When SVG unavailable |
-| JPEG | Never for logos | Avoid - no transparency, lossy |
-
-## Optimization
-
-Before adding images:
-
-1. **Compress**: Use [Squoosh](https://squoosh.app/) or [SVGOMG](https://jakearchibald.github.io/svgomg/)
-2. **Check size**: Keep under 100KB when possible
-3. **Verify dimensions**: Screenshots max 1920px wide
-
-## Naming Convention
-
-```
-{descriptive-name}-{type}.{ext}
-```
-
-**Examples:**
-- `wordpress-logo.svg` (service logo)
-- `deploy-button.webp` (UI screenshot)
-- `architecture-diagram.svg` (diagram)
-
-**Rules:**
-- Lowercase only
-- Hyphens for spaces
-- Include type suffix (`-logo`, `-screenshot`, `-diagram`)
-- Match actual file extension
-
-## Common Mistakes
-
-❌ **Don't:**
-- Use external image URLs (GitHub raw, CDNs)
-- Use `<ZoomableImage>` for small logos (unnecessary zoom)
-- Use relative paths (`./images/...`)
-- Forget alt text for accessibility
-
-✅ **Do:**
-- Download all images locally
-- Use standard markdown for logos
-- Use ZoomableImage for screenshots
-- Start paths with `/docs/images/`
-- Include descriptive alt text
+The catalog's body-image fallback is narrower than the renderer: it recognizes Markdown images and `ZoomableImage`, but not `ZoomImage`. Prefer a matching filename or explicit `icon` instead of relying on that fallback. See [service image rules](../adding-service-documentation/IMAGES.md).

@@ -1,6 +1,6 @@
 ---
 title: Integrations
-description: Use Coolify MCP to inspect GitHub integrations and browse repositories and branches.
+description: Use Coolify MCP to manage Git sources and S3 storages, and browse repositories and branches.
 ---
 
 # Integrations
@@ -11,4 +11,13 @@ description: Use Coolify MCP to inspect GitHub integrations and browse repositor
 | `list_github_repositories` | List repositories through a team GitHub App. |
 | `list_github_branches` | List branches for a repository through a team GitHub App. |
 
-Repository and branch tools register only when a usable GitHub App exists. Call `list_github_apps` first.
+Repository and branch tools register only when a GitHub App exists on the instance. Call `list_github_apps` first.
+
+## Manage Git sources and S3 storages
+
+| Tool | Actions |
+| :--- | :--- |
+| `manage_git_source` | GitHub and GitLab apps. `list` (`read`); `create`, `update` (`write`); `delete` (`write`, confirm). |
+| `manage_s3_storage` | `list`, `get` (`read`); `create`, `update`, `validate` (`write`); `delete` (`write`, confirm). Secrets are never returned. |
+
+Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.

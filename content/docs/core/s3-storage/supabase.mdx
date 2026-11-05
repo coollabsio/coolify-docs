@@ -48,11 +48,14 @@ Also record the project Region shown in the Supabase dashboard.
 
 ### Add Supabase Storage to Coolify
 
-In Coolify, open **S3 Storages** and select **Add**. Enter:
+In Coolify, open **S3 Storage** and select **New storage**. Enter:
 
 | Coolify field | Supabase value |
 |---|---|
-| **Endpoint** | The Supabase S3 endpoint. |
+| **Protocol** | `https`. |
+| **Host** | `<project-ref>.storage.supabase.co`, or the fallback `<project-ref>.supabase.co`. |
+| **Port** | Leave empty for the standard HTTPS endpoint. |
+| **Path** | `/storage/v1/s3`. |
 | **Bucket** | The bucket created in Supabase. |
 | **Region** | The Supabase project Region. |
 | **Access Key** | The generated **Access Key ID**. |
@@ -61,7 +64,7 @@ In Coolify, open **S3 Storages** and select **Add**. Enter:
 Select **Validate Connection & Continue**.
 
 <Callout type="warning" title="Keep the complete endpoint path">
-Use the endpoint exactly as provided by Supabase and keep the `/storage/v1/s3` suffix. Do not append the bucket name to the endpoint.
+Split the endpoint as shown above and keep `/storage/v1/s3` in **Path**. Do not append the bucket name to the endpoint.
 </Callout>
 
 </Step>

@@ -1,16 +1,18 @@
 ---
 title: Provision Cloud Server
-description: Purchase and create a Hetzner, DigitalOcean, or Vultr server from the Coolify dashboard.
+description: Purchase and create a Hetzner, DigitalOcean, Vultr, or Hostinger server from the Coolify dashboard.
 ---
 
-import { CloudBolt, Droplet, ServerCloud } from 'reicon-react';
+import { CloudBolt, Droplet, Server, ServerCloud } from 'reicon-react';
 
 # Provision a cloud server
 
-Coolify can create a server in a connected Hetzner, DigitalOcean, or Vultr account. After the provider assigns an IP address, validate the server so Coolify can prepare it for deployments.
+Coolify can create a server in a connected Hetzner, DigitalOcean, Vultr, or Hostinger account. After the provider assigns an IP address, validate the server so Coolify can prepare it for deployments.
 
 <Callout type="warning" title="This creates a billable server">
 Selecting **Buy & Create Server** sends a server-creation request to the provider. The provider charges your account according to the selected plan and options.
+
+A Hostinger order is a paid purchase. Hostinger charges the default payment method of the account for the full billing period (1 month, 1 year, or 2 years). Hostinger does not bill per hour. Read [Hostinger billing and deletion](#hostinger-billing-and-deletion).
 </Callout>
 
 ## What you need
@@ -33,8 +35,8 @@ Coolify uploads the selected public key to the provider when needed. It uses the
 ### Choose a provider
 
 1. Select **Servers** in the Coolify sidebar.
-2. Select **+ Add**.
-3. Select **Hetzner**, **DigitalOcean**, or **Vultr**.
+2. Select **New server**.
+3. Select **Hetzner**, **DigitalOcean**, **Vultr**, or **Hostinger**.
 4. Select the cloud token for the provider account.
 
 </Step>
@@ -44,7 +46,7 @@ Coolify uploads the selected public key to the provider when needed. It uses the
 
 Complete the fields for your provider.
 
-<Tabs id="provision-provider-fields" items={['Hetzner', 'DigitalOcean', 'Vultr']}>
+<Tabs id="provision-provider-fields" items={['Hetzner', 'DigitalOcean', 'Vultr', 'Hostinger']}>
 <Tab value="Hetzner" icon={ServerCloud}>
 
 | Field | What to choose |
@@ -88,16 +90,41 @@ Under the advanced options, you can add SSH keys, control IPv6, disable public I
 Do not disable public IPv4 unless Coolify has another working SSH path to the server.
 
 </Tab>
+<Tab value="Hostinger" icon={Server}>
+
+The Hostinger form opens at `/servers/new/hostinger`.
+
+| Field | What to choose |
+| :--- | :--- |
+| **Server name** | A name for the VPS. Use a fully qualified domain name, such as `vps.example.com`, to set it as the VPS hostname. |
+| **Data center** | The Hostinger data center. |
+| **Plan and billing period** | A KVM plan (KVM 1, KVM 2, KVM 4, or KVM 8) and a billing period (1 month, 1 year, or 2 years). The label shows the price for the first period and the renewal price. |
+| **Operating system** | A plain operating system. The default is Ubuntu 24.04 LTS. |
+| **Private key** | The SSH key Coolify will use. Coolify adds it to the VPS. |
+
+Instead of a plain operating system, you can select an **Operating system with application**. These templates install an application or a control panel on the VPS. The application can use ports `80` and `443`, which the Coolify proxy also needs. Use a plain operating system for a Coolify server.
+
+Under the advanced options, you can:
+
+- Turn **Enable weekly Hostinger backups (extra cost)** on or off. It is off by default. Hostinger charges extra for backups. Check the price in hPanel before you turn them on.
+- Add more SSH keys from your Hostinger account.
+- Select a Hostinger post-install script.
+
+If the server name is not a fully qualified domain name (it has no dot), Hostinger uses its default hostname, such as `srv123456.hstgr.cloud`.
+
+Hostinger does not use cloud-init. Use a Hostinger post-install script for startup configuration.
+
+</Tab>
 </Tabs>
 
-If you need startup configuration, select a saved script or enter one in the cloud-init field. Read [Cloud-Init Scripts](/core/security/credentials/cloud-init-scripts) before using this option.
+If you need startup configuration on Hetzner, DigitalOcean, or Vultr, select a saved script or enter one in the cloud-init field. Read [Cloud-Init Scripts](/core/security/credentials/cloud-init-scripts) before using this option.
 
 </Step>
 <Step>
 
 ### Send the creation request
 
-Review the selected plan and options, then select **Buy & Create Server**.
+Review the selected plan and options, then select **Buy & Create Server**. For Hostinger, select **Buy and create**.
 
 Coolify creates its server record immediately. The provider may take several minutes to create the machine and assign its public IP address.
 
@@ -116,17 +143,99 @@ Wait until:
 
 If the provider reports the machine as stopped or otherwise unavailable, power it on in the provider console or relink it before validation.
 
+For Hostinger, Coolify waits a short time for the public IP address. The IP address can appear 1 to 2 minutes later. Coolify adds it to the server automatically.
+
 </Step>
 <Step>
 
 ### Validate the server
 
-Select **Validate Server & Install Docker Engine**. Depending on the server state, the button may be labeled **Validate Server**.
+Select **Validate connection**. The server page shows **Revalidate connection** after successful validation.
 
 Coolify checks SSH access, the operating system, required tools, Docker Engine, and Docker Compose. When validation finishes, confirm that the server is reachable and validated.
 
 </Step>
 </Steps>
+
+---
+
+## Hostinger billing and deletion
+
+Hostinger works differently from the other providers. Read this section before you buy a Hostinger VPS.
+
+### Payment is still processing
+
+Sometimes Hostinger accepts the order but the payment is not complete. In this case, Coolify does not create a server. Coolify shows this message:
+
+```text
+Hostinger order N is waiting for payment. Finish the VPS setup in hPanel.
+```
+
+Open [hPanel](https://hpanel.hostinger.com/) and finish the VPS setup there. To manage the VPS in Coolify, [add the server](/core/infrastructure/servers/add-server). Then [link it to Hostinger](/core/infrastructure/servers/manage-server#link-an-existing-server-to-a-cloud-provider).
+
+### Setup fails after payment
+
+Sometimes Hostinger charges the order, but the VPS setup fails. Coolify then tries the setup again. Coolify also links the VPS to the server, so you do not lose it.
+
+If the setup still fails, the server shows the state `initial`. Finish the VPS setup in hPanel.
+
+### Server status
+
+A linked Hostinger server shows a `Hostinger · <state>` badge on the server page. Select **Refresh Status** to get the current state from Hostinger.
+
+If the VPS is stopped, you can start it from Coolify. Coolify does not validate the server over SSH while the VPS is stopped or suspended.
+
+### Delete a Hostinger VPS
+
+Hostinger has no API to delete a VPS immediately. When you delete the server in Coolify, you can select **Also delete VPS from Hostinger (at the end of the paid period)**. Coolify then turns off auto-renewal for the VPS. The VPS keeps running until the paid period ends. Then Hostinger deletes the VPS and all its data.
+
+If you do not select this option, the VPS keeps running and Hostinger continues to bill you.
+
+To delete the VPS now, or to request a refund in the 30-day money-back period, cancel the VPS in hPanel under **Billing > Subscriptions**.
+
+Read [Remove Server](/core/infrastructure/servers/remove-server) for the full deletion steps.
+
+---
+
+## Create a Hostinger server with the API
+
+You can also create a Hostinger server with the [Coolify API](/api/overview). All endpoints are under `/api/v1` and use a Bearer token.
+
+Use these endpoints to find the values for the request. Send `cloud_provider_token_uuid` as a query parameter.
+
+| Endpoint | Returns |
+| :--- | :--- |
+| `GET /hostinger/data-centers` | The Hostinger data centers. |
+| `GET /hostinger/catalog` | The KVM plans and their prices. |
+| `GET /hostinger/templates` | The operating system templates. |
+| `GET /hostinger/ssh-keys` | The SSH keys in the Hostinger account. |
+| `GET /hostinger/post-install-scripts` | The post-install scripts. Returns `403` with the Hostinger message if the token does not have permission. |
+
+Then send `POST /servers/hostinger` with these fields:
+
+| Field | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `cloud_provider_token_uuid` | string | Yes | The UUID of the Hostinger cloud token. |
+| `item_id` | string | Yes | The price ID of the plan and billing period, such as `hostingercom-vps-kvm1-usd-1m`. |
+| `data_center_id` | integer | Yes | The data center ID. |
+| `template_id` | integer | Yes | The operating system template ID. |
+| `private_key_uuid` | string | Yes | The UUID of the Coolify private key. |
+| `name` | string | No | The server name. |
+| `enable_backups` | boolean | No | Enables weekly Hostinger backups, which cost extra. The default is `false`. |
+| `public_key_ids` | integer array | No | The IDs of more SSH keys from the Hostinger account. |
+| `post_install_script_id` | integer | No | The ID of a Hostinger post-install script. |
+| `instant_validate` | boolean | No | Validates the server immediately. |
+
+The API returns:
+
+- `201` with `uuid`, `hostinger_virtual_machine_id`, `ip`, and `provisioning` when Coolify creates the server.
+- `202` with `message` when the payment is still processing. Coolify does not create a server.
+- `422` when the request is not valid.
+- `429` when you send too many requests. Hostinger allows about 90 requests per minute.
+
+<Callout type="warning" title="The API also buys the VPS">
+A successful `POST /servers/hostinger` request places a paid order. Hostinger charges the default payment method of the account.
+</Callout>
 
 ---
 
@@ -137,5 +246,6 @@ Coolify checks SSH access, the operating system, required tools, Docker Engine, 
 - Check provider quotas, account balance, and payment status.
 - Confirm that the selected SSH key is valid.
 - Open the provider console to determine whether the machine was created before retrying. Delete unwanted billable machines there.
+- For Hostinger, open hPanel before you try again. Hostinger can charge an order even if Coolify shows an error. Read [Hostinger billing and deletion](#hostinger-billing-and-deletion).
 
 For token-specific checks, follow [Cloud Tokens troubleshooting](/core/security/credentials/cloud-tokens#troubleshooting).

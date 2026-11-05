@@ -1,0 +1,170 @@
+---
+title: Server Transfer (Beta)
+description: Move a server and all its resources from one Coolify instance to another Coolify instance.
+---
+
+# Server transfer
+
+A server transfer moves a server, its resources, and the credentials that they use from one Coolify instance (the source) to another Coolify instance (the target). After the transfer, the target manages the server. The source keeps an archive of the server. Server transfer is marked **Beta**.
+
+The host does not move. The containers continue to run, and the volumes, files, and local backups stay on the server. Only the Coolify configuration of the server moves to the target.
+
+<Callout type="warning" title="Beta feature">
+Server transfer is in beta. The settings and the behavior can change in later versions. Make a [backup of the source instance](/core/backup-and-recovery/instance-backup) before you transfer a server, and keep the archive on the source until the transfer works.
+</Callout>
+
+## Prerequisites
+
+- Both instances run the same Coolify version. The target must support server transfer and read the same transfer bundle version as the source.
+- You are an admin or owner of the team of the server on the source.
+- The target uses `https`. The transfer sends credentials, so Coolify does not accept an `http` target URL.
+- The source can connect to the target URL.
+- The target can connect to the SSH port of the server.
+- The source can connect to the server over SSH.
+- On a self-hosted target, **API access** is enabled in **Settings > Advanced**. If the target uses **Allowed API IPs**, add the IP address of the source.
+- You have an [API token](/core/security/credentials/api-tokens) of the target. Create it in the team that receives the server. Use a token with the `root` permission, or with the `write` and `deploy` permissions. The token must belong to an admin or owner of that team.
+- No deployment is queued or running on the server.
+- On the target, the team can have one more server, and no other server uses the same UUID or IP address.
+
+You cannot transfer the **localhost** server (the server that runs Coolify).
+
+## What a transfer moves
+
+| Moved to the target | Not moved |
+| :--- | :--- |
+| The server, its settings, proxy configuration, and destinations | Users, team members, and team invitations |
+| Applications, preview deployments, databases, and services on this server | Resources of the same project on other servers. They stay on the source. |
+| Projects and environments that have resources on this server | Notification settings of the team |
+| Environment variables, and the shared variables that the resources use | Deployment history, backup history, and scheduled task history |
+| Persistent storage, file mounts, scheduled tasks, tags, and database backup and volume backup schedules | API tokens, instance settings, OAuth settings, and audit logs of the source |
+| Private keys, GitHub, GitLab, and Gitea Apps of the team, S3 storages, cloud provider tokens, and integration tokens that the server or its resources use | System-wide GitHub, GitLab, and Gitea Apps. The target links an application to a system-wide app with the same UUID, if one exists. |
+| SSL certificates, GitHub runner configuration, and managed DNS records | Resource links to resources on other servers, and project icons larger than 2 MB |
+| Secret manager links | Cloud-init scripts of the team |
+
+The data on the host does not move, because the host does not move. This includes Docker volumes, bind mounts, local backup files, and running containers. The target adopts the running containers. It does not deploy the resources again.
+
+The transfer log on the source shows a `NOTE:` line for each project that also has resources on other servers, and for each system-wide git source that the target does not have.
+
+## Transfer a server
+
+<Steps>
+<Step>
+
+### Create an API token on the target
+
+On the target instance, switch to the team that receives the server. Open **Keys & Tokens > API Tokens** and create a token with the `root` permission, or with the `write` and `deploy` permissions. Copy the token.
+
+</Step>
+<Step>
+
+### Open the transfer page on the source
+
+On the source instance, open **Servers**, select the server, then select **Transfer** in the server sidebar. The badge shows **Managed here**.
+
+</Step>
+<Step>
+
+### Enter the target
+
+1. In **Target instance URL**, enter the base URL of the target, for example `https://coolify.example.com`.
+2. In **Target API token**, paste the token from the target.
+
+</Step>
+<Step>
+
+### Start the transfer
+
+1. Select **Transfer server**.
+2. In the **Transfer this server?** dialog, select **Transfer server**.
+
+Coolify runs the checks first. If a check fails, nothing changes. The **Transfer log** shows each check with `OK`, `FAILED`, or `NOT CHECKED`. Fix the failed checks, then start the transfer again.
+
+</Step>
+</Steps>
+
+### Checks before the transfer
+
+| Check | Where it runs |
+| :--- | :--- |
+| The server is not the Coolify host | Source |
+| The source manages the server | Source |
+| No deployment is queued or running on the server | Source |
+| The source can connect to the server over SSH | Source |
+| The target can be reached, supports server transfer, accepts the API token, and the token can create servers | Source, with a request to the target |
+| The transfer bundle version is supported | Target |
+| The team can have one more server | Target |
+| No server with the same UUID or IP address exists | Target |
+| The target can reach the SSH port of the server | Target |
+
+## Watch the transfer
+
+When all checks pass, the transfer runs as a background job. The badge shows **Transferring**, and the page shows **Transfer in progress**. You can leave the page. The transfer continues in the background.
+
+The **Transfer** page updates every 5 seconds. The **Transfer log** shows each step:
+
+1. The source exports the server and its resources.
+2. The source sends the export to the target.
+3. The target imports the server and takes over management.
+4. The source disables management of the server.
+
+When the transfer finishes, the page shows **Transfer finished** and the badge shows **Transferred away**. The section **Finish the transfer on the target** lists the steps to do on the target, with a link to the server on the target. The **Warnings** list shows data that the transfer did not move.
+
+You can also start and watch a transfer with the API. Refer to [Migrate a server to another instance](/api/endpoints/servers/migrate-server-between-instances) and [Get the server transfer status](/api/endpoints/servers/get-server-transfer-status).
+
+### If the transfer fails
+
+- **A check failed. The transfer did not start.** Nothing changed. Read the transfer log, fix the problem, and start the transfer again.
+- **Transfer failed** — The source still manages the server. If the target imported the server but could not take over management, delete the imported server on the target, fix the problem, and start the transfer again.
+- **Transfer result unknown** — The source could not confirm the result. Make sure that the target manages the server. If it does, call [`POST /api/v1/servers/{uuid}/transfer/complete`](/api/endpoints/servers/complete-server-transfer) on the source. If it does not, start the transfer again.
+
+## Finish the transfer on the target
+
+On the target, open the server page. The **Finish the transfer** list shows the steps that the target cannot do alone. Coolify checks the open steps every 30 seconds. Select **Check now** to check them immediately.
+
+| Group | Step | What to do |
+| :--- | :--- | :--- |
+| Server | **Connection to the server** | Coolify checks the SSH connection from the target. |
+| Server | **Sentinel sends its data to this instance** | Wait for data from [Sentinel](/core/observability/monitoring/sentinel). Select **Restart Sentinel** if no data arrives. |
+| Server | **S3 storage ... works from this instance** | Make sure that the target can reach the S3 endpoint and that the bucket policies allow it. |
+| Git and webhooks | **Webhook URL of GitHub App ...** | Select **Set webhook URL**. Coolify changes the webhook URL of the GitHub App to the target. |
+| Git and webhooks | **Setup and Callback URL of GitHub App ...** | GitHub has no API for these URLs. Copy them from **Details**, set them in the GitHub App settings, then select **Mark as done**. |
+| Git and webhooks | **GitLab webhooks of GitLab App ...** | Set the webhook URL in each GitLab project that uses the app, then push once. |
+| Git and webhooks | **Manual webhook of ...** | If the repository has a manual webhook to Coolify, change its URL to the target, then push once. |
+| Git and webhooks | **Git source of ...** | The application used a system-wide git source that the target does not have. Select a git source of the target. |
+| Git and webhooks | **GitHub runners on this server** | The transfer disables [GitHub runners](/core/infrastructure/servers/github-actions-runners). Enable them after the GitHub App sends its webhooks to the target. |
+| Domains and DNS | **DNS record ...** | Select **Take ownership**, so that the target manages the record at Cloudflare. |
+| Domains and DNS | **Domain ... points to the server** | Coolify checks that the domain resolves to the server. If a proxy or load balancer is in front of the server, select **Mark as done**. |
+
+Coolify finds a webhook step complete when a webhook arrives at the target after the transfer. Select **Details** to see the URLs to copy. Use **Mark as done** for a step that you completed by hand.
+
+For a Gitea App, the source lists the steps in **Finish the transfer on the target**: set the redirect URI of the OAuth2 application and the webhook URL of each repository to the target.
+
+When all steps are done, select **Finish the transfer**. To close the list with open steps, select **Finish with open steps…**.
+
+## The archive on the source
+
+After the transfer, the server on the source is an archive. The server page shows **Transferred to another instance** and the badge **Transferred away**. The source does not run remote commands on the server and does not call cloud or DNS providers for it. Deployments, webhooks, scheduled tasks, backups, proxy updates, and monitoring for the server stop on the source. The source cannot validate the server again.
+
+Keep the archive until you are sure that the transfer works. The archive is the copy that you use to undo the transfer.
+
+### Undo the transfer
+
+- **Transfer back** — On the source, open the **Transfer** page of the archive. Enter **Instance that manages the server now**, **API token of that instance**, and **URL of this instance**, then select **Transfer back**. The token must have the `root` permission, or the `read:sensitive` and `write` permissions. The other instance transfers the server back with all changes that were made there. The archive is replaced only when the import succeeds.
+- **Enable management** — Use this only when the other instance is lost or cannot transfer the server back. On the server page of the archive, select **Enable management** and enter the server name. Changes that were made on the other instance after the transfer are lost. The source writes its ownership to the server, and the other instance stops to manage the server the next time it connects to it.
+
+### Delete the archive
+
+<Callout type="error" title="Deleting the archive removes the undo option">
+After you delete the archive, you cannot use **Transfer back** or **Enable management** for this server.
+</Callout>
+
+1. On the source, open the server and select **Danger Zone**.
+2. Select **Delete server**, then enter the server name.
+
+Coolify deletes only the records of the server and its resources on the source. The server, its containers, its data, its DNS records, and its GitHub runners do not change. Coolify does not delete the machine at the cloud provider. Refer to [Remove a server](/core/infrastructure/servers/remove-server) for the deletion dialog.
+
+## Next steps
+
+- [Manage a server](/core/infrastructure/servers/manage-server)
+- [Migrate an application](/applications/operations/migrate-between-instances)
+- [API tokens](/core/security/credentials/api-tokens)

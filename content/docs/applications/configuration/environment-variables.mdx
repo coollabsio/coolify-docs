@@ -7,11 +7,11 @@ description: Configure application values for the build phase, the running conta
 
 Application environment variables pass configuration to the image build, the running container, or both.
 
-Open the application, then select **Configuration > Environment Variables**.
+Open the application, then select **Environment Variables**.
 
 <Callout type="info" title="Preview deployments have separate values">
 
-Use the preview environment-variable view for values that should differ from the production application, such as a preview database or callback URL.
+Production and preview variables appear in separate labelled sections. Use the preview section for values that should differ, such as a preview database or callback URL.
 
 </Callout>
 
@@ -19,7 +19,7 @@ Use the preview environment-variable view for values that should differ from the
 
 ## Add variables
 
-Use **Normal view** to configure one variable at a time. Each entry can control whether the value is available during the build and at runtime, and whether it is multiline or literal.
+Use **Normal view** to configure one variable at a time. Select **Add**, enter **Name** and **Value**, choose its scope and value settings, then select **Add variable**. Select a variable name or its edit icon to change it, then select **Update variable**.
 
 Use **Developer view** to paste or edit multiple values in `.env` format:
 
@@ -29,13 +29,49 @@ LOG_LEVEL=info
 API_URL=https://api.example.com
 ```
 
-Lines beginning with `#` are ignored. Saving Developer view creates, updates, and removes entries to match its contents.
+Lines beginning with `#` are ignored, except `# coolify:` lines. Saving Developer view creates, updates, and removes entries to match its contents.
 
 Locked secrets and multiline values cannot be edited in Developer view. Change those entries in Normal view.
 
+### Set flags in Developer view
+
+To set the flags of a variable, put a `# coolify:` line directly above the variable line:
+
+```dotenv
+# coolify: literal buildtime=false
+DATABASE_URL=postgres://db:5432/app
+```
+
+| Flag | Default | Meaning |
+| :--- | :--- | :--- |
+| `literal` | `false` | Keep `$` references as text. |
+| `buildtime` | `true` | Make the variable available during the build. |
+| `runtime` | `true` | Make the variable available in the running container. |
+
+- Write a flag name alone to set it to `true`, or write `=true` or `=false`.
+- Developer view shows a `# coolify:` line only for variables whose flags are not the defaults.
+- If a variable has no `# coolify:` line, its flags do not change when you save. A new variable without this line gets the defaults.
+- The `# coolify:` line must be directly above the variable line. A blank line, another comment, or a second `# coolify:` line between them stops the save with an error. An unknown flag or a value other than `true` or `false` also stops the save. When the save stops, nothing changes.
+- A `# coolify:` line above a locked or multiline variable has no effect.
+
+## Environment values in logs
+
+An Owner or Admin can change **Environment values in logs** on the resource's **Environment Variables** page. Applications, services, and standalone databases each have this setting.
+
+| Option | Effect |
+| :--- | :--- |
+| **Hide all values** | Default. Adds the resource's environment values to log redaction. |
+| **Hide locked values only** | Allows ordinary environment values in logs while retaining redaction for locked values and recognized secret formats. |
+
+The setting applies to deployment logs, scheduled-task output, copied or downloaded logs, and logs returned through the API and MCP. It does not change live log streaming or scrub the application's own stored logs or external log drains.
+
+Redaction is best effort. Exact matching for ordinary unlocked values uses a minimum length of eight bytes; short or transformed values can remain visible. Locked and resolved remote secrets receive stricter matching, but a failed secret-provider lookup can prevent redaction of its resolved value. Avoid writing secrets to logs in the workload itself.
+
+Through the application, database, or service API, set `redact_all_env_values_in_logs` to `true` for all values or `false` for locked values only. Changing this field requires team administrator permissions.
+
 ## Build and runtime scope
 
-**Build Variable** and **Runtime Variable** are independent. Both are enabled for a new variable by default.
+**Build time** and **Runtime** are independent dropdowns. New variables default to **Available during build** and **Available in the container**.
 
 | Setting | Image build | Running container |
 | :--- | :---: | :---: |
@@ -43,11 +79,11 @@ Locked secrets and multiline values cannot be edited in Developer view. Change t
 | Build only | Available | Not available |
 | Runtime only | Not available | Available |
 
-Disable **Build Variable** for a secret that the application only reads after the container starts.
+Set **Build time** to **Not available during build** for a secret that the application only reads after the container starts.
 
 <Callout type="warning" title="Build arguments can remain visible">
 
-Traditional Docker build arguments can appear in image metadata. Use **Use Docker Build Secrets** for sensitive build-time values when the build server supports Docker BuildKit. If BuildKit is unavailable, Coolify falls back to build arguments.
+Traditional Docker build arguments can appear in image metadata. Set **Build secrets** to **Docker BuildKit secrets** for sensitive build-time values when the build server supports Docker BuildKit. If BuildKit is unavailable, Coolify falls back to build arguments.
 
 </Callout>
 
@@ -61,15 +97,15 @@ Authenticate to a private npm registry during the build with a build variable in
    //registry.npmjs.org/:_authToken=${NPM_TOKEN}
    ```
 
-2. Add `NPM_TOKEN` with **Build Variable** enabled (the token is only needed during `npm install`), and set its value to your registry token.
+2. Add `NPM_TOKEN` with **Build time** set to **Available during build** (the token is only needed during `npm install`), and set its value to your registry token.
 
 3. Deploy the application. The build reads `NPM_TOKEN` and authenticates to the registry.
 
 ## Multiline and literal values
 
-Enable **Multiline** when a value contains line breaks, such as a private key, certificate, or configuration file.
+Set **Value type** to **Multiline** when a value contains line breaks, such as a private key, certificate, or configuration file.
 
-Enable **Literal** when characters such as `$` must remain unchanged. Without it, Coolify can expand references contained in the value. Multiline values are already treated literally.
+Set **Interpolation** to **Literal (keep $ characters as-is)** when characters such as `$` must remain unchanged. Without it, Coolify can expand references contained in the value. Multiline values are already treated literally.
 
 ## Shared variables
 
@@ -80,6 +116,10 @@ Reference a team, project, environment, or server variable instead of copying th
 ```
 
 Follow [Shared variables](/core/team/shared-variables) to create a value at the correct scope and assign it to an application variable.
+
+## External secret managers
+
+Link Doppler, Infisical, or HashiCorp Vault and reference a remote value with `{{vault.KEY}}`. Follow [Use a secret manager](/integrations/security/using-secret-managers).
 
 ## Predefined application variables
 
@@ -96,7 +136,7 @@ Coolify makes deployment information available through predefined values.
 | `PORT` | First exposed port when `PORT` is not already set. |
 | `HOST` | `0.0.0.0` when `HOST` is not already set. |
 
-Coolify excludes `SOURCE_COMMIT` from Docker builds by default to preserve cache reuse. Enable **Configuration > Advanced > Include Source Commit in Build** when the build needs it.
+Coolify excludes `SOURCE_COMMIT` from Docker builds by default to preserve cache reuse. Set **Advanced > Build > Source commit availability** to **Available during build** when the build needs it.
 
 Assign a predefined value to your own key when the application expects another name:
 
@@ -126,3 +166,9 @@ For generated stack values such as URLs, users, passwords, and random strings, r
 Save the variables, then redeploy or restart the application so Coolify recreates the runtime environment.
 
 Use a new deployment when build-time values changed. Use **Restart** when only runtime values changed. Source-based paths reuse an existing image when eligible; Docker Image pulls the saved image reference again.
+
+## Names and copying values
+
+New environment variable names must match `[A-Za-z_][A-Za-z0-9_.]*`: begin with a letter or underscore, then use letters, numbers, underscores, or dots. Existing invalid runtime-only names, such as `my-var`, deploy with a warning and suggested name. Invalid build-time names stop the image build.
+
+Use the copy button to copy a resolved value. Shared-variable and `$SERVICE_*` references resolve to their actual values. Locked variables have no copy button, and references to locked shared variables remain references rather than exposing the secret.

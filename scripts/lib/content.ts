@@ -1,6 +1,7 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { extname, join, relative, resolve, sep } from 'node:path';
 import matter from 'gray-matter';
+import { loadGitLastModified } from './git-last-modified';
 import { site } from './site';
 import { currentDirFromMetaUrl } from './runtime-path';
 
@@ -41,6 +42,12 @@ export interface DocMetaSourceFile {
 }
 
 const docsDir = resolve(currentDirFromMetaUrl(import.meta.url), '../../content/docs');
+const repoRoot = resolve(docsDir, '../..');
+const gitLastModified = loadGitLastModified(repoRoot);
+
+function lastModifiedFor(repoRelativePath: string, mtime: Date): string {
+  return gitLastModified.get(toPosix(repoRelativePath)) ?? mtime.toISOString().slice(0, 10);
+}
 
 async function walk(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -112,12 +119,49 @@ export async function getDocEntries(): Promise<DocEntry[]> {
           title: typeof parsed.data.title === 'string' ? parsed.data.title : fallbackTitle,
           description:
             typeof parsed.data.description === 'string' ? parsed.data.description : site.description,
-          lastModified: fileStat.mtime.toISOString(),
+          lastModified: lastModifiedFor(`content/docs/${toPosix(relativeFilePath)}`, fileStat.mtime),
         } satisfies DocEntry;
       }),
   );
 
   return docs.sort((left, right) => left.routePath.localeCompare(right.routePath));
+}
+
+export async function getOpenApiEntries(): Promise<DocEntry[]> {
+  const { loader } = await import('fumadocs-core/source');
+  const { openapiSource } = await import('fumadocs-openapi/server');
+  const { openapi } = await import('../../src/lib/config/openapi');
+  const apiSource = loader(
+    await openapiSource(openapi, {
+      baseDir: 'api/endpoints',
+      groupBy: 'tag',
+    }),
+    { baseUrl: site.docsBasePath },
+  );
+  const schemaStat = await stat(resolve(docsDir, '../../config/openapi.json'));
+
+  return apiSource.getPages().map((page) => ({
+    filePath: page.path,
+    routeSegments: page.slugs,
+    routePath: page.url,
+    ogOutputPath: `og/${page.slugs.join('/')}.png`,
+    ogImagePath: `${site.docsBasePath}/og/${page.slugs.join('/')}.png`,
+    title: page.data.title ?? 'API Reference',
+    description: page.data.description ?? site.description,
+    lastModified: lastModifiedFor('config/openapi.json', schemaStat.mtime),
+  }));
+}
+
+export async function getAllDocEntries(): Promise<DocEntry[]> {
+  const [docs, apiDocs] = await Promise.all([getDocEntries(), getOpenApiEntries()]);
+  const seen = new Set<string>();
+
+  return [...docs, ...apiDocs].filter((doc) => {
+    const key = doc.routePath.replace(/\/$/, '');
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).sort((left, right) => left.routePath.localeCompare(right.routePath));
 }
 
 export async function getDocSourceFiles() {

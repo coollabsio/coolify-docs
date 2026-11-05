@@ -119,7 +119,7 @@ Click on continue button to create the tunnel.
 1. **Subdomain** - (Optional) You can make your all of your resource accessible on any subdomain/domain. For this guide, we are using a wildcard subdomain which is `*`
 2. **Domain** - Choose the domain you want to use for the tunnel.
 3. **Path** - Leave this field empty.
-4. **Service URL** - Enter **http://localhost:80** (this is very important).
+4. **Service URL** - Enter **http://localhost:80** (this is very important). If `localhost` selects an IPv6 address that the origin cannot accept, use `http://127.0.0.1:80`. See [loopback connection troubleshooting](/integrations/networking/cloudflare/tunnels/single-resource#realtime-or-terminal-connections-fail-with-localhost).
 6. After filling in the details, click the **Add route** button.
 
 <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/all-resource/12.webp" />

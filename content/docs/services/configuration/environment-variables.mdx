@@ -38,6 +38,8 @@ LOG_LEVEL=info
 
 Saving Developer view creates, updates, and removes managed variables to match the text. Locked secrets and multiline values cannot be changed from Developer view.
 
+To set the `literal`, `buildtime`, or `runtime` flag in Developer view, put a `# coolify:` line directly above the variable line, for example `# coolify: literal`. Refer to [Set flags in Developer view](/applications/configuration/environment-variables#set-flags-in-developer-view).
+
 ## Required values and defaults
 
 The Compose expression determines the initial requirement:
@@ -84,6 +86,10 @@ DATABASE_URL={{environment.DATABASE_URL}}
 
 Read [Shared variables](/core/team/shared-variables) for team, project, environment, and server scopes.
 
+## External secret managers
+
+Link Doppler, Infisical, or HashiCorp Vault and reference a remote value with `{{vault.KEY}}`. The source applies to the whole Service stack. Follow [Use a secret manager](/integrations/security/using-secret-managers).
+
 ## Generated domains and credentials
 
 Variables that start with `SERVICE_` can instruct Coolify to generate a value. URL and FQDN variables are tied to the matching Compose service and its domain configuration. Password, username, and random-value variables persist with the Service so components can share them.
@@ -99,3 +105,7 @@ Read [Docker Compose generated Service values](/services/configuration/docker-co
 5. Verify the behavior that consumes the value.
 
 Do not paste production secrets into support messages or screenshots. Team members can have restricted access to secret values even when they can view the Service.
+
+## Environment values in logs
+
+Owners and Admins can set **Environment values in logs** to **Hide all values** (the default) or **Hide locked values only**. Locked variables and recognized secret formats remain protected in either mode. This applies to supported deployment/task output and copied, downloaded, API, or MCP logs; live log streaming is unchanged. See [Log redaction behavior](/applications/configuration/environment-variables#environment-values-in-logs) for limits and API settings.

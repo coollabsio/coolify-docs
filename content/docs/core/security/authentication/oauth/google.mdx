@@ -12,7 +12,7 @@ Replace the example domain while following this guide:
 
 - **Coolify URL:** `https://coolify.shadowarcanist.com`
 - **Authorized redirect URI:** `https://coolify.shadowarcanist.com/auth/google/callback`
-- **Hosted domain hint:** `shadowarcanist.com` (optional)
+- **Hosted domain:** `shadowarcanist.com` (optional)
 </Callout>
 
 ## Set up Google OAuth
@@ -53,19 +53,19 @@ Copy the generated **Client ID** and **Client secret**. You can also download th
 
 ### Configure Google in Coolify
 
-Open **Settings > OAuth** and find **Google**.
+Open **Settings > Authentication** and find **Google**.
 
 | Coolify field | Google value |
 | :--- | :--- |
 | **Client ID** | The Google web client ID. |
 | **Client Secret** | The Google client secret. |
 | **Redirect URI** | `https://coolify.shadowarcanist.com/auth/google/callback` |
-| **Tenant** | Optional hosted-domain hint, such as `shadowarcanist.com`. |
+| **Hosted domain** | Optional allowed Google Workspace domain, such as `shadowarcanist.com`. Use `*` for any Workspace domain. |
 
 Select **Save**, then turn on **Enabled** for Google.
 
-<Callout type="warning" title="Tenant is a login hint, not an access rule">
-The Google **Tenant** value supplies the OAuth `hd` parameter. It can guide the account chooser, but Coolify does not use it to enforce that the returned email belongs to that domain. Restrict users in Google and in Coolify.
+<Callout type="warning" title="Hosted domain restricts sign-in">
+Coolify enforces the configured Workspace domain. `*` allows any Google Workspace account, but rejects personal Google accounts. Leave the field empty when you do not need a Workspace restriction.
 </Callout>
 
 </Step>

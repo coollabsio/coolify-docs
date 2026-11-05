@@ -7,17 +7,17 @@ description: Update or roll back the internal PostgreSQL database used by a self
 
 Coolify stores its projects, resources, settings, and deployment history in an internal PostgreSQL database. The database runs in the `coolify-db` container.
 
-A normal [Coolify update](/core/instance-management/update) does not migrate this database to a newer PostgreSQL major version. Major-version changes require the migration script described on this page.
-
 <Callout type="warning" title="Self-hosted instances only">
 Coolify Cloud users cannot access the internal Coolify database. If you see any `500` status code errors while accessing Coolify Cloud, [contact the Coolify team](/support).
 </Callout>
+
+A normal [Coolify update](/core/instance-management/update) does not migrate this database to a newer PostgreSQL major version. Major-version changes require the migration script described on this page.
 
 This procedure does not apply to PostgreSQL databases that you deploy as project resources. Back up and upgrade those databases separately.
 
 ## Before you update
 
-- [Create an instance backup](/core/backup-and-recovery/instance-backup), copy the backup outside the Coolify server, and confirm that you have saved the instance `APP_KEY`.
+- [Create an instance backup](/core/backup-and-recovery/instance-backup), copy the backup outside the Coolify server, and confirm that `/data/coolify/source/.env` is saved outside the server. It contains the instance `APP_KEY`.
 - Let active deployments finish before starting the migration.
 - Choose a PostgreSQL major version newer than the version currently used by `coolify-db`.
 
@@ -57,7 +57,7 @@ docker exec coolify-db sh -lc \
 
 The first command should show `coolify-db` as running. The second command prints the current PostgreSQL version.
 
-The target must be a numeric PostgreSQL major version of `10` or newer, and it must be higher than the current major version. The script does not support downgrading by passing an older version number.
+The target must be a numeric PostgreSQL major version of `10` or newer, and it must be higher than the major version reported above for the running `coolify-db` container. The script does not support downgrading by passing an older version number.
 
 </Step>
 <Step>

@@ -2,8 +2,11 @@
   "title": "Traefik",
   "pages": [
     "[Overview](/core/networking/proxy/traefik/overview)",
+    "update",
     "basic-auth",
+    "tls-certificates",
     "custom-ssl-certs",
+    "certificate-resolver",
     "dashboard",
     "custom-middlewares",
     "dynamic-config",

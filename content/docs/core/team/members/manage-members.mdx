@@ -10,10 +10,10 @@ Use the active team's **Members** page to review access, change another member's
 ## Review the member list
 
 1. Confirm that the intended team is active.
-2. Select **Teams** in the Coolify sidebar.
+2. Select **Team** in the Coolify sidebar.
 3. Select **Members**.
 
-The table shows **Name**, **Email**, **Role**, and the actions your role permits.
+The table shows **Name**, **Email**, **Role**, and the actions your role permits. Owners and administrators also see **2FA** status. Use search and the role or 2FA filters to narrow the list.
 
 Review the list regularly and remove access that is no longer needed. A person's role applies only to this team; the same account can have a different role in another team.
 
@@ -29,7 +29,7 @@ Owners and Admins can change another member's role. The available actions depend
 | **Admin** | Change an Admin to Member, or change a Member to Admin. Owners cannot be changed. |
 | **Member** | No role-change actions. |
 
-Find the member, then select the required action: **To Owner**, **To Admin**, or **To Member**.
+Find the member, open **Manage**, then select **Make owner**, **Make admin**, or **Make member**.
 
 <Callout type="info" title="Role changes revoke team API tokens">
 When you change a member's role, Coolify revokes that user's API tokens for this team. The person must create replacement tokens if they still need API access.
@@ -58,6 +58,6 @@ Invitation links are valid for three days. A valid invitation for an email addre
 
 ## Revoke an invitation
 
-Select **Revoke Invitation** beside an invitation that should no longer grant access.
+Select **Revoke** beside an invitation that should no longer grant access.
 
 Coolify removes the pending invitation immediately. Confirm that its row disappears from **Pending Invitations**. If the person still needs access, create a new invitation with the correct role.

@@ -17,3 +17,34 @@ export const siteDefinition = {
     muted: '#d8def0',
   },
 } as const;
+
+/** Origin that should be the only indexed copy of the docs. */
+export const productionDocsOrigin = 'https://coolify.io';
+
+export function docsHostname(siteUrl: string): string {
+  try {
+    return new URL(siteUrl).hostname.toLowerCase();
+  } catch {
+    return '';
+  }
+}
+
+/** Only the production docs host is indexable. Preview hosts stay reachable but noindex. */
+export function isIndexableDocsSite(siteUrl: string): boolean {
+  return docsHostname(siteUrl) === 'coolify.io';
+}
+
+/**
+ * Absolute URL for a docs path. On a non-production host the hostname is rewritten
+ * to coolify.io so the canonical points at the indexed copy. The page itself stays
+ * reachable; only the canonical changes.
+ */
+export function toCanonicalDocsUrl(siteUrl: string, pathname: string): string {
+  const absolute = new URL(pathname, `${siteUrl.replace(/\/+$/, '')}/`);
+  if (!isIndexableDocsSite(siteUrl)) {
+    absolute.protocol = 'https:';
+    absolute.hostname = 'coolify.io';
+    absolute.port = '';
+  }
+  return absolute.toString();
+}

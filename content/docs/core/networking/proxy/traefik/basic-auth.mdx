@@ -27,16 +27,16 @@ Coolify hashes the password and generates the Traefik middleware when you enable
 
 #### Open the application settings
 
-Open the application, select **Configuration > General**, then find **HTTP Basic Authentication**.
+Open the application, select **General**, then find **Security > Authentication**.
 
 </Step>
 <Step>
 
 #### Add the credentials
 
-Enable **HTTP Basic Authentication**, then enter a **Username** and **Password**. Save the application settings.
+Choose **HTTP Basic Authentication** in **Authentication**, then enter a **Username** and **Password**. Save the application settings.
 
-Keep **Readonly labels** enabled so Coolify continues to generate the proxy labels.
+Keep **Label management** set to **Managed by Coolify (auto-generated)** so Coolify continues to generate the proxy labels.
 
 </Step>
 <Step>
@@ -64,7 +64,7 @@ htpasswd -nbB <username> '<password>'
 </Step>
 <Step>
 #### Add the labels
-    Open the application **General** page, find **Container Labels**, then disable **Readonly labels**. Basic authentication takes two labels: one that **defines** the middleware and one that **attaches** it to the HTTPS router.
+    Open the application **General** page, find **Container labels**, then set **Label management** to **Managed manually (edit labels yourself)**. Basic authentication takes two labels: one that **defines** the middleware and one that **attaches** it to the HTTPS router.
 
     ```ini
     traefik.enable=true
@@ -85,7 +85,7 @@ htpasswd -nbB <username> '<password>'
     ```
     If the HTTPS router already lists middleware such as `gzip`, append `,http-basic-auth` to the existing comma-separated value instead of replacing it.
 
-    See [Custom middlewares](/core/networking/proxy/traefik/custom-middlewares) for what disabling **Readonly labels** makes you responsible for.
+    See [Custom middlewares](/core/networking/proxy/traefik/custom-middlewares) for what choosing manual label management makes you responsible for.
 </Step>
 <Step>
 
@@ -129,6 +129,14 @@ Use only the `htpasswd` output in the Traefik label. Store the plaintext passwor
 
 </Tab>
 </Tabs>
+
+## Configure bcrypt cost
+
+For a standard application, open **General > Security > Authentication > Password hashing**. Traefik supports bcrypt for the generated authentication middleware. **Cost** defaults to `10` and accepts `4` to `14`. The API field is `http_basic_auth_bcrypt_cost`.
+
+Each extra cost step increases the work required to check the password. Traefik checks authentication on every request, so a higher cost can slow protected requests. Save, redeploy, and verify request performance after changing it.
+
+Argon2id is available for compatible Caddy proxies; generated Traefik labels continue to use bcrypt. See [Caddy password hashing](/core/networking/proxy/caddy/basic-auth#choose-password-hashing).
 
 ## Troubleshooting
 

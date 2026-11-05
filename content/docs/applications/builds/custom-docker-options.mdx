@@ -5,7 +5,7 @@ description: Add supported Docker run options to a Coolify application without r
 
 # Custom Docker options
 
-Use **Configuration > General > Custom Docker Options** to add supported arguments to the command that starts an application container.
+Use **General > Custom Docker Options** to add supported arguments to the command that starts an application container.
 
 Use this field only when the option belongs to the container runtime. Put image construction in a Dockerfile and use the dedicated Coolify settings for CPU, memory, GPU, ports, storage, and environment variables when available.
 
@@ -28,8 +28,25 @@ Coolify accepts these options:
 - `--gpus`
 - `--hostname`
 - `--entrypoint`
+- `--add-host`
+- `--pids-limit`
+- `--read-only`
+- `--runtime`
+- `--tmpfs`
 
-Coolify converts only the listed options into the generated container configuration. Other Docker run options are not applied because they can conflict with the network, storage, or lifecycle configuration Coolify manages.
+Coolify converts only the listed options into the generated container configuration. Other Docker run options, such as `--network`, `--name`, `-v`, `-p`, and `-e`, are not applied because they can conflict with the network, storage, or lifecycle configuration Coolify manages. The deployment log shows a warning that lists each option Coolify did not apply.
+
+Use the dedicated Coolify settings for these values instead: **Persistent Storage** for volumes, **Environment Variables** for `-e`, and the network and port settings for networking.
+
+## Use a custom seccomp profile
+
+Put the profile file on the server, then refer to it with an absolute path:
+
+```sh
+--security-opt seccomp=/etc/docker/seccomp-profile.json
+```
+
+If the file does not exist on the server, the deployment fails with a `bind source path does not exist` error.
 
 ## Add an option
 
@@ -74,6 +91,18 @@ It can also run an image-owned initialization script:
 ```
 
 Use one `--entrypoint` value. Put multiple command arguments inside the quoted value instead of repeating the option.
+
+## GPU access
+
+Use `--gpus` to give the container access to the GPUs of the server. Coolify converts these forms to a Docker Compose GPU device request with the `nvidia` driver:
+
+| Option | Result |
+| :--- | :--- |
+| `--gpus all` | The container can use all GPUs. |
+| `--gpus 2` | The container can use 2 GPUs. |
+| `--gpus "device=0,1"` | The container can use the GPUs with the IDs `0` and `1`. |
+
+When **GPU access** is enabled in [Advanced > GPU](/applications/configuration/advanced#enable-gpu), Coolify ignores `--gpus` and uses the GPU settings. The deployment log shows a message about this. Use one of the two methods, not both.
 
 <Callout type="warning" title="Privileged options expand container access">
 

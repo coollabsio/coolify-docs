@@ -1,0 +1,669 @@
+---
+title: NGINX
+description: A case study of how ShadowArcanist replaced Traefik with a hand-configured NGINX stack, with the configuration snippets behind it.
+---
+
+# NGINX
+
+<Callout type="warning" title="A case study, not an installation guide">
+
+Coolify team member **ShadowArcanist** replaced Traefik with NGINX on a production server with about 20 seconds of downtime. This page describes how that setup is built and why, with snippets from it to show what manual proxy management involves.
+
+It is not a step-by-step guide, and the snippets are not a drop-in install. Coolify does not configure, start, or monitor this proxy. The [Custom proxy overview](/core/networking/proxy/custom/overview) explains which features you take over from Coolify with a custom proxy.
+
+</Callout>
+
+## Why switch
+
+The server runs about 19 applications, deployed through Coolify from Docker images and Docker Compose files. Traefik served 31 domains on it.
+
+The problem was memory. Right after a restart, Traefik's idle memory was low. After it had run for more than 6 hours, it used more than 40 MB at idle and 70–80 MB with very little traffic. Other Traefik versions did not help. Tuning Go's memory environment variables did not help either; it only raised CPU usage.
+
+Because traffic on the server was low, the Traefik container had a 512 MB memory limit. One night Traefik used all of it, crashed with an out-of-memory error, and Docker restarted it. The access log showed only about 170 requests in the hour before the crash, with no traffic spike.
+
+## Why NGINX
+
+ShadowArcanist first tested NGINX and Angie, an NGINX fork, on a separate server. NGINX used less memory and handled more requests. A later benchmark put NGINX, Traefik, and Caddy under the same load: 17 HTTPS hosts in front of one backend, on a test server with 2 vCPUs. The versions were NGINX 1.31.6 (`nginx:1.31-alpine`), Traefik 3.7.14 (`traefik:v3.7`, the version Coolify ships for new servers), and Caddy 2.11.7 (`caddy:2`).
+
+| Measurement | NGINX | Traefik | Caddy |
+| :--- | :--- | :--- | :--- |
+| Memory at idle | 3.8 MB | 19.4 MB | 15.2 MB |
+| Peak memory under load | 10.7 MB | 126 MB | 54 MB |
+| CPU at 510 requests per second | 5.3% of one core | 15.0% | 17.8% |
+| Throughput on 2 shared vCPUs (HTTP/1.1) | 19.3K req/s | 12.0K req/s | 10.5K req/s |
+
+After the load ended, NGINX dropped back to about 4 MB. Traefik and Caddy kept most of their peak memory. Latency at a normal request rate was under 1 ms at p50 for all three, so the difference was resources, not speed.
+
+This is one measurement on one machine, not a general ranking, but it made NGINX the choice.
+
+Two other requirements shaped the setup:
+
+- **Wildcard certificates across several Cloudflare accounts.** [Lego](https://go-acme.github.io/lego/) issues them through DNS-01 challenges, so the server does not need port `80`.
+- **A manageable number of routes.** One file per domain, written by hand, was enough. There was no need for automatic container discovery.
+
+---
+
+## How the stack fits together
+
+NGINX runs as its own Docker Compose project in `/data/nginx-proxy`, outside Coolify. Coolify keeps deploying the applications, and its proxy setting is **Custom (None)**.
+
+Every public domain on this server is proxied through Cloudflare. Visitors connect to Cloudflare, and Cloudflare connects to NGINX. Several choices on this page, such as the visitor IP handling, the keep-alive timeout, and the HTTPS redirect, depend on that.
+
+```sh
+/data/nginx-proxy/
+├── compose.yaml
+├── .env                        # host addresses for the listeners
+├── config/                     # mounted read-only into NGINX
+│   ├── current -> versions/3   # the version NGINX loads
+│   └── versions/
+│       └── 3/
+│           ├── nginx.conf      # shared settings
+│           ├── proxy.conf      # headers for every proxied location
+│           ├── cloudflare-ips.conf
+│           ├── default.conf    # catch-all for unknown names
+│           └── hosts/          # one file per domain
+├── certs/                      # written by Lego
+├── secrets/                    # Cloudflare API tokens
+├── lego.yml                    # which certificates to issue
+├── lego-renew.sh               # daily renewal, run by cron
+├── logs/                       # access.log and error.log
+└── rotate.sh                   # log rotation
+```
+
+Every configuration change goes into a new folder under `versions/`, and `current` points to the one in use. A rollback is a change of that link and a reload. [Changes and rollbacks](#changes-and-rollbacks) explains why.
+
+NGINX, Lego, and the log rotation all run as one user, UID `55555`. Lego writes private keys that only their owner can read, so NGINX runs as the same user to read them.
+
+---
+
+## The Compose file
+
+```yaml title="/data/nginx-proxy/compose.yaml"
+name: nginx-proxy
+
+services:
+  nginx:
+    image: nginx:1.31-alpine
+    container_name: nginx-proxy
+    restart: unless-stopped
+    user: '55555:55555'
+    mem_limit: 100m
+    command: ['nginx', '-g', 'daemon off;', '-c', '/etc/nginx/managed/current/nginx.conf']
+    ports:
+      # HTTPS only: Lego uses DNS-01, so nothing listens on port 80.
+      - '${PUBLIC_IP}:443:443'
+      # Private listener, reachable only over a VPN address.
+      - '${PRIVATE_IP}:443:8443'
+    volumes:
+      - ./config:/etc/nginx/managed:ro
+      - ./certs:/certs:ro
+      - ./logs:/var/log/nginx-proxy
+    networks:
+      - nginx-proxy
+      - coolify
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+
+  logrotate:
+    image: alpine:3.22
+    container_name: nginx-logrotate
+    restart: unless-stopped
+    user: '55555:55555'
+    mem_limit: 10m
+    network_mode: none
+    environment:
+      - LOG_ROTATE_MB=20
+      - LOG_KEEP=5
+    command: ['/bin/sh', '/rotate.sh']
+    volumes:
+      - ./logs:/logs
+      - ./rotate.sh:/rotate.sh:ro
+
+networks:
+  nginx-proxy:
+    external: true
+  coolify:
+    external: true
+```
+
+`.env` holds the two host addresses:
+
+```sh title="/data/nginx-proxy/.env"
+PUBLIC_IP=203.0.113.10
+PRIVATE_IP=100.92.0.1
+```
+
+Some choices in this file matter more than they look:
+
+- **Two listeners on port `443`.** Docker publishes container port `443` on the public address and container port `8443` on the VPN address (NetBird on this server). A host that listens only on `8443` cannot be reached from the internet. The two addresses must differ because both use host port `443`.
+- **The `config` folder is mounted, not single files.** Docker binds a single-file mount to the file's inode. Editors and `cp` often replace a file with a new inode, and the container then keeps reading the old one. Changes inside a mounted folder are always visible.
+- **Two networks.** `nginx-proxy` is a separate network that Compose applications join with an alias. `coolify` gives NGINX access to Coolify itself and to applications that do not use Docker Compose. Both networks exist before NGINX starts, so the file marks them `external`.
+- **Memory.** The 100 MB limit leaves plenty of room for NGINX on this server.
+
+---
+
+## The main configuration
+
+`nginx.conf` holds the settings every domain shares. Because NGINX runs as UID `55555`, the PID file and temporary files are in `/tmp`, and there is no `user` directive.
+
+```nginx title="config/versions/3/nginx.conf"
+worker_processes 4;
+pid /tmp/nginx.pid;
+error_log /var/log/nginx-proxy/error.log warn;
+
+events {
+    worker_connections 4096;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    # Keep NGINX's default: Cloudflare reuses idle origin connections.
+    keepalive_timeout 75s;
+
+    client_body_temp_path /tmp/client_body;
+    proxy_temp_path /tmp/proxy;
+    fastcgi_temp_path /tmp/fastcgi;
+    uwsgi_temp_path /tmp/uwsgi;
+    scgi_temp_path /tmp/scgi;
+
+    # Docker's DNS, so a redeployed container is found again.
+    resolver 127.0.0.11 valid=10s ipv6=off;
+    resolver_timeout 2s;
+
+    # Real visitor IP, accepted only from Cloudflare's ranges.
+    include /etc/nginx/managed/current/cloudflare-ips.conf;
+    real_ip_header CF-Connecting-IP;
+
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        ''      '';
+    }
+
+    log_format json escape=json '{"time":"$msec","host":"$host",'
+        '"method":"$request_method","path":"$uri","status":$status,'
+        '"bytes":$bytes_sent,"request_time":$request_time,'
+        '"upstream":"$upstream_addr","upstream_status":"$upstream_status",'
+        '"ip":"$remote_addr","country":"$http_cf_ipcountry",'
+        '"ua":"$http_user_agent"}';
+    access_log /var/log/nginx-proxy/access.log json;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    include /etc/nginx/managed/current/default.conf;
+    include /etc/nginx/managed/current/hosts/*.conf;
+}
+```
+
+| Setting | Why it is there |
+| :--- | :--- |
+| `worker_processes 4`, `worker_connections 4096` | Four worker processes share the traffic across CPU cores, and each one can hold 4096 open connections. `auto` starts one worker per core instead. |
+| `keepalive_timeout 75s` | Cloudflare reuses idle connections to the origin for up to 900 seconds. If NGINX closes a connection just as Cloudflare sends a request on it, the visitor gets a `520`. NGINX's default reduces that. See [Cloudflare connection limits](https://developers.cloudflare.com/fundamentals/reference/connection-limits/). |
+| `resolver 127.0.0.11` | Docker's embedded DNS server. NGINX uses it to look up container names again after a redeploy. |
+| `resolver_timeout 2s` | Limits the wait when a resolver gives an answer NGINX rejects. See [Keep targets stable across redeploys](#keep-targets-stable-across-redeploys). |
+| `real_ip_header CF-Connecting-IP` | Replaces the connecting address with the visitor's address, but only for requests from the ranges in `cloudflare-ips.conf`. |
+| `$connection_upgrade` map | Passes WebSocket upgrades through. A normal request gets an empty `Connection` header, so the connection to the application stays open for reuse. |
+| JSON access log | One line per request, easy to search with `jq`. `$uri` has no query string, so query strings stay out of the log. |
+
+### Shared proxy headers
+
+Every proxied location includes `proxy.conf`, so the headers exist in one place:
+
+```nginx title="config/versions/3/proxy.conf"
+proxy_http_version 1.1;
+proxy_set_header Host $host;
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Proto $scheme;
+proxy_connect_timeout 5s;
+```
+
+### Cloudflare IP ranges
+
+`cloudflare-ips.conf` lists every range Cloudflare publishes at [cloudflare.com/ips](https://www.cloudflare.com/ips/), one line each:
+
+```nginx title="config/versions/3/cloudflare-ips.conf"
+set_real_ip_from 173.245.48.0/20;
+set_real_ip_from 103.21.244.0/22;
+# ... every other IPv4 and IPv6 range
+set_real_ip_from 2400:cb00::/32;
+```
+
+With these lines, NGINX logs and forwards the visitor's address instead of Cloudflare's. If a range were missing, visitors through that range would appear with Cloudflare's address.
+
+### Unknown names
+
+Without a default server, NGINX answers a request for an unknown name with the first host in the configuration, and shows that host's certificate. The setup has a catch-all for each listener:
+
+```nginx title="config/versions/3/default.conf"
+server {
+    listen 443 ssl default_server;
+    ssl_reject_handshake on;
+}
+
+server {
+    listen 8443 ssl default_server;
+    ssl_reject_handshake on;
+}
+```
+
+`ssl_reject_handshake` ends the TLS handshake for any name that has no `server` block. Behind Cloudflare, those requests fail with a Cloudflare error and never reach an application.
+
+---
+
+## How applications connect
+
+A route needs a name and a port that NGINX can reach over a Docker network. No application publishes a host port.
+
+<Tabs id="nginx-application-networks" items={['Compose applications', 'Non-Compose applications']}>
+<Tab value="Compose applications">
+
+Compose applications and one-click services each have their own network. On this server, their web-facing services also join the shared `nginx-proxy` network with an alias. In a resource's Compose file in Coolify, that looks like this:
+
+```yaml
+services:
+  web:
+    # The service's other settings stay here.
+    networks:
+      nginx-proxy:
+        aliases:
+          - example-app
+
+networks:
+  nginx-proxy:
+    external: true
+```
+
+NGINX reaches the application as `example-app` on the port it listens on inside the container. The network is added next to the service's existing networks; it does not replace them.
+
+Each application has its own alias. Docker also registers Compose service names on the network, so a name such as `web` could match containers from several stacks.
+
+An early problem was adding aliases to the networks Coolify creates for each resource. Coolify can remove those aliases when it generates the deployment configuration. Aliases on the separate `nginx-proxy` network are kept.
+
+Only the containers NGINX needs to reach join this network. Databases and other internal services stay on the resource's own network.
+
+</Tab>
+<Tab value="Non-Compose applications">
+
+Applications that do not use Docker Compose, such as those built with Nixpacks, a Dockerfile, or a Docker image, use the `coolify` network by default. NGINX is on that network too.
+
+Coolify gives these containers a new name on each deployment, so a route cannot rely on the container name. Instead, each application has an alias set in the **Network aliases** field, in the **Networking** section of its configuration in Coolify. For example: `example-api`.
+
+Coolify adds those aliases to the container on the `coolify` network on every deployment, so NGINX always reaches the application as `example-api` on its internal port. No change to a Compose file is needed.
+
+</Tab>
+</Tabs>
+
+Shared networks are one option. A proxy can also join a resource's own network or connect through a published host port. [Custom proxy networking](/core/networking/proxy/custom/overview#connect-the-proxy-to-resources) covers those options and the firewall rules that published ports need.
+
+---
+
+## Domain files
+
+Each domain has its own file in `hosts/`. Changing a domain in Coolify does not change these files; a new domain means a new file and a reload.
+
+<Tabs id="nginx-host-examples" items={['Application', 'Private application', 'Redirect', 'Coolify dashboard']}>
+<Tab value="Application">
+
+```nginx title="config/versions/3/hosts/app.example.com.conf"
+upstream app_example_com {
+    zone app_example_com 64k;
+    server example-app:3000 resolve;
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name app.example.com;
+
+    ssl_certificate /certs/certificates/example.com.crt;
+    ssl_certificate_key /certs/certificates/example.com.key;
+    client_max_body_size 100m;
+
+    location / {
+        proxy_pass http://app_example_com;
+        include /etc/nginx/managed/current/proxy.conf;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_read_timeout 60s;
+    }
+}
+```
+
+Every `upstream` name is unique across the host files. The `Upgrade` and `Connection` lines carry WebSocket connections; see [NGINX WebSocket proxying](https://nginx.org/en/docs/http/websocket.html).
+
+`client_max_body_size` limits uploads. NGINX's default is 1 MB, which breaks most file uploads, so each host sets its own value. A photo library on this server uses `0`, which removes the limit.
+
+</Tab>
+<Tab value="Private application">
+
+Internal tools such as Grafana listen only on the private listener. They are reachable over the VPN and not from the internet:
+
+```nginx title="config/versions/3/hosts/grafana.example.com.conf"
+upstream grafana_example_com {
+    zone grafana_example_com 64k;
+    server grafana:3000 resolve;
+}
+
+server {
+    listen 8443 ssl;
+    http2 on;
+    server_name grafana.example.com;
+
+    ssl_certificate /certs/certificates/example.com.crt;
+    ssl_certificate_key /certs/certificates/example.com.key;
+
+    location / {
+        proxy_pass http://grafana_example_com;
+        include /etc/nginx/managed/current/proxy.conf;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+}
+```
+
+The domain's DNS record points to the VPN address. Because the certificate is a wildcard issued through DNS-01, the host does not need to be public to get one.
+
+</Tab>
+<Tab value="Redirect">
+
+A host that only redirects has no upstream:
+
+```nginx title="config/versions/3/hosts/old.example.com.conf"
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name old.example.com;
+
+    ssl_certificate /certs/certificates/example.com.crt;
+    ssl_certificate_key /certs/certificates/example.com.key;
+
+    location / {
+        return 301 https://new.example.com$request_uri;
+    }
+}
+```
+
+`301` and `308` mark a permanent move, `302` and `307` a temporary one. `307` and `308` keep the request method, so a `POST` stays a `POST`.
+
+</Tab>
+<Tab value="Coolify dashboard">
+
+The Coolify dashboard has three targets: the UI on port `8080`, realtime updates on `6001`, and the web terminal on `6002`. Sending everything to port `8080` would break live updates and the terminal. On this server, the dashboard is a private host on the `8443` listener.
+
+```nginx title="config/versions/3/hosts/coolify.example.com.conf"
+upstream coolify_ui {
+    zone coolify_ui 64k;
+    server coolify:8080 resolve;
+}
+
+upstream coolify_realtime {
+    zone coolify_realtime 64k;
+    server coolify:6001 resolve;
+}
+
+upstream coolify_terminal {
+    zone coolify_terminal 64k;
+    server coolify:6002 resolve;
+}
+
+server {
+    listen 8443 ssl;
+    http2 on;
+    server_name coolify.example.com;
+
+    ssl_certificate /certs/certificates/example.com.crt;
+    ssl_certificate_key /certs/certificates/example.com.key;
+    client_max_body_size 256m;
+
+    location / {
+        proxy_pass http://coolify_ui;
+        include /etc/nginx/managed/current/proxy.conf;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_read_timeout 60s;
+        proxy_request_buffering off;
+    }
+
+    location /app {
+        proxy_pass http://coolify_realtime;
+        include /etc/nginx/managed/current/proxy.conf;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_read_timeout 60s;
+        proxy_request_buffering off;
+    }
+
+    location /terminal/ws {
+        proxy_pass http://coolify_terminal;
+        include /etc/nginx/managed/current/proxy.conf;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_read_timeout 60s;
+        proxy_request_buffering off;
+    }
+}
+```
+
+All three targets are the `coolify` container, reached through the `coolify` network. Recent Coolify releases removed the separate `coolify-realtime` container and serve realtime updates and the terminal from `coolify` itself; see [realtime migration](/core/instance-management/reverb-migration).
+
+`proxy_request_buffering off` streams uploads, such as backup files, to Coolify instead of storing them in NGINX first. `client_max_body_size 256m` matches Coolify's own upload limit, so a large server transfer file is not rejected by NGINX.
+
+</Tab>
+</Tabs>
+
+The setup serves HTTPS only. Without a listener on port `80`, `http://` URLs do not redirect to HTTPS at the origin. On this server, Cloudflare's **Always Use HTTPS** setting does that redirect. A setup without Cloudflare would need a `listen 80` server that returns `301` to the HTTPS URL.
+
+---
+
+## Keep targets stable across redeploys
+
+A redeployed container can keep its name but get a new IP address. By default, NGINX resolves a name only when it loads the configuration and keeps using that address.
+
+Each upstream in this setup combines three parts:
+
+- `resolver 127.0.0.11 valid=10s` in `nginx.conf`, so NGINX asks Docker's DNS again after 10 seconds.
+- `zone` in the `upstream` block, so the resolved address is shared by the worker processes.
+- `resolve` on the `server` line, so NGINX keeps watching that name.
+
+Together, they let NGINX find the new container without a reload. Open-source NGINX supports `resolve` from version 1.27.3; see the [upstream module documentation](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#server).
+
+`resolve` also lets NGINX start while an application is down. The route returns `502` and recovers when the container comes back. With a plain `proxy_pass http://example-app:3000;`, NGINX would refuse to start if that name did not resolve.
+
+In a redeploy test, a route returned `502` for about half a second before the new container answered.
+
+One delay was much longer. On the test server, the NetBird DNS resolver returned an answer NGINX rejected, and NGINX waited for the default 30-second resolver timeout. `resolver_timeout 2s` reduced that delay.
+
+---
+
+## Certificates with Lego
+
+Lego issues wildcard certificates through Cloudflare DNS-01 challenges. It runs as a short-lived container, writes the certificates to `certs/`, and exits. NGINX only reads the certificate files and never sees the Cloudflare tokens.
+
+### Tokens
+
+Each Cloudflare account has an API token with **Zone: Read** and **DNS: Edit** for the zones its certificates cover. Each token is in its own file in `secrets/`:
+
+```sh title="/data/nginx-proxy/secrets/cloudflare.env"
+CF_DNS_API_TOKEN=your-cloudflare-api-token
+```
+
+No `CLOUDFLARE_*` or `CF_*` variable is set in the container's environment. A global variable would take priority over the env file and could make Lego use the wrong account.
+
+### Certificate list
+
+Lego v5 reads all accounts, challenges, and certificates from one file. Each entry under `challenges` points to one Cloudflare account's token file:
+
+```yaml title="/data/nginx-proxy/lego.yml"
+storage: /data
+servers:
+  letsencrypt:
+    url: https://acme-v02.api.letsencrypt.org/directory
+accounts:
+  main:
+    server: letsencrypt
+    email: 'admin@example.com'
+    acceptsTermsOfService: true
+challenges:
+  'cloudflare-main':
+    dns:
+      provider: cloudflare
+      envFile: '/secrets/main.env'
+  'cloudflare-second':
+    dns:
+      provider: cloudflare
+      envFile: '/secrets/second.env'
+certificates:
+  'example.com':
+    challenge: 'cloudflare-main'
+    account: main
+    domains: ['example.com', '*.example.com']
+    renew:
+      disableRandomSleep: true
+  'example.org':
+    challenge: 'cloudflare-second'
+    account: main
+    domains: ['example.org', '*.example.org']
+    renew:
+      disableRandomSleep: true
+```
+
+A wildcard covers one level only: `*.example.com` covers `app.example.com` but not `api.app.example.com`.
+
+`disableRandomSleep` matters because Lego runs from cron. Without it, Lego waits up to 8 minutes per certificate when its output is not a terminal.
+
+Lego writes `certs/certificates/example.com.crt`, which holds the certificate and its chain, and `example.com.key`. Those are the paths in the domain files. The first run issued two certificates in about 53 seconds. Later runs take a couple of seconds and renew only what is due.
+
+### Daily renewal
+
+A script runs Lego every day from the host's cron and reloads NGINX only when a certificate file changed:
+
+```sh title="/data/nginx-proxy/lego-renew.sh"
+#!/bin/sh
+set -eu
+DIR=/data/nginx-proxy
+
+snapshot() { cksum "$DIR"/certs/certificates/*.crt 2>/dev/null || true; }
+before=$(snapshot)
+
+docker run --rm --name nginx-proxy-lego \
+  --user 55555:55555 \
+  -v "$DIR/certs:/data" \
+  -v "$DIR/lego.yml:/config/lego.yml:ro" \
+  -v "$DIR/secrets:/secrets:ro" \
+  goacme/lego:v5.5.2 --config /config/lego.yml
+
+if [ "$(snapshot)" != "$before" ]; then
+  docker kill -s HUP nginx-proxy
+fi
+```
+
+```sh title="/etc/cron.d/nginx-proxy-lego"
+17 4 * * * root /data/nginx-proxy/lego-renew.sh 2>&1 | logger -t nginx-proxy-lego
+```
+
+The Lego container runs as the same UID as NGINX. Its fixed name prevents overlapping runs: a second run cannot start while the first container still exists.
+
+Updating the certificate files alone is not enough. NGINX serves a renewed certificate only after the `HUP` signal makes it reload. Running the renewal from the host's cron, not from a container, keeps it independent of anything else on the server.
+
+---
+
+## Logs
+
+NGINX writes `access.log` and `error.log` to `logs/`. The `logrotate` container runs a small loop that copies and truncates a file once it passes 20 MB, keeping five old copies:
+
+```sh title="/data/nginx-proxy/rotate.sh"
+#!/bin/sh
+set -u
+max=$(( ${LOG_ROTATE_MB:-20} * 1024 * 1024 ))
+keep=${LOG_KEEP:-5}
+
+while true; do
+  for f in /logs/access.log /logs/error.log; do
+    size=$(stat -c %s "$f" 2>/dev/null || echo 0)
+    if [ "$size" -ge "$max" ]; then
+      i=$keep
+      rm -f "$f.$i"
+      while [ "$i" -gt 1 ]; do
+        j=$((i - 1))
+        [ -f "$f.$j" ] && mv "$f.$j" "$f.$i"
+        i=$j
+      done
+      cp -p "$f" "$f.1" && : > "$f"
+    fi
+  done
+  sleep 60
+done
+```
+
+Copying and truncating keeps the same file open, so NGINX does not need a signal to reopen its logs. A few lines written between the copy and the truncate can be lost, which is acceptable here.
+
+Because each line is JSON, standard tools answer most questions. For example, the latest server errors:
+
+```sh
+jq -c 'select(.status >= 500)' /data/nginx-proxy/logs/access.log | tail -n 20
+```
+
+The error log separates the common failures: `connect() failed` for an application that is down, `could not be resolved` for a name Docker does not know, and `upstream timed out` for an application that is too slow.
+
+---
+
+## Changes and rollbacks
+
+Editing a file does not change what NGINX serves. NGINX reads its configuration only at startup and on a reload.
+
+A change in this setup goes into a copy of the current version. `current` then points at the copy, NGINX tests it, and the reload happens only if the test passes:
+
+```sh
+cd /data/nginx-proxy/config
+
+old=$(readlink current)
+new=versions/$(date +%Y%m%d-%H%M%S)
+cp -a "$old" "$new"
+
+# ... the files in $new are edited here ...
+
+ln -sfn "$new" current
+if docker exec nginx-proxy nginx -t -c /etc/nginx/managed/current/nginx.conf; then
+  docker kill -s HUP nginx-proxy
+else
+  ln -sfn "$old" current
+fi
+```
+
+If the test fails, `current` goes back to the old version. The running NGINX is not affected, because it has not reloaded. A later rollback is the same: `current` points at an older version, followed by a reload.
+
+During a reload, NGINX starts new worker processes with the new configuration, and the old workers finish their open requests before they exit. See [NGINX reload behavior](https://nginx.org/en/docs/control.html).
+
+<Callout type="info" title="Why a link instead of editing in place">
+
+If NGINX restarted while active files were half edited, it would load the half-finished change. A version folder is complete before `current` points at it, and the previous version stays on disk.
+
+The link is inside the mounted `config` folder. Replacing the mounted folder itself would leave the container reading the old one.
+
+</Callout>
+
+The reload uses `docker kill -s HUP` instead of `nginx -s reload`. NGINX runs with a custom configuration path and PID file, and `nginx -s reload` without the same `-c` option would look for the wrong PID file.
+
+A reload does not apply Docker changes. A change to ports, networks, mounts, or the image in `compose.yaml` needs `docker compose up -d` to recreate the container.
+
+---
+
+## Switching production traffic
+
+Traefik and NGINX both need the server's port `443`, so they cannot run at the same time on the same address. Everything was ready before Traefik stopped:
+
+- A domain file for every domain Traefik served, including redirects, WebSocket routes, and the Coolify dashboard.
+- Every Compose application connected to `nginx-proxy`, every other application given a network alias in Coolify, and all of them redeployed.
+- Every certificate issued and present in `certs/certificates/`.
+- The configuration tested with `docker compose run --rm nginx nginx -t -c /etc/nginx/managed/current/nginx.conf`. `docker compose run` does not publish ports, so the test ran while Traefik still held port `443`.
+
+The switch itself was stopping Traefik, selecting **Custom (None)** in Coolify, and starting the NGINX project. The interruption lasted about 20 seconds. The [Custom proxy overview](/core/networking/proxy/custom/overview#switch-to-custom-none) covers the Coolify side of that switch.
+
+A working homepage did not prove the switch was complete. Logins, uploads, WebSockets, redirects, and the Coolify dashboard's live updates and terminal all needed a check, followed by a redeploy to confirm NGINX found the new container.
+
+The old Traefik configuration in `/data/coolify/proxy` stayed on the server as the way back: stop NGINX, select Traefik in Coolify, and start the proxy again.

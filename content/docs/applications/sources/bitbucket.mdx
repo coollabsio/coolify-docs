@@ -16,13 +16,13 @@ Add the deploy key's public key under the repository's access-key settings.
 
 ## Configure automatic deployments
 
-1. Open **Configuration > Webhooks** in the Coolify application.
+1. Open **Webhooks** in the Coolify application.
 2. Copy the **Bitbucket** URL.
-3. Enter and save **Bitbucket Webhook Secret**.
+3. Enter **Webhook secret** in the **Bitbucket** section, then select **Save changes**.
 4. In Bitbucket, open the repository webhook settings.
 5. Enter the URL and configure the same secret when supported by the provider flow.
 6. Enable **Repository push**.
 7. For previews, enable pull request **Created**, **Updated**, **Merged**, and **Declined**.
-8. Enable **Configuration > Advanced > Auto Deploy** in Coolify.
+8. Open **Advanced > Deployment** and choose **Deploy on push (webhooks)** in **Auto deploy** in Coolify.
 
-Push to the configured branch and inspect **Deployments**. Open or update a pull request to verify preview events separately.
+Push to the configured branch and inspect **Deployment Logs**. Open or update a pull request to verify preview events separately.

@@ -55,7 +55,7 @@ Replace `authentik-server` with the actual internal hostname. Do not use the pub
 <Tabs items={['Standard application', 'Docker Compose or service']}>
 <Tab value="Standard application">
 
-Open the application **General** page and find **Container Labels**. Disable **Readonly labels**, then append the file-provider middleware to the existing HTTPS router:
+Open the application **General** page and find **Container labels**. Set **Label management** to **Managed manually (edit labels yourself)**, then append the file-provider middleware to the existing HTTPS router:
 
 ```ini
 traefik.http.routers.https-0-<resource-id>.middlewares=gzip # [!code --][!code focus]

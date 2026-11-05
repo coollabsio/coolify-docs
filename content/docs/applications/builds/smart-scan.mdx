@@ -1,0 +1,50 @@
+---
+title: Smart Scan
+description: Detect Dockerfiles, Compose files, ports, and environment templates while creating a Git application.
+---
+
+# Smart Scan
+
+Smart Scan inspects a Git repository while you create an application. It suggests a build pack and file path, reads the first supported Dockerfile `EXPOSE` port, and offers environment-template variables for review.
+
+It is available in the Public Repository, GitHub/GitLab App, and deploy-key creation forms. The selected deployment server must be reachable and able to clone the repository with the configured source or key.
+
+## Scan a repository
+
+1. Select the repository source, server, repository, and branch in the new-application form.
+2. Review **Base directory**. For a monorepo, set it to the directory of the application you want to deploy.
+3. In **Smart Scan**, select **Scan repository** or **Scan again**. Some source flows scan automatically after loading the repository.
+4. Review the suggested **Build pack**, file, and port before selecting **Continue**.
+
+Scan again after changing the branch or base directory. A new scan resets the previous scan's environment-import selection, so review and confirm that import again.
+
+## How suggestions are selected
+
+| Repository content | Result |
+| :--- | :--- |
+| Compose file directly in the base directory | Suggests Docker Compose. This takes priority over a Dockerfile in the same directory. |
+| Dockerfile directly in the base directory | Suggests Dockerfile when no Compose file is present there. |
+| Files found only in subdirectories | Lists them for selection without automatically changing the build pack. |
+| No Dockerfile or Compose file | Keep or select a build pack such as Railpack, Nixpacks, or Static manually. |
+| Selected Dockerfile has a numeric `EXPOSE` port | Uses that port as the suggested internal port. |
+| Selected Dockerfile has no supported `EXPOSE` port | Uses the form's default port; verify what the application actually listens on. |
+
+The scan recognizes Dockerfile names and variants such as `Dockerfile.production`, and `compose.yml`, `compose.yaml`, `docker-compose.yml`, or `docker-compose.yaml`. When several files are found, choose the one intended for this deployment. You can also enter a file path manually.
+
+File paths are relative to **Base directory**. For example, with `/apps/api` as the base and `/Dockerfile` as the Dockerfile location, the repository path is `/apps/api/Dockerfile`. Avoid repeating `/apps/api` in both fields. The configuration form displays the full path and warns about repeated base-directory segments.
+
+## Import environment templates
+
+Smart Scan looks for supported templates directly in the base directory: `.env.example`, `.env.sample`, `.env.template`, `.env.dist`, and `.env.local.example`.
+
+1. Select **Review** beside the detected env file.
+2. If multiple templates exist, choose **Env file**.
+3. Replace example values with the configuration your deployment needs.
+4. Select **Import** to confirm the variables. Select **Edit** to review them again or **Remove import** to cancel.
+5. Select **Continue** in the application form to create the application and save the confirmed variables.
+
+Only confirmed imports are saved. Review the application's **Environment Variables** page before deploying; example files can contain placeholders or development defaults. Templates are read up to 64 KiB, and the import creates production variables rather than preview-variable copies.
+
+## When scanning fails
+
+Check the repository URL, branch, private-repository permissions, deploy key or Git App, and server connectivity. A failed scan does not prevent you from selecting the build pack, file path, port, and variables manually.
