@@ -34,6 +34,26 @@ Coolify records the active team when the token is created. Switching teams later
 
 ---
 
+## Tokens limited to projects, environments, or resources
+
+You can limit a token to selected projects, environments, or resources. Such a token:
+
+- Can use only the project, application, service, database, and deployment endpoints.
+- Cannot read or reference team and server shared variables.
+- Cannot use team credentials, such as private keys, git sources, and S3 storages, that its resources do not use yet.
+- Can place resources only on servers that already run a resource inside its scope.
+
+<Callout type="warn">
+A limit is not a server boundary. A token with `write` can deploy a Docker Compose file with bind mounts of the host file system or privileged containers. It therefore has root access to every server that runs a resource inside its scope. When staging and production use the same server, a `write` token for staging can reach production.
+</Callout>
+
+To keep a limited token away from other resources:
+
+- Give it only `read` and `deploy` when it does not need to change configuration.
+- Run the resources of each environment on their own servers.
+
+---
+
 ## Sensitive response data
 
 Endpoint access and sensitive-data access are separate checks. A request with `read` may succeed while passwords, private keys, environment values, logs, or Compose content remain redacted.
