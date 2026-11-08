@@ -75,4 +75,11 @@ Confirm that the task is enabled, the application or service is running, and its
 Open the task and set **Container** or **Service** to the component that contains the command. Save the change before running the task again.
 
 </Accordion>
+<Accordion title="A task fails and its duration is the same as its timeout">
+
+Coolify stops a command that does not exit before **Timeout (seconds)**. The execution shows **Failed** with the output `The command on the server timed out after <timeout> seconds.`, even if the command already did its work.
+
+Make sure that the command exits when its work is done. For example, it must not wait for input or keep a process in the foreground. Click **Execute now** and check the duration. If the task needs more time, increase **Timeout (seconds)**.
+
+</Accordion>
 </Accordions>
