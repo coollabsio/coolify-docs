@@ -1,6 +1,6 @@
 ---
 title: Notification Events
-description: Choose which deployment, backup, scheduled task, container, and server events Coolify sends through each notification channel.
+description: Choose which deployment, resource, backup, scheduled task, and server events Coolify sends through each notification channel.
 ---
 
 # Notification events
@@ -13,12 +13,39 @@ Changing an event for one channel does not change the other channels.
 
 | Setting | When Coolify sends the notification |
 | :--- | :--- |
-| **Deployment Success** | An application deployment completes successfully. |
-| **Deployment Failure** | An application deployment fails. |
-| **Resource status changes** | An application or resource container stops unexpectedly or restarts automatically. |
-| **Restart limit reached** | A resource reaches its automatic restart limit and is stopped. |
+| **Deployment success** | An application deployment completes successfully. |
+| **Deployment failure** | An application deployment fails. |
 
-Pull request preview deployments use the same **Deployment Success** and **Deployment Failure** selections as regular application deployments.
+Pull request preview deployments use the same **Deployment success** and **Deployment failure** selections as regular application deployments.
+
+---
+
+## Resources
+
+| Setting | When Coolify sends the notification |
+| :--- | :--- |
+| **Resource status changes** | An application, preview, service, or database stops unexpectedly, for example after a crash or `docker kill`, or Coolify restarts a container automatically. |
+| **Restart limit reached** | A resource reaches its automatic restart limit and is stopped. |
+| **Image vulnerabilities** | [Image scanning](#image-vulnerabilities) finds security problems in the images of your resources. |
+
+### Resource status changes
+
+When a resource stops unexpectedly, Coolify waits 2 minutes and checks the resource again. It sends the notification only when the resource is still stopped. A resource that Docker restarted or a deployment replaced in that time sends no notification.
+
+- A stop, restart, or redeploy that you start from Coolify sends no notification.
+- The same resource sends at most one notification in 15 minutes.
+- An automatic restart of the same container, for example the proxy, sends at most one notification an hour.
+
+### Image vulnerabilities
+
+When you turn on container image vulnerability scanning, Coolify sends two kinds of notifications through this setting:
+
+- **An alert right after a scan** that finds new problems that attackers are using or are likely to use. The alert names the resource and the update that fixes the problems, or tells you that no fixed version exists yet.
+- **A daily security digest** when something changed: resources with new problems that an update fixes, resources that need a check, ignored vulnerabilities whose ignore ends within 7 days, and servers whose scans failed 2 days in a row.
+
+Chat and webhook messages do not contain vulnerability IDs. The email lists the problems, at most 10.
+
+By default, **Image vulnerabilities** is on for email and off for the other channels.
 
 ---
 
@@ -26,12 +53,14 @@ Pull request preview deployments use the same **Deployment Success** and **Deplo
 
 | Setting | When Coolify sends the notification |
 | :--- | :--- |
-| **Backup Success** | A scheduled database backup completes successfully. |
-| **Backup Failure** | A scheduled database backup fails, or the local backup succeeds but its S3 upload fails. |
+| **Backup success** | A scheduled database backup or [storage backup](/core/persistent-storage/storage-mounts/backups) completes successfully. |
+| **Backup failure** | A scheduled database backup or storage backup fails, the local backup succeeds but its S3 upload fails, an enabled backup schedule has no recent run, or a storage backup recovery fails. |
 
-<Callout type="info" title="S3 upload warnings use Backup Failure">
-When Coolify creates the local backup but cannot upload its S3 copy, it sends a warning through channels that have **Backup Failure** selected.
+<Callout type="info" title="S3 upload warnings use Backup failure">
+When Coolify creates the local backup but cannot upload its S3 copy, it sends a warning through channels that have **Backup failure** selected. While the S3 upload keeps failing, Coolify sends this warning at most once a day.
 </Callout>
+
+See [Repeated failures](#repeated-failures) for how often Coolify sends backup failures.
 
 ---
 
@@ -39,8 +68,12 @@ When Coolify creates the local backup but cannot upload its S3 copy, it sends a 
 
 | Setting | When Coolify sends the notification |
 | :--- | :--- |
-| **Scheduled Task Success** | A scheduled application or service task completes successfully. |
-| **Scheduled Task Failure** | A scheduled application or service task fails. |
+| **Scheduled task success** | A scheduled application or service task completes successfully. |
+| **Scheduled task failure** | A scheduled application or service task fails, or Coolify disables the task because it keeps failing. |
+
+Coolify disables a scheduled task automatically after 10 failed runs in a row when the first of these failures is more than 24 hours old. It sends one notification through **Scheduled task failure**, and the task page shows the reason. Enable the task again to clear the reason.
+
+A task that skips a run because the application or service has no running container sends no notification. The skipped run does not count toward the automatic disable.
 
 ---
 
@@ -48,13 +81,48 @@ When Coolify creates the local backup but cannot upload its S3 copy, it sends a 
 
 | Setting | When Coolify sends the notification |
 | :--- | :--- |
-| **Docker Cleanup Success** | An automatic Docker cleanup job completes successfully. |
-| **Docker Cleanup Failure** | An automatic Docker cleanup job fails. |
+| **Docker cleanup success** | An automatic Docker cleanup job completes successfully. |
+| **Docker cleanup failure** | An automatic Docker cleanup job fails. |
 | **Disk usage warning** (**Server disk usage** on Email) | Server disk usage exceeds the threshold configured for that server. |
-| **Server Reachable** | A previously unreachable server becomes reachable again. |
-| **Server Unreachable** | Coolify cannot reach a server after two consecutive checks. |
-| **Server Patching** | Coolify finds operating system updates during a patch check, or the patch check fails. |
-| **Traefik Proxy Outdated** | Coolify detects one or more servers running an outdated Traefik version. |
+| **Server reachable** | A previously unreachable server becomes reachable again. |
+| **Server unreachable** | Coolify cannot reach a server after two consecutive checks, or the SSH host key of a server changed. |
+| **Server patching** | Coolify finds operating system updates during a patch check, or the patch check fails. |
+| **Traefik proxy outdated** | Coolify detects a server that runs an outdated Traefik version, also when a newer patch version of the running branch is available. Coolify sends one notification for each new version, not one for each check. |
+
+<Callout type="warning" title="SSH host key changes use Server unreachable">
+Coolify saves the SSH host key of a server on the first connection. When the server shows a different key later, Coolify notifies the channels that have **Server unreachable** selected. The message links to the **Security** page of the server, where you compare the new key and trust it or reset it. Coolify sends this notification at most once an hour for each server. See [When the host key changes](/core/infrastructure/servers/security#when-the-host-key-changes).
+</Callout>
+
+High-disk alerts default to a 24-hour repeat interval per server; configure the interval under the server’s **Advanced** settings.
+
+---
+
+## Repeated failures
+
+When a scheduled job keeps failing, Coolify does not send a notification for each failed run. This applies to scheduled tasks, database backups, storage backups, and Docker cleanup.
+
+1. Coolify sends a notification for the first failure.
+2. While the job keeps failing, Coolify sends at most one failure notification a day.
+3. The first successful run after a failure notification sends one "works again" notification. It goes to the channels that have the failure event selected, for example **Backup failure**.
+
+Coolify never disables backups or Docker cleanup automatically, so they start again by themselves after an outage. Only scheduled tasks can be [disabled automatically](#scheduled-tasks).
+
+---
+
+## Notifications that are always sent
+
+Some notifications do not have an event setting. Coolify sends them through every enabled channel of the team:
+
+| Notification | When Coolify sends it |
+| :--- | :--- |
+| API token expires soon | An API token of the team expires within 7 days. A token that lives 7 days or less gets the warning 24 hours before it expires. |
+| API token sends many failed requests | An API token reached the limit of failed requests, and Coolify answers its requests with `429` until the failures stop. Coolify sends this at most once a day for each token. |
+| SSL certificates renewed | Coolify renewed SSL certificates that it manages, and the resources that use them need a manual redeployment. |
+
+These notifications go to every enabled channel except email:
+
+- Automatic updates: the root team gets a message when an automatic update of Coolify starts, fails, or finishes. A failure message contains the reason and a link to the update settings.
+- The message that Coolify [turned off a channel](/core/notifications/overview#disabled-channels) after failed deliveries.
 
 ---
 
@@ -68,5 +136,3 @@ After you configure a channel, select its test action:
 A test confirms that the current channel credentials can deliver a message. It does not trigger or verify every selected event.
 
 For webhook event identifiers and fields, see the [webhook payload reference](/core/notifications/channels/webhook/payload-reference).
-
-High-disk alerts default to a 24-hour repeat interval per server; configure the interval under the server’s **Advanced** settings. A proxy stuck in a restart loop sends at most one container-restarted notification per hour.
