@@ -163,7 +163,9 @@ Coolify does not accept these plugins and directives:
 | Not accepted | Where |
 | :--- | :--- |
 | `lua`, `wasm`, `exec`, `exec_wasi`, and `file` plugins | **Fluent Bit configuration** |
-| `@INCLUDE` and `plugins_file` | **Fluent Bit configuration** |
+| `@` directives other than `@SET`, such as `@INCLUDE`, and the `plugins_file` key | **Fluent Bit configuration** |
+| Sections other than `[SERVICE]`, `[INPUT]`, `[FILTER]`, `[OUTPUT]`, `[PARSER]`, and `[MULTILINE_PARSER]` | **Fluent Bit configuration** |
+| `@` directives | **Parser configuration** |
 | Sections other than `[PARSER]` and `[MULTILINE_PARSER]` | **Parser configuration** |
 
 ---
