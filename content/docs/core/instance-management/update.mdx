@@ -36,6 +36,33 @@ Coolify waits for the backup to finish. If the database backup fails, the update
 
 The option does not create a backup configuration for you. Without a configured instance backup, the update proceeds without this backup step. Running `upgrade.sh` directly also requires you to [create a backup yourself](/core/backup-and-recovery/instance-backup). Keep the instance `APP_KEY` separately so you can restore encrypted data.
 
+## Choose an update channel
+
+In **Settings > Updates**, **Channel** sets the versions this instance upgrades to. Select a channel, then click **Save changes**.
+
+| Channel | Installs | Image tags |
+| :--- | :--- | :--- |
+| **Stable** | Stable releases. This is the default. | `4.7.1`, moving `latest` |
+| **Preview** | Betas and release candidates, then the stable release. | `4.6.0-beta.1`, moving `preview` |
+| **Nightly** | A build of the next version, two times each day. Nightly builds get less testing. | `4.6.0-alpha.0.20261026.1`, moving `nightly` |
+| **Custom image** | The image tag that you enter in **Image tag**, such as `pr-1234` for the build of pull request 1234. | `ghcr.io/coollabsio/coolify:pr-<number>` |
+
+An instance installs the newest version of its channel and of the more stable channels. For example, the **Preview** channel also installs stable releases.
+
+<Callout type="warning" title="Nightly builds can break the instance">
+Breaking changes are possible in nightly builds, including database changes that a stable release does not expect. Back up first, and use **Nightly** only on an instance that you can rebuild.
+</Callout>
+
+When you switch to a more stable channel, the instance keeps the updates of the old channel until the stable release of the installed version is out. For example, an instance on a nightly build of `4.6.0` that switches to **Stable** gets the nightly builds of `4.6.0` until `4.6.0` is released.
+
+**Custom image** pulls the tag from `ghcr.io/coollabsio/coolify`. Coolify installs it only when you click **Upgrade now** on the update page. Automatic updates pause until you select a channel again. Pull request builds are untested and can include database changes that a later release does not expect.
+
+To switch the channel from the command line, run this command on the Coolify server. It accepts `stable`, `preview`, or `nightly`:
+
+```sh
+docker exec coolify php artisan app:update-channel nightly
+```
+
 ## Choose an update path
 
 <Tabs id="coolify-update-path" items={['Automatic', 'Dashboard', 'Terminal']}>
@@ -72,6 +99,10 @@ During an update, Coolify restarts to apply the new version. The dashboard is un
 
 Click **Check now** to check for a new version immediately. This does not install the update.
 
+### Update notifications
+
+Coolify sends a notification to the root team when an automatic update starts, fails, or finishes. It uses the enabled [notification channels](/core/notifications/overview) of the root team, except email. If the new version does not start within 30 minutes, Coolify reports the update as failed.
+
 </Tab>
 
 <Tab value="Dashboard" icon={Refresh23}>
@@ -86,19 +117,19 @@ Open the **Settings** page, then select **Updates**.
 
 <ZoomableImage src="/docs/images/core/instance-management/update/dashboard-update-check-frequency.webp" alt="Check frequency field and Check now button in Update checks settings" />
 
-When a new version is available, Coolify shows **Update available** beside the version number at the top left of the sidebar. **Check frequency** controls how often Coolify checks the [versions file on the CDN](https://cdn.coollabs.io/coolify/versions.json). To check immediately, click **Check now** in the **Update checks** section. This checks for an update but does not install it.
+When a new version is available, Coolify shows **Update available** beside the version number at the top left of the sidebar. **Check frequency** controls how often Coolify checks the [versions file on the CDN](https://cdn.coollabs.io/coolify/versions.json). To check immediately, click **Check now** in the **Updates** section. This checks for an update but does not install it.
 
 ### Update Coolify
 
 <ZoomableImage src="/docs/images/core/instance-management/update/dashboard-upgrade-entry-points.webp" alt="Upgrade Now button and Update available badge highlighted as update entry points" />
 
-Click **Upgrade Now** in the **Update Coolify** section, or click **Update available** beside the version number in the sidebar. Both options open the upgrade modal.
+Click **Upgrade now** in the **Updates** section, or click **Update available** beside the version number in the sidebar. Both options open the upgrade modal.
 
 ### Review update version
 
 <ZoomableImage src="/docs/images/core/instance-management/update/dashboard-upgrade-confirmation.webp" alt="Upgrade available modal showing the current and new version, with Upgrade Now highlighted" />
 
-Review the current and new version in the modal. Check that no deployments are pending or running, because deployments during the update will fail. Then click **Upgrade Now** to start the update.
+Review the current and new version in the modal. The modal also shows the update channel, with a **Change channel** link. Check that no deployments are pending or running, because deployments during the update will fail. Then click **Upgrade now** to start the update.
 
 ### Wait for the update to finish
 
@@ -106,13 +137,15 @@ Review the current and new version in the modal. Check that no deployments are p
 
 An update can take longer while the configured instance backup runs. The remaining update time depends on network conditions and server resources. Coolify restarts while applying the update, so the dashboard may be unavailable briefly.
 
+If the update fails before the upgrade script starts, for example because the database backup fails, the modal shows the error.
+
 If the progress modal remains on **Restart** for more than five minutes, refresh the page. Coolify may have finished updating but failed to reload the page automatically. If you see a **Gateway Timeout** or **Bad Gateway** error, wait two minutes before refreshing. If the error remains after refreshing, check the update logs under `/data/coolify/source/upgrade-*`.
 
 ### Upgrade complete
 
 <ZoomableImage src="/docs/images/core/instance-management/update/dashboard-upgrade-complete.webp" alt="Upgrade complete modal confirming the new version, with Reload Now button" />
 
-When all update stages are complete, Coolify confirms the new version and reloads the page. If the page does not reload automatically, click **Reload Now**.
+When all update stages are complete, Coolify confirms the new version and reloads the page. If the page does not reload automatically, click **Reload now**.
 
 </Tab>
 
@@ -150,8 +183,12 @@ curl -fsSL https://cdn.coollabs.io/coolify/upgrade.sh | bash -s 4.3.23
 
 Replace `4.3.23` with the Coolify version you want to install. The upgrade script updates configuration files from the [versions file on the CDN](https://cdn.coollabs.io/coolify/versions.json) as part of the process.
 
+For a preview or nightly version, use the upgrade script of that channel, for example `https://cdn.coollabs.io/coolify/nightly/upgrade.sh`.
+
 <Callout type="warn" title="Specify a version">
-Do not omit the version. Without one, the script writes `COOLIFY_VERSION=latest` to `.env`, which prevents update checks from working correctly.
+The script writes the version to `LATEST_IMAGE` in `.env`, and the Coolify containers use that image tag. Without a version, the script installs the `latest` image and writes `LATEST_IMAGE=latest`. A later `docker compose up --pull always` can then install a newer release.
+
+Coolify reads its version from the image. The script removes `COOLIFY_VERSION` from `.env`. Do not add it again, because it overrides the version that Coolify shows and uses for update checks.
 </Callout>
 
 </Step>
