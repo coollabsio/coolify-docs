@@ -37,6 +37,20 @@ Owners and Admins can open **Team > General** to change the team name, descripti
 
 Team avatars use the instance's configured [Image storage](/core/instance-management/instance-settings). Check the active team before uploading an image or changing its details.
 
+## Require two-factor authentication
+
+Owners and Admins can require [two-factor authentication](/core/security/authentication/2fa) for everyone in the team:
+
+1. Open **Team > General**.
+2. In **Two-factor authentication**, select **Required for all members**. Select **Optional for members** to remove the requirement.
+3. Select **Save changes**.
+
+You must configure 2FA on your own profile before you can require it. Otherwise Coolify shows `Enable two-factor authentication on your profile before you require it for the team.`
+
+When the team requires 2FA, a person without 2FA who opens the dashboard in this team goes to the **Two-factor authentication required** page. They must configure 2FA there before they can use the team, or switch to a team that does not require it.
+
+The requirement applies to dashboard sessions only. It does not block API tokens or MCP clients.
+
 ## What the Members page shows
 
 Open **Team** in the Coolify sidebar, then select **Members**.
