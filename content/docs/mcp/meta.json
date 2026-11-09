@@ -24,6 +24,7 @@
     "capabilities/logs",
     "capabilities/environment-and-storage",
     "capabilities/integrations",
+    "capabilities/image-scanning",
     "capabilities/automation",
     "capabilities/prompts-and-resources",
     "capabilities/pagination",
