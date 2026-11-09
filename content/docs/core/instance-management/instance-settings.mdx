@@ -547,85 +547,104 @@ Click the download icon on a successful run to download its backup.
 
 <Tab value="Email" icon={Mailbox}>
 
-<ZoomableImage src="/docs/images/core/instance-management/instance-settings/email-settings-overview.webp" alt="Email selected in instance settings, with Sender, SMTP server, and Resend sections" />
+Choose one provider to send Coolify's transactional email, such as password resets and invitations. Teams that select **Use system-wide settings** on their email notification page also send through this provider.
 
-Configure the sender identity and choose SMTP or Resend to deliver Coolify's transactional email.
+### Email delivery
 
-### Sender
+Select the provider in the list next to the **Email delivery** title:
 
-<ZoomableImage src="/docs/images/core/instance-management/instance-settings/email-sender.webp" alt="Sender section with From name and From address highlighted" />
+- **None:** Coolify does not send email.
+- **SMTP:** Coolify sends email through one of your [SMTP servers](#smtp-servers).
+- **Resend:** Coolify sends email through [Resend](#resend).
 
-Sender settings are shared by SMTP and Resend.
-
-#### From name
-
-Sets the display name shown in outgoing email, such as password resets and invitations. Enter a name, then click **Save changes**.
-
-**Accepted values:**
-
-- A required text value, for example `Coolify`.
-
-#### From address
-
-Sets the sender address used for outgoing email. Enter a valid email address, then click **Save changes**.
-
-**Accepted values:**
-
-- A required email address, for example `noreply@shadowarcanist.com`.
+Only one provider sends email. When the settings of the selected provider are complete, Coolify saves the selection immediately. Otherwise, the page shows a **Not active yet** warning. Enter the provider settings, then click **Save changes**. Until you save, Coolify continues to send email with the previous provider, if one is active.
 
 ---
 
-### SMTP server
+### SMTP servers
 
-<ZoomableImage src="/docs/images/core/instance-management/instance-settings/email-smtp-server.webp" alt="SMTP server settings highlighted" />
+You can save more than one SMTP server. Coolify sends email through the server that the **SMTP server** list shows. The first server is named `Default`.
 
-Connect Coolify to an SMTP-compatible email provider.
+- **Add a server:** Click **Add server**. Enter a **Name**, optionally select a **Template**, and click **Add server**. Enter the remaining settings, then click **Save changes**. The previous server stays in the list.
+- **Switch servers:** Select another server in the **SMTP server** list. Coolify saves the change immediately and uses that server.
+- **Rename a server:** Click the edit icon next to the list, enter the new **Name**, and click **Save**.
+- **Delete a server:** Click the delete icon next to the list. Coolify then uses the next server in the list. You cannot delete the only server. To stop using SMTP, select another provider.
 
-Enter the required **Host**, **Port**, and **Encryption** values supplied by your provider. Fill the remaining fields as needed.
+A **Template** fills in the **Host**, **Port**, and **Encryption** of a common provider: PostShiba, Amazon SES (us-east-1), Brevo, Gmail, Mailgun, Mailjet, Microsoft 365, Postmark, Proton Mail, Resend, SendGrid, and Zoho Mail. The Resend and SendGrid templates also fill in the **Username**. You then enter the credentials from the provider.
 
-#### SMTP delivery
+Each server has these settings:
 
-Choose **Enabled** to send email through SMTP or **Disabled** to turn SMTP off. This selection saves immediately. Enabling SMTP turns off Resend.
+#### Sender
 
-#### Host
+Each SMTP server has its own sender, because each server usually sends from its own verified domain.
 
-Enter the SMTP server hostname provided by your email provider, for example `smtp.mailgun.org`.
+- **From name:** the display name in email from this server, for example `Coolify`. Required.
+- **From address:** the sender address of this server, for example `noreply@shadowarcanist.com`. It must be on a domain that this server can send from. Required.
 
-#### Port
+#### Connection
 
-Enter the port provided by your email provider. It must be between `1` and `65535`; common values are `587`, `465`, and `25`.
+- **Host:** the SMTP server hostname from your provider, for example `smtp.mailgun.org`. Required.
+- **Port:** the port from your provider, from `1` to `65535`. Common values are `587`, `465`, and `25`. Required.
+- **Encryption:** **StartTLS**, **TLS / SSL**, or **None**, as your provider requires.
 
-#### Encryption
+#### Authentication
 
-Select the encryption method required by your email provider:
+- **Username:** the SMTP username from your provider.
+- **Password:** the SMTP password from your provider. It is required when you enter a username.
 
-- **StartTLS**
-- **TLS / SSL**
-- **None**
+Leave both fields empty only for a relay that does not need a login, for example a local mail server. When the **Host** is the host of a template provider, both fields are required.
 
-#### Username and password
+#### Advanced
 
-Enter the credentials required by your SMTP provider. Leave these fields empty if the provider does not require authentication.
-
-#### Timeout
-
-Sets the maximum delivery time in seconds. Leave it empty to use the default mailer behavior.
-
-#### EHLO domain
-
-Optionally set the fully qualified domain Coolify sends in the SMTP EHLO command. Leave it empty to use the system default.
-
-After editing SMTP connection settings, click **Save changes**.
+- **Timeout:** the maximum delivery time in seconds. Leave it empty to use the default mailer behavior.
+- **EHLO domain:** the fully qualified domain Coolify sends in the SMTP `EHLO` command, for example `coolify.example.com`. Leave it empty to use the system default.
 
 ---
 
 ### Resend
 
-<ZoomableImage src="/docs/images/core/instance-management/instance-settings/email-resend.webp" alt="Resend delivery settings and API key highlighted" />
+Connect Coolify to [Resend](https://resend.com) to send email through that provider. Select **Resend** under **Email delivery**, then enter:
 
-Connect Coolify to [Resend](https://resend.com) to send transactional email through that provider.
+- **Resend API key:** an API key that you create in Resend. Required.
+- **From name:** the display name in email from Resend. Required.
+- **From address:** the sender address for email from Resend. It must be on a domain verified in Resend. Required.
 
-Create an API key in Resend and enter it in **API key**. The key is required when Resend is enabled. Choose **Enabled** under **Resend delivery** to use Resend, or **Disabled** to turn it off. This selection saves immediately, and enabling Resend turns off SMTP. Click **Save changes** to save the API key and sender fields.
+Click **Save changes**.
+
+Resend has its own sender. It does not use the sender of your SMTP servers. When you upgrade from a version before v4.7.0, Coolify copies the old shared sender into the Resend sender, so nothing changes until you edit it.
+
+<Callout type="warning" title="API clients">
+The API uses `resend_from_name` and `resend_from_address` for the Resend sender. `smtp_from_name` and `smtp_from_address` set only the sender of the SMTP server in use. Update API clients that set the Resend sender with the SMTP fields.
+</Callout>
+
+---
+
+### Notification sender
+
+Optionally, send notification emails from a different sender than account emails. Both fields show when a provider is selected:
+
+- **Notification from name:** the display name in notification emails. When it is empty, Coolify uses the **From name** of the provider.
+- **Notification from address:** the sender address of notification emails. When it is empty, Coolify uses the **From address** of the provider. Your SMTP provider or Resend must allow this address.
+
+Coolify uses the notification sender for:
+
+- Team notifications, such as deployments, backups, and server alerts, of teams that use the instance email settings.
+- The alert that an S3 storage cannot connect.
+- The alert to team admins that Coolify disabled a notification channel after failed deliveries.
+
+Account emails, such as password resets, invitations, and email changes, always use the **From address** of the provider.
+
+<Callout type="info" title="Keep the sender reputation apart">
+Use a separate subdomain for the notification sender, for example `alerts@notifications.shadowarcanist.com`. Then many alerts do not affect the delivery of account emails.
+</Callout>
+
+---
+
+### Send test
+
+Click **Send test** next to the **Email delivery** title, enter the **Recipient**, and click **Send email**. Select **Send from the notification sender** to test the notification sender. The test uses the sender values on the page, and Coolify saves them before it sends the test.
+
+The button is available to admins after you save a provider.
 
 </Tab>
 
