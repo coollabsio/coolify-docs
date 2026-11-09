@@ -104,14 +104,14 @@ Review [Deploy by Tag](/core/automation/tags/deploy-by-tag) before automating a 
 
 ## Trigger the deployment
 
-Store the copied URL as `COOLIFY_DEPLOY_WEBHOOK`, then send a `GET` request with the token in the `Authorization` header:
+Store the copied URL as `COOLIFY_DEPLOY_WEBHOOK`, then send a `POST` request with the token in the `Authorization` header:
 
 ```sh
-curl --request GET "$COOLIFY_DEPLOY_WEBHOOK" \
+curl --request POST "$COOLIFY_DEPLOY_WEBHOOK" \
   --header "Authorization: Bearer $COOLIFY_TOKEN"
 ```
 
-Coolify also accepts `POST` requests. The endpoint requires either `uuid` or `tag`; do not send both in one request.
+A `GET` request does not deploy: Coolify answers with `405` and `This endpoint has changed to a POST request.` The endpoint requires either `uuid` or `tag`; do not send both in one request.
 
 <Callout type="warn" title="Protect the API token">
 The URL identifies the deployment target, but the Bearer token authorizes the action. Revoke the token from **Keys & Tokens > API Tokens** if it is exposed.
