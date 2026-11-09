@@ -98,10 +98,10 @@ For example, use `https://app.example.com:3000` when the component listens on po
 
 The **Advanced** page can configure:
 
-- **Enable Gzip Compression**
-- **Strip Prefixes**
-- **Exclude from service status**
-- **Drain Logs**, when a log drain is enabled on the server
+- **Gzip compression**
+- **Path prefixes**: **Strip prefixes** or **Keep prefixes**
+- **Service status**: **Include in status** or **Exclude from status**
+- **Log drain**, when a log drain is enabled on the server
 
 </Tab>
 <Tab value="Database">
@@ -118,7 +118,7 @@ Expose a database only when a client outside the Service networks must connect. 
 
 ### Advanced and data operations
 
-The **Advanced** page can exclude the component from the Service's aggregate status and enable a server log drain. Recognized database components can also show **Backups** and **Import Backup** pages when the underlying engine is supported.
+The **Advanced** page can exclude the component from the Service's aggregate status and enable a server log drain. Recognized database components can also show a **Backups** page when the underlying engine is supported. To restore a backup file, select **Import backup** on this page. The import opens in a dialog.
 
 Changing a database image tag is not a database upgrade procedure. Create and verify a compatible backup before changing a production image.
 
