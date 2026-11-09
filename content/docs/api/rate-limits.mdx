@@ -27,7 +27,7 @@ Coolify also limits API clients that keep failing. By default, a client can send
 - `401 Unauthenticated` and `403 Forbidden`
 - `404 Not Found` for a request without a Bearer token
 
-Each API token has its own count. Requests without a token are counted by source IP address. The `/api/health` and `/api/v1/health` endpoints are not counted.
+Each API token has its own count. Requests without a token are counted by source IP address. The `/api/health` and `/api/v1/health` endpoints are not counted. The limit applies only to REST API requests under `/api/`. Requests to the MCP endpoint `/mcp` are not counted or blocked.
 
 When a client reaches the limit, Coolify answers all its requests with `429 Too Many Requests` and a `Retry-After` header:
 
@@ -62,7 +62,7 @@ export COOLIFY_TOKEN="67|abcthisisa123dummytoken"
 
 curl --head \
   --header "Authorization: Bearer $COOLIFY_TOKEN" \
-  "$COOLIFY_URL/api/v1/teams/current"
+  "$COOLIFY_URL/api/v1/team"
 ```
 
 Some endpoints can also return `429 Too Many Requests` because a deployment queue or an upstream cloud provider is busy. Use `Retry-After` whenever the response provides it, even when `X-RateLimit-Remaining` shows capacity in Coolify's general API limit.

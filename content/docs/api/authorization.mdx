@@ -31,7 +31,7 @@ export COOLIFY_TOKEN="<api-token>"
 
 curl --fail-with-body \
   --header "Authorization: Bearer $COOLIFY_TOKEN" \
-  "$COOLIFY_URL/api/v1/teams/current"
+  "$COOLIFY_URL/api/v1/team"
 ```
 
 The header format is:
@@ -53,10 +53,10 @@ A protected request passes through these checks:
 1. The token exists, has not expired, is not paused, and authenticates a user.
 2. The user still belongs to the team recorded when the token was created.
 3. The token does not have more access than its owner currently has in that team.
-4. On a self-hosted instance, [API Access](/api/ip-allowlist) is enabled and the caller matches the IP allowlist when one is set.
+4. On a self-hosted instance, [API Access](/api/ip-allowlist) is enabled and the caller matches the IP allowlist when one is set. The instance-administrator endpoints check only the IP allowlist.
 5. A token limited to selected projects, environments, or resources calls an endpoint for projects and resources, not a team-level endpoint.
 6. The token has the permission required by the endpoint, unless it has `root`.
-7. The requested project, environment, or resource is inside the access of the token and its owner.
+7. The requested project, environment, or resource is inside the access of the token and its owner. Some endpoints also need the token owner to be a team administrator or owner. See [Permissions](/api/permissions#team-and-role-scope).
 
 | Status | Typical meaning |
 | :--- | :--- |
