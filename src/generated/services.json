@@ -1574,6 +1574,13 @@
     "disabled": true
   },
   {
+    "name": "Orbit",
+    "slug": "orbit",
+    "icon": "/docs/images/services/orbit-logo.svg",
+    "description": "Self-hosted workspace for teams with tasks, docs, chat, and an MCP server for AI clients.",
+    "category": "Productivity"
+  },
+  {
     "name": "Organizr",
     "slug": "organizr",
     "icon": "/docs/images/services/organizr-logo.png",
