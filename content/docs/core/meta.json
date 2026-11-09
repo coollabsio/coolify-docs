@@ -34,6 +34,7 @@
     "---Security---",
     "security/authentication",
     "security/credentials",
+    "security/image-scanning",
     "---Observability---",
     "...observability",
     "---Notifications---",
