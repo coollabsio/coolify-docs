@@ -14,11 +14,13 @@ MCP gives an AI client access to Coolify data and, when permitted, lifecycle ope
 | Inspect resources | `read` |
 | Read supported sensitive data or log summaries | `read:sensitive` |
 | Deploy, start, stop, restart, cancel, or roll back | `deploy` |
-| Create or update resources (`create_*` and `manage_*` tools) | `write` |
+| Create or update resources (create and update actions of `create_*` and `manage_*` tools) | `write` |
 | Delete resources, environment variables, storages, backups, scheduled tasks, or tags, or detach a tag | `delete` |
 | Change the instance MCP setting with the API | `write` or `root` token of an instance admin, in the root team |
 
-`write` does not include `delete`. A `root` token has every permission. Some actions need two permissions, for example a registry login needs `write` and `deploy`. The [capability pages](/mcp/capabilities/overview) show the permission of each action.
+`write` does not include `delete`. A `root` token has every permission. Each action of a `manage_*` tool has its own permission, and some list and get actions need only `read` or `read:sensitive`. Some actions need two permissions, for example a registry login needs `write` and `deploy`. The [capability pages](/mcp/capabilities/overview) show the permission of each action.
+
+MCP hides the deployment tools, `get_logs`, and the `create_*` and `manage_*` actions that the token's permissions do not allow. Most read tools are listed also for a token without `read`. They then return `Missing required permissions: read`.
 
 A token can never do more than its owner can do in the token's team. When the owner loses that access, the token stops working. Destructive actions need `confirm=true`. Configure your client to ask you before it calls them.
 
