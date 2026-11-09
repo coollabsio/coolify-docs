@@ -21,12 +21,12 @@ Use `get_infrastructure_overview` first for counts and server health hints.
 
 | Tool | Actions |
 | :--- | :--- |
-| `manage_server` | `create`, `update`, `validate` (`write`); `delete` (`write`, confirm). |
-| `manage_proxy` | `get` (`read`); `update` (`write`, confirm); `set_configuration` and `restart` (`deploy`, confirm). |
-| `docker_cleanup` | `get` and `executions` (`read`); `update` (`write`); `run` (`deploy`, confirm). |
-| `manage_destination` | `create`, `update` (`write`); `delete` (`write`, confirm). |
-| `manage_private_key` | `list`, `get` (`read`); `create`, `update` (`write`); `delete` (`write`, confirm). Key material is never returned. |
-| `manage_registry` | `list` (`read:sensitive`); `create` (`deploy`); `check` (`write`); `delete` (`write`, confirm). |
-| `cloud_provider` | `list_tokens`, `get_token`, `catalog` (`read`); `create_token`, `update_token`, `validate_token` (`write`); `delete_token` and `provision_server` (`write`, confirm). |
+| `manage_server` | `create`, `update`, `validate` (`write`); `delete` (`delete`, confirm). Changing `proxy_type`, deleting with `force` or `delete_from_provider`, and validating with `install` also need `deploy`. |
+| `manage_proxy` | `get` (`read`); `update` (`write`, confirm); `set_configuration` (`write` and `deploy`, confirm); `restart` (`deploy`, confirm). |
+| `docker_cleanup` | `get` and `executions` (`read`); `update` (`write`); `run` (`write` and `deploy`, confirm). |
+| `manage_destination` | `create`, `update` (`write`); `delete` (`delete`, confirm). |
+| `manage_private_key` | `list`, `get` (`read`); `create`, `update` (`write`); `delete` (`delete`, confirm). Key material is never returned. |
+| `manage_registry` | `list` (`read:sensitive`); `create` (log in) and `check` (`write` and `deploy`); `delete` (log out, `delete`, confirm). |
+| `cloud_provider` | `list_tokens`, `get_token`, `catalog` (`read`); `create_token`, `update_token`, `validate_token` (`write`); `provision_server` (`write`, confirm); `delete_token` (`delete`, confirm). |
 
 Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it. `provision_server` creates a paid server at the provider.

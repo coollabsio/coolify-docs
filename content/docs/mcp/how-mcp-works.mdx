@@ -25,6 +25,8 @@ Authorization: Bearer 67|abcthisisa123dummytoken
 
 The token is bound to one Coolify team. MCP only returns resources owned by that team. Create one token per team when a client needs access to multiple teams.
 
+A token limited to selected projects, environments, or resources sees only those resources. MCP does not list team-level tools for it, such as `get_current_team` and the server tools. A token can never do more than its owner can do in the team.
+
 The instance MCP setting must be enabled before `/mcp` responds. Team admins and owners can disable MCP for individual teams. A disabled instance returns `404`; a disabled team returns `403`. On self-hosted instances, the **Allowed IPs** list in **Settings > Advanced** also applies to `/mcp`.
 
 On self-hosted instances, **Allowed IPs** applies to MCP requests. The **MCP server** switch controls `/mcp` independently of REST **API access**.
@@ -34,7 +36,7 @@ On self-hosted instances, **Allowed IPs** applies to MCP requests. The **MCP ser
 <Tabs items={['Tools', 'Resources', 'Prompts']}>
 <Tab value="Tools">
 
-Tools perform Coolify queries and operations. Read tools need `read`. Deployment and lifecycle tools need `deploy`. Tools that create, update, or delete resources (`create_*` and `manage_*`) need `write`. MCP lists only the tools that the token's permissions allow. [MCP capabilities](/mcp/capabilities/overview) groups tools by task.
+Tools perform Coolify queries and operations. Read tools need `read`. Deployment and lifecycle tools need `deploy`. Tools that create or update resources (`create_*` and `manage_*`) need `write`. Delete actions need `delete`. MCP lists only the tools that the token's permissions allow. [MCP capabilities](/mcp/capabilities/overview) groups tools by task.
 
 </Tab>
 <Tab value="Resources">

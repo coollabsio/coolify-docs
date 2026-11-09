@@ -50,7 +50,7 @@ Coolify Cloud already has instance MCP enabled. Skip the Dashboard and API tabs,
 
 <ZoomImage src="/docs/images/mcp/enable-mcp.webp" alt="Coolify Advanced settings with MCP server enabled" />
 
-This step is required on self-hosted instances. Only an instance admin (a member of the root team) can change it.
+This step is required on self-hosted instances. Only an instance admin (an admin or owner of the root team) can change it.
 
 1. Open **Settings** in the sidebar.
 2. Open **Advanced**.
@@ -65,7 +65,7 @@ If you use **Allowed IPs** in **Settings > Advanced**, the list also applies to 
 </Tab>
 <Tab value="API">
 
-On a self-hosted instance, use a `write` or `root` API token of the root team to enable or disable the instance endpoint. The source IP must match **Allowed IPs** when configured. Replace the example URL with your instance's domain:
+On a self-hosted instance, an instance admin can enable or disable the instance endpoint with a `write` or `root` API token of the root team. The source IP must match **Allowed IPs** when configured. Replace the example URL with your instance's domain:
 
 ```sh
 export COOLIFY_URL="https://coolify.example.com"
@@ -78,7 +78,7 @@ curl --fail-with-body --request POST \
 
 The endpoint returns `MCP server enabled.`. Disable it with `POST /api/v1/mcp/disable`.
 
-These endpoints require a token with `write` or `root` that belongs to the root team (team ID `0`). A token of any other team receives `403`. These endpoints remain available while REST **API access** is disabled.
+These endpoints require a token with `write` or `root` that belongs to the root team (team ID `0`). The token owner must be an instance admin: an admin or owner of the root team. Any other token receives `403`. These endpoints remain available while REST **API access** is disabled.
 
 </Tab>
 </Tabs>
@@ -95,10 +95,11 @@ Coolify displays the complete token only once. Copy it into the client's secret 
 - Use `read` for inventory and inspection.
 - Add `read:sensitive` only for supported sensitive data or log summaries.
 - Add `deploy` for deploy, start, stop, restart, cancel, and rollback operations.
-- Add `write` to create, update, or delete resources with the `create_*` and `manage_*` tools.
+- Add `write` to create or update resources with the `create_*` and `manage_*` tools.
+- Add `delete` to delete resources, environment variables, storages, backups, scheduled tasks, or tags. `write` does not include it.
 - Do not use `root` for normal MCP clients.
 
-Only team admins and owners can use tokens with `read:sensitive`, `write`, `deploy`, or `root`. A team member can use only `read` tokens. MCP shows only the tools that the token's permissions allow.
+A token can never do more than its owner can do in the team. MCP shows only the tools that the token's permissions allow.
 
 MCP endpoint URL:
 
