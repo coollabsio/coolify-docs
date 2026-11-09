@@ -7,7 +7,7 @@ import { BranchUp, Refresh23, Server } from 'reicon-react';
 
 # Backups
 
-Coolify can create scheduled, engine-aware database backups for PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, and SQLite. Each backup schedule creates a backup on the database's server, and can upload a copy to an S3-compatible storage provider. To deploy a database and turn backups on, start with [Databases](/databases#self-host-a-database-with-backups).
+Coolify can create scheduled, engine-aware database backups for PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, and SQLite. Each backup schedule creates a backup on the database's server, and can upload a copy to an S3-compatible, SFTP, FTPS, or WebDAV storage. To deploy a database and turn backups on, start with [Databases](/databases#self-host-a-database-with-backups).
 
 Redis, Dragonfly, and KeyDB do not support this scheduled database backup workflow. Use the engine's persistence and backup tools for those databases, or deploy a backup-capable service separately.
 
@@ -122,10 +122,14 @@ The limits work independently. Coolify deletes a backup when any configured limi
 
 ## Upload backups to S3
 
-1. Configure and validate an S3-compatible storage under [S3 storage](/core/s3-storage/overview).
+1. Configure and validate an S3-compatible storage under [S3 storage](/core/s3-storage/overview), or an [SFTP, FTPS, or WebDAV storage](/core/s3-storage/sftp-ftps-webdav).
 2. Open the database schedule and open **S3 storage**.
 3. Select one or more destinations in **S3 storages**, select **Enable S3**, and select **Save changes**.
 4. Optionally set **Local copy** to **Delete after S3 upload**.
+
+The **S3 storages** list also shows the SFTP, FTPS, and WebDAV storages of the team. Uploads, retention, downloads, and restores work the same for every storage type.
+
+A member whose access is limited to some projects or resources cannot add a new storage to a backup schedule. This needs write access on the whole team, also through the API.
 
 Coolify uploads the local backup file to every selected S3 storage after the local dump succeeds. The execution shows each destination and its upload result. **S3 warning** means at least one upload failed; other destinations may still contain a usable copy.
 
@@ -149,7 +153,7 @@ A failed S3 upload does not necessarily mean the local database dump failed. Rea
 
 ## Download backup copies
 
-Open **Executions** and select **Download** on a successful backup. Coolify uses the local file when available, or redirects to a short-lived link for an available S3 copy when the local file is gone. S3 download links expire after 15 minutes; request another download if a link expires. Backup downloads require an Admin or Owner role.
+Open **Executions** and select **Download** on a successful backup. Coolify uses the local file when available, or redirects to a short-lived link for an available S3 copy when the local file is gone. S3 download links expire after 15 minutes; request another download if a link expires. A copy in an SFTP, FTPS, or WebDAV storage downloads through Coolify. Backup downloads require an Admin or Owner role.
 
 If the instance administrator has configured S3 for file downloads, Coolify may first prepare the local backup in that storage. Wait for preparation to finish and allow the browser to open the download.
 
@@ -183,5 +187,7 @@ Changing a schedule's destinations affects future uploads. Existing copies remai
 ## Scheduling and failed executions
 
 Due database backups are dispatched every minute independently of other schedule types. A scheduled backup whose queued job was lost is queued again after 60 minutes. A backup is skipped while the database starts, restarts, or imports, and a backup that exceeds its timeout fails with the timeout error.
+
+A failed backup notifies the team on the first failure, then at most once a day while it keeps failing. This also applies to a backup whose S3 upload keeps failing. The first successful run after a failure sends one "works again" notification. Coolify never disables a backup schedule automatically, so it starts again by itself after an outage.
 
 For backups of several databases, each database has its own result and finish time. All-database PostgreSQL, MySQL, and MariaDB backups fail if the dump command fails rather than retaining an incomplete archive. Review every result before relying on a backup set.
