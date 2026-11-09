@@ -7,7 +7,11 @@ description: Compare Owner, Admin, and Member access across team management, res
 
 Coolify assigns each person a role for each team they join. A person can be an Owner in one team and a Member or Admin in another.
 
-In Coolify v4.x, **Member** is the read-only role for most team resources. **Admin** and **Owner** can operate resources and manage team settings. Owner adds control over who else can become or remain an Owner.
+By default, **Member** is the read-only role for team resources. **Admin** and **Owner** can operate resources and manage team settings. Owner adds control over who else can become or remain an Owner.
+
+Owners and Admins can give a Member more access, or limit a Member to some projects, environments, or resources. This access uses the levels **Read**, **Read secrets**, **Deploy**, **Write**, **Delete**, and **Full access**. See [Set member access](/core/team/members/set-member-access).
+
+In the tables below, the **Member** column shows the default access (**Read** on the whole team). When an entry names a level, a Member with that level on the resource can do the action. A Member whose access does not include the whole team cannot open team-wide pages, such as servers, credentials, notifications, team settings, and members.
 
 ## Role comparison
 
@@ -21,7 +25,7 @@ In Coolify v4.x, **Member** is the read-only role for most team resources. **Adm
 | Invite Owners | Yes | No | No |
 | Change or remove Members or Admins | Yes | Yes | No |
 | Change or remove Owners | Yes | No | No |
-| Delete an eligible team | Yes | Yes | No |
+| Delete an eligible team | Yes | No | No |
 
 The member-management controls apply to other people. Coolify does not show actions for changing your own role or removing yourself on the **Members** page.
 
@@ -30,20 +34,22 @@ The member-management controls apply to other people. Coolify does not show acti
 | Permission | Owner | Admin | Member |
 | :--- | :---: | :---: | :---: |
 | View projects, environments, applications, databases, and services | Yes | Yes | Yes |
-| Create, update, or delete projects and environments | Yes | Yes | No |
-| Create, update, or delete applications, databases, and services | Yes | Yes | No |
-| Deploy applications and services | Yes | Yes | No |
-| Start, stop, restart, or otherwise operate resources | Yes | Yes | No |
-| Manage deployments, environment variables, storage, scheduled tasks, tags, webhooks, and backups | Yes | Yes | No |
+| View environment variables and other secrets | Yes | Yes | With **Read secrets** |
+| Create projects | Yes | Yes | With **Write** on the whole team |
+| Create environments and resources, or update projects, environments, applications, databases, and services | Yes | Yes | With **Write** |
+| Delete projects, environments, applications, databases, and services | Yes | Yes | With **Delete** |
+| Deploy, start, stop, or restart resources | Yes | Yes | With **Deploy** |
+| Add or change environment variables, storage, scheduled tasks, webhooks, and backups | Yes | Yes | With **Write** |
 | Open a resource terminal or container file browser | Yes | Yes | No |
 
-Member access lets a person inspect team resources without changing or deploying them. A page may still be visible to a Member while its editing and operational controls are unavailable.
+Default Member access lets a person inspect team resources without changing or deploying them. A page may still be visible to a Member while its editing and operational controls are unavailable.
 
 ### Servers and destinations
 
 | Permission | Owner | Admin | Member |
 | :--- | :---: | :---: | :---: |
 | View team servers and destinations | Yes | Yes | Yes |
+| Create, clone, or migrate a resource to a server | Yes | Yes | With **Write** on the whole team, or on a resource that already runs on that server |
 | Add, update, or remove servers and destinations | Yes | Yes | No |
 | Manage the proxy and server certificate authorities | Yes | Yes | No |
 | View or manage server security and Sentinel | Yes | Yes | No |
@@ -51,19 +57,25 @@ Member access lets a person inspect team resources without changing or deploying
 
 Terminal commands run on your infrastructure. Coolify therefore restricts both the global [Web Terminal](/core/infrastructure/servers/web-terminal) and resource terminals to Owners and Admins.
 
+Server lists, for example when you create a resource, show only the servers that you can use. Only an instance administrator can place resources on the localhost server, the server that runs Coolify.
+
 ### Team configuration and credentials
 
 | Permission | Owner | Admin | Member |
 | :--- | :---: | :---: | :---: |
 | View shared-variable entries | Yes | Yes | Yes |
-| Create, update, or delete shared variables | Yes | Yes | No |
+| Create, update, or delete project and environment shared variables | Yes | Yes | With **Write** on that project or environment |
+| Create, update, or delete team and server shared variables | Yes | Yes | No |
 | View notification settings | Yes | Yes | Yes |
 | Configure notifications or send test notifications | Yes | Yes | No |
 | View team S3 storage, Git sources, and private-key entries | Yes | Yes | Yes |
+| Use team private keys, GitHub Apps, and Gitea Apps in a resource, or add an S3 storage to a backup schedule | Yes | Yes | With **Write** on the whole team |
 | Create, update, or delete S3 storage, Git sources, and private keys | Yes | Yes | No |
 | View or manage cloud-init scripts and cloud provider tokens | Yes | Yes | No |
 
 Viewing a credential entry does not mean Coolify reveals every stored secret. Secret fields can remain concealed even when the surrounding resource is visible.
+
+The rule for team credentials also applies to the API. A resource keeps the private key or Git source that it already uses. When you do not have the access, Coolify shows a message that write access on the whole team is needed.
 
 ### API tokens
 
@@ -73,9 +85,10 @@ When API access is enabled for the instance, each role can create and revoke its
 | :--- | :---: | :---: | :---: |
 | Create and revoke personal API tokens | Yes | Yes | Yes |
 | Create a token with `read` permission | Yes | Yes | Yes |
-| Grant `read:sensitive`, `write`, `write:sensitive`, `deploy`, or `root` permissions | Yes | Yes | No |
+| Grant `read:sensitive`, `deploy`, `write`, `delete`, or `root` permissions | Yes | Yes | Only the levels the Member has |
+| Give a token access to all resources in the team | Yes | Yes | Only with access on the whole team |
 
-API tokens belong to the person who creates them and are scoped to the active team. A Member can create a read-only token, but cannot grant it sensitive, write, deployment, or root permissions. See [API permissions](/api/permissions) for the available token permissions.
+API tokens belong to the person who creates them and are scoped to the active team. A token never gets more access than its owner. With default access, a Member can create only a read-only token. See [API permissions](/api/permissions) for the available token permissions.
 
 ---
 
@@ -87,6 +100,7 @@ Owner is the highest team role. Only an Owner can:
 - promote an Admin or Member to Owner
 - change another Owner to Admin or Member
 - remove another Owner from the team
+- delete the team
 
 More than one person can have the Owner role. Keep at least one trusted Owner available so the team does not depend on a single account.
 
@@ -102,7 +116,7 @@ An Owner or Admin role in another team does not make a person an instance admini
 
 ## Choose a role
 
-- Choose **Member** when the person only needs to review team resources and their current state.
+- Choose **Member** when the person only needs to review team resources and their current state, or when they must work only in some projects, environments, or resources. Then [set their access](/core/team/members/set-member-access).
 - Choose **Admin** when the person should deploy and operate resources, manage servers and credentials, change team settings, and manage Members or Admins.
 - Choose **Owner** only when the person must also grant, change, or remove Owner access.
 
@@ -112,6 +126,6 @@ Team administrators and owners can review [Audit Log](/core/team/audit-log) even
 
 ## Sensitive content in the dashboard
 
-Users without permission to update a resource cannot view container logs, scheduled-task commands/output, Compose or file-mount content, hardcoded Compose environment values, proxy configuration, server shared values, or protected credentials such as basic-auth passwords, log-drain keys, and the Sentinel token. Sensitive API responses have an additional token-permission check; see [API permissions](/api/permissions).
+Users without permission to update a resource cannot view container logs, scheduled-task commands/output, Compose or file-mount content, hardcoded Compose environment values, proxy configuration, server shared values, or protected credentials such as basic-auth passwords, log-drain keys, and the Sentinel token. Sensitive API responses have an additional token-permission check, and still need a token owned by a team Owner or Admin; see [API permissions](/api/permissions).
 
 The team Danger Zone is visible only to its owner. Impersonation and the team admin view require an instance administrator. Credentials such as private keys, Git sources, S3 storage, and integration tokens must belong to the team that owns the resource.

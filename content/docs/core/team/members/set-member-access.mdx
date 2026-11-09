@@ -1,0 +1,130 @@
+---
+title: Set Member Access
+description: Limit a Coolify team member to selected projects, environments, or resources, and choose the access levels they get there.
+---
+
+# Set member access
+
+Give a person with the **Member** role more than read-only access, or limit them to some projects, environments, or resources of the team.
+
+Owners and Admins always have full access to the projects and resources of their team. Access settings apply only to people with the **Member** role.
+
+## How member access works
+
+The access of a Member is a list of scopes. Each scope has two parts:
+
+- **Applies to**: the whole team, or one or more projects, environments, or resources
+- the access levels that the Member gets there
+
+Scopes add up. A level on a project applies to all environments and resources in that project. A level on an environment applies to all resources in that environment.
+
+A new Member gets **Read** on the whole team. The member list shows this as `Team-wide read (default)`.
+
+### Access levels
+
+| Level | What the Member can do | Also gives | API ability |
+| :--- | :--- | :--- | :--- |
+| **Read** | See resources and their settings. Secrets stay hidden. | - | `read` |
+| **Read secrets** | Also see environment variables and other secrets. | Read | `read:sensitive` |
+| **Deploy** | Deploy, start, stop, and restart. | Read | `deploy` |
+| **Write** | Change settings and create resources. | Deploy, Read secrets, Read | `write` |
+| **Delete** | Delete resources. | Read | `delete` |
+| **Full access** | Every level, with no limits. | All levels | `root` |
+
+**Write** gives **Read secrets** because a person who can change a resource can always read its secrets back. **Write** does not give **Delete**. Select **Delete** too if the Member must delete resources.
+
+### Presets
+
+A preset fills in the scopes for a common case. You can change the scopes after you select a preset.
+
+| Preset | Scopes |
+| :--- | :--- |
+| **Viewer** | **Read** on the whole team |
+| **Developer** | **Write** and **Deploy** in one project. Select the project from the list. This preset shows only when the team has a project. |
+| **Operator** | **Write**, **Deploy**, and **Delete** on the whole team |
+| **Full access** | **Full access** on the whole team |
+
+---
+
+## Set access when you invite a person
+
+Select **Member** as the role in the invitation form, then select **Scopes** to choose the access. The person gets these scopes when they accept the invitation. Follow [Add a member](/core/team/members/add-a-member) for the full steps.
+
+## Change the access of a Member
+
+You must be an **Owner** or **Admin** in the active team.
+
+<Steps>
+<Step>
+
+### Open the member list
+
+1. Confirm that the intended team is active.
+2. Select **Team** in the Coolify sidebar.
+3. Select **Members**.
+
+</Step>
+<Step>
+
+### Open the access editor
+
+Find the person, open the `...` menu in their row, then select **Edit access**.
+
+**Edit access** shows only for people with the **Member** role. The dialog title is **Access for** followed by the person's name, and the dialog shows their current access.
+
+</Step>
+<Step>
+
+### Choose the scopes
+
+Select a preset under **Start from a preset**, or change the scopes under **Scopes**:
+
+1. In **Applies to**, select the whole team, or one or more projects, environments, or resources.
+2. Select the access levels for the scope. Levels that a selected level already gives are checked and locked.
+3. Select **Add scope** to add a scope with other levels. Select the trash icon to remove a scope.
+
+</Step>
+<Step>
+
+### Save the access
+
+Select **Save**. Coolify reloads the page.
+
+Confirm that the summary under the person's email address shows the new access, for example `Access: Team: read + 2 projects`.
+
+</Step>
+</Steps>
+
+If you remove every scope, the Member has no access. They do not see any project, environment, or resource of this team, and the member list shows `No access`.
+
+<Callout type="warning" title="Write access in the root team">
+In the root team, write access on a resource that runs on the localhost server lets a Member run a privileged container there. That gives root on the server that runs Coolify, and access to the data of all teams. Give **Write** or **Full access** in the root team only to people that you trust as instance administrators.
+</Callout>
+
+---
+
+## What a Member with limited access sees
+
+A Member sees only the projects, environments, resources, deployments, and search results that their scopes cover. A project or environment shows when it holds a scope of the Member. It then shows only the environments and resources that the Member can access.
+
+A Member who has no scope on the whole team cannot open team-wide pages. These pages include servers, destinations, private keys and other credentials, Git sources, S3 storages, notifications, tags, team and server shared variables, and the team settings, members, and audit log pages. Coolify shows `Your access in this team is limited to some projects.` The API also rejects team-level endpoints for this Member with `403`.
+
+## Servers and team credentials
+
+A Member with access grants can use only some servers and team credentials:
+
+- To create, clone, or migrate a resource to a server, the Member needs **Write** on the whole team, or **Write** on a resource that already runs on that server. Server lists show only the servers that the Member can use.
+- Only an instance administrator can place resources on the localhost server, the server that runs Coolify.
+- To use team private keys, GitHub Apps, and Gitea Apps in a resource, or to add a new S3 storage to a backup schedule, the Member needs **Write** on the whole team. This also applies to the API. A resource keeps the key or source that it already uses.
+
+When the Member does not have this access, Coolify shows a message, for example `You need write access on the whole team to use team credentials, such as private keys, git sources, and S3 storages.`
+
+Only Owners and Admins can add, change, or remove servers and team credentials. See [Roles & Permissions](/core/team/roles-and-permissions).
+
+## API tokens of a Member
+
+A Member can create [API tokens](/core/security/credentials/api-tokens) only with the levels and scopes that they have. A token never gets more access than its owner. A Member without a scope on the whole team must select **Selected projects, environments, or resources** for the token.
+
+If the access of a Member becomes smaller, a token that has more access than the Member stops working. The API returns `403` with `This API token has more access than you have in this team. Revoke it and create a new token.`
+
+When an Owner or Admin becomes a Member with **Make member**, Coolify resets their access to `Team-wide read (default)` and revokes their API tokens for this team. Follow [Manage members](/core/team/members/manage-members) to change a role.
