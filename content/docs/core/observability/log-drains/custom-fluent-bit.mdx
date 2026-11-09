@@ -8,6 +8,7 @@ import {
   Box2,
   Globe3,
   Layers,
+  Refresh,
   Server,
   Settings,
   Warning22,
@@ -19,13 +20,13 @@ Use **Custom Fluent Bit** when the built-in Axiom and New Relic destinations do 
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-Provide a complete Fluent Bit 2.0 configuration that accepts the `forward` protocol on port `24224` and sends records to your destination. Coolify writes the configuration, starts `coolify-log-drain`, and connects opted-in resource containers to it.
+Provide a complete Fluent Bit 5.1 configuration that accepts the `forward` protocol on port `24224` and sends records to your destination. Coolify writes the configuration, starts `coolify-log-drain`, and connects opted-in resource containers to it.
 
 </CoolCallout>
 
 <CoolCallout type="warning" icon={Warning22} title="Coolify does not validate Fluent Bit syntax">
 
-Coolify only checks that **Fluent Bit configuration** is not empty. An invalid directive, unavailable plugin, or rejected credential can leave `coolify-log-drain` stopped or unable to deliver logs.
+Coolify blocks some plugins and directives, but it does not check the Fluent Bit syntax. An invalid directive, unavailable plugin, or rejected credential can leave `coolify-log-drain` stopped or unable to deliver logs.
 
 </CoolCallout>
 
@@ -70,14 +71,14 @@ Treat the configuration as sensitive when it contains credentials. Coolify does 
   steps={[
     'Save the main configuration',
     'Write the server files',
-    'Start Fluent Bit 2.0',
+    'Start Fluent Bit 5.1',
     'Receive resource records',
     'Send records to the destination',
   ]}
   list={[
     <>Coolify saves <strong>Fluent Bit configuration</strong> and the optional <strong>Parser configuration</strong>.</>,
     'It writes the managed files under `/data/coolify/log-drains` on the resource server.',
-    'The `coolify-log-drain` container starts from `cr.fluentbit.io/fluent/fluent-bit:2.0` with `-c /fluent-bit.conf`.',
+    'The `coolify-log-drain` container starts from `cr.fluentbit.io/fluent/fluent-bit:5.1` with `-c /fluent-bit.conf`.',
     'Opted-in resources send Docker log records to `tcp://127.0.0.1:24224` through the Fluentd driver.',
     'Your filters, parsers, and outputs transform and deliver those records.',
   ]}
@@ -93,6 +94,35 @@ By default, Coolify writes these files on the resource server:
 | `/data/coolify/log-drains/docker-compose.yml` | The Coolify-managed Fluent Bit service |
 
 The container mounts the two configuration files at `/fluent-bit.conf` and `/parsers.conf`.
+
+Coolify writes these files again from your settings each time it starts `coolify-log-drain`. Do not edit the files on the server, because Coolify replaces your changes. Change the configuration in **Log Drains** instead.
+
+---
+
+## Fluent Bit version and automatic updates
+
+Coolify runs custom drains with the same Fluent Bit image as the built-in destinations. The current image is `cr.fluentbit.io/fluent/fluent-bit:5.1`.
+
+<CoolCallout icon={Refresh} title="Running drains update automatically">
+
+When a Coolify upgrade changes the log drain image or files, the next server check starts `coolify-log-drain` again with the new image. You do not have to disable and enable the drain.
+
+</CoolCallout>
+
+Coolify versions before Fluent Bit 5.1 used `cr.fluentbit.io/fluent/fluent-bit:2.0`. Fluent Bit 2.0 does not get security fixes. For example, the fixes for the Fluent Bit vulnerabilities in [VU#761751](https://kb.cert.org/vuls/id/761751) are only in Fluent Bit 4.2.0 and later. Most configurations work on 5.1 without changes. Before you upgrade Coolify, do these checks:
+
+1. If your configuration sends records to a **Fluentd** server with the `forward` output, add `retain_metadata_in_forward_mode false` to that output. From Fluent Bit 5.0.4, this option is `true` by default, and Fluentd rejects these records.
+2. If you changed the files in `/data/coolify/log-drains` on the server by hand, copy your changes into **Fluent Bit configuration** and **Parser configuration**. The automatic update replaces the files on the server.
+3. Read the [Fluent Bit upgrade notes](https://docs.fluentbit.io/manual/installation/upgrade-notes) for the plugins that you use.
+
+If Coolify blocks your configuration, the update does not start. The running `coolify-log-drain` container continues to run with the old image until you fix the configuration.
+
+After the update, make sure that the drain runs:
+
+```sh
+docker inspect -f '{{.Config.Image}}' coolify-log-drain
+docker logs --tail 100 coolify-log-drain
+```
 
 ---
 
@@ -126,7 +156,15 @@ This skeleton shows the required input and an example HTTPS output. Replace the 
 
 The example is not a complete configuration for a specific provider. Add the provider's required header, token, payload, retry, and TLS options before enabling the drain.
 
-Use only input, filter, parser, and output plugins included in the Fluent Bit 2.0 image used by Coolify.
+Use only input, filter, parser, and output plugins included in the Fluent Bit 5.1 image used by Coolify.
+
+Coolify does not accept these plugins and directives:
+
+| Not accepted | Where |
+| :--- | :--- |
+| `lua`, `wasm`, `exec`, `exec_wasi`, and `file` plugins | **Fluent Bit configuration** |
+| `@INCLUDE` and `plugins_file` | **Fluent Bit configuration** |
+| Sections other than `[PARSER]` and `[MULTILINE_PARSER]` | **Parser configuration** |
 
 ---
 
@@ -235,7 +273,8 @@ The configuration fields are read-only while the drain is enabled.
 - Confirm the main configuration has a `forward` input listening on port `24224`.
 - Read `docker logs --tail 100 coolify-log-drain` for syntax, plugin, DNS, TLS, and authentication errors.
 - Confirm every parser referenced by the main configuration exists in **Parser configuration**.
-- Confirm the selected plugins and options are available in Fluent Bit 2.0.
+- Confirm the selected plugins and options are available in Fluent Bit 5.1.
+- If the drain stopped after a Coolify upgrade, read [Fluent Bit version and automatic updates](#fluent-bit-version-and-automatic-updates).
 - Confirm the resource's **Log drain** setting is enabled and that the resource was restarted afterward.
 - Confirm the resource server can reach the configured output host and port.
 
