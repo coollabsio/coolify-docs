@@ -42,12 +42,14 @@ In **Settings > Updates**, **Channel** sets the versions this instance upgrades 
 
 | Channel | Installs | Image tags |
 | :--- | :--- | :--- |
-| **Stable** | Stable releases. This is the default. | `4.7.1`, moving `latest` |
+| **Stable** | Stable releases. This is the default. | `4.7.2`, moving `latest` |
 | **Preview** | Betas and release candidates, then the stable release. | `4.6.0-beta.1`, moving `preview` |
 | **Nightly** | A build of the next version, two times each day. Nightly builds get less testing. | `4.6.0-alpha.0.20261026.1`, moving `nightly` |
 | **Custom image** | The image tag that you enter in **Image tag**, such as `pr-1234` for the build of pull request 1234. | `ghcr.io/coollabsio/coolify:pr-<number>` |
 
 An instance installs the newest version of its channel and of the more stable channels. For example, the **Preview** channel also installs stable releases.
+
+On the **Stable** channel, the page shows a **Try the next version early** hint about the **Nightly** channel.
 
 <Callout type="warning" title="Nightly builds can break the instance">
 Breaking changes are possible in nightly builds, including database changes that a stable release does not expect. Back up first, and use **Nightly** only on an instance that you can rebuild.
