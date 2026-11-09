@@ -20,7 +20,6 @@ const teamMembers: TeamMember[] = [
     image: '/docs/images/team/andras.webp',
     links: [
       { label: 'GitHub', href: 'https://github.com/andrasbacsai' },
-      { label: 'Website', href: 'https://heyandras.dev' },
       { label: 'X', href: 'https://x.com/heyandras' },
       { label: 'Bluesky', href: 'https://bsky.app/profile/heyandras.dev' },
     ],
