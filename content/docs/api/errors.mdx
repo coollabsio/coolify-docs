@@ -59,6 +59,13 @@ For `401 Unauthenticated`, confirm that:
 - the token has not expired, been paused, or been revoked
 - the token owner still belongs to the token's team
 
+The `message` field shows the cause:
+
+| Message | Cause |
+| :--- | :--- |
+| `Unauthenticated.` | The token is missing, invalid, expired, paused, or revoked. |
+| `Invalid token.` | The token owner is no longer a member of the token's team. |
+
 A password change revokes that user's issued API tokens. Create a replacement token when this happens.
 
 For `403 Forbidden`, confirm that:
@@ -66,6 +73,7 @@ For `403 Forbidden`, confirm that:
 - the token has the endpoint's required `read`, `write`, `delete`, or `deploy` permission
 - a token limited to selected projects, environments, or resources calls an endpoint for projects and resources, and the requested item is inside its access
 - the token owner still has the access that the token uses
+- the token owner has the role that the endpoint needs, for example team administrator or owner
 - **API access** is enabled on a self-hosted instance
 - the caller matches **Allowed IPs** when an allowlist is configured
 
@@ -73,10 +81,15 @@ The `message` field tells you which check failed:
 
 | Message | Cause |
 | :--- | :--- |
-| `Missing required permissions: <permission>` | The token does not have the permission that the endpoint requires. |
+| `Missing required permissions: <permission>` | The token does not have the permission that the endpoint requires. For an [operation-specific check](/api/permissions#operation-specific-checks), Coolify adds the reason after the permission. |
 | `This API token is limited to selected projects, environments, or resources, so it cannot use this endpoint.` | The endpoint is team-level, and the token has limited access. |
-| `This API token has more access than you have in this team. Revoke it and create a new token.` | The token owner lost access that the token uses. |
+| `This API token has more access than you have in this team. Revoke it and create a new token.` | The token owner lost access that the token uses, or a selected project, environment, or resource of a member's token was deleted. |
 | `API is disabled.` | **API access** is off on a self-hosted instance. |
+| `You are not allowed to disable the API.`, `You are not allowed to enable the MCP server.`, `You are not allowed to disable the MCP server.` | The token is not a root-team token of an instance administrator. |
+| `Instance email settings require a root-team API token.` | The token for `/settings/email` was not created in the root team. |
+| `This action is unauthorized.` | `GET /cloud-tokens` needs a token owner who is a team administrator or owner. |
+| `Only team admins and owners can view audit logs.` | `GET /audit-events` needs a token owner who is a team administrator or owner. |
+| `You are not authorized to perform this action.` | The role or access of the token owner does not allow the operation, for example a member who manages cloud tokens. |
 
 To fix the permissions or access of a token, [edit the token](/core/security/credentials/api-tokens#manage-a-token). Its value does not change.
 
@@ -100,7 +113,7 @@ Treat the HTTP `403` status as the failure signal. Add the caller's exact source
 A successful request can still omit expected resources or redact sensitive values.
 
 - If a resource is missing, confirm that it belongs to the team recorded when the token was created and that it is inside the token's access. Create a separate token for another team.
-- If passwords, private keys, environment values, logs, or Compose content are redacted, use a token with `read:sensitive` in addition to the endpoint's required permission.
+- If passwords, private keys, environment values, logs, or Compose content are redacted, use a token with `read:sensitive` in addition to the endpoint's required permission. For most values, the token owner must also be a team administrator or owner. Locked environment variable values are never returned. See [Sensitive response data](/api/permissions#sensitive-response-data).
 
 Read [Authorization](/api/authorization) for the complete request and access-check flow.
 
