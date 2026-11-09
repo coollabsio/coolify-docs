@@ -1,0 +1,71 @@
+---
+title: SFTP, FTPS, and WebDAV
+description: Store Coolify database and volume backups on an SFTP, FTPS, or WebDAV server, and save the SFTP host key.
+---
+
+# SFTP, FTPS, and WebDAV storage
+
+Coolify can store database and volume backups on an SFTP, FTPS, or WebDAV server instead of S3-compatible storage. These storages support uploads, retention, downloads, and database restores, the same as S3 storages. Backup schedules select them in the same **S3 storages** list.
+
+## How Coolify connects
+
+Coolify connects to the storage from two places:
+
+- Each server uploads its backups with an `rclone/rclone` container.
+- The Coolify container checks the connection, restores backups, downloads backups, and deletes old backups.
+
+The storage must be reachable from Coolify and from every server that runs a backup. Below the storage directory, each backup keeps its full path on the server, for example `data/coolify/backups/...`.
+
+## Before you add the storage
+
+Create a directory for the backups and a user that can write to it.
+
+| Type | Protocol | Default port | Login |
+| :--- | :--- | :---: | :--- |
+| SFTP | SSH file transfer | `22` | Password or private key |
+| FTPS | FTP with explicit TLS | `21` | Username and password |
+| WebDAV | `https` or `http` | Protocol default | Username and password |
+
+FTPS uses explicit TLS, so the server must accept `AUTH TLS` and use a certificate that Coolify trusts.
+
+## Add the storage
+
+Only team admins and owners can add and validate a storage.
+
+1. Open **Storage** in the Coolify sidebar.
+2. Select **New storage**.
+3. Set **Type** to **SFTP**, **FTPS**, or **WebDAV**.
+4. Enter **Name** and an optional **Description**.
+5. Enter the server address:
+   - For SFTP and FTPS, enter **Host**, an optional **Port**, and an optional **Directory**. **Directory** is an absolute path from the root of the server, for example `home/user/backups`. Leave it empty to use the login directory.
+   - For WebDAV, select the **Protocol** and enter **Host**, an optional **Port**, and the **Path** of the backup directory. For Nextcloud, the path is for example `/remote.php/dav/files/USER/backups`.
+6. Enter the login:
+   - For SFTP, enter **Username**, then set **Authentication** to **Private key** or **Password**. For a private key, select a key from **Keys & Tokens** and add the **Public key** that Coolify shows to `~/.ssh/authorized_keys` of the user on the SFTP server.
+   - For FTPS and WebDAV, enter **Username** and **Password**.
+7. Select **Validate Connection & Continue**.
+
+After validation succeeds, Coolify opens the storage details page. You cannot change the type after creation. To use another type, create a new storage.
+
+## Save the SFTP host key
+
+When an admin validates an SFTP storage, Coolify saves the host key of the server and shows it in **Host key fingerprint**. After that, Coolify refuses the server if its key changes. A backup never saves a new key.
+
+<Callout type="warning" title="An SFTP storage needs a saved host key">
+Coolify does not use an SFTP storage before an admin saves its host key with a validation. Until then, uploads, restores, downloads, and the deletion of old backups fail. If you change the host or the port, Coolify removes the saved key, and an admin must validate the storage again.
+</Callout>
+
+If the host key of the server changed and you know why:
+
+1. Open the storage.
+2. Select **Reset host key**.
+3. Select **Validate connection** to save the new key.
+
+## Use the storage in a backup
+
+Open a database or volume backup schedule, then select the storage in **S3 storages** and select **Enable S3**. Read [Database backups](/databases/backups#upload-backups-to-s3) and [Storage mount backups](/core/persistent-storage/storage-mounts/backups#choose-where-backups-are-stored).
+
+A backup copy in an SFTP, FTPS, or WebDAV storage downloads through Coolify. To restore a database from the storage, select **Storage** as the source in **Import backup**. See [Restore a database](/databases/restore).
+
+## Manage the storage through the API
+
+The S3 storages API also manages these types. Set `type` to `sftp`, `ftps`, or `webdav`. An SFTP storage can log in with `private_key_uuid` instead of a password in `secret`, and returns its pinned host key in `sftp_host_key`. `POST /s3-storages/{uuid}/validate` validates the storage and saves the SFTP host key. See the [API reference](/api/overview).

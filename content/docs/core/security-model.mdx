@@ -48,7 +48,7 @@ Coolify supplies security controls for the management layer. Those controls do n
   title="Coolify provides"
   items={[
     'Dashboard authentication, optional two-factor authentication, OAuth sign-in, and team-based access controls',
-    'Authenticated API access with team-scoped tokens, selected permissions, expiration, and optional source-IP restrictions',
+    'Authenticated API and MCP access with team-scoped tokens, selected permissions, access to selected projects or resources, expiration, pause, and optional source-IP restrictions',
     'Encrypted database storage for supported credentials, private keys, environment values, and integration secrets',
     'Signature or token verification for supported Git provider webhooks',
     'Server-local proxy routing and HTTPS certificate automation for configured domains',
@@ -79,12 +79,12 @@ The built-in controls cover four parts of control-plane security.
   cards={[
     {
       title: 'Account access',
-      description: 'Email and password sign-in, optional OAuth and 2FA, team membership, and roles control dashboard access.',
+      description: 'Email and password sign-in, optional OAuth, SSO, passkeys, and 2FA, team membership, roles, and member access to selected projects or resources control dashboard access.',
       icon: SecuritySafe2,
     },
     {
       title: 'API automation',
-      description: 'API tokens belong to a team and carry selected permissions and an optional expiration date.',
+      description: 'API tokens belong to a team and carry selected permissions, access to the whole team or selected projects or resources, and an optional expiration date. A token never gets more access than its owner.',
       icon: Key2,
     },
     {
@@ -100,9 +100,9 @@ The built-in controls cover four parts of control-plane security.
   ]}
 />
 
-On self-hosted instances, **Settings > Advanced** also lets you disable API access or restrict it to specific IP addresses and CIDR ranges. Create and revoke tokens under **Keys & Tokens > API Tokens**.
+On self-hosted instances, **Settings > Advanced** also lets you disable **API access** and the **MCP server**, or restrict both to specific IP addresses and CIDR ranges with **Allowed IPs**. The two switches are separate: disabling **API access** does not disable MCP. Create, edit, pause, roll, and revoke tokens under **Keys & Tokens > API Tokens**.
 
-Read [API tokens](/core/security/credentials/api-tokens) for the available token permissions and request format.
+Read [API tokens](/core/security/credentials/api-tokens) for the available token permissions and request format, and [MCP security](/mcp/security) for MCP clients.
 
 These controls reduce risk in the paths Coolify manages. They do not replace security reviews, dependency updates, or runtime protections inside your applications.
 
@@ -124,14 +124,14 @@ Restrict administrative access. If you self-host Coolify, install supported upda
 
 - Keep **Registration Allowed** disabled unless you intentionally allow people to create accounts.
 - Enable two-factor authentication for every account with elevated access and store recovery codes safely.
-- Give team members the lowest role they need, then remove access when it is no longer required.
+- Give team members the lowest role and the narrowest [access](/core/team/members/set-member-access) they need, then remove access when it is no longer required.
 - Configure OAuth or SSO with trusted identity providers and limit who the provider allows to sign in.
 
 ### Limit API and integration access
 
-- Enable **API Access** only when an integration needs it.
-- Restrict **Allowed IPs for API Access** on a self-hosted instance whenever the callers have predictable source addresses.
-- Give each integration its own token with only the permissions it needs and an appropriate expiration date.
+- Enable **API access** and the **MCP server** only when an integration needs them. Disabling **API access** does not disable MCP.
+- Restrict **Allowed IPs** on a self-hosted instance whenever the callers have predictable source addresses. The list applies to the API and to MCP.
+- Give each integration its own token with only the permissions and access it needs and an appropriate expiration date.
 - Revoke unused or exposed tokens, then replace them in every integration that used them.
 
 ### Protect encrypted data and recovery material
@@ -187,7 +187,7 @@ Review this baseline before placing production workloads on a connected server:
 
 1. Serve the Coolify dashboard over HTTPS and restrict who can reach it when possible.
 2. Disable public registration unless it is required, enable 2FA, and review team roles.
-3. Keep API access disabled unless needed; otherwise, restrict source IPs and issue separate least-privilege tokens.
+3. Keep API access and the MCP server disabled unless needed; otherwise, restrict source IPs and issue separate least-privilege tokens.
 4. Use a dedicated SSH key, harden SSH, patch the server, and allow only required firewall ports.
 5. Review deployment sources, environment values, volume mounts, and every publicly exposed port.
 6. Back up workload data. For self-hosted Coolify, also back up the instance database and save its `APP_KEY` separately.

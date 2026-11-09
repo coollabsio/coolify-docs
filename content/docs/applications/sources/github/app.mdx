@@ -74,6 +74,8 @@ Repository access can work while automatic and preview deployments fail if GitHu
 
 Set **Preview deployment access** to **Read and update pull requests** when Coolify should add deployment information to pull requests. This grants read-and-write access to pull requests.
 
+Keep **GitHub deployments** at **Create GitHub deployments** when GitHub should show each deployment and its status. This grants read-and-write access to deployments. Read [Show deployments on GitHub](#show-deployments-on-github).
+
 The mandatory permissions grant read access to repository contents, metadata, and email addresses.
 
 Select **Register with GitHub**.
@@ -233,6 +235,7 @@ Under **Repository permissions**, grant:
 | Metadata | Read-only |
 | Email addresses | Read-only |
 | Pull requests | Read and write only when preview deployments are required |
+| Deployments | Read and write only when GitHub should [show deployments](#show-deployments-on-github) |
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/setup-app/25.webp" alt="Webhook event subscriptions and installation scope for a GitHub App" />
 
@@ -336,6 +339,30 @@ Confirm the repository clone and selected commit in **Deployment Logs**.
 Open **Sources**, select the GitHub App, open **General**, then select **Repositories**. Change the installation's repository access on GitHub and return to Coolify.
 
 Refresh the repository list before creating another application. Removing repository access prevents new clones and webhook deployments for applications that use that repository.
+
+## Show deployments on GitHub
+
+<Callout type="info" title="GitHub deployments require Coolify v4.7.0">
+  GitHub deployments are available in Coolify v4.7.0 or above.
+</Callout>
+
+When the GitHub App has the `Deployments: write` repository permission, Coolify reports each deployment and preview deployment to GitHub Deployments. GitHub then shows what is deployed on the branch and the pull request.
+
+- The production environment has the name of the application. A preview uses the name of the application with `(preview)`.
+- Each status links to the deployment log in Coolify. After a successful deployment, the status also links to the first domain of the application or the preview.
+- When a pull request closes, Coolify marks its preview deployments as inactive.
+
+This needs a private GitHub App. The public GitHub source of public repositories cannot report deployments.
+
+To add the permission to an existing GitHub App:
+
+1. Open **Sources**, select the GitHub App, then open **Permissions**.
+2. Select **Update on GitHub**, set **Deployments** to **Read and write**, and accept the permission update on GitHub.
+3. Return to Coolify and select **Refetch**. The **GitHub deployments** section shows `write` for **Deployments**.
+
+## Team access
+
+A member who has access only to some projects, environments, or resources cannot select a team GitHub App for a new application or as the new source of an application. This needs write access on the whole team, in the UI and through the API. An application keeps the source that it already uses.
 
 ## Detect build files
 

@@ -151,7 +151,10 @@ A resource is something Coolify will run for you, such as an app, database, or s
 In the resource list:
 
 - search for **Redis**
-- click **Redis**
+- click **Redis / Valkey**
+- select **Redis 8**
+
+Valkey 9 is the default image. It is a fork of Redis and works with the same `redis-cli` commands, so you can also select it for this guide.
 
 Coolify will create a Redis database resource with generated settings and credentials.
 
@@ -458,11 +461,11 @@ Coolify MCP can inspect and start existing resources, but its current tools cann
 
 </Callout>
 
-After [setting up Coolify MCP](/mcp/setup), create a `root` token for this end-to-end workflow, then give your client the Redis UUID or exact name. The prompts need to inspect Redis, start it, and read its sensitive connection values. A `deploy` token cannot perform read operations, and `read:sensitive` cannot start the database.
+After [setting up Coolify MCP](/mcp/setup), create a `root` token for this end-to-end workflow, then give your client the Redis UUID or exact name. The prompts need to inspect Redis, start it, and read its sensitive connection values. A token without `deploy` cannot start the database, and a token without `read:sensitive` cannot read its connection values.
 
 <Callout type="warning" title="Revoke the root token after this tutorial">
 
-A `root` token bypasses the `read`, `write`, and `deploy` endpoint checks and can return supported sensitive data. It remains limited to the active team, but it grants more access than routine MCP use requires. Revoke it when you finish this first deployment.
+A `root` token bypasses the `read`, `write`, `delete`, and `deploy` endpoint checks and can return supported sensitive data. It remains limited to the active team, but it grants more access than routine MCP use requires. Revoke it when you finish this first deployment.
 
 </Callout>
 

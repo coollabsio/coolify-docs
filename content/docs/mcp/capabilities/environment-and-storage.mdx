@@ -9,16 +9,16 @@ description: Use Coolify MCP to inspect and change environment variables, shared
 | :--- | :--- | :--- |
 | `list_env_keys` | `read` | List environment-variable key names for an application, database, or service. Never returns values. |
 | `list_shared_env_keys` | `read` | List shared key names at project or environment scope. Never returns values. |
-| `get_env_values` | `read:sensitive` | Return environment values. The token owner must be a team admin or owner. Values marked as shown once are never returned. |
+| `get_env_values` | `read:sensitive` | Return the environment values of an application, database, or service, or the shared values of the team, a project, an environment, or a server. The token owner must be a team admin or owner. Values marked as shown once are never returned. |
 | `list_storages` | `read` | List persistent and file storage mounts. Never returns file contents. |
 
 ## Change variables and storage
 
 | Tool | Actions |
 | :--- | :--- |
-| `manage_env` | `create`, `update`, `bulk_update` (`write`); `delete` (`write`, confirm). Values are returned only with `read:sensitive`. |
-| `manage_shared_env` | `create`, `update` (`write`); `delete` (`write`, confirm). |
-| `manage_storage` | `create`, `update`, `set_backup` (`write`); `delete` and `remove_backup` (`write`, confirm); `run_backup` (`deploy`, confirm). File content changes need `deploy`. |
+| `manage_env` | `create`, `update`, `bulk_update` (`write`); `delete` (`delete`, confirm). Values are returned only with `read:sensitive`. |
+| `manage_shared_env` | Shared variables of the team, a project, an environment, or a server. `create`, `update` (`write`); `delete` (`delete`, confirm). |
+| `manage_storage` | `create`, `update`, `set_backup` (`write`); `delete` and `remove_backup` (`delete`, confirm); `run_backup` (`write` and `deploy`, confirm). File content, mounts outside the resource directory, and `stop_during_backup` also need `deploy`. |
 
 Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.
 

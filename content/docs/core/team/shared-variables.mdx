@@ -136,7 +136,7 @@ Lines beginning with `#` are treated as comments, except `# coolify:` lines. Dev
 Removing a variable's line and saving deletes that shared variable. Review the entire editor before selecting **Save changes**.
 </Callout>
 
-Locked and multiline variables appear as placeholders in Developer view and cannot be changed there. Edit multiline variables in **Normal view**. To change a locked value, delete the variable and create it again.
+Locked and multiline variables appear as placeholders in Developer view and cannot be changed there. Edit multiline variables in **Normal view**. To replace a locked value, use **Normal view**, as described in [Lock a shared variable](#lock-a-shared-variable).
 
 To make a shared variable literal in Developer view, put `# coolify: literal` directly above its line. Use `# coolify: literal=false` to turn it off. Shared variables support only the `literal` flag. If a variable has no `# coolify:` line, its flag does not change when you save.
 
@@ -147,11 +147,23 @@ TEMPLATE=$NOT_A_REFERENCE
 
 ---
 
-## Update or delete a shared variable
+## Update a shared variable
 
 In **Normal view**, open the variable entry to change its name, value, comment, or **Value type**, then select **Update variable**.
 
 References use the variable name. If you rename a shared variable, update every `{{scope.VARIABLE_NAME}}` reference that used the previous name.
+
+## Lock a shared variable
+
+Lock a variable to hide its value for good. In **Normal view**, open the variable entry and select **Lock**. The **Lock Environment Variable?** dialog shows what changes: the value is hidden, and you cannot see or copy it again. Select **Lock** to confirm.
+
+The lock is permanent. You cannot unlock the variable in the UI, the API, or MCP.
+
+To replace a locked value, open the variable entry and enter the new value in **Value**, then select **Update variable**. Leave **Value** empty to keep the current value. Coolify never shows the locked value.
+
+---
+
+## Delete a shared variable
 
 To permanently remove a variable, select **Delete**, enter the variable name shown in the confirmation dialog, and select **Permanently Delete**.
 

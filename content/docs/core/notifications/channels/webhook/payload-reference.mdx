@@ -97,21 +97,26 @@ Same structure as `deployment_success`, with `"success": false`. PR preview fiel
 </Tab>
 <Tab value="status_changed" icon={Refresh23}>
 
-Sent when an application stops unexpectedly (not via a manual stop).
+Sent when an application, preview, service, or database stops unexpectedly and is still stopped after 2 minutes. A stop from Coolify does not send this event. See [Resource status changes](/core/notifications/events#resource-status-changes).
 
 ```json
 {
   "success": false,
   "event": "status_changed",
-  "message": "Application stopped",
+  "message": "Resource stopped",
+  "status": "exited",
   "application_name": "my-app",
   "application_uuid": "...",
+  "resource_name": "my-app",
+  "resource_uuid": "...",
+  "url": "...",
   "project": "...",
   "environment": "...",
-  "fqdn": "...",
-  "url": "..."
+  "fqdn": "..."
 }
 ```
+
+`resource_name` and `resource_uuid` identify the stopped resource of any type. `application_name` and `application_uuid` contain the same values, for existing receivers.
 
 </Tab>
 <Tab value="restart_limit_reached" icon={NotifRemove}>
@@ -212,7 +217,7 @@ Sent when the local backup succeeds but uploading to S3 fails.
 
 ## Scheduled tasks
 
-<Tabs id="webhook-task-events" items={['task_success', 'task_failed']}>
+<Tabs id="webhook-task-events" items={['task_success', 'task_failed', 'task_disabled']}>
 <Tab value="task_success" icon={CheckCircle}>
 
 Sent when a scheduled task completes successfully.
@@ -233,7 +238,7 @@ Sent when a scheduled task completes successfully.
 </Tab>
 <Tab value="task_failed" icon={Warning22}>
 
-Sent when a scheduled task fails.
+Sent on the first failure of a scheduled task, then at most once a day while it keeps failing. See [Repeated failures](/core/notifications/events#repeated-failures).
 
 ```json
 {
@@ -243,6 +248,7 @@ Sent when a scheduled task fails.
   "task_name": "...",
   "task_uuid": "...",
   "output": "...",
+  "consecutive_failures": 3,
   "application_uuid": "...",
   "url": "..."
 }
@@ -254,6 +260,27 @@ Sent when a scheduled task fails.
 `application_uuid` is included for application-level tasks. For service-level tasks, `service_uuid` is included instead. `url` is only present when available.
 
 </Callout>
+
+</Tab>
+<Tab value="task_disabled" icon={NotifRemove}>
+
+Sent once when Coolify disables a scheduled task after 10 failed runs in a row and the first of these failures is more than 24 hours old. This event uses the **Scheduled task failure** selection.
+
+```json
+{
+  "success": false,
+  "event": "task_disabled",
+  "message": "Scheduled task disabled",
+  "task_name": "...",
+  "task_uuid": "...",
+  "output": "...",
+  "consecutive_failures": 10,
+  "application_uuid": "...",
+  "url": "..."
+}
+```
+
+The conditional fields are the same as for `task_failed`.
 
 </Tab>
 </Tabs>
@@ -301,9 +328,36 @@ Sent when a Docker cleanup job fails.
 
 ---
 
+## Recovery events
+
+Sent once on the first successful run after Coolify sent a failure notification for a scheduled job. A recovery event uses the selection of the failure event, for example **Backup failure**.
+
+| Event | Job | Failure selection | Extra fields |
+|-------|-----|-------------------|--------------|
+| `task_recovered` | Scheduled task | **Scheduled task failure** | `task_name`, `task_uuid` |
+| `backup_recovered` | Database backup | **Backup failure** | `database_name`, `database_uuid`, `backup_uuid` |
+| `volume_backup_recovered` | Storage backup | **Backup failure** | `backup_uuid` |
+| `docker_cleanup_recovered` | Docker cleanup | **Docker cleanup failure** | `server_name`, `server_uuid` |
+
+```json
+{
+  "success": true,
+  "event": "backup_recovered",
+  "message": "Database backup for my-database works again.",
+  "database_name": "my-database",
+  "database_uuid": "...",
+  "backup_uuid": "...",
+  "url": "..."
+}
+```
+
+`url` is only present when available.
+
+---
+
 ## Server events
 
-<Tabs id="webhook-server-events" items={['server_reachable', 'server_unreachable', 'high_disk_usage', 'server_patch_check', 'server_patch_check_error', 'traefik_version_outdated']}>
+<Tabs id="webhook-server-events" items={['server_reachable', 'server_unreachable', 'server_ssh_host_key_changed', 'high_disk_usage', 'server_patch_check', 'server_patch_check_error', 'traefik_version_outdated']}>
 <Tab value="server_reachable" icon={Server}>
 
 Sent when a previously unreachable server becomes reachable again.
@@ -329,6 +383,22 @@ Sent when Coolify cannot reach a server.
   "success": false,
   "event": "server_unreachable",
   "message": "Server unreachable",
+  "server_name": "...",
+  "server_uuid": "...",
+  "url": "..."
+}
+```
+
+</Tab>
+<Tab value="server_ssh_host_key_changed" icon={Warning22}>
+
+Sent when the SSH host key of a server does not match the key that Coolify trusts. This event uses the **Server unreachable** selection. `url` opens the SSH host key section of the server's **Security** page.
+
+```json
+{
+  "success": false,
+  "event": "server_ssh_host_key_changed",
+  "message": "SSH host key changed",
   "server_name": "...",
   "server_uuid": "...",
   "url": "..."
@@ -434,27 +504,10 @@ Sent when one or more servers are running an outdated version of the Traefik pro
 
 ## Container events
 
-<Tabs id="webhook-container-events" items={['container_stopped', 'container_restarted']}>
-<Tab value="container_stopped" icon={Box2}>
-
-Sent when a container stops unexpectedly (not via a manual stop action).
-
-```json
-{
-  "success": false,
-  "event": "container_stopped",
-  "message": "Resource stopped unexpectedly",
-  "container_name": "...",
-  "server_name": "...",
-  "server_uuid": "...",
-  "url": "..."
-}
-```
-
-</Tab>
+<Tabs id="webhook-container-events" items={['container_restarted']}>
 <Tab value="container_restarted" icon={Refresh23}>
 
-Sent when a container is automatically restarted by Coolify.
+Sent when Coolify restarts a container automatically, for example the proxy. This event uses the **Resource status changes** selection. The same container sends at most one event an hour.
 
 ```json
 {
@@ -474,6 +527,120 @@ Sent when a container is automatically restarted by Coolify.
 `url` is only present when available.
 
 </Callout>
+
+</Tab>
+</Tabs>
+
+---
+
+## Image vulnerabilities
+
+These events use the **Resources > Image vulnerabilities** selection. They do not contain vulnerability IDs.
+
+<Tabs id="webhook-image-events" items={['image_exploited_problem', 'image_vulnerabilities_digest']}>
+<Tab value="image_exploited_problem" icon={Warning22}>
+
+Sent right after a scan finds new problems in a resource that attackers are using or are likely to use.
+
+```json
+{
+  "success": false,
+  "event": "image_exploited_problem",
+  "message": "Update now",
+  "resource_name": "api",
+  "resource_uuid": "...",
+  "url": "...",
+  "status": "update_now",
+  "text": "api: problems that attackers are using. Update to 1.28.",
+  "action": "Update to 1.28."
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `status` | `update_now` when an update fixes the problems, `check_needed` when Coolify could not check for a fixed version yet, or `no_fix` when no fixed version exists yet. |
+| `message` | The status as text: `Update now`, `Check needed`, or `No fix yet`. |
+| `action` | The update that fixes the most problems, or `null`. |
+
+</Tab>
+<Tab value="image_vulnerabilities_digest" icon={ServerUpdate}>
+
+The daily security digest of the team. Coolify sends it only when something changed.
+
+```json
+{
+  "success": false,
+  "event": "image_vulnerabilities_digest",
+  "message": "Daily security digest",
+  "url": "...",
+  "resources": [
+    {
+      "name": "...",
+      "uuid": "...",
+      "url": "...",
+      "status": "update_available",
+      "action": "..."
+    }
+  ],
+  "ignores_ending": false,
+  "servers_failing": [
+    {
+      "name": "...",
+      "url": "..."
+    }
+  ]
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `resources` | Resources with a new status or a new fixing version. `status` is the security status of the resource, for example `update_now`, `update_available`, or `check_needed`. |
+| `ignores_ending` | `true` when ignored vulnerabilities have an ignore that ends within 7 days. |
+| `servers_failing` | Servers whose scans failed 2 days in a row. |
+
+</Tab>
+</Tabs>
+
+---
+
+## Always-sent events
+
+These events have no event setting. Coolify sends them to every enabled webhook. See [Notifications that are always sent](/core/notifications/events#notifications-that-are-always-sent).
+
+<Tabs id="webhook-always-events" items={['api_token_failing', 'general']}>
+<Tab value="api_token_failing" icon={Warning22}>
+
+Sent when an API token of the team reaches the limit of failed requests. Coolify sends it at most once a day for each token.
+
+```json
+{
+  "success": false,
+  "event": "api_token_failing",
+  "message": "API token 'ci' sent 30 failed requests in one minute. Coolify now answers its requests with 429 (Too Many Requests) until the failures stop.",
+  "token_name": "ci",
+  "failed_requests": 30,
+  "last_request": "GET /api/v1/applications → 403",
+  "url": "..."
+}
+```
+
+`failed_requests` is the configured limit. `url` opens the API tokens page.
+
+</Tab>
+<Tab value="general" icon={ServerCloud}>
+
+A general message, for example about an automatic update of Coolify to the root team, or that Coolify [turned off a notification channel](/core/notifications/overview#disabled-channels).
+
+```json
+{
+  "success": true,
+  "event": "general",
+  "message": "Automatic update finished: Coolify is now on 4.7.1.",
+  "url": "..."
+}
+```
+
+`success` is `false` for failure messages, for example `Automatic update failed: ...`. `url` is the URL of the Coolify instance.
 
 </Tab>
 </Tabs>

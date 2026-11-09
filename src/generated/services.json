@@ -876,6 +876,13 @@
     "category": "Development"
   },
   {
+    "name": "Hi.Events",
+    "slug": "hi-events",
+    "icon": "/docs/images/services/hi-events-logo.svg",
+    "description": "Open-source event management and ticketing platform.",
+    "category": "Business"
+  },
+  {
     "name": "Hoarder",
     "slug": "hoarder",
     "icon": "/docs/images/services/hoarder-logo.png",
@@ -1572,6 +1579,13 @@
     "description": "Free HR management system for businesses.",
     "category": "Business",
     "disabled": true
+  },
+  {
+    "name": "Orbit",
+    "slug": "orbit",
+    "icon": "/docs/images/services/orbit-logo.svg",
+    "description": "Self-hosted workspace for teams with tasks, docs, chat, and an MCP server for AI clients.",
+    "category": "Productivity"
   },
   {
     "name": "Organizr",

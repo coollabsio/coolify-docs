@@ -160,6 +160,10 @@ Watch paths filter Git provider webhook events that include changed-file informa
 
 Test the patterns with a documentation-only commit before relying on them for production automation.
 
+## Cancel older webhook deployments
+
+When a newer push arrives, Coolify cancels the older webhook deployments of the application that still wait in the queue, so only the latest commit is built. To build every push, or to also stop older builds, change **Advanced > Deployment**. See [Older webhook deployments](/applications/configuration/advanced#cancel-older-webhook-deployments).
+
 ## Disable automatic Git deployments
 
 Choose **Manual deployments only** under **Advanced > Deployment > Auto deploy** to keep the source connection while ignoring automatic commit deployments from Git provider events.

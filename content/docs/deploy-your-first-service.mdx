@@ -420,11 +420,11 @@ Coolify MCP can inspect and start existing resources, but its current tools cann
 
 </Callout>
 
-After [setting up Coolify MCP](/mcp/setup), create a `root` token for this end-to-end workflow, then give your client the service UUID or exact name. The prompts need to inspect the service, start it, and inspect it again. A `deploy` token cannot perform the read operations because selecting `deploy` creates a deploy-only token.
+After [setting up Coolify MCP](/mcp/setup), create a `root` token for this end-to-end workflow, then give your client the service UUID or exact name. The prompts need to inspect the service, start it, and inspect it again. A token with only `deploy` cannot perform the read operations.
 
 <Callout type="warning" title="Revoke the root token after this tutorial">
 
-A `root` token bypasses the `read`, `write`, and `deploy` endpoint checks and can return supported sensitive data. It remains limited to the active team, but it grants more access than routine MCP use requires. Revoke it when you finish this first deployment.
+A `root` token bypasses the `read`, `write`, `delete`, and `deploy` endpoint checks and can return supported sensitive data. It remains limited to the active team, but it grants more access than routine MCP use requires. Revoke it when you finish this first deployment.
 
 </Callout>
 

@@ -58,6 +58,8 @@ Coolify does not check that the registry still has the image. If the pull fails,
 
 The API endpoint `GET /applications/{uuid}/rollback-images` returns the same list. Each image has a `source` field: `local` for an image on the server, or `registry` for an image that is only in the Docker registry.
 
+To roll back through the API, send the image tag as `commit` to `POST /applications/{uuid}/rollback`. The token needs `deploy`. The `commit` must be a tag from this list or the commit of a successful production deployment. Otherwise, Coolify returns `422`.
+
 <Callout type="warning" title="Back up state separately">
 
 Image rollback only changes application code and image contents. Use persistent-storage and database backups for state that must be restored.

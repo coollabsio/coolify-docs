@@ -33,10 +33,15 @@ Coolify accepts these options:
 - `--read-only`
 - `--runtime`
 - `--tmpfs`
+- `-i` or `--interactive`, `-t` or `--tty`, and combined forms such as `-it`
 
 Coolify converts only the listed options into the generated container configuration. Other Docker run options, such as `--network`, `--name`, `-v`, `-p`, and `-e`, are not applied because they can conflict with the network, storage, or lifecycle configuration Coolify manages. The deployment log shows a warning that lists each option Coolify did not apply.
 
 Use the dedicated Coolify settings for these values instead: **Persistent Storage** for volumes, **Environment Variables** for `-e`, and the network and port settings for networking.
+
+## Keep stdin open for the terminal console
+
+Add `-i` (or `-it`) when the main process of the container reads commands from stdin, for example a game server or a REPL. Coolify keeps stdin open (`stdin_open`), and `-t` allocates a TTY (`tty`). The web terminal can then connect to the main process in **Console** mode. Refer to [Use console mode for a container](/core/infrastructure/servers/web-terminal#use-console-mode-for-a-container).
 
 ## Use a custom seccomp profile
 

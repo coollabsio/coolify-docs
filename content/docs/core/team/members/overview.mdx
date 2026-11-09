@@ -3,7 +3,7 @@ title: Overview
 description: Understand how team membership controls access to team-scoped resources and choose the right member management task.
 ---
 
-import { ArrowsRight, Settings, UserAdd, UserRemove2 } from 'reicon-react';
+import { ArrowsRight, Key, Settings, UserAdd, UserRemove2 } from 'reicon-react';
 
 # Members overview
 
@@ -11,7 +11,7 @@ A Coolify team groups the people, resources, and settings they work with. Each p
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-Select the team you want to work with before changing its members. Owners and administrators can invite people, change other members' roles, revoke pending invitations, and remove members.
+Select the team you want to work with before changing its members. Owners and administrators can invite people, change other members' roles, set the access of Members, revoke pending invitations, and remove members.
 
 </CoolCallout>
 
@@ -25,6 +25,8 @@ When you switch teams, Coolify changes the resources and settings available in t
 
 Removing someone from a team removes their access to that team. It does not delete their Coolify account, their membership in other teams, or resources owned by the team.
 
+A person with the **Member** role can have read access to the whole team, or access only to some projects, environments, or resources. See [Set member access](/core/team/members/set-member-access).
+
 Read [Roles & Permissions](/core/team/roles-and-permissions) before granting administrative access.
 
 ---
@@ -35,11 +37,25 @@ Owners and Admins can open **Team > General** to change the team name, descripti
 
 Team avatars use the instance's configured [Image storage](/core/instance-management/instance-settings). Check the active team before uploading an image or changing its details.
 
+## Require two-factor authentication
+
+Owners and Admins can require [two-factor authentication](/core/security/authentication/2fa) for everyone in the team:
+
+1. Open **Team > General**.
+2. In **Two-factor authentication**, select **Required for all members**. Select **Optional for members** to remove the requirement.
+3. Select **Save changes**.
+
+You must configure 2FA on your own profile before you can require it. Otherwise Coolify shows `Enable two-factor authentication on your profile before you require it for the team.`
+
+When the team requires 2FA, a person without 2FA who opens the dashboard in this team goes to the **Two-factor authentication required** page. They must configure 2FA there before they can use the team, or switch to a team that does not require it.
+
+The requirement applies to dashboard sessions only. It does not block API tokens or MCP clients.
+
 ## What the Members page shows
 
 Open **Team** in the Coolify sidebar, then select **Members**.
 
-The member list shows each person's name, email address, role in the active team, and the actions available to you. Owners and administrators also see the invitation form and any pending invitations.
+The member list shows each person's name, email address, role in the active team, and the actions available to you. Owners and administrators also see a summary of each Member's access under their email address, the invitation form, and any pending invitations.
 
 Coolify marks your own row with **You**. You cannot change your own role or remove yourself from this page.
 
@@ -48,7 +64,7 @@ Coolify marks your own row with **You**. You cannot change your own role or remo
 ## Choose the next task
 
 <CoolIconCardGrid
-  columns={3}
+  columns={2}
   surface
   cards={[
     {
@@ -56,6 +72,12 @@ Coolify marks your own row with **You**. You cannot change your own role or remo
       description: 'Invite someone by email or create an invitation link to share with them.',
       href: '/core/team/members/add-a-member',
       icon: UserAdd,
+    },
+    {
+      title: 'Set member access',
+      description: 'Limit a Member to selected projects, environments, or resources.',
+      href: '/core/team/members/set-member-access',
+      icon: Key,
     },
     {
       title: 'Manage members',

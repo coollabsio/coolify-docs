@@ -18,6 +18,8 @@ Task command bodies and execution messages require `read:sensitive` and are best
 
 | Tool | Actions |
 | :--- | :--- |
-| `manage_scheduled_task` | `create`, `update` (`write`); `delete` (`write`, confirm); `execute` (`deploy`, confirm). |
+| `manage_scheduled_task` | `create`, `update` (`write`); `delete` (`delete`, confirm); `execute` (`deploy`, confirm). An enabled task also needs `deploy`. |
 
 Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.
+
+`create` and `update` accept `use_shell`, the **Run in a shell** setting. It defaults to `true`: the command runs with `sh -c` in the container. Set it to `false` for containers without a shell. The command then runs directly, without shell features such as variables, pipes, or redirects.

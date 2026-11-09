@@ -19,7 +19,7 @@ description: Use Coolify MCP to list projects, inspect environments, and search 
 
 | Tool | Actions |
 | :--- | :--- |
-| `manage_project` | `create`, `update`, `create_environment`, `update_environment` (`write`); `delete` and `delete_environment` (`write`, confirm). Only empty projects and environments can be deleted. |
-| `manage_tags` | `create`, `update`, `attach`, `detach` (`write`); `delete` (`write`, confirm). |
+| `manage_project` | `create`, `update`, `create_environment`, `update_environment` (`write`); `delete` and `delete_environment` (`delete`, confirm). Only empty projects and environments can be deleted. |
+| `manage_tags` | `create`, `update`, `attach` (`write`); `detach` (`delete`); `delete` (`delete`, confirm). |
 
 Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.

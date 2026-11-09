@@ -22,7 +22,7 @@ This routing behavior applies only when Coolify Proxy uses Traefik. When applica
 
 Docker Compose applications do not use the standard application **Healthcheck** page. Define the check in each service's Dockerfile or in the Compose definition.
 
-For a non-Compose Dockerfile application, Coolify detects the image's `HEALTHCHECK` and uses it instead of adding the health check configured in the dashboard. Remove the Dockerfile instruction and redeploy before switching that application to a Coolify-managed check.
+When the dashboard **Healthcheck** is enabled, it replaces the image's Dockerfile `HEALTHCHECK` in the generated container definition. To use the Dockerfile `HEALTHCHECK`, disable the dashboard **Healthcheck** and redeploy.
 
 <span id="configure-health-checks" />
 
@@ -198,7 +198,7 @@ CMD ["npm", "start"]
 
 The command runs inside containers created from the image. It must use the internal listening port, and every binary referenced by `HEALTHCHECK` must be installed in the final image stage.
 
-For a non-Compose Dockerfile application, Coolify detects this instruction and does not add its dashboard-configured health check to the generated container definition.
+For a non-Compose application, Coolify uses this instruction only while the dashboard **Healthcheck** is disabled. An enabled dashboard **Healthcheck** replaces it.
 
 </Tab>
 <Tab value="Docker Compose" icon={Layers}>

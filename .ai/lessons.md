@@ -1,1 +1,3 @@
 - In custom MDX components, use `fumadocs-core/link` instead of raw anchor elements so internal links include the configured `/docs` base path.
+- The Coolify UI links each one-click service to `/docs/services/<template-key>`. A variant template (`<name>-with-*`) without its own page needs a redirect in `nginx/redirects.conf`.
+- Headings inside `<Tabs>` are not in the prerendered HTML of `.output/public`, so an anchor check on the build output reports false "missing anchor" hits for them.

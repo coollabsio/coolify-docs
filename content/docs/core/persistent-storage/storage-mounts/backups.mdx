@@ -1,11 +1,11 @@
 ---
 title: Backup
-description: Schedule local and S3 backups for application volume and directory mounts, set retention, and verify each execution.
+description: Schedule local and off-server backups for application volume and directory mounts, set retention, and verify each execution.
 ---
 
 # Back up storage mounts
 
-Coolify can create scheduled file-level archives of eligible storage mounts attached to an application. Coolify first creates each compressed `.tar.gz` archive on the application's deployment server. It can then send a copy to S3-compatible storage and, if configured, remove the local archive after every selected destination has a successful copy.
+Coolify can create scheduled file-level archives of eligible storage mounts attached to an application. Coolify first creates each compressed `.tar.gz` archive on the application's deployment server. It can then send a copy to S3-compatible, SFTP, FTPS, or WebDAV storage and, if configured, remove the local archive after every selected destination has a successful copy.
 
 <Callout type="warning" title="A file-level archive can contain inconsistent data">
 If the application changes files while Coolify creates the archive, the backup may be inconsistent or corrupted. This is especially important for databases. Use an application-aware backup when one is available, or stop application writes during the archive step.
@@ -55,12 +55,14 @@ Every schedule keeps a local archive on the deployment server by default. Local 
 
 To create an off-server copy:
 
-1. Configure and validate an [S3-compatible storage destination](/core/s3-storage/overview) for the current team.
+1. Configure and validate an [S3-compatible storage destination](/core/s3-storage/overview), or an [SFTP, FTPS, or WebDAV storage](/core/s3-storage/sftp-ftps-webdav), for the current team.
 2. Open the storage backup schedule and select **S3** to open **S3 storage**.
 3. Select one or more destinations in **S3 storages**, then select **Enable S3**.
 4. Select **Save changes**.
 
 Set **Local copy** to **Delete after S3 upload** when you want to retain only the remote copies. Each backup is uploaded to every selected destination. Coolify deletes the local archive only after all uploads succeed. If any upload fails, the execution shows **S3 warning** and Coolify keeps the local archive.
+
+The **S3 storages** list also shows the SFTP, FTPS, and WebDAV storages of the team. A member whose access is limited to some projects or resources cannot add a new storage to a backup schedule. This needs write access on the whole team, also through the API.
 
 ## Set retention limits
 
@@ -82,7 +84,9 @@ Open **Executions** and wait for the run to finish. A usable result shows **Succ
 - **Failed** means the archive was not completed. Read the execution message before retrying.
 - **Needs attention** means recovery requires action. Read the reason, correct it, and use the retry button. Failed recovery does not indefinitely block new backups.
 
-**Download** uses the local archive when available and can fall back to a retained S3 copy. S3 links expire after 15 minutes. An instance configured with S3 for file downloads can first prepare local archives in that storage. Wait for preparation to finish. Downloads require an Admin or Owner role.
+**Download** uses the local archive when available and can fall back to a retained S3 copy. S3 links expire after 15 minutes. A copy in an SFTP, FTPS, or WebDAV storage downloads through Coolify. An instance configured with S3 for file downloads can first prepare local archives in that storage. Wait for preparation to finish. Downloads require an Admin or Owner role.
+
+A failed storage backup notifies the team on the first failure, then at most once a day while it keeps failing. The first successful run after a failure sends one "works again" notification. Coolify never disables a storage backup schedule automatically.
 
 <Callout type="warning" title="Coolify does not restore storage archives from this page">
 The storage backup workflow creates, downloads, and deletes archives, but it does not provide a dashboard restore action. Before relying on a schedule, download an archive and test your restore procedure in a separate environment.

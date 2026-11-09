@@ -1,11 +1,13 @@
 ---
 title: Restore a Database
-description: Restore database backups from an upload, a server file, or S3-compatible storage.
+description: Restore database backups from an upload, a server file, or a backup storage.
 ---
 
 # Restore a database
 
-Open a running database's **Import Backup** page to restore a backup from your computer, the database server, or S3 storage. Imports are also available for supported database components inside a service stack.
+Open a running database's **Backups** page and select **Import backup** to restore a backup from your computer, the database server, or a [backup storage](/core/s3-storage/overview). The import opens in a dialog. Imports are also available for supported database components inside a service stack.
+
+Older links to the **Import Backup** page open the **Backups** page.
 
 <Callout type="warning" title="Protect existing data before importing">
 Stop application writes and take a separate backup of the target before importing. Review the selected database, backup format, generated script, and replacement options. An import can overwrite data and credentials.
@@ -19,13 +21,14 @@ Stop application writes and take a separate backup of the target before importin
 | MySQL and MariaDB | SQL dumps, including all-database backups; optional user and privilege restoration. |
 | MongoDB | Archives and dump directories. |
 | SQLite | Database files; choose the target file under **Restore into**. |
-| Redis, Dragonfly, KeyDB, ClickHouse | No built-in Import Backup workflow; use an engine-specific restore process. |
+| ClickHouse | **Import backup** reports that restore is not supported; use a ClickHouse client. |
+| Redis, Dragonfly, KeyDB | No **Backups** page and no import; use an engine-specific restore process. |
 
 Coolify detects formats before changing data and supports gzip, bz2, xz, and zip compression as well as supported archives. Ensure the backup matches the target engine and version, and that the server has enough free space.
 
 ## Review restore options
 
-The **Import command** shows the exact generated restore script and is read-only. Choose **Backup contents** for a selected-database or all-database dump as appropriate.
+Select **Show import command** to see the **Import command**, the exact generated restore script. It is read-only. Choose **Backup contents** for a selected-database or all-database dump as appropriate.
 
 - **Replace objects that already exist** is off by default for single-database PostgreSQL imports. Enable it to request the previous clean/replace behavior. Existing objects can otherwise make an import fail.
 - **Keep owners and privileges** is off by default for PostgreSQL archives. Enable it only when the destination has the required roles and you intend to restore ownership and grants.
@@ -37,14 +40,16 @@ PostgreSQL restores run in one transaction. Replace restores of SQL backups swap
 
 ## Select and import a backup
 
-1. Open **Import Backup** on the running target database.
-2. Select a source:
-   - Upload a backup from your computer.
-   - Enter the backup's absolute server path and select **Check file**.
-   - Select available team **S3 storage**, enter the file path within the bucket, and check the file.
-3. Review file information, backup contents, restore options, and the generated import command.
-4. Start the restore and complete its confirmation.
-5. Follow **Database Restore Output** until the operation finishes.
+1. Open the running target database and select **Backups**.
+2. Select **Import backup**. For a service, open the service's **Backups** page, select **Import backup**, then select the **Database** if the service has more than one.
+3. Under **Backup source**, select a source:
+   - **File**: upload a backup from your computer, or enter the absolute **File path on the server** and select **Check file**.
+   - **Storage**: select a team backup storage in **Storage**, enter the **File path** in the storage, and select **Check file**.
+4. Review file information, backup contents, restore options, and the generated import command.
+5. Start the restore and complete its confirmation.
+6. Follow **Database Restore Output** until the operation finishes.
+
+If the database is not running, the dialog asks you to start it first. An SFTP storage needs a saved host key before Coolify can read a backup from it. See [SFTP, FTPS, and WebDAV storage](/core/s3-storage/sftp-ftps-webdav).
 
 Coolify uses the selected source; an earlier unused upload does not replace a checked server path. A second start, restart, or import is rejected while an import runs. Interrupted or stale imports are stopped and cleaned up so they do not indefinitely block later operations.
 
@@ -73,7 +78,7 @@ curl --request POST "https://coolify.example.com/api/v1/databases/<database-uuid
   --data '{"source":"server","path":"/var/backups/database.sql.gz","dump_all":false,"replace_existing":false}'
 ```
 
-Use a token with the required `write` and `deploy` abilities. Poll the activity endpoint with the returned activity ID and verify the result before resuming writes. Upload imports use `source: "upload"` and `upload_id`; S3 imports use `source: "s3"`, `s3_storage_uuid`, and `path`.
+Use a token with the required `write` and `deploy` abilities. Poll the activity endpoint with the returned activity ID and verify the result before resuming writes. Upload imports use `source: "upload"` and `upload_id`; storage imports use `source: "s3"`, `s3_storage_uuid`, and `path` for every storage type.
 
 ## Verify the result
 

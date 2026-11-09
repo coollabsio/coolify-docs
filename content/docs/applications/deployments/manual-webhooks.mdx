@@ -5,7 +5,7 @@ description: Configure repository events for applications connected by a public 
 
 # Manual Git webhooks
 
-A manual Git webhook lets GitHub, GitLab, Bitbucket, or Gitea notify Coolify when a repository changes. Use one for an application created from a public repository URL or **Private Repository (with deploy key)**.
+A manual Git webhook lets GitHub, GitLab, Bitbucket, Gitea, or Forgejo notify Coolify when a repository changes. Use one for an application created from a public repository URL or **Private Repository (with deploy key)**.
 
 Applications connected through an official Git App receive provider events through that integration and do not need a manual Git webhook.
 
@@ -176,7 +176,7 @@ Open **Webhooks** in Coolify. Enter a long random value in **Webhook secret** in
 
 ### Add the webhook on Gitea
 
-Open the Gitea repository and select **Settings > Webhooks > Add Webhook > Gitea**. Paste the Coolify URL into **Target URL** and enter the same secret.
+Open the Gitea repository and select **Settings > Webhooks > Add Webhook > Gitea**. On Forgejo, select **Forgejo** as the webhook type. Paste the Coolify URL into **Target URL** and enter the same secret.
 
 </Step>
 <Step>

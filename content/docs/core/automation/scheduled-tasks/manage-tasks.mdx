@@ -21,7 +21,7 @@ The address includes `task_uuid` while a task is open, so a link can reopen that
 
 ## Update task configuration
 
-You can change the task's **Name**, **Schedule**, **Timeout (seconds)**, **Container** or **Service**, and **Command**.
+You can change the task's **Name**, **Schedule**, **Timeout (seconds)**, **Container** or **Service**, **Command**, and **Run in a shell**.
 
 Click **Save changes** after making changes. Coolify validates the schedule before saving it.
 
@@ -34,6 +34,35 @@ If you change the command or target container, run the task manually and review 
 Click **Disable** to stop future scheduled executions without deleting the configuration or its history. Click **Enable** when the task should run on its schedule again.
 
 Disabling a task does not stop an execution that is already running.
+
+---
+
+## Automatic disable after repeated failures
+
+Coolify disables a task that keeps failing. This occurs after 10 failures in a row, when the first of these failures is more than 24 hours old. A short outage therefore does not disable a task that runs often.
+
+When Coolify disables a task:
+
+- the team gets one notification with the reason
+- the task page shows **Disabled because it keeps failing** with the reason
+
+Fix the cause, then click **Enable**. Enabling the task clears the reason and starts a new failure count.
+
+A run that Coolify skips because the resource has no running container does not count as a failure. Database backups, storage backups, and Docker cleanup are never disabled automatically.
+
+### Failure notifications
+
+While a task keeps failing, the team gets a notification for the first failure, then at most one notification each day. The first successful run after a failure sends one "works again" notification to the same channels.
+
+### Failure status in the API
+
+The scheduled tasks API returns these fields:
+
+| Field | Meaning |
+| :--- | :--- |
+| `consecutive_failures` | The number of failed runs since the last successful run. |
+| `failing_since` | The date and time of the first failed run since the last successful run. |
+| `disabled_reason` | Why Coolify disabled the task. Enabling the task clears it. |
 
 ---
 
@@ -67,12 +96,19 @@ The modal closes and the task disappears from the resource's **Scheduled Tasks**
 <Accordions type="multiple">
 <Accordion title="A saved task does not run on schedule">
 
-Confirm that the task is enabled, the application or service is running, and its server is validated and functional. Then compare **Schedule** with [Cron Syntax](/core/automation/cron-syntax) and the server timezone.
+Confirm that the task is enabled, the application or service is running, and its server is validated and functional. If Coolify disabled the task because it kept failing, the task page shows the reason. Then compare **Schedule** with [Cron Syntax](/core/automation/cron-syntax) and the server timezone.
 
 </Accordion>
 <Accordion title="Execute Now runs the command in the wrong container">
 
 Open the task and set **Container** or **Service** to the component that contains the command. Save the change before running the task again.
+
+</Accordion>
+<Accordion title="A task fails and its duration is the same as its timeout">
+
+Coolify stops a command that does not exit before **Timeout (seconds)**. The execution shows **Failed** with the output `The command on the server timed out after <timeout> seconds.`, even if the command already did its work.
+
+Make sure that the command exits when its work is done. For example, it must not wait for input or keep a process in the foreground. Click **Execute now** and check the duration. If the task needs more time, increase **Timeout (seconds)**.
 
 </Accordion>
 </Accordions>

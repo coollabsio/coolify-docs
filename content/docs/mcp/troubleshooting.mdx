@@ -25,12 +25,12 @@ Read the message in the response:
 </Accordion>
 <Accordion title="The client returns 401 or authentication fails">
 
-Confirm the complete token appears after `Bearer`, has not expired or been revoked, and that its owner is still a member of the token's team. Confirm the client sends the header on every MCP request. Coolify returns `401` with `Invalid token.` in these cases.
+Confirm the complete token appears after `Bearer`, has not expired, been paused, or been revoked, and that its owner is still a member of the token's team. Confirm the client sends the header on every MCP request. Coolify returns `401` with `Invalid token.` in these cases.
 
 </Accordion>
-<Accordion title="The client reports error -32003 Missing required team role">
+<Accordion title="The client reports error -32003: This API token has more access than you have in this team">
 
-The token has `read:sensitive`, `write`, `deploy`, or `root`, but its owner is a team member. Only team admins and owners can use these permissions. Use a `read` token, or ask a team owner to change your role.
+The token has more access than its owner has in the token's team. For example, the owner's access changed after the token was created. Revoke the token and create a new one with the access you have, or ask a team admin or owner to give you more access.
 
 </Accordion>
 <Accordion title="The client cannot connect">
@@ -40,7 +40,7 @@ Confirm the URL ends with `/mcp`, the instance is reachable from the client mach
 </Accordion>
 <Accordion title="A tool reports missing permissions">
 
-Use `read` for inspection, `read:sensitive` for supported sensitive output, `deploy` for deployment or lifecycle operations, and `write` for `create_*` and `manage_*` tools. MCP hides tools that the token cannot use. Call `coolify_help` to see the tools that the token can use.
+Use `read` for inspection, `read:sensitive` for supported sensitive output, `deploy` for deployment or lifecycle operations, `write` for `create_*` and `manage_*` tools, and `delete` for delete actions. `write` does not include `delete`. MCP hides tools that the token cannot use. A token limited to selected projects, environments, or resources also does not see team-level tools, such as the server tools. Call `coolify_help` to see the tools that the token can use.
 
 </Accordion>
 <Accordion title="A resource is missing">

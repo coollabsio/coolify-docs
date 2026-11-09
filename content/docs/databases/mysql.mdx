@@ -61,7 +61,7 @@ Select **Start** and follow the startup output. Wait until MySQL is running and 
 | Setting | Default or behavior |
 | :--- | :--- |
 | Internal port | `3306` |
-| Default image | `mysql:8` |
+| Default image | `mysql:9.7`. Existing databases keep their image. |
 | Normal user | `mysql` |
 | Initial database | `default` |
 | Data mount | `/var/lib/mysql` |
@@ -93,7 +93,7 @@ Use the image version that matches your application and backup/restore tooling. 
 
 Coolify uses `mysqldump` for scheduled backups. Selected databases are dumped directly; **Database selection > All databases** creates a gzip-compressed all-database dump. For **Specific databases**, type each name and press Enter in **Databases to back up**.
 
-Configure schedules, retention, and S3 storage under [Database backups](/databases/backups). The built-in **Import Backup** form accepts MySQL backups while the database is running; follow [Restore a database](/databases/restore) for the import workflow.
+Configure schedules, retention, and S3 storage under [Database backups](/databases/backups). The built-in **Import backup** dialog on the **Backups** page accepts MySQL backups while the database is running; follow [Restore a database](/databases/restore) for the import workflow.
 
 <Callout type="warning" title="Restore replaces data">
 

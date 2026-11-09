@@ -304,24 +304,25 @@ Check if all required Docker images were pulled successfully:
 
 ```bash
 # List Coolify-related images
-docker images | grep coolify
-docker images | grep ghcr.io/coollabsio
+docker images | grep coollabsio
 ```
 
 You should see at least:
 
-- `ghcr.io/coollabsio/coolify` (or your custom registry)
-- `ghcr.io/coollabsio/coolify-helper`
+- `coollabsio/coolify`
+- `coollabsio/coolify-helper`
+
+Coolify pulls its images from Docker Hub by default. If you set `REGISTRY_URL=ghcr.io`, the image names start with `ghcr.io/`.
 
 If images are missing, there may have been a network issue during installation. Try pulling them manually:
 
 ```bash
-# Pull the latest Coolify images
-docker pull ghcr.io/coollabsio/coolify:latest
-docker pull ghcr.io/coollabsio/coolify-helper:latest
+# Pull the images that the Coolify Compose files use
+cd /data/coolify/source
+docker compose --env-file .env -f docker-compose.yml -f docker-compose.prod.yml pull
+docker pull coollabsio/coolify-helper:latest
 
 # Then restart Coolify
-cd /data/coolify/source
 docker compose --env-file .env -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate
 ```
 
@@ -422,7 +423,7 @@ cat /data/coolify/source/upgrade-*.log
 
 # Look for errors in the log, then re-run upgrade
 cd /data/coolify/source
-bash upgrade.sh latest latest ghcr.io false
+bash upgrade.sh latest
 ```
 
 </Accordion>
@@ -459,18 +460,20 @@ See [Check Port Availability](#check-port-availability) above.
 **Solution:**
 
 ```bash
-# Test network connectivity to GitHub Container Registry
-curl -I https://ghcr.io
+# Test network connectivity to Docker Hub (a 401 response means it is reachable)
+curl -I https://registry-1.docker.io/v2/
 
 # Check DNS resolution
-nslookup ghcr.io
+nslookup registry-1.docker.io
 
 # Try pulling images manually
-docker pull ghcr.io/coollabsio/coolify:latest
+docker pull coollabsio/coolify:latest
 
 # If using custom registry, login first
 docker login your-registry.com
 ```
+
+If Docker Hub rate limits the pulls, pull the images from GitHub Container Registry instead. Read [Custom registry source](/start-with-self-hosted#_3-custom-registry-source).
 
 </Accordion>
 

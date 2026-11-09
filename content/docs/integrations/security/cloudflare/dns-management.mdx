@@ -12,20 +12,32 @@ Coolify can create DNS records for application and service domains using a team'
 1. Create a Cloudflare API token with **Zone > DNS > Edit** and **Zone > Zone > Read** for the zones you want Coolify to manage.
 2. In Coolify, open **Keys & Tokens > Integration Tokens** and select **New token**, then choose **Cloudflare** in **Provider**.
 3. Enter a **Token name**, paste the **API token**, and select the **DNS** capability.
-4. Optionally enable **Automatically configure DNS**. New domains are configured automatically when there is one unambiguous matching credential.
+4. Optionally enable **Automatically configure DNS**. New and edited domains are configured automatically when there is one unambiguous matching credential.
 5. Select **Validate and add**. Open the saved token's edit icon to review **Domains this token can manage**. Use **Refresh zones** after changing provider permissions, and **Validate and save** when editing credentials.
 
 Integration tokens belong to a team. Add the token to the team that owns the resource. This token workflow is separate from configuring a proxy's DNS challenge for certificate issuance.
 
 ## Manage a domain
 
-Open an application's or service's **Domains** page and add the hostname. Coolify matches it to zones available through the team's tokens and offers DNS configuration for that server.
+Open an application's or service's **Domains** page and add the hostname, or change an existing domain to it. Coolify matches it to zones available through the team's tokens. With automatic DNS, Coolify creates the record; otherwise it opens the **Configure DNS** dialog for that server.
 
-If a record already points elsewhere, review the existing value before using the replace action. Records created through this workflow show **Managed by Coolify**. Removing a managed domain offers deletion of its DNS record after confirmation; review other uses of the hostname before approving deletion.
+A clone of an application or service, and an application or service created through the API, also get a record for each domain in a zone with automatic DNS. A clone gets records only for the domains that the source does not use.
+
+If a record already points elsewhere, automatic DNS replaces it only when Coolify created it and no other resource uses it. Otherwise the domain shows the conflict and the **Configure DNS** dialog opens. Review the existing value before using the replace action. Records created through this workflow show **Managed by Coolify**. Removing a managed domain offers deletion of its DNS record after confirmation; review other uses of the hostname before approving deletion.
 
 Re-check DNS after changing a record. Coolify replaces the previous check result, including checks for preview domains. IPv6 addresses are compared by value rather than their written form.
 
 If no zone matches, check the token's zone scope and permissions, refresh accessible zones, or configure records manually using [DNS](/core/networking/dns).
+
+A proxied record that points to a different server shows **DNS mismatch**. See [Configure Coolify DNS validation](/core/networking/dns#configure-coolify-dns-validation).
+
+## Use the API or MCP
+
+You can also manage DNS records and integration tokens through the [API](/api/overview) and the [MCP server](/mcp/overview):
+
+- `GET` and `POST /api/v1/{applications|services}/{uuid}/dns`, `POST .../dns/replace` and `DELETE .../dns/{hostname}` view, create, replace and release the Cloudflare records of a resource's domains. A release deletes the record at Cloudflare only when Coolify created it and nothing else uses it. The MCP tool is `manage_dns`.
+- `PATCH /api/v1/applications/{uuid}` and `PATCH /api/v1/services/{uuid}` create the records of the domains they add, when exactly one zone with automatic DNS manages them, like the **Domains** page.
+- `/api/v1/security/integration-tokens` lists, adds, updates, rotates and deletes integration tokens, and `POST .../{uuid}/sync-zones` reads the zones again. A new Cloudflare token can get the `dns` and `tunnel` capabilities. The MCP tool is `manage_integration_tokens`.
 
 ## Use the token for SSH tunnels
 

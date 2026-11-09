@@ -106,7 +106,7 @@ Keep at least one tested backup outside the deployment server. A local backup on
 
 Use **Scheduled Tasks** for commands that must run inside an application container on a schedule, such as a framework scheduler, queue maintenance, or cache cleanup.
 
-A disabled task does not start scheduled executions. An enabled execution fails when the application has no running container or the deployment server is not functional. Follow [Application scheduled tasks](/applications/operations/scheduled-tasks) to configure the command, frequency, timeout, and target container.
+A disabled task does not start scheduled executions. When the application has no running container, Coolify skips the run. An enabled execution fails when the deployment server is not functional. Follow [Application scheduled tasks](/applications/operations/scheduled-tasks) to configure the command, frequency, timeout, and target container.
 
 Use [Tags](/core/automation/tags/overview) to group related resources across projects and environments.
 
@@ -157,4 +157,4 @@ Viewing container logs requires permission to update the resource. API log reque
 
 ## Show a maintenance page
 
-Open **Domains > Maintenance mode** to return a maintenance page with HTTP `503` while the containers keep running. The change applies without redeployment on supported Traefik and Caddy servers. See [Maintenance and error pages](/core/networking/proxy/maintenance-and-error-pages).
+Open **Maintenance Mode** in the application settings sidebar, select **Enable maintenance**, then confirm. All domains of the application return a maintenance page with HTTP `503` while the containers keep running. The change applies without redeployment on Traefik and Caddy servers that are not part of a Docker Swarm. See [Maintenance and error pages](/core/networking/proxy/maintenance-and-error-pages).

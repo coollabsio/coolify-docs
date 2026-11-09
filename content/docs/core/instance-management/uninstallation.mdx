@@ -130,14 +130,16 @@ This is the final destructive step. It permanently removes the instance `.env` f
 
 <Callout type="info" title="Image versions may differ">
 Image tags can vary depending on when you last updated Coolify. Run `docker images` to see the images and tags on your server, then use those tags in the commands below.
+
+Coolify pulls its images from Docker Hub by default, and `docker images` shows them without a registry prefix. If your instance uses `REGISTRY_URL=ghcr.io`, the image names start with `ghcr.io/`.
 </Callout>
 
 Remove the default Coolify images to free disk space:
 
 ```sh
-docker rmi ghcr.io/coollabsio/coolify:latest
-docker rmi ghcr.io/coollabsio/coolify-helper:latest
-docker rmi ghcr.io/coollabsio/sentinel:1.0.1
+docker rmi coollabsio/coolify:latest
+docker rmi coollabsio/coolify-helper:latest
+docker rmi coollabsio/sentinel:1.1.5
 docker rmi postgres:15-alpine
 docker rmi redis:7-alpine
 ```
@@ -145,7 +147,7 @@ docker rmi redis:7-alpine
 If you removed a `coolify-realtime` container, remove its image too:
 
 ```sh
-docker rmi ghcr.io/coollabsio/coolify-realtime:1.0.16
+docker rmi coollabsio/coolify-realtime:1.0.16
 ```
 
 If you used the default Traefik proxy, remove its image too:
@@ -275,13 +277,15 @@ This permanently deletes files Coolify stored under `/data/coolify` on this serv
 
 <Callout type="info" title="Image versions may differ">
 Image tags can vary depending on when you last updated Coolify. Run `docker images` to see the images and tags on your server, then use those tags in the commands below.
+
+Coolify pulls its images from Docker Hub by default, and `docker images` shows them without a registry prefix. If your instance uses `REGISTRY_URL=ghcr.io`, the image names start with `ghcr.io/`.
 </Callout>
 
 Remove the default Coolify images to free disk space:
 
 ```sh
-docker rmi ghcr.io/coollabsio/coolify-helper:latest
-docker rmi ghcr.io/coollabsio/sentinel:1.0.1
+docker rmi coollabsio/coolify-helper:latest
+docker rmi coollabsio/sentinel:1.1.5
 ```
 
 If you used the default Traefik proxy, remove its image too:

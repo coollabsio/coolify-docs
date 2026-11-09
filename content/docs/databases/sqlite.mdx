@@ -16,7 +16,11 @@ SQLite support is experimental. Coolify runs a standalone database resource usin
 
 ## Connect an application
 
-Under the database's **General > Connect application** section, select an application on the same server, choose the container **Mount path**, and select **Mount volume**. Configure the application to open the database file at that path and redeploy it. The application must run as user `65532` or root to access the files.
+Under the database's **General > Connect application** section, select an application on the same server, choose the container **Mount path**, and select **Mount volume**. Configure the application to open the database file at that path and redeploy it. The application can run as any user ID, because the database files are writable by every user.
+
+Keep the data in the Docker volume. If you mount the files with a bind mount instead, every user on the host can read and change them.
+
+A SQLite database created before Coolify v4.6.0 keeps its older image. With that image, the application must run as user `65532` or root to write the files. New databases use `peakimages/sqlite:3.54.1-v0.2.0`.
 
 For a Docker Compose application, Coolify shows the volume lines to add to the service that uses SQLite. Copy them into the application's Compose file and redeploy. Start the SQLite database first because Compose does not create the external volume.
 
@@ -24,4 +28,4 @@ Coolify protects connected volumes. Use **Unlink** to remove a managed applicati
 
 ## Backups and recovery
 
-SQLite supports manual and scheduled [database backups](/databases/backups). Use [Import Backup](/databases/restore) to restore a backup and choose the database file under **Restore into**. Stop application writes before replacing a file and verify the application after recovery.
+SQLite supports manual and scheduled [database backups](/databases/backups). Use **Import backup** on the **Backups** page to [restore a backup](/databases/restore) and choose the database file under **Restore into**. Stop application writes before replacing a file and verify the application after recovery.

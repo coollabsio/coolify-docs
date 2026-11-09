@@ -118,9 +118,9 @@ Select **Send test** and confirm that it arrives in the configured chat. The gen
 </Steps>
 
 <Callout type="info" title="Custom thread ID limitations">
-Custom thread IDs currently apply to deployment success and failure, application and container stopped or restarted events, backup success and failure, scheduled tasks, Docker cleanup, disk usage, server reachability, and server patching.
+Each event under **Notification events** can use a custom thread ID. Backup S3 upload warnings and missing backup alerts use the thread ID of **Backup failure**.
 
-Restart-limit alerts, backup S3 upload warnings, Traefik proxy outdated alerts, and test notifications use the main chat without a custom thread ID.
+These notifications use the main chat without a custom thread ID: SSH host key changes, "works again" notifications of scheduled jobs, API token alerts, automatic update and other general messages, and test notifications.
 </Callout>
 
 ---

@@ -47,7 +47,7 @@ Open the new record under **Recent executions**. Confirm that it finishes succes
 
 ## Application-specific behavior
 
-When the schedule is due, Coolify finds the application's running container and runs the saved command through `sh`.
+When the schedule is due, Coolify finds the application's running container and runs the saved command. With **Run in a shell** selected (the default), Coolify runs the command with `sh -c`. Clear it for a container without a shell, such as a distroless or scratch image: Coolify then splits the command into arguments and runs it directly.
 
 Before following the detailed guide, check these application-specific requirements:
 
@@ -57,7 +57,9 @@ Before following the detailed guide, check these application-specific requiremen
 - The schedule uses the timezone configured for the application's deployment server.
 - **Timeout (seconds)** accepts `60` to `36000` and defaults to `300`.
 
-An execution fails when no application container is running, the configured container cannot be found, the command exits with an error, or the command exceeds its timeout.
+When no application container is running, Coolify skips the run. A skipped run does not send a notification and does not count as a failure.
+
+An execution fails when the configured container cannot be found, the command exits with an error, or the command exceeds its timeout.
 
 Coolify records the status, timing, and captured output under **Recent executions**. A successful exit does not prove that the command produced the intended application result, so verify the affected records, files, or external system when necessary.
 
