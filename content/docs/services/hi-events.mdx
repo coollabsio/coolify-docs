@@ -1,0 +1,45 @@
+---
+title: "Hi.Events"
+description: "Open-source event management and ticketing platform."
+category: "Business"
+icon: "/docs/images/services/hi-events-logo.svg"
+---
+
+# Hi.Events
+
+<ZoomImage src="/docs/images/services/hi-events-logo.svg" alt="Hi.Events logo" />
+
+## What is Hi.Events?
+
+Hi.Events is an open-source platform to sell tickets and manage events, such as conferences, concerts, and festivals. Organizers keep control of their branding, checkout, and customer data.
+
+- Paid, free, donation, and tiered tickets, with add-ons and promo codes
+- Payouts to your own Stripe account, with taxes, fees, invoices, and refunds
+- Check-in with a phone camera or a USB scanner, and PDF tickets
+- Team roles, more than one organizer, a REST API, and webhooks
+
+## Before you deploy
+
+<Callout type="warning" title="Use an HTTPS domain">
+
+Hi.Events always sets its login cookie as `Secure`. On a plain HTTP domain, sign-in fails.
+
+</Callout>
+
+The Coolify template runs the all-in-one Hi.Events image with a PostgreSQL database and Redis.
+
+## Environment variables
+
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `APP_DISABLE_REGISTRATION` | `false` | Set to `true` to stop new sign-ups, for example after you create your account. |
+| `MAIL_MAILER` | `log` | With `log`, Hi.Events writes emails to the logs and does not send them. Set it to `smtp` and fill in the `MAIL_*` variables to send emails. |
+| `MAIL_FROM_ADDRESS` | `noreply@example.com` | Sender address of the emails. |
+| `STRIPE_PUBLIC_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Empty | Stripe keys. Fill them in to sell paid tickets. |
+| `APP_SAAS_MODE_ENABLED` | `false` | Runs Hi.Events as a platform for other organizers, with Stripe application fees. |
+
+## Links
+
+- [The official website](https://hi.events/?utm_source=coolify.io)
+- [Documentation](https://hi.events/docs?utm_source=coolify.io)
+- [GitHub](https://github.com/HiEventsDev/Hi.Events?utm_source=coolify.io)

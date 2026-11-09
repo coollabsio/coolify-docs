@@ -1,0 +1,45 @@
+---
+title: "Orbit"
+description: "Self-hosted workspace for teams with tasks, docs, chat, and an MCP server for AI clients."
+category: "Productivity"
+icon: "/docs/images/services/orbit-logo.svg"
+---
+
+# Orbit
+
+<ZoomImage src="/docs/images/services/orbit-logo.svg" alt="Orbit logo" />
+
+## What is Orbit?
+
+Orbit is a self-hosted workspace for teams from the Coolify team. It puts tasks, docs, and chat in one app:
+
+- **Tasks:** Projects with custom workflows, list, board, and timeline views, sub-issues, labels, and GitHub sync.
+- **Docs:** A page tree with live collaborative editing, version history, and search.
+- **Chat:** Channels, direct messages, threads, and files.
+- **MCP server:** AI clients connect to your Orbit server with OAuth to read and write tasks and docs, and to read chat.
+
+## Before you deploy
+
+- **Use an HTTPS domain.** In production, Orbit accepts only an HTTPS public origin. The template sets `ORBIT_PUBLIC_ORIGIN` to the domain of the `orbit` service, so make sure that the domain starts with `https://`.
+- **Keep a copy of `ORBIT_APP_KEY`.** Coolify generates this key when you create the service. Orbit uses it to encrypt saved secrets, for example the SMTP password and the GitHub App keys. A database that you restore without the same key cannot read its saved secrets. Store the key outside the server and its backups.
+
+## First setup
+
+1. Deploy the service.
+2. Open the logs of the `orbit` service. On the first start, Orbit prints one `Initial setup URL`.
+3. Open this URL and complete the owner and workspace form. This account becomes the root user.
+
+After the setup, registration is closed. People join your workspace only by invitation.
+
+## Persistent storage
+
+| Volume | Path in the container | Content |
+| :--- | :--- | :--- |
+| `orbit-data` | `/var/lib/orbit` | Orbit data |
+| `orbit-backups` | `/var/backups/orbit` | Local Orbit backups |
+
+## Links
+
+- [GitHub](https://github.com/coollabsio/orbit?utm_source=coolify.io)
+- [Deployment and operations](https://github.com/coollabsio/orbit/blob/main/docs/operations.md?utm_source=coolify.io)
+- [MCP server and client setup](https://github.com/coollabsio/orbit/blob/main/docs/mcp.md?utm_source=coolify.io)
