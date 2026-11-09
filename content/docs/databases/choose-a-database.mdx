@@ -21,7 +21,7 @@ Choose the database engine that matches the data model and workload your applica
 | [KeyDB](/databases/keydb) | Redis-compatible workloads using multithreading. | `6379` | No | No |
 | [ClickHouse](/databases/clickhouse) | Analytical queries and column-oriented data. | `9000` | Yes | No |
 
-Scheduled backups means the database resource exposes Coolify's engine-specific backup workflow. Dashboard restore means **Import Backup** can load a backup. ClickHouse can be backed up on a schedule, and its **Import Backup** page reports that restore is not supported. Redis, Dragonfly, and KeyDB do not expose either workflow. Backup support does not mean that the engine cannot create its own backups. The deployment and backup path for every engine is on [Databases](/databases#self-host-a-database-with-backups).
+Scheduled backups means the database resource exposes Coolify's engine-specific backup workflow. Dashboard restore means the **Import backup** button on **Backups** can load a backup. ClickHouse can be backed up on a schedule, and its import dialog reports that restore is not supported. Redis, Dragonfly, and KeyDB do not expose either workflow. Backup support does not mean that the engine cannot create its own backups. The deployment and backup path for every engine is on [Databases](/databases#self-host-a-database-with-backups).
 
 ## Choose a one-click database or a service
 
@@ -37,7 +37,7 @@ Create the database from **New Resource > Databases**. Use an application only f
 
 ## Choose a version and image
 
-The database selector provides the versions and images supported by the current Coolify release. PostgreSQL currently offers PostgreSQL 18, 17, and 16, plus Supabase PostgreSQL, PostGIS, and PGVector extension images. Select an image that matches your application's compatibility, architecture, and migration requirements.
+The database selector provides the versions and images supported by the current Coolify release. PostgreSQL currently offers PostgreSQL 18, 17, and 16, plus Supabase PostgreSQL, PostGIS, and PGVector extension images. **Redis / Valkey** offers Valkey 9, the default, and Redis 8. Select an image that matches your application's compatibility, architecture, and migration requirements.
 
 Do not change a production database image to another major version without checking the engine's upgrade procedure and taking a verified backup first. A database image version is not the same as a Coolify version.
 
