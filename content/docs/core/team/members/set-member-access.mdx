@@ -18,20 +18,35 @@ The access of a Member is a list of scopes. Each scope has two parts:
 
 Scopes add up. A level on a project applies to all environments and resources in that project. A level on an environment applies to all resources in that environment.
 
-A new Member gets **Read** on the whole team. The member list shows this as `Team-wide read (default)`.
+A new Member gets **Read** on the whole team. For a person that you invite, the invitation form and the member list show this as `Team: read`. A Member without saved access, for example after **Make member**, shows `Team-wide read (default)`. Both give the same access.
 
 ### Access levels
 
 | Level | What the Member can do | Also gives | API ability |
 | :--- | :--- | :--- | :--- |
-| **Read** | See resources and their settings. Secrets stay hidden. | - | `read` |
-| **Read secrets** | Also see environment variables and other secrets. | Read | `read:sensitive` |
-| **Deploy** | Deploy, start, stop, and restart. | Read | `deploy` |
-| **Write** | Change settings and create resources. | Deploy, Read secrets, Read | `write` |
-| **Delete** | Delete resources. | Read | `delete` |
-| **Full access** | Every level, with no limits. | All levels | `root` |
+| **Read** | See resources and their settings. Secrets, logs, and scheduled-task output stay hidden. | - | `read` |
+| **Read secrets** | Also see environment variables and other secrets in the dashboard. | Read | `read:sensitive` |
+| **Deploy** | Deploy, start, stop, and restart applications and services. | Read | `deploy` |
+| **Write** | Change settings and create resources. Start, stop, and restart databases. See logs and scheduled-task output. | Deploy, Read secrets, Read | `write` |
+| **Delete** | Delete resources, and their storage and backups. To delete a scheduled task, the Member also needs **Write**. | Read | `delete` |
+| **Full access** | Every level. | All levels | `root` |
 
 **Write** gives **Read secrets** because a person who can change a resource can always read its secrets back. **Write** does not give **Delete**. Select **Delete** too if the Member must delete resources.
+
+The level descriptions in the access editor differ in some details. For example, the editor says that **Read** shows logs, but Coolify shows container logs, deployment debug output, and scheduled-task commands and output only with **Write**, because they can contain secrets.
+
+### What access levels do not give
+
+Access levels apply only to projects, environments, and resources. Even **Full access** on the whole team does not let a Member:
+
+- open a resource terminal, the container file browser, or the [Web Terminal](/core/infrastructure/servers/web-terminal)
+- add, change, or remove servers, destinations, private keys, Git sources, S3 storages, tags, or notification settings
+- change team or server shared variables, team settings, or members
+- read the team audit log
+- place resources on the localhost server
+- read secret values through the API, or give a token `write:sensitive`
+
+A Member with **Write** or **Full access** can never open a resource terminal, the file browser, or the Web Terminal. Make the person an **Admin** if they need these controls. See [Roles & Permissions](/core/team/roles-and-permissions).
 
 ### Presets
 
@@ -115,16 +130,25 @@ A Member with access grants can use only some servers and team credentials:
 
 - To create, clone, or migrate a resource to a server, the Member needs **Write** on the whole team, or **Write** on a resource that already runs on that server. Server lists show only the servers that the Member can use.
 - Only an instance administrator can place resources on the localhost server, the server that runs Coolify.
-- To use team private keys, GitHub Apps, and Gitea Apps in a resource, or to add a new S3 storage to a backup schedule, the Member needs **Write** on the whole team. This also applies to the API. A resource keeps the key or source that it already uses.
+- To use team credentials, the Member needs **Write** on the whole team. This also applies to the API. A resource keeps the key or source that it already uses. Team credentials are:
+  - team private keys
+  - GitHub Apps, GitLab Apps, and Gitea Apps
+  - secret manager links, which use the team's integration tokens
+  - a new S3 storage for a database or volume backup schedule
+  - a server or S3 file that is not a backup of the same database, when the Member imports it into a database
 
-When the Member does not have this access, Coolify shows a message, for example `You need write access on the whole team to use team credentials, such as private keys, git sources, and S3 storages.`
+When the Member does not have this access, Coolify shows a message, for example `You need write access on the whole team to use team credentials, such as private keys, git sources, and S3 storages.` or `You need write access on the whole team to add an S3 storage to this backup.`
 
 Only Owners and Admins can add, change, or remove servers and team credentials. See [Roles & Permissions](/core/team/roles-and-permissions).
 
 ## API tokens of a Member
 
-A Member can create [API tokens](/core/security/credentials/api-tokens) only with the levels and scopes that they have. A token never gets more access than its owner. A Member without a scope on the whole team must select **Selected projects, environments, or resources** for the token.
+A Member can create [API tokens](/core/security/credentials/api-tokens) only with the levels and scopes that they have. A token never gets more access than its owner. A Member without a scope on the whole team must select **Selected projects, environments, or resources** for the token. A Member cannot give a token `write:sensitive`.
+
+The API returns secret values only to tokens of Owners and Admins. A Member's token with `read:sensitive` still gets API responses with the secrets hidden. To read secrets, the Member uses the dashboard.
 
 If the access of a Member becomes smaller, a token that has more access than the Member stops working. The API returns `403` with `This API token has more access than you have in this team. Revoke it and create a new token.`
+
+The same happens when a project, environment, or resource that a token of the Member selects is deleted. The token list shows the item as `Unavailable project`, `Unavailable environment`, or `Unavailable resource`. Edit the token to remove it.
 
 When an Owner or Admin becomes a Member with **Make member**, Coolify resets their access to `Team-wide read (default)` and revokes their API tokens for this team. Follow [Manage members](/core/team/members/manage-members) to change a role.

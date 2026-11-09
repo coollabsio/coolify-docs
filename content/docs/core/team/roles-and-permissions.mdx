@@ -13,6 +13,8 @@ Owners and Admins can give a Member more access, or limit a Member to some proje
 
 In the tables below, the **Member** column shows the default access (**Read** on the whole team). When an entry names a level, a Member with that level on the resource can do the action. A Member whose access does not include the whole team cannot open team-wide pages, such as servers, credentials, notifications, team settings, and members.
 
+Access levels apply only to projects, environments, and resources. When the **Member** column shows **No**, a Member cannot do the action at any level, also with **Full access** on the whole team.
+
 ## Role comparison
 
 ### Team and members
@@ -21,6 +23,7 @@ In the tables below, the **Member** column shows the default access (**Read** on
 | :--- | :---: | :---: | :---: |
 | View the team and member list | Yes | Yes | Yes |
 | Change the team name and description | Yes | Yes | No |
+| Require two-factor authentication for the team | Yes | Yes | No |
 | Invite Members or Admins | Yes | Yes | No |
 | Invite Owners | Yes | No | No |
 | Change or remove Members or Admins | Yes | Yes | No |
@@ -34,15 +37,23 @@ The member-management controls apply to other people. Coolify does not show acti
 | Permission | Owner | Admin | Member |
 | :--- | :---: | :---: | :---: |
 | View projects, environments, applications, databases, and services | Yes | Yes | Yes |
-| View environment variables and other secrets | Yes | Yes | With **Read secrets** |
+| View environment variables and other secrets in the dashboard | Yes | Yes | With **Read secrets** |
+| View container logs, deployment debug output, and scheduled-task commands and output | Yes | Yes | With **Write** |
 | Create projects | Yes | Yes | With **Write** on the whole team |
-| Create environments and resources, or update projects, environments, applications, databases, and services | Yes | Yes | With **Write** |
+| Create environments in a project | Yes | Yes | With **Write** on the project |
+| Create resources in an environment | Yes | Yes | With **Write** on the environment |
+| Update projects, environments, applications, databases, and services | Yes | Yes | With **Write** |
 | Delete projects, environments, applications, databases, and services | Yes | Yes | With **Delete** |
-| Deploy, start, stop, or restart resources | Yes | Yes | With **Deploy** |
+| Deploy, start, stop, or restart applications and services | Yes | Yes | With **Deploy** |
+| Start, stop, or restart databases | Yes | Yes | With **Write** |
 | Add or change environment variables, storage, scheduled tasks, webhooks, and backups | Yes | Yes | With **Write** |
+| Delete storage, backup schedules, or backup executions | Yes | Yes | With **Delete** |
+| Delete scheduled tasks | Yes | Yes | With **Write** and **Delete** |
 | Open a resource terminal or container file browser | Yes | Yes | No |
 
 Default Member access lets a person inspect team resources without changing or deploying them. A page may still be visible to a Member while its editing and operational controls are unavailable.
+
+**Write** on a project or environment also applies to the environments and resources in it. **Write** on one resource lets a Member change only that resource. A Member who can change environment variables can also delete them.
 
 ### Servers and destinations
 
@@ -54,8 +65,9 @@ Default Member access lets a person inspect team resources without changing or d
 | Manage the proxy and server certificate authorities | Yes | Yes | No |
 | View or manage server security and Sentinel | Yes | Yes | No |
 | Use the Web Terminal | Yes | Yes | No |
+| [Transfer a server](/core/infrastructure/servers/server-transfer) to another Coolify instance | Yes | No | No |
 
-Terminal commands run on your infrastructure. Coolify therefore restricts both the global [Web Terminal](/core/infrastructure/servers/web-terminal) and resource terminals to Owners and Admins.
+Terminal commands run on your infrastructure. Coolify therefore restricts both the global [Web Terminal](/core/infrastructure/servers/web-terminal) and resource terminals to Owners and Admins. A Member cannot open a terminal or the file browser, also with **Write** or **Full access**.
 
 Server lists, for example when you create a resource, show only the servers that you can use. Only an instance administrator can place resources on the localhost server, the server that runs Coolify.
 
@@ -69,26 +81,40 @@ Server lists, for example when you create a resource, show only the servers that
 | View notification settings | Yes | Yes | Yes |
 | Configure notifications or send test notifications | Yes | Yes | No |
 | View team S3 storage, Git sources, and private-key entries | Yes | Yes | Yes |
-| Use team private keys, GitHub Apps, and Gitea Apps in a resource, or add an S3 storage to a backup schedule | Yes | Yes | With **Write** on the whole team |
+| Use team credentials in a resource (see the list below) | Yes | Yes | With **Write** on the whole team |
 | Create, update, or delete S3 storage, Git sources, and private keys | Yes | Yes | No |
-| View or manage cloud-init scripts and cloud provider tokens | Yes | Yes | No |
+| Create, update, or delete tags | Yes | Yes | No |
+| View or manage cloud-init scripts, cloud provider tokens, and integration tokens | Yes | Yes | No |
+
+Team credentials that need **Write** on the whole team:
+
+- team private keys
+- GitHub Apps, GitLab Apps, and Gitea Apps
+- secret manager links, which use the team's integration tokens
+- a new S3 storage for a database or volume backup schedule
+- a server or S3 file that is not a backup of the same database, when you import it into a database
 
 Viewing a credential entry does not mean Coolify reveals every stored secret. Secret fields can remain concealed even when the surrounding resource is visible.
 
 The rule for team credentials also applies to the API. A resource keeps the private key or Git source that it already uses. When you do not have the access, Coolify shows a message that write access on the whole team is needed.
 
+Only an instance administrator can make a Git App system-wide, or change or delete a system-wide Git App.
+
 ### API tokens
 
-When API access is enabled for the instance, each role can create and revoke its own tokens.
+Each role can create and revoke its own tokens. Tokens work only when an instance administrator turns on API access. While API access is off, the token page shows `API access is turned off`.
 
 | Permission | Owner | Admin | Member |
 | :--- | :---: | :---: | :---: |
 | Create and revoke personal API tokens | Yes | Yes | Yes |
 | Create a token with `read` permission | Yes | Yes | Yes |
 | Grant `read:sensitive`, `deploy`, `write`, `delete`, or `root` permissions | Yes | Yes | Only the levels the Member has |
+| Grant `write:sensitive` permission | Yes | Yes | No |
 | Give a token access to all resources in the team | Yes | Yes | Only with access on the whole team |
 
 API tokens belong to the person who creates them and are scoped to the active team. A token never gets more access than its owner. With default access, a Member can create only a read-only token. See [API permissions](/api/permissions) for the available token permissions.
+
+The API returns secret values only to a token with `read:sensitive` or `root` that belongs to an Owner or Admin. A Member's token with `read:sensitive` still gets API responses with the secrets hidden.
 
 ---
 
@@ -100,6 +126,7 @@ Owner is the highest team role. Only an Owner can:
 - promote an Admin or Member to Owner
 - change another Owner to Admin or Member
 - remove another Owner from the team
+- transfer a server to another Coolify instance
 - delete the team
 
 More than one person can have the Owner role. Keep at least one trusted Owner available so the team does not depend on a single account.
@@ -120,12 +147,12 @@ An Owner or Admin role in another team does not make a person an instance admini
 - Choose **Admin** when the person should deploy and operate resources, manage servers and credentials, change team settings, and manage Members or Admins.
 - Choose **Owner** only when the person must also grant, change, or remove Owner access.
 
-Use the lowest role that provides the access the person needs. You can update another person's role from **Teams > Members**. Follow [Manage Members](/core/team/members/manage-members) for the role-change rules and verification steps.
+Use the lowest role that provides the access the person needs. You can update another person's role from **Team > Members**. Follow [Manage Members](/core/team/members/manage-members) for the role-change rules and verification steps.
 
 Team administrators and owners can review [Audit Log](/core/team/audit-log) events. Members cannot read the team audit log.
 
 ## Sensitive content in the dashboard
 
-Users without permission to update a resource cannot view container logs, scheduled-task commands/output, Compose or file-mount content, hardcoded Compose environment values, proxy configuration, server shared values, or protected credentials such as basic-auth passwords, log-drain keys, and the Sentinel token. Sensitive API responses have an additional token-permission check, and still need a token owned by a team Owner or Admin; see [API permissions](/api/permissions).
+Users without permission to update a resource cannot view container logs, scheduled-task commands/output, Compose or file-mount content, hardcoded Compose environment values, proxy configuration, server shared values, or protected credentials such as basic-auth passwords, log-drain keys, and the Sentinel token. Sensitive API responses have an additional token-permission check, and still need a token owned by a team Owner or Admin; see [API permissions](/api/permissions). Container logs are an exception: through the API, a token with `read:sensitive` can read them, also when its owner is a Member.
 
-The team Danger Zone is visible only to its owner. Impersonation and the team admin view require an instance administrator. Credentials such as private keys, Git sources, S3 storage, and integration tokens must belong to the team that owns the resource.
+The team Danger Zone is visible only to its owner. The team admin view requires an instance administrator. Impersonation is available only on Coolify Cloud, and only to the root user. Credentials such as private keys, Git sources, S3 storage, and integration tokens must belong to the team that owns the resource.
