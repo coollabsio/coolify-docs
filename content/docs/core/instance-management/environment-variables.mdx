@@ -1,11 +1,11 @@
 ---
 title: Instance Environment Variables
-description: Configure PHP memory, workers, and scheduled job dispatch for a self-hosted Coolify instance and apply environment changes.
+description: Configure PHP memory, workers, scheduled job dispatch, SSH host key checks, and API limits for a self-hosted Coolify instance and apply environment changes.
 ---
 
 # Instance environment variables
 
-Self-hosted Coolify reads its instance environment from `/data/coolify/source/.env`. Use this file for settings such as PHP memory, workers, and scheduled job dispatch that are not exposed in the dashboard.
+Self-hosted Coolify reads its instance environment from `/data/coolify/source/.env`. Use this file for settings such as PHP memory, workers, scheduled job dispatch, SSH host key checks, and API limits that are not exposed in the dashboard.
 
 These settings affect the Coolify instance. To configure a deployed application, use that application's [environment variables](/applications/configuration/environment-variables) and image configuration instead.
 
@@ -43,6 +43,32 @@ SCHEDULED_JOBS_DISPATCH_MODE=concurrent
 ```
 
 Then follow [Apply the changes](#apply-the-changes) below to recreate the Coolify container while preserving its current image and any custom Compose overrides.
+
+## SSH host key checking
+
+Coolify saves the SSH host key of a server on the first connection. `SSH_HOST_KEY_CHECKING` sets what Coolify does when the key changes, for all servers of the instance:
+
+| Value | Behavior |
+| :--- | :--- |
+| `warn` | Coolify connects, shows the new key, and notifies the team. This is the default. |
+| `enforce` | Coolify refuses to connect until you trust or reset the new key. |
+| `off` | Coolify does not check the host key. |
+
+Coolify uses `warn` for any other value. With `warn`, a team can still enforce the check on one server. Read [SSH host key](/core/infrastructure/servers/security#ssh-host-key) for details.
+
+```dotenv
+SSH_HOST_KEY_CHECKING=enforce
+```
+
+## API failed request limit
+
+`API_FAILED_REQUEST_RATE_LIMIT` sets how many failed API requests one token or IP address can send in one minute. The default is `30`. Requests that return `401` or `403` count, and `404` counts only for requests without a token. When a client reaches the limit, Coolify answers all its API requests with `429` for 1 minute, then for 5 and 15 minutes when the client reaches the limit again within one hour. The team of the token gets one notification a day. Set `0` to turn the limit off.
+
+```dotenv
+API_FAILED_REQUEST_RATE_LIMIT=60
+```
+
+For the general API request limit, read [Rate limits](/api/rate-limits).
 
 ## Change a setting
 
