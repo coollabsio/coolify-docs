@@ -98,6 +98,8 @@ Open **Settings > Advanced** to manage:
 
 Current DNS validation checks the domain's `A` records. Validation succeeds when an address matches the selected server's IPv4 address or a recognized Cloudflare proxy address. Coolify skips this check for generated `sslip.io` domains.
 
+For a Cloudflare proxy address in a zone that one of the team's [Cloudflare integration tokens](/integrations/security/cloudflare/dns-management) can access, Coolify also reads the record in Cloudflare. If the record, or the closest wildcard record, points to a different server, the domain shows **DNS mismatch**. A `CNAME` record, for example of a Cloudflare Tunnel, still passes.
+
 DNS validation reports a mismatch, but it does not replace a public DNS check. A cached resolver result, an incorrect `AAAA` record, firewall rules, or a proxy configuration can still prevent the domain from working.
 
 ## Use internationalized domain names
