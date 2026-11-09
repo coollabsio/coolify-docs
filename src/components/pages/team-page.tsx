@@ -348,7 +348,7 @@ export function TeamPage() {
             Honorable contributors
           </h2>
           <p className="m-0 mx-auto mt-3 max-w-2xl text-base leading-7 text-fd-muted-foreground">
-            People who made a big difference to Coolify.
+            People who made a big difference to Coolify or related products.
           </p>
         </div>
 
