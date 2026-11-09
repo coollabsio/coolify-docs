@@ -32,6 +32,16 @@ When troubleshooting, confirm the intended setting exists in the source definiti
 
 Saving reparses the definition. Removing or renaming a Compose service changes how Coolify identifies its components, so back up its data and inspect storage names before the change.
 
+### Removed Compose services
+
+When you remove a Compose service from the definition, Coolify keeps its component (application or database):
+
+- Its card shows **Not in Compose file**, and it does not count in the Service status.
+- Coolify keeps its settings. When you add the Compose service back under the same name, Coolify uses these settings again.
+- To remove the component, delete it in its settings.
+
+A component that was removed before Coolify v4.7.0 gets this mark at the next deployment or save of the Service.
+
 ## Environment references
 
 Reference a value with Compose interpolation to manage it under **Configuration > Environment Variables**:
