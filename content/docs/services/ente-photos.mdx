@@ -17,6 +17,13 @@ Ente is a service that provides a fully open-source, end-to-end encrypted platfo
 
 Learn more at [help.ente.io](https://help.ente.io/).
 
+## Variants
+
+- **Ente Photos:** Uses an S3 bucket that you provide. Fill in the `S3_STORAGE_*` variables before you deploy.
+- **Ente Photos with S3:** Includes a MinIO-compatible storage service. The template creates the buckets, allows all CORS origins, and uses the routed `MINIO_SERVER_URL` as the S3 endpoint. Browsers upload and download files from this URL directly, so it must be reachable from the browser.
+
+Both variants use the `ghcr.io/ente` images. The `albums` service has its own domain (`SERVICE_URL_ALBUMS_3002`) and serves the public album links.
+
 ## Configuring Object Store
 
 - Once you have selected your service. You will need to set up of some environment variables for your S3 bucket or substitute like MinIO.
@@ -67,11 +74,13 @@ minio/mc ls myminio
 
 ## Environment Variables
 
+This table lists the variables of the **Ente Photos** variant.
+
 | Variable Name                         | Service  | Description                                                                                 | Default Value      | Required | Prefilled |
 | ------------------------------------- | -------- | ------------------------------------------------------------------------------------------- | ------------------ | -------- | --------- |
 | `SERVICE_URL_MUSEUM_8080`             | museum   | URL for the museum service on port 8080                                                     | -                  | Yes      | Yes       |
 | `ENTE_HTTP_USE_TLS`                   | museum   | Enable/disable TLS for HTTP connections                                                     | `false`            | No       | Yes       |
-| `SERVICE_URL_WEB_3002`                | museum   | URL for the web albums service                                                              | -                  | Yes      | Yes       |
+| `SERVICE_URL_ALBUMS`                  | museum   | URL of the albums service, for public album links                                           | -                  | Yes      | Yes       |
 | `SERVICE_URL_WEB_3004`                | museum   | URL for the web cast service                                                                | -                  | Yes      | Yes       |
 | `SERVICE_URL_WEB_3001`                | museum   | URL for the web accounts service                                                            | -                  | Yes      | Yes       |
 | `ENTE_DB_HOST`                        | museum   | PostgreSQL database host                                                                    | `postgres`         | No       | Yes       |
@@ -81,7 +90,7 @@ minio/mc ls myminio
 | `SERVICE_PASSWORD_POSTGRES`           | museum   | PostgreSQL database password                                                                | -                  | Yes      | Yes       |
 | `SERVICE_REALBASE64_ENCRYPTION`       | museum   | Base64 encoded encryption key                                                               | -                  | Yes      | Yes       |
 | `SERVICE_REALBASE64_64_HASH`          | museum   | Base64 encoded hash key                                                                     | -                  | Yes      | Yes       |
-| `SERVICE_REALBASE64_JWT`              | museum   | Base64 encoded JWT secret                                                                   | -                  | Yes      | Yes       |
+| `SERVICE_PASSWORD_64_JWT`             | museum   | JWT secret, URL-safe (letters and digits only)                                              | -                  | Yes      | Yes       |
 | `ENTE_INTERNAL_ADMIN`                 | museum   | Internal admin user ID                                                                      | `1580559962386438` | No       | Yes       |
 | `ENTE_INTERNAL_DISABLE_REGISTRATION`  | museum   | Disable user registration                                                                   | `false`            | No       | Yes       |
 | `PRIMARY_STORAGE_ARE_LOCAL_BUCKETS`   | museum   | Use local buckets for primary storage (false unless you are connecting to bucket over http) | `false`            | No       | Yes       |
@@ -93,7 +102,8 @@ minio/mc ls myminio
 | `S3_STORAGE_BUCKET`                   | museum   | S3 storage bucket name                                                                      | -                  | Yes      | No        |
 | `SERVICE_URL_WEB_3000`                | web      | URL for the main web service                                                                | -                  | Yes      | Yes       |
 | `SERVICE_URL_MUSEUM`                  | web      | URL for the museum service                                                                  | -                  | Yes      | Yes       |
-| `SERVICE_URL_WEB_3002`                | web      | URL for the albums service                                                                  | -                  | Yes      | Yes       |
+| `SERVICE_URL_ALBUMS`                  | web      | URL of the albums service                                                                   | -                  | Yes      | Yes       |
+| `SERVICE_URL_ALBUMS_3002`             | albums   | URL of the albums service on port 3002, for public album links                              | -                  | Yes      | Yes       |
 | `SERVICE_USER_POSTGRES`               | postgres | PostgreSQL username                                                                         | `pguser`           | No       | Yes       |
 | `SERVICE_PASSWORD_POSTGRES`           | postgres | PostgreSQL password                                                                         | -                  | Yes      | Yes       |
 | `SERVICE_DB_NAME`                     | postgres | PostgreSQL database name                                                                    | `ente_db`          | No       | Yes       |

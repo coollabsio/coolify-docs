@@ -15,8 +15,17 @@ Rybbit is a next-gen, open source, lightweight, cookieless web & product analyti
 
 ## Configuration
 
-- set frontend URL.
-- set backend URL to `$frontend_URL/api` and uncheck the "Strip Prefixes" option.
+Set the domain of the `rybbit` service. Since Coolify v4.7.0, the template routes `/api` on the same domain to the `rybbit_backend` service on port 3001 and keeps the `/api` prefix. You do not need to set a backend domain.
+
+### Fix sign-up and login in an existing service
+
+In an older Rybbit service, `/api` requests can get a 404 error, so sign-up and login fail. To fix it:
+
+1. Open **Configuration > General > Edit Compose File**.
+2. Add `SERVICE_URL_RYBBIT_3001=/api` to the `environment` list of `rybbit_backend`.
+3. Move the `rybbit_backend` service above the `rybbit` service in the Compose file, then save.
+4. Open the settings of `rybbit_backend` and, in **Advanced**, set **Path prefixes** to **Keep prefixes**.
+5. Redeploy the service.
 
 # Screenshots
 

@@ -13,6 +13,13 @@ icon: "/docs/images/services/litellm-logo.svg"
 
 LiteLLM is an open-source LLM Gateway to manage authentication, loadbalancing, and spend tracking across 100+ LLMs. All in the OpenAI format.
 
+## Keys and models
+
+- **Admin API key:** The template sets `LITELLM_MASTER_KEY` to `sk-` followed by the value of `SERVICE_PASSWORD_MASTERKEY`. Use this full value, with the `sk-` prefix, as the admin key.
+- **Salt key:** `LITELLM_SALT_KEY` uses its own generated value (`SERVICE_PASSWORD_SALTKEY`). LiteLLM encrypts stored model credentials with it, so they stay readable when you change the master key. Do not change the salt key after you add models.
+- **Models in the UI:** `STORE_MODEL_IN_DB` is `True` by default, so you can add models in the LiteLLM UI.
+- **UI login:** Sign in to the UI with `SERVICE_USER_UI` and `SERVICE_PASSWORD_UI`.
+
 ## Screenshots
 
 <br />
