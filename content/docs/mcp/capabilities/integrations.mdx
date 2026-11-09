@@ -1,6 +1,6 @@
 ---
 title: Integrations
-description: Use Coolify MCP to manage Git sources and S3 storages, and browse repositories and branches.
+description: Use Coolify MCP to manage Git sources, backup storages, integration tokens, DNS records, secret managers, and Cloudflare Tunnels.
 ---
 
 # Integrations
@@ -13,11 +13,27 @@ description: Use Coolify MCP to manage Git sources and S3 storages, and browse r
 
 Repository and branch tools register only when a GitHub App exists on the instance. Call `list_github_apps` first.
 
-## Manage Git sources and S3 storages
+## Manage Git sources and backup storages
 
 | Tool | Actions |
 | :--- | :--- |
-| `manage_git_source` | GitHub and GitLab apps. `list` (`read`); `create`, `update` (`write`); `delete` (`write`, confirm). |
-| `manage_s3_storage` | `list`, `get` (`read`); `create`, `update`, `validate` (`write`); `delete` (`write`, confirm). Secrets are never returned. |
+| `manage_git_source` | GitHub and GitLab apps: `list` (`read`); `create`, `update` (`write`); `delete` (`delete`, confirm). Gitea apps: `list` only. Add and connect Gitea apps in the dashboard. |
+| `manage_s3_storage` | Backup storages of type S3, SFTP, FTPS, or WebDAV. `list`, `get` (`read`); `create`, `update`, `validate` (`write`); `delete` (`delete`, confirm). The type cannot change after `create`. Secrets are never returned. |
+
+To create an application from a Gitea App, use the `gitea_app` action of `create_application`. See [Applications](/mcp/capabilities/applications).
+
+## Manage integration tokens, DNS, and secret managers
+
+| Tool | Actions |
+| :--- | :--- |
+| `manage_integration_tokens` | Cloudflare (DNS and Tunnel), Doppler, Infisical, and Vault tokens of the team. `list`, `get`, `zones` (`read`); `create`, `update`, `sync_zones` (`write`); `delete` (`delete`, confirm). Only team admins and owners. The token secret is never returned. |
+| `manage_dns` | Cloudflare DNS records of the domains of an application or service. `status` (`read`); `create` (`write`); `replace` (`write`, confirm); `release` (`delete`, confirm). |
+| `manage_secret_manager` | Secret manager source (Doppler, Infisical, or Vault) of an application, service, or database. `get` (`read`); `set`, `keys`, `add_reference`, `import` (`write`); `remove` (`delete`, confirm). Secret values are never returned. |
+| `manage_cloudflare_tunnel` | Cloudflare Tunnel setting of a server. `get` (`read`); `update`, `enable`, `disable` (`write`, confirm). |
 
 Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.
+
+- `manage_dns` records point only to the public addresses of the resource's server, and use only zones of the team. When `create` finds a conflicting record, it returns the record ID and its current value. Ask the user before your client calls `replace`.
+- `manage_dns` `release` deletes the record at Cloudflare only when Coolify created it and nothing else uses it. Set `delete_record=false` to keep it.
+- `manage_secret_manager` `keys` lists the key names of the remote secrets. `add_reference` adds a `{{vault.KEY}}` variable for one key, and `import` adds one for every key that has no variable yet. After `remove`, existing `{{vault.*}}` variables fail the next deployment.
+- `manage_cloudflare_tunnel` does not install or remove `cloudflared` on the server. `enable` marks the tunnel as enabled after you set up `cloudflared` yourself. `disable` restores the previous server address when Coolify knows it.
