@@ -47,6 +47,21 @@ A limited token can use only the endpoints under `/applications`, `/services`, `
 
 List endpoints return only the projects, environments, and resources that the token can access. Coolify also applies the token's access to changes. The response message explains when the token's limits block a change.
 
+A limited token also:
+
+- Cannot read or reference team and server shared variables.
+- Cannot use team credentials, such as private keys, git sources, and S3 storages, that its resources do not use yet.
+- Can place resources only on servers that already run a resource inside its scope.
+
+<Callout type="warn">
+A limit is not a server boundary. A token with `write` can deploy a Docker Compose file with bind mounts of the host file system or privileged containers. It therefore has root access to every server that runs a resource inside its scope. When staging and production use the same server, a `write` token for staging can reach production.
+</Callout>
+
+To keep a limited token away from other resources:
+
+- Give it only `read` and `deploy` when it does not need to change configuration.
+- Run the resources of each environment on their own servers.
+
 A member who has access only to some projects or resources can create only limited tokens.
 
 If you delete a selected project, environment, or resource, the access list of the token in **Issued tokens** shows it as `Unavailable project`, `Unavailable environment`, or `Unavailable resource`. A token of a member then stops working with `This API token has more access than you have in this team. Revoke it and create a new token.` [Edit the token](/core/security/credentials/api-tokens#manage-a-token) and remove the unavailable item.

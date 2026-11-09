@@ -161,7 +161,7 @@ The archive keeps object owners and privileges (`GRANT`s). The **Import backup**
 
 When **Database selection** is **All databases**, Coolify uses `pg_dumpall` and stores a gzip-compressed dump. Configure the schedule, retention, and S3 destination in [Database backups](/databases/backups). Follow [Restore a database](/databases/restore) for the built-in PostgreSQL import workflow.
 
-The **Import backup** dialog on **Backups** accepts PostgreSQL backups while the database is running. Coolify detects the dump format and generates the appropriate restore command using `pg_restore` or `psql`. Review the read-only **Import command** before starting the restore.
+The built-in **Import backup** dialog on the **Backups** page accepts PostgreSQL backups while the database is running. Coolify detects the dump format and generates the appropriate restore command using `pg_restore` or `psql`. Select **Show import command** to review the read-only **Import command** before starting the restore.
 
 <Callout type="warning" title="Match the dump format to the restore command">
 

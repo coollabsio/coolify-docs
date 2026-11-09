@@ -28,7 +28,7 @@ Coolify detects formats before changing data and supports gzip, bz2, xz, and zip
 
 ## Review restore options
 
-The **Import command** shows the exact generated restore script and is read-only. Choose **Backup contents** for a selected-database or all-database dump as appropriate.
+Select **Show import command** to see the **Import command**, the exact generated restore script. It is read-only. Choose **Backup contents** for a selected-database or all-database dump as appropriate.
 
 - **Replace objects that already exist** is off by default for single-database PostgreSQL imports. Enable it to request the previous clean/replace behavior. Existing objects can otherwise make an import fail.
 - **Keep owners and privileges** is off by default for PostgreSQL archives. Enable it only when the destination has the required roles and you intend to restore ownership and grants.
