@@ -15,7 +15,7 @@ Image scanning is off by default. Turn it on for each server. When the server sc
 
 - You must be a team admin or owner to turn on image scanning for a server.
 - The server must be able to reach Docker Hub, to pull the scanner images (`anchore/syft`, `anchore/grype`, `regclient/regctl`, and `alpine`), and `grype.anchore.io`, to download the vulnerability database.
-- Scans use up to 1 CPU and 1 GB of memory while they run. The scanner data uses about 1.2 GB of disk, plus temporary space for one image.
+- Scans use up to 1 CPU and 1 GB of memory while they run. You can raise the memory limit, see [Scanner memory limit](#scanner-memory-limit). The scanner data uses about 1.2 GB of disk, plus temporary space for one image.
 
 Coolify keeps the scanner data in `/data/coolify/image-scans` and in the Docker volume `coolify-grype-db` on the server.
 
@@ -169,16 +169,25 @@ Select **Show error log** to see the failed step, its exit code, and the end of 
 | :--- | :--- |
 | Not enough disk space | Free disk space on the server. |
 | The vulnerability database is not on the server yet, or is too old | Check that the server can reach `grype.anchore.io`. |
-| The scanner ran out of memory | Make sure that the server has 1 GB of free memory. |
+| The scanner ran out of memory | Raise the [Scanner memory limit](#scanner-memory-limit). The server must have that much free memory. |
 | Coolify cannot read this image from its registry | Log in to the registry on the server. |
 | The image is not on the server | Select **Scan now** to pull and scan it. An image that Coolify builds needs a new deploy. |
 | Another scan is still running | Wait. Coolify runs one scan at a time on a server. |
+
+## Scanner memory limit
+
+Large images can need more memory than the default of 1 GB. To set a higher limit:
+
+1. Open the server **Vulnerabilities** page.
+2. In the **Image scanning** section, select **1 GB**, **2 GB**, **4 GB**, or **8 GB** in **Scanner memory limit**.
+
+The limit applies to each scanner step. The server must have that much free memory while a scan runs. The help text of the **Image scanning** section also shows the disk space that the scanner data uses on the server.
 
 ## Turn off image scanning
 
 On the server **Vulnerabilities** page, select **Disable** and confirm. Coolify stops scanning the images and the operating system packages of the server. The scan results and the scanner data on the server stay.
 
-To remove the scanner data, select **Delete scanner data**. Coolify removes the stored SBOMs, the vulnerability database, and the scanner images from the server. The scan results in Coolify stay, and the next scan gets the scanner again.
+To remove the scanner data, select **Delete scanner data**. Coolify removes the stored SBOMs, the vulnerability database, and the scanner images from the server. The scan results in Coolify stay, and the next scan gets the scanner again. When the server has no scanner data, Coolify hides the button.
 
 ## Permissions
 
@@ -197,8 +206,8 @@ Read [Roles and permissions](/core/team/roles-and-permissions).
 
 | Endpoint | Purpose |
 | :--- | :--- |
-| [`GET /api/v1/servers/{uuid}/image-scanning`](/api/endpoints/servers/get-server-image-scanning) | Read whether the server scans, and the state of the scanner. |
-| [`PATCH /api/v1/servers/{uuid}/image-scanning`](/api/endpoints/servers/update-server-image-scanning) | Turn scanning of the server on or off with `is_image_scan_enabled`. |
+| [`GET /api/v1/servers/{uuid}/image-scanning`](/api/endpoints/servers/get-server-image-scanning) | Read whether the server scans, the memory limit, the state of the scanner, and the disk space of the scanner data (`scanner_disk_used_bytes`). |
+| [`PATCH /api/v1/servers/{uuid}/image-scanning`](/api/endpoints/servers/update-server-image-scanning) | Turn scanning of the server on or off with `is_image_scan_enabled`, and set the scanner memory limit with `image_scan_memory_mb` (`1024`, `2048`, `4096`, or `8192`). |
 | [`GET /api/v1/vulnerabilities`](/api/endpoints/vulnerabilities/list-vulnerabilities) | List the resources of the team with their security status. |
 | [`GET /api/v1/applications/{uuid}/vulnerabilities`](/api/endpoints/vulnerabilities/get-application-vulnerabilities) | Read the status, images, and findings of an application. |
 | [`GET /api/v1/databases/{uuid}/vulnerabilities`](/api/endpoints/vulnerabilities/get-database-vulnerabilities) | Read the status, image, and findings of a database. |
