@@ -15,7 +15,7 @@ You must be an **Owner** or **Admin** in the active team.
 
 Choose the lowest role the person needs:
 
-- **Member** for read-only access to team resources
+- **Member** for read-only access to team resources, or for access to only some projects, environments, or resources
 - **Admin** to manage team settings, invitations, and members at the Admin or Member level
 - **Owner** for full control over roles, including other Owners
 
@@ -41,7 +41,7 @@ Sending the invitation from Coolify requires transactional email to be enabled. 
 
 ### Enter the email address
 
-Under **Invite a member**, enter the person's email address. Coolify stores invitation email addresses in lowercase and uses the address to identify who may accept the invitation.
+Under **Invite a member**, enter the person's address in **Email address**. Coolify stores invitation email addresses in lowercase and uses the address to identify who may accept the invitation.
 
 If the address already belongs to this team, Coolify reports that the person is already a member. If Coolify reports an existing pending invitation for the address, that invitation must be accepted, revoked from the team that created it, or allowed to expire before you create another one.
 
@@ -53,6 +53,17 @@ If the address already belongs to this team, Coolify reports that the person is 
 Select **Member**, **Admin**, or **Owner** from **Role**.
 
 Admins can invite Members and Admins. Owners can invite all three roles.
+
+</Step>
+<Step>
+
+### Choose the access of a Member
+
+When **Role** is **Member**, the form shows the current access under **Scopes**. By default, a Member gets `Team-wide read (default)`.
+
+To change it, select **Scopes**. In the **Access for the invited member** dialog, select a preset or set the scopes, then select **Save**. The person gets these scopes when they accept the invitation. See [Set member access](/core/team/members/set-member-access) for the access levels and presets.
+
+Owners and Admins always have full access to the team's projects and resources, so the access settings show only for the **Member** role.
 
 </Step>
 </Steps>
@@ -74,10 +85,10 @@ Select **Send email**. Coolify sends the invitation to the entered address using
 
 ### Share an invitation link
 
-Select **Generate link** to add the invitation under **Pending Invitations**. On an HTTPS dashboard, select **Copy Invitation Link** and send it directly to that person. On an HTTP dashboard, copy the displayed link manually.
+Select **Generate link** to add the invitation under **Pending invitations**. In the **Link** column, select the copy button (**Copy invitation link**) and send the link directly to that person.
 
 <Callout type="warning" title="Share the link only with the invited person">
-The invitation is tied to the entered email address and grants the selected role. Treat the link as sensitive until it is accepted or revoked.
+The invitation is tied to the entered email address and grants the selected role and access. Treat the link as sensitive until it is accepted or revoked.
 </Callout>
 
 </Tab>
@@ -91,13 +102,14 @@ An existing Coolify user must sign in with the invited email address, then accep
 
 ## Verify the invitation
 
-Before acceptance, confirm that **Pending Invitations** shows the correct email address, delivery method, and role.
+Before acceptance, confirm that **Pending invitations** shows the correct email address, method, and role. For a Member, the **Role** column also shows a summary of their access.
 
 After the person accepts, confirm that:
 
-1. the invitation no longer appears under **Pending Invitations**
+1. the invitation no longer appears under **Pending invitations**
 2. the person appears in the member list
 3. the **Role** column shows the role you selected
+4. for a Member, the summary under their email address shows the access you selected
 
 ---
 
@@ -105,4 +117,4 @@ After the person accepts, confirm that:
 
 Invitation links are valid for three days. After a link expires, create a new invitation.
 
-To invalidate a link before it is accepted, select **Revoke** beside the pending invitation. The revoked link can no longer be used to join the team.
+To invalidate a link before it is accepted, select the trash icon (**Revoke invitation**) in the row of the pending invitation. In the **Revoke invitation?** dialog, select **Revoke invitation**. The revoked link can no longer be used to join the team.

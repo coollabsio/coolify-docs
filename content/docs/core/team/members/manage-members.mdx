@@ -1,11 +1,11 @@
 ---
 title: Manage Members
-description: Review a Coolify team, change member roles, and manage pending invitations.
+description: Review a Coolify team, change member roles and access, and manage pending invitations.
 ---
 
 # Manage members
 
-Use the active team's **Members** page to review access, change another member's role, and revoke invitations that should no longer be accepted.
+Use the active team's **Members** page to review access, change another member's role or access, and revoke invitations that should no longer be accepted.
 
 ## Review the member list
 
@@ -13,7 +13,7 @@ Use the active team's **Members** page to review access, change another member's
 2. Select **Team** in the Coolify sidebar.
 3. Select **Members**.
 
-The table shows **Name**, **Email**, **Role**, and the actions your role permits. Owners and administrators also see **2FA** status. Use search and the role or 2FA filters to narrow the list.
+The table shows **Name**, **Email**, **Role**, and the actions your role permits. Owners and administrators also see **2FA** status and, under the email address of each Member, a summary of their access, such as `Access: Team-wide read (default)`. Use search and the role filter to narrow the list, and select a column header to sort it.
 
 Review the list regularly and remove access that is no longer needed. A person's role applies only to this team; the same account can have a different role in another team.
 
@@ -29,11 +29,13 @@ Owners and Admins can change another member's role. The available actions depend
 | **Admin** | Change an Admin to Member, or change a Member to Admin. Owners cannot be changed. |
 | **Member** | No role-change actions. |
 
-Find the member, open **Manage**, then select **Make owner**, **Make admin**, or **Make member**.
+Find the member, open the `...` menu in their row, then select **Make owner**, **Make admin**, or **Make member**.
 
-<Callout type="info" title="Role changes revoke team API tokens">
-When you change a member's role, Coolify revokes that user's API tokens for this team. The person must create replacement tokens if they still need API access.
+<Callout type="info" title="A lower role revokes team API tokens">
+When you change a member to a lower role, Coolify revokes that user's API tokens for this team. The person must create replacement tokens if they still need API access. A change to a higher role keeps the tokens.
 </Callout>
+
+When an Owner or Admin becomes a Member, Coolify also resets their access to `Team-wide read (default)`.
 
 The member list reloads after the change. Confirm that the **Role** column shows the new role.
 
@@ -41,16 +43,24 @@ You cannot change your own role from the member list. Ask another person with su
 
 ---
 
+## Change a Member's access
+
+For a person with the **Member** role, open the `...` menu in their row and select **Edit access**. Choose a preset or set the scopes, then select **Save**.
+
+Follow [Set member access](/core/team/members/set-member-access) for the access levels, presets, and what a Member with limited access can see.
+
+---
+
 ## Review pending invitations
 
-Owners and Admins can review **Pending Invitations** below the invitation form.
+Owners and Admins can review **Pending invitations** below the invitation form.
 
 Each row shows:
 
-- the invited email address
-- whether the invitation was created for email delivery or as a link
-- the role the person will receive
-- the invitation link
+- **Email**: the invited email address
+- **Method**: whether the invitation was created for email delivery or as a link
+- **Role**: the role the person will receive, and for a Member a summary of their access
+- **Link**: a copy button for the invitation link
 
 Invitation links are valid for three days. A valid invitation for an email address must be accepted, revoked, or allowed to expire before another invitation can be created for that address.
 
@@ -58,6 +68,6 @@ Invitation links are valid for three days. A valid invitation for an email addre
 
 ## Revoke an invitation
 
-Select **Revoke** beside an invitation that should no longer grant access.
+Select the trash icon (**Revoke invitation**) in the row of an invitation that should no longer grant access. The **Revoke invitation?** dialog shows that the invitation link stops working. Select **Revoke invitation** to confirm.
 
-Coolify removes the pending invitation immediately. Confirm that its row disappears from **Pending Invitations**. If the person still needs access, create a new invitation with the correct role.
+Coolify removes the pending invitation. Confirm that its row disappears from **Pending invitations**. If the person still needs access, create a new invitation with the correct role.
