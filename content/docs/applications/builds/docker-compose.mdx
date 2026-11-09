@@ -58,6 +58,8 @@ Set:
 
 Coolify combines both values when locating the file.
 
+Coolify runs Docker Compose in the base directory, so relative paths in the file, such as `build.context: ..`, resolve from the base directory. When the Compose file is in a subdirectory, Coolify shows a warning. If the paths in the file are relative to the file itself, select **Use `<directory>` as base directory** to move the file's directory into **Base Directory**.
+
 <ZoomImage src="/docs/images/builds/packs/compose/5.webp" alt="Branch, Base Directory, and Docker Compose Location fields" />
 
 </Step>
