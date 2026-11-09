@@ -80,6 +80,36 @@ The deployment step in the [GitHub Actions example](/applications/sources/github
 </Tab>
 </Tabs>
 
+## SSH host keys
+
+<Callout type="info" title="Host key pinning requires Coolify v4.7.0">
+  Coolify pins the SSH host keys of Git hosts in Coolify v4.7.0 or above.
+</Callout>
+
+Coolify checks the SSH host key of the Git host on every deployment, so a deployment cannot clone from a host that pretends to be your Git host. For an application that clones over SSH, open the application and select **Git Source** to see the keys in **SSH host keys**.
+
+- **GitHub, GitLab.com, and Bitbucket Cloud**: Coolify accepts only the host keys that the provider publishes. The list shows them with **Published by the provider, used for every deployment**.
+- **Other Git hosts**: on the first deployment, Coolify saves the key that the host sends. Later deployments fail if the key changes. This also applies to the hosts of Git submodules.
+
+To save the key of a self-hosted Git host before the first deployment, select **Fetch current host key**. Compare the fingerprint with the fingerprint from the administrator of the Git host, then select **Accept**.
+
+### When a host key changes
+
+The deployment fails, and the deployment log shows that the Git host sent an SSH host key that is not the saved or published key. This can be an attack.
+
+1. Ask the administrator of the Git host if the key changed.
+2. Open **Git Source** and select **Fetch current host key** in **SSH host keys**.
+3. Select **Accept** only if the fingerprint is the same as the fingerprint from the administrator. Otherwise, select **Decline**.
+4. Redeploy the application.
+
+If GitHub or Bitbucket Cloud changes its keys, **Fetch current host key** reads the new keys from the official HTTPS endpoint of the provider. If GitLab.com changes its keys, compare the fingerprint with the keys on [docs.gitlab.com](https://docs.gitlab.com/user/gitlab_com/#ssh-known_hosts-entries?utm_source=coolify.io).
+
+### Add or remove host keys manually
+
+To add a key, select **Edit manually** and enter one line for each key in **Known hosts**, in the format `host key-type key`. Use `[host]:port` for a custom SSH port, for example `[git.example.com]:2222 ssh-ed25519 AAAA...`. Hashed hosts and comments are not supported, and you cannot add keys for GitHub or Bitbucket Cloud. Select **Save changes**.
+
+To remove a saved key, select the delete icon next to it, then confirm **Remove host key**. The next deployment saves the key that the Git host sends then, without a check.
+
 ## Key scope
 
 Prefer a separate deploy key for each repository. If a key is exposed, remove it from the repository and Coolify, create a replacement, attach the new key under **Git Source**, and redeploy.
