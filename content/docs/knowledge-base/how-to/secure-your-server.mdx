@@ -1,0 +1,94 @@
+---
+title: Secure Your Server
+description: Harden a Coolify server with SSH keys, a provider firewall, private access through Tailscale, and Cloudflare WAF rules.
+---
+
+# Secure Your Server
+
+Use these layers to protect a server that runs Coolify or is connected to Coolify. Read the [Security Model](/core/security-model) to learn which parts Coolify protects.
+
+<Callout type="warning" title="Do not lock yourself out">
+
+Keep your current SSH session open while you change SSH or firewall settings. Test each change from a second terminal. If SSH stops working, use the server console in your hosting provider dashboard.
+
+</Callout>
+
+## 1. Harden the server
+
+- Set up key-based SSH with the [OpenSSH guide](/core/infrastructure/servers/openssh). Then add `PasswordAuthentication no` to `/etc/ssh/sshd_config` and run `sudo sshd -t && sudo systemctl restart ssh`.
+- Install security updates automatically with `sudo apt install unattended-upgrades`, or use [Server patching](/core/infrastructure/servers/server-patching).
+- On self-hosted Coolify, turn on [2FA](/core/security/authentication/2fa) or [passkeys](/core/security/authentication/passkeys) and keep a backup in a different location.
+
+## 2. Close public ports
+
+Use the firewall in your hosting provider dashboard. Do not use UFW by itself: Docker-published ports go around UFW rules.
+
+| Port | Rule |
+| :--- | :--- |
+| `22` | Allow only from your IP address and the Coolify server, or close it after step 3 |
+| `80`, `443` | Allow, or allow only from Cloudflare after step 4 |
+| `8000`, `6001`, `6002` | Close after the dashboard works through a domain or Tailscale |
+
+Do not open database ports unless a trusted client must connect directly. See [Firewall](/core/infrastructure/servers/firewall) for all ports.
+
+## 3. Use Tailscale for private access
+
+[Tailscale](https://tailscale.com) makes SSH and the dashboard available only to devices in your tailnet.
+
+1. Install Tailscale on each server and on your computer:
+
+   ```sh
+   curl -fsSL https://tailscale.com/install.sh | sh
+   sudo tailscale up
+   tailscale ip -4
+   ```
+
+2. Test SSH with the Tailscale IP address: `ssh root@100.x.y.z`.
+3. In Coolify, open each remote server, set **IP address or domain** to its Tailscale IP address, and click **Revalidate connection**.
+4. Open the dashboard at `http://100.x.y.z:8000`.
+5. Remove ports `22`, `8000`, `6001`, and `6002` from the provider firewall.
+
+<Callout type="info" title="Limits">
+
+- Coolify Cloud cannot join your tailnet. Keep port `22` open to the [Coolify Cloud IPv4](https://coolify.io/ipv4.txt) and [IPv6](https://coolify.io/ipv6.txt) addresses.
+- Git providers cannot send webhooks to a dashboard that is only in your tailnet. For automatic deployments, keep the dashboard on a public domain and protect it with the WAF rule in step 5.
+
+</Callout>
+
+## 4. Put Cloudflare in front of your applications
+
+Use one of these setups:
+
+- [Cloudflare proxy](/integrations/security/cloudflare/ddos-protection): allow ports `80` and `443` only from the [Cloudflare IP ranges](https://www.cloudflare.com/ips/), and use a Cloudflare Origin Certificate.
+- [Cloudflare Tunnel](/integrations/networking/cloudflare/tunnels): no inbound web ports.
+
+## 5. Add Cloudflare WAF rules
+
+In the Cloudflare dashboard, select your domain and go to **Security** > **WAF**. The available rules depend on your [Cloudflare plan](https://www.cloudflare.com/plans/). Test new rules with **Managed Challenge** before you use **Block**.
+
+1. Turn on the **Managed rules** for your plan.
+2. Block the dashboard for other IP addresses, but allow webhooks. Action: **Block**.
+
+   ```text
+   (http.host eq "coolify.example.com"
+     and not ip.src in {203.0.113.10}
+     and not starts_with(http.request.uri.path, "/webhooks/"))
+   ```
+
+3. Add a rate limiting rule for login attempts. Action: **Block** above your request limit.
+
+   ```text
+   (http.host eq "coolify.example.com"
+     and http.request.uri.path eq "/login"
+     and http.request.method eq "POST")
+   ```
+
+4. Optional: block countries that you do not serve on application domains. Do not use it on the dashboard domain, because webhooks come from many countries.
+
+   ```text
+   (not ip.src.country in {"DE" "FR"})
+   ```
+
+## Confirm the setup works
+
+From a computer outside your tailnet, run `nmap -Pn -p 22,80,443,6001,6002,8000 <server-public-ip>`. Closed ports must show `filtered` or `closed`. Then make sure that the dashboard opens, each server validates, each application opens through HTTPS, and a Git push starts a deployment.
