@@ -1,11 +1,11 @@
 ---
 title: Secure Your Server
-description: Harden a Coolify server with SSH keys, a provider firewall, private access through Tailscale, and Cloudflare WAF rules.
+description: Harden a Linux server with SSH keys, a provider firewall, private access through Tailscale, and Cloudflare WAF rules, with extra steps for Coolify.
 ---
 
 # Secure Your Server
 
-Use these layers to protect a server that runs Coolify or is connected to Coolify. Read the [Security Model](/core/security-model) to learn which parts Coolify protects.
+Use these layers to protect any Linux server that runs web applications. Each layer has general steps first, then extra steps for servers that run Coolify or are connected to Coolify. Read the [Security Model](/core/security-model) to learn which parts Coolify protects.
 
 <Callout type="warning" title="Do not lock yourself out">
 
@@ -15,25 +15,45 @@ Keep your current SSH session open while you change SSH or firewall settings. Te
 
 ## 1. Harden the server
 
-- Set up key-based SSH with the [OpenSSH guide](/core/infrastructure/servers/openssh). Then add `PasswordAuthentication no` to `/etc/ssh/sshd_config` and run `sudo sshd -t && sudo systemctl restart ssh`.
-- Install security updates automatically with `sudo apt install unattended-upgrades`, or use [Server patching](/core/infrastructure/servers/server-patching).
-- On self-hosted Coolify, turn on [2FA](/core/security/authentication/2fa) or [passkeys](/core/security/authentication/passkeys) and keep a backup in a different location.
+### General
+
+- Use SSH keys only. Add `PasswordAuthentication no` to `/etc/ssh/sshd_config`, then run `sudo sshd -t && sudo systemctl restart ssh`.
+- Install security updates automatically with `sudo apt install unattended-upgrades`.
+- Do not use a shared user. Give each person their own SSH key, and remove keys that you do not use.
+
+### With Coolify
+
+- Set up the Coolify SSH key with the [OpenSSH guide](/core/infrastructure/servers/openssh). To log in without root, see [Non-root user](/core/infrastructure/servers/non-root-user).
+- Use [Server patching](/core/infrastructure/servers/server-patching) to see and install updates from the dashboard.
+- On self-hosted Coolify, turn on [2FA](/core/security/authentication/2fa) or [passkeys](/core/security/authentication/passkeys), and keep a backup in a different location.
 
 ## 2. Close public ports
+
+### General
 
 Use the firewall in your hosting provider dashboard. Do not use UFW by itself: Docker-published ports go around UFW rules.
 
 | Port | Rule |
 | :--- | :--- |
-| `22` | Allow only from your IP address and the Coolify server, or close it after step 3 |
+| `22` | Allow only from your IP address, or close it after step 3 |
 | `80`, `443` | Allow, or allow only from Cloudflare after step 4 |
+| Database ports | Close, unless a trusted client must connect directly |
+| All other ports | Close |
+
+### With Coolify
+
+| Port | Rule |
+| :--- | :--- |
+| `22` | Also allow the Coolify server, so that it can connect to remote servers |
 | `8000`, `6001`, `6002` | Close after the dashboard works through a domain or Tailscale |
 
-Do not open database ports unless a trusted client must connect directly. See [Firewall](/core/infrastructure/servers/firewall) for all ports.
+See [Firewall](/core/infrastructure/servers/firewall) for all ports that Coolify uses.
 
 ## 3. Use Tailscale for private access
 
-[Tailscale](https://tailscale.com) makes SSH and the dashboard available only to devices in your tailnet.
+### General
+
+[Tailscale](https://tailscale.com) makes SSH and admin panels available only to devices in your tailnet.
 
 1. Install Tailscale on each server and on your computer:
 
@@ -44,9 +64,13 @@ Do not open database ports unless a trusted client must connect directly. See [F
    ```
 
 2. Test SSH with the Tailscale IP address: `ssh root@100.x.y.z`.
-3. In Coolify, open each remote server, set **IP address or domain** to its Tailscale IP address, and click **Revalidate connection**.
-4. Open the dashboard at `http://100.x.y.z:8000`.
-5. Remove ports `22`, `8000`, `6001`, and `6002` from the provider firewall.
+3. Remove port `22` from the provider firewall.
+
+### With Coolify
+
+1. In Coolify, open each remote server, set **IP address or domain** to its Tailscale IP address, and click **Revalidate connection**.
+2. Open the dashboard at `http://100.x.y.z:8000`.
+3. Remove ports `8000`, `6001`, and `6002` from the provider firewall.
 
 <Callout type="info" title="Limits">
 
@@ -57,17 +81,40 @@ Do not open database ports unless a trusted client must connect directly. See [F
 
 ## 4. Put Cloudflare in front of your applications
 
+### General
+
 Use one of these setups:
 
-- [Cloudflare proxy](/integrations/security/cloudflare/ddos-protection): allow ports `80` and `443` only from the [Cloudflare IP ranges](https://www.cloudflare.com/ips/), and use a Cloudflare Origin Certificate.
-- [Cloudflare Tunnel](/integrations/networking/cloudflare/tunnels): no inbound web ports.
+- **Cloudflare proxy**: set your DNS records to **Proxied**, use a Cloudflare Origin Certificate, and allow ports `80` and `443` only from the [Cloudflare IP ranges](https://www.cloudflare.com/ips/).
+- **Cloudflare Tunnel**: run `cloudflared` on the server. You do not need inbound web ports.
+
+### With Coolify
+
+- [Cloudflare proxy with Coolify](/integrations/security/cloudflare/ddos-protection)
+- [Cloudflare Tunnel with Coolify](/integrations/networking/cloudflare/tunnels)
 
 ## 5. Add Cloudflare WAF rules
+
+### General
 
 In the Cloudflare dashboard, select your domain and go to **Security** > **WAF**. The available rules depend on your [Cloudflare plan](https://www.cloudflare.com/plans/). Test new rules with **Managed Challenge** before you use **Block**.
 
 1. Turn on the **Managed rules** for your plan.
-2. Block the dashboard for other IP addresses, but allow webhooks. Action: **Block**.
+2. Block admin panels for other IP addresses. Action: **Block**.
+
+   ```text
+   (http.host eq "admin.example.com" and not ip.src in {203.0.113.10})
+   ```
+
+3. Optional: block countries that you do not serve.
+
+   ```text
+   (not ip.src.country in {"DE" "FR"})
+   ```
+
+### With Coolify
+
+1. Block the dashboard for other IP addresses, but allow webhooks. Action: **Block**.
 
    ```text
    (http.host eq "coolify.example.com"
@@ -75,7 +122,7 @@ In the Cloudflare dashboard, select your domain and go to **Security** > **WAF**
      and not starts_with(http.request.uri.path, "/webhooks/"))
    ```
 
-3. Add a rate limiting rule for login attempts. Action: **Block** above your request limit.
+2. Add a rate limiting rule for login attempts. Action: **Block** above your request limit.
 
    ```text
    (http.host eq "coolify.example.com"
@@ -83,12 +130,14 @@ In the Cloudflare dashboard, select your domain and go to **Security** > **WAF**
      and http.request.method eq "POST")
    ```
 
-4. Optional: block countries that you do not serve on application domains. Do not use it on the dashboard domain, because webhooks come from many countries.
-
-   ```text
-   (not ip.src.country in {"DE" "FR"})
-   ```
+3. Do not use a country block on the dashboard domain, because webhooks come from many countries.
 
 ## Confirm the setup works
 
-From a computer outside your tailnet, run `nmap -Pn -p 22,80,443,6001,6002,8000 <server-public-ip>`. Closed ports must show `filtered` or `closed`. Then make sure that the dashboard opens, each server validates, each application opens through HTTPS, and a Git push starts a deployment.
+### General
+
+From a computer outside your tailnet, run `nmap -Pn -p 22,80,443 <server-public-ip>`. Closed ports must show `filtered` or `closed`. Then make sure that each application opens through HTTPS.
+
+### With Coolify
+
+Add ports `6001`, `6002`, and `8000` to the `nmap` command. Then make sure that the dashboard opens, each server validates, and a Git push starts a deployment.
