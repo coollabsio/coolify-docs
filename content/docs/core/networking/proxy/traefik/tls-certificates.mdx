@@ -13,6 +13,18 @@ Review the domains covered by a certificate before deleting it. Deleting its ent
 
 After a change, Coolify indicates that the proxy needs a restart. Restart the proxy to apply the updated storage. Traefik may need to obtain a replacement certificate for domains that still require one.
 
+## Delete unused certificates
+
+Traefik renews every certificate in `acme.json`, also when no route uses its domain any more, until you delete the certificate and restart the proxy.
+
+A certificate shows **Not used** when no route of the proxy and no resource on the server uses one of its domains. Coolify checks the Traefik labels of the containers, the proxy and dynamic configuration files, and the domains of the server's resources, including stopped resources.
+
+1. Select **Delete unused**. The button shows the number of unused certificates.
+2. Review the listed domains and select **Delete Certificates**.
+3. Restart the proxy.
+
+Coolify saves a backup of `acme.json` first, so you can undo the deletion with [Restore ACME storage](#restore-acme-storage).
+
 ## Restore ACME storage
 
 Coolify backs up `acme.json` before every change and retains the last 10 backups. On the same page, choose a backup to restore or delete.

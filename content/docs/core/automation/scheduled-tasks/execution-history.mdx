@@ -25,6 +25,7 @@ Coolify shows the 20 most recent execution records, newest first.
 | <span className="whitespace-nowrap"><strong>In Progress</strong></span> | The command is still running. | Keep the task modal open while Coolify refreshes the record. |
 | <span className="whitespace-nowrap"><strong>Success</strong></span> | The command exited without a reported error. | Open the output and confirm the command produced the intended result. |
 | <span className="whitespace-nowrap"><strong>Failed</strong></span> | The command failed, timed out, or could not run in the selected container. | Open the output and start with the first reported error. |
+| <span className="whitespace-nowrap"><strong>Skipped</strong></span> | The resource had no running container, so Coolify did not run the command. A skipped run sends no notification and does not count as a failure. | Start the application or service if the task should run. |
 
 Completed records also show the start time, end time, and duration. Times are displayed in the timezone configured for the server that runs the resource.
 

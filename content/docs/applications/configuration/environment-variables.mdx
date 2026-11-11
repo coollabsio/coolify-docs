@@ -33,6 +33,8 @@ Lines beginning with `#` are ignored, except `# coolify:` lines. Saving Develope
 
 Locked secrets and multiline values cannot be edited in Developer view. Change those entries in Normal view.
 
+For a Docker Compose application, an empty variable with a default in the Compose file gets a `# Compose default: <value>` line above it. The deployment uses that default while the value is empty. Coolify ignores this line when you save.
+
 ### Set flags in Developer view
 
 To set the flags of a variable, put a `# coolify:` line directly above the variable line:
@@ -106,6 +108,20 @@ Authenticate to a private npm registry during the build with a build variable in
 Set **Value type** to **Multiline** when a value contains line breaks, such as a private key, certificate, or configuration file.
 
 Set **Interpolation** to **Literal (keep $ characters as-is)** when characters such as `$` must remain unchanged. Without it, Coolify can expand references contained in the value. Multiline values are already treated literally.
+
+Coolify saves a value with more than one line exactly as you enter it, in the UI and in the API, including a trailing newline. Coolify removes the leading and trailing whitespace of a single-line value.
+
+<Callout type="info" title="Save older multiline values again">
+
+Before v4.7.0, Coolify removed the trailing newline of multiline values. Some tools reject such a value, for example OpenSSH rejects a private key with `error in libcrypto`. Enter the value again and save it to restore the newline.
+
+</Callout>
+
+## Lock a variable
+
+Select **Lock** on a variable, then confirm, to hide its value. After you lock a variable, nobody can see or copy its value in the UI or the API.
+
+A lock is permanent. You cannot unlock the variable in the UI, the API, or MCP. To change a locked value, enter a new value in **Value** and select **Update variable**. Leave **Value** empty to keep the current value.
 
 ## Shared variables
 

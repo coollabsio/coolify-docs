@@ -29,7 +29,8 @@ Coolify MCP exposes tools, resources, and prompts for the team associated with t
 | [Deployments](/mcp/capabilities/deployments) | Deployment history, deploy, cancel, rollback, start, stop, and restart operations. |
 | [Logs](/mcp/capabilities/logs) | Container logs and deployment log summaries. |
 | [Environment and storage](/mcp/capabilities/environment-and-storage) | Environment variables, shared variables, storage mounts, and volume backups. |
-| [Integrations](/mcp/capabilities/integrations) | Git sources, repositories, branches, and S3 storages. |
+| [Integrations](/mcp/capabilities/integrations) | Git sources, repositories, branches, backup storages, integration tokens, DNS records, secret managers, and Cloudflare Tunnels. |
+| [Image scanning](/mcp/capabilities/image-scanning) | Image vulnerability scan results and scanning settings. |
 | [Automation](/mcp/capabilities/automation) | Scheduled tasks, executions, health hints, and unhealthy resources. |
 | [Prompts and resources](/mcp/capabilities/prompts-and-resources) | Read-only MCP resources and guided prompts. |
 | [Pagination](/mcp/capabilities/pagination) | Page arguments and continuation responses. |
@@ -40,8 +41,9 @@ Coolify MCP exposes tools, resources, and prompts for the team associated with t
 | :--- | :--- |
 | `read` | `list_*` and `get_*` tools, and read actions of `manage_*` tools. |
 | `read:sensitive` | Logs, environment values, command bodies, and other sensitive fields. |
-| `deploy` | `deploy`, `control`, `cancel_deployment`, `rollback_application`, and actions that run or delete workloads. |
-| `write` | `create_*` and `manage_*` tools. They use the same REST API routes, validation, and permissions as the API. |
+| `deploy` | `deploy`, `control`, `cancel_deployment`, `rollback_application`, and actions that run workloads. |
+| `write` | `create_*` and `manage_*` tools that create or change resources. They use the same REST API routes, validation, and permissions as the API. |
+| `delete` | Actions that delete or remove something, for example `delete`, `delete_token`, `remove_server`, `remove_backup`, and `detach`. `write` does not include `delete`. |
 
 Destructive actions need `confirm=true`. Your client must ask you before it sends it.
 

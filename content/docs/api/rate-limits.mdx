@@ -1,6 +1,6 @@
 ---
 title: Rate Limits
-description: Understand Coolify API request limits, response headers, reset times, and safe retry behavior.
+description: Understand Coolify API request limits, the failed request limit, response headers, reset times, and safe retry behavior.
 ---
 
 # API rate limits
@@ -17,6 +17,29 @@ Coolify limits API request frequency to protect the instance from excessive traf
 Coolify Cloud uses these default limits. Self-hosted instances use the same defaults unless an administrator changes the general limit with `API_RATE_LIMIT`. The health endpoint keeps its separate 1,000-request limit.
 
 Coolify identifies a rate-limit bucket by the authenticated user when one is available. Requests without an authenticated user are grouped by source IP address.
+
+---
+
+## Failed request limit
+
+Coolify also limits API clients that keep failing. By default, a client can send 30 failed requests per minute. Coolify counts these responses:
+
+- `401 Unauthenticated` and `403 Forbidden`
+- `404 Not Found` for a request without a Bearer token
+
+Each API token has its own count. Requests without a token are counted by source IP address. The `/api/health` and `/api/v1/health` endpoints are not counted. The limit applies only to REST API requests under `/api/`. Requests to the MCP endpoint `/mcp` are not counted or blocked.
+
+When a client reaches the limit, Coolify answers all its requests with `429 Too Many Requests` and a `Retry-After` header:
+
+```json
+{
+  "message": "Too many failed API requests. Retry after 60 seconds."
+}
+```
+
+The first block lasts 1 minute. If the client reaches the limit again within one hour, the block lasts 5 minutes and then 15 minutes.
+
+When a token reaches the limit, the team of the token receives a notification on each enabled notification channel, at most once a day for each token. Find the client that uses the token and fix its requests, give the token the permissions it needs, or revoke it.
 
 ---
 
@@ -39,7 +62,7 @@ export COOLIFY_TOKEN="67|abcthisisa123dummytoken"
 
 curl --head \
   --header "Authorization: Bearer $COOLIFY_TOKEN" \
-  "$COOLIFY_URL/api/v1/teams/current"
+  "$COOLIFY_URL/api/v1/team"
 ```
 
 Some endpoints can also return `429 Too Many Requests` because a deployment queue or an upstream cloud provider is busy. Use `Retry-After` whenever the response provides it, even when `X-RateLimit-Remaining` shows capacity in Coolify's general API limit.
@@ -56,6 +79,8 @@ When Coolify returns `429 Too Many Requests`:
 4. Add exponential backoff and random jitter if repeated attempts still fail.
 5. Avoid retrying unsafe write requests unless the endpoint and client can prevent duplicate changes.
 
+A `429` with the message `Too many failed API requests` means that the client reached the [failed request limit](#failed-request-limit). Fix the cause of the `401`, `403`, or `404` responses before you retry.
+
 Do not send parallel retries for the same failed request. Parallel retries consume the remaining capacity faster and can repeat a write operation.
 
 ---
@@ -65,10 +90,11 @@ Do not send parallel retries for the same failed request. Parallel retries consu
 <Tabs items={['Self-hosted', 'Coolify Cloud']}>
 <Tab value="Self-hosted">
 
-Set `API_RATE_LIMIT` in `/data/coolify/source/.env` to change the number of general API requests allowed per minute:
+Set `API_RATE_LIMIT` in `/data/coolify/source/.env` to change the number of general API requests allowed per minute. Set `API_FAILED_REQUEST_RATE_LIMIT` to change the number of failed requests allowed per minute; `0` turns off the failed request limit:
 
 ```dotenv
 API_RATE_LIMIT=400
+API_FAILED_REQUEST_RATE_LIMIT=30
 ```
 
 The running container does not pick up this change from a normal restart. Run the Coolify installation script to recreate the Coolify containers with the updated environment:
@@ -79,7 +105,7 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 
 The installation script also updates Coolify to the latest release. Follow [Update Coolify](/core/instance-management/update#manual-update-via-terminal) if you need to install a specific version.
 
-After the containers are recreated, make a request and confirm that `X-RateLimit-Limit` reports the new limit.
+After the containers are recreated, make a request and confirm that `X-RateLimit-Limit` reports the new general limit.
 
 Increasing this value does not increase the capacity of the Coolify instance, deployment queues, or upstream providers. Prefer client-side caching, request batching, and backoff before raising it.
 

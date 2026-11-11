@@ -876,6 +876,13 @@
     "category": "Development"
   },
   {
+    "name": "Hi.Events",
+    "slug": "hi-events",
+    "icon": "/docs/images/services/hi-events-logo.svg",
+    "description": "Open-source event management and ticketing platform.",
+    "category": "Business"
+  },
+  {
     "name": "Hoarder",
     "slug": "hoarder",
     "icon": "/docs/images/services/hoarder-logo.png",

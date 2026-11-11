@@ -350,6 +350,17 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
   View the [Script's Source Code](https://github.com/coollabsio/coolify/blob/v4.x/scripts/install.sh)
   
   </Accordion>
+  <Accordion title="Install a preview or nightly version">
+
+  Add `--preview` or `--nightly` to install the newest version of that channel. The installer also switches the [update channel](/core/instance-management/update#choose-an-update-channel) of the instance to that channel.
+
+  ```sh
+  curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash -s -- --nightly
+  ```
+
+  Preview versions are betas and release candidates. Nightly builds get less testing and can include breaking changes. Use them only on an instance that you can rebuild.
+
+  </Accordion>
 </Accordions>
 
 
@@ -371,6 +382,8 @@ Open `http://192.168.1.69:8000` in your browser (replace `192.168.1.69` with you
 <Callout type="danger" title="Secure your admin account">
 
   **Create your admin account as soon as installation finishes. Anyone who reaches the registration page first can become the instance admin and gain root access to your server.**
+
+  Coolify accepts the first account only in the first 10 minutes after Coolify starts. If the registration page shows **Setup window closed**, run `docker restart coolify` on the server, then reload the page.
 </Callout>
 
 ---
@@ -536,6 +549,8 @@ Open `http://192.168.1.69:8000` in your browser (replace `192.168.1.69` with you
 <Callout type="danger" title="Secure your admin account">
 
   **Create your admin account as soon as installation finishes. Anyone who reaches the registration page first can become the instance admin and gain root access to your server.**
+
+  Coolify accepts the first account only in the first 10 minutes after Coolify starts. If the registration page shows **Setup window closed**, run `docker restart coolify` on the server, then reload the page.
 </Callout>
 
 That's it!, you can start using Coolify.
@@ -921,19 +936,19 @@ Use this when you want Coolify images pulled from a different registry source.
 
 | Variable | Default | Allowed values |
 | :--- | :--- | :--- |
-| `REGISTRY_URL` | `ghcr.io` | `ghcr.io`, `docker.io` |
+| `REGISTRY_URL` | `docker.io` | `docker.io`, `ghcr.io` |
 
 <Tabs items={['Automated', 'Manual']}>
 <Tab value="Automated" icon={Autobrightness2}>
 
 ```sh
-env REGISTRY_URL=docker.io bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
+env REGISTRY_URL=ghcr.io bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
 ```
 
 If you are not logged in as `root`:
 
 ```sh
-sudo -E env REGISTRY_URL=docker.io bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
+sudo -E env REGISTRY_URL=ghcr.io bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
 ```
 
 </Tab>
@@ -949,7 +964,7 @@ nano /data/coolify/source/.env
 Add:
 
 ```sh
-REGISTRY_URL=docker.io
+REGISTRY_URL=ghcr.io
 ```
 
 Then run:
@@ -963,7 +978,7 @@ docker compose --env-file /data/coolify/source/.env -f /data/coolify/source/dock
 
 <Callout type="tip" title="Tip">
 
-  The registry can be changed after installing Coolify by following the steps above.
+  The registry can be changed after installing Coolify by following the steps above, or with **Docker registry** in **Settings > Updates**.
 </Callout>
 
 </Tab>

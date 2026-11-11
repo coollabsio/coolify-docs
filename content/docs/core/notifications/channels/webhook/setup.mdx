@@ -68,24 +68,39 @@ A received test confirms that Coolify can reach the current URL and submit a req
 
 ## Endpoint requirements
 
-Coolify accepts URLs with the `http` or `https` scheme. The URL must contain a valid host.
+Coolify accepts URLs with the `http` or `https` scheme. The URL must contain a valid host without a trailing dot.
 
-For server-side request protection, Coolify rejects:
+For server-side request protection, Coolify resolves the host and checks every address when you save the URL and again before each delivery. It connects only to the checked address and does not follow redirects. Use the final URL of the endpoint.
 
-- `localhost`, `0.0.0.0`, and IPv6 loopback addresses.
-- IPv4 addresses in `127.0.0.0/8`.
-- Link-local IPv4 addresses in `169.254.0.0/16`, including common cloud metadata endpoints.
-- Hostnames ending in `.internal`.
+| Target | Result |
+| :--- | :--- |
+| Public address | Accepted. |
+| Private network address, such as `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, or `fc00::/7` | Refused, unless the host or address is in **Allowed internal targets**. |
+| Hostname that ends in `.local`, `.internal`, or `.cluster.local` | Refused, unless the hostname is in **Allowed internal targets**. |
+| Loopback address, such as `localhost`, `127.0.0.0/8`, or `::1` | Refused, unless **Localhost targets** is **Allowed** and the host or address is in **Allowed internal targets**. |
+| Link-local address, such as `169.254.0.0/16` or `fe80::/10`, including cloud metadata endpoints | Always refused. |
+| Other reserved or special-use address, such as `0.0.0.0` or `100.64.0.0/10` | Refused, unless the address or its range is in **Allowed internal targets**. |
 
-Private-network IP addresses are accepted, but the Coolify instance must still have a network route to the endpoint.
+On a self-hosted instance, an instance administrator sets both options under [**Settings > Advanced > Outbound endpoints**](/core/instance-management/instance-settings#allowed-internal-targets). When Coolify refuses a URL, the error says that the URL points to a local or private address that is not allowed, and links to that setting.
+
+The same rules apply to the Discord and Slack webhook URLs.
 
 ---
 
 ## Delivery behavior
 
-Coolify queues webhook deliveries and sends the JSON request body with Laravel's HTTP client. A delivery job allows up to five total attempts, with a 10-second backoff after an unhandled exception.
+Coolify queues webhook deliveries and sends the JSON request body with Laravel's HTTP client. A delivery job allows up to five total attempts, with a 10-second backoff between attempts.
 
-Coolify currently does not fail the job only because the endpoint returns a non-2xx HTTP status. Return a 2xx response when your application accepts the event, and use the receiver's logs or monitoring to detect rejected requests.
+Coolify handles the response status of the endpoint as follows:
+
+| Response | What Coolify does |
+| :--- | :--- |
+| `2xx` | The delivery succeeded. |
+| `429` or `5xx` | Coolify tries the delivery again. |
+| `401`, `403`, `404`, or `410` | Coolify counts a failed delivery and does not try again. After 3 failed deliveries in a row, Coolify [disables the channel](/core/notifications/overview#disabled-channels). |
+| Other status, including redirects | Coolify logs a warning and does not try again. |
+
+If the URL fails the endpoint checks at delivery time, Coolify does not send the request and logs a warning.
 
 Your endpoint should respond promptly and handle duplicate event payloads safely. Coolify does not add a signature or shared-secret header, so use an unguessable HTTPS URL or an authenticated gateway when the endpoint is exposed to the internet.
 
@@ -98,10 +113,12 @@ See the [webhook payload reference](/core/notifications/channels/webhook/payload
 If the test does not reach your endpoint:
 
 1. Confirm that the URL starts with `http://` or `https://` and includes the complete path expected by the receiver.
-2. Confirm that the URL is not in one of the blocked loopback, link-local, or `.internal` ranges above.
+2. Confirm that the URL is not refused by the [endpoint requirements](#endpoint-requirements). For a private or internal endpoint, ask an instance administrator to add it to **Allowed internal targets**.
 3. From the Coolify server's network, confirm that DNS resolves the hostname and that firewalls allow the connection.
 4. Check the receiving service's access and application logs. A request can reach a reverse proxy but fail before the application records it.
 5. Confirm that the endpoint accepts `POST` with a JSON body and responds promptly.
 6. If a private IP is used, confirm that the Coolify instance has a route to that private network.
+7. If the endpoint answers with a redirect, enter the final URL. Coolify does not follow redirects.
+8. If the channel turned off by itself, fix the URL and select **Enable** again. See [Disabled channels](/core/notifications/overview#disabled-channels).
 
 If the test succeeds but a production event does not arrive, confirm that the event is enabled under **Notification events** and compare the receiver's parser with the [payload for that event](/core/notifications/channels/webhook/payload-reference).

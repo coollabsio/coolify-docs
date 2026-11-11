@@ -429,7 +429,7 @@ server {
         proxy_request_buffering off;
     }
 
-    location /app {
+    location /app/ {
         proxy_pass http://coolify_realtime;
         include /etc/nginx/managed/current/proxy.conf;
         proxy_set_header Upgrade $http_upgrade;
@@ -448,6 +448,8 @@ server {
     }
 }
 ```
+
+Keep the trailing slash in `location /app/`. Without it, NGINX also sends `/apps` to port `6001` and exposes the Reverb HTTP API. Coolify's own Traefik and Caddy configurations route only `/app/`.
 
 All three targets are the `coolify` container, reached through the `coolify` network. Recent Coolify releases removed the separate `coolify-realtime` container and serve realtime updates and the terminal from `coolify` itself; see [realtime migration](/core/instance-management/reverb-migration).
 

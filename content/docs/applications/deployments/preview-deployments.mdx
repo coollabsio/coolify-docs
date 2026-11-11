@@ -263,7 +263,7 @@ Depending on the preview state, you can:
 
 ## Manage previews through the API
 
-Use `GET /applications/{uuid}/previews` to list previews and `GET /applications/{uuid}/previews/{pull_request_id}` to inspect one. Creating or redeploying a preview requires `deploy`:
+Use `GET /applications/{uuid}/previews` to list previews and `GET /applications/{uuid}/previews/{pull_request_id}` to inspect one. Use `POST /applications/{uuid}/previews` to open or redeploy a preview:
 
 ```sh
 curl --request POST "https://coolify.example.com/api/v1/applications/<application-uuid>/previews" \
@@ -272,8 +272,16 @@ curl --request POST "https://coolify.example.com/api/v1/applications/<applicatio
   --data '{"pull_request_id":42,"git_type":"github","force":false}'
 ```
 
+A token with `deploy` can only redeploy an existing preview without changes. These requests also need `write`:
+
+- open a new preview
+- change the preview's `pull_request_html_url`, `git_type`, or `docker_tag`
+- choose a `commit`
+
+Without `write`, Coolify returns `403`.
+
 Use the provider that hosts the request. Bitbucket also requires a `commit` SHA. Pull request IDs must be positive integers no greater than `2147483647`; invalid IDs return a validation error, including in the MCP deploy tool.
 
-`POST /deploy` with `pull_request_id` also deploys the pull-request ref for deploy-key and public-repository applications. Gitea previews use the pull request's head commit. The UI's pull-request listing and status updates are available for GitHub App sources.
+`POST /deploy` with `pull_request_id` deploys an existing preview. For deploy-key and public-repository applications, it deploys the pull-request ref. For a Docker Image application, `docker_tag` can also open a preview or change its tag, which needs `write`. Gitea previews use the pull request's head commit. The UI's pull-request listing and status updates are available for GitHub App sources.
 
 Inspect deployment history after the request is accepted. Closing or deleting a preview removes only its own containers and Coolify-created networks and volumes.

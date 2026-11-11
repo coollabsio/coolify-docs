@@ -19,8 +19,12 @@ Application details can include configuration metadata. Environment values and o
 
 | Tool | Actions |
 | :--- | :--- |
-| `create_application` | `public`, `github_app`, `deploy_key`, `dockerfile`, `docker_image` (`write`). `instant_deploy` also needs `deploy`. |
-| `manage_application` | `update`, `clone`, `add_server` (`write`); `move` and `remove_server` (`write`, confirm); `delete` (`deploy`, confirm). |
-| `manage_preview` | `create` (`deploy`); `update` (`write`); `delete` (`deploy`, confirm). |
+| `create_application` | `public`, `github_app`, `gitea_app`, `deploy_key`, `dockerfile`, `docker_image` (`write`). `instant_deploy` also needs `deploy`. |
+| `manage_application` | `update`, `clone`, `add_server` (`write`); `move` (`write`, confirm); `delete` and `remove_server` (`delete`, confirm). `instant_deploy` and `clone_volumes` also need `deploy`. |
+| `manage_preview` | `create` (`deploy`); `update` (`write`); `delete` (`delete`, confirm). |
 
-Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it. To roll back an application, see [Deployments](/mcp/capabilities/deployments).
+Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.
+
+`gitea_app` creates an application from a private repository through a connected Gitea App. Give `gitea_app_uuid` and `git_repository` as `owner/name`. See [Gitea](/applications/sources/gitea).
+
+`manage_preview` `create` opens a preview or redeploys an existing one. A `deploy` token can only redeploy an existing preview without changes. To open a preview, change its pull request URL, git type, or Docker tag, or choose a commit, the token also needs `write`. To roll back an application, see [Deployments](/mcp/capabilities/deployments).

@@ -38,6 +38,15 @@ LOG_LEVEL=info
 
 Saving Developer view creates, updates, and removes managed variables to match the text. Locked secrets and multiline values cannot be changed from Developer view.
 
+When a variable is empty and its Compose reference has a default, the deployment uses that default. Developer view shows the default in a comment line above the variable:
+
+```dotenv
+# Compose default: info
+LOG_LEVEL=
+```
+
+Coolify shows this line only to users who can change the Service, and not for a default with more than one line.
+
 To set the `literal`, `buildtime`, or `runtime` flag in Developer view, put a `# coolify:` line directly above the variable line, for example `# coolify: literal`. Refer to [Set flags in Developer view](/applications/configuration/environment-variables#set-flags-in-developer-view).
 
 ## Required values and defaults

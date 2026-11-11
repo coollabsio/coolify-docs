@@ -1,17 +1,17 @@
 ---
-title: Gitea
-description: Deploy public and private Gitea repositories with a Gitea App, deploy key, or repository URL.
+title: Gitea and Forgejo
+description: Deploy public and private Gitea, Forgejo, and Codeberg repositories with a Gitea / Forgejo App, deploy key, or repository URL.
 ---
 
-# Gitea
+# Gitea and Forgejo
 
-Coolify can deploy Gitea repositories through a public HTTPS URL, an SSH deploy key, or a Gitea App.
+Coolify can deploy Gitea, Forgejo, and Codeberg repositories through a public HTTPS URL, an SSH deploy key, or a Gitea / Forgejo App. Codeberg runs Forgejo. The steps on this page are the same for Gitea and Forgejo.
 
 | Method | Best for | Repository access |
 | :--- | :--- | :--- |
 | Public repository | Public source that needs no authentication | HTTPS URL |
-| Deploy key | One private repository, or a Gitea instance where an OAuth2 application is unavailable | SSH URL and repository deploy key |
-| Gitea App | Private repositories on gitea.com or a self-hosted Gitea instance | OAuth2 application with repository browsing |
+| Deploy key | One private repository, or a Gitea or Forgejo instance where an OAuth2 application is unavailable | SSH URL and repository deploy key |
+| Gitea / Forgejo App | Private repositories on gitea.com, Codeberg, or a self-hosted Gitea or Forgejo instance | OAuth2 application with repository browsing |
 
 ## Set up a Gitea App
 
@@ -19,16 +19,28 @@ Coolify can deploy Gitea repositories through a public HTTPS URL, an SSH deploy 
   Gitea App integration is available in Coolify v4.5.0 or above.
 </Callout>
 
-A Gitea App lets Coolify list repositories and branches, clone private source over HTTPS, and receive push and pull-request events. Gitea has no installable apps like GitHub, so a Gitea App is a Gitea OAuth2 application that you connect to Coolify.
+<Callout type="info" title="Forgejo and Codeberg require Coolify v4.7.0">
+  The **Provider** list for Codeberg and Forgejo instances is available in Coolify v4.7.0 or above.
+</Callout>
+
+A Gitea / Forgejo App lets Coolify list repositories and branches, clone private source over HTTPS, and receive push and pull-request events. Gitea and Forgejo have no installable apps like GitHub, so a Gitea / Forgejo App is an OAuth2 application that you connect to Coolify.
 
 <Steps>
 <Step>
 
 ### Add the source in Coolify
 
-Open **Sources** and select **New Source > Gitea App**.
+Open **Sources** and select **New source > Gitea / Forgejo App**.
 
-Enter **Name**. To limit the repositories that Coolify lists, enter comma-separated organization or user names in **Organization**. For a self-hosted instance, expand **Self-hosted Gitea** and enter **Gitea URL**. Coolify fills in **API URL** (the Gitea URL with `/api/v1`). gitea.com is the default.
+In **Provider**, select:
+
+- **Gitea.com** for gitea.com (the default)
+- **Codeberg (Forgejo)** for codeberg.org
+- **Self-hosted Gitea or Forgejo** for your own instance
+
+For Gitea.com and Codeberg, Coolify fills in the instance URL and the API URL. For a self-hosted instance, enter **Instance URL** in the **Self-hosted Gitea or Forgejo** section. Coolify fills in **API URL** (the instance URL with `/api/v1`). Change **Custom Git user** and **Custom Git port** when the SSH user or port of the instance is not `git` and `22`.
+
+Enter **Name**. To limit the repositories that Coolify lists, enter comma-separated organization or user names in **Organization**.
 
 On a self-hosted Coolify instance, enable **System wide** only when every team must be able to select this source. Otherwise, keep the source scoped to the active team.
 
@@ -37,9 +49,9 @@ Select **Continue**. Coolify shows the redirect URI for the OAuth2 application.
 </Step>
 <Step>
 
-### Create the OAuth2 application in Gitea
+### Create the OAuth2 application in Gitea or Forgejo
 
-In Gitea, open **Settings > Applications** and go to **Manage OAuth2 Applications**. An organization owner can create the application in the organization settings, and an administrator can create it in **Site Administration > Applications**, when one user must not own it.
+In Gitea or Forgejo, open **Settings > Applications** and go to **Manage OAuth2 Applications**. An organization owner can create the application in the organization settings, and an administrator can create it in **Site Administration > Applications**, when one user must not own it.
 
 Create an application with:
 
@@ -51,13 +63,13 @@ Save the application, then copy its **Client ID** and **Client secret**.
 </Step>
 <Step>
 
-### Connect Coolify to Gitea
+### Connect Coolify to Gitea or Forgejo
 
-Go back to the Gitea source in Coolify. Enter **Client ID** and **Client secret**, then select **Save**.
+Go back to the source in Coolify. Enter **Client ID** and **Client secret**, then select **Save**.
 
-Select **Connect to Gitea**. Gitea asks you to authorize the `read:user`, `read:repository`, and `read:organization` scopes. Select **Authorize Application**.
+Select **Connect to Gitea / Forgejo**. The instance asks you to authorize the `read:user`, `read:repository`, and `read:organization` scopes. Select **Authorize Application**.
 
-After Gitea sends you back to Coolify, the source shows **Connected**. Select **Test Connection** to make sure that Coolify can call the Gitea API.
+After the instance sends you back to Coolify, the source shows **Connected**. Select **Test connection** to make sure that Coolify can call the API of the instance.
 
 </Step>
 <Step>
@@ -66,7 +78,7 @@ After Gitea sends you back to Coolify, the source shows **Connected**. Select **
 
 Copy **Webhook URL** and **Webhook secret** from the connected source.
 
-In Gitea, add a webhook of type **Gitea**. You can add it in the settings of a user, an organization, or one repository. A user or organization webhook sends events for all repositories of that owner. Set:
+In Gitea or Forgejo, add a webhook of type **Gitea** or **Forgejo**. You can add it in the settings of a user, an organization, or one repository. A user or organization webhook sends events for all repositories of that owner. Set:
 
 - **Target URL** to the Coolify webhook URL
 - **HTTP Method** to `POST` and **POST Content Type** to `application/json`
@@ -74,50 +86,66 @@ In Gitea, add a webhook of type **Gitea**. You can add it in the settings of a u
 - **Push** events for branch deployments
 - **Pull Request** events for preview deployments
 
-Coolify rejects Gitea webhook requests when the signature is missing or does not match the secret.
+Coolify accepts the `X-Gitea-*` and `X-Forgejo-*` headers. It rejects webhook requests when the signature is missing or does not match the secret.
 
 </Step>
 <Step>
 
 ### Deploy a repository
 
-Open a Coolify project, select **+ New**, then select **Git Repository (with Gitea App)**.
+Open a Coolify project, select **+ New**, then select **Git Repository (with Gitea / Forgejo App)**.
 
-Choose the server and the connected Gitea App. Select a repository, select **Load Repository**, choose the branch, then configure and deploy the application.
+Choose the server and the connected Gitea / Forgejo App. Select a repository, select **Load repository**, choose the branch, then configure and deploy the application.
 
 Make sure that the deployment log imports the selected repository and checks out the requested commit.
 
 </Step>
 </Steps>
 
-### Self-hosted Gitea network requirements
+### Self-hosted network requirements
 
-- Coolify must reach the Gitea URL to exchange OAuth2 codes, refresh tokens, and call the API. The deployment server must reach it to clone repositories.
-- Your browser must reach the Gitea URL to authorize the application.
-- Gitea must reach the Coolify webhook URL. By default, Gitea blocks webhooks to private networks. If Coolify runs on a private address, add it to `ALLOWED_HOST_LIST` in the `[webhook]` section of the Gitea `app.ini`.
-- Set `ROOT_URL` in the Gitea `app.ini` to the URL that you enter in Coolify.
+- Coolify must reach the instance URL to exchange OAuth2 codes, refresh tokens, and call the API. The deployment server must reach it to clone repositories.
+- Your browser must reach the instance URL to authorize the application.
+- The instance must reach the Coolify webhook URL. By default, Gitea and Forgejo block webhooks to private networks. If Coolify runs on a private address, add it to `ALLOWED_HOST_LIST` in the `[webhook]` section of `app.ini`.
+- Set `ROOT_URL` in `app.ini` to the URL that you enter in Coolify.
 
-Gitea OAuth2 access tokens expire after one hour. Coolify refreshes them automatically before each API call and clone.
+Gitea and Forgejo OAuth2 access tokens expire after one hour. Coolify refreshes them automatically before each API call and clone.
+
+### Team access
+
+A member who has access only to some projects, environments, or resources cannot select a team Gitea / Forgejo App for a new application or as the new source of an application. This needs write access on the whole team, in the UI and through the API. An application keeps the source that it already uses.
+
+### Use the API
+
+<Callout type="info" title="Gitea App API requires Coolify v4.7.0">
+  The Gitea App endpoints are available in Coolify v4.7.0 or above.
+</Callout>
+
+- [`GET /api/v1/gitea-apps`](/api/endpoints/gitea-apps/list-gitea-apps) lists the Gitea / Forgejo Apps of the team and the system-wide apps.
+- [`POST /api/v1/applications/private-gitea-app`](/api/endpoints/applications/create-private-gitea-app-application) creates an application from a private repository. Send `gitea_app_uuid`, and `git_repository` as `owner/name`.
+- `gitea_app_uuid` in `PATCH /api/v1/applications/{uuid}` changes the source of an application.
+
+The source must be connected. Create and connect a Gitea / Forgejo App in the UI.
 
 ## Use a deploy key
 
-Use a deploy key when Coolify only needs one private repository, or when Coolify cannot connect to the Gitea instance through OAuth2.
+Use a deploy key when Coolify only needs one private repository, or when Coolify cannot connect to the instance through OAuth2.
 
 1. Add a private key under **Keys & Tokens > Private Keys**.
-2. Add its public key in the Gitea repository under **Settings > Deploy Keys**.
+2. Add its public key in the repository under **Settings > Deploy Keys**.
 3. Copy the repository SSH URL, such as `git@gitea.example.com:example/application.git`.
 4. In Coolify, create **Private Repository (with deploy key)** and select the stored key.
 
 Read [Deploy keys](/applications/sources/deploy-keys) for the complete setup and security guidance.
 
-## Configure a manual Gitea webhook
+## Configure a manual Gitea or Forgejo webhook
 
 For an application that you created from a public URL or a deploy key:
 
 1. Open **Webhooks** in the Coolify application.
 2. Copy the **Gitea** URL.
 3. Enter **Webhook secret** in the **Gitea** section, then select **Save changes**.
-4. In Gitea, open the repository webhook settings.
+4. In Gitea or Forgejo, open the repository webhook settings.
 5. Enter the URL and the same secret.
 6. Enable **Push**.
 7. Enable pull-request events when you use preview deployments.

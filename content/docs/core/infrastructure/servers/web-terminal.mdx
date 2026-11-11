@@ -56,6 +56,20 @@ You can also open **Terminal** from an individual server, application, database,
 
 The same server setting controls both the global Terminal page and these resource terminals.
 
+## When a session ends
+
+Coolify checks every minute that you can still use an open terminal session. The session ends when:
+
+- you log out of Coolify
+- you are no longer an owner or administrator of the team, or you are removed from the team
+- **Terminal Access** is disabled for the server
+- the server is disabled or transferred to another Coolify instance
+- the team requires two-factor authentication and you have not set it up
+
+The terminal shows `Terminal session ended:` and the reason. If Coolify cannot answer the check three times in a row, for example during an upgrade, the session also ends.
+
+A session ends after 8 hours, also when it is active.
+
 ---
 
 ## Use console mode for a container
@@ -125,14 +139,13 @@ Use this setting when nobody should be able to open dashboard terminals for a se
 
 1. Open **Servers**.
 2. Select the server.
-3. Select **Security**.
-4. Open **Terminal Access**.
-
+3. Select **Security > General**.
+4. Find the **Terminal access** section.
 5. Select **Disable terminal**.
 6. Enter the server name and your Coolify account password in the confirmation window.
 7. Complete the confirmation.
 
-The change takes effect immediately. The server and its containers disappear from dashboard terminal selectors, including for owners and administrators.
+The change takes effect immediately. The server and its containers disappear from dashboard terminal selectors, including for owners and administrators. Open terminal sessions end within one minute.
 
 Disabling this setting does not block normal SSH connections made outside Coolify.
 
@@ -141,7 +154,7 @@ Disabling this setting does not block normal SSH connections made outside Coolif
 
 ### Enable terminal access again
 
-1. Return to **Servers > your server > Security > Terminal Access**.
+1. Return to **Servers > your server > Security > General** and find **Terminal access**.
 2. Select **Enable terminal**.
 3. Enter the server name and your Coolify account password.
 4. Complete the confirmation.

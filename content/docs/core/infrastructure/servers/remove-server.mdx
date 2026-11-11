@@ -5,7 +5,7 @@ description: Remove a server from Coolify, optionally delete its resources, and 
 
 # Remove a server
 
-Deleting a server always removes it's details from the Coolify database. Depending on the options you choose, Coolify can also delete its managed resources and its linked Hetzner, DigitalOcean, Vultr, or Hostinger machine.
+Deleting a server always removes its details from the Coolify database. Depending on the options you choose, Coolify can also delete its managed resources and its linked Hetzner, DigitalOcean, Vultr, or Hostinger machine.
 
 The **localhost** server in a self-hosted Coolify installation cannot be deleted.
 
@@ -20,10 +20,23 @@ Before opening the deletion dialog, choose the required outcome.
 | Option | Result |
 | :--- | :--- |
 | **Only delete server from Coolify** | Removes the server from Coolify. The Linux machine, Docker installation, and files remain. |
-| **Delete all resources** | Starts deletion for every resource Coolify manages on this server, then removes the server from database. |
+| **Delete all resources** | Starts deletion for every resource whose main destination is this server, then removes the server from database. |
+| **Remove the public key of this server's SSH key from ~/.ssh/authorized_keys on the server** | Removes the public key of the server's SSH key from `~/.ssh/authorized_keys` before Coolify deletes the server, so the key can no longer log in. |
 | **Also delete server/droplet from the provider** | Sends a deletion request for the linked Hetzner server, Vultr instance, or DigitalOcean Droplet. For a Hostinger VPS, turns off auto-renewal so Hostinger deletes the VPS at the end of the paid period. |
 
 Provider deletion is not selected by default. If you leave it disabled, the provider continues billing for a machine that still exists.
+
+### Applications on more than one server
+
+An application can use this server only as an [additional destination](/core/infrastructure/scaling/multi-server-deployments), while its main destination is another server. Coolify does not delete such an application. It removes the application from this server, stops its containers here, and the application keeps running on its other servers.
+
+This applies with or without **Delete all resources**. A server that has only such applications can be deleted without **Delete all resources**.
+
+### Remove the SSH key from the server
+
+The SSH key option shows only when the server has no resources. Coolify removes every line with the public key from `~/.ssh/authorized_keys` of the SSH user. If another server record in Coolify uses the same key for the same host and user, the key stays on the server.
+
+If Coolify cannot remove the key, it does not delete the server. Clear the option to delete the server without removing the key. When you also delete the machine at the provider, Coolify skips this step.
 
 <Callout type="warning" title="Hostinger deletes the VPS at the end of the paid period">
 Hostinger has no API to delete a VPS immediately. If you select the Hostinger option, Coolify turns off auto-renewal. The VPS keeps running until the paid period ends. Then Hostinger deletes the VPS and all its data.
@@ -53,7 +66,7 @@ Back up important data. Redeploy resources you want to keep to another server an
 
 For the safest and most controlled migration, move or delete each resource before removing the server.
 
-If resources remain, the confirmation dialog offers **Delete all resources** and shows how many will be deleted. Enable it only if every remaining resource can be destroyed.
+If resources remain, the confirmation dialog offers **Delete all resources** and lists the resources it deletes. Enable it only if every listed resource can be destroyed. The page also lists the applications that Coolify removes only from this server and that keep running on another server.
 
 </Step>
 <Step>
@@ -76,24 +89,25 @@ Keep the provider option disabled if you need the machine, its files, or console
 
 ### Open the Danger Zone
 
-Open the server's **Danger** page and find **Delete Server** under **Danger Zone**.
+Open the server's **Danger Zone** page and find the **Delete server** section.
 
 </Step>
 <Step>
 
 ### Review the confirmation
 
-Select **Delete** and review every action shown in the dialog.
+Select **Delete server** and review every action shown in the dialog.
 
 When applicable:
 
 - enable **Delete all resources** only if the remaining managed resources can be destroyed
+- enable **Remove the public key of this server's SSH key from ~/.ssh/authorized_keys on the server** if the key must no longer log in to the machine
 - enable **Also delete server from Hetzner Cloud** only if the linked Hetzner server should be permanently deleted
 - enable **Also delete server from Vultr** only if the linked Vultr instance should be permanently deleted
 - enable **Also delete droplet from DigitalOcean** only if the linked DigitalOcean Droplet should be permanently deleted
 - enable **Also delete VPS from Hostinger (at the end of the paid period)** only if the linked Hostinger VPS should be deleted when its paid period ends
 
-Enter the required confirmation value and complete the deletion.
+Enter the server name and your Coolify account password, then complete the deletion.
 
 </Step>
 <Step>
@@ -125,4 +139,10 @@ Applications, databases, and services from the deleted record do not automatical
 
 ## Provider deletion through the API
 
-For Hetzner, Vultr, or DigitalOcean, `DELETE /servers/{uuid}?delete_from_provider=true` also deletes the linked provider machine. Review the provider link before requesting deletion. The default is `false`. Use `force=true` only when you also intend to delete all resources. Deleting a server marks its queued deployments as failed.
+For Hetzner, Vultr, or DigitalOcean, `DELETE /servers/{uuid}?delete_from_provider=true` also deletes the linked provider machine. Review the provider link before requesting deletion. The default is `false`.
+
+Use `force=true` only when you also intend to delete all resources whose main destination is the server. Applications that use the server only as an additional destination are not deleted: Coolify removes them from the server and they keep running on their other servers. `force` and `delete_from_provider` need a token with the `deploy` permission.
+
+`remove_ssh_key=true` removes the public key of the server's SSH key from `~/.ssh/authorized_keys` before Coolify deletes the server. The server must have no resources. If the key cannot be removed, Coolify does not delete the server.
+
+Deleting a server marks its queued deployments as failed.

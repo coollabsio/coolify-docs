@@ -57,6 +57,20 @@ The default is **Runtime only (preserves cache)** so commits with otherwise iden
 
 Read [Build cache](/applications/builds/overview#build-cache) before enabling it for every deployment.
 
+---
+
+<span id="include-network-hosts-in-build" />
+
+### Network hosts during build
+
+**Network hosts during build** defaults to **Add network containers as hosts**. Coolify adds the containers of the destination network to the build with `--add-host`, so the build can reach them by name.
+
+When a resource is added to or removed from the network, the host list changes and Docker rebuilds the cached layers. Choose **Do not add (preserves cache)** when the build does not need to reach other containers.
+
+Coolify never adds preview deployment containers. A build on a [build server](/core/infrastructure/servers/build-servers) gets no hosts, because the build server cannot reach the deployment server's network.
+
+The API field is `include_network_hosts_in_build`.
+
 </Tab>
 <Tab value="Deployment" icon={BranchUp}>
 
@@ -67,6 +81,25 @@ These settings appear only for applications connected to a Git repository.
 Under **Deployment**, **Auto deploy** set to **Deploy on push (webhooks)** allows supported Git webhook events to start a deployment. It is enabled by default, but the repository connection must still have a working webhook or provider integration.
 
 Choose **Manual deployments only** when deployments should start only from the Coolify dashboard, API, deploy webhook, or an external workflow.
+
+---
+
+<span id="cancel-older-webhook-deployments" />
+
+### Older webhook deployments
+
+When you push several commits quickly, each push starts a webhook deployment. By default, Coolify builds only the latest commit.
+
+| Setting | Options | Default |
+| :--- | :--- | :--- |
+| **Queued webhook deployments** | **Cancel when a newer push arrives** cancels the older webhook deployments that still wait in the queue. **Deploy every push** builds each push. | **Cancel when a newer push arrives** |
+| **Building webhook deployments** | **Stop the build when a newer push arrives** also stops an older webhook deployment that is still building. **Let the build finish** keeps it running. | **Let the build finish** |
+
+Coolify cancels only older webhook deployments with the same target: the same application, the same server, and the same production or preview deployment. A deployment that started to replace containers always finishes. Manual, API, restart, and rollback deployments are never cancelled.
+
+When **Building webhook deployments** stops builds, Coolify also cancels queued webhook deployments, so **Queued webhook deployments** cannot be changed.
+
+The API fields are `is_auto_cancel_queued_deployments_enabled` and `is_auto_cancel_building_deployments_enabled`.
 
 ---
 
@@ -251,8 +284,8 @@ Give the process enough time to finish in-flight work after receiving its shutdo
 
 **Accepted values:**
 
-- The default is `10` restarts.
-- Enter `0` to disable the limit.
+- The default is `0`, which disables the limit.
+- Applications that had the old default of `10` were changed to `0`.
 - Enter a positive whole number to set another limit.
 
 ---

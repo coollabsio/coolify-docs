@@ -14,7 +14,7 @@ You must be an **Owner** or **Admin** in the active team.
 The role hierarchy limits who you can remove:
 
 - Owners can remove any other team member, including another Owner.
-- Admins can remove Admins and Members, but not Owners.
+- Admins can remove Admins and Members, but not Owners. An Admin sees a trash icon (**Remove member**) in an Owner's row, but Coolify rejects the removal with `You are not authorized to perform this action.`
 - You cannot remove yourself from the **Members** page.
 
 Confirm that the person no longer needs access to the team's projects, servers, credentials, shared variables, or other resources.
@@ -24,7 +24,7 @@ Confirm that the person no longer needs access to the team's projects, servers, 
 ## Remove the member
 
 <Callout type="warning" title="Removal takes effect immediately">
-The **Manage > Remove member** action does not open a confirmation step. Confirm the person's name, email address, and role before selecting it.
+After you confirm the removal, the person loses access to all resources of this team. Confirm the person's name, email address, and role before you continue.
 </Callout>
 
 <Steps>
@@ -39,16 +39,23 @@ The **Manage > Remove member** action does not open a confirmation step. Confirm
 </Step>
 <Step>
 
-### Select Remove
+### Select Remove member
 
-Find the person by name and email address, open **Manage** in their row, then select **Remove member**.
+Find the person by name and email address, open the `...` menu in their row, then select **Remove member**.
+
+</Step>
+<Step>
+
+### Confirm the removal
+
+The **Remove team member?** dialog shows that the user loses access to all resources of this team. Select **Remove member** to confirm.
 
 Coolify removes the team membership and revokes API tokens that belong to that user and team.
 
 </Step>
 <Step>
 
-### Confirm the removal
+### Verify the removal
 
 Verify that the person's row no longer appears in the member list.
 

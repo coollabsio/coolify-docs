@@ -1,6 +1,6 @@
 ---
 title: Server Validation Issues
-description: Resolve Coolify server validation errors by verifying SSH private key format includes BEGIN and END OPENSSH PRIVATE KEY headers to fix libcrypto errors.
+description: Resolve Coolify server validation errors such as libcrypto errors, missing authorized keys, a changed SSH host key, and the maximum number of SSH sessions.
 ---
 
 # Server Validation Issues
@@ -32,6 +32,36 @@ If it was not added, append it manually on the server:
 ```bash
 cat /data/coolify/ssh/keys/id.root@host.docker.internal.pub >> ~/.ssh/authorized_keys
 ```
+
+</Accordion>
+
+<Accordion title="The SSH host key of this server changed">
+
+### Symptoms
+- Validation or a deployment fails with: `The SSH host key of this server changed, so Coolify did not connect.`
+- The server **General** page shows **The SSH host key of this server changed**.
+
+### Solution
+Coolify refuses a changed host key in enforce mode. This is expected after you reinstall the server. Otherwise, another machine can answer at the server address.
+
+Compare the new key with the key on the server, then select **Trust new key** or **Reset** under **Servers > your server > Security**. See [SSH host key](/core/infrastructure/servers/security#ssh-host-key).
+
+</Accordion>
+
+<Accordion title="Maximum number of sessions (8192) reached">
+
+### Symptoms
+- The server refuses new SSH logins with `Maximum number of sessions (8192) reached`.
+- The server becomes unreachable in Coolify, also when SSH settings did not change.
+
+### Solution
+Coolify versions before v4.7.0 opened three SSH logins for each connection check. On some servers, these logins left stuck sessions. Update Coolify, then remove the stuck sessions on the server with the provider console or an open SSH session:
+
+```bash
+systemctl restart systemd-logind
+```
+
+Then validate the server again.
 
 </Accordion>
 

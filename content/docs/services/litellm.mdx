@@ -13,15 +13,6 @@ icon: "/docs/images/services/litellm-logo.svg"
 
 LiteLLM is an open-source LLM Gateway to manage authentication, loadbalancing, and spend tracking across 100+ LLMs. All in the OpenAI format.
 
-## Screenshots
-
-<br />
-<ZoomImage src="/docs/images/services/litellm2.avif" alt="Litellm dashboard" />
-<br />
-<ZoomImage src="/docs/images/services/litellm3.avif" alt="Litellm dashboard" />
-<br />
-<ZoomImage src="/docs/images/services/litellm4.avif" alt="Litellm dashboard" />
-
 ## Credentials
 
 Coolify generates these values when you create the service:
@@ -35,6 +26,15 @@ Coolify generates these values when you create the service:
 <Callout type="warning" title="Services created before this fix">
 Services that you created before this change use the master key without the `sk-` prefix, and use the master key as the salt key. To fix such a service, set `LITELLM_SALT_KEY` to the current master key, then add the `sk-` prefix to the master key. If you set a new salt key, add the stored models again.
 </Callout>
+
+## Screenshots
+
+<br />
+<ZoomImage src="/docs/images/services/litellm2.avif" alt="Litellm dashboard" />
+<br />
+<ZoomImage src="/docs/images/services/litellm3.avif" alt="Litellm dashboard" />
+<br />
+<ZoomImage src="/docs/images/services/litellm4.avif" alt="Litellm dashboard" />
 
 ## Links
 

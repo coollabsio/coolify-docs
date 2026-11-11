@@ -1,18 +1,64 @@
 ---
 title: Other Git Providers
-description: Deploy from another Git-compatible provider with public HTTPS access or an SSH deploy key.
+description: Deploy from another Git-compatible provider with public HTTPS access, HTTPS credentials, or an SSH deploy key.
 ---
 
 # Other Git providers
 
-Coolify can deploy from another Git-compatible provider, including Forgejo, Gogs, and self-hosted Git servers.
+Coolify can deploy from another Git-compatible provider, including Azure DevOps, Gogs, and self-hosted Git servers. For Gitea, Forgejo, and Codeberg, read [Gitea and Forgejo](/applications/sources/gitea), which also covers the Gitea / Forgejo App.
 
 Use:
 
 - [Public Repository](/applications/sources/public-repositories) with an unauthenticated HTTPS clone URL
+- [Public Repository](#use-https-credentials) with an HTTPS clone URL and a username and password or access token
 - [Private Repository (with deploy key)](/applications/sources/deploy-keys) with an SSH clone URL
 
 The deployment server must be able to resolve and reach the Git host.
+
+## Use HTTPS credentials
+
+<Callout type="info" title="HTTPS credentials require Coolify v4.6.0">
+  HTTPS credentials are available in Coolify v4.6.0 or above.
+</Callout>
+
+Coolify can clone a private repository from a custom Git host over HTTP(S) with a username and a password or access token. Use this instead of a token in the repository URL. Coolify sends the credentials only to the host of the repository URL and never shows the saved password or token.
+
+This does not work for `github.com` repositories. Use a [GitHub App](/applications/sources/github/app) or a [deploy key](/applications/sources/deploy-keys) for them.
+
+<Steps>
+<Step>
+
+### Create the application
+
+Open a project, select **+ New**, then select **Public Repository**. Paste the HTTPS clone URL without credentials, such as `https://git.example.com/example/application.git`, then select **Check repository**.
+
+Smart Scan cannot read the private repository before you add the credentials, so it shows **Could not read the repository**. Enter **Branch**, select the **Build pack** yourself, then select **Continue**. Do not deploy the application yet.
+
+</Step>
+<Step>
+
+### Add the credentials
+
+Open the application and select **Git Source**. In **HTTPS credentials**, enter:
+
+- **Username**. Some hosts accept any username with an access token, for example Azure DevOps.
+- **Password or token**. Use an access token with read access to the repository when the host supports it.
+
+Select **Save changes**.
+
+</Step>
+<Step>
+
+### Deploy
+
+Deploy the application. Make sure that the deployment log clones the repository and checks out the requested commit.
+
+</Step>
+</Steps>
+
+To replace the password or token, enter a new value and save. To delete the credentials, select **Remove credentials**.
+
+Through the API, send `git_https_username` and `git_https_password` when you create the application with `POST /api/v1/applications/public` or update it with `PATCH /api/v1/applications/{uuid}`. To remove the credentials, send `git_https_password` as `null`. The API never returns the password or token.
 
 ## Automatic deployments
 

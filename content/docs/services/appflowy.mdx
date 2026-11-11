@@ -27,6 +27,21 @@ Perfect for individuals seeking Notion's functionality with enhanced data securi
 
 <ZoomImage src="/docs/images/services/appflowy-screenshots.webp" alt="AppFlowy interface screenshot" />
 
+## Troubleshooting
+
+### "Network error" when you sign in with email in AppFlowy Web
+
+Since Coolify v4.7.0, the template sets `GOTRUE_CORS_ALLOWED_HEADERS=redirect_to` on the `gotrue` service. To fix an existing service:
+
+1. Open **Configuration > General > Edit Compose File**.
+2. Add this variable to the `environment` list of the `gotrue` service:
+
+   ```yaml
+   - GOTRUE_CORS_ALLOWED_HEADERS=redirect_to
+   ```
+
+3. Save the Compose file and restart the service.
+
 ## Links
 
 - [The official website](https://www.appflowy.com/?utm_source=coolify.io)

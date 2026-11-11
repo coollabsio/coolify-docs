@@ -39,12 +39,12 @@ Do not parse the human-readable message to decide whether a request succeeded. U
 | `200 OK` | The request succeeded. | Read the response body for the operation result. |
 | `201 Created` | Coolify created the requested resource. | Store the returned identifier and verify the resource state when required. |
 | `400 Bad Request` | The request or token is invalid for the operation. | Check the endpoint schema, parameters, and complete token value. |
-| `401 Unauthenticated` | Coolify could not authenticate the request. | Replace a missing, invalid, expired, or revoked token. |
-| `403 Forbidden` | The authenticated caller cannot perform the operation. | Check token permissions, team role, API access, and the source-IP allowlist. |
+| `401 Unauthenticated` | Coolify could not authenticate the request. | Replace a missing, invalid, expired, or revoked token, or resume a paused token. |
+| `403 Forbidden` | The authenticated caller cannot perform the operation. | Check token permissions and access, the owner's access, API access, and the source-IP allowlist. |
 | `404 Not Found` | The route or requested resource is unavailable to the caller. | Check the URL, resource identifier, and token team. |
 | `409 Conflict` | The requested change conflicts with existing state, such as an existing domain. | Read the response and resolve the conflicting state before retrying. |
 | `422 Unprocessable Content` | One or more request fields failed validation. | Correct the fields listed in `errors`, then send a new request. |
-| `429 Too Many Requests` | A request limit, deployment queue, or upstream provider rejected the request temporarily. | Follow `Retry-After` and the [rate-limit guidance](/api/rate-limits#handle-a-429-response). |
+| `429 Too Many Requests` | A request limit, the failed request limit, a deployment queue, or an upstream provider rejected the request temporarily. | Follow `Retry-After` and the [rate-limit guidance](/api/rate-limits#handle-a-429-response). |
 
 Each operation page under **Endpoints** lists its documented responses.
 
@@ -56,32 +56,55 @@ For `401 Unauthenticated`, confirm that:
 
 - the header uses `Authorization: Bearer <api-token>`
 - the complete token value, including the ID and `|` separator, is present
-- the token has not expired or been revoked
+- the token has not expired, been paused, or been revoked
 - the token owner still belongs to the token's team
+
+The `message` field shows the cause:
+
+| Message | Cause |
+| :--- | :--- |
+| `Unauthenticated.` | The token is missing, invalid, expired, paused, or revoked. |
+| `Invalid token.` | The token owner is no longer a member of the token's team. |
 
 A password change revokes that user's issued API tokens. Create a replacement token when this happens.
 
 For `403 Forbidden`, confirm that:
 
-- the token has the endpoint's required `read`, `write`, or `deploy` permission
-- the token owner still has an administrator or owner role when using `write` or `root`
-- **API Access** is enabled on a self-hosted instance
-- the caller matches **Allowed IPs for API Access** when an allowlist is configured
+- the token has the endpoint's required `read`, `write`, `delete`, or `deploy` permission
+- a token limited to selected projects, environments, or resources calls an endpoint for projects and resources, and the requested item is inside its access
+- the token owner still has the access that the token uses
+- the token owner has the role that the endpoint needs, for example team administrator or owner
+- **API access** is enabled on a self-hosted instance
+- the caller matches **Allowed IPs** when an allowlist is configured
 
-Token permissions cannot be changed after creation. Create a replacement token with the required permissions and revoke the previous token.
+The `message` field tells you which check failed:
+
+| Message | Cause |
+| :--- | :--- |
+| `Missing required permissions: <permission>` | The token does not have the permission that the endpoint requires. For an [operation-specific check](/api/permissions#operation-specific-checks), Coolify adds the reason after the permission. |
+| `This API token is limited to selected projects, environments, or resources, so it cannot use this endpoint.` | The endpoint is team-level, and the token has limited access. |
+| `This API token has more access than you have in this team. Revoke it and create a new token.` | The token owner lost access that the token uses, or a selected project, environment, or resource of a member's token was deleted. |
+| `API is disabled.` | **API access** is off on a self-hosted instance. |
+| `You are not allowed to disable the API.`, `You are not allowed to enable the MCP server.`, `You are not allowed to disable the MCP server.` | The token is not a root-team token of an instance administrator. |
+| `Instance email settings require a root-team API token.` | The token for `/settings/email` was not created in the root team. |
+| `This action is unauthorized.` | `GET /cloud-tokens` needs a token owner who is a team administrator or owner. |
+| `Only team admins and owners can view audit logs.` | `GET /audit-events` needs a token owner who is a team administrator or owner. |
+| `You are not authorized to perform this action.` | The role or access of the token owner does not allow the operation, for example a member who manages cloud tokens. |
+
+To fix the permissions or access of a token, [edit the token](/core/security/credentials/api-tokens#manage-a-token). Its value does not change.
 
 ### IP allowlist rejections
 
-On a self-hosted instance, a request from an address outside **Allowed IPs for API Access** returns `403 Forbidden`:
+On a self-hosted instance, a request from an address outside **Allowed IPs** returns `403 Forbidden`:
 
 ```json
 {
-  "success": true,
+  "success": false,
   "message": "You are not allowed to access the API."
 }
 ```
 
-Treat the HTTP `403` status as the failure signal even though this response contains `"success": true`. Add the caller's exact source IP address or network to the allowlist, then make the request again. Follow [Restrict API access by IP address](/api/ip-allowlist#restrict-api-access-by-ip-address) for supported values and configuration steps.
+Treat the HTTP `403` status as the failure signal. Add the caller's exact source IP address or network to the allowlist, then make the request again. Follow [Restrict API access by IP address](/api/ip-allowlist#restrict-api-access-by-ip-address) for supported values and configuration steps.
 
 ---
 
@@ -89,8 +112,8 @@ Treat the HTTP `403` status as the failure signal even though this response cont
 
 A successful request can still omit expected resources or redact sensitive values.
 
-- If a resource is missing, confirm that it belongs to the team recorded when the token was created. Create a separate token for another team.
-- If passwords, private keys, environment values, logs, or Compose content are redacted, use a token with `read:sensitive` in addition to the endpoint's required permission.
+- If a resource is missing, confirm that it belongs to the team recorded when the token was created and that it is inside the token's access. Create a separate token for another team.
+- If passwords, private keys, environment values, logs, or Compose content are redacted, use a token with `read:sensitive` in addition to the endpoint's required permission. For most values, the token owner must also be a team administrator or owner. Locked environment variable values are never returned. See [Sensitive response data](/api/permissions#sensitive-response-data).
 
 Read [Authorization](/api/authorization) for the complete request and access-check flow.
 
