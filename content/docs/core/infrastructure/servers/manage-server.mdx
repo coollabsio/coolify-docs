@@ -39,7 +39,7 @@ Create a DNS record for `*.example.com` that points to this server. Changing the
 
 ## Server details
 
-After successful validation, the **General** page displays detected information such as:
+After successful validation, the **Server overview** section of the **General** page displays detected information such as:
 
 - operating system
 - CPU architecture and core count
@@ -47,7 +47,9 @@ After successful validation, the **General** page displays detected information 
 - kernel version
 - Docker versions
 
-Coolify refreshes this information when it validates or checks the server. Use it to confirm that the connected machine and its available resources match what you expect.
+Coolify refreshes this information when it validates or checks the server. To refresh it yourself, select **Fetch server details**, or **Refresh details** when details already exist. For a server linked to a cloud provider, this action also refreshes the status at the provider. It refreshes the provider status also when the server is not validated yet.
+
+Use this information to confirm that the connected machine and its available resources match what you expect.
 
 ---
 
@@ -55,7 +57,7 @@ Coolify refreshes this information when it validates or checks the server. Use i
 
 If you added a Hetzner, DigitalOcean, Vultr, or Hostinger server manually, you can link its Coolify record to the matching provider machine.
 
-Linking lets Coolify read provider status and display provider-backed actions such as **Power On** when the machine is stopped. It does not create a new machine.
+Linking lets Coolify read provider status and display provider-backed actions such as **Power On** when a Hetzner, DigitalOcean, or Vultr machine is stopped. It does not create a new machine.
 
 <Steps>
 <Step>
@@ -71,7 +73,7 @@ Follow [Cloud Tokens](/core/security/credentials/cloud-tokens) to add a token fo
 
 1. Open **Servers** and select the server.
 2. Open **General**.
-3. Select **Link Cloud Provider**.
+3. In the **Connection** section, select **Link provider**.
 4. Choose **Hetzner**, **DigitalOcean**, **Vultr**, or **Hostinger**.
 5. Select the matching provider token.
 
@@ -80,25 +82,18 @@ Follow [Cloud Tokens](/core/security/credentials/cloud-tokens) to add a token fo
 
 ### Find the provider machine
 
-Search using the provider's server ID or the server IP address.
+Enter the provider ID of the machine and select **Search ID**, or select **Search by server IP**. The ID field is **Server ID** for Hetzner, **Droplet ID** for DigitalOcean, **Instance ID** for Vultr, and **Virtual Machine ID** for Hostinger.
 
-Confirm that **Match Found** shows the intended machine, then select **Link This Server**.
-
-For Hostinger, the flow is different:
-
-1. Select **Link Provider**, then select **Hostinger**.
-2. Select the Hostinger token.
-3. Enter the Virtual Machine ID, or select **Search By Server IP**.
-4. Select **Link Resource**.
+Confirm that **Match found** shows the intended machine, then select **Link resource**.
 
 </Step>
 <Step>
 
 ### Confirm the link
 
-Return to the server page and confirm that provider status is shown. If the status is stale, refresh it before taking a provider-backed action.
+Return to the server page and confirm that the **Server overview** section shows a badge with the provider and its status, for example `Hetzner · Running`. If the status is stale, select **Refresh details** before taking a provider-backed action.
 
-A linked Hostinger server shows a `Hostinger · <state>` badge. Select **Refresh Status** to update it. If the VPS is stopped, you can start it from Coolify. Coolify does not validate the server over SSH while the VPS is stopped or suspended.
+Coolify does not validate a linked Hostinger server over SSH while the VPS is stopped or suspended. Start the VPS in hPanel first.
 
 </Step>
 </Steps>
@@ -127,14 +122,14 @@ Open **Advanced** to control how many deployments a server runs at once and how 
 
 | Setting | What it controls | Default |
 | :--- | :--- | :--- |
-| **Concurrent builds** | How many build and deployment processes run at the same time on this server. Raise it to deploy more resources in parallel; lower it to protect a small server from resource exhaustion during builds. | `2` |
+| **Concurrent builds** | How many deployments can build at the same time on this server. Raise it to deploy more resources in parallel; lower it to protect a small server from resource exhaustion during builds. | `2` |
 | **Deployment timeout** | The maximum time a single deployment may run before Coolify cancels it. Increase it for large images or slow builds that legitimately exceed the limit. | `3600` |
-| **Queue limit** | The maximum number of deployments allowed to wait in the queue. When the limit is reached, Coolify rejects new deployments with an HTTP `429` response. | — |
+| **Queue limit** | The maximum number of deployments allowed to wait in the queue. When the limit is reached, Coolify rejects new deployments with an HTTP `429` response. | `25` |
 
 Select **Save changes** after changing these values.
 
 <Callout type="info" title="Limits are per server">
-The concurrent-build count and queue limit apply to each server independently. A dedicated [build server](/core/infrastructure/servers/build-servers) has its own limits, so raising them there does not affect deployments on other servers.
+The concurrent-build count and queue limit apply to each server independently. A build counts on the server that runs it: the deployment server, or the [build server](/core/infrastructure/servers/build-servers) that builds the image. When a deployment starts, it reserves a build server with a free slot. When a build server slot is free again, the waiting deployments of other servers can start.
 </Callout>
 
 ## Disk usage notifications

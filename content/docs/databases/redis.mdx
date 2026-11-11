@@ -5,9 +5,9 @@ description: Deploy and operate Redis on Coolify with generated credentials, per
 
 # Redis
 
-Coolify deploys Redis as a standalone in-memory datastore on the selected server and destination. A new resource gets a generated password, a persistent volume at `/data`, an internal connection URL, and a health check.
+Coolify deploys Redis or Valkey as a standalone in-memory datastore on the selected server and destination. A new resource gets a generated password, a persistent volume at `/data`, an internal connection URL, and a health check.
 
-Redis is a key-value datastore commonly used for caching, queues, streams, and short-lived application state.
+Redis is a key-value datastore commonly used for caching, queues, streams, and short-lived application state. [Valkey](https://valkey.io) is an open-source fork of Redis that works with the same clients, commands, and configuration. Coolify offers both as images of the Redis database type.
 
 ## Create a Redis database
 
@@ -23,7 +23,7 @@ Open the project and environment where the database should live, then select **N
 
 ### Select Redis
 
-Under **Databases**, select **Redis**. You can also search for **Redis** by name.
+Under **Databases**, select **Redis / Valkey**. You can also search for **Redis** or **Valkey** by name, or type `new redis` or `new valkey` in the global search.
 
 </Step>
 <Step>
@@ -38,6 +38,13 @@ Select the server that should run Redis. Build servers cannot be selected becaus
 ### Select a destination
 
 Select the Docker network destination that Redis should join.
+
+</Step>
+<Step>
+
+### Select a Redis or Valkey image
+
+Select **Valkey 9** (`valkey/valkey:9-alpine`, the default) or **Redis 8** (`redis:8`).
 
 </Step>
 <Step>
@@ -61,7 +68,7 @@ Select **Start** and follow the startup output. Wait until Redis is running and 
 | Setting | Default or behavior |
 | :--- | :--- |
 | Internal port | `6379`; TLS uses `6380` |
-| Default image | `redis:7.2` |
+| Default image | `valkey/valkey:9-alpine`. Existing databases keep their image. |
 | Username | `default` |
 | Data mount | `/data` |
 | Scheduled database backups | Not supported by Coolify |

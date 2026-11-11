@@ -1,0 +1,218 @@
+---
+title: Image Scanning
+description: Scan the container images of your applications, databases, and services for known vulnerabilities, get version recommendations, and block risky deploys.
+---
+
+# Image scanning
+
+Image scanning checks the container images on a server for known vulnerabilities. Coolify runs [Syft](https://github.com/anchore/syft) and [Grype](https://github.com/anchore/grype) on your server. Coolify does not send your images or their package lists (SBOMs) to a third party.
+
+Each application, database, and service gets one security status and a recommended version that fixes the problems. For applications, you can also block a deploy when the new image has security problems.
+
+Image scanning is off by default. Turn it on for each server. When the server scans, each application on it is scanned too, unless you turn it off for that application.
+
+## Before you begin
+
+- You must be a team admin or owner to turn on image scanning for a server.
+- The server must be able to reach Docker Hub, to pull the scanner images (`anchore/syft`, `anchore/grype`, `regclient/regctl`, and `alpine`), and `grype.anchore.io`, to download the vulnerability database.
+- Scans use up to 1 CPU and 1 GB of memory while they run. You can raise the memory limit, see [Scanner memory limit](#scanner-memory-limit). The scanner data uses about 1.2 GB of disk, plus temporary space for one image.
+
+Coolify keeps the scanner data in `/data/coolify/image-scans` and in the Docker volume `coolify-grype-db` on the server.
+
+## Turn on image scanning for a server
+
+<Steps>
+<Step>
+
+### Open the Vulnerabilities page
+
+1. Open **Servers** in the Coolify sidebar.
+2. Select the server.
+3. Select **Security** in the server menu.
+4. Select **Vulnerabilities**.
+
+**Vulnerabilities** shows only after the server is validated. Read [Server security](/core/infrastructure/servers/security).
+
+</Step>
+<Step>
+
+### Enable image scanning
+
+1. In the **Image scanning** section, select **Enable**.
+2. Select **Enable image scanning** to confirm.
+
+</Step>
+<Step>
+
+### Wait for the scanner
+
+Coolify gets the scanner in two steps:
+
+- **Get scanner**: Coolify pulls the scanner images.
+- **Update database**: Coolify downloads the vulnerability database.
+
+If a step fails, fix the cause in its message, then select **Try again**.
+
+</Step>
+</Steps>
+
+When you add a server, you can also set **Scan images for vulnerabilities** in the **Image scanning** section of the form. A team admin can preselect this option for all new servers with **Scan images on new servers** in **Team** > **Image Scanning**.
+
+## Turn off scanning for one application
+
+Applications on a server that scans are scanned by default.
+
+1. Open the application and select **Security** in its menu.
+2. Open **Settings** and set **Scan this app** to **Off**.
+
+For a Docker image application, **Who builds this image** tells Coolify whether your team builds the image. Coolify detects it. Change it only when the detection is wrong, because it changes the recommendation, for example a rebuild in your CI instead of a newer tag.
+
+Databases and services have no scan setting of their own. Coolify scans them when their server scans.
+
+## When Coolify scans
+
+| Event | What Coolify scans |
+| :--- | :--- |
+| Application deploy | The new image. When **Block deploys** is **On** or **Strict**, before the new container starts, else after it starts. Restarts and deploys that skip the build are not scanned again, rollbacks are. |
+| Database or service start | The images of the database, or of the applications and databases of the service, after the start. |
+| Every day | All running images on the server, between 02:00 and 04:59 server time. Coolify updates the vulnerability database first. |
+| Every day and after a package update | The operating system packages of the server. The results show in the **Vulnerabilities** section of the same server page. Read [Patch server packages](/core/infrastructure/servers/server-patching). |
+| **Scan now** | The images of one resource. Select it on the **Security** page of the resource. Coolify pulls an image that is not on the server. |
+
+Coolify also looks for newer versions of a scanned image: a newer build of the same tag, the newest tag of the same version line, and the next major version for information. It scans these candidates from the registry on the server. For a Dockerfile build, it also checks the base image.
+
+If an application uses a [build server](/core/infrastructure/servers/build-servers), turn on image scanning on the build server too. Else the deploy scan cannot run.
+
+## Read the results
+
+Open **Security** in the menu of an application, database, or service. The page shows:
+
+- The security status of the resource, with the time of the last check.
+- The recommended action and the problems that it fixes. Coolify can update the image, pull a newer build, or start a rebuild with a button. For other actions, such as a new base image in a Dockerfile, Coolify gives the text to copy.
+- **All findings**, with filters for fix state and severity, and a list grouped by package.
+
+A service shows the images of all its applications and databases.
+
+### Security status
+
+| Status | Meaning |
+| :--- | :--- |
+| **Update now** | An update fixes a problem that attackers are using or are likely to use. |
+| **Security update** | An update fixes a critical or high problem. With **Count medium problems**, also a medium problem. |
+| **No fix yet** | The image has a problem that attackers are using or are likely to use, and no fixed version exists yet. Coolify checks every day. |
+| **Check needed** | Coolify must check the image again, for example because the last result is more than 2 days old or the vulnerability database was more than 5 days old. |
+
+A resource with no badge has no problem that needs an action, or was not scanned yet.
+
+"Attackers are using" means that the problem is in the CISA Known Exploited Vulnerabilities catalog. "Likely to use" means an EPSS score of 0.10 or more and a CVSS score of 7.0 or more.
+
+### Team Security page
+
+Open **Monitoring** > **Security** in the Coolify sidebar. The page lists the resources of the team with their status, most urgent first. Filter by status, server, or project, or search for a vulnerability ID or a package across all scanned images. Each resource links to its **Security** page.
+
+Members who can access only some projects see only the resources of those projects.
+
+## Rules and deploy blocking
+
+Rules are set on four levels. Each level uses the value of the level above until you change it:
+
+1. **Settings** > **Image Scanning**: defaults for every team. Only instance admins can change them.
+2. **Team** > **Image Scanning**: defaults for the servers and applications of the team.
+3. The **Vulnerabilities** page of a server: defaults for the applications on the server.
+4. **Settings** > **Rules** on the **Security** page of an application.
+
+| Rule | Options | Default |
+| :--- | :--- | :--- |
+| **Block deploys** | **Off**, **On**, **Strict** | **Off** |
+| **If the scan cannot run** | **Deploy anyway**, **Block the deploy**. Applies when **Block deploys** is **On** or **Strict**. | **Deploy anyway** |
+| **Count medium problems** | **Yes**, **No**. Medium problems that an update fixes give a security update. | **No** |
+
+**Block deploys** applies only to applications:
+
+- **On** blocks a deploy when the new image adds a problem that attackers are using or are likely to use. Problems that the running image already has do not block. They show as a warning in the deployment log.
+- **Strict** also blocks critical, high, and counted medium problems that have a fix, and operating systems that no longer get security fixes.
+
+A blocked deployment has the **Blocked** status. The deployment log lists the problems, and the deployment failure notification names the block. A user with write access to the application can select **Deploy anyway** on the deployment page to deploy the same commit without the check. A rollback to an image that ran before is never blocked.
+
+<Callout type="warning" title="Compose applications with custom commands">
+Coolify cannot check an image before the start when a Docker Compose application uses a custom build or start command. With **Block deploys** on, **If the scan cannot run** decides.
+</Callout>
+
+## Ignore a finding
+
+Ignore a finding when it does not apply to you, for example because your application does not use the affected part.
+
+1. On the **Security** page of the resource, open **All findings**.
+2. Select the ignore button of a finding or a package.
+3. Enter a **Reason**.
+4. Set the **Scope**: **This resource**, or **All team resources** (team admins and owners only).
+5. Set when the ignore **Expires**, then select **Ignore**.
+
+Ignored findings do not count for the status, the notifications, or **Block deploys**.
+
+## Notifications
+
+The **Image vulnerabilities** event sends:
+
+- A daily summary of new vulnerabilities with a fix, between 06:00 and 07:59.
+- An alert right after a scan finds a new problem that attackers are using or are likely to use.
+
+The event is on by default for email and off for the other channels. Read [Notification events](/core/notifications/events).
+
+## Failed scans
+
+When a scan cannot run, the **Security** page of the resource shows **The last scan could not run** with the reason. For the operating system packages, the server **Vulnerabilities** page shows **The last scan failed**.
+
+Select **Show error log** to see the failed step, its exit code, and the end of the command output. Only users who can change the resource or the server see the error log. Coolify also writes the failure to the Laravel log.
+
+| Message | What to do |
+| :--- | :--- |
+| Not enough disk space | Free disk space on the server. |
+| The vulnerability database is not on the server yet, or is too old | Check that the server can reach `grype.anchore.io`. |
+| The scanner ran out of memory | Raise the [Scanner memory limit](#scanner-memory-limit). The server must have that much free memory. |
+| Coolify cannot read this image from its registry | Log in to the registry on the server. |
+| The image is not on the server | Select **Scan now** to pull and scan it. An image that Coolify builds needs a new deploy. |
+| Another scan is still running | Wait. Coolify runs one scan at a time on a server. |
+
+## Scanner memory limit
+
+Large images can need more memory than the default of 1 GB. To set a higher limit:
+
+1. Open the server **Vulnerabilities** page.
+2. In the **Image scanning** section, select **1 GB**, **2 GB**, **4 GB**, or **8 GB** in **Scanner memory limit**.
+
+The limit applies to each scanner step. The server must have that much free memory while a scan runs. The help text of the **Image scanning** section also shows the disk space that the scanner data uses on the server.
+
+## Turn off image scanning
+
+On the server **Vulnerabilities** page, select **Disable** and confirm. Coolify stops scanning the images and the operating system packages of the server. The scan results and the scanner data on the server stay.
+
+To remove the scanner data, select **Delete scanner data**. Coolify removes the stored SBOMs, the vulnerability database, and the scanner images from the server. The scan results in Coolify stay, and the next scan gets the scanner again. When the server has no scanner data, Coolify hides the button.
+
+## Permissions
+
+| Action | Who can do it |
+| :--- | :--- |
+| Turn image scanning of a server on or off, open the server **Vulnerabilities** page | Team admins and owners |
+| Change the team rules and **Scan images on new servers** | Team admins and owners. Other members can read them. |
+| Change the instance rules | Instance admins |
+| Change **Scan this app** and the rules of an application, **Scan now**, ignore a finding for one resource, **Deploy anyway** | Users with write access to the resource |
+| Ignore a finding for all team resources | Team admins and owners |
+| See the results of a resource | Users who can view the resource |
+
+Read [Roles and permissions](/core/team/roles-and-permissions).
+
+## API and MCP
+
+| Endpoint | Purpose |
+| :--- | :--- |
+| [`GET /api/v1/servers/{uuid}/image-scanning`](/api/endpoints/servers/get-server-image-scanning) | Read whether the server scans, the memory limit, the state of the scanner, and the disk space of the scanner data (`scanner_disk_used_bytes`). |
+| [`PATCH /api/v1/servers/{uuid}/image-scanning`](/api/endpoints/servers/update-server-image-scanning) | Turn scanning of the server on or off with `is_image_scan_enabled`, and set the scanner memory limit with `image_scan_memory_mb` (`1024`, `2048`, `4096`, or `8192`). |
+| [`GET /api/v1/vulnerabilities`](/api/endpoints/vulnerabilities/list-vulnerabilities) | List the resources of the team with their security status. |
+| [`GET /api/v1/applications/{uuid}/vulnerabilities`](/api/endpoints/vulnerabilities/get-application-vulnerabilities) | Read the status, images, and findings of an application. |
+| [`GET /api/v1/databases/{uuid}/vulnerabilities`](/api/endpoints/vulnerabilities/get-database-vulnerabilities) | Read the status, image, and findings of a database. |
+| [`GET /api/v1/services/{uuid}/vulnerabilities`](/api/endpoints/vulnerabilities/get-service-vulnerabilities) | Read the status, images, and findings of a service. |
+
+The `GET` endpoints need the `read` ability, the `PATCH` endpoint needs `write`. The server endpoints need a team admin or owner. Set `is_image_scan_enabled` on the applications API to turn scanning of one application on or off, and `scan_images_on_new_servers` on `PATCH /api/v1/team` for the team default. Read [API permissions](/api/permissions).
+
+The MCP tools `get_vulnerabilities` and `manage_image_scanning` read the results and change the scan settings with the same permissions as the API. Read [Image scanning MCP tools](/mcp/capabilities/image-scanning).

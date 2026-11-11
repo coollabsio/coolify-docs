@@ -111,4 +111,5 @@ If the test does not arrive:
 3. If the app or webhook was reinstalled or recreated, copy the new URL into Coolify and save it.
 4. In Slack, confirm that the app remains authorized for the workspace and channel.
 5. In Mattermost, confirm that incoming webhooks remain enabled in the server's integration settings.
-6. Send another test before enabling production events.
+6. If Coolify refuses the URL of a self-hosted Mattermost server on a private network or with a `.local` or `.internal` hostname, ask an instance administrator to add the host to **Allowed internal targets**. See the [endpoint requirements](/core/notifications/channels/webhook/setup#endpoint-requirements).
+7. Send another test before enabling production events.

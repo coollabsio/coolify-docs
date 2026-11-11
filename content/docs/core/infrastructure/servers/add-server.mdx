@@ -108,6 +108,7 @@ You can also generate or import a private key from the **New key** menu beside *
 | **User** | Enter `root` for this guide. |
 | **Private key** | Select the key whose public key you authorized on the server. |
 | **Server role** | Select **Deployments and builds**, **Deployments only**, or **Builds only** according to the server's purpose. |
+| **Scan images for vulnerabilities** | Optional. Select **On** to scan the images on this server for known vulnerabilities. You can change it later on the server's **Security** page. See [Image scanning](/core/security/image-scanning). |
 
 Expand **Advanced settings** to access **User**, **Port**, and **Server role**. Choose **Deployments and builds** for a server that builds and runs resources, or **Deployments only** to keep builds on other servers. Choose **Builds only** for a dedicated build server. See [Server roles](/core/infrastructure/servers/build-servers#server-roles).
 
@@ -122,7 +123,7 @@ Select **Validate connection** to open the validation panel. After a successful 
 
 During validation, Coolify:
 
-1. tests the SSH connection
+1. tests the SSH connection and saves the [SSH host key](/core/infrastructure/servers/security#ssh-host-key) of the server
 2. checks the operating system and required tools
 3. installs or verifies Docker Engine and Docker Compose
 4. records server information

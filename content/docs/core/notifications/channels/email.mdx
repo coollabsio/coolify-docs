@@ -1,6 +1,6 @@
 ---
 title: Email
-description: Configure Coolify email notifications with hosted email, self-hosted instance-wide transactional email, SMTP, or Resend.
+description: Configure Coolify email notifications with hosted email, self-hosted instance-wide transactional email, one or more SMTP servers, or Resend.
 ---
 
 import { Cloud, Rocket2, Server, ServerCloud } from 'reicon-react';
@@ -12,7 +12,7 @@ Coolify can send team notifications through a hosted email service, a team-speci
 Open **Notifications > Email** to configure the channel.
 
 <Callout type="info" title="Instance-wide email is self-hosted only">
-The **Email service > Use system-wide settings** option appears only on self-hosted Coolify. It uses the sender and SMTP or Resend provider configured under [**Settings > Email**](/core/instance-management/instance-settings#sender) for the Coolify instance.
+The **Email service > Use system-wide settings** option appears only on self-hosted Coolify. It uses the provider configured under [**Settings > Email**](/core/instance-management/instance-settings#email-delivery) for the Coolify instance. When the instance has a [notification sender](/core/instance-management/instance-settings#notification-sender), team notifications come from that sender.
 
 Coolify Cloud shows **Use hosted email service** instead. Cloud users do not configure the instance-wide provider.
 </Callout>
@@ -25,15 +25,15 @@ The available choices depend on how you use Coolify:
 | :--- | :--- | :--- |
 | **Use hosted email service** | Coolify Cloud | No provider credentials. |
 | **Use system-wide settings** | Self-hosted Coolify | A working email provider under **Settings > Email**. |
-| **SMTP server** | Coolify Cloud and self-hosted Coolify | SMTP sender, host, port, encryption, and optional authentication details. |
-| **Resend** | Coolify Cloud and self-hosted Coolify | A sender name, sender address, and Resend API key. |
+| **SMTP** | Coolify Cloud and self-hosted Coolify | One or more SMTP servers, each with a sender, host, port, encryption, and optional authentication details. |
+| **Resend** | Coolify Cloud and self-hosted Coolify | A Resend API key, a sender name, and a sender address. |
 
-A team can use only one email path at a time. The hosted and instance-wide options disable team-specific SMTP and Resend. Enabling team-specific SMTP disables Resend, and enabling Resend disables SMTP.
+Only one provider sends the team's email. Under **Email provider**, select **None**, **SMTP**, or **Resend**. When you change **Email service**, Coolify turns off the team's SMTP or Resend provider. After you change back to **Use team email settings**, select the provider again.
 
 Before you start, prepare the values required by the option you plan to use:
 
 - For **SMTP**, copy the host, port, encryption method, username, and password from your email provider. Confirm that the provider permits the sender address you want to use.
-- For **Resend**, verify your sending domain or sender in Resend and create an API key.
+- For **Resend**, verify your sending domain in Resend and create an API key.
 - For **system-wide email**, configure and test the instance provider first. This requires access to the self-hosted instance settings.
 
 ---
@@ -50,7 +50,7 @@ The dashboard shows the option for your Coolify deployment type. It does not sho
 
 ### Configure the instance provider
 
-As an instance administrator, open [**Settings > Email**](/core/instance-management/instance-settings#sender). Enter the shared sender details, configure either SMTP or Resend, enable that provider, and save it.
+As an instance administrator, open [**Settings > Email**](/core/instance-management/instance-settings#email-delivery). Select **SMTP** or **Resend** next to **Email delivery**, enter its settings, and save. Optionally, set a [notification sender](/core/instance-management/instance-settings#notification-sender) for team notifications.
 
 Use **Send test** on the instance settings page. Continue only after that test arrives. This confirms that the instance-wide provider works before a team tries to reuse it.
 
@@ -61,7 +61,7 @@ Use **Send test** on the instance settings page. Continue only after that test a
 
 Open **Notifications > Email** for the team and set **Email service** to **Use system-wide settings**.
 
-The team now uses the instance sender and provider credentials. It does not receive its own copy of those credentials, and team members cannot change them from the Notifications page.
+The team now uses the instance provider and sender. It does not receive its own copy of those credentials, and team members cannot change them from the Notifications page.
 
 </Step>
 <Step>
@@ -99,22 +99,26 @@ Choose SMTP or Resend when this team should use its own email provider instead o
 Enter the connection details supplied by your SMTP provider.
 
 1. Open **Notifications > Email** and set **Email service** to **Use team email settings**.
-2. Enter **From name** and a valid **From address**. Both are required. If either is empty, saving fails with an error such as `From Address is required. (and 1 more error)`.
-3. Under **SMTP server**, enter the connection details supplied by your email provider:
+2. Under **Email provider**, select **SMTP**. The page shows the settings of the server in the **SMTP server** list. The first server is named `Default`.
+3. Optionally, select **Add server**, enter a **Name**, and select a **Template** for your provider. A template fills in **Host**, **Port**, and **Encryption**. Templates are available for PostShiba, Amazon SES (us-east-1), Brevo, Gmail, Mailgun, Mailjet, Microsoft 365, Postmark, Proton Mail, Resend, SendGrid, and Zoho Mail.
+4. Enter the settings of the server:
 
-   | Field | Value |
-   | :--- | :--- |
-   | **Host** | SMTP hostname, such as `smtp.example.com`. |
-   | **Port** | Provider's SMTP port. Common values are `587`, `465`, and `25`; Coolify accepts ports from `1` to `65535`. |
-   | **Encryption** | `StartTLS`, `TLS/SSL`, or `None`. Port `587` commonly uses StartTLS and port `465` commonly uses TLS/SSL, but follow your provider's instructions. |
-   | **SMTP username** | Authentication username, when required. |
-   | **SMTP password** | Authentication password, when required. |
-   | **Timeout** | Optional send timeout in seconds. |
-   | **EHLO domain** | Optional fully qualified domain Coolify sends in the SMTP `EHLO` command, such as `coolify.example.com`. Leave it empty to use the system default. |
+   | Group | Field | Value |
+   | :--- | :--- | :--- |
+   | **Sender** | **From name** | Name shown in email from this server. Required. |
+   | | **From address** | Sender address of this server. It must be on a domain that this server can send from. Required. |
+   | **Connection** | **Host** | SMTP hostname, such as `smtp.example.com`. Required. Coolify [checks the host](#smtp-host-checks). |
+   | | **Port** | Provider's SMTP port. Common values are `587`, `465`, and `25`. Required. |
+   | | **Encryption** | **StartTLS**, **TLS / SSL**, or **None**. Port `587` commonly uses StartTLS and port `465` commonly uses TLS / SSL, but follow your provider's instructions. |
+   | **Authentication** | **Username** | SMTP username. Leave it empty only for a relay that does not need a login. Required when the host is the host of a template. |
+   | | **Password** | SMTP password. Required when you enter a username. |
+   | **Advanced** | **Timeout** | Optional maximum delivery time in seconds. |
+   | | **EHLO domain** | Optional fully qualified domain Coolify sends in the SMTP `EHLO` command, such as `coolify.example.com`. Leave it empty to use the system default. |
 
-4. Check the values against your provider's documentation. A mismatched port and encryption option prevents Coolify from connecting.
-5. Select **Save changes** in the **SMTP server** section.
-6. Set **SMTP delivery** to **Enabled** and select **Save changes**. Coolify disables Resend when SMTP is enabled.
+5. Check the values against your provider's documentation. A mismatched port and encryption option prevents Coolify from connecting.
+6. Select **Save changes**. Coolify turns on SMTP and turns off Resend. Until you save complete settings, the page shows **Not active yet**.
+
+If a required field is empty, saving fails with an error such as `From Address is required.`
 
 <Callout type="warning" title="Do not use unencrypted SMTP over an untrusted network">
 Choose **None** only when your email provider explicitly requires it and the connection stays on a trusted network. Prefer an encrypted option supported by the provider.
@@ -123,17 +127,49 @@ Choose **None** only when your email provider explicitly requires it and the con
 </Tab>
 <Tab value="Resend" icon={Rocket2}>
 
-Create a Resend API key and use a sender address that Resend has verified.
+Create a Resend API key and use a sender address on a domain that Resend has verified.
 
 1. Create an API key in the [Resend dashboard](https://resend.com/api-keys).
-2. Verify the domain or sender address that Coolify will use in Resend.
+2. Verify the domain that Coolify will send from in Resend.
 3. Open **Notifications > Email** and set **Email service** to **Use team email settings**.
-4. Enter **From name** and the verified **From address**. Resend also requires both fields.
-5. Under **Resend**, enter the **API key** and select **Save changes**.
-6. Set **Resend delivery** to **Enabled** and select **Save changes**. Coolify disables SMTP when Resend is enabled.
+4. Under **Email provider**, select **Resend**.
+5. Enter the **Resend API key**, the **From name**, and the **From address**. All three fields are required. The address must be on a domain verified in Resend.
+6. Select **Save changes**. Coolify turns on Resend and turns off SMTP.
+
+Resend has its own sender. It does not use the sender of the SMTP servers. With the API, set it with `resend_from_name` and `resend_from_address` in a `PATCH` request to `/api/v1/notifications/email`. When you upgrade from a version before v4.7.0, Coolify copies the old shared sender into these fields.
 
 </Tab>
 </Tabs>
+
+---
+
+## Manage more than one SMTP server
+
+A team can save more than one SMTP server, each with its own sender. Coolify sends email through the server that the **SMTP server** list shows.
+
+- **Add a server:** Select **Add server**, enter a **Name**, optionally select a **Template**, and select **Add server**. Enter the settings, then select **Save changes**. The previous server stays in the list. Select **Cancel** to discard the new server.
+- **Switch servers:** Select another server in the **SMTP server** list. Coolify saves the change immediately.
+- **Rename a server:** Select the edit icon next to the list, enter the new **Name**, and select **Save**.
+- **Delete a server:** Select the delete icon next to the list. Coolify then uses the next server in the list. You cannot delete the only server. To stop using SMTP, select another provider.
+
+---
+
+## SMTP host checks
+
+Coolify checks the **Host** of a team SMTP server when you save a new host and again before each email. It connects only to the address that it checked, so a later DNS change cannot send the connection to another address.
+
+| Host | Self-hosted Coolify | Coolify Cloud |
+| :--- | :--- | :--- |
+| Public address | Accepted | Accepted |
+| Private network address, such as `10.0.0.0/8` or `192.168.0.0/16`, and Docker service names | Accepted | Refused |
+| Loopback address, such as `localhost` or `127.0.0.1` | Refused, unless an instance administrator allows it | Refused |
+| Link-local address, such as `169.254.0.0/16` (cloud metadata) | Always refused | Always refused |
+
+To allow a refused internal host on a self-hosted instance, an instance administrator adds it to [**Allowed internal targets**](/core/instance-management/instance-settings#allowed-internal-targets). A loopback host also needs **Localhost targets** set to **Allowed**.
+
+When Coolify refuses a host, the error explains why, for example `The SMTP host points to a local or private address that is not allowed.` For an instance administrator, the error links to the allowed internal targets setting. If the host does not resolve, the error is `The SMTP host could not be resolved.`
+
+These checks apply to the team SMTP servers. The instance email settings under **Settings > Email** do not use them.
 
 ---
 
@@ -174,9 +210,10 @@ To change the setting with the API, send `deployment_commit_details_email_notifi
 
 If the test email does not arrive:
 
-1. Confirm that the intended provider is enabled. SMTP, Resend, and the hosted or system-wide option are mutually exclusive.
-2. For SMTP, compare the host, port, and encryption method with the provider's current settings. Also confirm that the Coolify server can make outbound connections on that port.
-3. Check whether the provider requires the **From address** or its domain to be verified.
-4. Check the provider's delivery or activity logs. An accepted request can still be rejected later because of sender policy or recipient filtering.
-5. Check the recipient's spam or junk folder.
-6. When using the self-hosted system-wide provider, send a test from **Settings > Email**. If that test also fails, fix the instance provider before troubleshooting the team channel.
+1. Confirm that **Email service** and **Email provider** show the provider you want, and that the page does not show **Not active yet**. **Send test** is available only after you save a provider.
+2. For SMTP, confirm that the **SMTP server** list shows the server you want. Compare its host, port, and encryption method with the provider's current settings. Also confirm that the Coolify server can make outbound connections on that port.
+3. If Coolify refuses the SMTP host, read the error and see [SMTP host checks](#smtp-host-checks).
+4. Check whether the provider requires the **From address** or its domain to be verified.
+5. Check the provider's delivery or activity logs. An accepted request can still be rejected later because of sender policy or recipient filtering.
+6. Check the recipient's spam or junk folder.
+7. When using the self-hosted system-wide provider, send a test from **Settings > Email**. If that test also fails, fix the instance provider before troubleshooting the team channel.

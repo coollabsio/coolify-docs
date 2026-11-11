@@ -1,0 +1,116 @@
+---
+title: Server Security
+description: Use the server Security page to check the pinned SSH host key, control terminal access, patch packages, and scan images.
+---
+
+# Server security
+
+Open **Servers**, select a server, then select **Security**. The **Security** menu has these pages:
+
+| Page | What it contains |
+| :--- | :--- |
+| **General** | The [SSH host key](#ssh-host-key) of the server and [terminal access](/core/infrastructure/servers/web-terminal#change-terminal-access). |
+| **Patching** | Operating-system package updates. See [Server Patching](/core/infrastructure/servers/server-patching). |
+| **Vulnerabilities** | Container image scanning for the server. See [Image scanning](/core/security/image-scanning). |
+
+**Patching** and **Vulnerabilities** show only after the server is validated. Only team owners and administrators can open the **Security** page.
+
+---
+
+## SSH host key
+
+The SSH host key identifies the server. Coolify uses it to make sure that it connects to the correct machine and not to another machine at the same address.
+
+Coolify saves the host key on the first connection to the server and trusts it after that (trust on first use). When the server later sends a different key, Coolify reports the change and, in enforce mode, refuses to connect.
+
+The **SSH host key** section shows:
+
+- the fingerprint of the trusted key, or **No key yet** before the first connection
+- how Coolify got the key, for example **Saved on the first connection** or **Moved with the server transfer**, and when it was trusted
+- the current mode
+
+The badge shows the state of the check:
+
+| Badge | Meaning |
+| :--- | :--- |
+| **Trusted, warn mode** or **Trusted, enforce mode** | Coolify trusts a key and the server sends it. |
+| **Key changed** | The server sent a key that does not match the trusted key. |
+| **Check off** | Coolify does not check the host key of this server. |
+| **No key yet** | Coolify saves the key on the next connection. |
+
+When you change the IP address or the SSH port of the server, Coolify removes the trusted key and saves the new key on the next connection.
+
+### Check modes
+
+| Mode | What Coolify does when the host key changes |
+| :--- | :--- |
+| `warn` | Coolify connects, shows the new key, and notifies the team. This is the default. |
+| `enforce` | Coolify refuses to connect until you trust or reset the new key. Deployments, backups, and server checks on this server stop. |
+| `off` | Coolify does not check the host key. |
+
+To refuse a changed key on one server, set **When the host key changes** to **Refuse to connect (enforce)**. Select **Warn and connect** to use warn mode again. The setting saves immediately. It shows only when the instance uses warn mode and the check is not disabled for the server.
+
+### When the host key changes
+
+When the server sends a different host key:
+
+- Coolify shows a callout with the fingerprint of the new key on the **Security** page and on the server **General** page.
+- The team gets a notification on the channels that receive the **Server unreachable** event. Coolify sends at most one notification an hour for each server.
+- Coolify writes the change to the [audit log](/core/team/audit-log).
+
+A new host key is expected after you reinstall the server. If you did not change the server, another machine can answer at its address. Do not trust the key until you compare it with the key on the server.
+
+<Steps>
+<Step>
+
+### Compare the key on the server
+
+From a trusted terminal or the provider console, run on the server:
+
+```sh
+for f in /etc/ssh/ssh_host_*_key.pub; do ssh-keygen -lf "$f"; done
+```
+
+Compare the `SHA256:` fingerprints with the fingerprint in the Coolify callout.
+
+</Step>
+<Step>
+
+### Trust the new key
+
+1. Open **Servers > your server > Security**.
+2. In **SSH host key**, select **Trust new key**.
+3. Enter the server name and your Coolify account password, then confirm.
+
+Coolify trusts the new key, stops trusting the old key, and checks the connection again.
+
+</Step>
+</Steps>
+
+### Other actions
+
+| Action | Result |
+| :--- | :--- |
+| **Reset** | Removes the trusted key and the new key. Coolify trusts the key that the server sends on the next connection. |
+| **Disable check** | Turns off the host key check for this server. Use it only for a server that changes its host key often, for example a load balancer address or a server that you rebuild often. |
+| **Enable check** | Turns the host key check on again for this server. |
+
+Each action asks for the server name and your Coolify account password.
+
+### Set the mode for the instance
+
+On a self-hosted instance, an instance administrator sets the mode for all servers with `SSH_HOST_KEY_CHECKING` in `/data/coolify/source/.env`. The values are `warn` (default), `enforce`, and `off`. Coolify uses `warn` for any other value.
+
+```sh
+SSH_HOST_KEY_CHECKING=enforce
+```
+
+Recreate the Coolify container to apply the change. Follow [Environment Variables](/core/instance-management/environment-variables#apply-the-changes).
+
+With `enforce` or `off` for the instance, the mode of each server follows the instance. With `warn`, you can set enforce mode for one server.
+
+### Reset the host key through the API
+
+`POST /servers/{uuid}/host-key/reset` removes the trusted key of the server. Coolify then trusts the key that the server sends on the next connection.
+
+To trust a known key instead, send it in `ssh_host_key`, as public key lines (`type base64`) or `known_hosts` lines. The response contains the fingerprints in `ssh_host_key_fingerprints`. The request needs a token with the `write` permission of a team administrator or owner. See [API](/api/overview).

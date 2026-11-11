@@ -36,7 +36,7 @@ Open **Keys & Tokens** in the main sidebar, then select **API Tokens**.
 
 ### Configure the token
 
-Enter a description, choose an expiration period, and select the `deploy` permission.
+Enter a description, choose an expiration period, and select the `deploy` permission. Clear the `read` permission, which the form selects by default.
 
 A deploy-only token can trigger deploy webhooks without receiving general read or write access to the API.
 
@@ -104,14 +104,14 @@ Review [Deploy by Tag](/core/automation/tags/deploy-by-tag) before automating a 
 
 ## Trigger the deployment
 
-Store the copied URL as `COOLIFY_DEPLOY_WEBHOOK`, then send a `GET` request with the token in the `Authorization` header:
+Store the copied URL as `COOLIFY_DEPLOY_WEBHOOK`, then send a `POST` request with the token in the `Authorization` header:
 
 ```sh
-curl --request GET "$COOLIFY_DEPLOY_WEBHOOK" \
+curl --request POST "$COOLIFY_DEPLOY_WEBHOOK" \
   --header "Authorization: Bearer $COOLIFY_TOKEN"
 ```
 
-Coolify also accepts `POST` requests. The endpoint requires either `uuid` or `tag`; do not send both in one request.
+A `GET` request does not deploy: Coolify answers with `405` and `This endpoint has changed to a POST request.` The endpoint requires either `uuid` or `tag`; do not send both in one request.
 
 <Callout type="warn" title="Protect the API token">
 The URL identifies the deployment target, but the Bearer token authorizes the action. Revoke the token from **Keys & Tokens > API Tokens** if it is exposed.
@@ -126,6 +126,13 @@ The URL identifies the deployment target, but the Bearer token authorizes the ac
 | `uuid` | Deploy one or more resource UUIDs. Separate several UUIDs with commas. | `uuid=abc,def` |
 | `tag` | Deploy one or more tag groups. Separate several names with commas. | `tag=api,worker` |
 | `force` | Rebuild an application without using its build cache. | `force=true` |
+| `pr` or `pull_request_id` | Deploy the preview of one pull request. Cannot be used with `tag`. | `pr=42` |
+| `docker_tag` | Set the image tag of a Docker Image preview. Requires `pr` or `pull_request_id`. Cannot be used with `tag`. | `docker_tag=pr-42` |
+| `cancel_previous` | Cancel older webhook, API, and MCP deployments of the same application, pull request, and server: `none` (default), `queued`, or `building`. | `cancel_previous=queued` |
+
+`cancel_previous=queued` cancels the older deployments that wait in the queue. `building` also stops the older deployments that are still building. A deployment that already started to replace containers always finishes. Manual, restart, and rollback deployments are never cancelled.
+
+For an application with the Docker Image build pack, a request with `pr` and `docker_tag` can open a new preview or change the image tag of a preview. This needs a token with `write` in addition to `deploy`. A `deploy`-only token can only redeploy an existing preview with its current tag. For other build packs, the preview must already exist.
 
 For a JSON `POST` request, send the same option names in the request body:
 

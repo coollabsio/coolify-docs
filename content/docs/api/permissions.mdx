@@ -1,44 +1,54 @@
 ---
 title: Permissions
-description: Choose Coolify API token permissions and understand team, role, and sensitive-data restrictions.
+description: Choose Coolify API token permissions and access, and understand team, role, and sensitive-data restrictions.
 ---
 
 # API permissions
 
-Each API token belongs to the user and active team that created it. Its permissions determine which endpoints it can use and whether supported responses can include sensitive values.
+Each API token belongs to the user and active team that created it. Its permissions determine which endpoints it can use and whether supported responses can include sensitive values. Its access determines which projects, environments, and resources it can reach.
 
-Choose the smallest permission set required by the integration.
+Choose the smallest permission set and the narrowest access required by the integration.
 
 ## Permission levels
 
 | Permission | Allows | Important restrictions |
 | :--- | :--- | :--- |
 | `read` | List and inspect resources. | Sensitive response values remain redacted. |
-| `read:sensitive` | Read secrets, logs, passwords, private keys, environment values, and Compose content returned by supported endpoints. | Coolify also adds `read`. The token owner must be a team administrator or owner. |
-| `write` | Create, update, and delete resources through write endpoints. | The token owner must remain a team administrator or owner when the request runs. |
-| `deploy` | Trigger deployments, restarts, stops, cancellations, and [deploy webhooks](/core/automation/deploy-webhooks) (`/api/v1/deploy`). | Selecting it in the dashboard creates a deploy-only token. The token owner must be a team administrator or owner. |
-| `root` | Bypass the `read`, `write`, and `deploy` checks on API endpoints. | It remains team-bound and does not bypass instance-wide API access or the IP allowlist. The token owner must be a team administrator or owner. |
+| `read:sensitive` | Read secrets, logs, passwords, private keys, environment values, and Compose content returned by supported endpoints. | Coolify also adds `read`. Most sensitive values are returned only when the token owner is a team administrator or owner. Container logs need only this permission. |
+| `write` | Create and update resources through write endpoints. | It cannot delete. Use `delete` for every `DELETE` request. |
+| `delete` | Delete resources, environment variables, storages, backups, scheduled tasks, and tags, and detach a tag from a resource. | Every `DELETE` endpoint requires `delete` or `root`. |
+| `deploy` | Trigger deployments, restarts, stops, cancellations, and [deploy webhooks](/core/automation/deploy-webhooks) (`/api/v1/deploy`). | Some write operations that run on a server at once also require `deploy`. See [Operation-specific checks](#operation-specific-checks). |
+| `root` | Bypass the `read`, `read:sensitive`, `write`, `write:sensitive`, `delete`, and `deploy` checks on API endpoints. | It remains team-bound and does not bypass instance-wide API access, the IP allowlist, the token's access, or the role checks of the token owner. |
 
 Selecting `root` in the dashboard removes the other permissions because they are unnecessary. It does not provide access to resources owned by another team.
 
----
+A token never gets more access than its owner. Team administrators and owners can select every permission. A member can select only the permissions that their own access in the team includes. See [Roles & Permissions](/core/team/roles-and-permissions).
 
-## Team and role scope
+### `write:sensitive`
 
-Coolify records the active team when the token is created. Switching teams later does not change an issued token.
-
-- Create a separate token for each team an integration must access.
-- Removing the token owner from the team makes the token invalid.
-- A token that performs privileged operations requires its owner to remain a team administrator or owner.
-- Instance-wide [API access and IP allowlist controls](/api/ip-allowlist) still apply to every self-hosted token, including `root`.
+`write:sensitive` is only for `PATCH /api/v1/settings/email`, which changes the instance email settings. Only team administrators and owners can give it to a token. The dashboard has no checkbox for it, so use a `root` token for this endpoint.
 
 ---
 
-## Tokens limited to projects, environments, or resources
+## Access
 
-You can limit a token to selected projects, environments, or resources. Such a token:
+Each token has one of two **Resources** settings:
 
-- Can use only the project, application, service, database, and deployment endpoints.
+- **All resources in the team** lets the token use every project, resource, and team-level endpoint that its permissions allow.
+- **Selected projects, environments, or resources** limits the token to the items in **Selected**. A selected project includes its environments and resources. A selected environment includes its resources.
+
+A limited token can use only the endpoints under `/applications`, `/services`, `/databases`, `/projects`, `/deploy`, `/deployments`, `/resources`, `/version`, and `/vulnerabilities`. Other endpoints, such as servers, keys, Git sources, S3 storages, cloud tokens, notifications, and the team, return `403 Forbidden`:
+
+```json
+{
+  "message": "This API token is limited to selected projects, environments, or resources, so it cannot use this endpoint."
+}
+```
+
+List endpoints return only the projects, environments, and resources that the token can access. Coolify also applies the token's access to changes. The response message explains when the token's limits block a change.
+
+A limited token also:
+
 - Cannot read or reference team and server shared variables.
 - Cannot use team credentials, such as private keys, git sources, and S3 storages, that its resources do not use yet.
 - Can place resources only on servers that already run a resource inside its scope.
@@ -52,13 +62,34 @@ To keep a limited token away from other resources:
 - Give it only `read` and `deploy` when it does not need to change configuration.
 - Run the resources of each environment on their own servers.
 
+A member who has access only to some projects or resources can create only limited tokens.
+
+If you delete a selected project, environment, or resource, the access list of the token in **Issued tokens** shows it as `Unavailable project`, `Unavailable environment`, or `Unavailable resource`. A token of a member then stops working with `This API token has more access than you have in this team. Revoke it and create a new token.` [Edit the token](/core/security/credentials/api-tokens#manage-a-token) and remove the unavailable item.
+
+---
+
+## Team and role scope
+
+Coolify records the active team when the token is created. Switching teams later does not change an issued token.
+
+- Create a separate token for each team an integration must access.
+- Removing the token owner from the team makes the token invalid.
+- Coolify checks the token against its owner's current access on every request. If the owner loses access that the token uses, the token stops working and returns `403 Forbidden` with `This API token has more access than you have in this team. Revoke it and create a new token.`
+- Some endpoints also need the token owner to be a team administrator or owner, whatever the token permissions. For example, cloud tokens (`/cloud-tokens`) and audit events (`/audit-events`) return `403 Forbidden` to the token of a member.
+- Instance-wide [API access and IP allowlist controls](/api/ip-allowlist) still apply to every self-hosted REST API request, including with `root`. The instance-administrator endpoints and the [MCP server](/mcp/security) check only the IP allowlist. They work while **API access** is disabled.
+- A team that requires [two-factor authentication](/core/security/authentication/2fa) does not block its API tokens. The requirement applies only to dashboard sign-in.
+
 ---
 
 ## Sensitive response data
 
 Endpoint access and sensitive-data access are separate checks. A request with `read` may succeed while passwords, private keys, environment values, logs, or Compose content remain redacted.
 
-Add `read:sensitive` only when the integration needs supported sensitive fields. The token must have that permission, and its owner must be a team administrator or owner. A `root` token can also receive supported sensitive data, but it should be reserved for integrations that need full API access.
+Add `read:sensitive` only when the integration needs supported sensitive fields. For most fields, the token must have that permission, and its owner must be a team administrator or owner. Container logs are the exception: they need only `read:sensitive`, also for the token of a member. A `root` token can also receive supported sensitive data, but it should be reserved for integrations that need full API access.
+
+Locked environment variable values are never returned, also not to a `read:sensitive` or `root` token. Coolify also hides them in the generated Compose content and hides the connection URLs of a database with a locked password.
+
+Server data in application, service, and database responses, such as the nested server settings, the Sentinel token, log drain keys, and the saved proxy configuration, is returned only to a token that can read sensitive data and has access to **All resources in the team**. Servers are team-level, so a token limited to selected projects, environments, or resources does not receive these values.
 
 ---
 
@@ -67,18 +98,53 @@ Add `read:sensitive` only when the integration needs supported sensitive fields.
 - Use `read` for inventory, monitoring, and status checks.
 - Use `deploy` for a deployment-only CI or automation workflow.
 - Use `write` only when the integration must change resource configuration.
+- Add `delete` only when the integration must delete resources or their settings.
 - Add `read:sensitive` only when redacted responses are insufficient.
+- Limit the token to the projects, environments, or resources it needs when it does not use team-level endpoints.
 - Use `root` only when the integration must call endpoints across permission levels or manage instance-wide API functions.
 
-Follow [API Tokens](/core/security/credentials/api-tokens) to create, store, rotate, and revoke credentials. Each endpoint under **Endpoints** identifies the permission required for that operation.
+Follow [API Tokens](/core/security/credentials/api-tokens) to create, store, edit, roll, and revoke credentials. Each endpoint under **Endpoints** identifies the permission required for that operation.
 
 ## Operation-specific checks
 
-- Container log endpoints and scheduled-task output require `read:sensitive` or `root`, rather than ordinary `read`.
-- Saved proxy configuration and server validation logs are returned only with `read:sensitive` or `root`.
-- Database import uploads and starts require `write`; server-path imports also require `deploy`.
-- Creating a resource with `instant_deploy` requires `deploy` in addition to its creation permission.
-- API mounts outside the resource directory require `deploy`.
-- Git provider webhook secrets (the GitHub App webhook secret, the GitLab App webhook token, and the manual webhook secrets of an application) are configuration and require `write`. A push webhook that is signed with one of these secrets can start a deployment, so give `write` only to integrations that you trust to change what a resource deploys.
+These operations need more than the usual permission of their HTTP method. `root` passes every permission check in this table. In the paths, `{type}` is `applications`, `services`, or `databases`.
+
+| Operation | Endpoint | Permissions |
+| :--- | :--- | :--- |
+| Read container logs | `GET /{type}/{uuid}/logs`, `GET /applications/{uuid}/previews/{pull_request_id}/logs`, `GET /services/{uuid}/applications/{app_uuid}/logs`, `GET /services/{uuid}/databases/{database_uuid}/logs` | `read:sensitive` |
+| List the registry logins of a server | `GET /servers/{uuid}/registries` | `read:sensitive` |
+| Read the command and output of scheduled tasks | `GET /applications/{uuid}/scheduled-tasks` and `GET /services/{uuid}/scheduled-tasks`, with their `/executions` | `read`. The command and output are returned only with `read:sensitive` and a token owner who is a team administrator or owner. |
+| Read the saved proxy configuration and server validation logs | Server data in responses, such as `GET /servers/{uuid}` and `GET /servers/{uuid}/proxy` | `read`. These fields are returned only with `read:sensitive` and a token owner who is a team administrator or owner. |
+| List the keys of a secret manager | `GET /{type}/{uuid}/secret-manager/keys` | `write` |
+| Upload a database import file | `POST /databases/{uuid}/imports/uploads`, `POST /services/{uuid}/databases/{database_uuid}/imports/uploads` | `write` |
+| Start a database import from any source (upload, S3, or server path) | `POST /databases/{uuid}/imports`, `POST /services/{uuid}/databases/{database_uuid}/imports` | `write` and `deploy` |
+| Create or update a resource with `instant_deploy` | Application, database, and service create endpoints, and `PATCH /{type}/{uuid}` | `write` and `deploy` |
+| Make a database public or private | `PATCH /databases/{uuid}` or `PATCH /services/{uuid}/databases/{database_uuid}` with a changed `is_public` | `write` and `deploy` |
+| Add a mount outside the resource directory or a file mount with `content` | `POST /{type}/{uuid}/storages` | `write` and `deploy` |
+| Change the content of a file mount | `PATCH /{type}/{uuid}/storages` with a changed `content` | `write` and `deploy` |
+| Clone a resource with its volume data | `POST /{type}/{uuid}/clone` with `clone_volumes` | `write` and `deploy` |
+| Create or update an enabled scheduled task | `POST` and `PATCH` under `/applications/{uuid}/scheduled-tasks` and `/services/{uuid}/scheduled-tasks`. A new task is enabled by default. | `write` and `deploy` |
+| Create or update a database backup with `backup_now` | `POST /databases/{uuid}/backups`, `PATCH /databases/{uuid}/backups/{scheduled_backup_uuid}` | `write` and `deploy` |
+| Save a volume backup with `stop_during_backup` | `PUT /{type}/{uuid}/storages/{storage_uuid}/backups` | `write` and `deploy` |
+| Run a volume backup now | `POST /{type}/{uuid}/storages/{storage_uuid}/backups/run` | `write` and `deploy` |
+| Open a preview, or change its pull request URL, Git type, Docker tag, or commit | `POST /applications/{uuid}/previews` | `deploy` and `write`. With `deploy` alone, the token can only redeploy an existing preview. |
+| Open a preview or change its Docker tag with a deploy request | `/api/v1/deploy` with `pr` and a new `docker_tag` | `deploy` and `write` |
+| Log in to a registry or check a registry login | `POST /servers/{uuid}/registries`, `POST /servers/{uuid}/registries/{registry}/check` | `write` and `deploy` |
+| Run a Docker cleanup now | `POST /servers/{uuid}/docker-cleanup/run` | `write` and `deploy` |
+| Turn on the deletion of unused volumes | `PATCH /servers/{uuid}/docker-cleanup` with `delete_unused_volumes` | `write` and `deploy` |
+| Change log drain or Sentinel settings | `PATCH /servers/{uuid}/log-drains`, `PATCH /servers/{uuid}/sentinel` | `write` and `deploy` |
+| Save and apply the proxy configuration | `PUT /servers/{uuid}/proxy/configuration` | `write` and `deploy` |
+| Change the proxy type | `PATCH /servers/{uuid}` or `PATCH /servers/{uuid}/proxy` with a new `proxy_type` | `write` and `deploy` |
+| Validate a server and install it | `POST /servers/{uuid}/validate` with `install` | `write` and `deploy` |
+| Create a cloud server with a cloud-init or post-install script, extra SSH keys, or `instant_validate` | `POST /servers/hetzner`, `POST /servers/vultr`, `POST /servers/digitalocean`, `POST /servers/hostinger` | `write` and `deploy` |
+| Check or start a server import | `GET /servers/import/check`, `POST /servers/import` | `write` and `deploy` |
+| Delete a server with its resources or from the cloud provider | `DELETE /servers/{uuid}` with `force` or `delete_from_provider` | `delete` and `deploy` |
+| Disable the API, or enable or disable the MCP server | `POST /api/v1/disable`, `POST /api/v1/mcp/enable`, `POST /api/v1/mcp/disable` | `write`, in a root-team token of an instance administrator |
+| Read the instance email settings | `GET /settings/email` | `read`, in a root-team token of an instance administrator |
+| Change the instance email settings | `PATCH /settings/email` | `write:sensitive`, in a root-team token of an instance administrator |
+
+An instance administrator is an administrator or owner of the root team. A root-team token is a token created while the root team is active. Other tokens receive `403 Forbidden` from the instance endpoints.
+
+Git provider webhook secrets (the GitHub App webhook secret, the GitLab App webhook token, and the manual webhook secrets of an application) are configuration and require `write`. A push webhook that is signed with one of these secrets can start a deployment, so give `write` only to integrations that you trust to change what a resource deploys.
 
 Only recognized token permissions are accepted. Resource and credential ownership is checked against the resource's team, even if the user switches teams in another browser tab.

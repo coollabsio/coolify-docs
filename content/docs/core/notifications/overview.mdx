@@ -48,6 +48,19 @@ If the test does not arrive, keep the channel enabled while you check its creden
 
 ---
 
+## Disabled channels
+
+Coolify turns off a channel after 3 failed deliveries in a row that come from the channel settings. Examples are a rejected token, API key, or SMTP password, a webhook URL that does not exist anymore, or a refused SMTP host. Rate limits, server errors, and connection problems do not count. Coolify tries these deliveries again.
+
+When Coolify turns off a channel:
+
+- The team admins and owners get an email through the instance email settings, when the instance can send email.
+- The other enabled channels of the team, except email, get a message with the reason.
+
+Fix the channel settings, then turn the channel on again. A successful delivery or a change to the channel settings sets the count back to zero. Test notifications never count.
+
+---
+
 ## What to read next
 
 - [Notification events](/core/notifications/events) explains every selectable event and its trigger.

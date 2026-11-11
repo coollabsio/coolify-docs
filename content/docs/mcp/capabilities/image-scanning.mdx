@@ -1,0 +1,20 @@
+---
+title: Image scanning
+description: Use Coolify MCP to read image vulnerability scan results and turn image scanning on or off.
+---
+
+# Image scanning
+
+| Tool | Actions |
+| :--- | :--- |
+| `get_vulnerabilities` | `list` returns every application, service, and database of the team with its security status, worst first. `resource` returns the status, scanned images, and vulnerabilities of one application, service, or database (`read`). |
+| `manage_image_scanning` | `get_server` (`read`) shows if a server scans images and the scanner state on the server. `update_server` turns scanning of a server on or off; turning it on gets the scanner on the server. `update_team` sets the default for servers that you add to the team later (`write`). Only team admins and owners. |
+
+`get_vulnerabilities` filters:
+
+| Action | Filters in `data` |
+| :--- | :--- |
+| `list` | `status`, comma-separated: `update_now`, `update_available`, `no_fix`, `check_needed`, `ok`, `not_checked`. |
+| `resource` | `state` (`fixed`, `no_fix`, `ignored`) and `severity`, both comma-separated, plus `image`, `search`, `page`, and `per_page` (maximum `200`). |
+
+To turn scanning of one application on or off, call `manage_application` `update` with `is_image_scan_enabled`. The server must also scan images.

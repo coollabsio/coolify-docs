@@ -124,6 +124,10 @@ Docker Compose Location: /compose.yaml
 Resolved file: /deploy/compose.yaml
 ```
 
+Coolify runs Docker Compose in **Base Directory**, not in the directory of the Compose file. Relative paths in the file, such as `build.context: ..`, resolve from **Base Directory**.
+
+When **Docker Compose Location** points to a file in a subdirectory, Coolify shows the **Relative paths resolve from the base directory** warning. If the relative paths in the file are relative to the file itself, select **Use `<directory>` as base directory**. Coolify moves the file's directory into **Base Directory** and keeps only the file name in **Docker Compose Location**.
+
 **Load Compose File** parses the repository file. After it has been loaded, **Reload Compose File** reads it again. Coolify then shows:
 
 - **Docker Compose Content (raw)** for the definition read from the repository.
@@ -166,7 +170,7 @@ Read [Docker Compose deployments](/applications/builds/docker-compose) for envir
 
 **Watch Paths** accepts one pattern per line. See [Limit deployments by changed paths](/applications/deployments/automatic-deployments#limit-deployments-by-changed-paths) for the pattern syntax.
 
-**Watch Paths** is available when you select a repository through a GitHub App or GitLab source integration. It is not available for applications created from a public repository URL or a deploy key.
+**Watch Paths** is available for applications connected through a Git App source or a deploy key. It is not available for applications created from a public repository URL.
 
 The setting filters which changed paths can start a webhook deployment.
 
@@ -181,6 +185,8 @@ The **Container image** section does not appear for Docker Compose applications 
 For a Docker Image application, **Image** and **Tag** identify the image Coolify pulls.
 
 For a source build, **Image** names an image Coolify can push after building it. Include the registry hostname for a private registry, for example `ghcr.io/example/api`. If **Tag** is set, Coolify pushes that tag in addition to the commit-based tag.
+
+Each source-built application of the team needs its own image name. Two applications that build the same image push the same tags, so one can run the image of the other. Coolify rejects an **Image** that another application of the team already builds, in the UI and in the API. A deployment of an application that shares its image name with another one fails with the same message.
 
 An output image name is required when the application uses Docker Swarm, additional deployment servers, or a separate build server. Those destinations must be able to pull the built image from a registry.
 

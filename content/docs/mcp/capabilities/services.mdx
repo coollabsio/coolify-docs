@@ -22,6 +22,6 @@ Use `get_logs` with the appropriate child resource when a service has multiple c
 | :--- | :--- |
 | `list_service_templates` | List the one-click service templates (`read`). |
 | `create_service` | `template`, `compose` (`write`). |
-| `manage_service` | `update`, `update_application`, `update_database` (`write`); `clone` and `move` (`write`, confirm); `delete` and `import_database` (`deploy`, confirm). |
+| `manage_service` | `update`, `update_application`, `update_database` (`write`); `clone` and `move` (`write`, confirm); `import_database` (`write` and `deploy`, confirm); `delete` (`delete`, confirm). |
 
 Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.

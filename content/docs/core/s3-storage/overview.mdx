@@ -7,6 +7,8 @@ description: Configure S3-compatible storage for Coolify backups with Amazon S3,
 
 Coolify connects to S3-compatible storage for backup files. You create the bucket with a storage provider, then add its connection details to Coolify as an S3 storage.
 
+Coolify can also store backups on an SFTP, FTPS, or WebDAV server. See [SFTP, FTPS, and WebDAV storage](/core/s3-storage/sftp-ftps-webdav).
+
 ## Before you add S3 storage
 
 Create the bucket with your provider and collect these connection details:
@@ -54,12 +56,24 @@ Other providers may also work. If you successfully connect another provider, let
 
 After you prepare the bucket and credentials:
 
-1. Open **S3 Storage** in the Coolify sidebar.
+1. Open **Storage** in the Coolify sidebar.
 2. Select **New storage**.
-3. Enter **Name**, optional **Description**, **Bucket**, **Region**, **Access Key**, and **Secret Key**. Split the endpoint into **Protocol**, **Host**, optional **Port**, and optional **Path**. Keep the bucket name separate from the endpoint.
-4. Select **Validate Connection & Continue**.
+3. Keep **Type** set to **S3**.
+4. Enter **Name**, optional **Description**, **Bucket**, **Region**, **Access Key**, and **Secret Key**. Split the endpoint into **Protocol**, **Host**, optional **Port**, and optional **Path**. Keep the bucket name separate from the endpoint.
+5. Turn on **Skip TLS certificate verification** only if the endpoint uses a self-signed or private CA certificate. See [Self-signed certificates](#self-signed-certificates).
+6. Select **Validate Connection & Continue**.
 
 After validation succeeds, Coolify opens the storage details page. The S3 storage is then ready to select when you configure a backup. Database and volume backup schedules can select multiple destinations; Coolify uploads each backup to every selected destination and tracks each copy separately.
+
+## Self-signed certificates
+
+Turn on **Skip TLS certificate verification** for an endpoint with a self-signed or private CA certificate. Coolify then accepts any certificate for the connection test, backups, restores, and the deletion of old backups.
+
+<Callout type="warning" title="An attacker on the network can read or change your backups">
+With this setting on, Coolify does not check the certificate of the endpoint. Turn it on only when the endpoint cannot use a trusted certificate.
+</Callout>
+
+The setting does not apply to your browser. Backup downloads open a link to the storage, so the browser must still trust the certificate. Through the API, set `skip_tls_verification` on the S3 storage.
 
 ## Recovering an unusable storage
 

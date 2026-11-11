@@ -17,14 +17,20 @@ Direct access through a published container port bypasses these proxy pages. Dat
 
 ## Enable maintenance mode
 
-1. Open the application or service and select **Domains**.
-2. Find **Maintenance mode**.
-3. Set it to **On: show the maintenance page**.
+1. Open the application or service and select **Maintenance Mode**.
+2. Select **Enable maintenance**.
+3. Review the actions in the dialog and select **Enable maintenance** to confirm.
 4. Open one of the resource's domains and confirm the maintenance page and HTTP `503` response.
 
-The change applies without redeploying. Existing containers and background jobs continue running; pause writes or jobs separately if your maintenance requires it. For a service, the setting applies across the stack's configured domains.
+The badge beside **Maintenance mode** changes to **On**. The change applies without redeploying. Existing containers and background jobs continue running; pause writes or jobs separately if your maintenance requires it. For a service, the setting applies across the stack's configured domains.
 
-To resume traffic, set **Maintenance mode** to **Off: serve the resource**. Verify the resource is healthy and its domains serve the expected content.
+To resume traffic, select **Disable maintenance** and confirm in the dialog. Verify the resource is healthy and its domains serve the expected content.
+
+If the resource's server does not use Traefik or Caddy, or is part of Docker Swarm, the **Maintenance Mode** page shows that maintenance mode is not available.
+
+### Applications with custom container labels
+
+When you edit an application's container labels manually (read-only labels turned off), maintenance mode uses the labels instead of the domains. Traefik shows the maintenance page for the rule of each router in the labels, and Caddy for each site address in the labels. This also covers wildcard domains and custom router rules. Docker Compose applications always use their domains.
 
 ### Customize the maintenance page
 
@@ -47,6 +53,6 @@ Choose **Return the default 503 response** to stop using custom fallback handlin
 
 ## Diagnose an unexpected 503
 
-Check whether **Domains > Maintenance mode** is on before investigating a deployment failure. If maintenance mode is off, check the resource's status, health checks, domain, and listening port. A custom error page changes what visitors see while the underlying routing problem remains.
+Check whether the resource's **Maintenance Mode** page shows **On** before investigating a deployment failure. If maintenance mode is off, check the resource's status, health checks, domain, and listening port. A custom error page changes what visitors see while the underlying routing problem remains.
 
 Follow [No Available Server (503)](/troubleshoot/applications/no-available-server) to investigate unavailable backends.
