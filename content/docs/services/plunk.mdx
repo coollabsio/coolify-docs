@@ -13,6 +13,25 @@ icon: "/docs/images/services/plunk-logo.svg"
 
 Plunk is an open-source email platform for AWS.
 
+## Setup
+
+The template runs Plunk v2. Plunk needs two domains:
+
+- The `plunk` service has the domain of the dashboard.
+- The `plunk-api` service has the domain of the API. Use this domain in your applications and SDKs.
+
+Coolify generates both domains. To use your own domains, set one domain on each service, then redeploy the service. If the two domains have different parent domains, use HTTPS for both. Otherwise the browser does not send the login cookie to the API.
+
+Before you deploy, set these environment variables from your AWS account:
+
+- `AWS_SES_REGION`
+- `AWS_SES_ACCESS_KEY_ID`
+- `AWS_SES_SECRET_ACCESS_KEY`
+
+To upload images in the email editor, set the `S3_*` variables to an S3-compatible bucket that the public can read. Without them, file uploads are off.
+
+The template does not publish the SMTP relay ports (465 and 587) of Plunk.
+
 ## Screenshots
 
 <ZoomImage src="https://raw.githubusercontent.com/useplunk/docs/refs/heads/main/images/advanced-selector.png" alt="Plunk Advanced Selector" />

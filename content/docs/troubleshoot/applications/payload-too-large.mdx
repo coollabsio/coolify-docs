@@ -65,7 +65,7 @@ Cloudflare limits the request body size for each plan:
 | Free | 100 MB |
 | Pro | 100 MB |
 | Business | 200 MB |
-| Enterprise | 500 MB (default) |
+| Enterprise | 500 MB (default). You can change it up to 5 GB on the **Network** page of the zone. |
 
 When a request is larger than this limit, Cloudflare stops it and sends a 413 error. The request does not get to your server.
 
@@ -73,7 +73,7 @@ Read more in the [Cloudflare documentation](https://developers.cloudflare.com/su
 
 ### Solutions
 
-<Tabs items={['Use an Unproxied Upload Domain', 'Use Chunked Uploads', 'Upload Over SSH']}>
+<Tabs items={['Use an Unproxied Upload Domain', 'Use Chunked Uploads', 'Upload Directly to S3', 'Upload Over SSH', 'Change the Cloudflare Plan']}>
 <Tab value="Use an Unproxied Upload Domain">
 
 1. In Cloudflare, add a DNS record for a different subdomain (for example `upload.example.com`) and set it to **DNS only** (grey cloud).
@@ -82,10 +82,17 @@ Read more in the [Cloudflare documentation](https://developers.cloudflare.com/su
 
 Requests to a **DNS only** record go directly to your server. Thus, Cloudflare does not protect or cache them.
 
+For a one-time upload, you can also set the record of your domain to **DNS only** for a short time. Wait until the DNS change is active, upload the file, and then set the record to **Proxied** again.
+
 </Tab>
 <Tab value="Use Chunked Uploads">
 
 Make your application send large files in parts that are smaller than the Cloudflare limit. For example, use a [tus](https://tus.io/) client and server, or an upload plugin for your CMS that sends files in chunks.
+
+</Tab>
+<Tab value="Upload Directly to S3">
+
+Make your application create a presigned upload URL for an S3-compatible storage (for example AWS S3, Cloudflare R2, or MinIO). The browser then sends the file directly to the storage, not through Cloudflare and your server. For very large files, use S3 multipart uploads.
 
 </Tab>
 <Tab value="Upload Over SSH">
@@ -101,6 +108,13 @@ Then copy the file into your container. Use the [web terminal](/core/infrastruct
 ```bash
 docker cp /tmp/backup.zip <container-name>:/var/www/html/
 ```
+
+Then import the file on the server. Many WordPress backup and migration plugins can import a file from a folder in the container, or you can use WP-CLI in the web terminal. Then you do not upload the file through the browser.
+
+</Tab>
+<Tab value="Change the Cloudflare Plan">
+
+The Business plan allows uploads up to 200 MB. On the Enterprise plan, you can set the **Maximum Upload Size** up to 5 GB on the **Network** page of the zone.
 
 </Tab>
 </Tabs>
