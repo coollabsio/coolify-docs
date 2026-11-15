@@ -159,6 +159,16 @@ If the instance administrator has configured S3 for file downloads, Coolify may 
 
 Changing a schedule's destinations affects future uploads. Existing copies remain tracked against the destinations that received them. Deleting an execution with the S3 deletion option removes its copies from every S3 destination.
 
+## Backups of a deleted database
+
+When you delete a database, or a service that contains a database, the delete dialog has the option to delete its database and storage backups. The option is off by default.
+
+If you select the option, Coolify deletes the backup files on the server and on every S3 destination, together with the backup schedules.
+
+If you do not select the option, the backup files stay on the server in `/data/coolify/backups/` and on S3. Coolify deletes the schedules and the execution history, so it no longer shows, prunes, or deletes these files. Delete them yourself when you do not need them.
+
+Through the API, send `delete_backups=true` to delete the files.
+
 ## Related guides
 
 <CoolNextSteps

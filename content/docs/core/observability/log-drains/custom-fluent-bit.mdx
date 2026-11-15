@@ -57,7 +57,7 @@ Coolify blocks some plugins and directives, but it does not check the Fluent Bit
 
 Read the [Fluent Bit configuration documentation](https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/configuration-file) before writing the configuration.
 
-Treat the configuration as sensitive when it contains credentials. Coolify does not provide a separate custom environment-variable field for provider secrets.
+Treat the configuration as sensitive when it contains credentials. Coolify does not provide a separate custom environment-variable field for provider secrets. For secrets that must be a file, such as a Google Cloud service account key, read [Use credential and certificate files](#use-credential-and-certificate-files).
 
 ---
 
@@ -92,8 +92,9 @@ By default, Coolify writes these files on the resource server:
 | `/data/coolify/log-drains/fluent-bit.conf` | The complete value from **Fluent Bit configuration** |
 | `/data/coolify/log-drains/parsers.conf` | The optional value from **Parser configuration** |
 | `/data/coolify/log-drains/docker-compose.yml` | The Coolify-managed Fluent Bit service |
+| `/data/coolify/log-drains/files/` | An empty directory for your own files. Coolify does not change the files in it |
 
-The container mounts the two configuration files at `/fluent-bit.conf` and `/parsers.conf`.
+The container mounts the two configuration files at `/fluent-bit.conf` and `/parsers.conf`, and the `files` directory read-only at `/files`.
 
 Coolify writes these files again from your settings each time it starts `coolify-log-drain`. Do not edit the files on the server, because Coolify replaces your changes. Change the configuration in **Log Drains** instead.
 
@@ -167,6 +168,36 @@ Coolify does not accept these plugins and directives:
 | Sections other than `[SERVICE]`, `[INPUT]`, `[FILTER]`, `[OUTPUT]`, `[PARSER]`, and `[MULTILINE_PARSER]` | **Fluent Bit configuration** |
 | `@` directives | **Parser configuration** |
 | Sections other than `[PARSER]` and `[MULTILINE_PARSER]` | **Parser configuration** |
+
+---
+
+## Use credential and certificate files
+
+Some outputs read a secret or a certificate from a file. A configuration value is one line, so you cannot put a multi-line value, such as a PEM private key, in the configuration.
+
+To use a file:
+
+1. Copy the file to `/data/coolify/log-drains/files/` on the resource server. Coolify does not change or delete the files in this directory.
+2. In **Fluent Bit configuration**, use the path `/files/<name>`.
+3. Disable and enable the drain, or start it again, so that Fluent Bit reads the file.
+
+For example, to send logs to Google Cloud Logging, create a service account with the **Logs Writer** role, download its JSON key, and copy it to `/data/coolify/log-drains/files/gcp.json`:
+
+```ini
+[OUTPUT]
+  Name                       stackdriver
+  Match                      *
+  google_service_credentials /files/gcp.json
+  export_to_project_id       your-project-id
+  resource                   generic_node
+  location                   global
+  namespace                  coolify
+  node_id                    your-server-name
+```
+
+Do not use `service_account_secret` for the private key. Fluent Bit cannot read a PEM key from one configuration line, and the drain stops with `error creating RSA context`.
+
+Use the same directory for TLS files, for example `tls.ca_file /files/ca.pem`, `tls.crt_file /files/client.pem`, and `tls.key_file /files/client.key`.
 
 ---
 
