@@ -153,6 +153,8 @@ Because this resource has no Git source, repository webhooks and pull-request pr
 
 For a Git-based Application, edit the Compose file in the repository and redeploy the selected commit. For **Docker Compose Empty**, use **Edit Compose File** in the Service configuration.
 
+When a service has no `restart` key, Coolify sets `restart: unless-stopped`. Docker Compose uses `no` as its default. For a container that must run one time and then stop, such as a migration or setup task, set `restart: "no"` on that service.
+
 <span id="defining-environment-variables" />
 <span id="shared-environment-variables" />
 
@@ -386,7 +388,7 @@ Volumes marked `external: true` use their declared Docker names. Existing resour
 
 Relative bind sources resolve from the resource directory, including supported `../` sources. Storage paths are validated; managed file paths must remain within the resource directory. Preview deletion removes only networks and volumes Coolify created for that preview.
 
-Coolify also supports `is_directory: true` and `content:` extensions for repository-relative bind sources. Use these only when the deployment must create the directory or file.
+Coolify also supports `is_directory` and `content:` extensions for repository-relative bind sources. Use these only when the deployment must create the directory or file. A bind without these keys is a directory. With `is_directory: false` and no `content:`, Coolify creates an empty file. You can then add its content on the **Persistent Storage** page.
 
 <Callout type="warning" title="A file bind source must exist">
 
