@@ -1,0 +1,56 @@
+---
+title: "Zammad"
+description: "Open-source helpdesk and customer support platform."
+category: "Business"
+icon: "/docs/images/services/zammad-logo.svg"
+---
+
+# Zammad
+
+Zammad is a web-based helpdesk for managing customer support tickets and conversations.
+
+## Deploy on Coolify
+
+1. In your project, choose **New Resource** and select **Zammad** from the service list.
+2. Set an HTTPS domain for the **Zammad** service. Coolify handles HTTPS through its proxy.
+3. Click **Deploy** and wait for the services to start. The `zammad-init` container exits after initializing the database.
+4. Open the configured domain and follow the setup wizard to create your administrator account.
+
+The stack includes PostgreSQL, Redis, Memcached, Elasticsearch, and Zammad's web, background worker, websocket, and backup services.
+
+## Server requirements
+
+Zammad's Docker installation requires at least 4 GB of RAM. See the [upstream requirements](https://docs.zammad.org/en/latest/install/docker-compose.html#prerequisites) before deploying.
+
+On the server running the stack, configure the kernel setting required by Elasticsearch:
+
+```bash
+sudo sysctl -w vm.max_map_count=262144
+```
+
+Persist this setting in `/etc/sysctl.d/` so it survives a reboot.
+
+## Environment variables
+
+Coolify generates the PostgreSQL password and sets `ZAMMAD_FQDN` from the service domain. The template defaults to HTTPS.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `TZ` | `Europe/Berlin` | Timezone used by the stack. |
+| `BACKUP_TIME` | `03:00` | Time of the daily backup. |
+| `HOLD_DAYS` | `10` | Number of days to retain local backups. |
+| `BACKUP_ON_START` | `false` | Run a backup when the backup container starts. |
+| `ELASTICSEARCH_JAVA_OPTS` | `-Xms1g -Xmx1g` | Elasticsearch JVM heap settings. |
+
+For additional settings, see the [Zammad Docker environment variables](https://docs.zammad.org/en/latest/appendix/environment-variables.html).
+
+## Persistent storage
+
+The stack uses named volumes for PostgreSQL, Redis, Elasticsearch, uploaded files (`zammad-storage`), and local backups (`zammad-backup`). Keep an off-server copy of your backups. See [Zammad's Docker backup and restore guide](https://docs.zammad.org/en/latest/appendix/backup-and-restore/docker-compose.html) for recovery instructions.
+
+## Links
+
+- [Official website](https://zammad.org/)
+- [Source repository](https://github.com/zammad/zammad)
+- [Docker Compose repository](https://github.com/zammad/zammad-docker-compose)
+- [Docker installation guide](https://docs.zammad.org/en/latest/install/docker-compose.html)
