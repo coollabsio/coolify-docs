@@ -452,6 +452,8 @@ Coolify creates a resource-specific network for the Compose resource. Services i
 
 Under **Advanced > Docker compose > Predefined network**, choose **Connect to predefined network** only when the Compose services must communicate with resources on the selected Coolify destination. Names can be prefixed to prevent collisions, so verify the generated container or service name before using it as a hostname.
 
+On the predefined network, and on a network with `name:` or `external: true`, production and its previews share one network. There, a service name such as `db` resolves to the container of production, also from a preview. Use `${SERVICE_NAME_DB}` as the hostname to reach the service of the same deployment. Read [Docker Compose preview names](/applications/deployments/preview-deployments#docker-compose-preview-names).
+
 <ZoomImage src="/docs/images/builds/packs/compose/6.webp" alt="Connect To Predefined Network option for a Docker Compose application" />
 
 Do not publish a service with `ports:` unless it must be reachable directly on a server interface. A published host port bypasses domain-based proxy routing and can expose an internal service.

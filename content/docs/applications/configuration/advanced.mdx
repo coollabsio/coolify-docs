@@ -177,6 +177,8 @@ This setting appears only for Docker Compose applications. Under **Docker compos
 
 Docker Compose services already receive a private network for communication within their own definition. Joining the predefined network is only needed for communication across Coolify resources, and service DNS names can change after joining it.
 
+Production and its preview deployments join the same predefined network. A service name such as `db` then resolves to the container of production, also from a preview. Use `${SERVICE_NAME_DB}` as the hostname to reach the service of the same deployment. Read [Docker Compose preview names](/applications/deployments/preview-deployments#docker-compose-preview-names).
+
 Read [Compose networking](/applications/builds/docker-compose#compose-networking) before configuring another resource's hostname.
 
 </Tab>

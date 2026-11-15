@@ -217,6 +217,26 @@ Use non-production credentials for preview databases, storage, and external serv
 
 Follow [Environment variables](/applications/configuration/environment-variables) for variable scopes and build-time values.
 
+## Docker Compose preview names
+
+A Docker Compose preview runs in its own Docker Compose project and network, so its services keep the names from the Compose file. Services reach one another by these names, for example `db`. Additional Compose files, `depends_on`, and custom start commands such as `docker compose up -d web` use the same names in production and in previews. Each service also answers to `<service>-pr-<id>` on the preview network, and its container is named `<service>-<uuid>-pr-<id>`.
+
+A preview renames its services to `<service>-pr-<id>` when it joins a network that production also uses:
+
+- **Advanced > Docker compose > Predefined network** is set to **Connect to predefined network**.
+- The Compose file declares a network with `name:` or `external: true`.
+
+On a shared network, Docker resolves a service name to the container of production. For example, `db` in a preview connects to the production database. To connect to the service of the same deployment, use the `SERVICE_NAME_<SERVICE>` variable as the hostname. Its value is `db` in production and `db-pr-<id>` in a preview:
+
+```yaml
+services:
+  web:
+    environment:
+      DB_HOST: ${SERVICE_NAME_DB}
+```
+
+When a preview on a shared network uses the name of another service as a hostname, Coolify writes a warning to the deployment log.
+
 ## Load pull requests that were already open
 
 Coolify does not automatically deploy pull requests that were open before previews were enabled.
