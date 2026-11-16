@@ -92,9 +92,11 @@ Replace `3000` and `/health` with the values entered in the health-check form. T
 </Step>
 </Steps>
 
-<Callout type="info" title="Current response validation">
+<Callout type="info" title="Response validation">
 
-The generated HTTP check currently uses the `curl` or `wget` exit status to determine health. Although **Expected code** and **Expected response text** appear in the form, the generated check does not compare the response against those two fields.
+A response with a `2xx` or `3xx` code always passes. To also pass a `4xx` or `5xx` response, for example `401` from an endpoint behind authentication, set **Expected code** to that code.
+
+When **Expected response text** is set, the response body must also contain that text. A `HEAD` response has no body, so a `HEAD` check does not compare the text. With the `https` scheme, the check does not verify the certificate.
 
 </Callout>
 
