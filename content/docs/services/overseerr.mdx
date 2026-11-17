@@ -11,7 +11,20 @@ icon: "/docs/images/services/overseerr-logo.svg"
 
 ## What is Overseerr?
 
-Overseerr is a request management and media discovery tool built to work with your existing Plex ecosystem.
+Overseerr is a request management and media discovery tool for Jellyfin, Plex, and Emby.
+
+Overseerr is archived. [Seerr](https://github.com/seerr-team/seerr) replaces it and merges Overseerr and Jellyseerr. New Overseerr services in Coolify use the official Seerr image.
+
+## Move an existing Overseerr service to Seerr
+
+Existing services keep their current image. To move a service to Seerr:
+
+1. Back up the `overseerr-config` volume.
+2. In the Docker Compose file of the service, change the image to `ghcr.io/seerr-team/seerr`, and add `init: true`.
+3. The Seerr container runs as the user with UID 1000. Make sure that this user can write to the config volume.
+4. Deploy the service. Seerr migrates the data automatically on the first start.
+
+For more information, refer to the [Seerr migration guide](https://docs.seerr.dev/migration-guide).
 
 ## Screenshots
 
@@ -19,5 +32,6 @@ Overseerr is a request management and media discovery tool built to work with yo
 
 ## Links
 
-- [The official website](https://overseerr.dev/)
-- [GitHub](https://github.com/sct/overseerr)
+- [The official website](https://seerr.dev/)
+- [Documentation](https://docs.seerr.dev/)
+- [GitHub](https://github.com/seerr-team/seerr)
