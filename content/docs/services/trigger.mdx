@@ -32,6 +32,14 @@ Trigger.dev is available in two deployment configurations in Coolify:
   - Trigger.dev container
   - Requires `DATABASE_URL` environment variable pointing to your external database
 
+## Upgrade to Trigger.dev v4.8
+
+New services use Trigger.dev v4.8.5 with ClickHouse 26.2. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+Trigger.dev v4.8.5 needs ClickHouse 26.2. Its migrations fail on ClickHouse 25.8. Change the ClickHouse image to 26.2 when you change the Trigger.dev image.
+
+See the [official Docker self-hosting guide](https://trigger.dev/docs/self-hosting/docker?utm_source=coolify.io).
+
 ## Links
 
 - [Official Website](https://trigger.dev)

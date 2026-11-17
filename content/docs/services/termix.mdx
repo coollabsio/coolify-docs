@@ -11,6 +11,17 @@ icon: "/docs/images/services/termix-logo.svg"
 
 Self-hosted application for managing SSH connections and remote desktops.
 
+## Upgrade to Termix 26
+
+New services use Termix 26.11.1 from `ghcr.io/termix-ssh/termix`. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+1. Start Termix 2.9.2 one time before you upgrade to 26.x.
+2. Change the image to `ghcr.io/termix-ssh/termix`.
+
+Termix 26 does not use guacd. RDP, VNC, and Telnet are built in. Features are plugins.
+
+See the [official release notes](https://github.com/Termix-SSH/Termix/releases/tag/v26.10.0?utm_source=coolify.io).
+
 ## Links
 
 - [Documentation](https://docs.termix.site/install/server/docker)

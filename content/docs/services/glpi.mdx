@@ -33,6 +33,15 @@ After deploying the template, GLPI will automatically complete an installation p
    glpi
    ```
 
+## Upgrade to GLPI 12
+
+New services use GLPI 12. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+- After the upgrade, knowledge base categories are invisible until an administrator gives access to them again.
+- To get the client IP addresses behind a reverse proxy, set `GLPI_TRUSTED_REVERSE_PROXIES` in the GLPI configuration.
+
+See the [official release notes](https://github.com/glpi-project/glpi/releases/tag/12.0.0?utm_source=coolify.io).
+
 ## Links
 
 - [Official website](https://glpi-project.org/?utm_source=coolify.io)

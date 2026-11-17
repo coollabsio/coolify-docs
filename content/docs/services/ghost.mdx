@@ -13,6 +13,19 @@ icon: "/docs/images/services/ghost-logo.svg"
 
 Ghost is a powerful app for professional publishers to create, share, and grow a business around their content. It comes with modern tools to build a website, publish content, send newsletters & offer paid subscriptions to members.
 
+## Upgrade to Ghost 6
+
+New services use Ghost 6. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+Ghost 6 needs MySQL 8.
+
+1. Back up your content and the database.
+2. Change the image to Ghost 6.
+
+ActivityPub and Tinybird are optional. A log line about the ActivityPub webhook secret is harmless.
+
+See the [official Ghost Docker repository](https://github.com/TryGhost/ghost-docker?utm_source=coolify.io).
+
 ## Links
 
 - [The official website](https://ghost.org/)

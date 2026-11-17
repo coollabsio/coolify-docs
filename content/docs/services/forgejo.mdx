@@ -70,6 +70,18 @@ Forgejo is also compatible with third-party CI apps and platforms. Forgejo is a 
 
 - [Demo](https://next.forgejo.org/)
 
+## Upgrade to Forgejo 17
+
+New services use Forgejo 17.0.1. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+This applies to all deployment variants. Do not use 17.0.0.
+
+- Forgejo 16: the image does not set `REVERSE_PROXY_TRUSTED_PROXIES=*` now. If you use reverse proxy authentication, set this value yourself.
+- Forgejo 16: mirrors that redirect fail. Update the URL of these mirrors.
+- Forgejo 17: the "action run" webhook events are deprecated. Use "workflow run" events.
+
+See the official release notes of [Forgejo 16](https://forgejo.org/2026-07-release-v16-0/?utm_source=coolify.io) and [Forgejo 17](https://forgejo.org/2026-10-release-v17-0/?utm_source=coolify.io).
+
 ## Links
 
 - [The official website](https://forgejo.org/)

@@ -755,6 +755,16 @@ Appwrite is an end-to-end backend server for Web, Mobile, Native, or Backend app
 Using Appwrite, you can easily integrate your app with user authentication and multiple sign-in methods, a database for storing and querying users and team data, storage and
 file management, image manipulation, Cloud Functions, and [more services](https://appwrite.io/docs?utm_source=coolify.io).
 
+## Upgrade to Appwrite 2.7
+
+New services use Appwrite 2.7.2. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+1. Back up your data.
+2. Change the image, then run `migrate` in the `appwrite` container (V25).
+3. If untrusted users deploy functions, change `_APP_EXECUTOR_SECRET`.
+
+See the [official release notes](https://github.com/appwrite/appwrite/releases/tag/2.7.0?utm_source=coolify.io).
+
 ## Links
 
 - [The official website](https://appwrite.io?utm_source=coolify.io)

@@ -18,6 +18,22 @@ This template is currently disabled in Coolify’s one-click service catalog and
 
 </Callout>
 
+## Upgrade to Huly v7
+
+New services use Huly v0.7.426 with CockroachDB instead of MongoDB. An existing service keeps its image.
+
+<Callout type="warning">
+
+Do not upgrade from v6 to v7 directly.
+
+</Callout>
+
+1. Back up your data with `hardcoreeng/tool:v0.6.504 backup-all-to-dir`.
+2. Deploy a new Huly v7 service.
+3. Restore the data with `hardcoreeng/tool:s0.7.251 restore-from-v6-all`.
+
+See the [official migration guide](https://github.com/hcengineering/huly-selfhost/blob/main/MIGRATION.md?utm_source=coolify.io).
+
 ## Links
 
 - [Official website](https://huly.io/)

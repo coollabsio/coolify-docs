@@ -21,6 +21,17 @@ NocoBase is the most extensible AI-powered no-code platform. Total control. Infi
 - **Plugin-based**: Built for extension through its plugin-based microkernel architecture. All functionalities are plugins.
 - **Open Source**: Core and foundational plugins are fully open source. Written in TypeScript, using Node.js, React, Koa.
 
+## Upgrade to NocoBase 2
+
+New services use NocoBase 2.2.46. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+1. Back up the database. You cannot downgrade after the upgrade.
+2. Make sure that you do not use the 1.x blocks that NocoBase 2.0 does not have: Calendar, Multi-step Form, and Public Form.
+
+The new template starts PostgreSQL with `wal_level=logical`.
+
+See the [official release notes](https://github.com/nocobase/nocobase/releases/tag/v2.0.0?utm_source=coolify.io).
+
 ## Links
 
 - [Official Website](https://www.nocobase.com/)

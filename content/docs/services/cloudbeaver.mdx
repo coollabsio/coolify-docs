@@ -15,6 +15,14 @@ icon: "/docs/images/services/cloudbeaver-logo.png"
 
 CloudBeaver is a lightweight web application designed for comprehensive data management.
 
+## Upgrade to CloudBeaver 26
+
+New services use CloudBeaver 26. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+CloudBeaver runs as UID 8978. If you bind-mount a workspace that root owns, change its owner, for example with `chown -R 8978 <workspace-path>`.
+
+See the [official documentation](https://dbeaver.com/docs/cloudbeaver/?utm_source=coolify.io).
+
 ## Links
 
 - [Official Documentation](https://dbeaver.com/docs/cloudbeaver/?utm_source=coolify.io)

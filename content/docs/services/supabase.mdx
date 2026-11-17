@@ -48,7 +48,7 @@ To
 
 ```yaml
 supabase-db:
-  image: "supabase/postgres:15.6.1.146"
+  image: "supabase/postgres:17.6.1.136"
   healthcheck:
     test: "pg_isready -U postgres -h 127.0.0.1"
     interval: 5s
@@ -99,6 +99,24 @@ An existing service keeps its `vector.yml`. To fix it:
    ```
 
 3. Restart the service.
+
+## Upgrade to Supabase with PostgreSQL 17
+
+New services use the upstream Compose file of 2026-11 with PostgreSQL 17. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+<Callout type="warning">
+
+Do not start PostgreSQL 17 on PostgreSQL 15 data.
+
+</Callout>
+
+1. Back up the database.
+2. Run `utils/upgrade-pg17.sh` as the official guide tells.
+3. Update the OAuth callback URLs at your providers. They now use `/auth/v1`.
+
+The storage migrations from v1.81 are one-way. The gateway does not add CORS headers to functions.
+
+See the [official PostgreSQL 17 upgrade guide](https://supabase.com/docs/guides/self-hosting/postgres-upgrade-17?utm_source=coolify.io).
 
 ## Links
 

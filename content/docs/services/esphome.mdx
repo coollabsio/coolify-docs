@@ -15,6 +15,20 @@ icon: "/docs/images/services/esphome-logo.svg"
 
 ESPHome is an open-source firmware framework that simplifies the process of creating custom firmware for popular WiFi-enabled microcontrollers.
 
+## Upgrade to ESPHome 2026.10
+
+New services use ESPHome 2026.10.2. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+Rename `USERNAME` to `ESPHOME_USERNAME` and `PASSWORD` to `ESPHOME_PASSWORD`.
+
+<Callout type="warning">
+
+If you keep only the old names, the dashboard can start without login.
+
+</Callout>
+
+See the [official ESPHome Device Builder repository](https://github.com/esphome/device-builder?utm_source=coolify.io).
+
 ## Links
 
 - [Official website](https://esphome.io/?utm_source=coolify.io)

@@ -30,6 +30,19 @@ On Coolify dashboard if you are seeing the database password as `${SERVICE_PASSW
 </Callout>
 
 
+## Upgrade to Pydio Cells 5
+
+New services use Pydio Cells 5.1.1. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+The migration from v4 to v5 runs at the first start.
+
+- Set the external URL.
+- Users must log in again.
+- Personal access tokens become invalid. Create new tokens.
+- GCS datasources are removed.
+
+See the [official major version upgrade information](https://docs.pydio.com/cells-v5/admin-guide/run-cells-in-production/upgrades/major-versions-upgrade-informations/?utm_source=coolify.io).
+
 ## Links
 
 - [The official website](https://www.pydio.com/en/pydio-cells/overview?utm_source=coolify.io)
