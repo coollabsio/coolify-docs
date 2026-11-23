@@ -35,6 +35,7 @@
     "list",
     "log-drains-get",
     "log-drains-update",
+    "metrics",
     "proxy-get",
     "proxy-restart",
     "proxy-set-config",

@@ -51,6 +51,7 @@
     "task-execute",
     "task-executions",
     "task-list",
-    "task-update"
+    "task-update",
+    "traffic"
   ]
 }
