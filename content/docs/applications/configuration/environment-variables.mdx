@@ -75,7 +75,7 @@ Set **Build time** to **Not available during build** for a secret that the appli
 | **Docker BuildKit secrets** | Coolify mounts each value as a BuildKit secret on every `RUN` instruction, as an environment variable with the same name. | Not saved. |
 | **Standard build arguments** | Coolify passes each value as `--build-arg` and adds `ARG` lines after each `FROM`. | Docker saves the values in the image history. Anyone who can pull the image can read them. |
 
-New applications use **Docker BuildKit secrets**. Applications created before this default keep their setting. The [Recommendations](/applications/configuration/recommendations) section on their **General** page recommends build secrets for them.
+New applications use **Docker BuildKit secrets**. Applications created before this default keep their setting. The [Recommended settings](/applications/configuration/recommended-settings) page recommends build secrets for them.
 
 If the build server does not support Docker BuildKit secrets, Coolify uses build arguments for that deployment.
 

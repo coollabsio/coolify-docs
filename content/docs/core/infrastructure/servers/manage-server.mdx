@@ -11,16 +11,6 @@ Open **Servers**, select a server, then open **General** to manage its identity,
 Before changing the IP address, domain, SSH user, port, or connection timeout, confirm that the new connection works from the Coolify machine.
 </Callout>
 
-## Items that need attention
-
-A yellow `!` next to a menu item in the server sidebar shows that the item needs an action from you. Hold the pointer on the `!` to see the reason.
-
-| Menu item | The `!` shows when | What to do |
-| :--- | :--- | :--- |
-| **Proxy** | Proxy changes are not applied, a newer Traefik version is available, or the proxy is not running. | Open **Proxy**, then restart or update the proxy. See [Proxy](/core/networking/proxy/overview). |
-| **Sentinel** | Sentinel is turned on and is out of sync. | Open **Sentinel** and select **Sync**. See [Troubleshooting Sentinel](/core/observability/monitoring/sentinel#troubleshooting). |
-| **Security** | The SSH host key of the server changed, and Coolify waits for you to trust the new key. | Open **Security**, compare the new key with the key on the server, then select **Trust new key**. |
-
 ## General settings
 
 | Setting | What it controls |
