@@ -1,0 +1,158 @@
+---
+title: IP Allowlist
+description: Let only specified IP addresses and CIDR ranges reach a Coolify application through Traefik or Caddy.
+---
+
+# IP allowlist
+
+An IP allowlist lets only the IP addresses and CIDR ranges that you specify reach an application through the Coolify proxy. The proxy sends HTTP `403 Forbidden` to all other clients, before the request gets to the application container.
+
+The setting works with Traefik and Caddy. It applies to all domains of the application and to its preview deployments.
+
+<Callout type="info" title="IP allowlist requires Coolify v4.8.0">
+  The **IP allowlist** setting is available in Coolify v4.8.0 or above.
+</Callout>
+
+## Restrict access to an application
+
+The setting is available for standard applications (all build packs except Docker Compose). For Docker Compose applications and services, see [Docker Compose and services](#docker-compose-and-services).
+
+<Steps>
+<Step>
+
+#### Open the application settings
+
+Open the application, select **General**, then find **Security > Authentication**.
+
+Keep **Label management** set to **Managed by Coolify (auto-generated)**. If the labels are managed manually, Coolify does not show the setting. See [Manual labels](#manual-labels).
+
+</Step>
+<Step>
+
+#### Add the allowed addresses
+
+Enter the IP addresses and CIDR ranges in **IP allowlist**. Use IPv4 or IPv6. Separate the entries with commas or spaces:
+
+```plaintext
+203.0.113.5, 10.0.0.0/8, 2001:db8::/32
+```
+
+Select **Save changes**. Coolify rejects entries that are not a valid IP address or CIDR range, and removes duplicate entries.
+
+</Step>
+<Step>
+
+#### Redeploy and verify
+
+Redeploy the application. The proxy uses the new rules only after the redeploy.
+
+From an allowed address, open the domain and make sure that the application loads. From a different network, for example a mobile connection, make sure that the proxy returns HTTP `403`.
+
+</Step>
+</Steps>
+
+To remove the restriction, clear **IP allowlist**, save, and redeploy. An empty allowlist lets all clients connect.
+
+You can use the IP allowlist together with [HTTP basic authentication](/core/networking/proxy/traefik/basic-auth). The proxy checks the IP address first. Only allowed clients get the login prompt.
+
+## Set the allowlist with the API
+
+The application API has the `ip_allowlist` field. It is a string with comma-separated entries. Send `null` or an empty string to remove the restriction.
+
+```bash
+curl -X PATCH "https://<coolify-domain>/api/v1/applications/<application-uuid>" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"ip_allowlist": "203.0.113.5,10.0.0.0/8"}'
+```
+
+Redeploy the application after the change.
+
+## Clients behind a CDN or another proxy
+
+The proxy checks the IP address of the connection that it receives. It does not read the `X-Forwarded-For` header.
+
+If a CDN or another proxy, for example Cloudflare or a load balancer, is in front of Coolify, the proxy sees the IP address of that CDN or proxy, not the IP address of the client. In this setup, do not use the Coolify IP allowlist. Restrict access in the CDN or in the proxy in front of Coolify.
+
+<Callout type="warning" title="Cloudflare Tunnel">
+
+With [Cloudflare Tunnel](/integrations/networking/cloudflare/tunnels), all requests come from the tunnel container. An allowlist that includes the tunnel address lets all clients connect, and an allowlist without it blocks all clients. Use Cloudflare Access to restrict access instead.
+
+</Callout>
+
+## How Coolify applies the allowlist
+
+Coolify adds the rules to the proxy labels of the application container.
+
+<Tabs id="ip-allowlist-proxy" items={['Traefik', 'Caddy']}>
+<Tab value="Traefik">
+
+Coolify adds an `ipallowlist` middleware and puts it first in the middleware chain of each router of the application:
+
+```ini
+traefik.http.middlewares.ip-allowlist-<uuid>.ipallowlist.sourcerange=203.0.113.5,10.0.0.0/8
+traefik.http.routers.https-0-<uuid>.middlewares=ip-allowlist-<uuid>,gzip
+```
+
+Because the middleware is first, blocked clients get HTTP `403` before a redirect or other middleware runs.
+
+</Tab>
+<Tab value="Caddy">
+
+Coolify adds a `remote_ip` matcher and a `respond` directive to each site of the application:
+
+```ini
+caddy_0.@ip_not_allowed=not remote_ip 203.0.113.5 10.0.0.0/8
+caddy_0.handle_path.0_respond=@ip_not_allowed 403
+```
+
+Caddy runs `respond` before `reverse_proxy`, so blocked clients do not reach the application.
+
+</Tab>
+</Tabs>
+
+## Manual labels
+
+If **Label management** is set to **Managed manually (edit labels yourself)**, Coolify does not generate the allowlist. Add the middleware yourself. For Traefik:
+
+```ini
+traefik.http.middlewares.my-allowlist.ipallowlist.sourcerange=203.0.113.5,10.0.0.0/8
+traefik.http.routers.https-0-<uuid>.middlewares=my-allowlist,gzip
+```
+
+Add the middleware to each router of the application, also the HTTP router. If a router already has middleware, add the allowlist to the existing comma-separated value. See [Custom middlewares](/core/networking/proxy/traefik/custom-middlewares) for more information.
+
+## Docker Compose and services
+
+Docker Compose applications and services do not have the **IP allowlist** setting. Add the middleware to the labels of the service that has the domain:
+
+```yaml
+services:
+  app:
+    image: nginx:alpine
+    labels:
+      - 'traefik.http.middlewares.app-allowlist.ipallowlist.sourcerange=203.0.113.5,10.0.0.0/8'
+      - 'coolify.traefik.middlewares=app-allowlist'
+```
+
+`coolify.traefik.middlewares` tells Coolify to add `app-allowlist` to the generated router middleware chain. Save and redeploy the resource.
+
+## Troubleshooting
+
+<Accordions type="multiple">
+
+<Accordion title="Allowed clients get HTTP 403">
+
+Make sure that the client connects from the address that you allowed. Use a service such as `https://ifconfig.me` from the client to see its public IP address.
+
+If a CDN, a load balancer, or Cloudflare Tunnel is in front of Coolify, the proxy sees the address of that system. See [Clients behind a CDN or another proxy](#clients-behind-a-cdn-or-another-proxy).
+
+</Accordion>
+
+<Accordion title="All clients can still connect">
+
+Make sure that you redeployed the application after you saved the allowlist. Make sure that **Label management** is set to **Managed by Coolify (auto-generated)**.
+
+</Accordion>
+
+</Accordions>
