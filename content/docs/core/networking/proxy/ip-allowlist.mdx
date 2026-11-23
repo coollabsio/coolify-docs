@@ -91,7 +91,7 @@ Coolify adds an `ipallowlist` middleware and puts it first in the middleware cha
 
 ```ini
 traefik.http.middlewares.ip-allowlist-<uuid>.ipallowlist.sourcerange=203.0.113.5,10.0.0.0/8
-traefik.http.routers.https-0-<uuid>.middlewares=ip-allowlist-<uuid>,gzip
+traefik.http.routers.https-0-<uuid>.middlewares=ip-allowlist-<uuid>,gzip-no-media
 ```
 
 Because the middleware is first, blocked clients get HTTP `403` before a redirect or other middleware runs.
@@ -117,7 +117,7 @@ If **Label management** is set to **Managed manually (edit labels yourself)**, C
 
 ```ini
 traefik.http.middlewares.my-allowlist.ipallowlist.sourcerange=203.0.113.5,10.0.0.0/8
-traefik.http.routers.https-0-<uuid>.middlewares=my-allowlist,gzip
+traefik.http.routers.https-0-<uuid>.middlewares=my-allowlist,gzip-no-media
 ```
 
 Add the middleware to each router of the application, also the HTTP router. If a router already has middleware, add the allowlist to the existing comma-separated value. See [Custom middlewares](/core/networking/proxy/traefik/custom-middlewares) for more information.
