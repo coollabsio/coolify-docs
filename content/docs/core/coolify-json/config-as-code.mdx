@@ -1,0 +1,197 @@
+---
+title: Config as Code (Beta)
+description: Link an environment to a coolify.json file on a branch, so each push plans the file and keeps the resources in sync.
+---
+
+# Config as code
+
+In the **Config as code** mode, an environment is linked to a `coolify.json` file on a branch of a git repository. Each push to the branch plans the file. Coolify applies safe changes automatically, and destructive changes wait for approval. The file is the full truth for the resources that it manages.
+
+<Callout type="warning" title="Beta feature">
+Config as code is in beta. The file format, the settings, and the behavior can change in later versions. Try the link on a test environment first, and protect the linked branch.
+</Callout>
+
+## Prerequisites
+
+- You are a team admin. Only a team admin can link an environment.
+- The repository is public, or Coolify can read it with a [GitHub App](/applications/sources/github/app), a [GitLab App](/applications/sources/gitlab), a [Gitea App](/applications/sources/gitea), or a [deploy key](/applications/sources/deploy-keys).
+- A server that can read the repository. Coolify reads the file on this server, and resources that name no server run on it.
+
+## Start from an existing environment
+
+<Steps>
+<Step>
+
+### Export the environment
+
+Open the project, select the environment, and open **Config as code** (in the environment settings, select **Set Up**). Select **Export**. Coolify downloads a `coolify.json` file with the current settings of the environment.
+
+The export has no secret values. Export needs a team admin, because commands and Compose files can hold credentials.
+
+</Step>
+<Step>
+
+### Commit the file
+
+Commit the file as `coolify.json` to the branch of the environment, for example `main`. Add the `$schema` key so that your editor checks the file:
+
+```json
+"$schema": "https://cdn.coollabs.io/coolify/schemas/coolify.v1.json"
+```
+
+</Step>
+<Step>
+
+### Connect the repository
+
+On the **Config as code** page, select **Connect repository** and enter:
+
+| Field | Value |
+| :--- | :--- |
+| **Repository** | The repository, for example `acme/shop` or its URL |
+| **Branch** | The branch that the environment follows |
+| **File** | The path of the file in the repository. The default is `coolify.json`. |
+| **Source** | Public repository, GitHub App, Gitea App, or deploy key |
+| **Server** | The server that reads the file. Resources that name no server run on it. |
+
+Select **Show plan** to see the changes, then select **Connect**.
+
+The first plan of an export only adopts the existing resources (with `import`), so nothing changes.
+
+</Step>
+<Step>
+
+### Set up the webhook
+
+A GitHub App sends the push events to Coolify. For all other sources, add one push webhook to the repository. Refer to [Set up the webhook](#set-up-the-webhook).
+
+</Step>
+<Step>
+
+### Push a change
+
+Change the file, commit, and push. Coolify plans the file and shows the result in **History**.
+
+</Step>
+</Steps>
+
+You can also start from an empty environment: write the file yourself (refer to the [example file](/core/coolify-json/example)), commit it, and connect the repository. Or select **Config as code** in the add-repository form when the repository already has a `coolify.json` file.
+
+## Set up the webhook
+
+Coolify plans the file when it receives a push event for the linked branch. It supports GitHub, GitLab, Gitea, and Bitbucket, with an app or a manual webhook.
+
+- **GitHub App**: The app sends the push events. You do not have to add a webhook.
+- **Manual webhook**: On the **Config as code** page, open **Set up a webhook**. Copy the **Secret** and the URL of your git provider, and add one push webhook with this secret in the repository settings.
+
+The manual webhook URLs have this format:
+
+```text
+https://<your-coolify>/webhooks/source/github/events/manual
+https://<your-coolify>/webhooks/source/gitlab/events/manual
+https://<your-coolify>/webhooks/source/gitea/events/manual
+https://<your-coolify>/webhooks/source/bitbucket/events/manual
+```
+
+## How a push works
+
+1. A push to the linked branch reaches Coolify through the webhook.
+2. Coolify reads the file at that commit on the server of the link and plans it. The plan never shows secret values.
+3. When **Apply safe changes automatically** is on, Coolify applies safe changes. A plan with a destructive change waits for approval. Destructive changes are a removed resource, a replaced resource, and a removed variable or storage.
+4. Deployments from the same push wait until the apply is done.
+5. A later push replaces a plan that waits.
+
+A plan is never partly applied. An error fails the whole revision, and **History** shows the reason. Select **Retry** to plan the commit again.
+
+Each environment tracks its own branch. A push changes only the environments that follow that branch. To use one file for more environments, refer to [Environments](/core/coolify-json/file-reference#environments).
+
+To roll back, use `git revert` and push.
+
+### History
+
+**History** has one row for each push or API call. Each row shows the commit, the status, and the changes:
+
+| Status | Meaning |
+| :--- | :--- |
+| `planned` | Coolify planned the file. |
+| `waiting_approval` | The plan has a destructive change and waits for approval. |
+| `applying` | Coolify applies the plan. |
+| `applied` | The plan is applied. |
+| `failed` | The plan or the apply failed. The row shows the reason. |
+| `superseded` | A later push replaced this plan. |
+| `skipped` | A newer push arrived before Coolify planned this commit. |
+
+If an apply stops and does not finish, a team admin can select **Release** to free the link.
+
+## Approve destructive changes
+
+When a plan waits for approval, the **Config as code** page shows **Changes waiting for approval**.
+
+1. Read the changes.
+2. For each removed resource, select whether Coolify also deletes its data. Deleting the data is a separate choice. By default, the data stays.
+3. Select **Approve and apply** and enter your password.
+
+Only a team admin can approve. Coolify also sends a notification when a plan waits for approval and when an apply fails. Configure the channels in [Notifications](/core/notifications/overview).
+
+## Pull request plans
+
+When the repository uses a GitHub App, Coolify comments the plan on each pull request to the linked branch. The comment shows the changes for each linked environment. Coolify updates the same comment on each new commit. Nothing applies until you merge the pull request.
+
+Coolify comments only on pull requests from the same repository. Pull requests from forks get no comment.
+
+## Managed resources
+
+- Settings that the file manages are read-only in Coolify and in the API. The resource shows **Read-only: these settings come from coolify.json**.
+- Deploy, logs, terminal, and setting the values of `required` variables still work.
+- Variables that are not in the file are removed after approval.
+- Coolify shows the sync state: a sync dot on the project page, a badge and a banner on the environment page, a `coolify.json` chip in the top bar of a managed resource, and tags in the variables list.
+
+### Values needed
+
+When the file has `required` variables without a value, the page shows **Values needed** with the resources and variable names. Set these variables in Coolify, then deploy. The variables list shows **Needs a value** until you set the value.
+
+## Pause and resume the sync
+
+A team admin can select **Pause sync**. While the sync is paused, edits in Coolify work again, and pushes do not change the resources.
+
+To continue, select **Resume sync**. Coolify shows the plan of the latest file first. Select **Resume and apply** to apply it. The file then overwrites the edits that you made while the sync was paused.
+
+## Change the server
+
+To run the resources on another server, a team admin opens the **Source** section and selects **Change server**.
+
+1. Select the new server, and the destination if the server has more than one.
+2. Coolify plans the file again. Resources without `server` in the file move to the new server, so the plan waits for approval.
+3. After the approval, Coolify stops the resources on the old server and starts or deploys them on the new server.
+
+<Callout type="warning" title="Volume data does not move">
+Volumes and their data stay on the old server. The resources start with empty volumes on the new server. Copy the data before you approve, for example with a [database backup](/databases/backups) and a restore.
+</Callout>
+
+Resources that name a `server` in the file do not move.
+
+## Disconnect
+
+Select **Disconnect** to remove the link. The resources stay and you can edit them in Coolify again. The history of the link is deleted.
+
+## Permissions
+
+| Action | Who |
+| :--- | :--- |
+| Connect a repository (link) | Team admin |
+| Pause, resume, disconnect, change server, release | Team admin |
+| Approve destructive changes | Team admin. Coolify asks for the password. |
+| Export | Team admin, or an API token with `read:sensitive` |
+| See the values in plans and history | Team admin, or an API token with `read:sensitive`. Other users see which settings change, but not the values. |
+
+<Callout type="warning" title="Protect the linked branch">
+Anyone who can push to the linked branch can change the resources of the environment and use the shared variables of the team. Protect the branch in your git provider, and require reviews for pull requests.
+</Callout>
+
+To use team credentials in the file (`source.github_app`, `source.gitea_app`, `source.deploy_key`, `secret_manager.token`, or `backups[].s3_storage`), the user who links or applies the file needs write access to the whole team. To place a resource on a server, the user needs access to that server.
+
+## Related pages
+
+- [File reference](/core/coolify-json/file-reference)
+- [API and CLI](/core/coolify-json/api-and-cli)
+- [Roles and permissions](/core/team/roles-and-permissions)
