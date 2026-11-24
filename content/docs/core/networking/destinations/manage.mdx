@@ -61,11 +61,11 @@ Clone a resource when you need a separate copy of its configuration on another s
 5. Select **Clone resource**.
 6. Open the cloned resource and verify its destination and configuration before deploying it.
 
-<Callout type="warning" title="Cloning does not copy resource data">
-Cloning duplicates configuration such as environment variables and build settings. It does not copy database contents, persistent-storage files, or data held by an external provider. The original resource remains unchanged.
+<Callout type="warning" title="Data is copied only on request">
+Cloning duplicates configuration such as environment variables and build settings. Select **Clone volume data** to also copy the data of the named Docker volumes, also to another server. A running source is stopped during the copy and started again afterwards. Bind mounts (host paths) and data held by an external provider are not copied.
 </Callout>
 
-Use a backup or a resource-specific migration procedure when the clone also needs existing data. **Move Resource** on the same page changes only the project or environment; it does not change the server or network destination.
+Use a backup or a resource-specific migration procedure for data that **Clone volume data** does not copy. **Move Resource** on the same page changes only the project or environment; it does not change the server or network destination.
 
 ## Connect Docker Compose resources
 

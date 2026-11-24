@@ -13,7 +13,7 @@ Updating can require more than changing an image tag. Review upstream release no
 
 <Callout type="warning" title="Test the update in a separate Service">
 
-Clone the Service or create another instance of the same one-click template, then test the target version there. Cloning copies configuration, not volume contents, bind-mounted files, database records, or external-service data. Restore representative data separately when the update includes a state migration.
+Clone the Service or create another instance of the same one-click template, then test the target version there. Cloning copies configuration. It copies the data of named volumes only when you select **Clone volume data**. It never copies bind-mounted files or external-service data. Use **Clone volume data** or restore representative data when the update includes a state migration.
 
 </Callout>
 

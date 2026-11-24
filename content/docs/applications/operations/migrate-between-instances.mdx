@@ -9,6 +9,10 @@ This guide moves one application from a source Coolify instance to a destination
 
 Coolify does not provide a single export and import operation for an application. Recreate the application on the destination instance, verify it with a temporary domain, move every stateful dependency, then transfer production traffic.
 
+<Callout type="info" title="Move to a new server on the same instance">
+To move an application to a new server that the same Coolify instance manages, add the server and use **Clone to another destination** with **Clone volume data**. Refer to [Clone or move an application](/applications/operations/resource-operations). To move Coolify itself to a new machine, refer to [Restore Coolify](/core/backup-and-recovery/instance-restore).
+</Callout>
+
 <Callout type="info" title="Move a whole server">
 To move all resources of a server, you can transfer the server to the other instance. The resources and their data stay on the same host. Refer to [Server transfer](/core/infrastructure/servers/server-transfer).
 </Callout>
