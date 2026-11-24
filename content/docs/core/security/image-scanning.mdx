@@ -75,8 +75,8 @@ Databases and services have no scan setting of their own. Coolify scans them whe
 | :--- | :--- |
 | Application deploy | The new image. When **Block deploys** is **On** or **Strict**, before the new container starts, else after it starts. Restarts and deploys that skip the build are not scanned again, rollbacks are. |
 | Database or service start | The images of the database, or of the applications and databases of the service, after the start. |
-| Every day | All running images on the server, between 02:00 and 04:59 server time. Coolify updates the vulnerability database first. |
-| Every day and after a package update | The operating system packages of the server. The results show in the **Vulnerabilities** section of the same server page. Read [Patch server packages](/core/infrastructure/servers/server-patching). |
+| Each rescan (every day by default) | All running images on the server, between 02:00 and 04:59 server time. Coolify updates the vulnerability database first. Read [Rescan frequency](#rescan-frequency). |
+| Each rescan and after a package update | The operating system packages of the server. The results show in the **Vulnerabilities** section of the same server page. Read [Patch server packages](/core/infrastructure/servers/server-patching). |
 | **Scan now** | The images of one resource. Select it on the **Security** page of the resource. Coolify pulls an image that is not on the server. |
 
 Coolify also looks for newer versions of a scanned image: a newer build of the same tag, the newest tag of the same version line, and the next major version for information. It scans these candidates from the registry on the server. For a Dockerfile build, it also checks the base image.
@@ -183,6 +183,21 @@ Large images can need more memory than the default of 1 GB. To set a higher limi
 
 The limit applies to each scanner step. The server must have that much free memory while a scan runs. The help text of the **Image scanning** section also shows the disk space that the scanner data uses on the server.
 
+## Rescan frequency
+
+A rescan checks the running images again with the newest vulnerability database. It finds vulnerabilities that became known after the deployment. When an image and the database did not change since the last scan, Coolify does not run the scanner again for that image.
+
+To scan less often:
+
+1. Open the server and select **Security** > **Vulnerabilities**.
+2. In **Rescans**, select **Every day**, **Every 3 days**, **Every week**, **Every 2 weeks**, **Every 30 days**, or **Never (only at deployments)** in **Rescan frequency**.
+
+A failed rescan runs again the next day. Before a scan, Coolify updates a vulnerability database that is older than 3 days.
+
+<Callout type="warning">
+With **Never (only at deployments)**, the results of running images get old, and Coolify sends no alerts for new vulnerabilities in them. The operating system packages are scanned only after a package update.
+</Callout>
+
 ## Turn off image scanning
 
 On the server **Vulnerabilities** page, select **Disable** and confirm. Coolify stops scanning the images and the operating system packages of the server. The scan results and the scanner data on the server stay.
@@ -207,7 +222,7 @@ Read [Roles and permissions](/core/team/roles-and-permissions).
 | Endpoint | Purpose |
 | :--- | :--- |
 | [`GET /api/v1/servers/{uuid}/image-scanning`](/api/endpoints/servers/get-server-image-scanning) | Read whether the server scans, the memory limit, the state of the scanner, and the disk space of the scanner data (`scanner_disk_used_bytes`). |
-| [`PATCH /api/v1/servers/{uuid}/image-scanning`](/api/endpoints/servers/update-server-image-scanning) | Turn scanning of the server on or off with `is_image_scan_enabled`, and set the scanner memory limit with `image_scan_memory_mb` (`1024`, `2048`, `4096`, or `8192`). |
+| [`PATCH /api/v1/servers/{uuid}/image-scanning`](/api/endpoints/servers/update-server-image-scanning) | Turn scanning of the server on or off with `is_image_scan_enabled`, set the scanner memory limit with `image_scan_memory_mb` (`1024`, `2048`, `4096`, or `8192`), and set the rescan frequency in days with `image_rescan_days` (`1`, `3`, `7`, `14`, `30`, or `0` for no rescans). |
 | [`GET /api/v1/vulnerabilities`](/api/endpoints/vulnerabilities/list-vulnerabilities) | List the resources of the team with their security status. |
 | [`GET /api/v1/applications/{uuid}/vulnerabilities`](/api/endpoints/vulnerabilities/get-application-vulnerabilities) | Read the status, images, and findings of an application. |
 | [`GET /api/v1/databases/{uuid}/vulnerabilities`](/api/endpoints/vulnerabilities/get-database-vulnerabilities) | Read the status, image, and findings of a database. |
