@@ -11,6 +11,10 @@ Neon Object Storage exposes an S3-compatible endpoint that you can use with Cool
 Neon Object Storage buckets are scoped to a Neon branch, and each branch has its own S3 endpoint. Pick the branch that should keep your backups, usually your production branch, and use the endpoint and credentials from that branch.
 </Callout>
 
+<Callout type="warning" title="A branch reset can remove backup files">
+[Reset from parent](https://neon.com/docs/guides/reset-from-parent#limitations) replaces the child branch's buckets and objects with the parent's current state. Keep a copy in a separate destination if the branch holding your backups may be reset. Neon's Postgres Instant Restore leaves object storage unchanged.
+</Callout>
+
 ## Configure Neon Object Storage
 
 <Steps>
