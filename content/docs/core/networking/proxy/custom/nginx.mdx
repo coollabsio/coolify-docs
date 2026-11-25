@@ -655,6 +655,24 @@ A reload does not apply Docker changes. A change to ports, networks, mounts, or 
 
 ---
 
+### Update the NGINX image
+
+A configuration reload reuses the running container, and a Coolify upgrade leaves this separate Compose stack on its current image. Set the intended NGINX tag in `compose.yaml`, then run the following from the proxy Compose directory:
+
+```sh
+docker compose pull nginx
+docker compose run --rm --no-deps nginx nginx -t -c /etc/nginx/managed/current/nginx.conf
+```
+
+The one-off test uses the new image and leaves the running proxy in place. If the test succeeds, recreate the proxy during a maintenance window:
+
+```sh
+docker compose up -d --no-deps nginx
+docker compose exec nginx nginx -v
+```
+
+Verify HTTPS routing for the domains served by this proxy.
+
 ## Switching production traffic
 
 Traefik and NGINX both need the server's port `443`, so they cannot run at the same time on the same address. Everything was ready before Traefik stopped:
