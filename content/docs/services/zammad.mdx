@@ -36,13 +36,14 @@ Coolify generates the PostgreSQL password and sets `ZAMMAD_FQDN` from the servic
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `TZ` | `Europe/Berlin` | Timezone used by the stack. |
+| `TZ` | `UTC` | Timezone used by the stack. |
 | `BACKUP_TIME` | `03:00` | Time of the daily backup. |
 | `HOLD_DAYS` | `10` | Number of days to retain local backups. |
 | `BACKUP_ON_START` | `false` | Run a backup when the backup container starts. |
 | `ELASTICSEARCH_JAVA_OPTS` | `-Xms1g -Xmx1g` | Elasticsearch JVM heap settings. |
+| `S3_URL` | Empty | Optional S3 storage for attachments. |
 
-For additional settings, see the [Zammad Docker environment variables](https://docs.zammad.org/en/latest/appendix/environment-variables.html).
+The template includes only the most common settings. To use other [Zammad Docker environment variables](https://docs.zammad.org/en/latest/appendix/environment-variables.html), add them to the `x-shared` environment in the service's Docker Compose file.
 
 ## Persistent storage
 
