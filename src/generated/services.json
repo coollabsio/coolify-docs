@@ -1559,6 +1559,13 @@
     "category": "Analytics"
   },
   {
+    "name": "OpenSearch",
+    "slug": "opensearch",
+    "icon": "/docs/images/services/opensearch-logo.svg",
+    "description": "Open-source search and analytics engine.",
+    "category": "Search"
+  },
+  {
     "name": "OpenWA",
     "slug": "openwa",
     "icon": "/docs/images/services/openwa.png",

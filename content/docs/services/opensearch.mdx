@@ -1,0 +1,49 @@
+---
+title: "OpenSearch"
+description: "Open-source search and analytics engine."
+og:
+  description: "Here you can find the documentation for hosting OpenSearch with Coolify."
+category: "Search"
+icon: "/docs/images/services/opensearch-logo.svg"
+---
+
+# OpenSearch
+
+![OpenSearch](/docs/images/services/opensearch-logo.svg)
+
+## What is OpenSearch?
+
+OpenSearch is an open-source search and analytics engine. It stores, searches, and analyzes large volumes of structured and unstructured data with a RESTful API.
+
+Use it for full-text search in applications, log and event analytics, and vector search. OpenSearch is a community-driven project under the Apache 2.0 license.
+
+## Deploy OpenSearch
+
+1. Create a new resource in Coolify and select **OpenSearch** from the service list.
+2. Click **Deploy**.
+3. Wait until the `opensearch` service shows as healthy. This can take about 1 minute.
+4. Send requests to the domain of the service. The API requires HTTP basic authentication:
+   - **Username:** `admin`
+   - **Password:** the value of the `SERVICE_PASSWORD_OPENSEARCH` environment variable.
+
+```bash
+curl -u admin:<password> https://<your-domain>/_cluster/health
+```
+
+This service does not include a GUI. Use the REST API or a client library.
+
+## Notes
+
+- The server needs at least 2 GiB of RAM. The JVM heap is set to 512 MB, and the container uses about 1.2 GB of memory.
+- To change the heap size, edit `OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m` in the Docker Compose file.
+- OpenSearch runs as a single node (`discovery.type=single-node`). Clustering is disabled.
+- TLS on the HTTP port is disabled in the container (`plugins.security.ssl.http.enabled=false`), because the Coolify proxy handles TLS.
+- OpenSearch reads `SERVICE_PASSWORD_OPENSEARCH` only on the first start, to set the initial `admin` password. If you change the variable later, the `admin` password does not change.
+- Data is stored in the `opensearch-data` volume.
+
+## Links
+
+- [Official website](https://opensearch.org/?utm_source=coolify.io)
+- [Documentation](https://docs.opensearch.org/latest/?utm_source=coolify.io)
+- [Docker installation guide](https://docs.opensearch.org/latest/install-and-configure/install-opensearch/docker/?utm_source=coolify.io)
+- [GitHub](https://github.com/opensearch-project/OpenSearch?utm_source=coolify.io)
