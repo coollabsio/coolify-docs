@@ -39,7 +39,7 @@ Self-hosting Coolify means you run the Coolify instance on infrastructure you co
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-Coolify needs 2 CPU cores, 2 GB RAM, and 10 GB disk space to run. If your server meets this specification, you can install Coolify by using this install script:
+Coolify needs 2 CPU cores, 2 GB RAM, and 10 GB disk space to run. If your server meets this specification, run the install script in a root shell. If you signed in as a sudo-capable user, run `sudo -i` first:
 
 ```sh
 curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
@@ -332,7 +332,7 @@ The resources you need depend on your projects. If you host multiple services or
 ---
 
 ### 1. Run the install script
-Open your terminal and SSH into your server as root or a user with sudo privileges, then run the command below:
+Connect to the server over SSH. If you signed in with a sudo-capable account, run `sudo -i` to enter a root shell. Run the following command as root:
 ```sh
 curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 ```
@@ -383,7 +383,7 @@ Open `http://192.168.1.69:8000` in your browser (replace `192.168.1.69` with you
 
   **Create your admin account as soon as installation finishes. Anyone who reaches the registration page first can become the instance admin and gain root access to your server.**
 
-  Coolify accepts the first account only in the first 10 minutes after Coolify starts. If the registration page shows **Setup window closed**, run `docker restart coolify` on the server, then reload the page.
+  On an instance with no accounts, Coolify opens a 10-minute window for creating the first administrator after startup. If **Setup window closed** appears and no account exists, run `docker restart coolify` on the server and reload the page after Coolify starts.
 </Callout>
 
 ---
@@ -550,7 +550,7 @@ Open `http://192.168.1.69:8000` in your browser (replace `192.168.1.69` with you
 
   **Create your admin account as soon as installation finishes. Anyone who reaches the registration page first can become the instance admin and gain root access to your server.**
 
-  Coolify accepts the first account only in the first 10 minutes after Coolify starts. If the registration page shows **Setup window closed**, run `docker restart coolify` on the server, then reload the page.
+  On an instance with no accounts, Coolify opens a 10-minute window for creating the first administrator after startup. If **Setup window closed** appears and no account exists, run `docker restart coolify` on the server and reload the page after Coolify starts.
 </Callout>
 
 That's it!, you can start using Coolify.
