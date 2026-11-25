@@ -1,0 +1,53 @@
+---
+title: "Sim Studio"
+description: "Open source platform for building and running AI agents."
+og:
+  description: "Deploy Sim Studio on Coolify to build, run, and schedule AI agent workflows with PostgreSQL (pgvector), Redis, and realtime collaboration."
+category: "AI"
+icon: "/docs/images/services/simstudio-logo.svg"
+---
+
+# Sim Studio
+
+## What is Sim Studio?
+
+Sim Studio is an open source platform to build and run AI agent workflows. You connect blocks for LLMs, tools, and integrations on a visual canvas. Then you run the workflows manually, on a schedule, by webhook, or through an API.
+
+## Services in the template
+
+| Service | Purpose |
+|---|---|
+| `simstudio` | Main web app (port 3000) |
+| `realtime` | Socket.IO server for live collaboration (port 3002) |
+| `gateway` | Caddy proxy: sends `/socket.io` to `realtime` and all other traffic to `simstudio` |
+| `migrations` | Runs the database migrations once, then stops |
+| `cron` | Runs scheduled workflows, polling triggers, and other background jobs |
+| `db` | PostgreSQL 17 with pgvector |
+| `redis` | Rate limits, pub/sub, and caches |
+
+Coolify generates all secrets (`BETTER_AUTH_SECRET`, `ENCRYPTION_KEY`, `INTERNAL_API_SECRET`, `CRON_SECRET`) and the database credentials.
+
+<Callout type="warning" title="Keep the encryption key">
+
+Do not change `ENCRYPTION_KEY` after the first deployment. Sim Studio uses it to encrypt stored credentials. If you change it, the app cannot read the old credentials.
+
+</Callout>
+
+## Requirements
+
+The `simstudio` container has a memory limit of 8 GB. Use a server with at least 12 GB of RAM.
+
+## Optional environment variables
+
+| Variable | Description |
+|---|---|
+| `OLLAMA_URL` | URL of an Ollama server for local models |
+| `COPILOT_API_KEY` | API key for the Sim Copilot |
+| `TRUSTED_ORIGINS` | More public origins to trust for auth, comma-separated |
+| `API_ENCRYPTION_KEY` | Separate key to encrypt API keys (64 hex characters) |
+
+## Links
+
+- [Official website](https://www.sim.ai?utm_source=coolify.io)
+- [Documentation](https://docs.sim.ai?utm_source=coolify.io)
+- [GitHub](https://github.com/simstudioai/sim?utm_source=coolify.io)
