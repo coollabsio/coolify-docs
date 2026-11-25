@@ -1353,6 +1353,13 @@
     "category": "Social Media"
   },
   {
+    "name": "Monica",
+    "slug": "monica",
+    "icon": "/docs/images/services/monica-logo.svg",
+    "description": "An open-source personal relationship manager.",
+    "category": "Productivity"
+  },
+  {
     "name": "Moodle",
     "slug": "moodle",
     "icon": "/docs/images/services/moodle-logo.png",
