@@ -1,43 +1,64 @@
 ---
 title: Connection Unstable
-description: Fix unstable Coolify server connections by removing UFW LIMIT rules, adjusting iptables, and configuring firewall settings for port 22 SSH access.
+description: Fix intermittent Coolify SSH connections caused by UFW LIMIT rules, iptables rate limits, or provider firewalls, and allow the Coolify control plane on the SSH port.
 ---
 
 # Connection Unstable
 
-If you're experiencing unstable connections, most of the times (90% of the cases) a firewall issue, ufw, iptables or some configuration on your server or between your Coolify instance (or Coolify Cloud) and your server.
+If Coolify intermittently loses access to a server, the cause is usually a firewall on the server, at your hosting provider, or between Coolify (or Coolify Cloud) and the server that drops or rate-limits SSH connections.
+
+Use the SSH port configured for the server in Coolify in every command below. It can differ from port `22`.
 
 ## Symptoms
 
-- Server is sometimes reachable, sometimes not.
-- You receive a lot of failed connection lost emails.
+- The server is sometimes reachable and sometimes not.
+- You receive many connection-lost notifications for the server.
 
 ## Diagnosis
 
-- Check your UFW rules with `ufw status numbered` and see if you have a `LIMIT` rule for port 22.
-- Check your iptables rules with `iptables -L -v -n` and see if you have a `LIMIT` rule for port 22.
-- Check your server logs (`/var/log/ufw.log`, `/var/log/iptables.log`, `/var/log/auth.log`, `/var/log/kern.log`) for any firewall related errors.
+Coolify opens new SSH connections for server checks, deployments, and file transfers. A rate limit on the SSH port can block these connections even when your own SSH session works.
+
+1. Check the UFW rules:
+
+   ```sh
+   sudo ufw status numbered
+   ```
+
+   A `LIMIT` rule for the SSH port is the most common cause. UFW `LIMIT` blocks a source address that opens 6 or more connections within 30 seconds, and the rate cannot be changed. There are usually separate IPv4 and IPv6 rules.
+
+2. Check iptables for rate-limiting rules on the SSH port, such as rules using the `recent`, `limit`, or `hashlimit` modules:
+
+   ```sh
+   sudo iptables -L -v -n
+   sudo ip6tables -L -v -n
+   ```
+
+3. Check the logs around the time of a failed connection, for example `/var/log/ufw.log`, `/var/log/auth.log`, and `/var/log/kern.log`. Blocked connections from the Coolify source address confirm a firewall problem.
+
+4. Check any firewall configured with your hosting provider.
 
 ## Solution
 
-- UFW
-  - `ufw status numbered` - if you have port 22 open, but with a `LIMIT` rule, this is the problem.
-  - `ufw delete <rule_number>` - delete the rule - you probably have IPV4 and IPV6 rules, so you need to delete both.
-    - After you deleted the rule, you need to check the status with `ufw status numbered` and see that the rule is deleted and which rule number is next.
-  - `ufw allow 22/tcp` - add the rule without a limit.
+<Callout type="warning" title="Keep SSH access open">
+Keep a working administrator SSH session open while changing firewall rules. A wrong SSH rule can lock you out of the server.
+</Callout>
 
-   OR
+1. Find the source addresses Coolify connects from:
+   - For Coolify Cloud, use the current [IPv4](https://coolify.io/ipv4.txt) and [IPv6](https://coolify.io/ipv6.txt) lists.
+   - For self-hosted Coolify, use the public IP address of the server running Coolify, as seen by the managed server.
 
-  - `ufw limit 22/tcp 100/minute` - add a higher limit.
+2. Add an allow rule for each source address before the `LIMIT` rule. UFW applies the first matching rule, so insert the new rules at the top:
 
-In case of Coolify Cloud, you can enable connection from Coolify Cloud IP addresses by adding the following to the UFW rules for each IP:
+   ```sh
+   sudo ufw insert 1 allow proto tcp from SOURCE_ADDRESS to any port SSH_PORT
+   ```
 
-```bash
-# For each IPv4 address
-ufw allow from <ipv4> to any port 22
+   Replace `SOURCE_ADDRESS` with the address or CIDR, and `SSH_PORT` with the SSH port. This keeps the rate limit for other sources.
 
-# For each IPv6 subnet
-ufw allow from <ipv6> to any port 22
-```
+3. In Coolify, open the server and select **Validate connection** (or **Revalidate connection** on a validated server) to confirm that Coolify can connect. From another terminal, open a second SSH session to confirm your own access.
 
-> You can find the current Coolify Cloud IP addresses at https://coolify.io/ipv4.txt and https://coolify.io/ipv6.txt
+4. If you want to remove the `LIMIT` rule instead, run `sudo ufw status numbered` again and delete it by its current number with `sudo ufw delete <rule_number>`. Rule numbers change after each deletion, so check the list again before deleting the IPv6 rule. Then restrict SSH to known source addresses, as described in [Firewall](/core/infrastructure/servers/firewall).
+
+For iptables rate limits, add an `ACCEPT` rule for the Coolify source addresses above the rate-limiting rule.
+
+See [Firewall](/core/infrastructure/servers/firewall) for the ports Coolify needs and for Docker port guidance.
