@@ -1260,6 +1260,13 @@
     "disabled": true
   },
   {
+    "name": "MCPHub",
+    "slug": "mcphub",
+    "icon": "/docs/images/services/mcphub-logo.svg",
+    "description": "Unified hub to manage and route many MCP servers.",
+    "category": "AI"
+  },
+  {
     "name": "Mealie",
     "slug": "mealie",
     "icon": "/docs/images/services/mealie-logo.png",
