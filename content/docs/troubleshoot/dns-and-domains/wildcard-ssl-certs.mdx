@@ -13,7 +13,7 @@ If your wildcard SSL certificate isn't working with your domain, it may be due t
 ### Check the SSL Certificate Validity
 
 - **Verify the Certificate:** Make sure the SSL certificate is valid for the domain.
-  - Confirm the Common Name (CN) matches your domain.
+  - Confirm the requested hostname is covered by a Subject Alternative Name.
   - Double-check that your wildcard certificate is not expired.
 
 </Step>
@@ -36,10 +36,9 @@ If your wildcard SSL certificate isn't working with your domain, it may be due t
 </Step>
 <Step>
 
-### Remove Old Certificates
+### Check which certificate Traefik serves
 
-- **Old Certificate Issue:** The Coolify proxy may be using an old certificate stored in the `acme.json` file.
-- **Action:** Delete the `acme.json` file from the `/data/coolify/proxy` directory and restart the Coolify proxy from the dashboard by clicking the restart proxy button.
+Verify the certificate directly at the origin using [SNI](/core/networking/proxy/traefik/custom-ssl-certs#verify-the-certificate). For a certificate issued through ACME, verify the DNS challenge and check the proxy logs first. If a stale ACME entry is still being served, open **Proxy > TLS Certificates**, verify the domains and expiry, delete only that entry, and restart the proxy when prompted. Coolify saves an ACME backup automatically. [Restore ACME storage](/core/networking/proxy/traefik/tls-certificates#restore-acme-storage) if the change needs to be reversed.
 
 </Step>
 <Step>
