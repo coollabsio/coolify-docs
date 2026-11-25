@@ -469,6 +469,13 @@
     "category": "Business"
   },
   {
+    "name": "Dograh",
+    "slug": "dograh",
+    "icon": "/docs/images/services/dograh-logo.png",
+    "description": "Open-source voice AI platform, an alternative to Vapi and Retell.",
+    "category": "AI"
+  },
+  {
     "name": "DokuWiki",
     "slug": "dokuwiki",
     "icon": "/docs/images/services/dokuwiki-logo.png",
