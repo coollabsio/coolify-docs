@@ -7,6 +7,8 @@ description: Read scheduled task status, timing, output, and downloadable logs i
 
 Coolify records each scheduled and manual task run under **Recent executions**. Use these records to confirm that a command finished and to inspect its output when it fails.
 
+An overlapping run that reaches the worker while the same task holds its lock is dropped without an execution record, including runs started with **Execute now**. **Skipped** is a recorded run, for example when Coolify cannot find a running target container.
+
 ## Open execution history
 
 1. Open the application or service.

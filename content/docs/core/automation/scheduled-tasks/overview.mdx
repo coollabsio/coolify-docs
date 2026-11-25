@@ -42,6 +42,8 @@ With **Run in a shell** on, the default, Coolify runs the command with `sh -c`, 
 
 A scheduled execution is skipped when the task is disabled, the application or service is not running, or the connected server is not functional. A task with multiple containers also needs the correct container or service name.
 
+If the same task already holds its execution lock when another run is picked up, Coolify drops the overlapping run without retrying it or adding a history row. This also applies to **Execute now**.
+
 If the resource has no running container when the task starts, Coolify records the run as **Skipped**. A skipped run sends no notification and does not count as a failure.
 
 A task that keeps failing notifies the team on the first failure, then at most once a day. After 10 failures in a row, when the first failure is more than 24 hours old, Coolify disables the task. Read [Manage tasks](/core/automation/scheduled-tasks/manage-tasks#automatic-disable-after-repeated-failures).
