@@ -1,0 +1,19 @@
+{
+  "title": "Config",
+  "pages": [
+    "overview",
+    "apply",
+    "approve",
+    "export",
+    "link-create",
+    "link-delete",
+    "link-get",
+    "link-update",
+    "plan",
+    "release",
+    "resume",
+    "retry",
+    "revisions",
+    "suspend"
+  ]
+}
