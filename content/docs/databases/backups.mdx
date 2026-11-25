@@ -155,6 +155,8 @@ A failed S3 upload does not necessarily mean the local database dump failed. Rea
 
 Open **Executions** and select **Download** on a successful backup. Coolify uses the local file when available, or redirects to a short-lived link for an available S3 copy when the local file is gone. S3 download links expire after 15 minutes; request another download if a link expires. A copy in an SFTP, FTPS, or WebDAV storage downloads through Coolify. Backup downloads require an Admin or Owner role.
 
+To verify an SFTP, FTPS, or WebDAV destination, [test a real upload and recovery from the remote copy](/core/s3-storage/sftp-ftps-webdav#verify-upload-and-recovery).
+
 If the instance administrator has configured S3 for file downloads, Coolify may first prepare the local backup in that storage. Wait for preparation to finish and allow the browser to open the download.
 
 Changing a schedule's destinations affects future uploads. Existing copies remain tracked against the destinations that received them. Deleting an execution with the S3 deletion option removes its copies from every S3 destination.
@@ -195,6 +197,8 @@ Through the API, send `delete_backups=true` to delete the files.
 />
 
 ## Scheduling and failed executions
+
+Since Coolify v4.7.4, daily cleanup removes failed database backup execution records older than 60 days. Successful backup files follow the local and remote retention settings above.
 
 Due database backups are dispatched every minute independently of other schedule types. A scheduled backup whose queued job was lost is queued again after 60 minutes. A backup is skipped while the database starts, restarts, or imports, and a backup that exceeds its timeout fails with the timeout error.
 

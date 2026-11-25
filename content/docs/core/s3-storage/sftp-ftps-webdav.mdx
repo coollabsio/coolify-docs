@@ -46,6 +46,10 @@ Only team admins and owners can add and validate a storage.
 
 After validation succeeds, Coolify opens the storage details page. You cannot change the type after creation. To use another type, create a new storage.
 
+## Verify upload and recovery
+
+In Coolify v4.7.6, validation lists the storage directory from the Coolify container. Run a small backup from the server that will actually upload backups and check that the expected remote file exists. Restore that remote copy into a disposable target to verify recovery. A successful dashboard **Download** can use a local copy, so choose the storage explicitly when testing recovery. If you need to verify remote deletion permissions, use only a disposable backup.
+
 ## Save the SFTP host key
 
 When an admin validates an SFTP storage, Coolify saves the host key of the server and shows it in **Host key fingerprint**. After that, Coolify refuses the server if its key changes. A backup never saves a new key.

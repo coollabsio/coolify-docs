@@ -13,6 +13,8 @@ Older links to the **Import Backup** page open the **Backups** page.
 Stop application writes and take a separate backup of the target before importing. Review the selected database, backup format, generated script, and replacement options. An import can overwrite data and credentials.
 </Callout>
 
+When testing an SFTP, FTPS, or WebDAV destination, restore from **Storage** into a disposable database so the test reads the remote copy. See [Verify upload and recovery](/core/s3-storage/sftp-ftps-webdav#verify-upload-and-recovery).
+
 ## Supported backups
 
 | Database | Supported restore inputs and options |
