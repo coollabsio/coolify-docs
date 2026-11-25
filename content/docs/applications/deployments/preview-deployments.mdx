@@ -213,7 +213,11 @@ Coolify keeps production and preview environment variables in separate groups.
 - **Production Environment Variables** apply to the main deployment.
 - **Preview Deployment Environment Variables** apply to pull-request and merge-request deployments.
 
-Use non-production credentials for preview databases, storage, and external services. A preview container is temporary, but data written to an external service can remain after Coolify deletes the preview.
+Creating a production variable can also create a preview entry with the same value. Review both groups when adding a credential.
+
+In Coolify v4.7.4 and later, a trusted preview with at least one runtime preview variable can fall back to production runtime values for keys with no preview entry. Public PR previews normally skip this fallback and omit preview entries that still have the production value. Existing previews marked to keep production values retain the trusted-preview behavior. This fallback applies only at runtime.
+
+Give previews explicit, limited non-production values for databases, storage, and external services. Deleting a preview variable can expose its production runtime value through fallback. Review the deployment log for keys Coolify withheld. A preview container is temporary, but data written to an external service can remain after Coolify deletes the preview.
 
 Follow [Environment variables](/applications/configuration/environment-variables) for variable scopes and build-time values.
 
