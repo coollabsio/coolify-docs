@@ -15,6 +15,12 @@ icon: "/docs/images/services/librechat-logo.svg"
 
 LibreChat is a self-hosted, powerful, and privacy-focused chat UI for multiple AI models including OpenAI GPT, Anthropic Claude, Azure OpenAI, and many others. It provides a unified interface to interact with various AI providers while keeping your conversations private and under your control. LibreChat supports conversation threading, message editing, plugin integration, and customizable presets.
 
+## Update an existing deployment
+
+The Coolify v4.7.6 template pins a LibreChat development image built from a commit of 2 April 2026, which is newer than v0.8.4 and older than v0.8.5. Check your saved **Source Compose** and compare its image with the versions in [LibreChat's published security advisories](https://github.com/LibreChat-AI/LibreChat/security/advisories).
+
+Back up MongoDB and review the [upstream upgrade instructions](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.9/UPGRADING.md#tenant-index-migration-v087-and-earlier-databases), including the tenant-index migration when upgrading from v0.8.7 or earlier to v0.8.9. Set the intended reviewed image in **Source Compose**, then redeploy and verify sign-in and existing conversations. **Pull Latest Images & Restart** pulls the references already saved in the service. A commit-pinned image stays on that commit until you update its reference.
+
 ## Links
 
 - [The official website](https://librechat.ai?utm_source=coolify.io)
