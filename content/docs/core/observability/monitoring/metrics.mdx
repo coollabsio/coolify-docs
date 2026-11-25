@@ -109,7 +109,7 @@ If Sentinel is disabled, the Metrics page directs you to enable it first. Enabli
 
 ## View fleet metrics
 
-Open **Metrics** from the main navigation. Select **All servers** or one server, then choose **24 hours**, **7 days**, or **30 days**. On the 24-hour range, **Live Refresh** can reload data every 60 seconds; the browser remembers your preference.
+Open **Metrics** from the main navigation. Select **All servers** or one server, then choose **24 hours**, **7 days**, or **30 days**. Use **Live Refresh** to reload the selected range every 60 seconds. Changing ranges pauses refresh. The browser restores the saved preference on the 24-hour range when the page opens.
 
 The fleet view includes:
 
@@ -164,14 +164,14 @@ Open the application or standalone database, then select **Metrics**.
 
 The individual server and resource Metrics pages offer these time ranges:
 
-- 5 minutes and 10 minutes, with live refresh
+- 5 minutes and 10 minutes
 - 30 minutes
 - 1 hour
 - 12 hours
 - 1 week
 - 30 days
 
-The live ranges ask Coolify for new chart data every five seconds. The Sentinel sampling rate determines how often a new metric point is available.
+**Live Refresh** is available for every range. When enabled, charts refresh every five seconds for ranges up to one hour and every 60 seconds for longer ranges. Sentinel's collection interval determines how often a new metric point is available.
 
 ---
 
