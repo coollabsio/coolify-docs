@@ -15,7 +15,7 @@ Choose the smallest permission set and the narrowest access required by the inte
 | :--- | :--- | :--- |
 | `read` | List and inspect resources. | Sensitive response values remain redacted. |
 | `read:sensitive` | Read secrets, logs, passwords, private keys, environment values, and Compose content returned by supported endpoints. | Coolify also adds `read`. Most sensitive values are returned only when the token owner is a team administrator or owner. Container logs need only this permission. |
-| `write` | Create and update resources through write endpoints. | It cannot delete. Use `delete` for every `DELETE` request. |
+| `write` | Create and update resources through write endpoints. | It cannot delete. Every `DELETE` request requires `delete` or `root`. |
 | `delete` | Delete resources, environment variables, storages, backups, scheduled tasks, and tags, and detach a tag from a resource. | Every `DELETE` endpoint requires `delete` or `root`. |
 | `deploy` | Trigger deployments, restarts, stops, cancellations, and [deploy webhooks](/core/automation/deploy-webhooks) (`/api/v1/deploy`). | Some write operations that run on a server at once also require `deploy`. See [Operation-specific checks](#operation-specific-checks). |
 | `root` | Bypass the `read`, `read:sensitive`, `write`, `write:sensitive`, `delete`, and `deploy` checks on API endpoints. | It remains team-bound and does not bypass instance-wide API access, the IP allowlist, the token's access, or the role checks of the token owner. |
@@ -29,6 +29,8 @@ A token never gets more access than its owner. Team administrators and owners ca
 `write:sensitive` is only for `PATCH /api/v1/settings/email`, which changes the instance email settings. Only team administrators and owners can give it to a token. The dashboard has no checkbox for it, so use a `root` token for this endpoint.
 
 ---
+
+If you upgraded from a release earlier than v4.6.0, review existing integrations that send `DELETE` requests. Edit affected tokens to add `delete` for operations they still need. The token owner's role and resource access are checked separately.
 
 ## Access
 

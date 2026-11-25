@@ -18,7 +18,7 @@ MCP gives an AI client access to Coolify data and, when permitted, lifecycle ope
 | Delete resources, environment variables, storages, backups, scheduled tasks, or tags, or detach a tag | `delete` |
 | Change the instance MCP setting with the API | `write` or `root` token of an instance admin, in the root team |
 
-`write` does not include `delete`. A `root` token has every permission. Each action of a `manage_*` tool has its own permission, and some list and get actions need only `read` or `read:sensitive`. Some actions need two permissions, for example a registry login needs `write` and `deploy`. The [capability pages](/mcp/capabilities/overview) show the permission of each action.
+`write` does not include `delete`. When upgrading from before v4.6.0, review tokens used for deletion actions and grant `delete` where needed. The token owner's role and resource access still apply. A `root` token has every permission. Each action of a `manage_*` tool has its own permission, and some list and get actions need only `read` or `read:sensitive`. Some actions need two permissions, for example a registry login needs `write` and `deploy`. The [capability pages](/mcp/capabilities/overview) show the permission of each action.
 
 MCP hides the deployment tools, `get_logs`, and the `create_*` and `manage_*` actions that the token's permissions do not allow. Most read tools are listed also for a token without `read`. They then return `Missing required permissions: read`.
 

@@ -96,7 +96,7 @@ Coolify displays the complete token only once. Copy it into the client's secret 
 - Add `read:sensitive` only for supported sensitive data or log summaries.
 - Add `deploy` for deploy, start, stop, restart, cancel, and rollback operations.
 - Add `write` to create or update resources with the `create_*` and `manage_*` tools.
-- Add `delete` to delete resources, environment variables, storages, backups, scheduled tasks, or tags. `write` does not include it.
+- Add `delete` to delete resources, environment variables, storages, backups, scheduled tasks, or tags. `write` does not include it. If you upgraded from before v4.6.0, review existing tokens for workflows that need to delete.
 - Do not use `root` for normal MCP clients.
 
 A token can never do more than its owner can do in the team. MCP hides the deployment tools, `get_logs`, and the `create_*` and `manage_*` actions that the token's permissions do not allow. Most read tools are listed also for a token without `read`, but they need `read` to run.

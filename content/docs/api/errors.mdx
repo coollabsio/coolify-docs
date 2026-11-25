@@ -68,7 +68,7 @@ The `message` field shows the cause:
 
 A password change revokes that user's issued API tokens. Create a replacement token when this happens.
 
-For `403 Forbidden`, confirm that:
+For `403 Forbidden`, check the cause below. You can edit an existing token's permissions, access, and expiry from [Keys & Tokens > API Tokens](/core/security/credentials/api-tokens#manage-a-token) without changing its value. Confirm that:
 
 - the token has the endpoint's required `read`, `write`, `delete`, or `deploy` permission
 - a token limited to selected projects, environments, or resources calls an endpoint for projects and resources, and the requested item is inside its access
