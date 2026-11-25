@@ -298,6 +298,13 @@
     "category": "CMS"
   },
   {
+    "name": "ClassroomIO",
+    "slug": "classroomio",
+    "icon": "/docs/images/services/classroomio-logo.svg",
+    "description": "Open-source LMS for courses, quizzes, and certificates.",
+    "category": "Education"
+  },
+  {
     "name": "Cloudbeaver",
     "slug": "cloudbeaver",
     "icon": "/docs/images/services/cloudbeaver-logo.png",

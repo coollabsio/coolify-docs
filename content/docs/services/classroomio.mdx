@@ -1,0 +1,74 @@
+---
+title: "ClassroomIO"
+description: "Open-source LMS for courses, quizzes, and certificates."
+og:
+  description: "Deploy ClassroomIO on Coolify to build and teach online courses with lessons, quizzes, certificates, student management, and an AI tutor."
+category: "Education"
+icon: "/docs/images/services/classroomio-logo.svg"
+---
+
+<ZoomImage src="/docs/images/services/classroomio-logo.svg" alt="ClassroomIO" />
+
+## What is ClassroomIO?
+
+ClassroomIO is an open-source learning management system (LMS). Use it to create courses with lessons, quizzes, and exercises, issue certificates, and manage students. It also has an optional AI tutor and AI course builder.
+
+Companies, schools, and creators use ClassroomIO to train employees, teach students, or sell courses on their own server.
+
+## Services in the template
+
+| Service | Purpose |
+|---|---|
+| `dashboard` | Web app on port `3082`. This is the only service that needs a public domain for the app. |
+| `api` | Backend API. It runs the database migrations at start. |
+| `jobs` | Background worker for emails, media processing, and scheduled tasks. |
+| `postgres` | Database. |
+| `redis` | Job queue. |
+| `storage` | S3-compatible object storage (SeaweedFS) for videos, documents, and media. |
+| `storage-init` | One-time job that creates the `videos`, `documents`, and `media` buckets, then stops. |
+
+Coolify generates the database credentials, storage credentials, and auth secrets.
+
+## Deploy on Coolify
+
+1. Go to your project and click **New Resource**.
+2. Search for **ClassroomIO** and select it.
+3. Set a domain for the **dashboard** service, for example `https://learn.example.com`.
+4. Set a domain for the **storage** service, for example `https://files.example.com`. Browsers load uploaded media from this domain.
+5. Add your SMTP settings in **Environment Variables** (see below). Without SMTP, ClassroomIO cannot send sign-up verification, password reset, or invite emails.
+6. Click **Deploy**.
+7. Open the dashboard domain and sign up. The first account becomes the organization admin.
+
+<Callout type="info">
+
+The `storage-init` service shows as **Exited** after it creates the buckets. This is expected.
+
+</Callout>
+
+## Environment variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `SMTP_HOST` | Yes, for email | SMTP server host. |
+| `SMTP_PORT` | Yes, for email | SMTP server port, for example `587`. |
+| `SMTP_USER` | Yes, for email | SMTP username. |
+| `SMTP_PASSWORD` | Yes, for email | SMTP password. |
+| `SMTP_SENDER` | Yes, for email | Sender address, for example `ClassroomIO <noreply@example.com>`. |
+| `OPENAI_API_KEY` | No | Turns on transcription and AI features. |
+| `CIO_VERSION` | No | Image tag for `api`, `dashboard`, and `jobs`. Defaults to a pinned release. |
+| `CIO_TELEMETRY_DISABLED` | No | Set to `true` to turn off the anonymous weekly usage ping in newer versions. |
+| `WEBHOOK_ALLOW_PRIVATE_NETWORKS` | No | Defaults to `false`. Keep it `false` unless webhooks must reach private network addresses. |
+| `LICENSE_KEY` | No | ClassroomIO enterprise license key. |
+
+## Persistent storage
+
+- `postgres-data`: database files.
+- `redis-data`: queue data.
+- `storage-data`: uploaded videos, documents, and media.
+
+## Links
+
+- [The official website](https://classroomio.com?utm_source=coolify.io)
+- [Self-hosting documentation](https://classroomio.com/docs/self-hosted/coolify?utm_source=coolify.io)
+- [GitHub](https://github.com/classroomio/classroomio?utm_source=coolify.io)
+- [Discord](https://dub.sh/ciodiscord?utm_source=coolify.io)
