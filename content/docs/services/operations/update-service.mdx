@@ -58,7 +58,7 @@ Saving Compose reparses referenced environment variables. Review the resulting E
 
 ### Pull the saved tag again
 
-Select **Advanced > Pull Latest Images & Restart** to run a Compose pull for the image tags already stored in the Service, then recreate the stack.
+A Compose Service has a separate action to pull images, unlike a standalone [MySQL](/databases/mysql) restart, whose start step normally pulls its configured image. Select **Advanced > Pull Latest Images & Restart** to run a Compose pull for the image tags already stored in the Service, then recreate the stack.
 
 This action does not replace the saved Compose definition with a newer one-click template. It also does not add variables, components, mounts, commands, or migration steps introduced by the upstream release.
 
