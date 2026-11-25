@@ -44,7 +44,7 @@ The following data is used as an example in this guide. Please replace it with y
 
 - **Domain Name:** shadowarcanist.com
 - **Ports Exposes:** 80
-- **Ports Mapping:** 4477:80
+- **Port mapping:** `127.0.0.1:4477:80`
 
 </Callout>
 
@@ -59,7 +59,7 @@ To setup your app for tunneling, follow these steps:
 
 1. Remove all domains from the **Domains** field.
 2. Set the correct port in **Ports Exposed** (the port your app uses).
-3. Set the correct ports in **Port Mappings** (left is the host port, right is the app port).
+3. Set **Port Mappings** to `127.0.0.1:4477:80` for this example. The stock Cloudflared template uses host networking, so it can reach the published port on loopback.
 4. Deploy your app by clicking the **Deploy** button.
 
 ## 2. Create a Cloudflare Tunnel
@@ -103,20 +103,11 @@ Once cloudflared starts running you will be able to see it's status on Cloudflar
 
 Click on continue button to create the tunnel.
 
-## 4. Set Up TLS Encryption
-To make Cloudflare use stricter encryption when connecting to your server, configure your TLS encryption in Cloudflare:
+## 4. Choose the origin protocol
 
-<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/8.webp" />
+Cloudflare serves the public hostname over HTTPS. The example below connects from `cloudflared` to the app over HTTP on host loopback. The zone’s **Full (Strict)** setting does not change an HTTP tunnel service URL into HTTPS.
 
-1. Go to **SSL/TLS** in Cloudflare.
-2. Select **Overview**.
-3. Click **Configure** button
-
-<ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/9.webp" />
-
-1. Choose **Full (Strict)** as the encryption mode.
-2. Click **Save** button
-
+If you need TLS on the tunnel-to-origin hop, configure an HTTPS listener, use an `https://` service URL, and verify the origin certificate. See [Full TLS for Cloudflare Tunnels](/integrations/networking/cloudflare/tunnels/full-tls).
 
 ## 5. Configure tunnel routes
 
@@ -139,7 +130,7 @@ To make Cloudflare use stricter encryption when connecting to your server, confi
 1. **Subdomain** - (Optional) You can make your resource accessible on any subdomain/domain. For this guide, we are using the `helixa` subdomain.
 2. **Domain** - Choose the domain you want to use for the tunnel.
 3. **Path** - Leave this field empty.
-4. **Service URL** - Enter **http://localhost:4477** (this is very important). The port 4477 is the one we mapped to the host system in [Step 1](/integrations/networking/cloudflare/tunnels/single-resource#1-setup-your-app-for-tunneling).
+4. **Service URL** - Enter **`http://127.0.0.1:4477`**. Use the loopback port you mapped in [Step 1](/integrations/networking/cloudflare/tunnels/single-resource#1-setup-your-app-for-tunneling).
 6. After filling in the details, click the **Add route** button.
 
 <ZoomImage src="/docs/images/integrations/networking/cloudflare/tunnels/single-resource/14.webp" />
@@ -151,7 +142,7 @@ To make Cloudflare use stricter encryption when connecting to your server, confi
 
 ## Tunnel Multiple Resources
 
-The easiest way to tunnel multiple resources is by following our [Tunnel All Resources](/integrations/networking/cloudflare/tunnels/single-resource) guide, which uses Coolify's built-in proxy. 
+The easiest way to tunnel multiple resources is by following our [Tunnel All Resources](/integrations/networking/cloudflare/tunnels/all-resource) guide, which uses Coolify's built-in proxy.
 
 However, if you prefer not to use the proxy, there are two alternative methods:
 
