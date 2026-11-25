@@ -39,10 +39,10 @@ An explicit icon must point to an existing file directly under `public/images/se
 
 ## Page Images
 
-A Markdown logo is valid MDX:
+Use `<ZoomImage>` for the logo. Do not use a Markdown image (`![alt](/docs/images/...)`) for a local asset. Fumadocs turns it into a build import from `public/docs/images/...`, which does not exist (assets live in `public/images/`), and the docs dev server and build fail. Use `<ZoomImage>` for local logos and screenshots.
 
 ```mdx
-![Service Name](/docs/images/services/service-name-logo.svg)
+<ZoomImage src="/docs/images/services/service-name-logo.svg" alt="Service Name" />
 ```
 
 For a screenshot, use descriptive alt text:
@@ -51,7 +51,7 @@ For a screenshot, use descriptive alt text:
 <ZoomImage src="/docs/images/services/service-name-dashboard.webp" alt="Service dashboard" />
 ```
 
-`ZoomableImage` remains a supported alias. Both aliases and Markdown images use the same registered image implementation.
+`ZoomableImage` remains a supported alias for the same image implementation.
 
 ## Body Fallback
 

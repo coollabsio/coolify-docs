@@ -33,7 +33,7 @@ This service's one-click templates are temporarily unavailable in Coolify. Expla
 
 # Service Name
 
-![Service Name](/docs/images/services/service-name-logo.svg)
+<ZoomImage src="/docs/images/services/service-name-logo.svg" alt="Service Name" />
 
 ## What is Service Name?
 

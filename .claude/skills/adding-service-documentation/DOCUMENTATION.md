@@ -57,13 +57,13 @@ icon: "/docs/images/services/service-name-logo.svg"
 #### 2. Logo (Required)
 
 ```mdx
-![ServiceName](/docs/images/services/service-name-logo.svg)
+<ZoomImage src="/docs/images/services/service-name-logo.svg" alt="ServiceName" />
 ```
 
-- Use standard markdown `![alt](path)` for the logo.
-- Use `<ZoomImage>` or its supported `<ZoomableImage>` alias for screenshots. Markdown images use the same registered wrapper.
+- Use `<ZoomImage>` for the logo and for screenshots. `<ZoomableImage>` is a supported alias.
+- Do not use a Markdown image (`![alt](/docs/images/...)`) for a local asset. Fumadocs turns it into a build import from `public/docs/images/...`, which does not exist (assets live in `public/images/`), and the docs dev server and build fail. Use `<ZoomImage>` for local logos and screenshots.
 - Path starts with `/docs/images/services/` (not `/public/`).
-- The body image also acts as a *fallback* for icon resolution if the resolver can't find a matching file in `public/images/services/` and you didn't set `icon` in frontmatter.
+- The catalog's body-image fallback does not match `<ZoomImage>`. Set `icon` in frontmatter or use a logo filename the resolver finds.
 
 #### 3. What is ServiceName?
 
@@ -160,6 +160,7 @@ See [TEMPLATES.md](./TEMPLATES.md) for ready-to-use templates (minimal and compr
 - Hand-edit `content/docs/services/all.mdx` or `src/generated/services.json` — both are regenerated
 - Omit `category` from frontmatter — the collector falls back to `Uncategorized`
 - Use external image URLs — always download logos locally first
+- Use Markdown `![alt](path)` for local images — the build fails; use `<ZoomImage>`
 - Use relative paths for images
 - Omit UTM parameters from external links
 
@@ -168,8 +169,7 @@ See [TEMPLATES.md](./TEMPLATES.md) for ready-to-use templates (minimal and compr
 - Always include `title`, `description`, and `category` in frontmatter
 - Use kebab-case for the filename and the slug
 - Save logos to `public/images/services/` with a name the resolver will find
-- Use standard markdown `![alt](path)` for the logo
-- Use `<ZoomableImage>` for screenshots only
+- Use `<ZoomImage>` for the logo and screenshots
 - Append `?utm_source=coolify.io` to all external links
 - Run `bun run generate:services` and commit the regenerated files
 
