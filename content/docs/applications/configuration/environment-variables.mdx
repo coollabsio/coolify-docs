@@ -11,7 +11,7 @@ Open the application, then select **Environment Variables**.
 
 <Callout type="info" title="Preview deployments have separate values">
 
-Production and preview variables appear in separate labelled sections. Use the preview section for values that should differ, such as a preview database or callback URL.
+Production and preview variables appear in separate labelled sections. Use the preview section for values that should differ, such as a preview database or callback URL. Check the [runtime fallback rules](/applications/deployments/preview-deployments#separate-preview-variables-from-production) before deleting a preview value.
 
 </Callout>
 
@@ -85,7 +85,7 @@ Set **Build time** to **Not available during build** for a secret that the appli
 
 <Callout type="warning" title="Build arguments can remain visible">
 
-Traditional Docker build arguments can appear in image metadata. Set **Build secrets** to **Docker BuildKit secrets** for sensitive build-time values when the build server supports Docker BuildKit. If BuildKit is unavailable, Coolify falls back to build arguments.
+Traditional Docker build arguments can appear in image metadata. Set **Build secrets** to **Docker BuildKit secrets** for sensitive build-time values when the build server supports Docker BuildKit. If BuildKit is unavailable, Coolify falls back to build arguments. BuildKit mounts are temporary, but a build command can still print a secret or write it to an image file or build artifact. For example, Next.js can embed statically referenced `NEXT_PUBLIC_*` values in browser JavaScript.
 
 </Callout>
 
@@ -99,7 +99,7 @@ Authenticate to a private npm registry during the build with a build variable in
    //registry.npmjs.org/:_authToken=${NPM_TOKEN}
    ```
 
-2. Add `NPM_TOKEN` with **Build time** set to **Available during build** (the token is only needed during `npm install`), and set its value to your registry token.
+2. Add `NPM_TOKEN` with **Build time** set to **Available during build** (the token is only needed during `npm install`), with **Runtime** set to **Not available in the container**, and set its value to your registry token.
 
 3. Deploy the application. The build reads `NPM_TOKEN` and authenticates to the registry.
 
