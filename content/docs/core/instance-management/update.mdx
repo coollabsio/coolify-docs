@@ -30,11 +30,11 @@ Read the [Reverb migration guide](/core/instance-management/reverb-migration) be
 
 ## Back up before an update
 
-In **Settings > Backup**, configure the instance backup, then leave **Backup before update > Database backup** set to **Enabled**. This option is enabled by default. Once an instance backup is configured, Coolify runs it before dashboard-triggered and automatic updates, in addition to its normal schedule.
+In **Settings > Backup**, configure the instance backup, then leave **Backup before update > Database backup** set to **Enabled**. This option is enabled by default. When the recurring instance backup is configured and enabled, Coolify runs it before dashboard-triggered and automatic updates, in addition to its normal schedule.
 
 Coolify waits for the backup to finish. If the database backup fails, the update does not start. Review the failed execution in **Settings > Backup**, fix the problem, and retry the update. An S3 upload warning can leave a successful local backup; check which copies are available.
 
-The option does not create a backup configuration for you. Without a configured instance backup, the update proceeds without this backup step. Running `upgrade.sh` directly also requires you to [create a backup yourself](/core/backup-and-recovery/instance-backup). Keep the instance `APP_KEY` separately so you can restore encrypted data.
+The option does not create a backup configuration for you. If the instance backup is missing or paused, the update proceeds without this backup step. Create a separate backup and verify that you can retrieve it before updating. Running `upgrade.sh` directly also requires you to [create a backup yourself](/core/backup-and-recovery/instance-backup). Keep the instance `APP_KEY` separately so you can restore encrypted data.
 
 ## Choose an update channel
 

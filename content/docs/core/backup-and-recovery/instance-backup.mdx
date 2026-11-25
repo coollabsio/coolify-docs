@@ -94,7 +94,7 @@ The backup is now stored at `/data/backups/coolify-db-manual-backup.dmp`. Copy i
 
 After configuring the instance backup, find **Backup before update** on **Settings > Backup**. **Database backup** is enabled by default. Coolify runs this backup before manual updates started from the dashboard and before automatic updates, even outside the normal backup schedule.
 
-The update waits for the backup result. A failed database backup prevents the update from starting. Correct the failure in **Executions**, then retry the update. This setting requires an existing instance backup configuration and does not cover a direct invocation of `upgrade.sh`. See [Update Coolify](/core/instance-management/update#back-up-before-an-update).
+The update waits for the backup result. A failed database backup prevents the update from starting. Correct the failure in **Executions**, then retry the update. This setting runs only when the recurring instance backup is configured and enabled. A paused backup is skipped even when **Backup before update** is enabled. If the backup is paused or you run `upgrade.sh` directly, create a separate backup and verify you can retrieve it before updating. See [Update Coolify](/core/instance-management/update#back-up-before-an-update).
 
 ## Save the instance encryption key
 
@@ -179,6 +179,6 @@ The available actions depend on the execution:
 - **Download** saves a local backup or redirects to an available S3 copy. If the instance uses S3 for file downloads, wait while Coolify prepares the local file for download.
 - **Delete** removes the local backup and can also remove its copies from every S3 destination when selected.
 - **Clean failed backups** removes failed execution records.
-- **Clean deleted entries** removes execution records already marked as deleted from local storage. It does not delete backup files.
+- **Clean deleted entries** removes execution records already marked as deleted from local storage. This includes S3-only backups after **Delete after S3 upload**. The remote files remain in storage, but the dashboard can no longer download them through the removed records. Keep the records for dashboard access, or retrieve the files directly from the storage destination.
 
 Periodically check that you can access the copies stored on another server or your computer. Also confirm that you still have the saved `APP_KEY`. To test or perform recovery, follow [Restore a Coolify instance](/core/backup-and-recovery/instance-restore).

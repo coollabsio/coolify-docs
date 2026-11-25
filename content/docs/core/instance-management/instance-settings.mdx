@@ -513,7 +513,7 @@ Sets how many days can pass without a backup execution before Coolify sends an a
 
 Use S3 storage to keep a remote copy of each instance backup. [Set up and validate an S3 storage destination](/core/s3-storage/overview) before enabling S3 backups.
 
-Click **Enable S3** to turn on uploads, then select an **S3 storage** destination. Choose whether **Local copy** should **Keep local backup** or **Delete after S3 upload**. Save changes after updating the local copy option. The storage selector is unavailable until a validated destination exists.
+Click **Enable S3** to turn on uploads, then select one or more validated **S3 storages** destinations. Choose whether **Local copy** should **Keep local backup** or **Delete after S3 upload**. Save changes after updating the local copy option. The storage selector is unavailable until a validated destination exists. If any selected upload fails, Coolify keeps the local file. See [Configure recurring backups](/core/backup-and-recovery/instance-backup#configure-recurring-backups).
 
 ---
 
@@ -541,7 +541,7 @@ To delete a backup, click its delete icon. Whether Coolify asks for password con
 
 Click the download icon on a successful run to download its backup.
 
-**Clean failed backups** removes rows for unsuccessful runs. **Clean deleted entries** removes rows for backups whose local files have already been deleted; it does not delete files. Successful runs appear here after a scheduled or manual backup completes.
+**Clean failed backups** removes rows for unsuccessful runs. **Clean deleted entries** removes rows for backups whose local files have already been deleted, including S3-only backups. Remote files remain in storage. Retrieve them directly from storage if the execution no longer appears in the dashboard. Successful runs appear here after a scheduled or manual backup completes.
 
 </Tab>
 
