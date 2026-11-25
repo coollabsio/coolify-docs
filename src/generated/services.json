@@ -2015,6 +2015,13 @@
     "category": "Productivity"
   },
   {
+    "name": "Sim Studio",
+    "slug": "simstudio",
+    "icon": "/docs/images/services/simstudio-logo.svg",
+    "description": "Open source platform for building and running AI agents.",
+    "category": "AI"
+  },
+  {
     "name": "Siyuan",
     "slug": "siyuan",
     "icon": "/docs/images/services/siyuan.svg",
