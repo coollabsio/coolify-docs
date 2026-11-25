@@ -1,0 +1,62 @@
+---
+title: "MCPHub"
+description: "Unified hub to manage and route many MCP servers."
+og:
+  description: "Here you can find the documentation for hosting MCPHub with Coolify."
+category: "AI"
+icon: "/docs/images/services/mcphub-logo.svg"
+---
+
+# MCPHub
+
+<ZoomImage src="/docs/images/services/mcphub-logo.svg" alt="MCPHub logo" />
+
+## What is MCPHub?
+
+MCPHub is a hub for Model Context Protocol (MCP) servers. It runs many MCP servers in one place and gives AI clients, such as Claude Desktop or Cursor, one endpoint to connect to.
+
+You can put servers into groups, control who can access each server or group, and add servers from a web dashboard. The optional smart routing feature uses vector search to find the right tools for a request.
+
+## Deploy MCPHub
+
+1. Create a new resource in Coolify and select **MCPHub** from the service list.
+2. Click **Deploy**.
+3. Wait until the `mcphub` and `postgres` services show as healthy.
+4. Open the domain of the service and log in:
+   - **Username:** `admin`
+   - **Password:** the value of the `SERVICE_PASSWORD_ADMIN` environment variable.
+5. Add your MCP servers in the dashboard.
+
+## Connect AI clients
+
+Use these endpoints in your MCP client:
+
+| Endpoint | Description |
+| :--- | :--- |
+| `https://<your-domain>/mcp` | All servers |
+| `https://<your-domain>/mcp/<group>` | One group |
+| `https://<your-domain>/mcp/<server>` | One server |
+| `https://<your-domain>/mcp/$smart` | Smart routing (must be enabled) |
+
+## Smart routing
+
+Smart routing is disabled by default. To enable it:
+
+1. Set `SMART_ROUTING_ENABLED` to `true`.
+2. Set `OPENAI_API_KEY` to your API key.
+3. Optional: set `OPENAI_API_BASE_URL` and `EMBEDDING_MODEL` to use an OpenAI-compatible provider or a different embedding model.
+4. Restart the service.
+
+The included PostgreSQL database has the `pgvector` extension, which smart routing uses to store embeddings.
+
+## Notes
+
+- MCPHub reads `SERVICE_PASSWORD_ADMIN` only on the first start, when no users exist. If you change the variable later, the `admin` password does not change. Change it in the dashboard.
+- `MCPHUB_CREDENTIAL_ENCRYPTION_KEY` encrypts saved personal credentials. Do not change it after you save credentials, because MCPHub cannot decrypt them with a new key.
+- Data is stored in the `mcphub-data` and `mcphub-postgres-data` volumes.
+
+## Links
+
+- [Official documentation](https://docs.mcphub.app/?utm_source=coolify.io)
+- [Smart routing](https://docs.mcphub.app/features/smart-routing?utm_source=coolify.io)
+- [GitHub](https://github.com/samanhappy/mcphub?utm_source=coolify.io)
