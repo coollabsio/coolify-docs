@@ -188,7 +188,9 @@ Open **Servers > [server] > Metrics** to change these values:
 
 - **Push interval** controls health-report frequency. The default is `60` seconds, and the minimum is `10`.
 
-Save the settings to apply them. Chart tooltips show both your local time and UTC.
+Save the settings to apply them.
+
+Chart axes and tooltips show times in the time zone of your browser. To also show the UTC time in tooltips, for example to compare with server logs, open **Profile > Appearance** and select **Your time and UTC** under **Chart times**.
 
 Sentinel stores this history under `/data/coolify/sentinel` on the connected server. A lower collection interval creates more points and uses more disk space.
 
