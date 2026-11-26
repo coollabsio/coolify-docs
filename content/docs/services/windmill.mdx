@@ -5,22 +5,19 @@ og:
   description: "Build workflows on Coolify with Windmill for scripts, flows, UIs, and developer-centric workflow automation with TypeScript/Python."
 category: "Development"
 icon: "/docs/images/services/windmill-logo.svg"
-disabled: true
 ---
-
-<Callout type="error" title="SERVICE TEMPORARILY DISABLED">
-
-This service's one-click templates are temporarily disabled in Coolify because of the PHP security vulnerabilities **CVE-2026-109618** and **CVE-2026-109619**. New deployments from the service catalog are unavailable while patched container images are verified.
-
-See the [PHP security advisory](/knowledge-base/php-security-advisory-2026) for guidance on existing deployments and [the template disablement PR](https://github.com/coollabsio/coolify/pull/12268) for details and updates.
-
-</Callout>
 
 <ZoomImage src="https://raw.githubusercontent.com/windmill-labs/windmill/main/imgs/windmill-banner.png" alt="Windmill" />
 
 ## What is Windmill?
 
 Windmill is an open-source developer platform to power your entire infra and turn scripts into webhooks, workflows and UIs. Fastest workflow engine (13x vs Airflow). Open-source alternative to Retool and Temporal.
+
+## Notes
+
+New services use the stable Windmill `1.875.0` image instead of `main`. The workers start one after the other, and the template does not mount the Docker socket into the workers.
+
+Existing services keep their Compose file and image.
 
 ## Screenshots
 

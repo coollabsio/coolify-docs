@@ -267,7 +267,8 @@
     "slug": "chaskiq",
     "icon": "/docs/images/services/chaskiq-logo.png",
     "description": "Open source customer engagement platform.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "Chatwoot",
@@ -430,8 +431,7 @@
     "slug": "dify",
     "icon": "/docs/images/services/dify.png",
     "description": "Open-source platform for building LLM applications with workflows, retrieval-augmented generation, and AI agents.",
-    "category": "AI",
-    "disabled": true
+    "category": "AI"
   },
   {
     "name": "Directus",
@@ -2415,8 +2415,7 @@
     "slug": "windmill",
     "icon": "/docs/images/services/windmill-logo.svg",
     "description": "Open-source developer platform.",
-    "category": "Development",
-    "disabled": true
+    "category": "Development"
   },
   {
     "name": "Windows",
