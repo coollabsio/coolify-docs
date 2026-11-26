@@ -43,6 +43,25 @@ If your server becomes very slow or crashes during deployment, consider the foll
 </Step>
 <Step>
 
+### Reduce build memory (Node.js example)
+
+Before offloading the build, try lowering what the build itself consumes. On 2 to 4 GB servers this is often enough to keep deployments running on the box.
+
+- **Cap the Node heap:** set `NODE_OPTIONS=--max-old-space-size=1536` (roughly 35 to 40% of the server's RAM) as an environment variable on the application. A large `next build` otherwise grows until the kernel OOM killer stops it, and it frequently takes `sshd` or `cloudflared` down with it, so the deployment looks like a server crash.
+- **Add swap:** a 2 GB swapfile keeps the server reachable while the build peaks.
+
+```bash
+fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile
+echo '/swapfile none swap sw 0 0' >> /etc/fstab
+sysctl -w vm.swappiness=10
+```
+
+- **Do not let `npm ci` skip devDependencies:** Coolify builds images with `NODE_ENV=production`, so `npm ci` omits devDependencies and the build fails on tooling such as `tailwindcss`, `typescript` or `postcss` (`Cannot find module 'tailwindcss'`). Use `npm ci --include=dev` in your Dockerfile, or `pnpm install --prod=false`.
+- **Measure before and after:** `docker stats` and `free -m` during a deployment show whether the build or the running app is the cause.
+
+</Step>
+<Step>
+
 ### Offload Builds with GitHub Actions
 
 To reduce the load on your server during deployments, follow this process:
@@ -66,6 +85,8 @@ To reduce the load on your server during deployments, follow this process:
 - **Troubleshooting:**
   - Identify if the issue is due to the application’s resource needs or the image build process.
   - Upgrade your server or offload builds as needed.
+- **Memory:**
+  - Cap the Node heap (`NODE_OPTIONS=--max-old-space-size`), add swap, and keep devDependencies installed (`npm ci --include=dev`) before offloading the build.
 - **Optimization:**
   - Using GitHub Actions to build Docker images externally can significantly reduce local resource usage.
 
