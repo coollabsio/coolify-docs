@@ -77,7 +77,6 @@ config/site.shared.ts       # Shared site metadata and docs base path
 config/openapi.json         # Coolify OpenAPI spec for the API reference
 scripts/                    # Generators, link checker, and postbuild script
 nginx/                      # Nginx config and redirects
-atlas.json                  # Atlas devkit config (bun run dev:atlas)
 ```
 
 `content/docs/` is the source of truth for documentation. Edit MDX files there directly.
