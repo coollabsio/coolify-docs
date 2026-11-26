@@ -104,6 +104,8 @@ On self-hosted instances, **Settings > Advanced** also lets you disable **API ac
 
 Read [API tokens](/core/security/credentials/api-tokens) for the available token permissions and request format, and [MCP security](/mcp/security) for MCP clients.
 
+The web server in the `coolify` container uses the hardened nginx defaults of its base image. PHP-FPM listens only on the loopback interface of the container and runs only PHP scripts that exist outside `/storage`. Responses carry the `X-Frame-Options`, `X-Content-Type-Options`, and `Referrer-Policy` headers, and requests for dotfiles and for backup, config, log, SQL, and shell files return `403`.
+
 These controls reduce risk in the paths Coolify manages. They do not replace security reviews, dependency updates, or runtime protections inside your applications.
 
 ---
