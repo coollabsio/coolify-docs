@@ -96,6 +96,8 @@ networks:
     name: existing-shared-network
 ```
 
+Each component joins only the networks that it declares, plus the Service network. In this example, only `api` joins `existing-shared-network`.
+
 <Callout type="warning" title="External networks are an advanced Compose responsibility">
 
 Coolify does not create or manage an external network declared this way. The network must exist on the selected server, and deleting or renaming it breaks the connection. Declaring an external Compose network also does not change the Service's predefined destination in the dashboard.
