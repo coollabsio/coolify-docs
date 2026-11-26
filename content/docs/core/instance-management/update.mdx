@@ -149,6 +149,8 @@ If the progress modal remains on **Restart** for more than five minutes, refresh
 
 When all update stages are complete, Coolify confirms the new version and reloads the page. If the page does not reload automatically, click **Reload now**.
 
+The page waits until the database migrations of the new version finish. Until then, the health endpoint `/api/health` returns `503` with `Database migrations are running.`, so a monitor or load balancer that checks it also sees the instance as not ready during the update.
+
 </Tab>
 
 <Tab value="Terminal" icon={BrowserTerminal}>
