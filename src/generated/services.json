@@ -35,6 +35,13 @@
     "category": "Productivity"
   },
   {
+    "name": "ALTCHA Sentinel",
+    "slug": "altcha",
+    "icon": "/docs/images/services/altcha-logo.svg",
+    "description": "Self-hosted protection for websites and APIs against spam, bots, and abuse.",
+    "category": "Security"
+  },
+  {
     "name": "AnythingLLM",
     "slug": "anythingllm",
     "icon": "/docs/images/services/anythingllm-logo.svg",
