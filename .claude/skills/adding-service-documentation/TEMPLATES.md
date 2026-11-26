@@ -17,7 +17,7 @@ category: "CMS"
 
 # ServiceName
 
-![ServiceName](/docs/images/services/servicename-logo.svg)
+<ZoomImage src="/docs/images/services/servicename-logo.svg" alt="ServiceName logo" />
 
 ## What is ServiceName?
 
@@ -44,7 +44,7 @@ icon: "/docs/images/services/ghost-logo.svg"
 
 # Ghost
 
-![Ghost](/docs/images/services/ghost-logo.svg)
+<ZoomImage src="/docs/images/services/ghost-logo.svg" alt="Ghost logo" />
 
 ## What is Ghost?
 
@@ -73,7 +73,7 @@ category: "Development"
 
 # ServiceName
 
-![ServiceName](/docs/images/services/servicename-logo.svg)
+<ZoomImage src="/docs/images/services/servicename-logo.svg" alt="ServiceName logo" />
 
 ## What is ServiceName?
 
@@ -132,7 +132,7 @@ icon: "/docs/images/services/appsmith-logo.svg"
 
 # Appsmith
 
-![Appsmith](/docs/images/services/appsmith-logo.svg)
+<ZoomImage src="/docs/images/services/appsmith-logo.svg" alt="Appsmith logo" />
 
 ## What is Appsmith
 
@@ -264,7 +264,7 @@ Before submitting:
 - [ ] `category` matches an existing category (or is intentionally new)
 - [ ] Service name is consistently capitalized in `title` and the H1
 - [ ] Logo file exists in `public/images/services/` with a name the resolver finds, **or** `icon` is set in frontmatter
-- [ ] Logo displays using standard markdown `![alt](path)` syntax
+- [ ] Logo displays using `<ZoomImage>` (not Markdown image syntax)
 - [ ] "What is..." section is clear and informative
 - [ ] All external links include `?utm_source=coolify.io`
 - [ ] GitHub and website links are correct

@@ -39,10 +39,10 @@ An explicit icon must point to an existing file directly under `public/images/se
 
 ## Page Images
 
-A Markdown logo is valid MDX:
+Add the logo with `ZoomImage`:
 
 ```mdx
-![Service Name](/docs/images/services/service-name-logo.svg)
+<ZoomImage src="/docs/images/services/service-name-logo.svg" alt="Service Name logo" />
 ```
 
 For a screenshot, use descriptive alt text:
@@ -51,7 +51,7 @@ For a screenshot, use descriptive alt text:
 <ZoomImage src="/docs/images/services/service-name-dashboard.webp" alt="Service dashboard" />
 ```
 
-`ZoomableImage` remains a supported alias. Both aliases and Markdown images use the same registered image implementation.
+`ZoomableImage` remains a supported alias. Both aliases use the same registered image implementation. Do not use Markdown image syntax (`![alt](/docs/images/...)`) for local images. The MDX compiler resolves the path to `public/docs/images/...`, which does not exist, and the dev server returns 500 for every page.
 
 ## Body Fallback
 
