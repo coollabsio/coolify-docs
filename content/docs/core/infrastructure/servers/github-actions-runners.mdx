@@ -304,6 +304,8 @@ Select **Disable runners** to stop taking new jobs. Coolify removes the runners 
 
 To take jobs again, select **Enable runners**.
 
+When all runner configurations of a GitHub App are disabled, Coolify does not drop the jobs that are already queued. They keep waiting for the **Queue wait** time and start after a configuration is enabled again.
+
 You cannot change the role of a build server while its runners are enabled. Disable the runners first.
 
 ---
