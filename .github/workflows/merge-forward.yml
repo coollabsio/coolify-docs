@@ -25,6 +25,14 @@ concurrency:
   group: merge-forward
   cancel-in-progress: false
 
+env:
+  # Discord users to mention when a merge needs a manual merge or the run fails.
+  # Add one Discord user ID per line. The webhook URL is the repository secret
+  # DISCORD_MERGE_FORWARD_WEBHOOK; without it, no alert is sent.
+  DISCORD_USER_IDS: >-
+    181775064302223360
+    589480400850780170
+
 jobs:
   merge:
     name: Merge forward
@@ -107,7 +115,11 @@ jobs:
           > [!IMPORTANT]
           > Merge this pull request with a merge commit, not a squash merge, so the next merge forward does not conflict again.
           BODY
-            "$GH" pr create --base "$target" --head "$head" --title "$title" --body-file "$TEMP/body.md"
+            url="$("$GH" pr create --base "$target" --head "$head" --title "$title" --body-file "$TEMP/body.md")"
+            echo "$url"
+            # Record the new pull request for the Discord alert. Pull requests that
+            # were open already are not alerted again.
+            printf '%s\t%s\t%s\t%s\n' "$source" "$target" "$url" "$(paste -sd, - <<< "$conflicts")" >> "$TEMP/new-conflict-prs.tsv"
           }
 
           merge() {
@@ -169,3 +181,41 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run staging-build.yml --repo "$GITHUB_REPOSITORY" --ref next
+
+      # Alert on Discord when a new conflict pull request was opened or the run failed.
+      - name: Alert on Discord
+        if: always()
+        shell: bash
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_MERGE_FORWARD_WEBHOOK }}
+          MERGE_OUTCOME: ${{ steps.merge.outcome }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          prs="${RUNNER_TEMP:-/tmp}/new-conflict-prs.tsv"
+          lines=()
+          if [[ -s "$prs" ]]; then
+            while IFS=$'\t' read -r source target url files; do
+              IFS=, read -ra list <<< "$files"
+              shown="$(printf '`%s`, ' "${list[@]:0:10}")"
+              shown="${shown%, }"
+              (( ${#list[@]} > 10 )) && shown+=" and $(( ${#list[@]} - 10 )) more"
+              lines+=("- \`$source\` into \`$target\` conflicts in $shown. Merge it by hand: $url")
+            done < "$prs"
+          fi
+          if [[ "$MERGE_OUTCOME" == failure ]]; then
+            lines+=("- The merge forward run failed: $RUN_URL")
+          fi
+          if (( ${#lines[@]} == 0 )); then
+            exit 0
+          fi
+          if [[ -z "${WEBHOOK:-}" ]]; then
+            echo "::notice::DISCORD_MERGE_FORWARD_WEBHOOK is not set, so no Discord alert was sent."
+            exit 0
+          fi
+          mentions="$(for id in $DISCORD_USER_IDS; do printf '<@%s> ' "$id"; done)"
+          content="${mentions}Merge forward in coolify-docs needs attention:"$'\n'"$(printf '%s\n' "${lines[@]}")"
+          jq -n --arg content "${content:0:1990}" --arg ids "$DISCORD_USER_IDS" \
+            '{content: $content, allowed_mentions: {parse: [], users: ($ids | split(" ") | map(select(test("^[0-9]+$"))))}}' |
+            curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$WEBHOOK" > /dev/null
+          echo "Sent the Discord alert."
