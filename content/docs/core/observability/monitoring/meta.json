@@ -3,6 +3,7 @@
   "pages": [
     "overview",
     "sentinel",
+    "sentinel-private-ca",
     "metrics",
     "traffic-analytics"
   ]
