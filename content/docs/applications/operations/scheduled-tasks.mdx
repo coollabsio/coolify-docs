@@ -53,7 +53,7 @@ Before following the detailed guide, check these application-specific requiremen
 
 - Test commands that change or delete data through the application **Terminal** first.
 - Enter the command as it should run inside the container; do not include `docker exec`.
-- Set **Container** when the application has more than one container.
+- Set **Container** when a Docker Compose application has more than one service. Other applications run the task in the container that serves traffic. During a rolling update, this is the old container until the new container is healthy.
 - The schedule uses the timezone configured for the application's deployment server.
 - **Timeout (seconds)** accepts `60` to `36000` and defaults to `300`.
 
