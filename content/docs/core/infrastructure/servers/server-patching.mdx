@@ -51,6 +51,10 @@ Coolify marks these packages:
 
 If the server must reboot to apply updates, the page shows **Reboot required**.
 
+<Callout type="info" title="Amazon Linux 2023 releases">
+Amazon Linux 2023 keeps a server on its installed release, so the update list and the automatic security updates come only from that release. When a newer release is available, the page shows a notice with the release and the command to upgrade to it: `dnf upgrade --releasever=<release>`. Read the release notes that the notice links before you run the command on the server.
+</Callout>
+
 </Step>
 <Step>
 
@@ -163,6 +167,6 @@ Server Patching currently supports APK, APT, DNF, Pacman, and Zypper. Coolify re
 | --- | --- |
 | APK | Alpine Linux |
 | APT | Ubuntu, Debian, Raspberry Pi OS, Pop!_OS, Linux Mint, Zorin OS |
-| DNF | Fedora, CentOS, RHEL, Rocky Linux, AlmaLinux, Oracle Linux, Amazon Linux |
+| DNF | Fedora, CentOS, RHEL, Rocky Linux, AlmaLinux, Oracle Linux, Amazon Linux 2023 |
 | Pacman | Arch Linux, Manjaro, EndeavourOS |
 | Zypper | SLES, openSUSE Leap, openSUSE Tumbleweed |

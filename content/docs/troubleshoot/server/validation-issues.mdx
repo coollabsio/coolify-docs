@@ -1,6 +1,6 @@
 ---
 title: Server Validation Issues
-description: Resolve Coolify server validation errors such as libcrypto errors, missing authorized keys, a changed SSH host key, and the maximum number of SSH sessions.
+description: Resolve Coolify server validation errors such as libcrypto errors, missing authorized keys, a changed SSH host key, an unsupported operating system, and the maximum number of SSH sessions.
 ---
 
 # Server Validation Issues
@@ -45,6 +45,19 @@ cat /data/coolify/ssh/keys/id.root@host.docker.internal.pub >> ~/.ssh/authorized
 Coolify refuses a changed host key in enforce mode. This is expected after you reinstall the server. Otherwise, another machine can answer at the server address.
 
 Compare the new key with the key on the server, then select **Trust new key** or **Reset** under **Servers > your server > Security**. See [SSH host key](/core/infrastructure/servers/security#ssh-host-key).
+
+</Accordion>
+
+<Accordion title="Server OS type is not supported">
+
+### Symptoms
+- Validation stops with: `Server OS type is not supported.`
+- The server runs Amazon Linux 2, or a distribution that Coolify does not know.
+
+### Solution
+Coolify reads `ID` and `ID_LIKE` from `/etc/os-release` on the server and compares them with the [supported operating systems](/start-with-self-hosted#2-supported-operating-systems).
+
+Amazon Linux 2 reached its end of life and is not supported. Move the server to Amazon Linux 2023, then validate it again. On Amazon Linux 2023, Coolify installs Docker from the Amazon Linux repository and the Docker Compose plugin from GitHub.
 
 </Accordion>
 
