@@ -7,6 +7,8 @@ description: Add a Cloudflare integration token and manage application DNS recor
 
 Coolify can create DNS records for application and service domains using a team's Cloudflare integration tokens. It matches each hostname to an accessible Cloudflare zone and points the record at the resource's server.
 
+The records use the [**Public IPv4** and **Public IPv6**](/core/infrastructure/servers/manage-server#public-ip-addresses) of the server when they are set, else the server IP address. Coolify does not publish private, reserved, CGNAT, or link-local addresses. If Coolify connects to the server over a private network, set the public addresses on the server **General** page first.
+
 ## Add a token
 
 1. Create a Cloudflare API token with **Zone > DNS > Edit** and **Zone > Zone > Read** for the zones you want Coolify to manage.

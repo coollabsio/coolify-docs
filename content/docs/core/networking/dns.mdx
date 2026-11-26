@@ -96,7 +96,9 @@ Open **Settings > Advanced** to manage:
 - **DNS Validation**: enables or disables the check.
 - **Custom DNS Servers**: sets the resolvers used for the check. The default is `1.1.1.1`. Enter a comma-separated list of IPv4 or IPv6 resolver addresses, such as `1.1.1.1,8.8.8.8`, or leave the field empty to use the system resolvers.
 
-Current DNS validation checks the domain's `A` records. Validation succeeds when an address matches the selected server's IPv4 address or a recognized Cloudflare proxy address. Coolify skips this check for generated `sslip.io` domains.
+DNS validation compares the domain's records with the address of the selected server. It uses the [**Public IPv4** or **Public IPv6**](/core/infrastructure/servers/manage-server#public-ip-addresses) of the server when they are set, else the server IP address. For the server that runs Coolify, it uses the instance public IPs from **Settings**. Coolify checks `A` records for an IPv4 address and `AAAA` records for an IPv6 address. Validation succeeds when a record matches that address or a recognized Cloudflare proxy address. Coolify skips this check for generated `sslip.io` domains.
+
+If Coolify connects to the server over a private IP address, set **Public IPv4** and **Public IPv6** on the server **General** page. Otherwise, the domains show **DNS mismatch**.
 
 For a Cloudflare proxy address in a zone that one of the team's [Cloudflare integration tokens](/integrations/security/cloudflare/dns-management) can access, Coolify also reads the record in Cloudflare. If the record, or the closest wildcard record, points to a different server, the domain shows **DNS mismatch**. A `CNAME` record, for example of a Cloudflare Tunnel, still passes.
 

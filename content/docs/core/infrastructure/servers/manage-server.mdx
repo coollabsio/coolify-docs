@@ -19,6 +19,7 @@ Before changing the IP address, domain, SSH user, port, or connection timeout, c
 | **Description** | Optional notes about the server or its purpose. |
 | **Wildcard domain** | The base domain Coolify can use when suggesting domains for new resources. |
 | **IP address or domain** | The address Coolify uses for SSH and server communication. |
+| **Public IPv4** and **Public IPv6** | The public addresses that DNS checks and DNS records of the server's resources use instead of **IP address or domain**. See [Public IP addresses](#public-ip-addresses). |
 | **SSH user** | The account Coolify uses for SSH. |
 | **SSH port** | The SSH port. |
 | **Connection timeout** | How long Coolify waits for the SSH connection, from 1 to 300 seconds. |
@@ -34,6 +35,14 @@ You cannot switch a server with managed resources to **Builds only**. Move or de
 For example, setting **Wildcard domain** to `https://example.com` lets Coolify suggest a domain such as `https://<application-id>.example.com` for a new resource.
 
 Create a DNS record for `*.example.com` that points to this server. Changing the setting does not create DNS records or update domains already assigned to resources.
+
+### Public IP addresses
+
+Set **Public IPv4** and **Public IPv6** when Coolify connects to the server over a private network, for example a VPN or a private network of the provider. Without them, DNS checks compare the domains of resources with the private address and report **DNS mismatch**.
+
+When they are set, the DNS checks and the DNS records of the resources on this server use these addresses instead of **IP address or domain**. For an address family without a public IP, Coolify uses the server IP address when it is of that family. Coolify still connects over **IP address or domain**.
+
+The fields are not shown for build servers, Swarm workers, and the server that runs Coolify. The server that runs Coolify uses the [instance public IPs](/core/instance-management/instance-settings#instance-public-ipv4). The server API accepts the same values as `public_ipv4` and `public_ipv6`; `null` removes an address.
 
 ---
 
