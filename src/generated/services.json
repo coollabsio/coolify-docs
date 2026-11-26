@@ -405,6 +405,13 @@
     "category": "Backup"
   },
   {
+    "name": "DBX",
+    "slug": "dbx",
+    "icon": "/docs/images/services/dbx-logo.png",
+    "description": "Lightweight database client that supports more than 90 databases.",
+    "category": "Database"
+  },
+  {
     "name": "Denokv",
     "slug": "denokv",
     "icon": "/docs/images/services/denolookingup-logo.svg",
