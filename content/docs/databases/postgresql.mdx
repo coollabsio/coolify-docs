@@ -77,6 +77,8 @@ Select **Start** and follow the startup output. Wait until PostgreSQL is running
 
 Coolify's PostgreSQL selector includes PostgreSQL 18, 17, and 16 images, plus Supabase PostgreSQL, PostGIS, and PGVector extension images. Select the image that matches the extensions, architecture, and major version your application requires.
 
+A new Supabase PostgreSQL database uses the `supabase_admin` user unless you set another user, because the image needs it on the first start. The health check, backups, and restores of a database with a Supabase image connect over `127.0.0.1` instead of the socket, so they also work for other users. With **SSL** on and no **Custom PostgreSQL configuration**, Coolify keeps the configuration directory of the Supabase image, so the database keeps listening on all addresses and keeps its preloaded extensions.
+
 The password is generated when the resource is created. If you change the username, password, or initial database in the running database outside Coolify, update the matching values in **General** so connection URLs and automated backups continue to work.
 
 
@@ -112,15 +114,15 @@ Use **Name** and **Description** to identify the resource in Coolify. **Image** 
 
 ### Initial database options
 
-**Initial database arguments** passes arguments to PostgreSQL initialization. **Host authentication method** controls the authentication method used by the image while it initializes a new data directory.
+**Initial database arguments** sets `POSTGRES_INITDB_ARGS`, the arguments that the image passes to `initdb`. **Host authentication method** sets `POSTGRES_HOST_AUTH_METHOD`, the authentication method that the image writes to `pg_hba.conf`. A variable with the same name on **Environment Variables** takes precedence.
 
-These settings do not reinitialize an existing persistent data directory.
+PostgreSQL uses both settings only on the first start, when it creates the data directory. They do not change an existing persistent data directory. To apply a change later, delete the data volume or edit the files in the database.
 
 ### Initialization scripts
 
 Add a filename and content under **Initialization scripts**. Coolify mounts the scripts under `/docker-entrypoint-initdb.d/`.
 
-The PostgreSQL image runs these scripts only when it initializes an empty data directory. Adding or editing a script does not run it against an existing database.
+The PostgreSQL image runs these scripts only when it initializes an empty data directory. Adding or editing a script does not run it against an existing database. Coolify makes each script readable for the container user, also on servers with a strict umask.
 
 </Tab>
 <Tab value="Configuration file">
@@ -173,7 +175,7 @@ A custom-format dump is not a plain `.sql` file. Use `pg_restore` for a custom-f
 
 PostgreSQL supports `allow`, `prefer`, `require`, `verify-ca`, and `verify-full`. The last two modes require the client to trust the Coolify CA certificate. See [Database SSL](/databases/ssl).
 
-The default health check runs inside the PostgreSQL container. Configure its interval, timeout, retries, and start period under **Healthcheck**, then restart PostgreSQL to apply changes.
+The default health check runs `psql` inside the PostgreSQL container. When **Custom PostgreSQL configuration** sets a `port`, the check connects to that port. Configure its interval, timeout, retries, and start period under **Healthcheck**, then restart PostgreSQL to apply changes.
 
 ## Official PostgreSQL resources
 
