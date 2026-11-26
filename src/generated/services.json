@@ -2256,6 +2256,13 @@
     "category": "Media"
   },
   {
+    "name": "TREK",
+    "slug": "trek",
+    "icon": "/docs/images/services/trek-logo.svg",
+    "description": "Self-hosted, real-time collaborative travel planner.",
+    "category": "Productivity"
+  },
+  {
     "name": "Trigger",
     "slug": "trigger",
     "icon": "/docs/images/services/trigger-logo.png",
