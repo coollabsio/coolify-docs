@@ -64,6 +64,8 @@ In **Webhook endpoint**, choose **Use an instance endpoint** and select an **Ins
 
 Enter only the base URL, such as `https://coolify.example.com`. Do not append `/webhooks`.
 
+When the instance has no domain and no public IP, Coolify shows the warning **No public endpoint**, because GitHub cannot send webhooks to the instance. Set the **URL** or the **Instance public IPv4** in **Settings**, or use a custom endpoint.
+
 <Callout type="warning" title="GitHub must reach the webhook endpoint">
 
 Repository access can work while automatic and preview deployments fail if GitHub cannot reach this endpoint.
@@ -88,6 +90,8 @@ Select **Register with GitHub**.
 2. Select **Create GitHub App**.
 
 GitHub returns you to Coolify after creating the app. Coolify stores the generated App ID, client credentials, webhook secret, and private key.
+
+GitHub registers the app on the account that its form shows. When you entered an **Organization** but your GitHub user cannot manage GitHub Apps of that organization, GitHub registers the app on your personal account. Coolify then shows an error that names the account. Make sure that your GitHub user is an owner or a GitHub App manager of the organization, then delete the GitHub App on GitHub and in Coolify, and create it again.
 
 ### 4. Install repository access
 
@@ -339,6 +343,10 @@ Confirm the repository clone and selected commit in **Deployment Logs**.
 Open **Sources**, select the GitHub App, open **General**, then select **Repositories**. Change the installation's repository access on GitHub and return to Coolify.
 
 Refresh the repository list before creating another application. Removing repository access prevents new clones and webhook deployments for applications that use that repository.
+
+## Install the app on another account
+
+One GitHub App can be installed on more than one account or organization. Select **Repositories** and install the app on the other account. Coolify adds a new source for each account that installs the app, and the source lists show the account of each installation. The applications of the first account keep their source and repository access.
 
 ## Show deployments on GitHub
 
