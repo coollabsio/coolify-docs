@@ -45,7 +45,7 @@ export function ContributionGuidelinesPage({ children }: { children?: ReactNode 
       <section className="grid gap-4 md:grid-cols-3">
         <div className="rounded-lg border border-fd-border bg-fd-background/70 p-4">
           <p className="m-0 text-xs font-medium uppercase tracking-wide text-fd-muted-foreground">Project scale</p>
-          <p className="m-0 mt-2 text-2xl font-semibold text-fd-foreground">470K+</p>
+          <p className="m-0 mt-2 text-2xl font-semibold text-fd-foreground">530K+</p>
           <p className="m-0 mt-1 text-sm leading-6 text-fd-muted-foreground">people use Coolify worldwide.</p>
         </div>
         <div className="rounded-lg border border-fd-border bg-fd-background/70 p-4">
