@@ -23,6 +23,8 @@ Coolify uses the active team as the boundary for dashboard work. Projects, serve
 
 When you switch teams, Coolify changes the resources and settings available in the dashboard. Your role is also evaluated for the newly active team.
 
+A direct link to a resource of another team that you belong to switches the active team to the team of that resource, so the page opens instead of a 404. This applies to projects and their resources, servers, destinations, S3 storages, private keys, cloud tokens, cloud-init scripts, and Git sources that are not system-wide. A link to a resource of a team that you are not a member of never switches teams.
+
 Removing someone from a team removes their access to that team. It does not delete their Coolify account, their membership in other teams, or resources owned by the team.
 
 A person with the **Member** role can have read access to the whole team, or access only to some projects, environments, or resources. See [Set member access](/core/team/members/set-member-access).

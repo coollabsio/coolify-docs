@@ -16,6 +16,7 @@ The role hierarchy limits who you can remove:
 - Owners can remove any other team member, including another Owner.
 - Admins can remove Admins and Members, but not Owners. An Admin sees a trash icon (**Remove member**) in an Owner's row, but Coolify rejects the removal with `You are not authorized to perform this action.`
 - You cannot remove yourself from the **Members** page.
+- Nobody can remove the root user from the **Root Team**. If the root user has no team, for example because an older version allowed its removal, Coolify attaches it to the existing **Root Team** as Owner again when it signs in.
 
 Confirm that the person no longer needs access to the team's projects, servers, credentials, shared variables, or other resources.
 
