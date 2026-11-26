@@ -38,6 +38,8 @@ Select **Show import command** to see the **Import command**, the exact generate
 - **Restore into** selects a configured SQLite file. Coolify preselects the file identified by the backup name when possible.
 - MongoDB offers **Replace collections that already exist** for replacing existing collections.
 
+When **Backup contents** is **Backup contains all databases**, a MySQL or MariaDB import uses root without a password when the database does not accept the root password, for example in a service with a linuxserver.io image. A MariaDB database that sets only `MYSQL_*` variables uses those values. For PostgreSQL with a Supabase image, the restore connects over `127.0.0.1` instead of the socket.
+
 PostgreSQL restores run in one transaction. Replace restores of SQL backups swap in the new database only after success. Format detection occurs before destructive changes; keep a verified backup for recovery regardless of these safeguards.
 
 ## Select and import a backup

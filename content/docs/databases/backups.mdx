@@ -31,6 +31,8 @@ SQLite backups use its configured database files. See [SQLite](/databases/sqlite
 
 A backup job runs only while the database is running. If the database is stopped when the schedule fires, Coolify skips that execution.
 
+The **Backups** page lists the schedules of the database under **Schedules**, and the runs of all its schedules under **Executions**. Select a schedule to open its settings in the **Edit backup schedule** dialog, with the **General** and **Danger Zone** tabs. Older links to a schedule page open this dialog.
+
 ## Back up a database inside a service
 
 A database component deployed inside a Service uses credentials from the environment of its running container. This differs from a standalone database resource, whose connection values are stored directly by Coolify.
@@ -39,9 +41,9 @@ Coolify reads the resolved container variables listed below. These names do not 
 
 | Database | Variables used by Coolify | Fallback behavior |
 | :--- | :--- | :--- |
-| PostgreSQL | `POSTGRES_PASSWORD`, `POSTGRES_USER`, `POSTGRES_DB` | `POSTGRES_USER` defaults to `postgres`. `POSTGRES_DB` defaults to the resolved username. When `POSTGRES_PASSWORD` is absent, Coolify runs the dump without setting `PGPASSWORD`; password-authenticated databases require this value. |
-| MySQL | `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE` | `MYSQL_DATABASE` has no fallback. Without it, the backup stops before running `mysqldump`. A standard password-authenticated database also requires `MYSQL_ROOT_PASSWORD`. |
-| MariaDB | `MARIADB_ROOT_PASSWORD` or `MYSQL_ROOT_PASSWORD`; `MARIADB_DATABASE` or `MYSQL_DATABASE` | Coolify checks the `MARIADB_*` name first, then its `MYSQL_*` fallback. At least one password variable and one database variable are needed for a standard password-authenticated backup. |
+| PostgreSQL | `POSTGRES_PASSWORD`, `POSTGRES_USER`, `POSTGRES_DB` | Coolify reads the user from `POSTGRES_USER`, `PGUSER`, or `POSTGRESQL_USERNAME`, and defaults to `postgres`. A database with a Supabase image is reached over `127.0.0.1` instead of the socket. `POSTGRES_DB` defaults to the resolved username. When `POSTGRES_PASSWORD` is absent, Coolify runs the dump without setting `PGPASSWORD`; password-authenticated databases require this value. |
+| MySQL | `MYSQL_ROOT_PASSWORD`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DATABASE` | Coolify uses the first account that the database accepts: root with `MYSQL_ROOT_PASSWORD`, root without a password, then `MYSQL_USER` with `MYSQL_PASSWORD`. Without **Databases to back up** or **All databases**, the backup uses `MYSQL_DATABASE`, and fails when it is not set. |
+| MariaDB | `MARIADB_*` or `MYSQL_*` versions of `ROOT_PASSWORD`, `USER`, `PASSWORD`, and `DATABASE` | Coolify checks the `MARIADB_*` name first, then its `MYSQL_*` fallback. It uses the first account that the database accepts, in the same order as for MySQL. Without **Databases to back up** or **All databases**, the backup uses `MARIADB_DATABASE` or `MYSQL_DATABASE`, and fails when neither is set. |
 | MongoDB | `MONGO_INITDB_ROOT_USERNAME`, `MONGO_INITDB_ROOT_PASSWORD` | Coolify uses both values to construct the service database connection URL. The backup fails when either value is unavailable. |
 
 For example, a PostgreSQL component can map Service variables to the names Coolify reads:
@@ -69,7 +71,7 @@ To verify or correct the configuration:
 
 Read [Service environment variables](/services/configuration/environment-variables) for details about generated, referenced, and hard-coded Compose values.
 
-A missing MySQL or MariaDB database-name variable can stop the job before Coolify creates a normal execution entry. If **Back up now** produces no execution, confirm that the database is running and recheck the variables in the table.
+When Coolify cannot find a MySQL or MariaDB database to back up, the execution fails with `No database to back up` and Coolify sends a **Backup failure** notification. Set the database-name variable, or select **All databases** or the **Databases to back up** in the schedule. If **Back up now** produces no execution, confirm that the database is running.
 
 ## Set the backup scope
 
@@ -106,19 +108,23 @@ Coolify accepts standard five-field cron expressions and these named schedules:
 | `monthly` | `0 0 1 * *` |
 | `yearly` | `0 0 1 1 *` |
 
-Use a **Timeout** of at least `60` seconds when a database dump needs more time. The timeout applies to the backup job and defaults to `3600` seconds in the job when no value is set.
+Use a **Timeout** of at least `60` seconds when a database dump needs more time. The timeout is the maximum runtime of the complete backup run, including the dumps and S3 uploads of all databases of the schedule. It defaults to `3600` seconds in the job when no value is set. A run that passes it fails with an error that names the timeout, for example `The backup timeout of 3600 seconds has passed.`
 
 ## Store backups locally
 
-Coolify writes local database backups under `/data/coolify/backups` on the deployment server. The exact subdirectory includes the team, database, and execution name; use the **Executions** page to inspect the result instead of relying on a manually reconstructed path.
+Coolify writes local database backups under `/data/coolify/backups` on the deployment server. The exact subdirectory includes the team, database, and execution name; open the execution in **Executions** and copy its **Backup path** instead of relying on a manually reconstructed path.
 
 Local retention can remove successful backup files after an execution completes. In **Retention**, set any of these values to `0` for no limit:
 
-- **Backups to keep**
-- **Days to keep**
-- **Maximum storage (GB)**
+| Setting | Applies to |
+| :--- | :--- |
+| **Backups to keep** | Each database of the schedule. Coolify keeps this many recent backups of every database. |
+| **Days to keep** | Each database of the schedule. Coolify removes backups older than this many days, counted from the newest backup of the same database. |
+| **Maximum storage (GB)** | All databases of the schedule together. Coolify removes the oldest backups when the total size passes the limit, but always keeps the newest backup of each database. |
 
-The limits work independently. Coolify deletes a backup when any configured limit is reached, keeping the most recent backups first.
+The limits work independently. Coolify deletes a backup when any configured limit is reached, keeping the most recent backups first. The backups of a database that the schedule no longer backs up count against the whole schedule, so they expire as new backups come in.
+
+If Coolify cannot delete an expired local file, for example because the server is not reachable, the backup stays in **Executions** and the next retention run tries again.
 
 ## Upload backups to S3
 
@@ -133,13 +139,17 @@ A member whose access is limited to some projects or resources cannot add a new 
 
 Coolify uploads the local backup file to every selected S3 storage after the local dump succeeds. The execution shows each destination and its upload result. **S3 warning** means at least one upload failed; other destinations may still contain a usable copy.
 
-**Local copy > Delete after S3 upload** removes the local file only after every selected S3 destination has a successful copy. If any upload fails, Coolify keeps the local file. It does not remove the S3 copy. Set S3 retention separately; local and S3 retention rules are independent. The S3 limits apply separately to each destination.
+**Local copy > Delete after S3 upload** removes the local file only after every selected S3 destination has a successful copy. If any upload fails, Coolify keeps the local file. It does not remove the S3 copy. Set S3 retention separately; local and S3 retention rules are independent. The S3 limits work like the local limits and apply separately to each destination.
+
+Read [Failed uploads](/core/s3-storage/overview#failed-uploads) for how Coolify retries an S3 upload and when it counts a failed upload as successful.
 
 Through the API, use `s3_storage_uuids` to select multiple destinations. The singular `s3_storage_uuid` remains supported. When sent with the list, it must be one of its entries and selects the primary destination. See the [API reference](/api/overview) for create and update behavior.
 
 ## Run and verify a backup
 
-Open a schedule and select **Back up now** while the database is running. Coolify queues the backup job and shows the execution in the schedule.
+While the database is running, select **Back up now** in the actions of a schedule in **Schedules**, or in the schedule dialog. Coolify queues the backup job and shows the run in **Executions**.
+
+The **Time** column of **Executions** shows when a run ended, how long ago that was, and how long it took. Hover over it to see the start and end times. Select a run to open **Backup execution** with its status, times, size, **Backup path**, and output.
 
 Open the execution to verify:
 
@@ -153,13 +163,23 @@ A failed S3 upload does not necessarily mean the local database dump failed. Rea
 
 ## Download backup copies
 
-Open **Executions** and select **Download** on a successful backup. Coolify uses the local file when available, or redirects to a short-lived link for an available S3 copy when the local file is gone. S3 download links expire after 15 minutes; request another download if a link expires. A copy in an SFTP, FTPS, or WebDAV storage downloads through Coolify. Backup downloads require an Admin or Owner role.
+In **Executions**, select **Download backup** on a successful backup. Coolify uses the local file when available, or redirects to a short-lived link for an available S3 copy when the local file is gone. S3 download links expire after 15 minutes; request another download if a link expires. A copy in an SFTP, FTPS, or WebDAV storage downloads through Coolify. Backup downloads require an Admin or Owner role.
 
 To verify an SFTP, FTPS, or WebDAV destination, [test a real upload and recovery from the remote copy](/core/s3-storage/sftp-ftps-webdav#verify-upload-and-recovery).
 
 If the instance administrator has configured S3 for file downloads, Coolify may first prepare the local backup in that storage. Wait for preparation to finish and allow the browser to open the download.
 
-Changing a schedule's destinations affects future uploads. Existing copies remain tracked against the destinations that received them. Deleting an execution with the S3 deletion option removes its copies from every S3 destination.
+Changing a schedule's destinations affects future uploads. Existing copies remain tracked against the destinations that received them.
+
+## Delete backups and execution records
+
+Users who can delete the database can remove backups from **Executions**:
+
+- **Delete backup** on a row deletes the local file of that backup and its execution record. When an S3 copy exists, select **Delete the selected backup permanently from every S3 storage** to also remove its copies from every S3 destination.
+- **Clean failed backups** removes the records of failed executions.
+- **Clean deleted entries** removes the records of executions whose local file is already deleted. This includes S3-only backups after **Delete after S3 upload**. The remote files stay in storage, but the dashboard can no longer download them through the removed records.
+
+Through the API, you can delete a backup schedule or an execution also when the server is not reachable. The local backup files then stay on the server.
 
 ## Backups of a deleted database
 
@@ -169,7 +189,7 @@ If you select the option, Coolify deletes the backup files on the server and on 
 
 If you do not select the option, the backup files stay on the server in `/data/coolify/backups/` and on S3. Coolify deletes the schedules and the execution history, so it no longer shows, prunes, or deletes these files. Delete them yourself when you do not need them.
 
-Through the API, send `delete_backups=true` to delete the files.
+Through the API, send `delete_backups=true` to the delete endpoint to delete the files. The parameter defaults to `false`.
 
 ## Related guides
 

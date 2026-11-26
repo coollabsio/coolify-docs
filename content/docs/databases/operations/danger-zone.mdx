@@ -41,7 +41,7 @@ Deleting a database can remove its containers, configuration, volumes, and netwo
 
 ## Deletion actions
 
-The confirmation dialog can select these actions. They are selected by default in the current interface:
+The confirmation dialog can select these actions. All except the backup deletion are selected by default:
 
 | Action | Effect |
 | :--- | :--- |
@@ -49,6 +49,9 @@ The confirmation dialog can select these actions. They are selected by default i
 | **Permanently delete all non-predefined networks associated with this resource.** | Deletes non-predefined Docker networks associated with the resource. |
 | **Permanently delete all configuration files from the server.** | Deletes Coolify-generated configuration files for the resource from the server. |
 | **Run Docker Cleanup (remove unused images and builder cache).** | Runs Docker cleanup on the resource's server after deletion. |
+| **Permanently delete all database and storage backups of this resource, on the server and on S3.** | Deletes the backup files of the database on the server and on every S3 destination. Off by default. |
+
+When the backup deletion is not selected, the backup files stay on the server and on S3, and Coolify no longer manages them. See [Backups of a deleted database](/databases/backups#backups-of-a-deleted-database).
 
 Clear **volumes** only when you deliberately want to preserve the volume for a separate recovery or manual cleanup process. Keeping a volume does not keep the Coolify database resource or make the data available to a newly created resource automatically.
 
