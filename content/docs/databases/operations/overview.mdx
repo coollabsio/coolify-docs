@@ -31,7 +31,7 @@ The database header shows actions based on its current status:
 | Action | What it does |
 | :--- | :--- |
 | **Start** | Starts a stopped database container. |
-| **Restart** | Restarts the database. The database is unavailable during the restart. |
+| **Restart** | Pulls the image, then restarts the database. The database is unavailable during the restart. If the image pull fails, the restart fails and the database keeps running. |
 | **Stop** | Stops the database and removes non-persistent container data. The resource and persistent data remain so you can start it again. |
 
 Stop or restart a database only when clients can tolerate the interruption. A write in progress or a client that does not retry can fail while the database is unavailable.

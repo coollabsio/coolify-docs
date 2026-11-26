@@ -85,7 +85,7 @@ Read [Databases](/databases) for port mappings, the public TCP proxy, and firewa
 
 ## Configure MySQL
 
-**Restart** stops MySQL and then starts it. The start normally pulls the configured image, so a floating tag can resolve to a newer build. A failed pull can leave the database stopped. Before a planned restart, check the image tag and verify a recent backup. After restart, run `SELECT VERSION();` and confirm that clients can reconnect.
+**Restart** pulls the configured image first, so a floating tag can resolve to a newer build. Coolify stops MySQL only after the pull and then starts it again. If the pull fails, the restart fails and MySQL keeps running. Before a planned restart, check the image tag and verify a recent backup. After restart, run `SELECT VERSION();` and confirm that clients can reconnect.
 
 Open **General** to change the image, credentials, **Port mappings**, public proxy, custom Docker options, and **Custom MySQL configuration**. Coolify mounts the custom configuration into the MySQL container and recreates the generated configuration when you restart the resource.
 
