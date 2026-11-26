@@ -42,6 +42,10 @@ Sentinel v2 uses a different port, configuration format, and data path. Do not s
 
 ## First login
 
+<Callout type="warn">
+The Sentinel dashboard login works only over HTTPS. On an `http://` URL, such as the default generated `sslip.io` URL, the login page shows **Security Requirement Not Met**. Set an `https://` domain for the service before you deploy it.
+</Callout>
+
 1. Deploy the service and wait until it is healthy.
 2. Open the service URL.
 3. Log in with the username `root` and the value of `SERVICE_PASSWORD_ALTCHA`.
