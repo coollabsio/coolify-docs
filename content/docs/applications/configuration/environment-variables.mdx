@@ -29,7 +29,9 @@ LOG_LEVEL=info
 API_URL=https://api.example.com
 ```
 
-Lines beginning with `#` are ignored, except `# coolify:` lines. Saving Developer view creates, updates, and removes entries to match its contents.
+Lines beginning with `#` are ignored, except `# coolify:` lines. Saving Developer view creates, updates, and removes entries to match its contents, and sets the order of the variables to the order of the lines.
+
+As in a `.env` file, Developer view removes the spaces around an unquoted value. Put the value in quotes to keep its spaces, for example `GREETING=" hello "`.
 
 Locked secrets and multiline values cannot be edited in Developer view. Change those entries in Normal view.
 
@@ -73,7 +75,7 @@ Through the application, database, or service API, set `redact_all_env_values_in
 
 ## Build and runtime scope
 
-**Build time** and **Runtime** are independent dropdowns. New variables default to **Available during build** and **Available in the container**.
+**Build time** and **Runtime** are independent dropdowns. New variables default to **Available during build (a change needs a rebuild)** and **Available in the container**.
 
 | Setting | Image build | Running container |
 | :--- | :---: | :---: |
@@ -109,7 +111,9 @@ Set **Value type** to **Multiline** when a value contains line breaks, such as a
 
 Set **Interpolation** to **Literal (keep $ characters as-is)** when characters such as `$` must remain unchanged. Without it, Coolify can expand references contained in the value. Multiline values are already treated literally.
 
-Coolify saves a value with more than one line exactly as you enter it, in the UI and in the API, including a trailing newline. Coolify removes the leading and trailing whitespace of a single-line value.
+Coolify saves a value with more than one line exactly as you enter it, in the UI and in the API, including a trailing newline. For a single-line value, Coolify removes only the line breaks around it and keeps leading and trailing spaces and tabs. The **Value** field shows a warning when the value starts or ends with a space.
+
+Coolify refuses a value with a NUL character when you save it, because a container cannot start with one.
 
 <Callout type="info" title="Save older multiline values again">
 
@@ -182,6 +186,19 @@ For generated stack values such as URLs, users, passwords, and random strings, r
 Save the variables, then redeploy or restart the application so Coolify recreates the runtime environment.
 
 Use a new deployment when build-time values changed. Use **Restart** when only runtime values changed. Source-based paths reuse an existing image when eligible; Docker Image pulls the saved image reference again.
+
+A change to a variable that is available during the build needs a new build, because the variable can change the image. The **Changes pending** popover marks such changes, and the **Restart** dialog tells you when a restart builds a new image and why.
+
+## Variable order
+
+**Environment variable order** sets the order of the list and of the `.env` file that a deployment writes:
+
+- **Creation order** writes the variables in the order of the **Environment Variables** page. Change the order in **Developer view**.
+- **Alphabetical** sorts the variables by name.
+
+A variable can reference a variable that comes before it in the `.env` file. Keep the referenced variable above the variable that uses it.
+
+Docker Compose applications do not show this setting.
 
 ## Names and copying values
 
