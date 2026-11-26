@@ -124,9 +124,9 @@ You can even use our [referral link](https://coolify.io/hetzner) to support the 
 | Base | Distributions | Notes |
 | :--- | :--- | :--- |
 | Debian-based | Debian, Ubuntu | Ubuntu non-LTS: use Manual install |
-| Red Hat-based | CentOS, Fedora, Red Hat, AlmaLinux, Rocky, Amazon Linux 2023, TencentOS, Asahi | Docker may need manual pre-install on some variants |
+| Red Hat-based | CentOS, Fedora, Red Hat, AlmaLinux, Rocky, Amazon Linux 2023, TencentOS, Asahi | Docker may need manual pre-install on some variants. Amazon Linux 2 is not supported |
 | SUSE-based | SLES, SUSE, openSUSE | Supported |
-| Arch-based | Arch Linux | Supported |
+| Arch-based | Arch Linux, and distributions with `arch` in `ID_LIKE` of `/etc/os-release`, such as Manjaro, EndeavourOS, CachyOS, or Garuda | Supported |
 | Alpine-based | Alpine Linux | Supported |
 | Raspberry Pi OS | Raspberry Pi OS (64-bit) | Use 64-bit image |
 
@@ -520,11 +520,13 @@ sed -i "s|PUSHER_APP_SECRET=.*|PUSHER_APP_SECRET=$(openssl rand -hex 32)|g" /dat
 ---
 
 ### 6. Create Docker network
-Create the Docker network Coolify uses to connect its internal services:
+Create the Docker network Coolify uses to connect its internal services. Create it with IPv6 when Docker can allocate an IPv6 subnet, and without IPv6 otherwise:
 
 ```sh
-docker network create --attachable coolify
+docker network create --attachable --ipv6 coolify || docker network create --attachable coolify
 ```
+
+With IPv6 on the network, applications behind the proxy get the real address of IPv6 visitors instead of the Docker gateway address. See [Applications see the Docker gateway IP](/troubleshoot/applications/wrong-client-ip).
 
 ---
 
@@ -817,9 +819,11 @@ Use this when you want to pre-create the root account during installation, so th
 
 | Variable | Required | Notes |
 | :--- | :--- | :--- |
-| `ROOT_USERNAME` | Yes | 3-255 characters. Allowed: letters, numbers, spaces, underscores, and hyphens. |
-| `ROOT_USER_EMAIL` | Yes | Must be a valid email format, up to 255 characters. |
-| `ROOT_USER_PASSWORD` | Yes | At least 8 characters with uppercase, lowercase, number, and special symbol. |
+| `ROOT_USERNAME` | No | 3-255 characters. Allowed: letters, numbers, spaces, underscores, and hyphens. Defaults to `Root User`. |
+| `ROOT_USER_EMAIL` | Yes | Must be a valid email format, up to 255 characters. The domain does not need a mail DNS record. |
+| `ROOT_USER_PASSWORD` | Yes | At least 8 characters with uppercase, lowercase, number, and special symbol. The password must not appear in a known data breach. |
+
+While `ROOT_USER_EMAIL` and `ROOT_USER_PASSWORD` are set, Coolify creates the root account only from these values, and registration in the browser stays closed. If a value is not valid, the installer shows why it could not create the root user, and the registration page tells you to run the installer again. A new run of the installer replaces the old `ROOT_USER_*` values in `/data/coolify/source/.env`.
 
 <Tabs items={['Automated', 'Manual']}>
 <Tab value="Automated" icon={Autobrightness2}>
