@@ -60,6 +60,14 @@ To replace the password or token, enter a new value and save. To delete the cred
 
 Through the API, send `git_https_username` and `git_https_password` when you create the application with `POST /api/v1/applications/public` or update it with `PATCH /api/v1/applications/{uuid}`. To remove the credentials, send `git_https_password` as `null`. The API never returns the password or token.
 
+## Git servers with a private CA
+
+When the Git server uses a certificate from a private CA, add that CA to the trusted certificates of the server that builds the application: the deployment server, or the build server when the application uses one. The helper container of the deployment adds the CA bundle of that server to the CAs of git, curl, and Git LFS, so HTTPS clones work with certificate verification on.
+
+<Callout type="info" title="Upgrade from Coolify v4.7.6 or earlier">
+  Before Coolify v4.7.7, git and curl in the helper container did not trust the CA bundle of the server, so HTTPS clones from a Git server with a private CA failed with certificate errors. Git LFS trusts the CA bundle of the server since Coolify v4.7.0.
+</Callout>
+
 ## Automatic deployments
 
 The manual provider webhooks in Coolify have provider-specific payload and signature handling for GitHub, GitLab, Bitbucket, and Gitea.
