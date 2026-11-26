@@ -24,7 +24,7 @@ Use this table to identify which part of **General** applies to the application:
 | Docker Compose from Git | Compose file paths, per-service domains, parsed Compose content, repository preservation, optional Compose commands, and label escaping. |
 | Docker Image | Image name, tag or hash, container options, domains, network settings, and container labels. The **Build strategy** selector is not shown. |
 
-Docker Compose applications do not use the single-container **Network**, **HTTP Basic Authentication**, or editable **Active labels** controls on this page. Configure ports, health checks, service environment entries, volumes, and labels in the Compose definition.
+Docker Compose applications do not use the single-container **Network**, **HTTP Basic Authentication**, **IP allowlist**, or editable **Active labels** controls on this page. Configure ports, health checks, service environment entries, volumes, and labels in the Compose definition.
 
 <Tabs id="application-general-configuration" items={['General', 'Build', 'Network', 'Labels', 'Deployment']}>
 <Tab value="General" icon={Settings}>
@@ -258,6 +258,12 @@ Labels contains proxy authentication and the container metadata Coolify uses for
 Under **Security**, choose **HTTP Basic Authentication** in **Authentication** to place a proxy username and password in front of a non-Compose application. Enter **Username** and **Password**, then redeploy or restart the application so the proxy configuration is refreshed.
 
 For Docker Compose, define the required proxy middleware through the Compose labels instead of this control.
+
+### IP allowlist
+
+Under **Security > Authentication**, enter IP addresses or CIDR ranges in **IP allowlist** to let only those clients reach a non-Compose application. The proxy sends HTTP `403` to all other clients. Redeploy the application to apply the change.
+
+Read [IP allowlist](/core/networking/proxy/ip-allowlist) for CDN setups, the API field, and Docker Compose labels.
 
 ---
 
