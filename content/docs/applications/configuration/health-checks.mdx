@@ -55,7 +55,7 @@ Add an endpoint such as `/health` to the application. It should return success o
 
 Enter:
 
-- **Method**: `GET` or `POST`
+- **Method**: `GET`, `HEAD`, `POST`, or `OPTIONS`
 - **Scheme**: `http` or `https`
 - **Host**: normally `localhost`
 - **Port**: the port used inside the container; when empty, Coolify uses the first value from **Ports Exposes**
@@ -96,7 +96,9 @@ Replace `3000` and `/health` with the values entered in the health-check form. T
 
 A response with a `2xx` or `3xx` code always passes. To also pass a `4xx` or `5xx` response, for example `401` from an endpoint behind authentication, set **Expected code** to that code.
 
-When **Expected response text** is set, the response body must also contain that text. A `HEAD` response has no body, so a `HEAD` check does not compare the text. With the `https` scheme, the check does not verify the certificate.
+When **Expected response text** is set, the response body must also contain that text. A `HEAD` response has no body, so a `HEAD` check does not compare the text. With the `https` scheme, the check does not verify the certificate, so it also works with a self-signed certificate.
+
+The upgrade to Coolify v4.7.7 cleared the **Expected response text** that applications saved before, because older versions did not check it. Set the text again to use the check.
 
 </Callout>
 
