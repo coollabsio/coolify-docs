@@ -94,7 +94,7 @@ Coolify does not create scheduled database backups for KeyDB. Keep the `/data` p
 
 KeyDB exposes **SSL** without an SSL mode selector. See [Database SSL](/databases/ssl) for the CA certificate mount and TLS connection workflow.
 
-Configure the Docker health check under **Healthcheck** and restart KeyDB after saving.
+Configure the Docker health check under **Healthcheck** and restart KeyDB after saving. When **Custom KeyDB configuration** sets `requirepass`, the check only requires that KeyDB replies. See [How the probe connects](/databases/configuration/health-checks#how-the-probe-connects).
 
 ## Official KeyDB resources
 

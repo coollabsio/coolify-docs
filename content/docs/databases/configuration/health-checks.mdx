@@ -43,3 +43,15 @@ Set **Start period (seconds)** high enough for the database to initialize on the
 </Callout>
 
 MongoDB health checks ping the database, so a running container whose database cannot respond is no longer treated as healthy automatically. Review container logs when the check fails.
+
+## How the probe connects
+
+Coolify builds the probe from the engine and its settings:
+
+- **Custom port**: when the custom configuration of a PostgreSQL, MongoDB, Redis, Valkey, or KeyDB database sets a `port`, the probe connects to the last `port` in that configuration.
+- **Redis and Valkey**: the probe runs `redis-cli` directly, without a shell, so it also works with images that have no shell. It pings with the database password. On Redis 6.2 and later and on Valkey, it fails on error replies such as `NOAUTH` and `LOADING`.
+- **Redis, Valkey, and KeyDB with their own password**: when **Custom Redis / Valkey configuration** or **Custom KeyDB configuration** sets `requirepass`, Coolify does not know that password, so the probe only requires that the database replies.
+- **Dragonfly with SSL**: the probe connects over TLS with the certificate of the database.
+- **Supabase PostgreSQL**: the probe connects over `127.0.0.1` instead of the socket.
+
+Restart the database after changing its custom configuration, so the probe uses the new values.

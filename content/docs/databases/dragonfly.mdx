@@ -94,7 +94,7 @@ Coolify does not create scheduled database backups for Dragonfly. Keep the `/dat
 
 Dragonfly exposes **SSL** without an SSL mode selector. See [Database SSL](/databases/ssl) for the CA certificate mount and TLS connection workflow.
 
-Configure the Docker health check under **Healthcheck** and restart Dragonfly after saving.
+Configure the Docker health check under **Healthcheck** and restart Dragonfly after saving. With **SSL** on, the check connects over TLS. See [How the probe connects](/databases/configuration/health-checks#how-the-probe-connects).
 
 ## Official Dragonfly resources
 

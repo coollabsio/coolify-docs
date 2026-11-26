@@ -89,7 +89,7 @@ When SSL is enabled, Coolify uses the `rediss` scheme and TLS port `6380`. When 
 
 ## Configure Redis
 
-Open **General** to change the image, credentials, **Port mappings**, public proxy, **Custom Redis configuration**, and supported custom Docker options. When **Custom Redis configuration** is set, Coolify writes it as the Redis configuration file and starts Redis with that file. Include persistence and authentication directives you need; Coolify adds the password only when the file does not already define `requirepass`.
+Open **General** to change the image, credentials, **Port mappings**, public proxy, **Custom Redis / Valkey configuration**, and supported custom Docker options. When **Custom Redis / Valkey configuration** is set, Coolify writes it as the Redis configuration file and starts Redis with that file. Include persistence and authentication directives you need; Coolify adds the password only when the file does not already define `requirepass`.
 
 Open **Persistent Storage** to manage the `/data` volume. Persistent storage keeps Redis data across container recreation, but it is not a scheduled backup.
 
@@ -101,7 +101,7 @@ Redis, Dragonfly, and KeyDB do not support Coolify's scheduled database backup p
 
 Redis exposes **SSL** without an SSL mode selector. The generated TLS URL uses the `rediss` scheme and port `6380`; configure CA verification in the client library when required. See [Database SSL](/databases/ssl) before connecting an application with TLS.
 
-Configure the Docker health check under **Healthcheck** and restart Redis after saving.
+Configure the Docker health check under **Healthcheck** and restart Redis after saving. The check runs `redis-cli` without a shell and connects to the `port` of **Custom Redis / Valkey configuration** when it sets one. See [How the probe connects](/databases/configuration/health-checks#how-the-probe-connects).
 
 ## Official Redis resources
 

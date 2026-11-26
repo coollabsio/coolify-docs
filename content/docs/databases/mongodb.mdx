@@ -85,7 +85,7 @@ Coolify shows a **Mongo URL (public)** only after **Public access > Access > Pub
 
 ## Configure MongoDB
 
-Open **General** to change the image, root credentials, **Port mappings**, public proxy, custom Docker options, and **Custom MongoDB configuration**. Restart the resource after changing generated container configuration.
+Open **General** to change the image, root credentials, **Port mappings**, public proxy, custom Docker options, and **Custom MongoDB configuration**. Restart the resource after changing generated container configuration. Coolify makes the configuration file and the script that creates the initial database readable for the container user, also on servers with a strict umask.
 
 ## Back up MongoDB
 
@@ -105,7 +105,7 @@ The built-in **Import backup** dialog on the **Backups** page accepts MongoDB ar
 
 MongoDB supports `allow`, `prefer`, `require`, and `verify-full`. `verify-full` requires the client to trust the Coolify CA certificate. See [Database SSL](/databases/ssl).
 
-Configure the Docker health check under **Healthcheck** and restart MongoDB after saving.
+Configure the Docker health check under **Healthcheck** and restart MongoDB after saving. When **Custom MongoDB configuration** sets a `port`, the check connects to that port. See [How the probe connects](/databases/configuration/health-checks#how-the-probe-connects).
 
 ## Official MongoDB resources
 
