@@ -91,6 +91,8 @@ Coolify follows the same broad lifecycle even when the source and replacement pa
   endnote="Coolify stores the deployment status and logs. Docker runs the resulting containers, while the images, networks, and storage remain on the connected server."
 />
 
+When a deployment writes no log output for longer than the deployment timeout of the server plus 10 minutes, for example because the worker stopped during the build, Coolify marks it as failed and starts the next queued deployment. Ten minutes after a deployment fails, Coolify removes its helper container on the deployment server and on the build server.
+
 ---
 
 ## How Coolify prepares an image
