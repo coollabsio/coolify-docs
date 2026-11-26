@@ -86,6 +86,8 @@ A manual cleanup does not wait for the schedule or disk threshold. If another cl
 
 Open **Recent executions** and select the latest cleanup. A scheduled cleanup can succeed while leaving build caches in place for a queued or running deployment. Other eligible cleanup continues, and the execution log explains why the cache prune was skipped.
 
+Coolify prunes the Railpack build cache only when the `coolify-railpack` builder exists on the server. On a server without Railpack deployments, the cleanup skips this step without an error.
+
 Confirm that:
 
 1. the execution completed successfully
