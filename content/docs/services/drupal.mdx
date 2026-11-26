@@ -5,14 +5,11 @@ og:
   description: "Deploy Drupal CMS on Coolify for enterprise content management with powerful APIs, content types, workflows, and extensive module ecosystem."
 category: "CMS"
 icon: "/docs/images/services/drupal-logo.svg"
-disabled: true
 ---
 
-<Callout type="error" title="SERVICE TEMPORARILY DISABLED">
+<Callout type="info" title="PHP security update">
 
-This service's one-click templates are temporarily disabled in Coolify because of the PHP security vulnerabilities **CVE-2026-109618** and **CVE-2026-109619**. New deployments from the service catalog are unavailable while patched container images are verified.
-
-See the [PHP security advisory](/knowledge-base/php-security-advisory-2026) for guidance on existing deployments and [the template disablement PR](https://github.com/coollabsio/coolify/pull/12268) for details and updates.
+This service's one-click templates have been re-enabled following the PHP security review. Updating Coolify does not update deployed service containers. For existing deployments, follow the [PHP security advisory](/knowledge-base/php-security-advisory-2026) and the service's upstream upgrade instructions to apply any required image updates.
 
 </Callout>
 
@@ -27,6 +24,18 @@ Drupal is a free and open-source web content management system written in PHP an
 ## Variants
 
 - **Drupal with PostgreSQL:** Includes a PostgreSQL database.
+
+## Upgrade to Drupal 11
+
+New services use Drupal 11. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+Drupal 11 needs PostgreSQL 16 or later with the `pg_trgm` extension.
+
+1. Update to the last 10.x version.
+2. Make sure that your modules are compatible with Drupal 11.
+3. Change the image to Drupal 11, then run `drush updb`.
+
+See the [official system requirements](https://www.drupal.org/docs/getting-started/system-requirements?utm_source=coolify.io).
 
 ## Links
 

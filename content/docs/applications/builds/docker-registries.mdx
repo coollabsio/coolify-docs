@@ -34,6 +34,10 @@ Open **General > Docker Registry**.
 | **Docker Image** | Registry and repository name, such as `ghcr.io/example/api`. Leaving it empty prevents Coolify from pushing the built image. |
 | **Docker Image Tag** | Optional additional tag. Coolify also tags the image with the source commit for Git-based builds. |
 
+<Callout type="warning" title="Use one Docker image name for each application">
+Coolify always tags a Git-based build with its commit SHA, or with `latest` when the Dockerfile is set in Coolify, and the container runs that tag. The **Docker Image Tag** is pushed in addition to it. Two applications that build the same commit to one image name use the same tag, so one application can run the image of the other. Coolify rejects two applications of a team with the same **Docker Image**, also when their **Docker Image Tag** values are different. Give each application its own image name, such as `ghcr.io/example/api` and `ghcr.io/example/api-staging`.
+</Callout>
+
 Deploy the application and confirm the registry contains the expected image and tags.
 
 <span id="docker-credentials" />

@@ -5,10 +5,12 @@ description: Patched Coolify versions and update instructions for PHP2Shell (CVE
 
 # PHP Security Advisory 2026 (PHP2Shell)
 
-**Last updated: 21 October 2026 — patched releases available.**
+**Originally published on 21 October 2026.**
+
+The version table and recovery steps below record the October PHP2Shell response. For current self-hosted installations, follow the [Coolify update guide](/core/instance-management/update). The [November 19 v4.7.6 release](https://github.com/coollabsio/coolify/releases/tag/v4.7.6#security) includes additional dependency security fixes. Apply PHP updates to your deployed applications separately.
 
 <Callout type="error" title="Update self-hosted Coolify immediately">
-PHP2Shell, tracked as [CVE-2026-109618](https://www.cve.org/CVERecord?id=CVE-2026-109618) and [CVE-2026-109619](https://www.cve.org/CVERecord?id=CVE-2026-109619), consists of two critical PHP remote code execution vulnerabilities. Unpatched Coolify installations across every v4 release line are affected. Install a patched version below; **v4.4.7 is recommended**.
+PHP2Shell, tracked as [CVE-2026-109618](https://www.cve.org/CVERecord?id=CVE-2026-109618) and [CVE-2026-109619](https://www.cve.org/CVERecord?id=CVE-2026-109619), consists of two critical PHP remote code execution vulnerabilities. Unpatched Coolify installations across every v4 release line are affected. The October advisory recommended **v4.4.7** for that incident.
 </Callout>
 
 ## Patched Coolify versions
@@ -23,9 +25,9 @@ The PHP fix has been backported to every v4 minor release line. If you need to s
 | v4.3.x | [v4.3.24](https://github.com/coollabsio/coolify/releases/tag/v4.3.24) |
 | v4.4.x | [v4.4.7](https://github.com/coollabsio/coolify/releases/tag/v4.4.7) |
 
-**We recommend moving to v4.4.7 wherever possible.** Staying on an older minor line addresses PHP2Shell, but leaves out other security fixes that have not been backported.
+These are the first patched versions for the October incident. Use the current stable release for subsequent fixes.
 
-## Self-hosted Coolify users
+## October recovery procedures for self-hosted Coolify
 
 ### Update v4.4 from the dashboard
 

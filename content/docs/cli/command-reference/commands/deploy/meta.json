@@ -1,6 +1,7 @@
 {
   "title": "Deploy",
   "pages": [
+    "overview",
     "batch",
     "cancel",
     "get",

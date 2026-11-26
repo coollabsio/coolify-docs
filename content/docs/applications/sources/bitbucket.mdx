@@ -26,3 +26,5 @@ Add the deploy key's public key under the repository's access-key settings.
 8. Open **Advanced > Deployment** and choose **Deploy on push (webhooks)** in **Auto deploy** in Coolify.
 
 Push to the configured branch and inspect **Deployment Logs**. Open or update a pull request to verify preview events separately.
+
+When one push updates several branches, each application on a pushed branch deploys the commit of its branch. `[skip ci]` or `[skip cd]` skips only the branch whose pushed commits all contain it.

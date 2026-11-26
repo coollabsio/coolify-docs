@@ -13,6 +13,77 @@ icon: "/docs/images/services/getoutline-logo.jpeg"
 
 Outline is an open-source collaboration tool that allows you to create and share documents with your team.
 
+## Upgrade PostgreSQL 12 of an existing service
+
+Since Coolify v4.7.0, a new Outline service uses PostgreSQL 16. An older service keeps `postgres:12-alpine`. Current Outline versions do not start on PostgreSQL 12: the `outline` container restarts in a loop with `syntax error at or near "TRIGGER"`.
+
+Coolify does not upgrade the database for you. PostgreSQL 16 cannot read the data directory of PostgreSQL 12, so move the data with a dump and a restore. These steps keep the old volume, so you can go back to it if a step fails.
+
+Run the commands on the server of the service, as a user that can run `docker`. Replace `<uuid>` with the UUID of the service: it is in the URL of the service page in Coolify, after `/service/`. The container names are `postgres-<uuid>` and `outline-<uuid>`.
+
+<Steps>
+<Step>
+
+### Dump the PostgreSQL 12 database
+
+```bash
+docker exec postgres-<uuid> sh -c 'pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB"' > outline-pg12.sql
+```
+
+Make sure that `outline-pg12.sql` is not empty and ends with `PostgreSQL database dump complete`:
+
+```bash
+tail -n 3 outline-pg12.sql
+```
+
+</Step>
+<Step>
+
+### Change the database image and volume
+
+1. In Coolify, stop the service.
+2. Open **Configuration > General > Edit Compose File**.
+3. In the `postgres` service, change the image to `postgres:16-alpine`, and give the data volume a new name, for example `database-data-16`:
+
+   ```yaml
+   postgres:
+     image: postgres:16-alpine
+     volumes:
+       - database-data-16:/var/lib/postgresql/data
+   ```
+
+4. Save the Compose file and start the service.
+
+PostgreSQL 16 creates an empty database in the new volume, with the same user and password. The old volume `<uuid>_database-data` stays on the server and keeps the PostgreSQL 12 data.
+
+</Step>
+<Step>
+
+### Restore the dump
+
+Outline creates its tables in the empty database when it starts. Stop Outline and create the database again, so that the dump goes into an empty database:
+
+```bash
+docker stop outline-<uuid>
+docker exec postgres-<uuid> sh -c 'dropdb -U "$POSTGRES_USER" "$POSTGRES_DB" && createdb -U "$POSTGRES_USER" "$POSTGRES_DB"'
+docker exec -i postgres-<uuid> sh -c 'psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB"' < outline-pg12.sql
+```
+
+</Step>
+<Step>
+
+### Restart and verify
+
+1. In Coolify, restart the service.
+2. Sign in to Outline and make sure that your documents are there.
+
+After you verify the data, you can delete the old volume with `docker volume rm <uuid>_database-data` and delete `outline-pg12.sql`.
+
+</Step>
+</Steps>
+
+If a step fails, stop the service, set the image back to `postgres:12-alpine` and the volume back to `database-data`, and start the service again.
+
 ## Screenshots
 
 ## Links

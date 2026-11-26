@@ -11,10 +11,10 @@ Use the exact filename, extension, and case. Prefer lowercase kebab-case for new
 
 ## Supported Syntax
 
-Markdown images are supported:
+Markdown images work only for external URLs (`https://...`). Do not use a Markdown image (`![alt](/docs/images/...)`) for a local asset. Fumadocs turns it into a build import from `public/docs/images/...`, which does not exist (assets live in `public/images/`), and the docs dev server and build fail. Use `<ZoomImage>` for local logos and screenshots. A local logo looks like this:
 
 ```mdx
-![Appsmith](/docs/images/services/appsmith-logo.svg)
+<ZoomImage src="/docs/images/services/appsmith-logo.svg" alt="Appsmith" />
 ```
 
 For an explicit image component:
@@ -29,7 +29,7 @@ The legacy alias remains supported:
 <ZoomableImage src="/docs/images/applications/domain.webp" alt="Application domain settings" />
 ```
 
-`src/components/docs/mdx.tsx` maps Markdown images, `Image`, `ZoomImage`, and `ZoomableImage` to the same zoomable-image implementation. No import is needed for these registered components. Do not rewrite valid `ZoomableImage` uses just because the docs moved to MDX.
+`src/components/docs/mdx.tsx` maps Markdown images (external URLs only), `Image`, `ZoomImage`, and `ZoomableImage` to the same zoomable-image implementation. No import is needed for these registered components. Do not rewrite valid `ZoomableImage` uses just because the docs moved to MDX.
 
 ## Assets and Accessibility
 

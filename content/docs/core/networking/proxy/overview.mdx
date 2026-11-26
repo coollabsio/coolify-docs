@@ -75,6 +75,10 @@ An invalid proxy configuration can make every application and service on the ser
 
 ---
 
+## Maintenance and fallback responses
+
+Use a resource's **Maintenance Mode** page to show a 503 maintenance page while its containers keep running. Under **Servers > [server] > Proxy > Routing behavior**, customize the server's fallback error page or redirect URL. See [Maintenance and error pages](/core/networking/proxy/maintenance-and-error-pages) for scope, setup, and proxy limitations.
+
 ## Switch between Traefik and Caddy
 
 The running proxy must be stopped before Coolify allows you to switch it. Plan a maintenance window because public routes remain unavailable until the new proxy starts and the resources have compatible labels.
@@ -158,4 +162,14 @@ For an external proxy, read [Custom proxy](/core/networking/proxy/custom/overvie
 
 Coolify connects the proxy to a destination network when the destination is created, a resource is deployed, or the proxy starts or restarts. It no longer reconnects all networks on hourly checks or server validation. If a required network connection is missing, redeploy the resource or restart the proxy.
 
-Proxy configurations are validated before saving. New configurations use Traefik v3.7 or caddy-docker-proxy 2.13; existing custom configurations should be reviewed before changing their image version.
+Proxy configurations are validated before saving. New configurations use Traefik v3.8 or caddy-docker-proxy 2.13; existing custom configurations should be reviewed before changing their image version.
+
+## Port conflicts and restarts
+
+Before Coolify starts the proxy from the dashboard, it checks the host ports that the proxy configuration publishes, usually `80` and `443`. Every other listener on such a port counts as a conflict, also a Docker container or a service that listens on IPv4 and IPv6 or on an address other than `127.0.0.1`. The Coolify proxy container itself is not a conflict. The start then stops with `Port <port> is in use.` Stop the process that uses the port and start the proxy again.
+
+The check uses `ss` or `netstat` when the server has one of them. Otherwise, it reads the socket table of the kernel, so it needs no other tool.
+
+When the proxy ports have a host IP, for example `203.0.113.5:443:443`, only listeners on all addresses or on that host IP count as a conflict. A service on the same port of another address, such as a Tailscale address, does not block the proxy.
+
+**Restart Proxy** pulls the proxy image before it stops the running proxy. If the pull fails, the restart fails and the proxy keeps running.

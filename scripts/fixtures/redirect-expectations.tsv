@@ -39,3 +39,4 @@
 /docs/api/endpoints/servers/export-server-transfer-mailbox	/docs/api/overview
 /docs/api-reference/api/operations/enable-api	/docs/api/ip-allowlist#api-access-controls
 /docs/api/endpoints/system/enable-api	/docs/api/ip-allowlist#api-access-controls
+/docs/core/persistent-storage/file-browser	/docs/core/container-file-browser

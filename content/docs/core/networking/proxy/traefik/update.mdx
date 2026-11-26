@@ -7,6 +7,8 @@ description: Review Traefik release notes, change the proxy image version in Coo
 
 When Coolify shows **Traefik patch update available** or **New Traefik minor version available**, update the proxy by changing its image version in the UI, saving the configuration, and restarting the proxy.
 
+New proxy configurations use `traefik:v3.8`. Existing proxies keep the image saved in their configuration, so Coolify does not update them by itself. On servers with an older version, **New Traefik minor version available** offers Traefik 3.8.
+
 ## Check compatibility first
 
 Open the [Traefik releases](https://github.com/traefik/traefik/releases) and review the release notes between your current version and the version you want to use. Follow any linked migration guides to check whether configuration options have changed or been removed.
@@ -32,7 +34,7 @@ In **Configuration file**, find `image` under `services.traefik` and replace its
 ```yaml
 services:
   traefik:
-    image: traefik:v3.7.14
+    image: traefik:v3.8.0
     # Keep the rest of your existing configuration.
 ```
 
@@ -48,6 +50,8 @@ Edits made directly to `/data/coolify/proxy/docker-compose.yml` do not sync back
 ### Save and restart
 
 Select **Save changes**, then **Restart Proxy** to apply the new image version.
+
+Coolify pulls the new image before it stops the running proxy. If the pull fails, for example because the tag does not exist, the restart fails and the old proxy keeps running.
 
 Wait for the proxy to report that it is running. Check **Proxy > Logs** for startup or configuration errors, then open your application domains and verify HTTPS and any custom routing or middleware.
 

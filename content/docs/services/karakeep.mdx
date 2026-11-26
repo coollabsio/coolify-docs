@@ -15,6 +15,15 @@ icon: "/docs/images/services/karakeep-logo.svg"
 
 KaraKeep is a self-hostable bookmark-everything app with AI-based automatic tagging. It serves as a comprehensive read-it-later service and alternative to Pocket or Omnivore. KaraKeep can automatically categorize and tag your saved content using AI, making it easy to organize and rediscover articles, videos, and other web content you want to save for later.
 
+## Upgrade to Karakeep 0.35
+
+New services use Karakeep 0.35.0. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+- 0.34: all users must sign in again. Before the upgrade, fix the accounts whose email addresses are different only in letter case.
+- 0.35: Karakeep drops privileges. If you get errors about the data directory, set `KARAKEEP_DISABLE_PRIVILEGE_DROP=true`.
+
+See the [official release notes](https://github.com/karakeep-app/karakeep/releases?utm_source=coolify.io).
+
 ## Links
 
 - [The official website](https://docs.karakeep.app?utm_source=coolify.io)

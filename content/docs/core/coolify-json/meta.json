@@ -1,0 +1,11 @@
+{
+  "title": "coolify.json",
+  "pages": [
+    "overview",
+    "use-as-template",
+    "config-as-code",
+    "file-reference",
+    "example",
+    "api-and-cli"
+  ]
+}

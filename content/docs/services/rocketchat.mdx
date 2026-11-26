@@ -19,6 +19,18 @@ Rocket.Chat is an open-source team communication platform that allows you to com
 <ZoomImage src="https://cdn.prod.website-files.com/611a19b9853b7414a0f6b3f6/66d6b552743cdc359b7b9fda_Group%205006.avif" alt="Rocket Chat Preview 2" />
 <ZoomImage src="https://cdn.prod.website-files.com/611a19b9853b7414a0f6b3f6/6298ae98a2113078342a1c9c_team-collaboration.avif" alt="Rocket Chat Preview 3" />
 
+## Upgrade to Rocket.Chat 9
+
+New services use Rocket.Chat 9.0.0 with MongoDB 8.0. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+1. On MongoDB 7, set `featureCompatibilityVersion` to `7.0`.
+2. Change the MongoDB image to 8.0.
+3. Change the Rocket.Chat image to 9.0.0.
+
+LDAP, SAML, and custom OAuth need a Premium licence. Some OAuth providers are removed.
+
+See the [official release notes](https://github.com/RocketChat/Rocket.Chat/releases/tag/9.0.0?utm_source=coolify.io).
+
 ## Links
 
 - [The official website](https://rocket.chat)

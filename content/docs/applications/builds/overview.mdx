@@ -35,7 +35,7 @@ Choose [Nixpacks](/applications/builds/nixpacks/overview) or [Railpack](/applica
 
 ## Where builds run
 
-Coolify runs image builds on the deployment server by default.
+Coolify runs image builds on the deployment server by default. Docker Compose and Docker Image applications always use the deployment server.
 
 A [build server](/core/infrastructure/servers/build-servers) separates build CPU, memory, and disk use from the server running the application. A build server cannot run deployed resources. The completed image must be available to the deployment server through the configured registry path.
 
@@ -47,11 +47,11 @@ A runtime-only change can reuse an existing image. Changes to the Dockerfile, Co
 
 ## Build cache
 
-Docker reuses unchanged build layers when caching is available. Under **Advanced**, **Disable Build Cache** forces every build step to run again.
+Docker reuses unchanged build layers when caching is available. Under **Advanced > Build**, setting **Build cache** to **Rebuild from scratch every time** forces every build step to run again.
 
 Coolify excludes `SOURCE_COMMIT` from the build by default so different commits can reuse unchanged layers. Under **Advanced > Build**, set **Source commit availability** to **Available during build** only when the build itself requires the commit value.
 
-Use **Force deploy (without cache)** for one deployment that must run a Coolify-generated build without cached layers. A custom Docker Compose build command controls its own cache flags.
+Use **Deploy (without cache)** or **Redeploy (without cache)** for one deployment that must build without cached layers. For a custom Docker Compose build command, Coolify adds `--no-cache` when the command does not have it.
 
 ## Push built images to a registry
 

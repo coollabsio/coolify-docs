@@ -1,9 +1,10 @@
-import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { appendFile, cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
 import { loader, multiple, source as createSource } from 'fumadocs-core/source';
 import { openapiPlugin, openapiSource } from 'fumadocs-openapi/server';
 import { getAllDocEntries, getDocSourceFiles } from './lib/content';
+import { splitLlmsFull } from './lib/llms-full-split';
 import { openapi } from '../src/lib/config/openapi';
 import { getDocMarkdownPath, getDocOgPath } from '../src/lib/config/site';
 import { getManifestKey } from '../src/lib/docs/docs-manifest';
@@ -174,6 +175,57 @@ Sitemap: ${absoluteUrl(`${site.docsBasePath}/sitemap.xml`)}
   await writeFile(resolve(outputRoot, 'robots.txt'), robots, 'utf8');
 }
 
+// Agents read about 200,000 tokens at most, and a full llms-full.txt is about 3 MB.
+// 100 KB is about 25,000 tokens, so an agent can read several files in one task.
+const llmsFullMaxBytes = 100_000;
+
+function formatSize(bytes: number): string {
+  return bytes < 1_000_000 ? `${Math.ceil(bytes / 1000)} KB` : `${(bytes / 1_000_000).toFixed(1)} MB`;
+}
+
+async function writeLlmsFullFiles() {
+  const outputRoot = resolve(currentDir, '../.output/public');
+  const markdownRoot = resolve(outputRoot, 'llms.mdx/docs');
+  const paths = (await readdir(markdownRoot, { recursive: true })).filter((path) => path.endsWith('content.md'));
+  const pages = await Promise.all(
+    paths.map(async (path) => ({
+      slugs: dirname(path).split('/').filter((slug) => slug && slug !== '.'),
+      text: (await readFile(resolve(markdownRoot, path), 'utf8')).trim(),
+    })),
+  );
+
+  const { metas } = await getDocSourceFiles();
+  const folderTitles = new Map(
+    metas.flatMap((meta) => (meta.data.title ? [[dirname(meta.path).replace(/^\.$/, ''), meta.data.title]] : [])),
+  );
+  const files = splitLlmsFull(pages, llmsFullMaxBytes, folderTitles);
+  await rm(resolve(outputRoot, 'llms-full'), { recursive: true, force: true });
+  await Promise.all(
+    files.map(async (file) => {
+      const target = resolve(outputRoot, 'llms-full', `${file.name}.txt`);
+      await mkdir(dirname(target), { recursive: true });
+      await writeFile(target, `${file.text}\n`, 'utf8');
+    }),
+  );
+
+  // llms.txt is prerendered before this script runs, so the file sizes are known only here.
+  const fullSize = Buffer.byteLength(await readFile(resolve(outputRoot, 'llms-full.txt')));
+  const lines = [
+    '',
+    '## Full text',
+    '',
+    `- [All pages](${absoluteUrl(site.llmsFullUrl)}): ${pages.length} pages, ${formatSize(fullSize)}. Too large for most agents; use the files below.`,
+    ...files.map((file) => {
+      const url = absoluteUrl(`${site.docsBasePath}/llms-full/${file.name}.txt`);
+      const { contents } = file;
+      const covers = contents.length > 6 ? `${contents[0]} to ${contents.at(-1)}` : contents.join(', ');
+      const size = `${file.pages.length} pages, ${formatSize(Buffer.byteLength(file.text))}`;
+      return `- [${file.title}](${url}): ${covers === file.title ? size : `${covers} (${size})`}`;
+    }),
+  ];
+  await appendFile(resolve(outputRoot, 'llms.txt'), `${lines.join('\n')}\n`, 'utf8');
+}
+
 async function writeDocsManifest() {
   const outputRoot = resolve(currentDir, '../.output/public');
   const { metas, pages: sourcePages } = await getDocSourceFiles();
@@ -196,6 +248,7 @@ async function writeDocsManifest() {
       const base = {
         description: page.data.description ?? site.description,
         isIndex: page.slugs.length === 0,
+        markdownUrl: getDocMarkdownPath(page.slugs),
         ogImagePath: getDocOgPath(page.slugs),
         title: page.data.title,
         url: page.url === '/' ? site.docsBasePath : `${site.docsBasePath}${page.url}`,
@@ -212,7 +265,6 @@ async function writeDocsManifest() {
           : {
               ...base,
               type: 'docs',
-              markdownUrl: getDocMarkdownPath(page.slugs),
               path: page.path,
             },
       ];
@@ -258,5 +310,6 @@ await writeOgImages();
 await writeSitemap();
 await writeRobots();
 await writeDocsManifest();
+await writeLlmsFullFiles();
 await copyBaseScopedPublicAssets();
 await cleanupNonStaticOutput();

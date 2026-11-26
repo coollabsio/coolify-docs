@@ -54,8 +54,8 @@ Use:
 
 - **Deploy** for the first deployment
 - **Redeploy** to run the deployment flow again
-- **Restart** to recreate the runtime through the deployment queue; source-based paths reuse an existing image when eligible, while Docker Image pulls the saved image reference again
-- **Force deploy (without cache)** to disable cache for a Coolify-generated source build; custom Docker Compose build commands control their own cache flags
+- **Restart** to recreate the runtime through the deployment queue; source-based paths start the existing image when no build setting changed, while Docker Image pulls the saved image reference again
+- **Deploy (without cache)** or **Redeploy (without cache)** to build without cache; Coolify adds `--no-cache` to a custom Docker Compose build command
 
 Read [Build and deployment model](/core/build-deployment-model) for the difference between image preparation and container replacement.
 

@@ -22,6 +22,31 @@ full control through self-hosting.
 
 <ZoomImage src="/docs/images/services/bugsink.webp" alt="Bugsink dashboard" />
 
+## Database
+
+Since Coolify v4.7.0, a new Bugsink service uses Bugsink 2 with a PostgreSQL 17 database.
+
+### Stop the disk growth of an existing MySQL service
+
+An older Bugsink service uses MySQL. MySQL writes binary logs that can fill the disk until Bugsink stops. To stop this:
+
+1. Open the **Terminal** of the service, select the `mysql` container, and connect to MySQL as root with `mysql -u root -p`. The root password is in **Environment Variables**.
+2. Delete the existing binary logs:
+
+   ```sql
+   PURGE BINARY LOGS BEFORE NOW();
+   ```
+
+3. Open **Configuration > General > Edit Compose File** and add this line to the `mysql` service:
+
+   ```yaml
+   command: ['--disable-log-bin']
+   ```
+
+4. Save the Compose file and restart the service.
+
+The service continues to use MySQL. Coolify does not move the data to PostgreSQL.
+
 ## Links
 
 - [The official website](https://www.bugsink.com/?utm_source=coolify.io)

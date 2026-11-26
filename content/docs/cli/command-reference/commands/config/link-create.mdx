@@ -1,0 +1,38 @@
+---
+title: "Link create"
+description: "Link an environment to coolify.json"
+---
+
+# Link create
+
+Link an environment to coolify.json
+
+## Usage
+
+```sh
+coolify config link create
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--auto-apply` | `boolean` | No | `false` | Apply safe changes automatically |
+| `--branch` | `string` | No | — | Branch (git mode) |
+| `--destination-uuid` | `string` | No | — | Destination on that server, when it has more than one |
+| `--environment` | `string` | Yes | — | Environment name (required) |
+| `--file-path` | `string` | No | — | Path of the file in the repository (default coolify.json) |
+| `--mode` | `string` | No | `api` | Link mode: api or git |
+| `--project` | `string` | Yes | — | Project name (required) |
+| `--repository` | `string` | No | — | Repository URL (git mode) |
+| `--server-uuid` | `string` | No | — | Server that reads the file and runs resources that name no server (git mode) |
+| `--source-type` | `string` | No | — | Git source: public, github_app, gitea_app, or deploy_key (git mode) |
+| `--source-uuid` | `string` | No | — | UUID of the GitHub app, Gitea app, or deploy key |
+
+## Get current help
+
+```sh
+coolify config link create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

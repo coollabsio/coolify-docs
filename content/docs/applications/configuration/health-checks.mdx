@@ -22,7 +22,7 @@ This routing behavior applies only when Coolify Proxy uses Traefik. When applica
 
 Docker Compose applications do not use the standard application **Healthcheck** page. Define the check in each service's Dockerfile or in the Compose definition.
 
-For a non-Compose Dockerfile application, Coolify detects the image's `HEALTHCHECK` and uses it instead of adding the health check configured in the dashboard. Remove the Dockerfile instruction and redeploy before switching that application to a Coolify-managed check.
+When the dashboard **Healthcheck** is enabled, it replaces the image's Dockerfile `HEALTHCHECK` in the generated container definition. To use the Dockerfile `HEALTHCHECK`, disable the dashboard **Healthcheck** and redeploy.
 
 <span id="configure-health-checks" />
 
@@ -55,7 +55,7 @@ Add an endpoint such as `/health` to the application. It should return success o
 
 Enter:
 
-- **Method**: `GET` or `POST`
+- **Method**: `GET`, `HEAD`, `POST`, or `OPTIONS`
 - **Scheme**: `http` or `https`
 - **Host**: normally `localhost`
 - **Port**: the port used inside the container; when empty, Coolify uses the first value from **Ports Exposes**
@@ -92,9 +92,13 @@ Replace `3000` and `/health` with the values entered in the health-check form. T
 </Step>
 </Steps>
 
-<Callout type="info" title="Current response validation">
+<Callout type="info" title="Response validation">
 
-The generated HTTP check currently uses the `curl` or `wget` exit status to determine health. Although **Expected code** and **Expected response text** appear in the form, the generated check does not compare the response against those two fields.
+A response with a `2xx` or `3xx` code always passes. To also pass a `4xx` or `5xx` response, for example `401` from an endpoint behind authentication, set **Expected code** to that code.
+
+When **Expected response text** is set, the response body must also contain that text. A `HEAD` response has no body, so a `HEAD` check does not compare the text. With the `https` scheme, the check does not verify the certificate, so it also works with a self-signed certificate.
+
+The upgrade to Coolify v4.7.7 cleared the **Expected response text** that applications saved before, because older versions did not check it. Set the text again to use the check.
 
 </Callout>
 
@@ -198,7 +202,7 @@ CMD ["npm", "start"]
 
 The command runs inside containers created from the image. It must use the internal listening port, and every binary referenced by `HEALTHCHECK` must be installed in the final image stage.
 
-For a non-Compose Dockerfile application, Coolify detects this instruction and does not add its dashboard-configured health check to the generated container definition.
+For a non-Compose application, Coolify uses this instruction only while the dashboard **Healthcheck** is disabled. An enabled dashboard **Healthcheck** replaces it.
 
 </Tab>
 <Tab value="Docker Compose" icon={Layers}>

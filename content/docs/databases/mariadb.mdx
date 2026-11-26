@@ -61,7 +61,7 @@ Select **Start** and follow the startup output. Wait until MariaDB is running an
 | Setting | Default or behavior |
 | :--- | :--- |
 | Internal port | `3306` |
-| Default image | `mariadb:11` |
+| Default image | `mariadb:12.3`. Existing databases keep their image. |
 | Normal user | `mariadb` |
 | Initial database | `default` |
 | Data mount | `/var/lib/mysql` |
@@ -89,7 +89,7 @@ Open **General** to change the image, credentials, **Port mappings**, public pro
 
 Coolify uses `mariadb-dump` for scheduled backups. Selected databases are dumped directly. **Database selection > All databases** runs `mariadb-dump --all-databases` and compresses the output with `pigz` when it is available, otherwise `gzip`. The all-database file name ends in `.gz`. For **Specific databases**, type each name and press Enter in **Databases to back up**.
 
-Use [Database backups](/databases/backups) to configure schedules, retention, and S3 storage. The built-in **Import Backup** form accepts MariaDB backups while the database is running; follow [Restore a database](/databases/restore) for the import workflow.
+Use [Database backups](/databases/backups) to configure schedules, retention, and S3 storage. The built-in **Import backup** dialog on the **Backups** page accepts MariaDB backups while the database is running; follow [Restore a database](/databases/restore) for the import workflow.
 
 <Callout type="warning" title="Restore replaces data">
 

@@ -1,0 +1,70 @@
+---
+title: "Orbit"
+description: "Self-hosted workspace for teams with tasks, docs, chat, and an MCP server for AI clients."
+category: "Productivity"
+icon: "/docs/images/services/orbit-logo.svg"
+---
+
+# Orbit
+
+<ZoomImage src="/docs/images/services/orbit-logo.svg" alt="Orbit logo" />
+
+## What is Orbit?
+
+Orbit is a self-hosted workspace for teams. It puts tasks, docs, and chat in one app on your own server. AI clients connect to its MCP server and can read and write your tasks and docs without your data leaving your server.
+
+- **Tasks:** projects with custom workflows, list, board, and timeline views, sub-issues, labels, GitHub sync, and import from Asana, Linear, and Trello.
+- **Docs:** a page tree with live collaborative editing, version history, search, and Notion import.
+- **Chat:** channels, direct messages, threads, and files.
+- **AI:** an MCP server with OAuth at `<your domain>/mcp`.
+
+The Coolify template runs the `ghcr.io/coollabsio/orbit` image with a SQLite database on a persistent volume.
+
+## Deploy on Coolify
+
+1. Go to **Projects → New Resource**.
+2. Select **Orbit** from the service list.
+3. Set an `https://` domain on the Orbit service. Orbit runs in production mode and does not start without an HTTPS origin.
+4. Click **Deploy**.
+
+<Callout type="warning">
+Keep a copy of `ORBIT_APP_KEY` outside the server. Orbit encrypts saved secrets (SMTP password, integration tokens, two-factor data) with this key. A database restored without the same key cannot read them.
+</Callout>
+
+## First setup
+
+On a fresh database, Orbit prints one `Initial setup URL` to its logs.
+
+1. Open the **Logs** of the Orbit service in Coolify.
+2. Find the line `Initial setup URL` and open the URL in your browser.
+3. Complete the owner and workspace form. The account that you create here becomes the root user.
+
+If the setup token expires before you use it, restart the service. On startup, Orbit removes the expired token and prints a new `Initial setup URL` to the logs.
+
+After the first setup, registration is closed. People join only by invitation. The root user can configure email in **Admin → Settings** and S3 storage in **Admin → Storage**.
+
+## Environment variables
+
+Coolify sets these variables for you:
+
+| Variable | Description |
+|----------|-------------|
+| `ORBIT_ENV` | Set to `production`. |
+| `ORBIT_PUBLIC_ORIGIN` | The public URL of the service. It must start with `https://`. |
+| `ORBIT_TRUSTED_PROXIES` | The networks of the reverse proxy and the loopback address for the healthcheck. The default covers the private Docker networks. |
+| `ORBIT_APP_KEY` | A generated base64 key of 32 random bytes for saved secrets. |
+
+Orbit does not start when it finds an unknown variable that starts with `ORBIT_`. For all supported variables, see the [Orbit operations guide](https://github.com/coollabsio/orbit/blob/main/docs/operations.md?utm_source=coolify.io).
+
+## Persistent storage
+
+| Volume | Path | Content |
+|--------|------|---------|
+| `orbit-data` | `/var/lib/orbit` | SQLite database and attachments |
+| `orbit-backups` | `/var/backups/orbit` | Local backups, including the backups that Orbit makes before a migration |
+
+## Links
+
+- [GitHub](https://github.com/coollabsio/orbit?utm_source=coolify.io)
+- [Operations guide](https://github.com/coollabsio/orbit/blob/main/docs/operations.md?utm_source=coolify.io)
+- [MCP setup](https://github.com/coollabsio/orbit/blob/main/docs/mcp.md?utm_source=coolify.io)

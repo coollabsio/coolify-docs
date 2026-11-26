@@ -13,6 +13,8 @@ Coolify Cloud users cannot access the internal Coolify database. If you see any 
 
 A normal [Coolify update](/core/instance-management/update) does not migrate this database to a newer PostgreSQL major version. Major-version changes require the migration script described on this page.
 
+Patch releases within the current major version need no separate step. `coolify-db` uses a floating tag such as `postgres:15-alpine`, so each Coolify update pulls the newest patch release and recreates the container with the existing data volume.
+
 This procedure does not apply to PostgreSQL databases that you deploy as project resources. Back up and upgrade those databases separately.
 
 ## Before you update

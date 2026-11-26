@@ -25,8 +25,9 @@ The update accepts a `soketi` override in `docker-compose.custom.yml`. Existing 
 The external paths do not change:
 
 - `/app/*` carries browser WebSocket connections.
-- `/apps/*` carries Pusher-compatible API requests.
 - `/terminal/ws` carries web terminal connections.
+
+Since Coolify 4.6.0, the generated Traefik and Caddy configurations no longer route `/apps/*`, the Reverb HTTP API, through the dashboard domain. Coolify sends events to Reverb inside the `coolify` container, so the browser does not need this path. If your own reverse proxy routes `/apps/*` to port `6001`, remove that route.
 
 The update keeps the existing Pusher application ID, key, and secret. It also keeps `SOKETI_PORT` as the compatible Docker host-port setting. Do not rename that variable during this migration.
 
@@ -161,7 +162,6 @@ This is the recommended configuration. Send the dashboard hostname to the Coolif
 
 ```text
 /app/*       -> coolify:6001
-/apps/*      -> coolify:6001
 /terminal/ws -> coolify:6002
 /*           -> coolify:8080
 ```

@@ -15,6 +15,18 @@ icon: "/docs/images/services/twenty-logo.svg"
 
 Twenty is an open-source CRM that gives you the building blocks to create exactly what your business needs.
 
+## Upgrade to Twenty v2.58
+
+New services use Twenty v2.58. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+Twenty 2 needs PostgreSQL 15 or later.
+
+1. From v1.15, upgrade one version at a time up to v1.23. Then upgrade directly to the latest version.
+2. Set `ENCRYPTION_KEY` before the v2.5 step. If you change this key later, you must do a key rotation.
+3. Do not change `APP_SECRET`.
+
+See the [official upgrade guide](https://docs.twenty.com/developers/self-host/capabilities/upgrade-guide?utm_source=coolify.io) and [key rotation](https://docs.twenty.com/developers/self-host/capabilities/key-rotation?utm_source=coolify.io).
+
 ## Links
 
 - [Official website](https://twenty.com/?utm_source=coolify.io)

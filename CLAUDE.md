@@ -14,6 +14,8 @@ The Coolify application source can be found at https://github.com/coollabsio/coo
 - **next**: Development branch, deployed to https://next.coolify.io/docs/ by `.github/workflows/staging-build.yml`
 - Pull requests must target `next`, not `main`. `enforce-pr-standards.yml` retargets non-maintainer PRs to `next` automatically.
 - Weekly release cycle merges `next` into `main`.
+- `release/vX.Y` branches (for example `release/v4.8`) hold docs for an upcoming Coolify release. Merge a release branch into `next` by hand when that release is ready.
+- `.github/workflows/merge-forward.yml` runs after every push to `main`. It merges `main` into each release branch and into `next`, and regenerates the service catalog in each merge. It never merges a release branch into `next`. On other conflicts it opens a pull request from a `chore/merge-<source>-into-<target>` branch; merge that pull request with a merge commit, not a squash merge.
 
 ## Technology Stack
 
@@ -77,7 +79,6 @@ config/site.shared.ts       # Shared site metadata and docs base path
 config/openapi.json         # Coolify OpenAPI spec for the API reference
 scripts/                    # Generators, link checker, and postbuild script
 nginx/                      # Nginx config and redirects
-atlas.json                  # Atlas devkit config (bun run dev:atlas)
 ```
 
 `content/docs/` is the source of truth for documentation. Edit MDX files there directly.

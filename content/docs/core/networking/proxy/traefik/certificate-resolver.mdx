@@ -1,0 +1,100 @@
+---
+title: Certificate Resolver
+description: Choose which Traefik certificate resolver Coolify uses for HTTPS routes, per server or per resource, or turn it off when Traefik uses your own certificates.
+---
+
+# Certificate resolver
+
+Coolify adds a Traefik certificate resolver to every HTTPS route that it generates. By default this is `letsencrypt`, the resolver in Coolify's default Traefik configuration, so Traefik requests a Let's Encrypt certificate for each HTTPS domain.
+
+You can change the resolver for a whole server, and override it for each application or service. Use this when:
+
+- Traefik serves your own certificates, for example [Cloudflare Origin CA](https://developers.cloudflare.com/ssl/origin-configuration/origin-ca/) certificates or certificates from your organization ([custom SSL certificates](/core/networking/proxy/traefik/custom-ssl-certs)).
+- Another proxy in front of the server terminates TLS, and Traefik only needs a local certificate.
+- You removed the `letsencrypt` resolver from the Traefik configuration, and the proxy logs show `Router uses a nonexistent certificate resolver` ([troubleshooting](/troubleshoot/dns-and-domains/certificate-resolver-doesnt-exist)).
+- Your Traefik configuration has a resolver with another name, for example a [DNS challenge](/core/networking/proxy/traefik/dns-challenge) resolver for some domains.
+
+<Callout type="warning" title="Requires Coolify v4.4.7">
+  The certificate resolver setting is available in Coolify v4.4.7 or above. It applies only to the Traefik proxy. Caddy has no certificate resolvers.
+</Callout>
+
+## Values
+
+| Value | Generated HTTPS route | When to use |
+| --- | --- | --- |
+| `letsencrypt` (default) | `tls=true` and `tls.certresolver=letsencrypt` | Traefik gets Let's Encrypt certificates. |
+| Empty / **None** | `tls=true` only | Traefik uses certificates from its dynamic configuration, or its default certificate. Traefik makes no certificate requests. |
+| A custom name, for example `cloudflare` | `tls=true` and `tls.certresolver=cloudflare` | The resolver with this name exists in your Traefik configuration. |
+
+A resolver name can contain letters, numbers, hyphens (`-`), and underscores (`_`).
+
+## Set the resolver for a server
+
+Open **Servers > your server > Proxy > Configuration**. In **Routing behavior**, set **Certificate resolver**:
+
+- Keep `letsencrypt` to keep the default behavior.
+- Clear the field when no resource on this server should use a certificate resolver.
+- Enter the name of another resolver from your Traefik configuration.
+
+Save the configuration. Coolify updates its own dashboard routes and the catch-all route for unknown hosts at once. Redeploy your resources to update their routes.
+
+<Callout type="info" title="Upgrades from older versions">
+  When you upgrade to Coolify v4.4.7, Coolify checks the saved Traefik configuration of each server. If it has no active `--certificatesresolvers.letsencrypt.*` option, the server resolver is set to empty. All other servers keep `letsencrypt`.
+</Callout>
+
+## Override the resolver for a resource
+
+A resource uses the server resolver unless you choose another value.
+
+- **Applications**: open the application, then **Advanced > Proxy > Certificate resolver**.
+- **Services**: open the service, select the service application, and set **Certificate resolver** in its settings.
+
+Choose one of these options:
+
+| Option | Result |
+| --- | --- |
+| **Server setting** | Uses the resolver of the server. The option shows the current server value. |
+| **None (use your own certificates)** | No resolver on this resource's HTTPS routes. |
+| **Custom resolver** | Uses the resolver name that you enter. |
+
+Redeploy the application, or restart the service, to apply the change.
+
+The option is shown only when the server uses Traefik and Coolify manages the container labels. If you edit the labels manually (read-only labels turned off), change `traefik.http.routers.<router>.tls.certresolver` in the labels instead.
+
+In a Docker Compose application, the value applies to all services of the application. In a service stack, each service application has its own value.
+
+## Mix Let's Encrypt and your own certificates on one server
+
+Some domains on a server can use your own certificates while other domains use Let's Encrypt. For example, Cloudflare proxies some domains with Origin CA certificates, and other domains use DNS only.
+
+You can do this in two ways:
+
+- **Recommended**: set **None** on the resources that use your own certificates. Traefik then never requests a Let's Encrypt certificate for these domains.
+- **Without changes to the resolver**: keep `letsencrypt` and load a certificate for each of these domains in a [dynamic configuration](/core/networking/proxy/traefik/custom-ssl-certs). Before Traefik requests a certificate, it checks its certificate store. If a loaded certificate covers all domains of a route, Traefik uses it and requests nothing.
+
+The second way does not work with a default certificate (`tls.stores.default.defaultCertificate`), because a default certificate does not match a domain. In that case, use **None**.
+
+## Use the API
+
+The setting is also available in the [API](/api/overview):
+
+- Server: `traefik_certificate_resolver` in `GET` and `PATCH /api/v1/servers/{uuid}/proxy`. Send an empty string or `null` for no resolver.
+- Application: `traefik_certificate_resolver` when you create or update an application.
+- Service application: `traefik_certificate_resolver` when you update a service application.
+
+For applications and service applications, `null` uses the server setting and `none` uses no resolver.
+
+## Verify the routes
+
+After a redeploy, check the labels of the container:
+
+```bash
+docker inspect <container> --format '{{json .Config.Labels}}' | tr ',' '\n' | grep 'tls'
+```
+
+With **None**, you see `tls=true` and no `tls.certresolver` label. Then check the certificate that Traefik serves:
+
+```bash
+openssl s_client -connect example.com:443 -servername example.com </dev/null 2>/dev/null \
+  | openssl x509 -noout -subject -issuer -dates
+```

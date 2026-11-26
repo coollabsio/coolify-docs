@@ -15,6 +15,17 @@ icon: "/docs/images/services/homarr-logo.svg"
 
 Homarr is a self-hosted homepage for your services.
 
+## Upgrade to Homarr v2
+
+New services use Homarr v2.13.1. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+1. Back up `/appdata`. Homarr v1 cannot read the migrated database.
+2. If you use MySQL, convert it to SQLite first.
+3. Keep `SECRET_ENCRYPTION_KEY`.
+4. Behind a TLS proxy, `BASE_URL` must use HTTPS.
+
+See the [official Docker installation guide](https://homarr.dev/docs/getting-started/installation/docker/?utm_source=coolify.io).
+
 ## Links
 
 - [Official Documentation](https://homarr.dev?utm_source=coolify.io)

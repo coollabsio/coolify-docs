@@ -138,6 +138,12 @@ Your friendliest open source all-in-one automation tool, designed to be extensib
 
 <ZoomImage src="/docs/images/services/activepieces2.gif" alt="Activepieces dashboard" />
 
+## Upgrade to Activepieces 0.93
 
+New services use Activepieces 0.93.0. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
 
+- Rename `AP_SANDBOX_RUN_TIME_SECONDS` to `AP_FLOW_TIMEOUT_SECONDS`.
+- Rename `AP_MAX_CONCURRENT_JOBS_PER_PROJECT` to `AP_DEFAULT_CONCURRENT_JOBS_LIMIT`. The default is 5.
+- To connect to private hosts, set `AP_SSRF_ALLOW_LIST`.
 
+See the [official breaking changes](https://www.activepieces.com/docs/install/reference/breaking-changes?utm_source=coolify.io).

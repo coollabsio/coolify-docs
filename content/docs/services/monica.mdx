@@ -1,0 +1,49 @@
+---
+title: "Monica"
+description: "An open-source personal relationship manager."
+og:
+  description: "Deploy Monica on Coolify to keep track of contacts, conversations, reminders, and important dates for the people in your life."
+category: "Productivity"
+icon: "/docs/images/services/monica-logo.svg"
+---
+
+# Monica
+
+<ZoomImage src="/docs/images/services/monica-logo.svg" alt="Monica logo" />
+
+## What is Monica?
+
+Monica is an open-source personal relationship manager (personal CRM). It helps you remember details about the people in your life: notes about conversations, birthdays, gifts, debts, activities, and reminders for important dates.
+
+## Deployment
+
+The Coolify template runs three containers:
+
+| Container | Purpose |
+|---|---|
+| `monica` | The web application (Apache, port 80). At each start it runs the database migrations and creates the API keys. |
+| `monica-cron` | Runs the Laravel scheduler each minute. It sends reminders and runs scheduled jobs. |
+| `mariadb` | The database. |
+
+Coolify generates the application key, the hash salt, and the database credentials. You do not need to run setup commands after deployment.
+
+1. Deploy the service.
+2. Open the service URL.
+3. Register the first account at `/register`.
+
+## Persistent storage
+
+| Volume | Path | Contents |
+|---|---|---|
+| `monica-storage` | `/var/www/html/storage` | Uploaded files, logs, and the OAuth keys. Back up this volume. |
+| `mariadb-data` | `/var/lib/mysql` | The database. |
+
+## Email
+
+Monica sends reminders by email. To send email, add the `MAIL_*` variables (for example `MAIL_MAILER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS`) to the `monica` and `monica-cron` services. See the [Monica mail documentation](https://github.com/monicahq/monica/blob/4.x/docs/installation/mail.md?utm_source=coolify.io).
+
+## Links
+
+- [The official website](https://www.monicahq.com?utm_source=coolify.io)
+- [GitHub](https://github.com/monicahq/monica?utm_source=coolify.io)
+- [Docker image](https://github.com/monicahq/docker?utm_source=coolify.io)

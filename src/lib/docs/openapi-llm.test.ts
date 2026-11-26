@@ -175,7 +175,7 @@ describe('renderOpenApiLlmText', () => {
       document,
     });
 
-    assert.match(text, new RegExp(`^# Create Preview Deployment \\(${pageUrl}\\)`));
+    assert.match(text, new RegExp(`^# Create Preview Deployment\\n\\nSource: ${pageUrl}\\n`));
     assert.match(text, /## POST \/applications\/\{uuid\}\/previews/);
     assert.match(text, /\*\*Authentication:\*\* Bearer token \(`bearerAuth`\)/);
     assert.match(text, /\| uuid \| path \| yes \| string \| UUID of the application\. \|/);

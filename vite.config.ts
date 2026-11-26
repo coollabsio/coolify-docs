@@ -4,9 +4,11 @@ import tailwindcss from '@tailwindcss/vite';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import mdx from 'fumadocs-mdx/vite';
 import { nitro } from 'nitro/vite';
+import { openapiSource } from 'fumadocs-openapi/server';
 import { defineConfig } from 'vite';
 import { getAllDocEntries } from './scripts/lib/content';
 import { siteDefinition } from './config/site.shared';
+import { openapi } from './src/lib/config/openapi';
 
 const docEntries = await getAllDocEntries();
 const prerenderDocPages = docEntries.map((doc) => ({
@@ -15,14 +17,19 @@ const prerenderDocPages = docEntries.map((doc) => ({
       ? siteDefinition.docsBasePath
       : `${siteDefinition.docsBasePath}/${doc.routeSegments.join('/')}`,
 }));
-const prerenderMarkdownPages = docEntries.map((doc) => ({
-  path: `${siteDefinition.docsBasePath}/llms.mdx/docs/${[...doc.routeSegments, 'content.md'].join('/')}`,
+// The crawler finds API endpoint pages through links, but no link points to their Markdown.
+const openapiPages = (await openapiSource(openapi, { baseDir: 'api/endpoints', groupBy: 'tag' })).files
+  .filter((file) => file.type === 'page')
+  .map((file) => file.path.replace(/\.mdx?$/, '').split('/'));
+const prerenderMarkdownPages = [...docEntries.map((doc) => doc.routeSegments), ...openapiPages].map((slugs) => ({
+  path: `${siteDefinition.docsBasePath}/llms.mdx/docs/${[...slugs, 'content.md'].join('/')}`,
 }));
 
 export default defineConfig({
   base: '/docs/',
   server: {
     port: 3000,
+    allowedHosts: ['.ts.net'],
     watch: {
       ignored: ['**/.output/**', '**/node_modules/.nitro/**'],
       usePolling: true,

@@ -1,6 +1,6 @@
 ---
 title: Services
-description: Use Coolify MCP to inspect one-click services and their application or database components.
+description: Use Coolify MCP to inspect, create, and manage one-click services and their components.
 ---
 
 # Services
@@ -8,10 +8,20 @@ description: Use Coolify MCP to inspect one-click services and their application
 | Tool | Purpose |
 | :--- | :--- |
 | `list_services` | List multi-container services with project, environment, server, status, and name filters. |
-| `get_service` | Inspect one service by UUID. |
+| `get_service` | Inspect one service by UUID. With `read:sensitive` and a token of a team admin or owner, it also returns the Compose files `docker_compose_raw` and `docker_compose`. Locked values in `docker_compose` show as `<locked>`, as in the API. |
 | `list_service_applications` | List application components in a service. |
 | `get_service_application` | Inspect one service application component. |
 | `list_service_databases` | List database components in a service. |
 | `get_service_database` | Inspect one service database component. |
 
 Use `get_logs` with the appropriate child resource when a service has multiple containers.
+
+## Create and manage services
+
+| Tool | Actions |
+| :--- | :--- |
+| `list_service_templates` | List the one-click service templates (`read`). |
+| `create_service` | `template`, `compose` (`write`). |
+| `manage_service` | `update`, `update_application`, `update_database` (`write`); `clone` and `move` (`write`, confirm); `import_database` (`write` and `deploy`, confirm); `delete` (`delete`, confirm). |
+
+Actions marked **confirm** need `confirm=true`. Ask the user before your client sends it.

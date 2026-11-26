@@ -5,14 +5,11 @@ og:
   description: "GLPI (Gestionnaire Libre de Parc Informatique) is a free, open-source IT Service Management (ITSM) platform used for IT asset management, helpdesk, and service desk operations."
 category: "Business"
 icon: "/docs/images/services/glpi-logo.svg"
-disabled: true
 ---
 
-<Callout type="error" title="SERVICE TEMPORARILY DISABLED">
+<Callout type="info" title="PHP security update">
 
-This service's one-click templates are temporarily disabled in Coolify because of the PHP security vulnerabilities **CVE-2026-109618** and **CVE-2026-109619**. New deployments from the service catalog are unavailable while patched container images are verified.
-
-See the [PHP security advisory](/knowledge-base/php-security-advisory-2026) for guidance on existing deployments and [the template disablement PR](https://github.com/coollabsio/coolify/pull/12268) for details and updates.
+This service's one-click templates have been re-enabled following the PHP security review. Updating Coolify does not update deployed service containers. For existing deployments, follow the [PHP security advisory](/knowledge-base/php-security-advisory-2026) and the service's upstream upgrade instructions to apply any required image updates.
 
 </Callout>
 
@@ -35,6 +32,15 @@ After deploying the template, GLPI will automatically complete an installation p
    # password
    glpi
    ```
+
+## Upgrade to GLPI 12
+
+New services use GLPI 12. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+- After the upgrade, knowledge base categories are invisible until an administrator gives access to them again.
+- To get the client IP addresses behind a reverse proxy, set `GLPI_TRUSTED_REVERSE_PROXIES` in the GLPI configuration.
+
+See the [official release notes](https://github.com/glpi-project/glpi/releases/tag/12.0.0?utm_source=coolify.io).
 
 ## Links
 

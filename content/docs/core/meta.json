@@ -10,6 +10,9 @@
     "docker-and-containers",
     "networking-in-coolify",
     "security-model",
+    "---Using Coolify---",
+    "canvas-views",
+    "container-file-browser",
     "---Manage Coolify---",
     "instance-management",
     "backup-and-recovery",
@@ -31,10 +34,13 @@
     "---Security---",
     "security/authentication",
     "security/credentials",
+    "security/image-scanning",
     "---Observability---",
     "...observability",
     "---Notifications---",
     "...notifications",
+    "---Config as Code---",
+    "...coolify-json",
     "---Automation---",
     "...automation"
   ]

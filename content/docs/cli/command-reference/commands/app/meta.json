@@ -23,6 +23,7 @@
     "get",
     "list",
     "logs",
+    "metrics",
     "move",
     "previews-create",
     "previews-delete",
@@ -53,6 +54,7 @@
     "task-executions",
     "task-list",
     "task-update",
+    "traffic",
     "update"
   ]
 }

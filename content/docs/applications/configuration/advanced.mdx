@@ -29,11 +29,13 @@ Build controls cache reuse, Docker build arguments, and commit metadata.
 
 ### Build cache
 
-Under **Build cache**, choose **Rebuild from scratch every time** to prevent Coolify-generated builds from reusing Docker build cache on every deployment.
+Under **Build cache**, choose **Rebuild from scratch every time** to prevent builds from reusing Docker build cache on every deployment.
 
-Choose **Use Docker build cache** for normal deployments. Select **Force deploy (without cache)** instead when only the next deployment needs a clean generated build.
+Choose **Use Docker build cache** for normal deployments. Select **Deploy (without cache)** or **Redeploy (without cache)** instead when only the next deployment needs a clean build.
 
-A custom Docker Compose build command controls its own cache flags, so this setting cannot add or remove cache arguments from that command.
+For a Docker Compose application with a **Custom Build Command**, Coolify adds `--no-cache` to the command when it does not have it.
+
+A **Restart** starts the existing image when no build setting changed, also with **Rebuild from scratch every time**. A restart that must build still builds without the cache.
 
 ---
 
@@ -57,6 +59,20 @@ The default is **Runtime only (preserves cache)** so commits with otherwise iden
 
 Read [Build cache](/applications/builds/overview#build-cache) before enabling it for every deployment.
 
+---
+
+<span id="include-network-hosts-in-build" />
+
+### Network hosts during build
+
+**Network hosts during build** defaults to **Add network containers as hosts**. Coolify adds the containers of the destination network to the build with `--add-host`, so the build can reach them by name.
+
+When a resource is added to or removed from the network, the host list changes and Docker rebuilds the cached layers. Choose **Do not add (preserves cache)** when the build does not need to reach other containers.
+
+Coolify never adds preview deployment containers. A build on a [build server](/core/infrastructure/servers/build-servers) gets no hosts, because the build server cannot reach the deployment server's network.
+
+The API field is `include_network_hosts_in_build`.
+
 </Tab>
 <Tab value="Deployment" icon={BranchUp}>
 
@@ -67,6 +83,25 @@ These settings appear only for applications connected to a Git repository.
 Under **Deployment**, **Auto deploy** set to **Deploy on push (webhooks)** allows supported Git webhook events to start a deployment. It is enabled by default, but the repository connection must still have a working webhook or provider integration.
 
 Choose **Manual deployments only** when deployments should start only from the Coolify dashboard, API, deploy webhook, or an external workflow.
+
+---
+
+<span id="cancel-older-webhook-deployments" />
+
+### Older webhook deployments
+
+When you push several commits quickly, each push starts a webhook deployment. By default, Coolify builds only the latest commit.
+
+| Setting | Options | Default |
+| :--- | :--- | :--- |
+| **Queued webhook deployments** | **Cancel when a newer push arrives** cancels the older webhook deployments that still wait in the queue. **Deploy every push** builds each push. | **Cancel when a newer push arrives** |
+| **Building webhook deployments** | **Stop the build when a newer push arrives** also stops an older webhook deployment that is still building. **Let the build finish** keeps it running. | **Let the build finish** |
+
+Coolify cancels only older webhook deployments with the same target: the same application, the same server, and the same production or preview deployment. A deployment that started to replace containers always finishes. Manual, API, restart, and rollback deployments are never cancelled.
+
+When **Building webhook deployments** stops builds, Coolify also cancels queued webhook deployments, so **Queued webhook deployments** cannot be changed.
+
+The API fields are `is_auto_cancel_queued_deployments_enabled` and `is_auto_cancel_building_deployments_enabled`.
 
 ---
 
@@ -96,6 +131,8 @@ For private submodules in the same GitHub user or organization, prefer a relativ
 ```
 
 The relative URL uses the authenticated parent-repository remote instead of starting a separate unauthenticated HTTPS clone. If checkout still fails, confirm that the GitHub App installation or deploy key can access both repositories.
+
+With a GitHub App, GitLab, or Gitea source, Coolify also sends the token of the source to submodules on the host of the source that use an SSH URL, such as `git@github.com:example/prisma.git` or `ssh://git@github.com/example/prisma.git`. You do not need to change `.gitmodules`.
 
 Changing only the submodule repository does not update the commit recorded by the parent repository. Commit the new submodule pointer in the parent repository before deploying it.
 
@@ -143,6 +180,8 @@ Read [Raw Compose deployment](/applications/builds/docker-compose#raw-compose-de
 This setting appears only for Docker Compose applications. Under **Docker compose > Predefined network**, choose **Connect to predefined network** when services in the Compose application must communicate with resources attached to the selected Coolify destination network.
 
 Docker Compose services already receive a private network for communication within their own definition. Joining the predefined network is only needed for communication across Coolify resources, and service DNS names can change after joining it.
+
+Production and its preview deployments join the same predefined network. A service name such as `db` then resolves to the container of production, also from a preview. Use `${SERVICE_NAME_DB}` as the hostname to reach the service of the same deployment. Read [Docker Compose preview names](/applications/deployments/preview-deployments#docker-compose-preview-names).
 
 Read [Compose networking](/applications/builds/docker-compose#compose-networking) before configuring another resource's hostname.
 
@@ -211,6 +250,8 @@ Choosing **Enabled** in **Gzip compression** allows Coolify Proxy to compress su
 
 Choose **Disabled** when the application already compresses responses or when a streaming or binary workload should not be compressed by the proxy.
 
+With Traefik, Coolify Proxy does not compress video, audio, image, PDF, and archive files or event streams, so range requests, seeking, and video playback in Safari keep working. An application deployed before Coolify v4.7.7 uses this behavior after its next deployment.
+
 ---
 
 <span id="strip-prefixes" />
@@ -251,8 +292,8 @@ Give the process enough time to finish in-flight work after receiving its shutdo
 
 **Accepted values:**
 
-- The default is `10` restarts.
-- Enter `0` to disable the limit.
+- The default is `0`, which disables the limit.
+- Applications that had the old default of `10` were changed to `0`.
 - Enter a positive whole number to set another limit.
 
 ---
@@ -279,33 +320,69 @@ Coolify rejects the setting when log draining is not enabled on that server. Fol
 
 GPU controls appear only for non-Compose applications. The deployment server must already have working GPU drivers and a container runtime configured for GPU access.
 
+<span id="detected-gpus" />
+
+### Detected GPUs
+
+The **Detected GPUs** box at the top of the **GPU** section shows each server of the application: the main deployment server and each additional server. For each server, it shows the server name, the time of the last check, and the GPUs that Coolify found.
+
+Coolify finds GPUs when it collects the server details: when you validate the server, and when you select **Refresh GPUs**. Coolify runs these checks on the server:
+
+- `nvidia-smi` lists the NVIDIA GPUs. For each GPU, Coolify shows the index, the name, the memory in GB, and the UUID.
+- Coolify looks for `nvidia-container-runtime-hook` or `nvidia-ctk` to find the NVIDIA Container Toolkit.
+
+Only NVIDIA GPUs are detected. The same GPU list also shows in the server details on the server page.
+
+To update the list, select **Refresh GPUs**. The button is disabled until the server connection is validated.
+
+| Message | Meaning and action |
+| :--- | :--- |
+| **Not checked yet. Refresh to find GPUs.** | Coolify did not collect the GPU list for this server. Select **Refresh GPUs**. |
+| **No NVIDIA GPU found** | `nvidia-smi` is not installed, or it shows no GPU. Install the NVIDIA driver on the server, make sure that `nvidia-smi` shows the GPUs, then select **Refresh GPUs**. |
+| **NVIDIA Container Toolkit not found** | Coolify found GPUs, but containers cannot use them. Install the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html), configure Docker to use it, restart Docker, then select **Refresh GPUs**. |
+
 <span id="enable-gpu" />
 
 ### GPU access
 
 Under **GPU > GPU access**, choose **Enabled** to add GPU access to the application container. Additional GPU fields appear after it is enabled.
 
+Coolify adds a Docker Compose GPU device request to the container. Refer to the [Docker Compose GPU documentation](https://docs.docker.com/compose/gpu-support/) for more information.
+
+When GPU access is enabled, Coolify ignores `--gpus` in [Custom Docker Options](/applications/builds/custom-docker-options#gpu-access). The deployment log shows a message about this.
+
 ---
 
 ### GPU Driver
 
-**GPU driver** selects the container runtime's GPU driver. Enter the driver configured on the deployment server.
+**GPU driver** selects the container runtime's GPU driver, for example `nvidia`. Enter the driver configured on the deployment server.
+
+If you keep the field empty, Coolify does not set a driver, and Docker selects it.
 
 ---
 
 ### GPU Count and device IDs
 
-Use **GPU count** to request a number of GPUs. Leave it empty to make all available GPUs accessible to the container.
+**GPU count** sets the number of GPUs for the container. Enter a whole number, such as `1`, or `all`. If you keep **GPU count** and **GPU device ids** empty, the container can use all available GPUs.
 
-Use **GPU device ids** to select specific devices as a comma-separated list, such as `0,2`.
+**GPU device ids** selects specific GPUs. Enter a comma-separated list, such as `0,2`. You can use the index or the UUID from **Detected GPUs**.
 
-Do not set **GPU count** and **GPU device ids** together. Coolify rejects the configuration and clears both values when both are provided.
+Use **GPU count** or **GPU device ids**, not both. Coolify rejects the change when you set both values. If an older configuration has both values, Coolify uses **GPU count**.
 
 ---
 
 ### GPU Options
 
-**GPU options** accepts additional driver-specific runtime options. Add only options supported by the GPU driver and container runtime installed on the deployment server.
+**GPU options** sets driver-specific options. Use one of these formats:
+
+- One `key=value` pair on each line.
+- A YAML mapping, such as `key: value`.
+
+Add only options that the GPU driver and container runtime on the deployment server support.
+
+Coolify rejects the change when the value is not in one of these formats. If an older value is not valid, Coolify does not use it, and the deployment log shows a message about this.
+
+Coolify validates only the GPU values that you change. Older values that you do not change do not block other changes.
 
 Select **Save changes**, then redeploy or restart the application and verify GPU access from inside the container.
 

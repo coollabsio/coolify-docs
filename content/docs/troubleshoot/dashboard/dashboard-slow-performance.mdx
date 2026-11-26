@@ -52,6 +52,10 @@ If the dashboard is fast via your server IP but slow through your custom domain,
   - Switch the toggle for **Rocket Loader** to **Off**.
 - **Wait:** Allow a few minutes for the changes to take effect, then visit your Coolify dashboard using your domain.
 
+<Callout type="info" title="Dashboard pages ask proxies not to change them">
+Coolify dashboard pages send `Cache-Control: no-transform`, which tells proxies such as Cloudflare not to rewrite their HTML and scripts. This prevents the blank page after a click on a sidebar link that Rocket Loader caused. If the dashboard is still slow or broken through your domain, turn Rocket Loader off as described above.
+</Callout>
+
 </Step>
 <Step>
 

@@ -61,7 +61,7 @@ Select **Start** and follow the startup output. Wait until MongoDB is running an
 | Setting | Default or behavior |
 | :--- | :--- |
 | Internal port | `27017` |
-| Default image | `mongo:7` |
+| Default image | `mongo:9`. Existing databases keep their image. |
 | Root username | `root` |
 | Initial database | `default` |
 | Data mounts | `/data/db` and `/data/configdb` |
@@ -85,7 +85,7 @@ Coolify shows a **Mongo URL (public)** only after **Public access > Access > Pub
 
 ## Configure MongoDB
 
-Open **General** to change the image, root credentials, **Port mappings**, public proxy, custom Docker options, and **Custom MongoDB configuration**. Restart the resource after changing generated container configuration.
+Open **General** to change the image, root credentials, **Port mappings**, public proxy, custom Docker options, and **Custom MongoDB configuration**. Restart the resource after changing generated container configuration. Coolify makes the configuration file and the script that creates the initial database readable for the container user, also on servers with a strict umask.
 
 ## Back up MongoDB
 
@@ -99,13 +99,13 @@ app:events,logs|analytics
 
 This includes all collections in `app` except `events` and `logs`, and all collections in `analytics`. Configure the schedule, retention, and S3 copy in [Database backups](/databases/backups).
 
-The built-in **Import Backup** form accepts MongoDB archives while the database is running. Follow [Restore a database](/databases/restore), then verify the restored collections from a controlled client workflow.
+The built-in **Import backup** dialog on the **Backups** page accepts MongoDB archives while the database is running. Follow [Restore a database](/databases/restore), then verify the restored collections from a controlled client workflow.
 
 ## SSL and health checks
 
 MongoDB supports `allow`, `prefer`, `require`, and `verify-full`. `verify-full` requires the client to trust the Coolify CA certificate. See [Database SSL](/databases/ssl).
 
-Configure the Docker health check under **Healthcheck** and restart MongoDB after saving.
+Configure the Docker health check under **Healthcheck** and restart MongoDB after saving. When **Custom MongoDB configuration** sets a `port`, the check connects to that port. See [How the probe connects](/databases/configuration/health-checks#how-the-probe-connects).
 
 ## Official MongoDB resources
 

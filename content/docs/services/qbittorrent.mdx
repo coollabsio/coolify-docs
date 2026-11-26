@@ -15,6 +15,10 @@ icon: "/docs/images/services/qbittorrent-logo.svg"
 
 The qBittorrent project aims to provide an open-source software alternative to μTorrent.
 
+## Fix the VueTorrent login
+
+The VueTorrent backend connects to the `qbit` container over the internal network. In older services, it sent the API requests to its own public domain, so the login failed. To fix an existing service, set `QBIT_BASE` of `vuetorrent-backend` to `http://qbit:8080` in **Configuration > General > Edit Compose File**, then redeploy the service.
+
 ## Links
 
 - [Official Documentation](https://docs.linuxserver.io/images/docker-qbittorrent/?utm_source=coolify.io)

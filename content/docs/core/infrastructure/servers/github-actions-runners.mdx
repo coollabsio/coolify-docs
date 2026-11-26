@@ -45,7 +45,7 @@ The GitHub App needs these permissions and events:
 | Type | Name | Access |
 |------|------|--------|
 | Organization permission | Self-hosted runners | Write |
-| Repository permission | Actions | Read |
+| Repository permission | Actions | Read and write |
 | Webhook event | Workflow job | - |
 
 <Tabs id="github-app-runners" items={['Create a new GitHub App', 'Update an existing GitHub App']}>
@@ -92,7 +92,7 @@ Use this procedure for a GitHub App that belongs to an organization and that you
 
 1. Open the settings of the GitHub App on GitHub.
 2. In **Permissions**, set **Organization permissions > Self-hosted runners** to **Read and write**.
-3. Set **Repository permissions > Actions** to **Read-only**.
+3. Set **Repository permissions > Actions** to **Read and write**. With **Read-only**, runners work, but Coolify cannot cancel the job of a runner that stopped.
 4. In **Subscribe to events**, select **Workflow job**.
 5. Save the changes.
 6. Accept the new permissions for the App installation in your organization.
@@ -284,7 +284,7 @@ The **Recent runners** section on the **GitHub Runners** page shows the queued j
 | **Waiting for job** | The runner is registered and waits for GitHub to give it a job. |
 | **Running** | The runner runs the job. |
 | **Completed** | The job completed and Coolify removed the runner. |
-| **Failed** | Coolify could not start the runner after 3 attempts. The error message shows the cause. |
+| **Failed** | Coolify could not start the runner after 3 attempts, or the runner container stopped during a job. The error message shows the cause. |
 | **Cancelled** | The job ended before a runner started, the runner got no job, or a user cancelled it. |
 | **Timed out** | The job waited or ran longer than the configured timeout. |
 
@@ -294,6 +294,8 @@ After the last failed attempt, the job stays queued on GitHub until GitHub cance
 
 To stop an active runner, select **Cancel** on its row.
 
+When Coolify removes a runner while it runs a job (the runner container stopped, the job timeout ended, or you cancelled the runner), Coolify cancels the workflow run of that job on GitHub. GitHub cannot cancel only one job, so the other jobs of the same workflow run are also cancelled. This needs the repository permission **Actions: Read and write**.
+
 ---
 
 ## Disable runners
@@ -301,6 +303,8 @@ To stop an active runner, select **Cancel** on its row.
 Select **Disable runners** to stop taking new jobs. Coolify removes the runners that wait for a job. Running jobs continue until they finish. Coolify keeps the settings and the execution history of the server.
 
 To take jobs again, select **Enable runners**.
+
+When all runner configurations of a GitHub App are disabled, Coolify does not drop the jobs that are already queued. They keep waiting for the **Queue wait** time and start after a configuration is enabled again.
 
 You cannot change the role of a build server while its runners are enabled. Disable the runners first.
 

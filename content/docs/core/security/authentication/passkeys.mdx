@@ -1,0 +1,56 @@
+---
+title: Passkeys
+description: Sign in to Coolify with a passkey, manage registered devices, and configure instance access.
+---
+
+# Passkeys
+
+A passkey lets you sign in with your device's fingerprint, face recognition, screen lock, or a security key. Each user registers passkeys for their own Coolify account from **Profile**.
+
+A passkey sign-in does not ask for your Coolify password or a separate two-factor authentication code. Password, OAuth, and SSO sign-ins continue to use your configured [2FA](/core/security/authentication/2fa).
+
+## Before you begin
+
+- Use a browser and device that support passkeys.
+- Open Coolify on its configured HTTPS domain. An IP address is not supported. `localhost` is supported for local development.
+- On a self-hosted instance, an instance administrator must leave **Settings > Advanced > Access > Passkeys** set to **Enabled**.
+
+Passkeys are tied to the instance domain. After changing the domain, sign in through another available method and register new passkeys on the new domain.
+
+## Add a passkey
+
+1. Sign in to Coolify, open the user menu, and select **Profile**.
+2. Under **Passkeys**, select **Add passkey**.
+3. Complete the account confirmation if requested. An existing passkey can be used through **Confirm with a passkey** when available.
+4. Enter a **Passkey name** that identifies the device or security key, then select **Create passkey**.
+5. Follow the browser's prompt to save the passkey.
+
+The passkey appears in your profile with its authenticator, creation time, and last-used time. Add another passkey if you want a second device or security key available for sign-in.
+
+## Sign in
+
+Open the same instance domain where you registered the passkey. Select the passkey sign-in control on the login page and complete your device's authentication prompt. Supported browsers may also offer a passkey through the email field's autofill menu.
+
+Keep another available sign-in method so you can access the account if your device or passkey is unavailable.
+
+## Rename or delete a passkey
+
+Open **Profile > Passkeys**.
+
+- Select **Rename**, enter the new name, and select **Save**.
+- Select **Delete**, review the action, enter the passkey name, and complete the confirmation.
+
+Deleting a passkey prevents it from signing in to Coolify. It does not delete your account or change your password, OAuth, SSO, or authenticator setup.
+
+## Disable passkeys for an instance
+
+An instance administrator can set **Settings > Advanced > Access > Passkeys** to **Disabled**. Coolify keeps registered passkeys, but users cannot use or manage them while the feature is disabled. Re-enabling the setting makes the stored passkeys available again on the same domain.
+
+## Troubleshooting
+
+| Problem | Check |
+| :--- | :--- |
+| Passkeys are missing from Profile or the login page | Ask the instance administrator to check the Passkeys setting. |
+| Profile says passkeys are unavailable on this address | Use the configured HTTPS instance domain, with a valid certificate, instead of an IP address. |
+| The browser cannot find a passkey | Confirm the domain, the browser's passkey provider, and access to the device or security key where you saved it. |
+| Passkeys stopped working after a domain change | Use another sign-in method, then register new passkeys on the new domain. |

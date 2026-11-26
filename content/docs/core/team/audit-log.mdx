@@ -7,13 +7,17 @@ description: Search team activity and review resource changes in Coolify's audit
 
 Team administrators and owners can open **Team > Audit Log** to review activity from the UI, API, MCP, and webhooks. Search and filter events to find an actor, resource, or action.
 
-Events cover resource changes, deployments, backups, proxy controls, membership, API tokens, integrations, account security, and server, application, service, and instance settings. Each entry records actor, resource, and request context where available.
+Events cover resource changes, deployments, backups, proxy controls, membership and member access, API tokens, integrations, account security, and server, application, service, and instance settings. Each entry records actor, resource, and request context where available.
 
 ## Review changes
 
-Select **View changes** to compare previous and new values for changed fields. Changes are encrypted at rest. Secrets, commands, and configuration content are excluded, and sensitive request metadata is redacted. The audit log is an activity record rather than a configuration backup.
+Select **View changes** to compare previous and new values for changed fields. Changes are encrypted at rest. Secrets, credentials, commands, and configuration content are excluded, and sensitive request metadata is redacted. The audit log is an activity record rather than a configuration backup.
 
 Events are pruned after 90 days. Export events through the API if your team needs a separate archive beyond that window.
+
+## Deleted users
+
+When a user account is deleted, Coolify anonymizes the user in the audit log. Events that the user did show `[deleted user]` as the actor, without the email address, IP address, and user agent. Events about the user, such as membership changes, also replace the user's name and email address with `[deleted user]`. The events themselves stay in the log.
 
 ## API access
 

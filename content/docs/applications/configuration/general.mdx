@@ -24,7 +24,7 @@ Use this table to identify which part of **General** applies to the application:
 | Docker Compose from Git | Compose file paths, per-service domains, parsed Compose content, repository preservation, optional Compose commands, and label escaping. |
 | Docker Image | Image name, tag or hash, container options, domains, network settings, and container labels. The **Build strategy** selector is not shown. |
 
-Docker Compose applications do not use the single-container **Network**, **HTTP Basic Authentication**, or editable **Active labels** controls on this page. Configure ports, health checks, service environment entries, volumes, and labels in the Compose definition.
+Docker Compose applications do not use the single-container **Network**, **HTTP Basic Authentication**, **IP allowlist**, or editable **Active labels** controls on this page. Configure ports, health checks, service environment entries, volumes, and labels in the Compose definition.
 
 <Tabs id="application-general-configuration" items={['General', 'Build', 'Network', 'Labels', 'Deployment']}>
 <Tab value="General" icon={Settings}>
@@ -124,6 +124,10 @@ Docker Compose Location: /compose.yaml
 Resolved file: /deploy/compose.yaml
 ```
 
+Coolify runs Docker Compose in **Base Directory**, not in the directory of the Compose file. Relative paths in the file, such as `build.context: ..`, resolve from **Base Directory**.
+
+When **Docker Compose Location** points to a file in a subdirectory, Coolify shows the **Relative paths resolve from the base directory** warning. If the relative paths in the file are relative to the file itself, select **Use `<directory>` as base directory**. Coolify moves the file's directory into **Base Directory** and keeps only the file name in **Docker Compose Location**.
+
 **Load Compose File** parses the repository file. After it has been loaded, **Reload Compose File** reads it again. Coolify then shows:
 
 - **Docker Compose Content (raw)** for the definition read from the repository.
@@ -134,7 +138,7 @@ These fields are read-only. Edit the Compose file in the Git repository, then re
 
 Enable **Preserve repository during deployment** when the repository content under **Base Directory** must also be copied into the deployment directory. This is useful when the Compose definition uses repository-relative files at runtime rather than only during an image build.
 
-**Custom Build Command** and **Custom Start Command** replace the generated Compose commands. Coolify adds the Compose-file and environment-file flags unless the command already supplies its own `-f` or `--env-file` flag. When an override is entered, **Final Build Command (Preview)** or **Final Start Command (Preview)** shows the command Coolify will execute.
+**Custom Build Command** and **Custom Start Command** replace the generated Compose commands. Coolify adds the Compose-file and environment-file flags unless the command already supplies its own `-f` or `--env-file` flag. When an override is entered, **Final Build Command (Preview)** or **Final Start Command (Preview)** shows the command Coolify will execute. For a deployment without build cache, Coolify also adds `--no-cache` to a custom build command that does not have it.
 
 Keep custom command paths relative to **Base Directory** and use the same Compose file that Coolify parsed. Otherwise, generated domains, labels, and variables may not match the deployed services.
 
@@ -156,7 +160,7 @@ Read [Docker Compose deployments](/applications/builds/docker-compose) for envir
 
 ### Build servers and container options
 
-**Builder selection** appears for non-Compose source builds. Choose a dedicated builder only after configuring another server as a [build server](/core/infrastructure/servers/build-servers). Coolify builds the image there, pushes it to the configured registry, and the deployment server pulls it. A registry image name is required for this path.
+**Builder selection** appears for non-Compose source builds. Choose a dedicated builder only after configuring another server as a [build server](/core/infrastructure/servers/build-servers). Coolify builds the image there, pushes it to the configured registry, and the deployment server pulls it. A registry image name is required for this path. Docker Compose and Docker Image applications always use the deployment server, also when **Builder selection** was set before the build strategy changed.
 
 **Custom Docker Options** also appears for Nixpacks, Railpack, Static, Dockerfile, and Docker Image applications. The options affect how Coolify starts the container; they do not change the image build. Docker Compose applications define equivalent runtime configuration in the Compose file.
 
@@ -166,7 +170,7 @@ Read [Docker Compose deployments](/applications/builds/docker-compose) for envir
 
 **Watch Paths** accepts one pattern per line. See [Limit deployments by changed paths](/applications/deployments/automatic-deployments#limit-deployments-by-changed-paths) for the pattern syntax.
 
-**Watch Paths** is available when you select a repository through a GitHub App or GitLab source integration. It is not available for applications created from a public repository URL or a deploy key.
+**Watch Paths** is available for applications connected through a Git App source or a deploy key. It is not available for applications created from a public repository URL.
 
 The setting filters which changed paths can start a webhook deployment.
 
@@ -181,6 +185,8 @@ The **Container image** section does not appear for Docker Compose applications 
 For a Docker Image application, **Image** and **Tag** identify the image Coolify pulls.
 
 For a source build, **Image** names an image Coolify can push after building it. Include the registry hostname for a private registry, for example `ghcr.io/example/api`. If **Tag** is set, Coolify pushes that tag in addition to the commit-based tag.
+
+Each source-built application of the team needs its own image name. Two applications that build the same image push the same tags, so one can run the image of the other. Coolify rejects an **Image** that another application of the team already builds, in the UI and in the API. A deployment of an application that shares its image name with another one fails with the same message.
 
 An output image name is required when the application uses Docker Swarm, additional deployment servers, or a separate build server. Those destinations must be able to pull the built image from a registry.
 
@@ -252,6 +258,12 @@ Labels contains proxy authentication and the container metadata Coolify uses for
 Under **Security**, choose **HTTP Basic Authentication** in **Authentication** to place a proxy username and password in front of a non-Compose application. Enter **Username** and **Password**, then redeploy or restart the application so the proxy configuration is refreshed.
 
 For Docker Compose, define the required proxy middleware through the Compose labels instead of this control.
+
+### IP allowlist
+
+Under **Security > Authentication**, enter IP addresses or CIDR ranges in **IP allowlist** to let only those clients reach a non-Compose application. The proxy sends HTTP `403` to all other clients. Redeploy the application to apply the change.
+
+Read [IP allowlist](/core/networking/proxy/ip-allowlist) for CDN setups, the API field, and Docker Compose labels.
 
 ---
 

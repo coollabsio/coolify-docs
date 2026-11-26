@@ -1,0 +1,188 @@
+---
+title: coolify.json Example File (Beta)
+description: A complete coolify.json file with applications, databases, a service, variables, backups, and a staging environment.
+---
+
+# coolify.json example file
+
+This page shows a complete `coolify.json` file for a shop with a web application, a worker, a PostgreSQL database, a Redis cache, and a Plausible analytics service. The file has a production environment on `main` and a staging environment on `staging`.
+
+<Callout type="warning" title="Beta feature">
+coolify.json is in beta. The file format can change in later versions.
+</Callout>
+
+## The file
+
+Before you use the file, replace the names of the GitHub App (`acme-github`), the server (`db-server-1`), the S3 storage (`backups-r2`), and the shared variables with names that exist in your team.
+
+```json title="coolify.json"
+{
+  "$schema": "https://cdn.coollabs.io/coolify/schemas/coolify.v1.json",
+  "version": 1,
+  "minimum_coolify_version": "4.0.0",
+  "project": "shop",
+  "x-owner": "platform-team",
+  "resources": {
+    "web": {
+      "type": "application",
+      "name": "Shop web",
+      "description": "Next.js storefront",
+      "source": {
+        "repository": "https://github.com/acme/shop",
+        "branch": "main",
+        "github_app": "acme-github"
+      },
+      "build": {
+        "pack": "nixpacks",
+        "base_directory": "/apps/web",
+        "build_command": "npm run build",
+        "start_command": "npm run start",
+        "watch_paths": ["apps/web/**", "packages/**"]
+      },
+      "ports": { "exposes": "3000" },
+      "domains": ["https://shop.example.com"],
+      "health_check": {
+        "enabled": true,
+        "path": "/api/health",
+        "port": "3000",
+        "return_code": 200,
+        "interval": 10,
+        "retries": 5
+      },
+      "limits": { "memory": "1g", "cpus": "1" },
+      "settings": {
+        "is_auto_deploy_enabled": true,
+        "is_preview_deployments_enabled": true
+      },
+      "preview": { "url_template": "{{pr_id}}.{{domain}}" },
+      "env": {
+        "NODE_ENV": { "value": "production", "buildtime": true },
+        "NEXT_PUBLIC_API_URL": { "value": "https://api.example.com", "buildtime": true, "preview": { "value": "https://api-staging.example.com" } },
+        "SESSION_SECRET": { "generate": "password", "length": 64 },
+        "STRIPE_SECRET_KEY": { "required": true },
+        "SENDGRID_API_KEY": { "ref": "team.SENDGRID_API_KEY" },
+        "DATABASE_URL": { "ref": "resource.db.internal_url" },
+        "REDIS_HOST": { "ref": "resource.cache.host" },
+        "REDIS_PORT": { "ref": "resource.cache.port" }
+      },
+      "storages": {
+        "uploads": { "mount": "/app/uploads" }
+      },
+      "files": {
+        "/app/config/robots.txt": { "content": "User-agent: *\nAllow: /\n" }
+      },
+      "scheduled_tasks": {
+        "cleanup-sessions": { "command": "npm run cleanup", "frequency": "0 3 * * *" }
+      },
+      "tags": ["shop", "frontend"]
+    },
+    "worker": {
+      "type": "application",
+      "source": { "repository": "https://github.com/acme/shop", "branch": "main", "github_app": "acme-github" },
+      "build": { "pack": "dockerfile", "dockerfile_location": "/apps/worker/Dockerfile" },
+      "env": {
+        "DATABASE_URL": { "ref": "resource.db.internal_url" },
+        "QUEUE_CONCURRENCY": { "value": "4" }
+      },
+      "tags": ["shop"]
+    },
+    "db": {
+      "type": "postgresql",
+      "server": "db-server-1",
+      "image": "postgres:17-alpine",
+      "credentials": { "user": "shop", "database": "shop" },
+      "limits": { "memory": "2g" },
+      "backups": [
+        {
+          "frequency": "daily",
+          "save_s3": true,
+          "s3_storage": "backups-r2",
+          "retention_local_amount": 7,
+          "retention_s3_days": 30
+        }
+      ],
+      "tags": ["shop"]
+    },
+    "cache": {
+      "type": "redis",
+      "image": "redis:7.4-alpine",
+      "limits": { "memory": "256m" }
+    },
+    "analytics": {
+      "type": "service",
+      "template": "plausible",
+      "services": {
+        "plausible": { "domains": ["https://stats.example.com"] }
+      }
+    }
+  },
+  "environments": {
+    "production": {
+      "branch": "main"
+    },
+    "staging": {
+      "branch": "staging",
+      "resources": {
+        "web": {
+          "source": { "branch": "staging" },
+          "domains": ["https://staging.shop.example.com"],
+          "limits": { "memory": "512m" },
+          "env": {
+            "NEXT_PUBLIC_API_URL": { "value": "https://api-staging.example.com", "buildtime": true },
+            "STRIPE_SECRET_KEY": { "ref": "environment.STRIPE_TEST_KEY" }
+          }
+        },
+        "worker": {
+          "source": { "branch": "staging" }
+        },
+        "db": {
+          "server": null,
+          "backups": []
+        },
+        "analytics": { "enabled": false }
+      }
+    }
+  }
+}
+```
+
+## What the file does
+
+### Shared resources
+
+- **`web`** builds `apps/web` of the repository with Nixpacks through the GitHub App `acme-github`. It has a domain, a health check, resource limits, a persistent storage, a file mount, and a scheduled task.
+- **`worker`** builds a Dockerfile from the same repository. It has no domain.
+- **`db`** is a PostgreSQL database on the server `db-server-1`, with a daily backup to the S3 storage `backups-r2`. Coolify generates the database password.
+- **`cache`** is a Redis database. It has no `server`, so it runs on the server of the link.
+- **`analytics`** is a Plausible service from the one-click template, with a domain for its `plausible` container.
+- **`x-owner`** is a custom key. Coolify ignores keys that start with `x-`.
+
+### Variables
+
+| Variable | Form | Result |
+| :--- | :--- | :--- |
+| `NODE_ENV` | `value` | A plain value, also available during the build |
+| `NEXT_PUBLIC_API_URL` | `value` with `preview` | Preview deployments get another value |
+| `SESSION_SECRET` | `generate` | Coolify generates a 64-character password one time |
+| `STRIPE_SECRET_KEY` | `required` | You set the value in Coolify. The plan shows **Values needed** until you set it. |
+| `SENDGRID_API_KEY` | `ref` to `team.` | The value of the team shared variable `SENDGRID_API_KEY` |
+| `DATABASE_URL` | `ref` to `resource.db.internal_url` | The internal connection URL of `db` |
+| `REDIS_HOST`, `REDIS_PORT` | `ref` to `resource.cache.host` and `.port` | The internal host and port of `cache` |
+
+No secret value is in the file.
+
+### Staging overrides
+
+The `staging` environment follows the `staging` branch and changes the shared resources:
+
+- `web` and `worker` build the `staging` branch.
+- `web` gets another domain, less memory, another API URL, and the Stripe test key from the environment shared variable `STRIPE_TEST_KEY`. The other variables of `web` stay the same.
+- `db` has `"server": null`, so it runs on the server of the staging link. `"backups": []` replaces the backup list with an empty list.
+- `analytics` has `"enabled": false`, so staging has no analytics service.
+
+To use the file, link a production environment to `main` and a staging environment to `staging`. Each push changes only the environment of its branch. Refer to [Config as code](/core/coolify-json/config-as-code).
+
+## Related pages
+
+- [File reference](/core/coolify-json/file-reference)
+- [Use coolify.json as a template](/core/coolify-json/use-as-template)

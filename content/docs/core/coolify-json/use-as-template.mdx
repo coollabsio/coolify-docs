@@ -1,0 +1,100 @@
+---
+title: Use coolify.json as a Template (Beta)
+description: Create normal, editable Coolify resources one time from the coolify.json file of a repository.
+---
+
+# Use coolify.json as a template
+
+When you add a repository that has a `coolify.json` file, Coolify can use the file one time as the default settings of the new resources. This is the **Use coolify.json** mode. The resources that Coolify creates are normal resources: you edit them in Coolify, and later changes of the file do not change them.
+
+<Callout type="warning" title="Beta feature">
+coolify.json is in beta. The file format and the behavior can change in later versions.
+</Callout>
+
+With this mode, a repository can give its own default settings (build pack, ports, health check, variables, a database) to everyone who deploys it. For the differences to the **Config as code** mode, refer to [Two ways to use the file](/core/coolify-json/overview#two-ways-to-use-the-file).
+
+## Prerequisites
+
+- The repository has a `coolify.json` file. Refer to the [file reference](/core/coolify-json/file-reference).
+- You can create resources in the environment.
+- The environment is not linked to a `coolify.json` file. A linked environment cannot use a template: add the resources to its file instead.
+
+## Create the resources
+
+<Steps>
+<Step>
+
+### Add the repository
+
+In the environment, select **Add resource**, then select a public repository, a GitHub App repository, or a repository with a deploy key. Enter the repository and the branch, and select the server.
+
+</Step>
+<Step>
+
+### Select how to create the resources
+
+When Coolify finds a `coolify.json` file in the repository, the form shows three choices:
+
+| Choice | Result |
+| :--- | :--- |
+| **Use coolify.json** (default) | Coolify creates the resources with the settings of the file one time. You edit them in Coolify after that. |
+| **Config as code** | Coolify creates the resources and links the environment to the file. Each push to the branch updates them. Only a team admin can select this. Refer to [Config as code](/core/coolify-json/config-as-code). |
+| **Configure manually** | Coolify does not use the file. You set the build pack and the settings in the form. |
+
+Keep **Use coolify.json**.
+
+</Step>
+<Step>
+
+### Create the resources
+
+Submit the form. Coolify creates all resources of the file. Nothing deploys until you deploy the resources.
+
+</Step>
+<Step>
+
+### Set the required values
+
+Open each resource and set the values of the variables that show **Needs a value**. Then deploy.
+
+</Step>
+</Steps>
+
+## How Coolify reads the file
+
+- `environments` is optional. When the file has an environment for the branch that you added, or an environment with the name of the Coolify environment, Coolify applies its overrides.
+- An application without `source.repository` builds the repository that you add, with its branch and git source. So a fork or a copy of the repository builds itself, not the original repository.
+- Resources without `server` go to the server that you selected in the form.
+- `moved`, `unmanage`, and `import` have no effect in this mode.
+- `required` variables are created empty and marked as required.
+- `generate` values are generated one time.
+
+A short file for a repository that needs a database:
+
+```json title="coolify.json"
+{
+  "$schema": "https://cdn.coollabs.io/coolify/schemas/coolify.v1.json",
+  "version": 1,
+  "resources": {
+    "app": {
+      "type": "application",
+      "build": { "pack": "nixpacks" },
+      "ports": { "exposes": "3000" },
+      "health_check": { "enabled": true, "path": "/health" },
+      "env": {
+        "APP_KEY": { "generate": "base64" },
+        "MAIL_API_KEY": { "required": true },
+        "DATABASE_URL": { "ref": "resource.db.internal_url" }
+      }
+    },
+    "db": { "type": "postgresql" }
+  }
+}
+```
+
+The application has no `source`, so it builds the repository that you add.
+
+## Limits
+
+- The CLI does not have a command for the template mode yet. Use the add-repository form or the [API](/core/coolify-json/api-and-cli#template-endpoints).
+- The template mode does not keep a connection to the file. To apply later changes of the file, edit the resources in Coolify, or link the environment with [Config as code](/core/coolify-json/config-as-code).

@@ -13,19 +13,19 @@ If Coolify still has a working connection to the user's servers, deleting the us
 
 ## Before you delete a user
 
-- You must belong to the `root` team. Only `root` team members can delete users from the UI.
-- The `root` team and the `root` user cannot be deleted.
+- You must be an **Owner** or **Admin** of the `root` team, which makes you an instance administrator.
+- You cannot delete the `root` user, your own account, or a user with a higher role in the `root` team than yours. A user who is alone in the `root` team also cannot be deleted.
 - Confirm which teams the user belongs to and what resources those teams own.
 
 ## Delete the user
 
-1. Go to the **Team** page.
-2. Switch to the **Admin View** tab. This lists every user registered in Coolify.
-3. Select **Delete** next to the user you want to remove.
+1. Select **Team** in the Coolify sidebar, then select **Admin View**. The **Instance users** list shows every user except you.
+2. Find the user, then select the trash icon (**Delete user**) in their row.
+3. In the **Confirm User Deletion?** dialog, enter the user name and your password to confirm.
 
 ## What happens during deletion
 
-Coolify iterates over every team the user belongs to and applies these rules per team:
+Coolify revokes the API tokens of the user. Then it applies these rules to every team that the user belongs to:
 
 ### The user is alone in the team
 
@@ -33,16 +33,16 @@ The team and all of its resources are deleted from both the servers and Coolify'
 
 ### The user is not alone in the team
 
-1. The user is the owner or admin, no other owner or admin exists, and the team **has** other members:
-   - Ownership transfers to the first team member who is not the owner or admin.
+1. The user is an Owner, and another Owner or Admin is in the team:
    - The user is removed from the team. No resources are deleted.
 
-2. The user is the owner or admin, no other owner or admin exists, and the team has **no** other members:
-   - The team and all of its resources are deleted from both the servers and Coolify's database.
-
-3. The user is not the owner or admin of the team:
+2. The user is an Owner, and no other Owner or Admin is in the team:
+   - The first person with the **Member** role becomes an Owner.
    - The user is removed from the team. No resources are deleted.
+
+3. The user is an Admin or a Member:
+   - The user is removed from the team. No resources are deleted. Ownership does not change.
 
 ## Delete your own account
 
-Use [Profile and account deletion](/core/security/authentication/profile) to delete your own account. Root team administrators cannot delete the root user, root team owners, or their own account from the team admin view.
+Use [Profile and account deletion](/core/security/authentication/profile) to delete your own account. The team admin view does not let you delete your own account, the root user, or a user with a higher role in the root team. For example, a root team Admin cannot delete a root team Owner.
