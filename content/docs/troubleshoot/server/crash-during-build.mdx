@@ -45,19 +45,23 @@ If your server becomes very slow or crashes during deployment, consider the foll
 
 ### Reduce build memory (Node.js example)
 
-Before offloading the build, try lowering what the build itself consumes. On 2 to 4 GB servers this is often enough to keep deployments running on the box.
+Before offloading the build, try lowering what the build itself uses. On servers with 2 to 4 GB of RAM, this is often enough to keep deployments on the same server.
 
-- **Cap the Node heap:** set `NODE_OPTIONS=--max-old-space-size=1536` (roughly 35 to 40% of the server's RAM) as an environment variable on the application. A large `next build` otherwise grows until the kernel OOM killer stops it, and it frequently takes `sshd` or `cloudflared` down with it, so the deployment looks like a server crash.
-- **Add swap:** a 2 GB swapfile keeps the server reachable while the build peaks.
+- **Cap the Node.js heap:** Add `NODE_OPTIONS=--max-old-space-size=<MB>` as an environment variable of the application, at roughly 35 to 40% of the server's RAM. For example, use `768` on a 2 GB server and `1536` on a 4 GB server. Without a cap, a large build such as `next build` can use memory until the server stops responding, including SSH and tunnels, until the kernel stops the build. If the cap is too low, the build fails with `JavaScript heap out of memory`. Raise the value a little or add swap.
+- **Limit the cap to the build:** New variables are available during the build and in the running container. To apply the cap only to the build, set **Runtime** to **Not available in the container**. See [Build and runtime scope](/applications/configuration/environment-variables#build-and-runtime-scope).
+- **Add swap:** A 2 GB swap file keeps the server reachable while the build peaks. Run `swapon --show` first to check whether swap already exists, then run:
 
 ```bash
-fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile
-echo '/swapfile none swap sw 0 0' >> /etc/fstab
-sysctl -w vm.swappiness=10
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+grep -q '^/swapfile ' /etc/fstab || echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+echo 'vm.swappiness=10' | sudo tee /etc/sysctl.d/99-swappiness.conf
+sudo sysctl -p /etc/sysctl.d/99-swappiness.conf
 ```
 
-- **Do not let `npm ci` skip devDependencies:** Coolify builds images with `NODE_ENV=production`, so `npm ci` omits devDependencies and the build fails on tooling such as `tailwindcss`, `typescript` or `postcss` (`Cannot find module 'tailwindcss'`). Use `npm ci --include=dev` in your Dockerfile, or `pnpm install --prod=false`.
-- **Measure before and after:** `docker stats` and `free -m` during a deployment show whether the build or the running app is the cause.
+- **Measure before and after:** Run `docker stats` and `free -m` during a deployment to see whether the build or the running application uses the memory.
 
 </Step>
 <Step>
@@ -86,7 +90,7 @@ To reduce the load on your server during deployments, follow this process:
   - Identify if the issue is due to the application’s resource needs or the image build process.
   - Upgrade your server or offload builds as needed.
 - **Memory:**
-  - Cap the Node heap (`NODE_OPTIONS=--max-old-space-size`), add swap, and keep devDependencies installed (`npm ci --include=dev`) before offloading the build.
+  - Cap the Node.js heap with `NODE_OPTIONS=--max-old-space-size` and add swap before offloading the build.
 - **Optimization:**
   - Using GitHub Actions to build Docker images externally can significantly reduce local resource usage.
 
