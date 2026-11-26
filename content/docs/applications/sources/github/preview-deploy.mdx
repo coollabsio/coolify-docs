@@ -36,12 +36,15 @@ Coolify does not automatically deploy pull requests that were already open when 
 
 Pull-request code can be untrusted. A public contributor could otherwise run code on your server.
 
-<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/1.webp" alt="Preview Deployments and Allow Public PR Deployments settings" />
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/1.webp" alt="Preview deployment access settings" />
 
-- **Preview Deployments** enables previews for trusted repository members, collaborators, and contributors.
-- **Allow Public PR Deployments** allows public contributors to trigger previews.
+- **Enable preview deployments** turns on previews for the application.
+- **PR deployment access** set to **Repository members only** blocks pull requests from forks unless the author is a repository owner, member, or collaborator.
+- **PR deployment access** set to **Public (fork PRs allowed)** allows public contributors to trigger previews.
 
-Keep public pull-request deployments disabled unless you accept the risk of running contributor code.
+**PR deployment access** applies only while preview deployments are enabled. When they are disabled, a preview that you deploy by hand is deployed as **Repository members only**.
+
+Keep **PR deployment access** set to **Repository members only** unless you accept the risk of running contributor code.
 
 ### Scoped secrets
 
@@ -52,7 +55,7 @@ Coolify keeps production and preview variables in separate groups.
 - **Production Environment Variables** are used by the main deployment.
 - **Preview Deployment Environment Variables** are used by pull-request deployments.
 
-Use explicit, limited non-production credentials for pull requests. Creating a production variable can also create a preview entry with the same value, and trusted previews can inherit missing production runtime values in v4.7.4 and later. Review [preview variable isolation](/applications/deployments/preview-deployments#separate-preview-variables-from-production) before exposing previews to contributors.
+Use explicit, limited non-production credentials for pull requests. Creating a production variable can also create a preview entry with the same value. A public preview does not get the preview variables whose value resolves to the production value, including references such as `{{team.KEY}}`. With **Repository members only**, a preview can fall back to production runtime values for keys with no preview entry. Review [preview variable isolation](/applications/deployments/preview-deployments#separate-preview-variables-from-production) before exposing previews to contributors.
 
 ### Automated comments
 
