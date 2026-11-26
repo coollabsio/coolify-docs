@@ -1,0 +1,55 @@
+---
+title: "ALTCHA Sentinel"
+description: "Self-hosted protection for websites and APIs against spam, bots, and abuse."
+og:
+  description: "Deploy ALTCHA Sentinel on Coolify. Protect your forms and APIs from spam, bots, and abuse with a privacy-friendly, self-hosted CAPTCHA alternative."
+category: "Security"
+icon: "/docs/images/services/altcha-logo.svg"
+---
+
+# ALTCHA Sentinel
+
+![ALTCHA Sentinel](/docs/images/services/altcha-logo.svg)
+
+## What is ALTCHA Sentinel?
+
+[ALTCHA Sentinel](https://altcha.org/docs/sentinel/?utm_source=coolify.io) is a self-hosted server that protects websites, forms, and APIs from spam, bots, and abuse. It uses the open-source [ALTCHA](https://github.com/altcha-org/altcha?utm_source=coolify.io) proof-of-work widget, so users do not have to solve image puzzles.
+
+Sentinel adds spam classification, threat intelligence, IP and user-agent lists, and an admin dashboard. ALTCHA states that it does not use cookies or fingerprinting.
+
+## License
+
+ALTCHA Sentinel is proprietary software. It starts with a 30-day trial and does not need a license key for the trial. For production use, you must get a license from ALTCHA and enter the key in the admin dashboard under **Admin > License**.
+
+See the [ALTCHA Sentinel license documentation](https://altcha.org/docs/sentinel/security/license/?utm_source=coolify.io).
+
+## Deploy on Coolify
+
+The template starts one container from `ghcr.io/altcha-org/sentinel`. Sentinel listens on port `8080` and keeps its database, Redis data, and generated secrets in the `altcha-data` volume.
+
+Coolify generates these values for you:
+
+| Variable | Description |
+|---|---|
+| `SERVICE_URL_ALTCHA_8080` | Public URL of Sentinel |
+| `SERVICE_PASSWORD_ALTCHA` | Password of the `root` admin user |
+
+To change the image version, set `ALTCHA_VERSION`. The template uses a pinned Sentinel v1 version by default.
+
+<Callout type="warn">
+Sentinel v2 uses a different port, configuration format, and data path. Do not set `ALTCHA_VERSION` to a v2 tag on an existing service.
+</Callout>
+
+## First login
+
+1. Deploy the service and wait until it is healthy.
+2. Open the service URL.
+3. Log in with the username `root` and the value of `SERVICE_PASSWORD_ALTCHA`.
+
+Sentinel uses `SERVICE_PASSWORD_ALTCHA` only when it creates the `root` user on the first start. If you change the password in the dashboard, the variable does not change.
+
+## Links
+
+- [Official website](https://altcha.org/?utm_source=coolify.io)
+- [Sentinel documentation](https://altcha.org/docs/sentinel/?utm_source=coolify.io)
+- [ALTCHA widget on GitHub](https://github.com/altcha-org/altcha?utm_source=coolify.io)
