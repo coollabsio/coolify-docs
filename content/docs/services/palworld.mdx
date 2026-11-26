@@ -4,7 +4,7 @@ description: "Dedicated server for Palworld multiplayer survival game with creat
 og:
   description: "Host Palworld dedicated server on Coolify for multiplayer survival gameplay with creature collection, base building, and cooperative adventures."
 category: "Gaming"
-icon: "/docs/images/services/palworld-logo.webp"
+icon: "/docs/images/services/palworld-logo.svg"
 ---
 
 ## What is Palworld?
@@ -18,6 +18,16 @@ Palworld is a multiplayer, open-world survival and crafting game where you can b
 - Persistent world
 - Custom server configuration
 - Save game management
+
+## Upgrade to Palworld server v2
+
+New services use palworld-server-docker v2.8.1. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+1. Back up the server data.
+2. Use the REST API on port 8212. RCON is deprecated.
+3. Use `PLAYERS`, not `MAX_PLAYERS`.
+
+See the [official release notes](https://github.com/thijsvanloef/palworld-server-docker/releases/tag/2.0.0?utm_source=coolify.io).
 
 ## Links
 

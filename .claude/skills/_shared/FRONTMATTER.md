@@ -1,78 +1,41 @@
 # Frontmatter Reference
 
-Required and optional frontmatter fields for documentation pages.
-
-## Required Fields
-
-Every documentation page MUST have:
+Put YAML frontmatter at the start of every page in `content/docs/`. Use a specific title and a description that states what the reader will learn or accomplish.
 
 ```yaml
 ---
-title: "Page Title"
-description: "SEO-friendly description (150-160 characters ideal)."
+title: "Configure application health checks"
+description: "Configure and verify application health checks in Coolify."
 ---
 ```
 
-### Title Guidelines
+Keep metadata clear and concise. Service descriptions should stay short because they also appear on cards and in the categorized directory.
 
-- **Be specific**: "Deploying Laravel on Coolify" not "Laravel"
-- **Include context**: Users should know what they'll learn
-- **Keep concise**: Under 60 characters for SEO
+## Service Metadata
 
-### Description Guidelines
-
-- **Summarize the page**: What will users learn or accomplish?
-- **Include keywords**: Terms users might search for
-- **Length**: 150-160 characters is ideal for search results
-
-## Optional: Open Graph Image
-
-Override the default social sharing image:
+Individual service pages also need `category`. The filename determines the slug. Use an existing category spelling from the catalog where possible.
 
 ```yaml
 ---
-title: "Page Title"
-description: "Description here."
-image: /docs/images/og/custom-og-image.png
+title: "Service Name"
+description: "Short description for the service card and directory."
+category: "Analytics"
+icon: "/docs/images/services/service-name-logo.svg"
+# disabled: true
 ---
 ```
 
-### How Open Graph Works
+`icon` is optional if the collector can resolve a local logo. Uncomment `disabled: true` only when hiding the service from catalogs; the page remains reachable. The service collector reads top-level scalar values and does not interpret nested metadata. See [CATALOG.md](../adding-service-documentation/CATALOG.md).
 
-VitePress automatically generates OG meta tags from frontmatter:
+## Current SEO and Social Images
 
-| Frontmatter | OG Tag | Fallback |
-|-------------|--------|----------|
-| `title` | `og:title` | Page heading or "Coolify Docs" |
-| `description` | `og:description` | Default site description |
-| `image` | `og:image` | `https://coolcdn.b-cdn.net/assets/coolify/og-image-docs.png` |
+The application derives page metadata from `title` and `description`, then applies `src/lib/docs/seo.ts` for title and service-description rules. `scripts/lib/content.ts` builds the page list, and `scripts/postbuild.ts` generates Open Graph PNGs from that metadata under `.output/public/og/`.
 
-The same values are used for Twitter Card tags (`twitter:title`, etc.).
+Existing pages may retain nested `og.description` or an `image` field, but those are not read as overrides by the current metadata and social-image pipeline. Do not add them expecting to change social previews. An explicit social-image override would need implementation in the application first.
 
-### Custom OG Images
+## Verify
 
-For pages that benefit from custom social images (major features, key guides):
-
-1. **Create image**: 1200×630px recommended (summary_large_image)
-2. **Save to**: `docs/public/images/og/`
-3. **Reference in frontmatter**: Use `/docs/images/og/filename.png`
-
-**Note:** Relative paths are automatically converted to absolute URLs.
-
-## Complete Example
-
-```yaml
----
-title: "How to Deploy WordPress on Coolify"
-description: "Step-by-step guide to deploying WordPress with automatic SSL, backups, and one-click updates using Coolify."
-image: /docs/images/og/wordpress-guide.png
----
-```
-
-## Validation Checklist
-
-- [ ] `title` is present and specific
-- [ ] `description` is present and descriptive
-- [ ] Title under 60 characters (for SEO)
-- [ ] Description 150-160 characters (for search results)
-- [ ] Custom `image` only if page warrants it
+- The page starts with valid YAML frontmatter and has a useful `title` and `description`.
+- A service page has a `category`, a resolver-friendly local logo or valid `icon`, and the intended availability flag.
+- Required catalog fields stay at the top level; do not use nested YAML or folded values for them.
+- Changes to a service page are reflected by running `bun run generate:services`, without hand-editing either generated output.

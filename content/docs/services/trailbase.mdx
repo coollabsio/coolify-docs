@@ -17,6 +17,16 @@ An open, blazingly fast, single-executable Firebase alternative with type-safe R
 
 Simplify with fewer moving parts: an easy to self-host single-executable with everything you need to focus on your mobile, web or desktop application. Sub-millisecond latencies eliminate the need for dedicated caches, no more stale or inconsistent data.
 
+## Upgrade to TrailBase 0.35
+
+New services use TrailBase 0.35.12. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+- Rebuild your WASM components.
+- To add the first-party Auth UI, run `trail components add trailbase/auth_ui`.
+- The response format of the batch API changed. Update your clients.
+
+See the [official changelog](https://github.com/trailbaseio/trailbase/blob/main/CHANGELOG.md?utm_source=coolify.io).
+
 ## Links
 
 - [Official website](https://trailbase.io/?utm_source=coolify.io)

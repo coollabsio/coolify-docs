@@ -10,9 +10,15 @@ Set up Coolify MCP by enabling the instance endpoint, confirming team access, cr
 ## Before you begin
 
 - Use Coolify Cloud or a self-hosted Coolify instance with a public HTTPS URL.
-- On self-hosted Coolify, enable **API access** in **Settings > Configuration > Advanced**.
+- On self-hosted Coolify, allow the client's source address in **Settings > Advanced > Allowed IPs**, if an allowlist is configured. MCP has its own enable switch and works while REST **API access** is disabled.
 - Choose the team whose resources the client must access.
 - Create an API token with the smallest required permissions. See [API tokens](/core/security/credentials/api-tokens).
+
+<Callout type="warning" title="Self-hosted: MCP is off by default">
+On a self-hosted instance, you must turn on MCP for the instance before a client can connect. Open **Settings > Advanced**, find the **API and MCP** section, and set **MCP server** to **Enabled**. Until you do this, `/mcp` returns `404`.
+
+On Coolify Cloud, MCP is already enabled. You do not have to change this setting.
+</Callout>
 
 <Callout type="warning" title="Protect the token">
 An MCP client can use every operation allowed by its token. Store the token in the client's secret configuration, never commit it, and revoke it if exposed.
@@ -20,12 +26,12 @@ An MCP client can use every operation allowed by its token. Store the token in t
 
 ## Example values
 
-Use your own instance URL and token when following this guide:
+This guide uses Coolify Cloud in its examples. If you use a self-hosted Coolify instance, replace `app.coolify.io` with your instance's domain in every URL, and use your own token:
 
 <Callout type="info" title="Example data">
 
-- **Coolify URL:** `https://coolify.shadowarcanist.com`
-- **MCP endpoint:** `https://coolify.shadowarcanist.com/mcp`
+- **Coolify URL:** `https://app.coolify.io`
+- **MCP endpoint:** `https://app.coolify.io/mcp`
 - **API token:** `67|abcthisisa123dummytoken`
 
 </Callout>
@@ -44,20 +50,25 @@ Coolify Cloud already has instance MCP enabled. Skip the Dashboard and API tabs,
 
 <ZoomImage src="/docs/images/mcp/enable-mcp.webp" alt="Coolify Advanced settings with MCP server enabled" />
 
-1. Open **Settings** in the sidebar.
-2. Select **Configuration**.
-3. Open **Advanced**.
-4. In **API and MCP**, set **MCP server** to **Enabled**.
+This step is required on self-hosted instances. Only an instance admin (an admin or owner of the root team) can change it.
 
-MCP must also be enabled in the current team's settings. Open team settings and set **MCP server** to **Enabled for this team**.
+1. Open **Settings** in the sidebar.
+2. Open **Advanced**.
+3. In the **API and MCP** section, set **MCP server** to **Enabled**. Coolify saves the change immediately.
+
+The **API access** setting does not control MCP. MCP works when the REST API is disabled.
+
+MCP must also be enabled for the team of the token. It is enabled by default. To check it, open **Team > General**, make sure **MCP server** is **Enabled for this team**, then select **Save changes**. Team admins and owners can change this setting.
+
+If you use **Allowed IPs** in **Settings > Advanced**, the list also applies to `/mcp`. Add the IP address of the machine that runs the MCP client.
 
 </Tab>
 <Tab value="API">
 
-Use a `root` API token to enable or disable the instance endpoint:
+On a self-hosted instance, an instance admin can enable or disable the instance endpoint with a `write` or `root` API token of the root team. The source IP must match **Allowed IPs** when configured. Replace the example URL with your instance's domain:
 
 ```sh
-export COOLIFY_URL="https://coolify.shadowarcanist.com"
+export COOLIFY_URL="https://coolify.example.com"
 export COOLIFY_ROOT_TOKEN="67|abcthisisa123dummytoken"
 
 curl --fail-with-body --request POST \
@@ -67,7 +78,7 @@ curl --fail-with-body --request POST \
 
 The endpoint returns `MCP server enabled.`. Disable it with `POST /api/v1/mcp/disable`.
 
-These endpoints require a `root` token. A `read` or `write` token cannot change the instance MCP setting.
+These endpoints require a token with `write` or `root` that belongs to the root team (team ID `0`). The token owner must be an instance admin: an admin or owner of the root team. Any other token receives `403`. These endpoints remain available while REST **API access** is disabled.
 
 </Tab>
 </Tabs>
@@ -79,17 +90,21 @@ These endpoints require a `root` token. A `read` or `write` token cannot change 
 
 Create a token from **Keys & Tokens > API Tokens** while the required team is active.
 
-Coolify displays the complete token only once. Copy it into the client's secret configuration before leaving the API Tokens page.
+Coolify displays the complete token only once. Copy it into the client's secret configuration before you close the **Copy your token** window.
 
 - Use `read` for inventory and inspection.
 - Add `read:sensitive` only for supported sensitive data or log summaries.
-- Add `deploy` for deploy, start, stop, restart, or cancel operations.
+- Add `deploy` for deploy, start, stop, restart, cancel, and rollback operations.
+- Add `write` to create or update resources with the `create_*` and `manage_*` tools.
+- Add `delete` to delete resources, environment variables, storages, backups, scheduled tasks, or tags. `write` does not include it. If you upgraded from before v4.6.0, review existing tokens for workflows that need to delete.
 - Do not use `root` for normal MCP clients.
+
+A token can never do more than its owner can do in the team. MCP hides the deployment tools, `get_logs`, and the `create_*` and `manage_*` actions that the token's permissions do not allow. Most read tools are listed also for a token without `read`, but they need `read` to run.
 
 MCP endpoint URL:
 
 ```txt
-https://coolify.shadowarcanist.com/mcp
+https://app.coolify.io/mcp
 ```
 
 </Step>
@@ -99,7 +114,7 @@ https://coolify.shadowarcanist.com/mcp
 
 Configure the client with:
 
-- **URL:** `https://coolify.shadowarcanist.com/mcp`
+- **URL:** `https://app.coolify.io/mcp`
 - **Transport:** Streamable HTTP
 - **Authorization:** `Bearer 67|abcthisisa123dummytoken`
 
@@ -114,7 +129,7 @@ Follow a client guide:
 
 ### Verify access
 
-Ask the client to call `get_current_team` or `get_infrastructure_overview`. The response should contain the team and resources associated with the token.
+Ask the client to call `get_current_team` or `get_infrastructure_overview`. The response should contain the team and resources associated with the token. A token limited to selected projects, environments, or resources does not get `get_current_team`. Use `get_infrastructure_overview` for it.
 
 </Step>
 </Steps>

@@ -21,6 +21,8 @@ The open source Firebase alternative.
 
 You can find your anonymous key in the **Environment Variables** area under **SERVICE_SUPABASEANON_KEY**.
 
+New services use Envoy as the API gateway instead of Kong. The gateway is the `supabase-envoy` component, and its URL is in `SERVICE_URL_SUPABASEENVOY`. Existing services keep Kong.
+
 ## Public Port Access
 
 
@@ -42,21 +44,18 @@ Go to the **General** tab then **Edit Compose File**
 Then add this line:
 ```yaml
 ports:
-      - ${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}`
+      - ${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}
 ```
 To
 
 ```yaml
 supabase-db:
-  image: "supabase/postgres:15.6.1.146"
+  image: "supabase/postgres:17.11.0.019"
   healthcheck:
     test: "pg_isready -U postgres -h 127.0.0.1"
     interval: 5s
     timeout: 5s
     retries: 10
-  depends_on:
-    supabase-vector:
-      condition: service_healthy
   ports:
     - ${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}
 ```
@@ -78,6 +77,45 @@ This rule ensures traffic can reach your PostgreSQL database through the Docker 
 ### Using Hetzner's firewall UI
 
 If your server is hosted on Hetzner, you may not need ufw-docker. Instead, you can open the relevant database port (e.g., 5432) directly using [Hetzner's firewall UI](https://docs.hetzner.com/cloud/firewalls/overview).
+
+## Studio shows the logs of another Supabase stack
+
+When two Supabase services run on one server, Supabase Studio of an older service can show the API logs of the other stack. Since Coolify v4.7.0, the Vector container of the template reads only the logs of its own stack.
+
+An existing service keeps its `vector.yml`. To fix it:
+
+1. On the server, open `/data/coolify/services/<service-uuid>/volumes/logs/vector.yml`.
+2. Add `include_labels` under `sources.docker_host`:
+
+   ```yaml
+   sources:
+     docker_host:
+       type: docker_logs
+       include_labels:
+         - 'com.docker.compose.project=${COOLIFY_RESOURCE_UUID}'
+       exclude_containers:
+         - supabase-vector
+   ```
+
+3. Restart the service.
+
+## Upgrade to Supabase with PostgreSQL 17
+
+New services use the Supabase self-hosted release 0.8.4 with PostgreSQL 17.11 and Envoy. An existing service keeps Kong and its images until you change them in **Configuration > General > Edit Compose File**.
+
+<Callout type="warning">
+
+Do not start PostgreSQL 17 on PostgreSQL 15 data.
+
+</Callout>
+
+1. Back up the database.
+2. Run `utils/upgrade-pg17.sh` as the official guide tells.
+3. Update the OAuth callback URLs at your providers. They now use `/auth/v1`.
+
+The storage migrations from v1.81 are one-way. The gateway does not add CORS headers to functions.
+
+See the [official PostgreSQL 17 upgrade guide](https://supabase.com/docs/guides/self-hosting/postgres-upgrade-17?utm_source=coolify.io).
 
 ## Links
 

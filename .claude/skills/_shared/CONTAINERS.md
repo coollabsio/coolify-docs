@@ -1,136 +1,62 @@
-# VitePress Containers
+# MDX Callouts and Components
 
-Callout containers for highlighting important information.
+Use the components registered in `src/components/docs/mdx.tsx`. VitePress `:::` containers are unsupported in the current Fumadocs pipeline.
 
-## Available Containers
+## Callouts
 
-### Tip
+```mdx
+<Callout type="warning" title="Prerequisites">
 
-For helpful recommendations:
+Before continuing, confirm that Docker is installed and your server is reachable over SSH.
 
-```markdown
-::: tip
-Helpful tips and recommendations.
-:::
+</Callout>
 ```
 
-### Info
+Leave blank lines around Markdown children. Close every JSX tag and put commands, configuration, and literal braces in code fences.
 
-For additional context:
+| Type | Use for |
+|---|---|
+| `info` | Background context and notes |
+| `warning` | Prerequisites and cautions |
+| `error` | Security risks, data loss, and critical warnings |
+| `success` | Successful checks and helpful recommendations |
+| `idea` | Optional approaches and ideas |
 
-```markdown
-::: info
-Additional information or context.
-:::
-```
+The runtime also maps `tip` to `success`, `warn` to `warning`, and `danger` to `error`. Prefer the canonical types above for new examples. See `src/components/docs/callout.tsx` for the supported props.
 
-### Warning
+````mdx
+<Callout type="error" title="Check before deleting data">
 
-For important prerequisites or cautions:
-
-```markdown
-::: warning
-Important warnings or prerequisites.
-:::
-```
-
-### Danger
-
-For critical warnings:
-
-```markdown
-::: danger
-Critical warnings about data loss or security.
-:::
-```
-
-### Success
-
-For confirmation messages:
-
-```markdown
-::: success
-Success messages or confirmations.
-:::
-```
-
-## Custom Titles
-
-Add a custom title after the container type:
-
-```markdown
-::: warning Prerequisites
-You must complete X before proceeding.
-:::
-
-::: tip Pro Tip
-This advanced technique can save time.
-:::
-
-::: danger Data Loss Warning
-This action cannot be undone.
-:::
-```
-
-## When to Use Each Type
-
-| Container | Use For |
-|-----------|---------|
-| `tip` | Best practices, shortcuts, recommendations |
-| `info` | Background context, explanations, notes |
-| `warning` | Prerequisites, cautions, important notes |
-| `danger` | Data loss, security risks, breaking changes |
-| `success` | Completed steps, confirmations |
-
-## Examples in Context
-
-### Prerequisites Section
-
-```markdown
-## Prerequisites
-
-::: warning Required Setup
-Before proceeding, ensure you have:
-- SSH access to your server
-- Docker installed
-- A domain name configured
-:::
-```
-
-### After a Risky Step
-
-```markdown
-## 3. Reset Database
-
-::: danger
-This will delete all existing data. Make sure you have a backup.
-:::
+Confirm that you have a usable backup before running a destructive command.
 
 ```bash
-coolify db:reset
-```
-```
-
-### Helpful Tip
-
-```markdown
-## Configuration
-
-::: tip
-You can also set these values via environment variables for easier deployment.
-:::
+# Put the verified command here.
 ```
 
-## Nesting Content
+</Callout>
+````
 
-Containers can include any markdown:
+For disabled service pages, use `disabled: true` in frontmatter and an appropriate title such as `SERVICE TEMPORARILY DISABLED`. See [disabling-services](../disabling-services/SKILL.md) for the catalog rules.
 
-```markdown
-::: info Multiple Items
-You can include:
-- Bullet lists
-- **Bold text**
-- `code snippets`
-- [Links](/path)
-:::
+## Tabs
+
+```mdx
+<Tabs items={['Dashboard', 'Terminal']}>
+<Tab value="Dashboard">
+
+Follow the dashboard steps here.
+
+</Tab>
+<Tab value="Terminal">
+
+Follow the terminal steps here.
+
+</Tab>
+</Tabs>
 ```
+
+## Other Components
+
+`Steps`/`Step`, `Cards`/`Card`, `Accordions`/`Accordion`, `ScreenshotTabs`, and the `Cool*` components are registered for MDX. Check their implementations and nearby pages before using component-specific props. A component not registered in `mdx.tsx` needs an explicit MDX import.
+
+Use [IMAGES.md](./IMAGES.md) for `ZoomImage` and its supported `ZoomableImage` alias.

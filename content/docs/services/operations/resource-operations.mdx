@@ -17,9 +17,9 @@ Neither action moves a Service to another Coolify instance.
 
 A clone creates another Service from the saved configuration. The source Service remains in its current destination and is not replaced.
 
-<Callout type="warning" title="Cloning does not migrate Service data">
+<Callout type="warning" title="Service data is copied only on request">
 
-Treat the clone as a new stack. Do not assume Docker volume contents, bind-mounted files, database records, or data in external services have moved to the destination. Plan a separate, verified transfer or restore for every stateful component.
+Treat the clone as a new stack. Select **Clone volume data** to also copy the data of the named Docker volumes, also to another server. A running source is stopped while the data is copied and started again afterwards. Coolify does not copy bind mounts (host paths), databases outside the resource, or data in external services. Plan a separate, verified transfer or restore for every other stateful component.
 
 </Callout>
 
@@ -27,10 +27,10 @@ The Service clone can copy stack configuration such as the Compose definition, e
 
 1. Confirm that the target server is validated, can host resources, and has the required network destination. Build servers cannot host the Service.
 2. Configure any registry, proxy, DNS, firewall, and external-service access required on the target server.
-3. Under **Clone Resource**, choose **Select Server** and **Select Network Destination**.
+3. Under **Clone Resource**, choose **Select Server** and **Select Network Destination**. To copy the data of the named volumes, select **Clone volume data**.
 4. Select **Clone Resource**.
 5. Open the new Service and review its source and deployable Compose, environment variables, domains, storage, scheduled tasks, and tags.
-6. Restore or transfer required data into the new volumes and server paths.
+6. Restore or transfer the data that was not copied into the new volumes and server paths.
 7. Deploy with temporary domains or isolated external dependencies.
 8. Verify every component before moving production traffic.
 

@@ -43,11 +43,11 @@ Anyone with the URL can post to the Discord channel. Store it as a secret and re
 ## Configure Coolify
 
 1. Open **Notifications > Discord**.
-2. Paste the URL into **Webhook** and select **Save**.
-3. Turn on **Enabled**.
-4. Optional: turn on **Ping Enabled** to add `@here` to critical event notifications. Discord notifies only members who are online and can access the channel.
-5. Under **Notification Settings**, select the events to send to Discord.
-6. Select **Send Test Notification**.
+2. Paste the URL into **Webhook URL** and select **Save changes**.
+3. Select **Enable**.
+4. Optional: set **Critical event mention** to **Mention @here** to add `@here` to critical event notifications. Discord notifies only members who are online and can access the channel.
+5. Under **Notification events**, select the events to send to Discord.
+6. Select **Send test**.
 
 Confirm that the test appears in the selected Discord channel before selecting additional events.
 
@@ -61,6 +61,6 @@ If the test does not appear:
 2. Confirm that it targets the channel you are checking. A webhook can be moved to another channel without changing the workflow in Coolify.
 3. Copy the URL again and replace the saved value in Coolify if the webhook was recreated or its token changed.
 4. Confirm that the destination channel still exists and that the webhook can post to it.
-5. Save the URL before turning on **Enabled**, then send another test.
+5. Save the URL before selecting **Enable**, then send another test.
 
 See [Notification events](/core/notifications/events) for the trigger behind each event setting.

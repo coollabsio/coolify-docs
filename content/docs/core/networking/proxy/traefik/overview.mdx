@@ -28,19 +28,25 @@ Coolify configures:
 - the `coolify-proxy` Traefik container on connected servers
 - public `http` and `https` entry points on ports `80` and `443`
 - Docker and file providers for generated routes and dynamic configuration
-- the `letsencrypt` TLS certificate resolver for HTTP challenge
+- the `letsencrypt` TLS certificate resolver for HTTP challenge, which you can change or turn off for each server and resource ([certificate resolver](/core/networking/proxy/traefik/certificate-resolver))
 - resource router, middleware, service, and target-port labels
 - the Docker networks that let Traefik reach routed resources
 
 The main configuration is stored at `/data/coolify/proxy/docker-compose.yml`. Traefik file-provider configuration is stored under `/data/coolify/proxy/dynamic/` and mounted at `/traefik/dynamic/` inside the proxy container.
 
+<Callout type="warning" title="Edit the main configuration in Coolify">
+Coolify does not sync edits to `/data/coolify/proxy/docker-compose.yml` back into the UI once a proxy configuration is saved in Coolify. Make changes under **Servers > your server > Proxy > Configuration** and save them there. Starting or restarting the proxy through Coolify writes its saved configuration to disk and can overwrite disk-only edits.
+</Callout>
+
 <Callout type="warning" title="Keep generated routing intact">
-Resetting the proxy configuration removes custom changes from the main Docker Compose file. Editing application labels after disabling **Readonly labels** also makes you responsible for preserving every generated route and middleware label.
+Resetting the proxy configuration removes custom changes from the main Docker Compose file. Editing application labels after choosing manual label management also makes you responsible for preserving every generated route and middleware label.
 </Callout>
 
 ---
 
 ## Choose a Traefik guide
+
+If Coolify shows a new-version notice, follow [Update Traefik](/core/networking/proxy/traefik/update) to review compatibility, change the image version, and restart the proxy.
 
 <CoolNextSteps
   cards={[

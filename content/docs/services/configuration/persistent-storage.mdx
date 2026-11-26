@@ -13,6 +13,8 @@ Open **Configuration > Persistent Storages** to review parsed mounts grouped by 
 
 Storage parsed from a Service is read-only on the Persistent Storages page. Add, change, or remove its mount under **Configuration > General > Edit Compose File**, then save and review the parsed result.
 
+The **Delete** action of a volume stays disabled while the volume is in the Compose file. Remove the volume from the Compose file first, then delete it here.
+
 </Callout>
 
 ## Choose a mount
@@ -62,7 +64,11 @@ services:
           logLevel: info
 ```
 
+A bind with `is_directory: false` and no `content:` is an empty file. Coolify creates it before `docker compose up`, so Docker does not create a directory at its path. Fill it in on the Persistent Storages page.
+
 Use an absolute source path only when you intend to depend on that exact path on the selected server. The path must exist with permissions suitable for the container user.
+
+The host path of a short-syntax volume can use variables, such as `${DATA}/config:/config`. The path uses the value from **Environment Variables**, or the default of `${VAR:-default}`. Read [Variables in host paths](/applications/builds/docker-compose#variables-in-host-paths) for how Coolify keeps the data of a storage that existed before Coolify v4.7.7.
 
 ## Change a mount safely
 

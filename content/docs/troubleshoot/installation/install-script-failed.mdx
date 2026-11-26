@@ -208,8 +208,11 @@ tcp   LISTEN  0  4096  *:8000  *:*  users:(("some-app",pid=1234,fd=3))
 You can check the other Coolify ports the same way:
 
 ```bash
-# Port 6001 (Soketi/Real-time)
+# Port 6001 (Reverb realtime updates)
 sudo ss -tulpn | grep :6001
+
+# Port 6002 (web terminal)
+sudo ss -tulpn | grep :6002
 
 # Port 5432 (PostgreSQL - usually internal only)
 sudo ss -tulpn | grep :5432
@@ -259,8 +262,7 @@ You should see these containers:
 
 | Container Name     | Status | Purpose                    |
 | ------------------ | ------ | -------------------------- |
-| `coolify`          | Up     | Main Coolify application   |
-| `coolify-realtime` | Up     | Real-time updates (Soketi) |
+| `coolify`          | Up     | Main application, realtime updates, and web terminal |
 | `coolify-db`       | Up     | PostgreSQL database        |
 | `coolify-redis`    | Up     | Redis cache                |
 
@@ -277,7 +279,6 @@ If containers are **stopped** or **exited**, check their logs:
 ```bash
 # View logs for specific container
 docker logs coolify
-docker logs coolify-realtime
 docker logs coolify-db
 docker logs coolify-redis
 
@@ -303,26 +304,25 @@ Check if all required Docker images were pulled successfully:
 
 ```bash
 # List Coolify-related images
-docker images | grep coolify
-docker images | grep ghcr.io/coollabsio
+docker images | grep coollabsio
 ```
 
 You should see at least:
 
-- `ghcr.io/coollabsio/coolify` (or your custom registry)
-- `ghcr.io/coollabsio/coolify-helper`
-- `ghcr.io/coollabsio/coolify-realtime`
+- `coollabsio/coolify`
+- `coollabsio/coolify-helper`
+
+Coolify pulls its images from Docker Hub by default. If you set `REGISTRY_URL=ghcr.io`, the image names start with `ghcr.io/`.
 
 If images are missing, there may have been a network issue during installation. Try pulling them manually:
 
 ```bash
-# Pull the latest Coolify images
-docker pull ghcr.io/coollabsio/coolify:latest
-docker pull ghcr.io/coollabsio/coolify-helper:latest
-docker pull ghcr.io/coollabsio/coolify-realtime:latest
+# Pull the images that the Coolify Compose files use
+cd /data/coolify/source
+docker compose --env-file .env -f docker-compose.yml -f docker-compose.prod.yml pull
+docker pull coollabsio/coolify-helper:latest
 
 # Then restart Coolify
-cd /data/coolify/source
 docker compose --env-file .env -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate
 ```
 
@@ -423,7 +423,7 @@ cat /data/coolify/source/upgrade-*.log
 
 # Look for errors in the log, then re-run upgrade
 cd /data/coolify/source
-bash upgrade.sh latest latest ghcr.io false
+bash upgrade.sh latest
 ```
 
 </Accordion>
@@ -460,18 +460,20 @@ See [Check Port Availability](#check-port-availability) above.
 **Solution:**
 
 ```bash
-# Test network connectivity to GitHub Container Registry
-curl -I https://ghcr.io
+# Test network connectivity to Docker Hub (a 401 response means it is reachable)
+curl -I https://registry-1.docker.io/v2/
 
 # Check DNS resolution
-nslookup ghcr.io
+nslookup registry-1.docker.io
 
 # Try pulling images manually
-docker pull ghcr.io/coollabsio/coolify:latest
+docker pull coollabsio/coolify:latest
 
 # If using custom registry, login first
 docker login your-registry.com
 ```
+
+If Docker Hub rate limits the pulls, pull the images from GitHub Container Registry instead. Read [Custom registry source](/start-with-self-hosted#_3-custom-registry-source).
 
 </Accordion>
 
@@ -523,6 +525,40 @@ Should show:
 - `permitrootlogin without-password`
 
 If it shows `permitrootlogin no`, see the [OpenSSH Configuration Guide](/core/infrastructure/servers/openssh).
+
+</Accordion>
+
+<Accordion title="Operating system not supported">
+
+**Symptoms:**
+
+- The installer stops with `This script only supports Debian, Redhat, Arch Linux, Alpine Linux, or SLES based operating systems for now.`
+- On Amazon Linux 2, the installer stops with `Amazon Linux 2 reached its end of life and is not supported. Use Amazon Linux 2023.`
+
+**Solution:**
+
+Check `ID` and `ID_LIKE` of the server:
+
+```bash
+cat /etc/os-release
+```
+
+The installer treats every distribution with `arch` in `ID_LIKE` as Arch Linux, so Arch based distributions such as Garuda install as Arch Linux. For other distributions, use a [supported operating system](/start-with-self-hosted#2-supported-operating-systems) or the manual installation. On AWS, use Amazon Linux 2023.
+
+</Accordion>
+
+<Accordion title="Predefined root user was not created">
+
+**Symptoms:**
+
+- You installed with `ROOT_USER_EMAIL` and `ROOT_USER_PASSWORD`, and the installer lists why it could not create the root user.
+- The registration page says that Coolify rejected the `ROOT_USER_*` values in `/data/coolify/source/.env`.
+
+**Solution:**
+
+Fix the values that the installer names, for example a password that is too weak or appears in a known data breach. Then run the installer again with the corrected values. The new run replaces the old `ROOT_USER_*` values in `/data/coolify/source/.env`. While these values are set, registration in the browser stays closed. See [Root user](/start-with-self-hosted#_1-root-user) for the rules of each value.
+
+To change the email or password of an existing root user, run `docker exec -it coolify php artisan root:change-email` or `docker exec -it coolify php artisan root:reset-password`. Both commands stop with `Root user not found` when no root user exists yet.
 
 </Accordion>
 

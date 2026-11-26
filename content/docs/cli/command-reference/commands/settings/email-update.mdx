@@ -1,0 +1,28 @@
+---
+title: "Email update"
+description: "Pass settings as JSON via --json. Requires write:sensitive. Example: coolify settings email update --json '{\"smtp_ehlo_domain\":\"coolify.example.com\"}'"
+---
+
+# Email update
+
+Pass settings as JSON via --json. Requires write:sensitive. Example: coolify settings email update --json '&#123;"smtp_ehlo_domain":"coolify.example.com"&#125;'
+
+## Usage
+
+```sh
+coolify settings email update
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--json` | `string` | No | — | JSON object of fields to update |
+
+## Get current help
+
+```sh
+coolify settings email update --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

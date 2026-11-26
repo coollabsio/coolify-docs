@@ -44,7 +44,7 @@ export function baseOptions(): SharedLayoutOptions {
       },
       {
         type: 'icon',
-        url: 'https://coolify.io/pricing/',
+        url: 'https://coolify.io/pricing',
         text: 'Coolify Cloud',
         label: 'Coolify Cloud',
         icon: (

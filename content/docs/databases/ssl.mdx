@@ -7,7 +7,7 @@ description: Enable SSL for standalone database connections in Coolify, choose a
 
 Coolify can generate a server certificate for supported standalone databases and add the certificate to the database container. For engines that expose SSL connection parameters, the **General** page also includes those parameters in the generated internal and public connection URLs.
 
-SSL settings are changed from the database's **Configuration > General** page. Stop the database before changing **Enable SSL** or **SSL Mode**, then restart it after saving so the generated certificate and connection port are applied.
+SSL settings are changed from the database's **General** page. Stop the database before changing **SSL** or **SSL mode**, then restart it after saving so the generated certificate and connection port are applied.
 
 <Callout type="warning" title="Update the connection URL">
 
@@ -18,14 +18,14 @@ Applications use SSL only when their connection configuration enables it. Copy t
 ## Enable SSL
 
 1. Stop the database.
-2. Open **Configuration > General**.
-3. Enable **Enable SSL**.
-4. Choose an **SSL Mode** when the database provides that field.
-5. Select **Save** if other configuration changed, then restart the database.
+2. Open **General**.
+3. Under **SSL configuration**, set **SSL** to **Enabled**.
+4. Choose an **SSL mode** when the database provides that field.
+5. Select **Save changes** if other configuration changed, then restart the database.
 
 Coolify creates a database certificate signed by the CA certificate for the database's server. If no server CA certificate exists, Coolify attempts to generate one. The certificate status and expiration date appear on the database's General page.
 
-To regenerate a database certificate, use **Regenerate SSL Certificates** on the General page, then restart the database. A regenerated certificate can require the connecting application to trust the server CA again.
+To regenerate a database certificate, use **Regenerate SSL Certificates** on the General page, then restart the database. PostgreSQL, MySQL, MariaDB, Redis, KeyDB, and Dragonfly use separate `server.crt` and `server.key` files. New and regenerated certificates use a P-256 key, including for compatibility with Electron-based clients such as MongoDB Compass. The CA file on the server matches the signing CA. A regenerated certificate can require the connecting application to trust the server CA again.
 
 ## SSL modes
 
@@ -52,12 +52,12 @@ MySQL exposes **Prefer**, **Require**, **Verify CA**, and **Verify Full**. The d
 </Tab>
 <Tab value="MongoDB">
 
-MongoDB exposes `allow`, `prefer`, `require`, and `verify-full`. The default is `require`, and **Enable SSL** is enabled by default for newly created MongoDB resources. The generated MongoDB URL uses `/etc/mongo/certs/ca.pem` for the CA and adds `/etc/mongo/certs/server.pem` for `verify-full`. If the consuming application runs in another container, mount or configure the client certificate paths expected by its MongoDB driver instead of assuming that paths inside the database container are available to the application.
+MongoDB exposes `allow`, `prefer`, `require`, and `verify-full`. The default is `require`, and **SSL** is **Enabled** by default for newly created MongoDB resources. The generated MongoDB URL uses `/etc/mongo/certs/ca.pem` for the CA and adds `/etc/mongo/certs/server.pem` for `verify-full`. If the consuming application runs in another container, mount or configure the client certificate paths expected by its MongoDB driver instead of assuming that paths inside the database container are available to the application.
 
 </Tab>
 <Tab value="MariaDB, Redis, Dragonfly & KeyDB">
 
-These databases expose **Enable SSL** but no SSL mode selector in the Coolify interface. Coolify configures the database's TLS listener. Redis, Dragonfly, and KeyDB generated URLs use the `rediss` scheme and TLS port `6380`; configure the MariaDB client with its SSL options when connecting.
+These databases expose an **SSL** dropdown but no SSL mode selector in the Coolify interface. Coolify configures the database's TLS listener. Redis, Dragonfly, and KeyDB generated URLs use the `rediss` scheme and TLS port `6380`; configure the MariaDB client with its SSL options when connecting.
 
 </Tab>
 <Tab value="ClickHouse">

@@ -40,7 +40,7 @@ Coolify shows each parsed Compose service as a component card under **Configurat
 
 The Service status aggregates its non-excluded components. An optional or one-time component can be excluded from the aggregate status from its **Advanced** settings.
 
-A component can be restarted separately, but **Deploy**, **Restart**, **Stop**, and **Pull Latest Images & Restart** act on the Service stack.
+A component can be restarted separately, but **Deploy**, **Restart**, **Stop**, and **Pull latest and restart** act on the Service stack.
 
 ## Networking
 
@@ -64,7 +64,7 @@ Deploy or restart the Service after changing:
 - persistent storage
 - component logging or status settings
 
-**Restart** recreates the stack without first pulling newer images. **Pull Latest Images & Restart** pulls the image tags stored in the current Compose definition, then recreates the stack.
+**Restart** recreates the stack without first pulling newer images. **Pull latest and restart** pulls the image tags stored in the current Compose definition, then recreates the stack.
 
 <Callout type="info" title="Template updates do not replace an existing Service">
 

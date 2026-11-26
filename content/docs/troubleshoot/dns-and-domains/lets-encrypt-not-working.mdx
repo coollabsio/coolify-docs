@@ -77,30 +77,11 @@ However, if your domain has been working fine over HTTPS for several months and 
 </Step>
 <Step>
 
-### Force Regenerate Certificates
+### Remove a verified stale certificate
 
-If the certificates stored on your server are corrupted or outdated, you can delete them and force Coolify generate new ones.
+Resolve DNS, challenge, and proxy log errors before removing a certificate. If Traefik still serves a stale ACME certificate, open **Servers > [server] > Proxy > TLS Certificates**. Verify the entry by its domains and expiry, then delete only that entry and restart the proxy when prompted. Coolify backs up the ACME storage before the change. See [Traefik TLS certificates](/core/networking/proxy/traefik/tls-certificates).
 
-- Open your server terminal and run:
-  ```bash
-  rm /data/coolify/proxy/acme.json
-  ```
-- Then, restart the Coolify proxy from the dashboard by clicking the Restart Proxy button.
-
-<Accordions type="multiple">
-
-<Accordion title="Guide: How to Restart Proxy from Dashboard?">
-
-
-  1. Select your server on the Coolify Dashboard
-     <ZoomImage src="/docs/images/troubleshoot/dns-and-domains/lets-encrypt-not-working/1.webp" alt="Screenshot showing Lets Encrypt Not Working" />
-
-  2. Click on Restart Proxy button
-     <ZoomImage src="/docs/images/troubleshoot/dns-and-domains/lets-encrypt-not-working/2.webp" alt="Screenshot showing Lets Encrypt Not Working" />
-
-</Accordion>
-
-</Accordions>
+For an ACME storage problem affecting the whole file, use the [ACME backup recovery procedure](/core/networking/proxy/traefik/tls-certificates#restore-acme-storage).
 
 </Step>
 <Step>

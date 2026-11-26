@@ -35,6 +35,8 @@ The confirmation modal selects these actions by default:
 | **Permanently delete all configuration files from the server.** | Deletes the generated Service configuration directory from its server. |
 | **Run Docker Cleanup (remove unused images and builder cache).** | Queues Docker cleanup on the Service server. |
 
+The modal also offers **Permanently delete all database and storage backups of this resource, on the server and on S3.** This action is off by default. When it is off, the database and storage backups stay on the server and on S3, and Coolify no longer manages them, so you must delete them yourself. The delete endpoint of the API takes the same choice as `delete_backups`, default `false`.
+
 The Service record, component records, scheduled tasks, tags, and containers are removed even when you clear optional Docker-resource actions.
 
 Clearing the volume action preserves the selected Docker volumes; it does not preserve the Coolify Service or reconnect those volumes to a future resource automatically. Record their actual Docker names before deletion if you intend to recover them manually.

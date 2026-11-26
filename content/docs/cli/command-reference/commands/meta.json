@@ -21,9 +21,13 @@
     "teams",
     "private-key",
     "tag",
+    "mcp",
     "completion",
     "config",
     "version",
-    "update"
+    "update",
+    "audit",
+    "integration-token",
+    "settings"
   ]
 }

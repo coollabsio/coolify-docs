@@ -1,0 +1,30 @@
+---
+title: "Metrics"
+description: "Get database CPU and memory metrics"
+---
+
+# Metrics
+
+Get database CPU and memory metrics
+
+## Usage
+
+```sh
+coolify database metrics <uuid>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--from` | `string` | No | — | Start of the history, ISO 8601 (e.g. 2026-11-20T08:00:00Z) |
+| `--minutes` | `integer` | No | `0` | Minutes of history before now (API default: 10). Cannot be used with --from or --to |
+| `--to` | `string` | No | — | End of the history, ISO 8601 (default: now). Needs --from |
+
+## Get current help
+
+```sh
+coolify database metrics --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

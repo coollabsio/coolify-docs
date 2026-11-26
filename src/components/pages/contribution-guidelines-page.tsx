@@ -34,7 +34,7 @@ export function ContributionGuidelinesPage({ children }: { children?: ReactNode 
   const [introSection, ...contentSections] = sections;
 
   return (
-    <CoolDocsPage data-contribution-guidelines-page hideToc>
+    <CoolDocsPage data-contribution-guidelines-page>
       {introSection ? (
         <>
           {introSection}

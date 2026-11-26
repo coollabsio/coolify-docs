@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: Destinations Overview
 description: Understand how Coolify uses Docker network destinations to deploy resources on your servers.
 ---
 
@@ -33,6 +33,8 @@ A destination does not move traffic between servers. It also does not replace DN
 
 The default `coolify` destination represents the `coolify` Docker network on the server.
 
+Coolify creates the `coolify` network and the networks of new destinations with IPv6 when Docker can allocate an IPv6 subnet, and without IPv6 when it cannot. Coolify does not change a network that exists already. To add IPv6 to an existing network, follow [Applications see the Docker gateway IP](/troubleshoot/applications/wrong-client-ip).
+
 When you create a resource, Coolify first asks you to select a server. If the server has only one destination, Coolify selects it automatically. If the server has multiple destinations, you choose the Docker network for the new resource.
 
 The default `coolify` destination cannot be deleted from the dashboard.
@@ -47,7 +49,7 @@ Creating more destinations does not create more servers. Every destination still
 
 Docker Compose applications and service stacks use a resource-specific Docker network by default. They do not join their selected Coolify destination automatically.
 
-Enable **Connect To Predefined Network** when a Docker Compose resource must communicate with other resources through its Coolify destination. Review [Docker Compose networking](/applications/builds/docker-compose#application-networking) before enabling the setting.
+Enable **Connect To Predefined Network** when a Docker Compose resource must communicate with other resources through its Coolify destination. Review [Docker Compose networking](/applications/builds/docker-compose#compose-networking) before enabling the setting.
 
 <Callout type="warning" title="Docker Swarm destinations are deprecated">
 Existing Coolify v4 Docker Swarm destinations may still appear with a **Deprecated** badge. Do not create a new Swarm deployment. Read [Docker Swarm (Deprecated)](/core/infrastructure/scaling/docker-swarm) when maintaining an existing deployment.

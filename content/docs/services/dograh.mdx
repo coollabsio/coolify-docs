@@ -1,0 +1,69 @@
+---
+title: "Dograh"
+description: "Open-source voice AI platform, an alternative to Vapi and Retell."
+category: "AI"
+icon: "/docs/images/services/dograh-logo.png"
+---
+
+# Dograh
+
+<ZoomImage src="/docs/images/services/dograh-logo.png" alt="Dograh logo" />
+
+## What is Dograh?
+
+Dograh is an open-source, self-hostable voice AI platform. You can use it as an alternative to hosted platforms such as Vapi or Retell.
+
+With Dograh, you build voice agents in a visual workflow builder. The agents can make and receive phone calls through telephony integrations, take web calls over WebRTC, and use tools through MCP.
+
+## Components
+
+The Coolify template starts these containers:
+
+- **ui**: The Dograh dashboard (port 3010).
+- **api**: The Dograh backend (port 8000). Telephony providers send webhooks to this URL.
+- **postgres**: PostgreSQL with pgvector.
+- **redis**: Redis for queues and caching.
+- **minio**: Object storage for call recordings. The browser loads recordings from this URL.
+- **coturn**: STUN/TURN server for WebRTC calls behind NAT.
+
+## Before you deploy
+
+### Set the public IP address
+
+Set `TURN_EXTERNAL_IP` to the public IPv4 address of your server. The deployment does not start without this value. coturn sends this address to WebRTC clients. If the value is wrong, web calls do not connect.
+
+### Open the firewall ports
+
+coturn uses fixed ports on the host. Open these ports in your server firewall and in the firewall of your cloud provider:
+
+| Port | Protocol | Purpose |
+| :--- | :--- | :--- |
+| 3478 | TCP and UDP | STUN/TURN |
+| 5349 | TCP and UDP | TURN over TLS |
+| 49152-49200 | UDP | Media relay |
+
+<Callout type="warning">
+Because the coturn ports are fixed, you can run only one Dograh service on each server.
+</Callout>
+
+### Domains
+
+The template gives a domain to the **ui**, **api**, and **minio** services. All three must be reachable from the internet:
+
+- Users open the **ui** domain.
+- Telephony providers call the **api** domain.
+- Browsers load call recordings from the **minio** domain.
+
+## After you deploy
+
+1. Open the **ui** domain.
+2. Create an account.
+3. To stop other people from signing up, set `ENABLE_SIGNUP` to `false` and redeploy.
+
+Dograh sends anonymous usage data by default. To turn this off, set `ENABLE_TELEMETRY` to `false` and redeploy.
+
+## Links
+
+- [The official website](https://www.dograh.com?utm_source=coolify.io)
+- [Documentation](https://docs.dograh.com?utm_source=coolify.io)
+- [GitHub](https://github.com/dograh-hq/dograh?utm_source=coolify.io)

@@ -1,0 +1,32 @@
+---
+title: "OpenWA"
+description: "Open-source, self-hosted WhatsApp API gateway with a bundled dashboard."
+category: "Messaging"
+icon: "/docs/images/services/openwa.png"
+---
+
+# OpenWA
+
+<ZoomImage src="/docs/images/services/openwa.png" alt="OpenWA logo" />
+
+Open-source, self-hosted WhatsApp API gateway with a bundled dashboard.
+
+## Variants
+
+- **OpenWA:** Uses SQLite for storage in a single container.
+- **OpenWA with PostgreSQL and Redis:** Includes PostgreSQL and Redis containers.
+
+## Upgrade to OpenWA 0.30
+
+New services use OpenWA 0.30.3. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+This applies to both variants.
+
+- `DATABASE_SYNCHRONIZE` must be exactly `true` or `false`.
+- If you roll back after the upgrade, you lose the wwjs logins (Chrome 157).
+
+See the [official changelog](https://github.com/rmyndharis/OpenWA/blob/main/CHANGELOG.md?utm_source=coolify.io).
+
+## Links
+
+- [GitHub](https://github.com/rmyndharis/OpenWA)

@@ -50,6 +50,18 @@ Directus is available in two deployment configurations in Coolify:
 - [Twitter](https://twitter.com/directus?utm_source=coolify.io) (Latest News)
 - [YouTube](https://www.youtube.com/c/DirectusVideos/featured?utm_source=coolify.io) (Video Tutorials)
 
+## Upgrade to Directus 12
+
+New services use Directus 12. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+This applies to both deployment variants.
+
+- SSO, custom permission rules, and custom LLMs need a licence. You have a 30-day grace period.
+- `/server/health` needs authentication. Change the health check to `/server/ping`.
+- The default of `IP_TRUST_PROXY` is now `false`. Add `IP_TRUST_PROXY=true` to the environment variables. The new template sets this value.
+
+See the [official breaking changes of version 12](https://directus.com/docs/releases/breaking-changes/version-12?utm_source=coolify.io).
+
 ## Links
 
 - [The official website](https://directus.io?utm_source=coolify.io)

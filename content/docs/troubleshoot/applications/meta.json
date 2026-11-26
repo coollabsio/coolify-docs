@@ -4,6 +4,9 @@
     "bad-gateway",
     "no-available-server",
     "gateway-timeout",
-    "failed-to-get-token"
+    "payload-too-large",
+    "too-many-redirects",
+    "failed-to-get-token",
+    "wrong-client-ip"
   ]
 }

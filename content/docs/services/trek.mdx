@@ -1,0 +1,62 @@
+---
+title: "TREK"
+description: "Self-hosted, real-time collaborative travel planner."
+category: "Productivity"
+icon: "/docs/images/services/trek-logo.svg"
+---
+
+# TREK
+
+<ZoomImage src="/docs/images/services/trek-logo.svg" alt="TREK logo" />
+
+## What is TREK?
+
+TREK is a self-hosted travel planner. You and your travel companions plan trips together and see each other's changes in real time.
+
+- Day-by-day itineraries with places on an interactive map
+- Shared budgets, expense splitting, and packing lists
+- Bookings, files, and notes for each trip
+- Local accounts, passkeys, and single sign-on with OpenID Connect (OIDC)
+
+## Before you deploy
+
+<Callout type="warning" title="Save the encryption key">
+
+TREK encrypts stored secrets, such as API keys and MFA secrets, with `ENCRYPTION_KEY`. Coolify generates this key on the first deployment. Do not change it later. If the key does not match the key in the data volume, TREK does not start.
+
+</Callout>
+
+The Coolify template runs TREK with its built-in SQLite database. It stores data in two volumes: `/app/data` (database and keys) and `/app/uploads` (uploaded files).
+
+## Admin account
+
+On the first start, TREK creates an admin account from `ADMIN_EMAIL` and `SERVICE_PASSWORD_ADMIN`. Both values are on the **Environment Variables** page of the service in Coolify. TREK asks you to change the password after the first login.
+
+TREK reads these variables only when the database is empty. To change the admin later, use the TREK settings.
+
+## Environment variables
+
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `ADMIN_EMAIL` | `admin@trek.local` | Email of the first admin account. |
+| `TZ` | `UTC` | Time zone for logs, reminders, and scheduled tasks, for example `Europe/Berlin`. |
+| `LOG_LEVEL` | `info` | Set to `debug` for more detailed logs. |
+| `FORCE_HTTPS` | `false` | Set to `true` to redirect to HTTPS and send HSTS headers. Coolify's proxy already handles TLS. |
+| `TRUST_PROXY` | `1` | Number of trusted proxy hops in front of TREK. |
+| `ALLOW_INTERNAL_NETWORK` | `false` | Set to `true` to let TREK connect to private IP addresses, for example an Immich server on your network. |
+| `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET` | Empty | OIDC provider settings. Fill them in to enable single sign-on. |
+| `OIDC_DISPLAY_NAME` | `SSO` | Label of the single sign-on button. |
+| `OIDC_ONLY` | `false` | Set to `true` to disable password login and use only single sign-on. |
+
+## Single sign-on
+
+1. In your OIDC provider, create a client with the redirect URI `https://<your-trek-domain>/api/auth/oidc/callback`.
+2. Set `OIDC_ISSUER`, `OIDC_CLIENT_ID`, and `OIDC_CLIENT_SECRET` in Coolify.
+3. Redeploy the service.
+
+Coolify sets `APP_URL` to the domain of the service. The redirect URI must use the same domain. For provider-specific steps, see the [TREK OIDC guide](https://github.com/liketrek/TREK/wiki/OIDC-SSO?utm_source=coolify.io).
+
+## Links
+
+- [GitHub](https://github.com/liketrek/TREK?utm_source=coolify.io)
+- [Wiki](https://github.com/liketrek/TREK/wiki?utm_source=coolify.io)

@@ -12,11 +12,11 @@ Claude Code can connect directly to Coolify's Streamable HTTP MCP endpoint.
 Run this command from a terminal. Replace the URL and token:
 
 ```sh
-claude mcp add --transport http coolify https://coolify.shadowarcanist.com/mcp \
+claude mcp add --transport http coolify https://app.coolify.io/mcp \
   --header "Authorization: Bearer 67|abcthisisa123dummytoken"
 ```
 
-Use a token with `read` for inspection. Add `deploy` only when Claude Code must run deployment or lifecycle operations.
+Use a token with `read` for inspection. Add `deploy` only when Claude Code must run deployment or lifecycle operations, `write` only when it must create or update resources, and `delete` only when it must delete them.
 
 ## Verify the connection
 

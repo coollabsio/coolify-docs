@@ -89,38 +89,38 @@ If the response does not include the destination, send another message in the gr
 
 ### Save the bot and chat
 
-Open **Notifications > Telegram**. Enter the **Bot API Token** and **Chat ID** exactly as returned by Telegram, including a leading `-` in the chat ID, then select **Save**.
+Open **Notifications > Telegram**. Enter the **Bot API token** and **Chat ID** exactly as returned by Telegram, including a leading `-` in the chat ID, then select **Save changes**.
 
 </Step>
 <Step>
 
 ### Enable the channel
 
-Turn on **Enabled**. If Coolify does not keep the channel enabled, recheck that both required values were saved.
+Select **Enable**. If Coolify does not keep the channel enabled, recheck that both required values were saved.
 
 </Step>
 <Step>
 
 ### Choose events and topics
 
-Under **Notification Settings**, select the events to send to Telegram.
+Under **Notification events**, select the events to send to Telegram.
 
-To route a supported event into a topic, enter that topic's numeric ID in **Custom Telegram Thread ID** beside the event. Leave it empty to send the event to the main chat.
+To route a supported event into a topic, enable the event, then enter that topic's numeric **Topic ID** for it under **Forum topics**. Select **Save changes**. Leave it empty to send the event to the main chat.
 
 </Step>
 <Step>
 
 ### Send a test
 
-Select **Send Test Notification** and confirm that it arrives in the configured chat. The general test uses the main chat configuration, not a custom thread ID.
+Select **Send test** and confirm that it arrives in the configured chat. The general test uses the main chat configuration, not a custom thread ID.
 
 </Step>
 </Steps>
 
 <Callout type="info" title="Custom thread ID limitations">
-Custom thread IDs currently apply to deployment success and failure, application and container stopped or restarted events, backup success and failure, scheduled tasks, Docker cleanup, disk usage, server reachability, and server patching.
+Each event under **Notification events** can use a custom thread ID. Backup S3 upload warnings and missing backup alerts use the thread ID of **Backup failure**.
 
-Restart-limit alerts, backup S3 upload warnings, Traefik proxy outdated alerts, and test notifications use the main chat without a custom thread ID.
+These notifications use the main chat without a custom thread ID: SSH host key changes, "works again" notifications of scheduled jobs, API token alerts, automatic update and other general messages, and test notifications.
 </Callout>
 
 ---

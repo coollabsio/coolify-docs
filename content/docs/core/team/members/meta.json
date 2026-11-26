@@ -3,6 +3,7 @@
   "pages": [
     "overview",
     "add-a-member",
+    "set-member-access",
     "remove-a-member",
     "delete-user",
     "manage-members"

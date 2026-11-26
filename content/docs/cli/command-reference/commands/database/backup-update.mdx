@@ -25,8 +25,8 @@ coolify database backup update <database_uuid> <backup_uuid>
 | `--retention-amount-s3` | `integer` | No | `0` | Number of backups to retain in S3 |
 | `--retention-days-locally` | `integer` | No | `0` | Days to retain backups locally |
 | `--retention-days-s3` | `integer` | No | `0` | Days to retain backups in S3 |
-| `--retention-max-storage-locally` | `integer` | No | `0` | Max storage for local backups (MB) |
-| `--retention-max-storage-s3` | `integer` | No | `0` | Max storage for S3 backups (MB) |
+| `--retention-max-storage-locally` | `float64` | No | `0` | Max storage for local backups (GB) |
+| `--retention-max-storage-s3` | `float64` | No | `0` | Max storage for S3 backups (GB) |
 | `--s3-storage-uuid` | `string` | No | — | S3 storage UUID |
 | `--save-s3` | `boolean` | No | `false` | Save backups to S3 |
 

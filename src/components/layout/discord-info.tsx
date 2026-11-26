@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/ui/cn';
 
-const discordInviteCode = 'ka4bNH8TMU';
+const discordInviteCode = '66SwnZu649';
 const discordInviteUrl = 'https://coollabs.io/discord';
 
 type DiscordInviteResponse = {

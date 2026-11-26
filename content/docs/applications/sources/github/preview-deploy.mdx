@@ -36,23 +36,26 @@ Coolify does not automatically deploy pull requests that were already open when 
 
 Pull-request code can be untrusted. A public contributor could otherwise run code on your server.
 
-<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/1.webp" alt="Preview Deployments and Allow Public PR Deployments settings" />
+<ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/1.webp" alt="Preview deployment access settings" />
 
-- **Preview Deployments** enables previews for trusted repository members, collaborators, and contributors.
-- **Allow Public PR Deployments** allows public contributors to trigger previews.
+- **Enable preview deployments** turns on previews for the application.
+- **PR deployment access** set to **Repository members only** blocks pull requests from forks unless the author is a repository owner, member, or collaborator.
+- **PR deployment access** set to **Public (fork PRs allowed)** allows public contributors to trigger previews.
 
-Keep public pull-request deployments disabled unless you accept the risk of running contributor code.
+**PR deployment access** applies only while preview deployments are enabled. When they are disabled, a preview that you deploy by hand is deployed as **Repository members only**.
+
+Keep **PR deployment access** set to **Repository members only** unless you accept the risk of running contributor code.
 
 ### Scoped secrets
 
-Coolify keeps production and preview variables separate.
+Coolify keeps production and preview variables in separate groups.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/2.webp" alt="Production and preview environment-variable groups" />
 
-- **Production Environment Variables** are used only by the main deployment and are not passed to pull-request previews.
-- **Preview Deployment Environment Variables** are used only by pull-request deployments.
+- **Production Environment Variables** are used by the main deployment.
+- **Preview Deployment Environment Variables** are used by pull-request deployments.
 
-Do not copy production credentials into preview variables for untrusted pull requests. Use limited, non-production credentials.
+Use explicit, limited non-production credentials for pull requests. Creating a production variable can also create a preview entry with the same value. A public preview does not get the preview variables whose value resolves to the production value, including references such as `{{team.KEY}}`. With **Repository members only**, a preview can fall back to production runtime values for keys with no preview entry. Review [preview variable isolation](/applications/deployments/preview-deployments#separate-preview-variables-from-production) before exposing previews to contributors.
 
 ### Automated comments
 
@@ -82,7 +85,7 @@ Follow [Set up a GitHub App](/applications/sources/github/app) first.
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/github-app/1.webp" alt="Preview Deployments permission during automated GitHub App installation" />
 
-Enable **Preview Deployments** before selecting **Register Now**. Coolify requests read-and-write pull-request access and subscribes the app to pull-request events.
+Set **Preview deployment access** to **Read and update pull requests** before selecting **Register with GitHub**. Coolify requests read-and-write pull-request access and subscribes the app to pull-request events.
 
 </Tab>
 <Tab value="Manual installation">
@@ -116,9 +119,9 @@ When creating the app on GitHub:
 
 <ZoomImage src="/docs/images/applications/ci-cd/github/preview-deploy/webhook/1.webp" alt="GitHub manual webhook URL and secret in Coolify" />
 
-1. Open **Configuration > Webhooks**.
-2. Enter and save a random **GitHub Webhook Secret**.
-3. Copy the GitHub URL under **Manual Git Webhooks**.
+1. Open **Webhooks**.
+2. Enter a random **Webhook secret** in the **GitHub** section and select **Save changes**.
+3. Copy the GitHub URL under **Manual Git webhooks**.
 
 <Callout type="warning" title="Protect the webhook secret">
 

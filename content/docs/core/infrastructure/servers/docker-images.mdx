@@ -1,0 +1,19 @@
+---
+title: Docker Images
+description: Inspect Docker image disk usage and remove unused images from a server.
+---
+
+# Docker images
+
+Open **Servers > [server] > Images** to inspect images stored on that server. The page shows repository, tag, image ID, creation time, size, and containers that use each image. Search by repository, tag, or ID and use **Refresh** after changes.
+
+**Total** shows image disk usage and **Reclaimable** shows space Docker can recover. Images with no container references are marked **Unused**.
+
+## Delete an unused image
+
+1. Find an image marked **Unused** and review its reference.
+2. Select its delete action.
+3. Type the requested image reference and confirm.
+4. Refresh the list and check reclaimable space.
+
+Only unused images can be deleted here. A future deployment may need to pull or rebuild a removed image. Use [Docker cleanup](/core/infrastructure/servers/automated-docker-cleanup) for scheduled cleanup.

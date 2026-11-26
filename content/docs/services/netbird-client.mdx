@@ -13,6 +13,14 @@ icon: "/docs/images/services/netbird-logo.png"
 
 Connect your devices into a secure WireGuard®-based overlay network with SSO, MFA and granular access controls.
 
+## Manually self-host NetBird
+
+The Coolify v4.7.9 service catalog includes the NetBird Client template. The client joins a private NetBird network. To run your own management server and dashboard, follow the [NetBird self-hosting guide](https://docs.netbird.io/selfhosted/selfhosted-quickstart).
+
+The optional [NetBird Reverse Proxy](https://docs.netbird.io/selfhosted/migration/enable-reverse-proxy) publishes network services to the internet. If using a Compose configuration that publishes host TCP ports `80` and `443` directly, check that both ports are free first. A Coolify proxy listening on them conflicts with those bindings. Use a separate host with free ports for that configuration.
+
+For a new NetBird datastore configured manually, generate its encryption key with `openssl rand -base64 32` and keep the trailing padding. For an existing datastore, back up and preserve the exact key. On NetBird v0.83.0 or later, [move the existing value into `.env`](https://docs.netbird.io/selfhosted/maintenance/configuration-files#keeping-secrets-out-of-the-config-file) unchanged and apply the Compose change with `docker compose up -d netbird-server`.
+
 ## Links
 
 - [The official website](https://netbird.io/?utm_source=coolify.io)

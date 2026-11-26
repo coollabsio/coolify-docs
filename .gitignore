@@ -18,6 +18,7 @@ examples-temp
 node_modules
 pnpm-global
 TODOs.md
+.ai/todo.md
 *.timestamp-*.mjs
 
 .env

@@ -9,7 +9,7 @@ Coolify exposes an MCP server at `/mcp`. An MCP-compatible client sends Streamab
 
 ## Connection flow
 
-1. Enable MCP for the Coolify instance.
+1. Enable MCP for the Coolify instance in **Settings > Advanced > API and MCP**. This step is required on self-hosted instances. Coolify Cloud has it enabled.
 2. Keep MCP enabled for the team the token belongs to.
 3. Create an API token for that team.
 4. Configure the client with the endpoint and Bearer token.
@@ -25,14 +25,20 @@ Authorization: Bearer 67|abcthisisa123dummytoken
 
 The token is bound to one Coolify team. MCP only returns resources owned by that team. Create one token per team when a client needs access to multiple teams.
 
-The instance MCP setting must be enabled before `/mcp` responds. Team owners can disable MCP for individual teams. A disabled instance returns `404`; a disabled team returns `403`.
+A token limited to selected projects, environments, or resources sees only those resources. MCP does not list team-level tools for it, such as `get_current_team` and the server tools. A token can never do more than its owner can do in the team.
+
+The instance MCP setting must be enabled before `/mcp` responds. Team admins and owners can disable MCP for individual teams. A disabled instance returns `404`; a disabled team returns `403`. On self-hosted instances, the **Allowed IPs** list in **Settings > Advanced** also applies to `/mcp`. A team that requires [two-factor authentication](/core/security/authentication/2fa) does not block MCP tokens.
+
+On self-hosted instances, **Allowed IPs** applies to MCP requests. The **MCP server** switch controls `/mcp` independently of REST **API access**.
 
 ## MCP primitives
 
 <Tabs items={['Tools', 'Resources', 'Prompts']}>
 <Tab value="Tools">
 
-Tools perform Coolify queries and operations. Read tools need `read`. Deployment and lifecycle tools need `deploy`. [MCP capabilities](/mcp/capabilities/overview) groups tools by task.
+Tools perform Coolify queries and operations. Read tools need `read`. Deployment and lifecycle tools need `deploy`. `get_logs` needs `read:sensitive`. Each action of a `create_*` or `manage_*` tool has its own permission: create and update actions need `write`, delete actions need `delete`, and some list, get, or server actions need `read`, `read:sensitive`, or `deploy`. [MCP capabilities](/mcp/capabilities/overview) groups tools by task and shows the permission of each action.
+
+MCP hides the deployment and lifecycle tools, `get_logs`, and every `create_*` and `manage_*` action that the token cannot use. Most read tools are listed also for a token without `read`. They then return `Missing required permissions: read`.
 
 </Tab>
 <Tab value="Resources">
@@ -49,4 +55,4 @@ Prompts give clients guided workflows. Coolify provides prompts for troubleshoot
 
 ## Response boundaries
 
-Coolify returns structured responses with `data` and may include `_pagination`, `_actions`, or failure details. Environment values, configuration snapshots, and full deployment logs are not returned. Log summaries are capped and best-effort redacted.
+Coolify returns structured responses with `data` and may include `_pagination`, `_actions`, or failure details. Configuration snapshots and full deployment logs are not returned. Environment values are returned only by `get_env_values`, which needs `read:sensitive` and a team admin or owner. Log summaries are capped and best-effort redacted.

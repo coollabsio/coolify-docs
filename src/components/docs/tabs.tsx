@@ -22,6 +22,17 @@ function normalizeTabValue(value: string) {
   return value.toLowerCase().replace(/\s/, '-');
 }
 
+// Collect every element `id` inside a panel so TOC links that point to a
+// heading within an inactive tab can activate the tab before scrolling.
+function collectElementIds(node: React.ReactNode, ids: string[]) {
+  Children.forEach(node, (child) => {
+    if (!isValidElement(child)) return;
+    const props = child.props as { id?: unknown; children?: React.ReactNode };
+    if (typeof props.id === 'string' && props.id) ids.push(props.id);
+    if (props.children) collectElementIds(props.children, ids);
+  });
+}
+
 function scrollToHash(hash: string) {
   const id = hash.startsWith('#') ? hash.slice(1) : hash;
   if (!id) return;
@@ -57,6 +68,40 @@ export function Tabs({
         .map((panel) => [normalizeTabValue(panel.props.value ?? ''), panel.props.icon as CoolIcon]),
     );
   }, [panels]);
+
+  // Panels (and any heading inside them) can be opened from the URL hash,
+  // e.g. /docs/start-with-self-hosted#_4-compose-overrides or a TOC link to a
+  // heading that lives inside an inactive tab.
+  const hashTargets = JSON.stringify(
+    panels.flatMap((panel) => {
+      const value = panel.props.value ? normalizeTabValue(panel.props.value) : undefined;
+      if (!value) return [];
+      const ids: string[] = [];
+      if (panel.props.id) ids.push(panel.props.id);
+      collectElementIds(panel.props.children, ids);
+      return ids.map((hid) => [hid, value] as [string, string]);
+    }),
+  );
+
+  useEffect(() => {
+    const valueById = new Map<string, string>(JSON.parse(hashTargets));
+    if (!valueById.size) return;
+
+    function activateFromHash() {
+      const value = valueById.get(decodeURIComponent(window.location.hash.slice(1)));
+      if (!value) return;
+
+      setActiveValue(value);
+      setPendingScrollHash(window.location.hash);
+    }
+
+    activateFromHash();
+    window.addEventListener('hashchange', activateFromHash);
+
+    return () => {
+      window.removeEventListener('hashchange', activateFromHash);
+    };
+  }, [hashTargets]);
 
   useLayoutEffect(() => {
     if (!pendingScrollHash) return;

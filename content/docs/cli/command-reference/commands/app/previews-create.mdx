@@ -1,0 +1,33 @@
+---
+title: "Previews create"
+description: "Open or redeploy a preview deployment"
+---
+
+# Previews create
+
+Open or redeploy a preview deployment
+
+## Usage
+
+```sh
+coolify app previews create <app_uuid> <pr_id>
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--commit` | `string` | No | — | Commit SHA to deploy (required for Bitbucket) |
+| `--docker-tag` | `string` | No | — | Docker image tag (Docker Image applications only) |
+| `--force` | `boolean` | No | `false` | Rebuild without cache |
+| `--git-type` | `string` | No | — | Git provider of the pull request: github, gitlab, gitea, or bitbucket |
+| `--no-deploy` | `boolean` | No | `false` | Only create the preview, do not queue a deployment |
+| `--url` | `string` | No | — | Pull request URL |
+
+## Get current help
+
+```sh
+coolify app previews create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

@@ -1,0 +1,260 @@
+---
+title: Payload Too Large (413) Errors
+description: Find which layer rejects large uploads with a 413 Payload Too Large error and raise the limit in Cloudflare, Apache, Nginx, Traefik, or a WAF.
+tags:
+  [
+    "Payload Too Large",
+    "Request Entity Too Large",
+    "413",
+    "Upload",
+    "Troubleshooting",
+    "Coolify",
+    "Traefik",
+    "Cloudflare",
+  ]
+---
+
+# Payload Too Large (413) Errors
+
+A 413 error occurs when a layer between the browser and your application rejects a request because its body is too large. Usually this occurs when you upload a large file.
+
+The Coolify proxy (Traefik or Caddy) does not set a limit on the request body size. Thus, the 413 error comes from a different layer: a CDN in front of your server, the web server in your container, or a limit that you added.
+
+## Find the Layer That Sends the Error
+
+Look at the `Server` header of the 413 response. Use the network tab of your browser, or send a large request with `curl`:
+
+```bash
+# Make a 150 MB test file and send it to your application
+head -c 150M /dev/zero > /tmp/big.bin
+curl -s -D - -o /dev/null --data-binary @/tmp/big.bin https://your-domain.com/
+```
+
+Find the `Server` header in the output, then go to the related issue:
+
+| `Server` header | Layer that sends the 413 | Issue |
+|---|---|---|
+| `cloudflare` | Cloudflare proxy | Issue 1 |
+| `Apache/...` | Apache in your container (for example WordPress) | Issue 2 |
+| `nginx` | Nginx in your container | Issue 3 |
+| No `Server` header | A Traefik `buffering` middleware | Issue 4 |
+| Other, or the response comes from a security rule | A web application firewall (WAF) | Issue 5 |
+
+<Callout type="info" title="Note">
+
+If you do not get a 413 error, make the test file larger than the size at which your uploads fail. Other errors (for example 404 or 405) are not important here, because the request went through all limits.
+
+</Callout>
+
+<Accordions type="multiple">
+
+<Accordion title="Issue 1: Cloudflare Proxy">
+
+### Symptoms
+
+- Uploads larger than 100 MB fail with a 413 error.
+- Smaller uploads work.
+- The DNS record of your domain is **Proxied** (orange cloud) in Cloudflare. A Cloudflare Tunnel also sends all traffic through Cloudflare.
+
+### Root Cause
+
+Cloudflare limits the request body size for each plan:
+
+| Plan | Maximum upload size |
+|---|---|
+| Free | 100 MB |
+| Pro | 100 MB |
+| Business | 200 MB |
+| Enterprise | 500 MB (default). You can change it up to 5 GB on the **Network** page of the zone. |
+
+When a request is larger than this limit, Cloudflare stops it and sends a 413 error. The request does not get to your server.
+
+Read more in the [Cloudflare documentation](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-413/).
+
+### Solutions
+
+<Tabs items={['Use an Unproxied Upload Domain', 'Use Chunked Uploads', 'Upload Directly to S3', 'Upload Over SSH', 'Change the Cloudflare Plan']}>
+<Tab value="Use an Unproxied Upload Domain">
+
+1. In Cloudflare, add a DNS record for a different subdomain (for example `upload.example.com`) and set it to **DNS only** (grey cloud).
+2. In Coolify, add this domain to your application or service.
+3. Use this domain for large uploads.
+
+Requests to a **DNS only** record go directly to your server. Thus, Cloudflare does not protect or cache them.
+
+For a one-time upload, you can also set the record of your domain to **DNS only** for a short time. Wait until the DNS change is active, upload the file, and then set the record to **Proxied** again.
+
+</Tab>
+<Tab value="Use Chunked Uploads">
+
+Make your application send large files in parts that are smaller than the Cloudflare limit. For example, use a [tus](https://tus.io/) client and server, or an upload plugin for your CMS that sends files in chunks.
+
+</Tab>
+<Tab value="Upload Directly to S3">
+
+Make your application create a presigned upload URL for an S3-compatible storage (for example AWS S3, Cloudflare R2, or MinIO). The browser then sends the file directly to the storage, not through Cloudflare and your server. For very large files, use S3 multipart uploads.
+
+</Tab>
+<Tab value="Upload Over SSH">
+
+For a one-time upload (for example a backup file), copy the file to your server over SSH or SFTP:
+
+```bash
+scp backup.zip root@your-server-ip:/tmp/
+```
+
+Then copy the file into your container. Use the [web terminal](/core/infrastructure/servers/web-terminal) of your resource, or run `docker cp` on the server:
+
+```bash
+docker cp /tmp/backup.zip <container-name>:/var/www/html/
+```
+
+Then import the file on the server. Many WordPress backup and migration plugins can import a file from a folder in the container, or you can use WP-CLI in the web terminal. Then you do not upload the file through the browser.
+
+</Tab>
+<Tab value="Change the Cloudflare Plan">
+
+The Business plan allows uploads up to 200 MB. On the Enterprise plan, you can set the **Maximum Upload Size** up to 5 GB on the **Network** page of the zone.
+
+</Tab>
+</Tabs>
+
+</Accordion>
+
+<Accordion title="Issue 2: Apache LimitRequestBody (WordPress and Other PHP Images)">
+
+### Symptoms
+
+- Uploads larger than 1 GiB fail with a 413 error.
+- The `Server` header of the response is `Apache/...`.
+
+### Root Cause
+
+Apache limits the request body size with the `LimitRequestBody` setting. Since Apache 2.4.54, the default is 1 GiB. Images such as the official `wordpress` image use Apache with this default.
+
+<Callout type="info" title="PHP limits do not cause a 413 error">
+
+When an upload is larger than the PHP `upload_max_filesize` or `post_max_size` limit, PHP does not send a 413 error. PHP removes the upload, and your application shows its own error (for example, WordPress shows "The uploaded file exceeds the upload_max_filesize directive"). The official `wordpress` image uses the PHP defaults: `upload_max_filesize = 2M` and `post_max_size = 8M`.
+
+</Callout>
+
+### Solutions
+
+Add these lines to the `.htaccess` file in the web root of your container (for WordPress: `/var/www/html/.htaccess`):
+
+```apache
+# Apache: 0 = no limit
+LimitRequestBody 0
+
+# PHP limits (the Apache image of WordPress reads them from .htaccess)
+php_value upload_max_filesize 2000M
+php_value post_max_size 2000M
+php_value max_execution_time 300
+php_value max_input_time 300
+```
+
+Set `post_max_size` to a value that is equal to or larger than `upload_max_filesize`.
+
+Uploads that take more than 60 seconds can also fail with a 504 error. To prevent this, increase the proxy timeouts. Refer to [Gateway Timeout Errors](/troubleshoot/applications/gateway-timeout).
+
+</Accordion>
+
+<Accordion title="Issue 3: Nginx client_max_body_size">
+
+### Symptoms
+
+- Uploads larger than 1 MB fail with a 413 error.
+- The `Server` header of the response is `nginx`.
+
+### Root Cause
+
+Nginx limits the request body size with the `client_max_body_size` setting. The default is 1 MB. Many PHP-FPM and static site images use Nginx with this default.
+
+### Solutions
+
+Set `client_max_body_size` in the Nginx configuration of your container, in the `http`, `server`, or `location` block:
+
+```nginx
+server {
+    # 0 = no limit
+    client_max_body_size 2000M;
+}
+```
+
+To keep this change after a redeploy, add the configuration file to your image, or mount it with [Persistent Storage](/applications/configuration/persistent-storage). Then restart your application.
+
+</Accordion>
+
+<Accordion title="Issue 4: Traefik Buffering Middleware">
+
+### Symptoms
+
+- Uploads larger than a fixed size fail with a 413 error.
+- Your application or service has custom labels that add a Traefik `buffering` middleware.
+
+### Root Cause
+
+Coolify does not add a `buffering` middleware. If you add one, its `maxRequestBodyBytes` setting limits the request body size. When a request is larger, Traefik sends a 413 error.
+
+### Solutions
+
+In the **Container Labels** of your resource, increase `maxRequestBodyBytes` or set it to `0` (no limit):
+
+```yaml
+traefik.http.middlewares.my-buffering.buffering.maxRequestBodyBytes=0
+```
+
+If you do not need the middleware, remove its labels, and remove its name from the `middlewares` label of the router.
+
+Read more in the [Traefik documentation](https://doc.traefik.io/traefik/reference/routing-configuration/http/middlewares/buffering/).
+
+</Accordion>
+
+<Accordion title="Issue 5: Web Application Firewall (WAF)">
+
+### Symptoms
+
+- Uploads fail with a 413 error, but you do not use Cloudflare and you did not change the limits of your web server.
+- You use a WAF, for example ModSecurity in your container or a firewall from your hosting provider.
+
+### Root Cause
+
+A WAF can limit the request body size. For example, ModSecurity uses the `SecRequestBodyLimit` setting.
+
+### Solutions
+
+Increase the limit in the WAF configuration. For ModSecurity, set the limit in bytes:
+
+```apache
+# 2 GB
+SecRequestBodyLimit 2000000000
+```
+
+For a firewall from your hosting provider, refer to the documentation of the provider.
+
+</Accordion>
+
+</Accordions>
+
+## Quick Diagnosis Checklist
+
+1. **Check the error code:**
+
+   - 413 = Payload Too Large (this guide)
+   - 504 = Gateway Timeout. The upload takes too long. Refer to [Gateway Timeout Errors](/troubleshoot/applications/gateway-timeout).
+   - 502 = Bad Gateway. Refer to [Bad Gateway Errors](/troubleshoot/applications/bad-gateway).
+
+2. **Check the size at which uploads fail:**
+
+   - Approximately 100 MB, 200 MB, or 500 MB = Cloudflare (Issue 1)
+   - Approximately 1 MB = Nginx (Issue 3)
+   - Approximately 1 GiB = Apache (Issue 2)
+
+3. **Check the `Server` header** of the 413 response. Refer to [Find the Layer That Sends the Error](#find-the-layer-that-sends-the-error).
+
+## Support
+
+If these solutions do not fix your 413 errors:
+
+- Join our [Discord community](https://coolify.io/discord) and include the response headers of the 413 error.
+- Search the [GitHub issues](https://github.com/coollabsio/coolify/issues) for similar problems.

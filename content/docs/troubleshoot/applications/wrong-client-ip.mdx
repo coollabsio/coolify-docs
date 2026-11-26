@@ -1,0 +1,150 @@
+---
+title: Applications See the Docker Gateway IP Instead of the Client IP
+description: Fix applications behind the Coolify proxy that get 172.x.0.1 as the client IP for IPv6 visitors, by recreating the coolify Docker network with IPv6.
+tags: ["X-Forwarded-For", "IPv6", "Client IP", "Traefik", "Caddy", "Docker network", "Troubleshooting"]
+---
+
+# Applications See the Docker Gateway IP Instead of the Client IP
+
+Your application gets the Docker gateway address (for example `172.18.0.1`) as the client IP, not the real address of the visitor.
+
+## Symptoms
+
+- `X-Forwarded-For`, `X-Real-Ip`, or the client IP of your framework shows `172.x.0.1` for some visitors.
+- Other visitors have the correct IP. The visitors with the wrong IP connect over IPv6.
+- Rate limits, IP bans, or analytics treat many visitors as one client.
+
+## Cause
+
+The proxy (Traefik or Caddy) receives traffic on the `coolify` Docker network. Older Coolify versions created this network with IPv4 only.
+
+When an IPv6 visitor connects to an IPv4-only network, Docker forwards the request through `docker-proxy`. `docker-proxy` opens a new IPv4 connection from the network gateway. The proxy then sees the gateway address, and it sends that address to your application in `X-Forwarded-For`.
+
+Newer Coolify versions create the network with IPv6 when Docker supports it. Coolify does not change a network that exists already, so you must recreate it one time.
+
+## Check your server
+
+Run these commands on the server:
+
+```bash
+docker version --format '{{.Server.Version}}'
+docker network inspect coolify --format 'IPv6: {{.EnableIPv6}}'
+```
+
+- `IPv6: true`: the network is correct. This page does not apply.
+- `IPv6: false`: follow the solution below.
+
+<Callout type="warning" title="Requirements">
+
+- Docker Engine 28.0.1 or newer. Docker 27 and newer can give an IPv6 network a private subnet automatically. Docker 27.0 to 28.0.0 shows the IPv6 gateway in a format that Coolify cannot read until you restart Docker. For an older Docker, upgrade Docker first.
+- This page is for servers that are not in Docker Swarm mode.
+
+</Callout>
+
+## Solution
+
+The script below saves the containers on the `coolify` network and their network aliases. It then recreates the network with IPv6 and connects the same containers again. The containers keep running. Your applications are not available for some seconds.
+
+<Callout type="error" title="Use an SSH session">
+
+Run the script in an SSH session to the server, not in the Coolify terminal. On the server that runs Coolify, the script also disconnects the Coolify containers, so the Coolify terminal stops during the script.
+
+</Callout>
+
+<Steps>
+<Step>
+
+### Save the script
+
+Save this script as `/root/coolify-network-ipv6.sh`:
+
+```bash
+#!/bin/sh
+# Recreate the Docker network $NET with IPv6 and connect its containers again, with their aliases.
+set -eu
+NET="${NET:-coolify}"
+LIST="/root/${NET}-network-containers.txt"
+
+docker network inspect "$NET" --format '{{range .Containers}}{{.Name}}{{"\n"}}{{end}}' | sed '/^$/d' > "$LIST.names"
+: > "$LIST"
+while read -r c; do
+    aliases=$(docker inspect "$c" --format "{{with index .NetworkSettings.Networks \"$NET\"}}{{join .Aliases \" \"}}{{end}}")
+    echo "$c $aliases" >> "$LIST"
+done < "$LIST.names"
+rm "$LIST.names"
+echo "Saved $(wc -l < "$LIST") containers to $LIST"
+
+while read -r c aliases; do
+    docker network disconnect -f "$NET" "$c"
+done < "$LIST"
+
+docker network rm "$NET"
+docker network create --attachable --ipv6 "$NET" || docker network create --attachable "$NET"
+
+while read -r c aliases; do
+    args=""
+    for a in $aliases; do args="$args --alias $a"; done
+    docker network connect $args "$NET" "$c"
+done < "$LIST"
+
+docker network inspect "$NET" --format 'IPv6: {{.EnableIPv6}}  Subnets: {{range .IPAM.Config}}{{.Subnet}} {{end}}'
+```
+
+</Step>
+<Step>
+
+### Run the script
+
+```bash
+sh /root/coolify-network-ipv6.sh
+```
+
+The last line must show `IPv6: true` and two subnets, one IPv4 and one IPv6.
+
+If the last line shows `IPv6: false`, Docker could not create an IPv6 network on this server. The script then creates the network again without IPv6, so your applications continue to work. Upgrade Docker, then run the script again.
+
+If the script stops with an error, the list of containers and aliases is in `/root/coolify-network-containers.txt`. Connect each container again with `docker network connect --alias <alias> coolify <container>`.
+
+</Step>
+<Step>
+
+### Check the gateway
+
+```bash
+docker network inspect coolify --format '{{range .IPAM.Config}}{{.Gateway}} {{end}}'
+```
+
+The gateways must not contain a `/`, for example `172.18.0.1 fd5e:1c2a:9b3d::1`. If a gateway shows as `fd5e:1c2a:9b3d::1/64`, run `systemctl restart docker`. This restarts all containers.
+
+</Step>
+<Step>
+
+### Restart the proxy and redeploy
+
+In Coolify, go to **Servers > your server > Proxy** and select **Restart Proxy**. Redeploy the applications that have **Network aliases** set.
+
+</Step>
+<Step>
+
+### Test the result
+
+Open your application over IPv6, for example with `curl -6 https://your-domain.com`. Your application must now get the real IPv6 address of the visitor.
+
+</Step>
+</Steps>
+
+<Callout type="info" title="Other destination networks">
+
+The proxy also receives traffic on the networks of other [destinations](/core/networking/destinations/overview) on the same server. If the problem continues, recreate those networks too, for example `NET=my-destination sh /root/coolify-network-ipv6.sh`.
+
+</Callout>
+
+<Callout type="warning" title="Firewall rules">
+
+With IPv6 on the network, Docker forwards IPv6 traffic to published ports with ip6tables, the same as IPv4. Docker then skips the UFW rules in the `INPUT` chain for these ports. If you used UFW to block a published port for IPv6, use the firewall of your hosting provider or ufw-docker instead. See [Firewall](/core/infrastructure/servers/firewall).
+
+</Callout>
+
+## Still stuck?
+
+Reach out on the [Coolify Discord](https://coolify.io/discord), or see [issue #3436](https://github.com/coollabsio/coolify/issues/3436).

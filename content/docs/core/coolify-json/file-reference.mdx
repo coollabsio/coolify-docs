@@ -1,0 +1,254 @@
+---
+title: coolify.json File Reference (Beta)
+description: All keys of the coolify.json file format version 1, with resources, variables, environments, renames, and adoption.
+---
+
+# coolify.json file reference
+
+This page describes version 1 of the `coolify.json` file format. For a complete file, refer to the [example file](/core/coolify-json/example).
+
+<Callout type="warning" title="Beta feature">
+coolify.json is in beta. The file format can change in later versions.
+</Callout>
+
+## JSON schema
+
+The full JSON schema is at:
+
+```text
+https://cdn.coollabs.io/coolify/schemas/coolify.v1.json
+```
+
+Set it as `$schema` in the file. Editors such as VS Code and JetBrains IDEs then check the file and complete the keys while you type:
+
+```json
+{
+  "$schema": "https://cdn.coollabs.io/coolify/schemas/coolify.v1.json",
+  "version": 1
+}
+```
+
+Coolify also checks the file when it plans it. An error shows the path of the key, for example `resources.api.env.STRIPE_KEY`, and the reason.
+
+## Top-level keys
+
+| Key | Required | Description |
+| :--- | :--- | :--- |
+| `$schema` | No | The URL of the JSON schema. Coolify ignores it. |
+| `version` | Yes | The file format version. Must be `1`. |
+| `minimum_coolify_version` | No | The lowest Coolify version that can read the file, for example `"4.7.0"`. An older instance fails the plan. |
+| `project` | No | A label for people. Coolify does not compare it with the linked project. |
+| `resources` | Yes | The resources, keyed by a resource key. Refer to [Resources](#resources). |
+| `environments` | For Config as code | The environments and their branches. Refer to [Environments](#environments). |
+| `moved` | No | Renamed resource keys. Refer to [Renames, hand-offs, and adoption](#renames-hand-offs-and-adoption). |
+| `unmanage` | No | Resource keys that the file stops managing. |
+
+Unknown keys fail the plan. Coolify ignores keys that start with `x-` at every level, so you can add your own notes or metadata. For this reason, do not start a resource key with `x-`.
+
+The link decides the project, the environment, and the default server. So one file works in any project, team, or Coolify instance.
+
+## Resources
+
+`resources` is an object. Each key is a stable resource key: lowercase letters, digits, and hyphens, starts with a letter, at most 63 characters. Coolify stores the key on the resource. When you rename the resource (`name`), Coolify does not lose data.
+
+Each resource has a `type`:
+
+| `type` | Resource |
+| :--- | :--- |
+| `application` | An [application](/applications) from git or a Docker image |
+| `service` | A Docker Compose stack, from a one-click template or a Compose file |
+| `postgresql`, `mysql`, `mariadb`, `mongodb`, `redis`, `keydb`, `dragonfly`, `clickhouse`, `sqlite` | A standalone [database](/databases) |
+
+You cannot change the `type` of an existing resource key in an environment override. To replace a resource with another type, use a new key.
+
+### Keys of all resources
+
+| Key | Description |
+| :--- | :--- |
+| `name` | The name in Coolify. Without it, Coolify uses the resource key. |
+| `description` | The description in Coolify. |
+| `server` | The name of a server of the team. The name must match exactly one server. Without it, the resource runs on the server of the link. |
+| `destination` | The name of a destination on that server. Needed when the server has more than one. |
+| `env` | The variables. Refer to [Variables](#variables). |
+| `tags` | A list of [tag](/core/automation/tags/overview) names. |
+| `scheduled_tasks` | Scheduled tasks, keyed by name. Each task has `command` and `frequency`, and optional `container`, `timeout`, `enabled`, and `use_shell`. |
+| `secret_manager` | A secret manager link: `token` names an existing secret manager token, and `settings` holds its settings. |
+| `settings` | Boolean and text settings of the resource. The schema lists the available settings for each type. |
+
+The file never creates or configures servers. A resource names a `server` only to run on another server than the server of the link.
+
+### Application
+
+| Key | Description |
+| :--- | :--- |
+| `source` | `repository`, `branch`, `commit`, and one of `github_app`, `gitlab_app`, `gitea_app`, or `deploy_key` (the name of an existing source or private key). Also `https_username` and `ssh_known_hosts`. |
+| `image` | `name` and `tag` of a Docker image, for an application that deploys an image. |
+| `build` | `pack` (for example `nixpacks`, `railpack`, `static`, `dockerfile`, or `dockercompose`), `install_command`, `build_command`, `start_command`, `base_directory`, `publish_directory`, `dockerfile`, `dockerfile_location`, `dockerfile_target`, `static_image`, `nginx_configuration`, `watch_paths`, `compose_location`, `compose_build_command`, and `compose_start_command`. |
+| `ports` | `exposes` (for example `"3000"`) and `mappings` (for example `"8080:80"`). |
+| `domains` | A list of URLs, for example `["https://api.example.com"]`. |
+| `noindex_domains`, `redirect`, `domain_port_overrides` | Domain behavior. |
+| `compose` | For Docker Compose applications: `domains` for each Compose service, and `image_overrides`. |
+| `health_check` | `enabled`, `type`, `command`, `path`, `port`, `host`, `method`, `scheme`, `return_code`, `response_text`, `interval`, `timeout`, `retries`, and `start_period`. Refer to [Health checks](/applications/configuration/health-checks). |
+| `deployment` | `pre_command`, `pre_command_container`, `post_command`, and `post_command_container`. |
+| `limits` | `memory`, `memory_swap`, `memory_swappiness`, `memory_reservation`, `cpus`, `cpuset`, and `cpu_shares`. |
+| `storages` | Persistent storages, keyed by name. Each has `mount`, and optional `host_path`, `volume_name`, `external` (an existing Docker volume that Coolify never creates or deletes), and `preview_suffix`. |
+| `files` | File mounts, keyed by the path in the container. Each has `content`, and optional `is_directory`, `is_host_file`, `chown`, `chmod`, and `preview_suffix`. |
+| `basic_auth` | HTTP basic authentication: `enabled`, `username`, and hash settings. The password is not in the file. |
+| `preview` | `url_template` for preview deployments. |
+| `additional_servers` | More servers for the same application: a list of `server` and `destination`. |
+| `swarm` | `replicas` and `placement_constraints`. |
+| `maintenance`, `restart`, `network`, `labels`, `docker_run_options` | Other application settings. |
+
+An application without `source.repository` gets its repository from the link or from the add-repository form.
+
+### Service
+
+A service uses exactly one of these keys:
+
+| Key | Description |
+| :--- | :--- |
+| `template` | The name of a [one-click service](/services/all), for example `"plausible"`. Coolify resolves the template to its Compose file one time, when it creates the service. Later template updates in Coolify do not change the service, so the same file always gives the same result. |
+| `compose` | A Docker Compose file as text. |
+
+Other keys:
+
+| Key | Description |
+| :--- | :--- |
+| `services` | Settings for each Compose service, keyed by the Compose service name: `domains`, `human_name`, `description`, `is_public`, `public_port`, `exclude_from_status`, and domain settings. |
+| `connect_to_docker_network` | Connect the stack to the predefined Docker network. |
+| `maintenance` | `enabled` and `page`. |
+
+### Databases
+
+All nine database types share these keys:
+
+| Key | Description |
+| :--- | :--- |
+| `image` | The Docker image, for example `"postgres:17-alpine"`. |
+| `public` | `enabled`, and for most types `port` and `port_timeout`, to make the database public. |
+| `ports` | `mappings`. Not for SQLite. |
+| `health_check` | `enabled`, `interval`, `timeout`, `retries`, and `start_period`. |
+| `limits` | The same keys as for an application. |
+| `storages`, `files` | The same keys as for an application. |
+| `backups` | A list of [scheduled backups](/databases/backups). Each has `frequency` (for example `"daily"` or a cron expression), and optional `enabled`, `databases`, `dump_all`, `save_s3`, `s3_storage` (the name of an existing S3 storage), `disable_local_backup`, retention settings, `timeout`, and `missing_backup_notification_days`. |
+| `docker_run_options` | Custom Docker options. |
+
+Type-specific keys:
+
+| Type | Keys |
+| :--- | :--- |
+| `postgresql` | `credentials` (`user`, `database`), `config` (`initdb_args`, `host_auth_method`, `file`), `ssl` (`enabled`, `mode`), `init_scripts` |
+| `mysql`, `mongodb` | `credentials` (`user`, `database`), `config.file`, `ssl` (`enabled`, `mode`) |
+| `mariadb` | `credentials` (`user`, `database`), `config.file`, `ssl.enabled` |
+| `redis`, `keydb` | `config.file`, `ssl.enabled` |
+| `dragonfly` | `ssl.enabled` |
+| `clickhouse` | `credentials` (`user`, `database`) |
+| `sqlite` | `config.databases` |
+
+Database passwords are not in the file. Coolify generates them when it creates the database.
+
+## Variables
+
+`env` is an object of variables. A variable name uses letters, digits, and underscores, and does not start with a digit. A variable never holds a secret value. Each variable uses exactly one of these forms:
+
+| Form | Example | Meaning |
+| :--- | :--- | :--- |
+| `value` | `{ "value": "production" }` | A plain value from the file. Use it only for values that are not secret. |
+| `required` | `{ "required": true }` | You set the value in Coolify. The variables list shows **Needs a value** until it is set. |
+| `generate` | `{ "generate": "password", "length": 64 }` | Coolify generates the value one time. Kinds: `password` (default length 64), `base64` (default length 32), and `uuid`. `length` is 8 to 256, for `password` and `base64` only. |
+| `ref` | `{ "ref": "team.SENDGRID_KEY" }` | A reference to another value. Refer to [References](#references). |
+
+### Rotate a generated value
+
+Coolify keeps a generated value while `generate`, `length`, and `rotation` stay the same. To generate a new value, increase `rotation`:
+
+```json
+"SESSION_SECRET": { "generate": "password", "rotation": 1 }
+```
+
+### References
+
+| Reference | Value |
+| :--- | :--- |
+| `team.X`, `project.X`, `environment.X`, `server.X` | A [shared variable](/core/team/shared-variables) of the team, the project, the environment, or the server |
+| `vault.X` | A value from the secret manager |
+| `resource.<key>.internal_url` | The internal connection URL of another resource of the file, for example a database |
+| `resource.<key>.host` | The internal host name of another resource |
+| `resource.<key>.port` | The internal port of another resource |
+
+Coolify creates the referenced resources first. A circular reference fails the plan.
+
+### Flags
+
+| Flag | Description |
+| :--- | :--- |
+| `buildtime` | Available during the build. |
+| `runtime` | Available when the container runs. |
+| `literal` | Coolify does not expand variables in the value. |
+| `multiline` | The value has more than one line. |
+| `containers` | For a Docker Compose application or service: a list of Compose service names, for example `["app", "worker"]`. Only these containers get the variable. Without it, every container gets the variable. |
+| `preview` | An object with a variable form for [preview deployments](/applications/deployments/preview-deployments), for example `{ "preview": { "value": "staging" } }`. Without it, previews use the production value. |
+
+Variables of a managed resource that are not in the file are removed after approval. Refer to [Environment variables](/applications/configuration/environment-variables) for the general behavior of variables.
+
+## Environments
+
+`environments` maps environment names to branches. Each environment tracks its own branch, and a push changes only the environment of that branch. Two environments cannot use the same branch.
+
+```json
+"environments": {
+  "production": { "branch": "main" },
+  "staging": {
+    "branch": "staging",
+    "resources": {
+      "api": { "domains": ["https://staging.example.com"] },
+      "worker": { "enabled": false }
+    }
+  }
+}
+```
+
+| Key | Description |
+| :--- | :--- |
+| `branch` | Required. The git branch of the environment. |
+| `resources` | Overrides of the shared resources for this environment. |
+| `import` | Existing resources that this environment adopts. Refer to [Renames, hand-offs, and adoption](#renames-hand-offs-and-adoption). |
+
+When Coolify plans the file for a link:
+
+- **Config as code with git**: Coolify uses the environment whose `branch` is the branch of the link. If no environment uses the branch, the plan fails.
+- **Link in API mode**: Coolify uses the environment with the name of the Coolify environment.
+- **Use coolify.json** (template): `environments` is optional. Coolify uses the environment of the branch, else the environment with the name of the Coolify environment, else only `resources`.
+
+### Override rules
+
+- Objects merge by key.
+- Lists replace the shared list.
+- `null` removes a key. For example, `"domains": null` removes the domains in this environment.
+- A variable entry replaces the shared variable entry. `"env": { "DEBUG": null }` removes one variable, and `"env": null` removes all variables.
+- `"enabled": false` removes the resource from this environment. `enabled` is allowed only in an override.
+- A resource that only this environment has needs a `type`.
+- `server` can be overridden, so each environment can run on another server.
+
+## Renames, hand-offs, and adoption
+
+| Key | Example | Meaning |
+| :--- | :--- | :--- |
+| `moved` | `[{ "from": "web", "to": "api" }]` | Renames a resource key without data loss. The `from` key must not be in `resources` anymore. |
+| `unmanage` | `["old-worker"]` | Stops managing the resource. It keeps running, and you edit it in Coolify again. The key must not be in `resources`. |
+| `environments.<name>.import` | `[{ "to": "api", "uuid": "<resource-uuid>" }]` | Adopts an existing resource of the environment as the resource key `to`. The key must be a resource of this environment. |
+
+An export of an environment adds `import` entries for all existing resources, so the first plan after the link changes nothing.
+
+## What is not in the file
+
+The file refers to secrets and infrastructure; it never contains them:
+
+- Secret values: use `required`, `generate`, or `ref`.
+- Database passwords: Coolify generates them.
+- Servers and destinations: referenced by name with `server` and `destination`.
+- GitHub Apps, GitLab Apps, Gitea Apps, and deploy keys: referenced by name in `source`.
+- S3 storages: referenced by name in `backups[].s3_storage`.
+- Secret manager tokens: referenced by name in `secret_manager.token`.
+
+Names must match exactly (case-sensitive), and a name must select one object of the team. A git app of the team wins over a system-wide app with the same name. To use the same file on another instance or team, create these objects with the same names there.

@@ -7,6 +7,12 @@ category: "CMS"
 icon: "/docs/images/services/drupal-logo.svg"
 ---
 
+<Callout type="info" title="PHP security update">
+
+This service's one-click templates have been re-enabled following the PHP security review. Updating Coolify does not update deployed service containers. For existing deployments, follow the [PHP security advisory](/knowledge-base/php-security-advisory-2026) and the service's upstream upgrade instructions to apply any required image updates.
+
+</Callout>
+
 # Drupal
 
 <ZoomImage src="/docs/images/services/drupal-logo.svg" alt="Drupal dashboard" />
@@ -14,6 +20,22 @@ icon: "/docs/images/services/drupal-logo.svg"
 ## What is Drupal
 
 Drupal is a free and open-source web content management system written in PHP and distributed under the GNU General Public License.
+
+## Variants
+
+- **Drupal with PostgreSQL:** Includes a PostgreSQL database.
+
+## Upgrade to Drupal 11
+
+New services use Drupal 11. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+Drupal 11 needs PostgreSQL 16 or later with the `pg_trgm` extension.
+
+1. Update to the last 10.x version.
+2. Make sure that your modules are compatible with Drupal 11.
+3. Change the image to Drupal 11, then run `drush updb`.
+
+See the [official system requirements](https://www.drupal.org/docs/getting-started/system-requirements?utm_source=coolify.io).
 
 ## Links
 

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - v4.x
+      - main
 
 env:
   GITHUB_REGISTRY: ghcr.io
@@ -84,4 +84,4 @@ jobs:
 
       - name: Deploy to Coolify
         run: |
-          curl --request GET '${{ secrets.COOLIFY_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
+          curl --request POST '${{ secrets.COOLIFY_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'

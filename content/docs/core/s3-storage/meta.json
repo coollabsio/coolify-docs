@@ -4,6 +4,8 @@
     "overview",
     "aws",
     "r2",
-    "supabase"
+    "neon",
+    "supabase",
+    "sftp-ftps-webdav"
   ]
 }

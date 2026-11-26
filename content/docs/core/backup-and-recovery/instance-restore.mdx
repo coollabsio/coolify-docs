@@ -95,8 +95,10 @@ Change the value of `BACKUP_PATH` if your backup is stored somewhere else. The r
 Stop the containers that can use the instance database, but keep `coolify-db` running:
 
 ```sh
-docker stop coolify coolify-redis coolify-realtime
+docker stop coolify coolify-redis
 ```
+
+On releases from before the [Reverb migration](/core/instance-management/reverb-migration), also stop the `coolify-realtime` container.
 
 The dashboard will be unavailable during the restore. Deployed resources and Coolify Proxy keep running.
 

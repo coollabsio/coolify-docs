@@ -738,6 +738,12 @@ icon: "/docs/images/services/appwrite-logo.svg"
 #     appwrite-config: null
 ---
 
+<Callout type="info" title="PHP security update">
+
+This service's one-click templates have been re-enabled following the PHP security review. Updating Coolify does not update deployed service containers. For existing deployments, follow the [PHP security advisory](/knowledge-base/php-security-advisory-2026) and the service's upstream upgrade instructions to apply any required image updates.
+
+</Callout>
+
 # Appwrite
 
 <ZoomImage src="https://raw.githubusercontent.com/appwrite/appwrite/main/public/images/banner.png" alt="Appwrite" />
@@ -748,6 +754,25 @@ Appwrite is an end-to-end backend server for Web, Mobile, Native, or Backend app
 
 Using Appwrite, you can easily integrate your app with user authentication and multiple sign-in methods, a database for storing and querying users and team data, storage and
 file management, image manipulation, Cloud Functions, and [more services](https://appwrite.io/docs?utm_source=coolify.io).
+
+## Upgrade to Appwrite 2.7
+
+New services use Appwrite 2.7.2. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+1. Back up your data.
+2. Change the image, then run `migrate` in the `appwrite` container (V25).
+3. If untrusted users deploy functions, change `_APP_EXECUTOR_SECRET`.
+
+See the [official release notes](https://github.com/appwrite/appwrite/releases/tag/2.7.0?utm_source=coolify.io).
+
+## Function and site domains
+
+`SERVICE_FQDN_APPWRITE` is the host of the console. `_APP_DOMAIN`, `_APP_DOMAIN_FUNCTIONS`, and `_APP_DOMAIN_SITES` use it. In older services, `_APP_DOMAIN` got the `/v1/realtime` path of the API, so the function and site domains were wrong.
+
+An existing service keeps its Compose file. To fix it, do one of these in **Configuration > General > Edit Compose File**, then redeploy:
+
+- Move the `appwrite-console` service below `appwrite-realtime`.
+- Set `_APP_DOMAIN`, `_APP_DOMAIN_FUNCTIONS`, and `_APP_DOMAIN_SITES`.
 
 ## Links
 

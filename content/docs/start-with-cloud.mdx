@@ -149,7 +149,7 @@ The resources you need depend on your projects. If you host multiple services or
 <CoolResourceShowcase
   icon={ServerCloud}
   title="Example production setup"
-  description="ShadowArcanist runs a mixed production workload on one server with the resources below. Use this as a rough reference point, not a fixed recommendation."
+  description="ShadowArcanist runs a mixed production workload on one server with the resources below. The applications are built externally and the workloads are heavily optimized, so they run on modest resources. Use this as a rough reference point, not a fixed recommendation."
   profile={[
     {
       label: 'Hosting provider',
@@ -164,17 +164,17 @@ The resources you need depend on your projects. If you host multiple services or
     {
       label: 'Memory',
       value: '4 GB',
-      description: 'Average usage: 2.8 GB',
+      description: 'Average usage: 2.1 GB',
     },
     {
       label: 'CPU',
       value: '2 cores',
-      description: 'Average usage: 60-80%',
+      description: 'Average usage: 40-70%',
     },
     {
       label: 'Storage',
       value: '40 GB',
-      description: 'Average usage: 30 GB',
+      description: 'Average usage: 27 GB',
     },
   ]}
   supports={[
@@ -184,8 +184,7 @@ The resources you need depend on your projects. If you host multiple services or
     '4 Rust Discord bots',
     '7 Rust workers',
     '2 Valkey databases',
-    '2 PostgreSQL databases',
-    'Umami Analytics',
+    '1 PostgreSQL database',
     'Beszel',
   ]}
 />
@@ -311,7 +310,7 @@ Choose **Existing key**, then paste the private SSH key that Cloud should use to
 
 Make sure the matching public key already exists in `~/.ssh/authorized_keys` on the server user you plan to select in the next step.
 
-<ZoomableImage src="shadow-to-do" alt="Add private key in Coolify Cloud" />
+{/* <ZoomableImage src="shadow-to-do" alt="Add private key in Coolify Cloud" /> */}
 
 </Tab>
 
@@ -321,7 +320,7 @@ Choose **Create new key**, copy the generated public key, then add it to `~/.ssh
 
 Use this option when you do not already have a key prepared for Cloud onboarding.
 
-<ZoomableImage src="shadow-to-do" alt="Private key setup in Coolify Cloud" />
+{/* <ZoomableImage src="shadow-to-do" alt="Private key setup in Coolify Cloud" /> */}
 
 </Tab>
 </Tabs>
@@ -337,19 +336,19 @@ Now add the server you want to deploy to:
 - select SSH port
 - select server user account
 
-<ZoomableImage src="shadow-to-do" alt="Add server in Coolify Cloud" />
+{/* <ZoomableImage src="shadow-to-do" alt="Add server in Coolify Cloud" /> */}
 <br />
-<ZoomableImage src="shadow-to-do" alt="Server connection form in Coolify Cloud" />
+{/* <ZoomableImage src="shadow-to-do" alt="Server connection form in Coolify Cloud" /> */}
 
 Then click **Validate Server & Install Docker Engine**.
 
 Coolify Cloud will validate the SSH connection and install the required components on your server.
 
-<ZoomableImage src="shadow-to-do" alt="Validate server and install Docker Engine action" />
+{/* <ZoomableImage src="shadow-to-do" alt="Validate server and install Docker Engine action" /> */}
 
 After validation succeeds, you will see the server status update in onboarding.
 
-<ZoomableImage src="shadow-to-do" alt="Server status after validation" />
+{/* <ZoomableImage src="shadow-to-do" alt="Server status after validation" /> */}
 
 ---
 
@@ -425,6 +424,12 @@ No. The Cloud dashboard is provided at `app.coolify.io`.
 <Accordion title="Will my apps stop if my Cloud subscription is paused?">
 
 Your apps keep running on your own servers. Coolify dashboard access will be restricted, but your running workloads remain on your infrastructure.
+
+</Accordion>
+
+<Accordion title="How long does Cloud keep my data after my subscription ends?">
+
+60 days. After that, Coolify Cloud can delete your team, its servers, resources, and projects, and the users that are in no other team. The containers on your servers keep running.
 
 </Accordion>
 

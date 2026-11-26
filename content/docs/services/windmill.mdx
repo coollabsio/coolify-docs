@@ -13,6 +13,12 @@ icon: "/docs/images/services/windmill-logo.svg"
 
 Windmill is an open-source developer platform to power your entire infra and turn scripts into webhooks, workflows and UIs. Fastest workflow engine (13x vs Airflow). Open-source alternative to Retool and Temporal.
 
+## Notes
+
+New services use the stable Windmill `1.875.0` image instead of `main`. The workers start one after the other, and the template does not mount the Docker socket into the workers.
+
+Existing services keep their Compose file and image.
+
 ## Screenshots
 
 <ZoomImage src="https://raw.githubusercontent.com/windmill-labs/windmill/main/imgs/windmill-editor.png" alt="Windmill Preview" />

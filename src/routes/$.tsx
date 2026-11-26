@@ -9,15 +9,17 @@ import { ReiconMarkdownCopyButton } from '@/components/docs/markdown-copy-button
 import { MobileDrawerHeaderActions } from '@/components/layout/mobile-header-controls';
 import { PageSwitcherGuide } from '@/components/layout/page-switcher-guide';
 import { DocsLayout, type DocsSlots } from 'fumadocs-ui/layouts/notebook';
-import { DocsBody, DocsPage } from 'fumadocs-ui/layouts/notebook/page';
+import { DocsBody, DocsPage, DocsTitle } from 'fumadocs-ui/layouts/notebook/page';
 import { useMDXComponents } from '@/components/docs/mdx';
 import { CarbonAds } from '@/components/layout/carbon-ads';
 import { ViewOptionsPopover } from '@/components/layout/page-actions';
 import { type DocsManifest, getManifestKey, type LoaderData } from '@/lib/docs/docs-manifest';
+import { getDiscordEmbedScript } from '@/lib/docs/discord-embed';
 import { createDocsLayoutTabs } from '@/lib/docs/docs-layout-tabs';
 import { baseOptions } from '@/lib/ui/layout.shared';
 import { prepareHomeSidebarPageTree, preparePageTree } from '@/lib/docs/page-tree';
-import { absoluteUrl, getDocGithubPath, getDocOgPath, site } from '@/lib/config/site';
+import { absoluteUrl, canonicalDocsUrl, getDocGithubPath, getDocOgPath, site } from '@/lib/config/site';
+import { resolveDocSeo } from '@/lib/docs/seo';
 import { getPageMarkdownUrl, source } from '@/lib/docs/source';
 import services from '@/generated/services.json';
 
@@ -36,6 +38,8 @@ const hiddenSidebarSlots: DocsSlots['sidebar'] = {
 };
 
 const servicePageUrls = new Set(services.map((service) => `/services/${service.slug}`));
+// These components render their own H1, which is not included in the MDX TOC.
+const pagesWithCustomTitle = new Set(['team.mdx', 'sponsors.mdx']);
 
 function toPublicDocUrl(url: string): string {
   if (url === '/') return site.docsBasePath;
@@ -82,9 +86,17 @@ export const Route = createFileRoute('/$')({
       return {};
     }
 
-    const title = data.isIndex ? site.title : `${data.title} | ${site.title}`;
-    const description = data.description || site.description;
-    const canonicalUrl = absoluteUrl(data.url.endsWith('/') ? data.url : `${data.url}`);
+    const seo = resolveDocSeo({
+      url: data.url,
+      title: data.title,
+      description: data.description,
+      isIndex: data.isIndex,
+      siteTitle: site.title,
+      siteDescription: site.description,
+    });
+    const title = seo.title;
+    const description = seo.description;
+    const canonicalUrl = canonicalDocsUrl(data.url);
     const ogImageUrl = absoluteUrl(data.ogImagePath);
     const structuredData = {
       '@context': 'https://schema.org',
@@ -104,6 +116,7 @@ export const Route = createFileRoute('/$')({
       meta: [
         { title },
         { name: 'description', content: description },
+        { name: 'robots', content: site.indexable ? 'index,follow' : 'noindex, nofollow' },
         { property: 'og:title', content: title },
         { property: 'og:description', content: description },
         { property: 'og:url', content: canonicalUrl },
@@ -116,8 +129,26 @@ export const Route = createFileRoute('/$')({
         { name: 'twitter:description', content: description },
         { name: 'twitter:image', content: ogImageUrl },
       ],
-      links: [{ rel: 'canonical', href: canonicalUrl }],
+      links: [
+        { rel: 'canonical', href: canonicalUrl },
+        { rel: 'alternate', type: 'text/markdown', href: absoluteUrl(data.markdownUrl) },
+      ],
       scripts: [
+        {
+          id: 'discord:component-embed',
+          type: 'application/json',
+          children: getDiscordEmbedScript({
+            title: data.isIndex ? site.title : data.title,
+            description,
+            url: canonicalUrl,
+            ...(data.type === 'docs'
+              ? {
+                  markdownUrl: absoluteUrl(data.markdownUrl),
+                  githubUrl: getDocGithubPath(data.path),
+                }
+              : {}),
+          }),
+        },
         {
           type: 'application/ld+json',
           children: JSON.stringify(structuredData),
@@ -141,6 +172,7 @@ const serverLoader = createServerFn({
         type: 'openapi',
         description: page.data.description ?? site.description,
         isIndex: page.slugs.length === 0,
+        markdownUrl: getPageMarkdownUrl(page).url,
         ogImagePath: getDocOgPath(page.slugs),
         pageTree,
         props: await page.data.getClientAPIPageProps(),
@@ -200,6 +232,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
     { hideFooter, markdownUrl, path }: { hideFooter?: boolean; markdownUrl: string; path: string },
   ) {
     const hidePageChrome = path.includes('choose-your-path');
+    const showTitle = !pagesWithCustomTitle.has(path) && !toc.some((item) => item.depth === 1);
     const pageActions = (
       <PageActions
         className="mt-4 border-t pt-4 max-xl:mb-4 max-xl:ps-2"
@@ -229,10 +262,11 @@ const clientLoader = browserCollections.docs.createClientLoader({
         toc={toc}
         breadcrumb={{ enabled: false }}
         footer={{ enabled: !hideFooter && !hidePageChrome }}
-        tableOfContent={hidePageChrome ? { enabled: false } : { style: 'clerk', footer: pageActions }}
-        tableOfContentPopover={hidePageChrome ? { enabled: false } : { style: 'clerk', footer: pageActions }}
+        tableOfContent={{ style: 'clerk', footer: pageActions }}
+        tableOfContentPopover={{ style: 'clerk', footer: pageActions }}
       >
         <DocsBody>
+          {showTitle ? <DocsTitle>{frontmatter.title}</DocsTitle> : null}
           <MDX components={useMDXComponents()} />
         </DocsBody>
       </DocsPage>
@@ -257,6 +291,7 @@ function Page() {
     content = (
       <DocsPage full tableOfContent={{ enabled: false }} breadcrumb={{ enabled: false }}>
         <DocsBody>
+          <DocsTitle>{data.title}</DocsTitle>
           <ClientAPIPage {...data.props} />
         </DocsBody>
       </DocsPage>

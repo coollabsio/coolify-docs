@@ -1,0 +1,24 @@
+---
+title: Profile and Account Deletion
+description: Manage your Coolify profile, linked identity, and account deletion.
+---
+
+# Profile and account deletion
+
+Open the user menu and select **Profile** to manage your account, [passkeys](/core/security/authentication/passkeys), and [two-factor authentication](/core/security/authentication/2fa). Linked SSO identities are displayed here. When your email is managed by a provider, change it at the provider; Coolify does not allow editing it locally.
+
+For an account with a linked OAuth identity, destructive actions use typed confirmation without requiring a Coolify password. Review every action listed by the confirmation before proceeding.
+
+## Delete your account
+
+Use the account-deletion action on **Profile** and complete the confirmation. Deleting an account:
+
+- deletes teams where you are the only member
+- removes you from all other teams
+- revokes your API tokens and sessions
+
+Deletion is blocked for the root user, while a team you own alone still has servers, projects, or Git sources, and when leaving a shared team would leave it without an administrator or owner. The **Delete account** section lists each requirement that is not met.
+
+On Coolify Cloud, account deletion removes the servers, projects, and Git sources of a team where you are the only member, but only when that team has no paying subscription. Nothing is stopped on the servers. For a paying team, you must first delete its data yourself. The confirmation lists each team that loses its data and each subscription that Coolify cancels. **Delete my account** in the **Cancel Immediately** dialog of a subscription follows the same rules, and the team whose subscription you cancel there does not count as paying.
+
+Before retrying a blocked deletion, remove the remaining resources or arrange the required ownership and administration in each team. Account deletion is separate from removing a member through team administration; see [Remove a member](/core/team/members/remove-a-member).

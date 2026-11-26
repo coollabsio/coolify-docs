@@ -67,14 +67,15 @@ jobs:
               await removeLabel(MAINTAINER_LABEL);
             }
 
-            // 2. Add "⏳ Waiting for PR merge on Core Repo" if description links to coollabsio/coolify
+            // 2. Add "⏳ Waiting for PR merge on Core Repo" if description links to coollabsio/coolify.
+            // Only ever add it here: the label is cleared manually once the Core PR is merged
+            // (the description link stays after merge), so auto-removal would strip both the
+            // automated and any manually-added label.
             const coreRepoRegex = /https:\/\/github\.com\/coollabsio\/coolify\/(issues|pull)\/(\d+)/gi;
             const coreLinks = body.match(coreRepoRegex);
-            
+
             if (coreLinks && coreLinks.length > 0) {
               await addLabel(WAITING_CORE_LABEL);
-            } else {
-              await removeLabel(WAITING_CORE_LABEL);
             }
 
             // 3. Check for stale PRs (only for scheduled runs or when relevant labels change)

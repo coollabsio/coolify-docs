@@ -11,6 +11,9 @@
     "clone",
     "create",
     "database-get",
+    "database-import-start",
+    "database-import-status",
+    "database-import-upload",
     "database-list",
     "database-logs",
     "database-restart",
@@ -42,6 +45,13 @@
     "storage-update",
     "tag-add",
     "tag-list",
-    "tag-remove"
+    "tag-remove",
+    "task-create",
+    "task-delete",
+    "task-execute",
+    "task-executions",
+    "task-list",
+    "task-update",
+    "traffic"
   ]
 }

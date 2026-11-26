@@ -1,0 +1,7 @@
+{
+  "title": "Settings",
+  "pages": [
+    "email-get",
+    "email-update"
+  ]
+}

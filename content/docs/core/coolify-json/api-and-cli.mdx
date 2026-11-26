@@ -1,0 +1,207 @@
+---
+title: coolify.json API and CLI (Beta)
+description: Export, plan, link, apply, and approve coolify.json files with the Coolify API and the coolify config CLI commands, also in CI.
+---
+
+# coolify.json API and CLI
+
+You can manage `coolify.json` links with the Coolify API and with the `coolify config` commands of the [Coolify CLI](/cli/what-is-the-coolify-cli). Use them to export environments, to check a file in CI before you merge it, or to apply a file without a git webhook.
+
+<Callout type="warning" title="Beta feature">
+coolify.json is in beta. The endpoints, the request bodies, and the responses can change in later versions.
+</Callout>
+
+The API supports links ([Config as code](/core/coolify-json/config-as-code)) and the [template mode](#template-endpoints). The CLI supports links only.
+
+## Link modes
+
+A link has one of two modes:
+
+| Mode | Where the file comes from |
+| :--- | :--- |
+| `git` | A branch of a git repository. A push plans the file. This is the mode of the **Connect repository** form. |
+| `api` | The API request. A link in `api` mode has no repository: `POST /config/links/{uuid}/apply` with the file in the request applies it. |
+
+For a `git` link, `POST /config/links/{uuid}/apply` without a file plans the head of the branch. A `git` link does not accept a file in the request: push the file instead.
+
+## API endpoints
+
+All paths start with `/api/v1`. Create a token in **Keys & Tokens > API Tokens**. Refer to [API tokens](/core/security/credentials/api-tokens) and [API permissions](/api/permissions).
+
+| Method and path | Description | Token abilities |
+| :--- | :--- | :--- |
+| `GET /environments/{uuid}/config/export` | Export an environment as a `coolify.json` file. No variable values are exported. | `read` and `read:sensitive` |
+| `POST /environments/{uuid}/config/plan` | Compare a file with the environment. Nothing changes. | `read` |
+| `POST /config/links` | Link an environment. Creates a missing project or environment. | `write` |
+| `GET /config/links/{uuid}` | Get a link. | `read` |
+| `PATCH /config/links/{uuid}` | Change `auto_apply`, or the server with `server_uuid` and `destination_uuid`. | `write`. A server change also needs `deploy`. |
+| `DELETE /config/links/{uuid}` | Disconnect. The resources stay. | `write` and `delete` |
+| `GET /config/links/{uuid}/revisions` | List the last 50 revisions, newest first. | `read` |
+| `POST /config/links/{uuid}/apply` | Apply a file (`api` mode), or plan the head of the branch (`git` mode). | `write` and `deploy` |
+| `POST /config/links/{uuid}/suspend` | Pause the sync. Team admins only. | `write` |
+| `POST /config/links/{uuid}/resume` | Without `confirm=1`, return the plan of the latest file. With `?confirm=1`, resume and apply. Team admins only. | `write`. `confirm=1` also needs `deploy`. |
+| `POST /config/revisions/{uuid}/approve` | Approve a plan that waits for approval. `delete_data` lists the keys of removed resources whose data Coolify also deletes. | `write`, `deploy`, and `delete` |
+| `POST /config/revisions/{uuid}/release` | Release an apply that does not finish. Team admins only. | `write` |
+| `POST /config/revisions/{uuid}/retry` | Plan the file of a revision again. | `write` and `deploy` |
+
+### Template endpoints
+
+These endpoints use a file one time, as the defaults of new resources ([Use coolify.json as a template](/core/coolify-json/use-as-template)). Coolify does not save a link, and the file does not manage the resources after that. Nothing deploys. The environment must not have a link.
+
+| Method and path | Description | Token abilities |
+| :--- | :--- | :--- |
+| `POST /environments/{uuid}/config/template/plan` | Read the file and return the resources that Coolify creates, and the `commit` of the file. Nothing changes. | `write` |
+| `POST /environments/{uuid}/config/template` | Create the resources. Send the `commit` of the plan to create the resources from the file that you saw. Returns `201` and the `uuid`, `type`, and `name` of each resource. | `write` |
+
+The request body has `repository`, `branch`, `source_type` (`public`, `github_app`, `gitlab_app`, `gitea_app`, or `deploy_key`), `server_uuid`, and optional `file_path`, `source_uuid` (required when `source_type` is not `public`), and `destination_uuid`. A source other than `public` needs write access on the whole team.
+
+```bash
+curl -X POST "https://coolify.example.com/api/v1/environments/<environment-uuid>/config/template/plan" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"repository": "https://github.com/acme/web", "branch": "main", "source_type": "public", "server_uuid": "<server-uuid>"}'
+```
+
+A token with the `root` ability passes all ability checks. The role checks of the token owner still apply. For example, only a team admin can suspend, resume, and release, and approving needs delete access to the environment.
+
+A token that is limited to some projects, environments, resources, or servers cannot use these endpoints. Use a token with access to the whole team.
+
+### Values in plans
+
+Plans and revisions show the values of the changed settings only to a token with `read:sensitive`. Other tokens see which settings change, but not their values. Commands and Compose files can hold credentials, so export always needs `read:sensitive`.
+
+### The plan response
+
+`POST /environments/{uuid}/config/plan` and the `plan` key of a revision return an object with these keys:
+
+| Key | Description |
+| :--- | :--- |
+| `changes` | A list of changes. Each change has a `kind`: `create`, `update`, `remove`, `rename`, `unmanage`, or `import`. |
+| `errors` | Errors that stop the apply. |
+| `warnings` | Warnings that do not stop the apply. |
+| `missing_required` | `required` variables without a value, for each resource key. |
+| `destructive` | `true` when the plan waits for approval. |
+| `removes_all` | `true` when the plan removes all managed resources. |
+| `state_hash` | A hash of the current state of the environment. |
+
+A file that is not valid returns `422` with `errors`. Each error has the path of the key and a message.
+
+### Examples
+
+Export an environment:
+
+```bash
+curl -s https://coolify.example.com/api/v1/environments/$ENVIRONMENT_UUID/config/export \
+  -H "Authorization: Bearer $COOLIFY_TOKEN" > coolify.json
+```
+
+Plan a file:
+
+```bash
+jq -n --rawfile file coolify.json '{file: $file}' |
+  curl -s -X POST https://coolify.example.com/api/v1/environments/$ENVIRONMENT_UUID/config/plan \
+    -H "Authorization: Bearer $COOLIFY_TOKEN" \
+    -H "Content-Type: application/json" \
+    --data-binary @-
+```
+
+The `file` key holds the file as text, not as a JSON object. When the environment is linked to a branch, Coolify plans the entry of `environments` that uses this branch. Otherwise, it plans the entry with the name of the Coolify environment.
+
+Link an environment to a branch:
+
+```bash
+curl -s -X POST https://coolify.example.com/api/v1/config/links \
+  -H "Authorization: Bearer $COOLIFY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "project": "shop",
+    "environment": "production",
+    "mode": "git",
+    "repository": "acme/shop",
+    "branch": "main",
+    "file_path": "coolify.json",
+    "source_type": "github_app",
+    "source_uuid": "<github-app-uuid>",
+    "server_uuid": "<server-uuid>"
+  }'
+```
+
+| Field | Description |
+| :--- | :--- |
+| `project`, `environment` | Names. Coolify creates a missing project or environment. |
+| `mode` | `git` or `api` |
+| `auto_apply` | Apply safe changes automatically. The default is `true`. |
+| `repository`, `branch` | Required for `git` |
+| `file_path` | The path of the file in the repository. The default is `coolify.json`. |
+| `source_type` | Required for `git`: `public`, `github_app`, `gitea_app`, or `deploy_key` |
+| `source_uuid` | The UUID of the GitHub App, the Gitea App, or the private key. Required for all source types except `public`. |
+| `server_uuid` | Required for `git`. Coolify reads the file on this server, and resources that name no server run on it. |
+| `destination_uuid` | The destination on that server. Needed when the server has more than one. |
+
+The token owner needs write access to the whole team and must be able to create resources in the environment. An environment can have only one link: a second link returns `409`.
+
+For a `git` link, the response also has `webhook_secret` and `webhook_urls`, for the [manual webhook](/core/coolify-json/config-as-code#set-up-the-webhook). Coolify shows the secret in the response only one time. Team admins see it later on the **Config as code** page.
+
+## CLI
+
+<Callout type="info" title="In development">
+The `coolify config` commands for coolify.json are being built now. The command names and flags on this page can change before the release. Run `coolify config --help` with your CLI version for the current commands and flags. In earlier CLI versions, `coolify config` only shows the path of the CLI configuration file.
+</Callout>
+
+The `coolify config` commands use the API endpoints on this page with the token of your [CLI context](/cli/contexts):
+
+| Command | What it does | Endpoint |
+| :--- | :--- | :--- |
+| `coolify config export` | Write the `coolify.json` file of an environment | `GET /environments/{uuid}/config/export` |
+| `coolify config plan` | Show the plan of a local file. Nothing changes. | `POST /environments/{uuid}/config/plan` |
+| `coolify config link` | Link an environment to a branch or in `api` mode | `POST /config/links` |
+| `coolify config apply` | Apply a local file (`api` mode), or plan the head of the branch (`git` mode) | `POST /config/links/{uuid}/apply` |
+| `coolify config approve` | Approve a plan that waits for approval | `POST /config/revisions/{uuid}/approve` |
+
+The CLI also covers the other link and revision endpoints, for example the revision history, pause and resume, retry, and disconnect.
+
+### Check a file in CI
+
+Run `coolify config plan` in a CI job on each pull request. The job reads the changed `coolify.json`, sends it to Coolify, and prints the plan. Nothing changes in Coolify. Use the plan to:
+
+- Fail the job when the file is not valid. Coolify returns the path of each wrong key.
+- See which resources the merge creates, updates, removes, or renames.
+- See when the merge is destructive and needs an approval after the push.
+- See the `required` variables that still need a value.
+
+Use a token with the `read` ability only. Add `read:sensitive` only if the job must show the changed values. Do not print values in public CI logs.
+
+This GitHub Actions job runs the plan with the API, so it works before the CLI command is released. It fails when the file is not valid:
+
+```yaml title=".github/workflows/coolify-plan.yml"
+name: coolify.json plan
+on:
+  pull_request:
+    paths: ["coolify.json"]
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Plan coolify.json
+        env:
+          COOLIFY_URL: ${{ vars.COOLIFY_URL }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+          ENVIRONMENT_UUID: ${{ vars.COOLIFY_ENVIRONMENT_UUID }}
+        run: |
+          jq -n --rawfile file coolify.json '{file: $file}' |
+            curl -sS --fail-with-body -X POST "$COOLIFY_URL/api/v1/environments/$ENVIRONMENT_UUID/config/plan" \
+              -H "Authorization: Bearer $COOLIFY_TOKEN" \
+              -H "Content-Type: application/json" \
+              --data-binary @- | tee plan.json
+          jq -e '.errors == []' plan.json
+```
+
+If the repository uses a GitHub App, Coolify also comments the plan on same-repository pull requests. Refer to [Pull request plans](/core/coolify-json/config-as-code#pull-request-plans).
+
+## Related pages
+
+- [Config as code](/core/coolify-json/config-as-code)
+- [File reference](/core/coolify-json/file-reference)
+- [API overview](/api/overview)

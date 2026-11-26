@@ -27,15 +27,25 @@ Before adding the mount, find the exact directory where the application writes i
 1. Open the application or database in Coolify.
 2. Select **Configuration** > **Persistent Storage**.
 3. Select **Add** > **Volume Mount**.
-4. Enter a short **Name**, such as `uploads`.
-5. Leave **Source Path** empty. Entering a source path creates a bind mount instead of a named volume.
-6. Enter the **Destination Path** inside the container. For example, use `/app/uploads` only when the application writes uploads to that exact path.
-7. Select **Add**.
-8. Redeploy the resource so Docker creates the new container with the mount attached.
+4. Review the pre-filled resource-based **Name** and change it if needed.
+5. Enter the **Destination Path** inside the container. For example, use `/app/uploads` only when the application writes uploads to that exact path.
+6. Select **Add**.
+7. Redeploy the resource so Docker creates the new container with the mount attached.
 
 Coolify prefixes the name with the resource UUID to prevent name collisions on the deployment server. The name shown by `docker volume ls` is therefore longer than the value entered in **Name**.
 
 Verify the mount by letting the application write a test file under the destination path. Redeploy the resource again and confirm that the application can still read the file.
+
+## Change the volume name
+
+Changing the **Storage Name** of a volume mount on **Persistent Storage** does not rename or move the Docker volume. After the next restart or deployment, the resource uses a Docker volume with the new name. If that volume does not exist, Docker creates it empty. Your data stays in the old volume, and Coolify does not delete the old volume when you delete the resource.
+
+When you save a new name, the **Change the volume name?** dialog asks for confirmation. To keep your data:
+
+1. Stop the resource.
+2. Change the **Storage Name**, save it, and select **Change Volume Name** in the dialog.
+3. On the server, find both names with `docker volume ls`. Create the new volume with `docker volume create <new-volume-name>` if it does not exist, then copy the data from the old volume into it.
+4. Start the resource and confirm that the application can read its data.
 
 ## Use volume mounts with preview deployments
 
@@ -64,7 +74,7 @@ volumes:
 
 Replace `/app/data` with the exact data directory used by the image. Save the Compose file and reload its configuration in Coolify.
 
-Coolify prefixes parsed volume names to avoid collisions. The **Persistent Storage** page displays the resulting mount as read-only because the Compose file owns its configuration. Edit the Compose file when the source or destination needs to change.
+Coolify prefixes managed Compose volume names to avoid collisions, but preserves volumes declared `external: true`. Existing resources that used renamed external volumes keep their current volume until you explicitly migrate. Review the deployment log, copy the data to the external volume, and follow the storage page’s migration instructions before switching. Compose `driver`, `driver_opts`, and `labels` are preserved; existing volumes retain their settings. The **Persistent Storage** page displays the resulting mount as read-only because the Compose file owns its configuration. Edit the Compose file when the source or destination needs to change.
 
 ## Back up a volume
 

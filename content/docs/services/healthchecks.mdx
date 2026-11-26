@@ -25,6 +25,18 @@ Read the [Healthchecks Docker documentation](https://healthchecks.io/docs/self_h
 
 <ZoomImage src="/docs/images/services/healthchecks-screenshot.png" alt="Healthchecks monitoring dashboard" />
 
+## Upgrade to Healthchecks v5
+
+New services use Healthchecks v5.0.3. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+Healthchecks 5 uses gunicorn instead of uWSGI.
+
+- A custom command must run `/opt/healthchecks/run.sh`.
+- Rename `UWSGI_PROCESSES` to `GUNICORN_WORKERS`.
+- An external database must be PostgreSQL 15, MySQL 8.4, MariaDB 10.11, or later.
+
+See the [official changelog](https://github.com/healthchecks/healthchecks/blob/master/CHANGELOG.md?utm_source=coolify.io).
+
 ## Links
 
 - [Official website](https://healthchecks.io/)

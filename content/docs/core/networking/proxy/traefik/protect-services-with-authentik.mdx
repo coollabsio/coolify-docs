@@ -5,33 +5,40 @@ description: Add Authentik forward authentication to Coolify resources through T
 
 # Protect with Authentik
 
-Traefik's `forwardAuth` middleware can send each request to an Authentik proxy provider before it reaches an application. Authentik handles sign-in and returns identity headers to Traefik after successful authentication.
+Traefik's `forwardAuth` middleware can send each request to an Authentik outpost before it reaches an application. Authentik handles sign-in and returns identity headers to Traefik after successful authentication.
 
-Use this guide when Authentik and the protected resource can communicate over a shared Docker network on the same Coolify server.
+This guide uses the embedded outpost of the [Authentik service](/services/authentik) on the same Coolify server as the protected resource. The embedded outpost runs in the `authentik-server` container on port `9000`.
 
 ## Configure Authentik
 
-Deploy the [Authentik service](/services/authentik), then follow Authentik's [forward authentication documentation](https://docs.goauthentik.io/docs/add-secure-apps/providers/proxy/) to:
+Deploy the [Authentik service](/services/authentik) and give it a domain, for example `https://auth.example.com`. Then do these steps in the Authentik admin interface:
 
-1. Create a proxy provider that uses forward authentication.
-2. Create an Authentik application and attach the proxy provider.
-3. Set the provider's cookie domain to the parent domain shared by the protected services when you want single sign-on across subdomains.
-4. Add the protected domain to Authentik's application or provider configuration.
+1. Create an application with a **Proxy Provider**. Select one of these modes:
+   - **Forward auth (single application)**: set **External host** to the URL of the protected application, for example `https://app.example.com`. Use one provider for each application.
+   - **Forward auth (domain level)**: set **Authentication URL** to the Authentik URL, for example `https://auth.example.com`, and **Cookie domain** to the parent domain, for example `example.com`. One provider protects all subdomains.
+2. Open **Applications > Outposts**, edit **authentik Embedded Outpost**, and add the application to **Selected Applications**. If you do not do this step, the protected domain shows a white **Not Found** page.
+3. In the same outpost, open **Advanced settings** and make sure that `authentik_host` is the full public Authentik URL, for example `https://auth.example.com/`.
 
-Make sure the Authentik server container and protected resource share a Docker network that Traefik can use to reach Authentik.
+See Authentik's [forward authentication documentation](https://docs.goauthentik.io/add-secure-apps/providers/proxy/forward_auth/) for more information about the two modes.
+
+## Find the Authentik hostname
+
+Traefik must send the forward-auth request to Authentik on the internal Docker network. Do not use the public Authentik URL.
+
+Coolify names the container `authentik-server-<service-uuid>`. The `<service-uuid>` is the UUID of the Authentik service, which is in the URL of the service page. You can also run `docker ps --filter name=authentik-server` on the server.
+
+Coolify connects the proxy to the network of the Authentik service, so Traefik can reach this container. The protected resource does not have to share a network with Authentik.
 
 ## Create the Traefik middleware
 
-Find the Authentik server container or service name on the shared network. In the example below it is `authentik-server` and listens on port `9000`.
-
-Open **Servers > your server > Proxy > Dynamic Configurations** and create `authentik-forward-auth.yaml`:
+Open **Servers > your server > Proxy > Dynamic Configurations** and create `authentik-forward-auth.yaml`. Replace `<service-uuid>` with the UUID of your Authentik service:
 
 ```yaml
 http:
   middlewares:
     authentik-forward-auth:
       forwardAuth:
-        address: 'http://authentik-server:9000/outpost.goauthentik.io/auth/traefik'
+        address: 'http://authentik-server-<service-uuid>:9000/outpost.goauthentik.io/auth/traefik'
         trustForwardHeader: true
         authResponseHeaders:
           - X-authentik-username
@@ -48,18 +55,45 @@ http:
           - X-authentik-meta-version
 ```
 
-Replace `authentik-server` with the actual internal hostname. Do not use the public Authentik URL unless the proxy cannot reach Authentik privately and you intentionally want the external traffic path.
+### Route the outpost paths (single application mode)
+
+In **Forward auth (single application)** mode, Authentik sends the browser to `/outpost.goauthentik.io/` on the domain of the protected application to complete the sign-in. Traefik must send these paths to Authentik, not to the application. Add a router and a service for each protected domain to the same file:
+
+```yaml
+http:
+  middlewares:
+    authentik-forward-auth:
+      # ...
+  routers: # [!code ++:9]
+    app-authentik-outpost:
+      rule: 'Host(`app.example.com`) && PathPrefix(`/outpost.goauthentik.io/`)'
+      entryPoints:
+        - https
+      priority: 1000
+      service: authentik-outpost
+      tls:
+        certResolver: letsencrypt
+  services: # [!code ++:5]
+    authentik-outpost:
+      loadBalancer:
+        servers:
+          - url: 'http://authentik-server-<service-uuid>:9000/outpost.goauthentik.io'
+```
+
+Replace `app.example.com` with the protected domain. Add one router for each protected domain. All routers can use the same `authentik-outpost` service.
+
+In **Forward auth (domain level)** mode, you do not need these routers. The sign-in occurs on the Authentik domain, and Coolify already routes that domain to the `authentik-server` container.
 
 ## Attach the middleware
 
 <Tabs items={['Standard application', 'Docker Compose or service']}>
 <Tab value="Standard application">
 
-Open the application **General** page and find **Container Labels**. Disable **Readonly labels**, then append the file-provider middleware to the existing HTTPS router:
+Open the application **General** page and find **Container labels**. Set **Label management** to **Managed manually (edit labels yourself)**, then append the file-provider middleware to the existing HTTPS router:
 
 ```ini
-traefik.http.routers.https-0-<resource-id>.middlewares=gzip # [!code --][!code focus]
-traefik.http.routers.https-0-<resource-id>.middlewares=gzip,authentik-forward-auth@file # [!code ++][!code focus]
+traefik.http.routers.https-0-<resource-id>.middlewares=gzip-no-media # [!code --][!code focus]
+traefik.http.routers.https-0-<resource-id>.middlewares=gzip-no-media,authentik-forward-auth@file # [!code ++][!code focus]
 ```
 
 Save and redeploy the application.
@@ -79,6 +113,8 @@ services:
 
 Save and redeploy the resource.
 
+A label such as `traefik.http.middlewares.authentik-forward-auth@file` without a value does not attach the middleware to a router.
+
 </Tab>
 </Tabs>
 
@@ -90,21 +126,33 @@ Open the protected domain in a private browser window. Traefik should redirect y
 
 <Accordions type="multiple">
 
+<Accordion title="The protected domain shows a white Not Found page">
+
+The embedded outpost does not have a provider for this domain. Add the application to **authentik Embedded Outpost** in **Applications > Outposts**. Also make sure that the **External host** of a single application provider is the exact URL of the protected domain, with `https://`.
+
+</Accordion>
+
 <Accordion title="The request returns a gateway error or a 500 response">
 
-Confirm the Authentik internal hostname and port from the shared Docker network. Inspect both Authentik logs and **Servers > your server > Proxy > Logs** for connection errors.
+Traefik cannot reach the address of the middleware. Make sure that the address uses the container name `authentik-server-<service-uuid>` and port `9000`, not the public Authentik URL. Inspect both Authentik logs and **Servers > your server > Proxy > Logs** for connection errors.
 
 </Accordion>
 
 <Accordion title="The user is not redirected to Authentik">
 
-Confirm the proxy provider is assigned to the correct Authentik application and that `authentik-forward-auth@file` is attached to the resource's HTTPS router.
+Make sure that `authentik-forward-auth@file` is attached to the HTTPS router of the resource, then redeploy the resource. Look for errors about the middleware in **Servers > your server > Proxy > Logs**.
 
 </Accordion>
 
-<Accordion title="Authentication repeatedly returns to the sign-in page">
+<Accordion title="The application shows its own 404 page after sign-in, or sign-in repeats">
 
-Confirm the Authentik provider's cookie domain covers the protected hostname and that the protected domain is assigned to the expected Authentik application.
+In single application mode, the `/outpost.goauthentik.io/` router for the protected domain is missing or has the wrong host. See [Route the outpost paths](#route-the-outpost-paths-single-application-mode). In domain level mode, make sure that the cookie domain covers the protected hostname.
+
+</Accordion>
+
+<Accordion title="Authentik runs on a different server">
+
+The `authentik-server-<service-uuid>` hostname works only on the server that runs Authentik. On another server, deploy a separate Authentik outpost there. In **Applications > Outposts**, create an outpost of type **Proxy** with a **Docker** integration for that server, and set `docker_network: coolify` and `docker_map_ports: false` in its configuration. Then use `http://ak-outpost-<outpost-name>:9000` instead of `http://authentik-server-<service-uuid>:9000` in the middleware and in the outpost service.
 
 </Accordion>
 

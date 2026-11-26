@@ -4,7 +4,7 @@ description: "Lightweight server monitoring hub with historical data, docker sta
 og:
   description: "Deploy Beszel lightweight server monitoring on Coolify with real-time metrics, Docker stats, and minimal resource usage for infrastructure tracking."
 category: "Monitoring"
-icon: "/docs/images/services/beszel-logo.svg"
+icon: "/docs/images/services/beszel-logo.webp"
 ---
 
 <ZoomImage src="/docs/images/services/beszel-logo.webp" alt="Beszel Logo" />
@@ -62,6 +62,14 @@ Go to the Beszel service in Coolify, click "settings", and uncheck the `gzip com
 
 </Callout>
 
+
+## Upgrade to Beszel 0.21
+
+New services use Beszel 0.21.2. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+Since 0.19.0, agents verify the HTTPS certificate of the hub. If your hub uses a self-signed certificate, set `CA_CERT_FILE` on the agent.
+
+See the [official release notes](https://github.com/henrygd/beszel/releases?utm_source=coolify.io).
 
 ## Links
 

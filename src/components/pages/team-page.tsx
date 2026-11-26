@@ -20,7 +20,6 @@ const teamMembers: TeamMember[] = [
     image: '/docs/images/team/andras.webp',
     links: [
       { label: 'GitHub', href: 'https://github.com/andrasbacsai' },
-      { label: 'Website', href: 'https://heyandras.dev' },
       { label: 'X', href: 'https://x.com/heyandras' },
       { label: 'Bluesky', href: 'https://bsky.app/profile/heyandras.dev' },
     ],
@@ -47,6 +46,15 @@ const teamMembers: TeamMember[] = [
     ],
   },
   {
+    name: 'Cynthia Ebert',
+    role: 'Developer, Community Moderator',
+    image: '/docs/images/team/cinzya.webp',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/Cinzya' },
+      { label: 'Website', href: 'https://cinzya.gg/' },
+    ],
+  },
+  {
     name: 'Aditya Tripathi',
     role: 'Developer, Community Moderator',
     image: '/docs/images/team/aditya.webp',
@@ -62,6 +70,18 @@ const teamMembers: TeamMember[] = [
     image: '',
     links: [],
     variant: 'join',
+  },
+];
+
+const honorableContributors: TeamMember[] = [
+  {
+    name: 'Oren Aksakal',
+    role: 'Developer',
+    image: '/docs/images/team/oren.webp',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/orenaksakal' },
+      { label: 'X', href: 'https://x.com/orenaksakal' },
+    ],
   },
 ];
 
@@ -318,6 +338,21 @@ export function TeamPage() {
 
         <div className="mx-auto mt-12 flex max-w-5xl flex-wrap justify-center gap-5">
           {teamMembers.map((member) => (
+            <ProfileCard key={member.name} member={member} />
+          ))}
+        </div>
+
+        <div className="mx-auto mt-16 max-w-3xl text-center">
+          <h2 className="m-0 text-2xl font-bold tracking-normal text-fd-foreground md:text-3xl">
+            Honorable contributors
+          </h2>
+          <p className="m-0 mx-auto mt-3 max-w-2xl text-base leading-7 text-fd-muted-foreground">
+            People who made a big difference to Coolify or related products.
+          </p>
+        </div>
+
+        <div className="mx-auto mt-8 flex max-w-5xl flex-wrap justify-center gap-5">
+          {honorableContributors.map((member) => (
             <ProfileCard key={member.name} member={member} />
           ))}
         </div>
