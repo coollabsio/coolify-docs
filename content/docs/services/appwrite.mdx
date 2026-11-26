@@ -765,6 +765,15 @@ New services use Appwrite 2.7.2. An existing service keeps its image until you c
 
 See the [official release notes](https://github.com/appwrite/appwrite/releases/tag/2.7.0?utm_source=coolify.io).
 
+## Function and site domains
+
+`SERVICE_FQDN_APPWRITE` is the host of the console. `_APP_DOMAIN`, `_APP_DOMAIN_FUNCTIONS`, and `_APP_DOMAIN_SITES` use it. In older services, `_APP_DOMAIN` got the `/v1/realtime` path of the API, so the function and site domains were wrong.
+
+An existing service keeps its Compose file. To fix it, do one of these in **Configuration > General > Edit Compose File**, then redeploy:
+
+- Move the `appwrite-console` service below `appwrite-realtime`.
+- Set `_APP_DOMAIN`, `_APP_DOMAIN_FUNCTIONS`, and `_APP_DOMAIN_SITES`.
+
 ## Links
 
 - [The official website](https://appwrite.io?utm_source=coolify.io)
