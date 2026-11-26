@@ -11,13 +11,13 @@ Use the exact filename, extension, and case. Prefer lowercase kebab-case for new
 
 ## Supported Syntax
 
-Markdown images are supported:
+Use the registered image component:
 
 ```mdx
-![Appsmith](/docs/images/services/appsmith-logo.svg)
+<ZoomImage src="/docs/images/services/appsmith-logo.svg" alt="Appsmith logo" />
 ```
 
-For an explicit image component:
+For a screenshot:
 
 ```mdx
 <ZoomImage src="/docs/images/applications/domain.webp" alt="Application domain settings" />
@@ -29,7 +29,7 @@ The legacy alias remains supported:
 <ZoomableImage src="/docs/images/applications/domain.webp" alt="Application domain settings" />
 ```
 
-`src/components/docs/mdx.tsx` maps Markdown images, `Image`, `ZoomImage`, and `ZoomableImage` to the same zoomable-image implementation. No import is needed for these registered components. Do not rewrite valid `ZoomableImage` uses just because the docs moved to MDX.
+`src/components/docs/mdx.tsx` maps Markdown images, `Image`, `ZoomImage`, and `ZoomableImage` to the same zoomable-image implementation. No import is needed for these registered components. Do not use Markdown image syntax (`![alt](/docs/images/...)`) for local images. The MDX compiler resolves the path to `public/docs/images/...`, which does not exist, and the dev server returns 500 for every page. Do not rewrite valid `ZoomableImage` uses just because the docs moved to MDX.
 
 ## Assets and Accessibility
 

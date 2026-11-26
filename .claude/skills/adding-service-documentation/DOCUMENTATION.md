@@ -57,13 +57,13 @@ icon: "/docs/images/services/service-name-logo.svg"
 #### 2. Logo (Required)
 
 ```mdx
-![ServiceName](/docs/images/services/service-name-logo.svg)
+<ZoomImage src="/docs/images/services/service-name-logo.svg" alt="ServiceName logo" />
 ```
 
-- Use standard markdown `![alt](path)` for the logo.
-- Use `<ZoomImage>` or its supported `<ZoomableImage>` alias for screenshots. Markdown images use the same registered wrapper.
+- Use `<ZoomImage>` for the logo and for screenshots. `<ZoomableImage>` is a supported alias.
+- Do not use Markdown image syntax (`![alt](/docs/images/...)`) for local images. The MDX compiler resolves the path to `public/docs/images/...`, which does not exist, and the dev server returns 500 for every page.
 - Path starts with `/docs/images/services/` (not `/public/`).
-- The body image also acts as a *fallback* for icon resolution if the resolver can't find a matching file in `public/images/services/` and you didn't set `icon` in frontmatter.
+- The catalog icon comes from frontmatter `icon` or a matching file in `public/images/services/`. The body-image fallback does not match `<ZoomImage>`, so name the logo `{slug}-logo.{ext}` or set `icon`.
 
 #### 3. What is ServiceName?
 
@@ -168,8 +168,8 @@ See [TEMPLATES.md](./TEMPLATES.md) for ready-to-use templates (minimal and compr
 - Always include `title`, `description`, and `category` in frontmatter
 - Use kebab-case for the filename and the slug
 - Save logos to `public/images/services/` with a name the resolver will find
-- Use standard markdown `![alt](path)` for the logo
-- Use `<ZoomableImage>` for screenshots only
+- Use `<ZoomImage>` for the logo
+- Use `<ZoomImage>` or `<ZoomableImage>` for screenshots
 - Append `?utm_source=coolify.io` to all external links
 - Run `bun run generate:services` and commit the regenerated files
 
