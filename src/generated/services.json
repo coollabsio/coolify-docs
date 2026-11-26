@@ -113,6 +113,13 @@
     "category": "Health"
   },
   {
+    "name": "Backrest",
+    "slug": "backrest",
+    "icon": "/docs/images/services/backrest-logo.svg",
+    "description": "A web UI and orchestrator for restic backups, with scheduling, retention, and restore.",
+    "category": "Backup"
+  },
+  {
     "name": "BentoPDF",
     "slug": "bento-pdf",
     "icon": "/docs/images/services/bento-pdf.png",

@@ -1,0 +1,55 @@
+---
+title: "Backrest"
+description: "A web UI and orchestrator for restic backups, with scheduling, retention, and restore."
+og:
+  description: "Host Backrest on Coolify to schedule, monitor, and restore restic backups from a web interface."
+category: "Backup"
+icon: "/docs/images/services/backrest-logo.svg"
+---
+
+# Backrest
+
+<ZoomImage src="/docs/images/services/backrest-logo.svg" alt="Backrest logo" />
+
+## What is Backrest?
+
+Backrest is a web UI and orchestrator for [restic](https://restic.net?utm_source=coolify.io) backups. It lets you create restic repositories, schedule backups, apply retention policies, browse snapshots, and restore files from your browser.
+
+Backrest supports all storage backends that restic supports, for example local disks, S3-compatible storage, SFTP, and rclone remotes.
+
+## Features
+
+- Scheduled backups with retention policies
+- Snapshot browser and file restore
+- Backup status and operation history
+- Hooks that send notifications or run commands before and after backups
+- Support for all restic storage backends
+
+## Setup
+
+<Callout type="warning" title="Complete the first-time setup immediately">
+
+Backrest does not have default credentials. The first person who opens the web UI creates the admin user. Open the service URL immediately after deployment and create your user.
+
+</Callout>
+
+1. Deploy the service.
+2. Open the service URL and set the instance ID, username, and password.
+3. Add a repository. To keep backups on the server, use a path under `/repos`. This path is a persistent volume.
+4. Add a backup plan.
+
+## Back up files from the server
+
+The template does not mount host directories. To back up files from the server, edit the compose file of the service and add a read-only bind mount. For example:
+
+```yaml
+volumes:
+  - /path/on/host:/userdata:ro
+```
+
+Then select `/userdata` as a path in your backup plan.
+
+## Links
+
+- [The official website](https://garethgeorge.github.io/backrest/?utm_source=coolify.io)
+- [GitHub](https://github.com/garethgeorge/backrest?utm_source=coolify.io)
