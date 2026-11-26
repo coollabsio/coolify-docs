@@ -35,16 +35,18 @@ A new Member gets **Read** on the whole team. For a person that you invite, the 
 
 The level descriptions in the access editor differ in some details. For example, the editor says that **Read** shows logs, but Coolify shows container logs, deployment debug output, and scheduled-task commands and output only with **Write**, because they can contain secrets.
 
+**Write** on a resource also lets the Member add and remove its tags, download its backups, and save its environment variables in the **Developer view**. **Write** on the whole team also lets the Member create, rename, and delete tags, and change the image scan settings and ignores of the team.
+
 ### What access levels do not give
 
 Access levels apply only to projects, environments, and resources. Even **Full access** on the whole team does not let a Member:
 
 - open a resource terminal, the container file browser, or the [Web Terminal](/core/infrastructure/servers/web-terminal)
-- add, change, or remove servers, destinations, private keys, Git sources, S3 storages, tags, or notification settings
+- add, change, or remove servers, destinations, private keys, Git sources, S3 storages, or notification settings
 - change team or server shared variables, team settings, or members
 - read the team audit log
 - place resources on the localhost server
-- read secret values through the API, or give a token `write:sensitive`
+- read team credentials or server secrets through the API, or give a token `write:sensitive`
 
 A Member with **Write** or **Full access** can never open a resource terminal, the file browser, or the Web Terminal. Make the person an **Admin** if they need these controls. See [Roles & Permissions](/core/team/roles-and-permissions).
 
@@ -145,7 +147,7 @@ Only Owners and Admins can add, change, or remove servers and team credentials. 
 
 A Member can create [API tokens](/core/security/credentials/api-tokens) only with the levels and scopes that they have. A token never gets more access than its owner. A Member without a scope on the whole team must select **Selected projects, environments, or resources** for the token. A Member cannot give a token `write:sensitive`.
 
-The API returns secret values only to tokens of Owners and Admins. A Member's token with `read:sensitive` still gets API responses with the secrets hidden. To read secrets, the Member uses the dashboard.
+A Member's token with `read:sensitive` gets the secrets of an application, service, database, or environment variable when the Member has **Read secrets** on that resource. Team credentials and server secrets, such as the Sentinel token, log drain keys, and the saved proxy configuration, stay hidden from Members.
 
 If the access of a Member becomes smaller, a token that has more access than the Member stops working. The API returns `403` with `This API token has more access than you have in this team. Revoke it and create a new token.`
 

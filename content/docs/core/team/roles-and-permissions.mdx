@@ -49,6 +49,8 @@ The member-management controls apply to other people. Coolify does not show acti
 | Add or change environment variables, storage, scheduled tasks, webhooks, and backups | Yes | Yes | With **Write** |
 | Delete storage, backup schedules, or backup executions | Yes | Yes | With **Delete** |
 | Delete scheduled tasks | Yes | Yes | With **Write** and **Delete** |
+| Download backups | Yes | Yes | With **Write** |
+| Add or remove the tags of a resource | Yes | Yes | With **Write** |
 | Open a resource terminal or container file browser | Yes | Yes | No |
 
 Default Member access lets a person inspect team resources without changing or deploying them. A page may still be visible to a Member while its editing and operational controls are unavailable.
@@ -83,7 +85,8 @@ Server lists, for example when you create a resource, show only the servers that
 | View team S3 storage, Git sources, and private-key entries | Yes | Yes | Yes |
 | Use team credentials in a resource (see the list below) | Yes | Yes | With **Write** on the whole team |
 | Create, update, or delete S3 storage, Git sources, and private keys | Yes | Yes | No |
-| Create, update, or delete tags | Yes | Yes | No |
+| Create, update, or delete tags | Yes | Yes | With **Write** on the whole team |
+| Change the image scan settings and ignores of the team | Yes | Yes | With **Write** on the whole team |
 | View or manage cloud-init scripts, cloud provider tokens, and integration tokens | Yes | Yes | No |
 
 Team credentials that need **Write** on the whole team:
@@ -114,7 +117,7 @@ Each role can create and revoke its own tokens. Tokens work only when an instanc
 
 API tokens belong to the person who creates them and are scoped to the active team. A token never gets more access than its owner. With default access, a Member can create only a read-only token. See [API permissions](/api/permissions) for the available token permissions.
 
-The API returns secret values only to a token with `read:sensitive` or `root` that belongs to an Owner or Admin. A Member's token with `read:sensitive` still gets API responses with the secrets hidden.
+The API returns secret values only to a token with `read:sensitive` or `root`. For an Owner or Admin, the token gets the secrets of the team. For a Member, the token gets the secrets of the resources where the Member has **Read secrets**. Team credentials and server secrets stay hidden from Members.
 
 ---
 
@@ -153,6 +156,6 @@ Team administrators and owners can review [Audit Log](/core/team/audit-log) even
 
 ## Sensitive content in the dashboard
 
-Users without permission to update a resource cannot view container logs, scheduled-task commands/output, Compose or file-mount content, hardcoded Compose environment values, proxy configuration, server shared values, or protected credentials such as basic-auth passwords, log-drain keys, and the Sentinel token. Sensitive API responses have an additional token-permission check, and still need a token owned by a team Owner or Admin; see [API permissions](/api/permissions). Container logs are an exception: through the API, a token with `read:sensitive` can read them, also when its owner is a Member.
+Users without permission to update a resource cannot view container logs, scheduled-task commands/output, Compose or file-mount content, hardcoded Compose environment values, proxy configuration, server shared values, or protected credentials such as basic-auth passwords, log-drain keys, and the Sentinel token. Sensitive API responses have an additional token-permission check, and need a token owned by a team Owner or Admin, or by a Member with **Read secrets** on the resource; see [API permissions](/api/permissions). Container logs are an exception: through the API, a token with `read:sensitive` can read them, also when its owner is a Member.
 
 The team Danger Zone is visible only to its owner. The team admin view requires an instance administrator. Impersonation is available only on Coolify Cloud, and only to the root user. Credentials such as private keys, Git sources, S3 storage, and integration tokens must belong to the team that owns the resource.
