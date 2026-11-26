@@ -81,6 +81,8 @@ Databases and services have no scan setting of their own. Coolify scans them whe
 
 Coolify also looks for newer versions of a scanned image: a newer build of the same tag, the newest tag of the same version line, and the next major version for information. It scans these candidates from the registry on the server. For a Dockerfile build, it also checks the base image.
 
+Images in a Compose file can be set with a variable, such as `repo:${APP_RELEASE:-v1.0.0}`. The scan uses the value of the environment variable of the service or application, else the default in the reference. An image pinned by tag and digest (`name:tag@sha256:<digest>`) is read by its digest, as Docker does. For an image from a GitLab dependency proxy, which has no tag list, Coolify reads the tags from the Docker Hub image behind the proxy and keeps the proxy for digests and scans.
+
 If an application uses a [build server](/core/infrastructure/servers/build-servers), turn on image scanning on the build server too. Else the deploy scan cannot run.
 
 ## Read the results
@@ -171,11 +173,12 @@ Select **Show error log** to see the failed step, its exit code, and the end of 
 
 | Message | What to do |
 | :--- | :--- |
-| Syft or Grype timed out | Check **Show error log** for the failed step. Each step defaults to 10 minutes. Increase that step’s time limit under the server’s **Image scanning** settings, then use **Scan now** to retry. |
+| Syft or Grype timed out | Check **Show error log** for the failed step. Each step defaults to 10 minutes. The message names the setting to raise under **Scanner limits** on the server **Vulnerabilities** page: **Syft time limit** for the `docker save` export of the image and for Syft, **Grype time limit** for the check of the vulnerability database and for Grype. The database check reads the whole database file, so it is slow on a slow disk. Then use **Scan now** to retry. |
 | Not enough disk space | Free disk space on the server. |
 | The vulnerability database is not on the server yet, or is too old | Check that the server can reach `grype.anchore.io`. |
 | The scanner ran out of memory | Raise the [Scanner memory limit](#scanner-memory-limit). The server must have that much free memory. |
 | Coolify cannot read this image from its registry | Log in to the registry on the server. |
+| Untrusted certificate on a registry | The version check does not trust the certificate of the registry. Install the CA of the registry on the server. The scanner trusts the CA bundle of the server. |
 | The image is not on the server | Select **Scan now** to pull and scan it. An image that Coolify builds needs a new deploy. |
 | Another scan is still running | Wait. Coolify runs one scan at a time on a server. |
 
