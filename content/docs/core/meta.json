@@ -39,6 +39,8 @@
     "...observability",
     "---Notifications---",
     "...notifications",
+    "---Config as Code---",
+    "...coolify-json",
     "---Automation---",
     "...automation"
   ]
