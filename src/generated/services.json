@@ -476,6 +476,13 @@
     "category": "Business"
   },
   {
+    "name": "Dograh",
+    "slug": "dograh",
+    "icon": "/docs/images/services/dograh-logo.png",
+    "description": "Open-source voice AI platform, an alternative to Vapi and Retell.",
+    "category": "AI"
+  },
+  {
     "name": "DokuWiki",
     "slug": "dokuwiki",
     "icon": "/docs/images/services/dokuwiki-logo.png",
@@ -1267,6 +1274,13 @@
     "disabled": true
   },
   {
+    "name": "MCPHub",
+    "slug": "mcphub",
+    "icon": "/docs/images/services/mcphub-logo.svg",
+    "description": "Unified hub to manage and route many MCP servers.",
+    "category": "AI"
+  },
+  {
     "name": "Mealie",
     "slug": "mealie",
     "icon": "/docs/images/services/mealie-logo.png",
@@ -1358,6 +1372,13 @@
     "icon": "/docs/images/services/mixpost-logo.svg",
     "description": "Self-hosted social media management software (Buffer alternative).",
     "category": "Social Media"
+  },
+  {
+    "name": "Monica",
+    "slug": "monica",
+    "icon": "/docs/images/services/monica-logo.svg",
+    "description": "An open-source personal relationship manager.",
+    "category": "Productivity"
   },
   {
     "name": "Moodle",
@@ -2020,6 +2041,13 @@
     "icon": "/docs/images/services/silverbullet.png",
     "description": "An open source personal productivity platform built on Markdown.",
     "category": "Productivity"
+  },
+  {
+    "name": "Sim Studio",
+    "slug": "simstudio",
+    "icon": "/docs/images/services/simstudio-logo.svg",
+    "description": "Open source platform for building and running AI agents.",
+    "category": "AI"
   },
   {
     "name": "Siyuan",
