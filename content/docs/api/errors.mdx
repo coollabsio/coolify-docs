@@ -113,9 +113,15 @@ Treat the HTTP `403` status as the failure signal. Add the caller's exact source
 A successful request can still omit expected resources or redact sensitive values.
 
 - If a resource is missing, confirm that it belongs to the team recorded when the token was created and that it is inside the token's access. Create a separate token for another team.
-- If passwords, private keys, environment values, logs, or Compose content are redacted, use a token with `read:sensitive` in addition to the endpoint's required permission. For most values, the token owner must also be a team administrator or owner. Locked environment variable values are never returned. See [Sensitive response data](/api/permissions#sensitive-response-data).
+- If passwords, private keys, environment values, logs, or Compose content are redacted, use a token with `read:sensitive` in addition to the endpoint's required permission. For most values, the token owner must also be a team administrator or owner, or a Member with **Read secrets** on the resource. Locked environment variable values are never returned. See [Sensitive response data](/api/permissions#sensitive-response-data).
 
 Read [Authorization](/api/authorization) for the complete request and access-check flow.
+
+## Service Compose files
+
+`POST /services` and `PATCH /services/{uuid}` with `docker_compose_raw` check the generated Compose file with `docker compose config` on the server. When Docker Compose rejects the file, the API returns `422` with the error under `errors.docker_compose_raw` and does not save the file. Coolify skips the check when the server is not reachable.
+
+When `POST /services` rejects a request, for example because of invalid `urls`, it creates nothing.
 
 ## Database imports and log requests
 

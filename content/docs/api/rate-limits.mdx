@@ -67,6 +67,14 @@ curl --head \
 
 Some endpoints can also return `429 Too Many Requests` because a deployment queue or an upstream cloud provider is busy. Use `Retry-After` whenever the response provides it, even when `X-RateLimit-Remaining` shows capacity in Coolify's general API limit.
 
+When you create an application from a private repository with a GitHub App and the GitHub API rate limit of the app is exceeded, the API returns `429` without `Retry-After`. The message tells when you can try again:
+
+```json
+{
+  "message": "GitHub API rate limit exceeded. Try again after 2026-11-26 14:05:00 UTC. See https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api."
+}
+```
+
 ---
 
 ## Handle a 429 response
