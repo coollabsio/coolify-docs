@@ -29,15 +29,15 @@ After a Service is deployed, Coolify provides stack lifecycle actions, deploymen
 
 | Goal | Action | What Coolify does |
 | :--- | :--- | :--- |
-| Deploy a new or stopped Service | **Deploy** | Pulls the configured images, writes the generated Compose and `.env` files, and runs the stack. |
+| Deploy a new or stopped Service | **Deploy** | Pulls the configured images, writes the generated Compose and `.env` files, and runs the stack. The [deploy webhook](/core/automation/deploy-webhooks) and the start endpoint of the API also pull the images. |
 | Recreate a running stack without intentionally updating images | **Restart** | Stops the current containers and starts the stack from the saved configuration without first running a Compose pull. |
-| Pull the image tags saved in Compose and recreate the stack | **Advanced > Pull Latest Images & Restart** | Runs a Compose pull, then recreates the stack. |
+| Pull the image tags saved in Compose and recreate the stack | **Restart > Pull latest and restart** | Runs a Compose pull, then recreates the stack. |
 | Take the stack offline without deleting its configuration | **Stop** | Stops and removes the component containers. Persistent volumes and the Service resource remain. |
-| Recover from a stuck or degraded deployment | **Advanced > Force Restart** or **Force Deploy** | Marks active deployment records as failed when necessary and starts a forced deployment path. Use only after checking the current operation and logs. |
+| Recover from a stuck or degraded deployment | **Restart > Force Restart** or **Force Deploy** | Marks active deployment records as failed when necessary and starts a forced deployment path. Use only after checking the current operation and logs. |
 
 <Callout type="warning" title="Pulling an image is an upgrade">
 
-A mutable tag can resolve to different software than the currently running image. Read upstream release notes, back up stateful components, and confirm version compatibility before selecting **Pull Latest Images & Restart** in production.
+A mutable tag can resolve to different software than the currently running image. Read upstream release notes, back up stateful components, and confirm version compatibility before selecting **Pull latest and restart** in production.
 
 </Callout>
 
