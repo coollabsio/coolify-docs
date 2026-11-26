@@ -138,7 +138,7 @@ These fields are read-only. Edit the Compose file in the Git repository, then re
 
 Enable **Preserve repository during deployment** when the repository content under **Base Directory** must also be copied into the deployment directory. This is useful when the Compose definition uses repository-relative files at runtime rather than only during an image build.
 
-**Custom Build Command** and **Custom Start Command** replace the generated Compose commands. Coolify adds the Compose-file and environment-file flags unless the command already supplies its own `-f` or `--env-file` flag. When an override is entered, **Final Build Command (Preview)** or **Final Start Command (Preview)** shows the command Coolify will execute.
+**Custom Build Command** and **Custom Start Command** replace the generated Compose commands. Coolify adds the Compose-file and environment-file flags unless the command already supplies its own `-f` or `--env-file` flag. When an override is entered, **Final Build Command (Preview)** or **Final Start Command (Preview)** shows the command Coolify will execute. For a deployment without build cache, Coolify also adds `--no-cache` to a custom build command that does not have it.
 
 Keep custom command paths relative to **Base Directory** and use the same Compose file that Coolify parsed. Otherwise, generated domains, labels, and variables may not match the deployed services.
 
@@ -160,7 +160,7 @@ Read [Docker Compose deployments](/applications/builds/docker-compose) for envir
 
 ### Build servers and container options
 
-**Builder selection** appears for non-Compose source builds. Choose a dedicated builder only after configuring another server as a [build server](/core/infrastructure/servers/build-servers). Coolify builds the image there, pushes it to the configured registry, and the deployment server pulls it. A registry image name is required for this path.
+**Builder selection** appears for non-Compose source builds. Choose a dedicated builder only after configuring another server as a [build server](/core/infrastructure/servers/build-servers). Coolify builds the image there, pushes it to the configured registry, and the deployment server pulls it. A registry image name is required for this path. Docker Compose and Docker Image applications always use the deployment server, also when **Builder selection** was set before the build strategy changed.
 
 **Custom Docker Options** also appears for Nixpacks, Railpack, Static, Dockerfile, and Docker Image applications. The options affect how Coolify starts the container; they do not change the image build. Docker Compose applications define equivalent runtime configuration in the Compose file.
 

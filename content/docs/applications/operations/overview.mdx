@@ -30,8 +30,8 @@ Start with the page that matches what you are trying to understand or change. De
 | :--- | :--- | :--- |
 | Deploy the application for the first time | **Deploy** | Starts the configured deployment flow. |
 | Apply source, image, build-time, or deployment changes | **Redeploy** | Runs the normal deployment flow again and uses a [rolling update](/applications/deployments/rolling-updates) when supported. |
-| Recreate the runtime without intentionally rebuilding | **Restart** | Runs the restart path through the deployment queue. A Docker Image application pulls its saved image reference again. |
-| Rebuild a Coolify-generated source image without build cache | **Force deploy (without cache)** | Starts a deployment with the generated build cache disabled. A custom Docker Compose build command controls its own cache behavior. |
+| Recreate the runtime without intentionally rebuilding | **Restart** | Runs the restart path through the deployment queue. It starts the existing image when no build setting changed; the dialog tells you when it must build and why. A Docker Image application pulls its saved image reference again. |
+| Rebuild the image without build cache | **Deploy (without cache)** or **Redeploy (without cache)** | Starts a deployment with the build cache disabled. For a custom Docker Compose build command, Coolify adds `--no-cache`. |
 | Take the application offline without deleting its configuration | **Stop** | Stops its containers and removes non-persistent container data. Persistent mounts and the Coolify resource remain. |
 
 Use **Restart** after a runtime-only change when a rebuild is unnecessary. Use **Redeploy** when source code, the selected image, build arguments, or build-time variables changed.

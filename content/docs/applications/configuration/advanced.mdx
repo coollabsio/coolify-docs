@@ -29,11 +29,13 @@ Build controls cache reuse, Docker build arguments, and commit metadata.
 
 ### Build cache
 
-Under **Build cache**, choose **Rebuild from scratch every time** to prevent Coolify-generated builds from reusing Docker build cache on every deployment.
+Under **Build cache**, choose **Rebuild from scratch every time** to prevent builds from reusing Docker build cache on every deployment.
 
-Choose **Use Docker build cache** for normal deployments. Select **Force deploy (without cache)** instead when only the next deployment needs a clean generated build.
+Choose **Use Docker build cache** for normal deployments. Select **Deploy (without cache)** or **Redeploy (without cache)** instead when only the next deployment needs a clean build.
 
-A custom Docker Compose build command controls its own cache flags, so this setting cannot add or remove cache arguments from that command.
+For a Docker Compose application with a **Custom Build Command**, Coolify adds `--no-cache` to the command when it does not have it.
+
+A **Restart** starts the existing image when no build setting changed, also with **Rebuild from scratch every time**. A restart that must build still builds without the cache.
 
 ---
 
@@ -129,6 +131,8 @@ For private submodules in the same GitHub user or organization, prefer a relativ
 ```
 
 The relative URL uses the authenticated parent-repository remote instead of starting a separate unauthenticated HTTPS clone. If checkout still fails, confirm that the GitHub App installation or deploy key can access both repositories.
+
+With a GitHub App, GitLab, or Gitea source, Coolify also sends the token of the source to submodules on the host of the source that use an SSH URL, such as `git@github.com:example/prisma.git` or `ssh://git@github.com/example/prisma.git`. You do not need to change `.gitmodules`.
 
 Changing only the submodule repository does not update the commit recorded by the parent repository. Commit the new submodule pointer in the parent repository before deploying it.
 
@@ -245,6 +249,8 @@ The domain, DNS, and certificate must already support HTTPS. Selecting this opti
 Choosing **Enabled** in **Gzip compression** allows Coolify Proxy to compress supported responses.
 
 Choose **Disabled** when the application already compresses responses or when a streaming or binary workload should not be compressed by the proxy.
+
+With Traefik, Coolify Proxy does not compress video, audio, image, PDF, and archive files or event streams, so range requests, seeking, and video playback in Safari keep working. An application deployed before Coolify v4.7.7 uses this behavior after its next deployment.
 
 ---
 
