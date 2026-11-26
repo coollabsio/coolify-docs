@@ -1092,14 +1092,18 @@ See the Docker Compose documentation for the full list of available attributes: 
 
 The port number can be changed via the `APP_PORT` variable in Coolify's `.env` file (`/data/coolify/source/.env`). However, the override file lets you control *how* the port is bound — something `.env` cannot do.
 
-Bind the Coolify UI to localhost only, so it is only accessible through a reverse proxy:
+Bind the Coolify UI to localhost only, so it is only accessible through a reverse proxy or a tunnel. Coolify's own Compose file already publishes ports `8000`, `6001` (realtime), and `6002` (terminal). Docker Compose adds a plain `ports:` list to those ports instead of replacing them, so use `!override`:
 
 ```yaml
 services:
   coolify:
-    ports:
+    ports: !override
       - "127.0.0.1:8000:8080"
+      - "127.0.0.1:6001:6001"
+      - "127.0.0.1:6002:6002"
 ```
+
+`!override` replaces the ports with these exact values. If you changed `APP_PORT` or `REVERB_PORT` in `.env`, use those values as the host ports instead of `8000` and `6001`, and keep the container ports `8080` and `6001`. Run the validation command above and check that every published port of the `coolify` service has `host_ip: 127.0.0.1`.
 
 Or close the port entirely and rely on the Docker network (useful when the Coolify Proxy is enabled and configured for the Coolify Dashboard):
 
