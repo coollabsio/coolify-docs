@@ -83,7 +83,7 @@ htpasswd -nbB <username> '<password>'
     traefik.http.services.http-0-<uuid>.loadbalancer.server.port=3000
     traefik.http.services.https-0-<uuid>.loadbalancer.server.port=3000
     ```
-    If the HTTPS router already lists middleware such as `gzip`, append `,http-basic-auth` to the existing comma-separated value instead of replacing it.
+    If the HTTPS router already lists middleware such as `gzip-no-media`, append `,http-basic-auth` to the existing comma-separated value instead of replacing it.
 
     See [Custom middlewares](/core/networking/proxy/traefik/custom-middlewares) for what choosing manual label management makes you responsible for.
 </Step>
@@ -158,7 +158,7 @@ Keep **Escape special characters in labels?** enabled and enter each `$` once in
 
 <Accordion title="Another middleware stops working">
 
-Keep every existing middleware name when adding basic authentication. Append `app-auth` to the generated middleware chain instead of replacing middleware such as `gzip` or another custom middleware.
+Keep every existing middleware name when adding basic authentication. Append `app-auth` to the generated middleware chain instead of replacing middleware such as `gzip-no-media` or another custom middleware.
 
 </Accordion>
 

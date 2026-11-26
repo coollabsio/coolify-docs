@@ -92,8 +92,8 @@ In **Forward auth (domain level)** mode, you do not need these routers. The sign
 Open the application **General** page and find **Container labels**. Set **Label management** to **Managed manually (edit labels yourself)**, then append the file-provider middleware to the existing HTTPS router:
 
 ```ini
-traefik.http.routers.https-0-<resource-id>.middlewares=gzip # [!code --][!code focus]
-traefik.http.routers.https-0-<resource-id>.middlewares=gzip,authentik-forward-auth@file # [!code ++][!code focus]
+traefik.http.routers.https-0-<resource-id>.middlewares=gzip-no-media # [!code --][!code focus]
+traefik.http.routers.https-0-<resource-id>.middlewares=gzip-no-media,authentik-forward-auth@file # [!code ++][!code focus]
 ```
 
 Save and redeploy the application.

@@ -70,11 +70,13 @@ The `@file` suffix identifies middleware loaded from Traefik's file provider.
 Open the application **General** page and find **Container labels**. Set **Label management** to **Managed manually (edit labels yourself)**, then append the middleware names to the existing HTTPS router label:
 
 ```ini
-traefik.http.routers.https-0-<resource-id>.middlewares=gzip # [!code --][!code focus]
-traefik.http.routers.https-0-<resource-id>.middlewares=gzip,app-rate-limit@file,security-headers@file # [!code ++][!code focus]
+traefik.http.routers.https-0-<resource-id>.middlewares=gzip-no-media # [!code --][!code focus]
+traefik.http.routers.https-0-<resource-id>.middlewares=gzip-no-media,app-rate-limit@file,security-headers@file # [!code ++][!code focus]
 ```
 
 Keep every existing middleware name. Save and redeploy the application.
+
+`gzip-no-media` is the compression middleware that Coolify adds when **Gzip compression** is enabled. It does not compress video, audio, images, PDF, and archive files, so `Accept-Ranges` stays and video seeking works. Since Coolify v4.7.7, generated labels use `gzip-no-media`. A resource that an older version deployed uses the new middleware after its next redeploy.
 
 If the route breaks, select **Reset to defaults**, set **Label management** back to **Managed by Coolify (auto-generated)**, and redeploy before trying again.
 
@@ -287,7 +289,7 @@ Define the middleware in a dynamic configuration file, attach it to your router 
 
 <Accordion title="An existing middleware stops working">
 
-Keep existing middleware such as `gzip` when editing a generated router chain. Append the new middleware instead of replacing the complete value.
+Keep existing middleware such as `gzip-no-media` when editing a generated router chain. Append the new middleware instead of replacing the complete value.
 
 </Accordion>
 
