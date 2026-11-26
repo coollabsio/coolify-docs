@@ -206,7 +206,7 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 
 <Callout type="warn" title="HEADS UP!">
 
-Cloudflare Tunnel connects to the Coolify proxy from inside the server. Ports `8000`, `6001`, and `6002` do not need to be exposed publicly.
+Cloudflare Tunnel connects to the Coolify proxy from inside the server. Ports `8000`, `6001`, and `6002` do not need to be exposed publicly. To stop them from answering on the server's public IP, bind them to localhost with a [Compose override](/start-with-self-hosted#_4-compose-overrides), as shown in the **Change port binding** example.
 
 </Callout>
 
