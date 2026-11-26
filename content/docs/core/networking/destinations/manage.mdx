@@ -71,7 +71,7 @@ Use a backup or a resource-specific migration procedure for data that **Clone vo
 
 Docker Compose applications and service stacks use a resource-specific network by default, even though the resource has a selected destination.
 
-Enable **Connect To Predefined Network** in the resource settings when its containers must join the selected destination and communicate with other resources on that Docker network. Read [Docker Compose networking](/applications/builds/docker-compose#application-networking) for the Compose requirements and limitations.
+Enable **Connect To Predefined Network** in the resource settings when its containers must join the selected destination and communicate with other resources on that Docker network. Read [Docker Compose networking](/applications/builds/docker-compose#compose-networking) for the Compose requirements and limitations.
 
 Do not add a custom Compose network only to reproduce a Coolify destination. Conflicting network configuration can prevent the Coolify Proxy from reaching the resource.
 
