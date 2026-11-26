@@ -27,6 +27,8 @@ Open the application, select **Preview Deployments** in its settings sidebar, th
 
 With **PR deployment access** set to **Repository members only**, Coolify blocks pull requests from forks unless the author is a repository owner, member, or collaborator. Choose **Public (fork PRs allowed)** only when anyone should be allowed to trigger a preview. GitLab, Gitea, and Bitbucket pull requests from other repositories require public preview deployments to be enabled.
 
+**PR deployment access** applies only while preview deployments are enabled. When they are disabled, a preview that you deploy by hand is deployed as **Repository members only**, and a preview that a webhook queued before you disabled them does not start.
+
 ## Connect pull-request events
 
 Choose how Coolify receives pull-request or merge-request events for the application.
@@ -215,11 +217,38 @@ Coolify keeps production and preview environment variables in separate groups.
 
 Creating a production variable can also create a preview entry with the same value. Review both groups when adding a credential.
 
-In Coolify v4.7.4 and later, a trusted preview with at least one runtime preview variable can fall back to production runtime values for keys with no preview entry. Public PR previews normally skip this fallback and omit preview entries that still have the production value. Existing previews marked to keep production values retain the trusted-preview behavior. This fallback applies only at runtime.
+With **PR deployment access** set to **Public (fork PRs allowed)**, a preview does not get the preview variables that have the same value as in production. Coolify compares the values after it resolves shared variables, so a preview variable such as `{{team.API_KEY}}` whose value resolves to the production value is also withheld. The deployment log lists the withheld keys. Give such a variable its own preview value to pass it to the preview.
+
+<Callout type="info" title="Upgrade from Coolify v4.7.6 or earlier">
+
+Since Coolify v4.7.7, a public preview no longer gets a preview variable whose value only resolves to the production value, for example `{{team.KEY}}` or `{{ team.KEY }}`. A public preview that used such a variable does not get it after the upgrade. Give the preview variable its own value.
+
+</Callout>
+
+With **Repository members only**, a preview with at least one runtime preview variable falls back to production runtime values for keys with no preview entry. A public preview does not get this fallback. Previews marked to keep production values, from before Coolify v4.5.1, retain the trusted-preview behavior. This fallback applies only at runtime.
 
 Give previews explicit, limited non-production values for databases, storage, and external services. Deleting a preview variable can expose its production runtime value through fallback. Review the deployment log for keys Coolify withheld. A preview container is temporary, but data written to an external service can remain after Coolify deletes the preview.
 
 Follow [Environment variables](/applications/configuration/environment-variables) for variable scopes and build-time values.
+
+## Preview files on the server
+
+Each preview has its own folder on the deployment server, next to the folder of the application: `/data/coolify/applications/<uuid>-pr-<id>`. The preview keeps its Compose file, its `.env` file, and, with **Preserve repository during deployment**, its checkout of the pull request there. A preview never replaces the repository files or the `.env` file of production.
+
+With **Preserve repository during deployment**, a preview mounts the repository files from its pull request and updates only its own copy of a file storage. Deleting the preview removes its folder. Deleting the application with **Permanently delete all configuration files from the server.** selected also removes the folders of its previews.
+
+## Docker Compose file of a preview
+
+A preview of a Docker Compose application deploys the Compose file of its pull request when all of these apply:
+
+- **PR deployment access** is **Repository members only**.
+- The pull-request branch is in the same repository, not in a fork.
+- Coolify received the pull request through a webhook or **Load Pull Requests**.
+- **Advanced > Docker compose > Compose deployment** is not **Raw (deploy file as-is)**.
+
+The file of the pull request changes only that preview. It does not change the variables or file storages of the application. Coolify resolves the [`include` entries](/applications/builds/docker-compose#include-other-compose-files) of that file in the same way as for production.
+
+Otherwise, for example for a public preview or a preview created through the API, the preview uses the Compose file of the base branch. The deployment log tells why.
 
 ## Docker Compose preview names
 
@@ -241,6 +270,12 @@ services:
 
 When a preview on a shared network uses the name of another service as a hostname, Coolify writes a warning to the deployment log.
 
+## Preview container labels
+
+A preview container gets its own proxy labels for the preview domain. It also gets the custom container labels of the application that are not Traefik, Caddy, or `coolify.` labels, for example a `logging` label. Labels that route the production domains are left out.
+
+To protect previews with a password, use [HTTP Basic Authentication](/applications/configuration/general#http-basic-authentication) instead of proxy labels.
+
 ## Load pull requests that were already open
 
 Coolify does not automatically deploy pull requests that were open before previews were enabled.
@@ -261,21 +296,23 @@ For a [Docker Image application](/applications/deployments/docker-image), open *
 
 Enter:
 
-- **Preview ID:** an identifier used in the preview name, domain, logs, and cleanup
-- **Docker Tag:** the image tag to deploy, for example `pr_1234`
+- **Preview ID:** a positive whole number used in the preview name, domain, logs, and cleanup
+- **Docker tag:** the image tag to deploy, for example `pr_1234`. It must be a valid image tag.
 
-Select **Deploy Preview**. This path is useful when an external CI system builds one image tag for each pull request.
+Select **Deploy preview**. This path is useful when an external CI system builds one image tag for each pull request.
 
 ## Manage a preview
 
-Open **Preview Deployments** to view each preview. Use **Preview links** to open its domain or Git request, **Preview logs** for deployment and runtime logs, and **Preview actions** for lifecycle actions.
+Open **Preview Deployments** to view each preview. Use **Links** to open its domain or Git request, **Logs** for deployment and runtime logs, and **Actions** for lifecycle actions.
 
-Depending on the preview state, you can:
+Depending on the preview state, the **Actions** menu shows:
 
-- select **Deploy** or **Redeploy**
-- select **Force deploy (without cache)**
-- select **Stop** to remove its containers and other non-persistent runtime resources
-- select **Delete** to permanently remove the preview deployment
+- **Deploy** and **Deploy (without cache)** for a stopped preview
+- **Redeploy** and **Redeploy (without cache)** for a running preview
+- **Stop** to remove its containers and other non-persistent runtime resources
+- **Delete** to permanently remove the preview deployment
+
+When Coolify skips a GitHub pull request preview, for example because of a skip marker, a fork pull request while public PR deployments are off, or no changed file in the watch paths, the deployment history of the preview shows a deployment with the status **Skipped** and the reason.
 
 ## Verify the preview lifecycle
 
