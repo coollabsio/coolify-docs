@@ -1473,6 +1473,13 @@
     "category": "Forum"
   },
   {
+    "name": "Notifuse",
+    "slug": "notifuse",
+    "icon": "/docs/images/services/notifuse-logo.svg",
+    "description": "Self-hosted email marketing and automation platform with built-in web analytics.",
+    "category": "Marketing"
+  },
+  {
     "name": "Ntfy",
     "slug": "ntfy",
     "icon": "/docs/images/services/ntfy-logo.svg",
