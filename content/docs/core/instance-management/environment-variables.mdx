@@ -1,11 +1,11 @@
 ---
 title: Instance Environment Variables
-description: Configure PHP memory, workers, scheduled job dispatch, SSH host key checks, and API limits for a self-hosted Coolify instance and apply environment changes.
+description: Configure PHP memory, workers, scheduled job dispatch, SSH host key checks and retries, log retention, session cookies, and API limits for a self-hosted Coolify instance and apply environment changes.
 ---
 
 # Instance environment variables
 
-Self-hosted Coolify reads its instance environment from `/data/coolify/source/.env`. Use this file for settings such as PHP memory, workers, scheduled job dispatch, SSH host key checks, and API limits that are not exposed in the dashboard.
+Self-hosted Coolify reads its instance environment from `/data/coolify/source/.env`. Use this file for settings such as PHP memory, workers, scheduled job dispatch, SSH host key checks and retries, log retention, and API limits that are not exposed in the dashboard.
 
 These settings affect the Coolify instance. To configure a deployed application, use that application's [environment variables](/applications/configuration/environment-variables) and image configuration instead.
 
@@ -59,6 +59,34 @@ Coolify uses `warn` for any other value. With `warn`, a team can still enforce t
 ```dotenv
 SSH_HOST_KEY_CHECKING=enforce
 ```
+
+## SSH handshake retries
+
+Some servers close a new SSH connection before the key exchange, for example when sshd reaches its `MaxStartups` limit or a firewall rate-limits the SSH port. The SSH log then shows `kex_exchange_identification`. Coolify tries such a connection up to 5 times in about 30 seconds before a deployment or server command fails.
+
+`SSH_HANDSHAKE_MAX_RETRIES` sets the number of attempts in total. A value below the general SSH retry count has no effect.
+
+```dotenv
+SSH_HANDSHAKE_MAX_RETRIES=8
+```
+
+If the error happens often, fix the cause on the server. See [Connection Unstable](/troubleshoot/server/connection-issues).
+
+## Coolify log retention
+
+Coolify writes its application log to one file for each day, `laravel-<date>.log` in `/var/www/html/storage/logs` inside the `coolify` container, and keeps the files of the last 7 days. `LOG_DAILY_DAYS` sets the number of days to keep:
+
+```dotenv
+LOG_DAILY_DAYS=14
+```
+
+Instances that ran an older version had one `laravel.log` file without a size limit. At the start, Coolify compresses that file once to `laravel-legacy-<date>.log.gz` in the same folder and deletes the original.
+
+## Session cookies on plain HTTP
+
+`SESSION_SECURE_COOKIE` controls the `Secure` flag of the session cookie. When it is not set, Coolify sends `Secure` cookies over HTTPS, and plain HTTP requests, for example to port `8000`, use their own session and XSRF cookies. A browser does not let plain HTTP replace the `Secure` cookies of an HTTPS visit to the same host, so separate cookies keep the login on port `8000` from failing with `419 Page Expired`. You sign in separately on HTTP and HTTPS.
+
+Leave the variable unset unless you need a fixed value. `SESSION_SECURE_COOKIE=true` sends `Secure` cookies on every request, so a login over plain HTTP does not work.
 
 ## API failed request limit
 

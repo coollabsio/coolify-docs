@@ -1,6 +1,6 @@
 ---
 title: Connection Unstable
-description: Fix intermittent Coolify SSH connections caused by UFW LIMIT rules, iptables rate limits, or provider firewalls, and allow the Coolify control plane on the SSH port.
+description: Fix intermittent Coolify SSH connections caused by UFW LIMIT rules, iptables rate limits, or provider firewalls, understand SSH retries, and allow the Coolify control plane on the SSH port.
 ---
 
 # Connection Unstable
@@ -13,6 +13,13 @@ Use the SSH port configured for the server in Coolify in every command below. It
 
 - The server is sometimes reachable and sometimes not.
 - You receive many connection-lost notifications for the server.
+- Deployments or server commands fail with `kex_exchange_identification: read: Connection reset by peer` or `kex_exchange_identification: Connection closed by remote host`.
+
+## How Coolify retries
+
+When sshd closes a new connection before the key exchange (`kex_exchange_identification`), Coolify tries the connection up to 5 times in about 30 seconds before the deployment or command fails. Set [`SSH_HANDSHAKE_MAX_RETRIES`](/core/instance-management/environment-variables#ssh-handshake-retries) to change the number of attempts. Retries only hide a short block: if the error keeps coming back, find the rate limit with the steps below.
+
+Coolify reuses one SSH connection for many commands (SSH multiplexing). When the server refuses a new session on that connection, for example because sshd reached its `MaxSessions` limit, the SSH client reports `Session open refused by peer` and Coolify replaces the connection. You do not need to delete the mux files in `/data/coolify/ssh/mux` by hand.
 
 ## Diagnosis
 
