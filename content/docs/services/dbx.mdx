@@ -1,0 +1,42 @@
+---
+title: "DBX"
+description: "Lightweight database client that supports more than 90 databases."
+og:
+  description: "Deploy DBX on Coolify to manage PostgreSQL, MySQL, MongoDB, Redis, and more than 90 other databases from a password-protected web interface."
+category: "Database"
+icon: "/docs/images/services/dbx-logo.png"
+---
+
+# DBX
+
+![DBX](/docs/images/services/dbx-logo.png)
+
+## What is DBX?
+
+DBX is a lightweight, open-source database client with a web interface. It supports more than 90 databases, for example PostgreSQL, MySQL, SQLite, MongoDB, and Redis.
+
+Use DBX to connect to your databases, run queries, and examine data from your browser.
+
+## Deploy on Coolify
+
+1. Go to **Projects > New Resource**.
+2. Select **DBX** from the service list.
+3. Click **Deploy**.
+4. Open the generated URL, then log in with the password in `SERVICE_PASSWORD_DBX`.
+
+## Environment variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `DBX_PASSWORD` | Yes | Web login password. Coolify sets it to the generated `SERVICE_PASSWORD_DBX` value. |
+| `DBX_VERSION` | No | Image tag. The template pins a tested version. |
+
+## Persistent storage
+
+The `dbx-data` volume keeps the saved connections and settings in `/app/data`.
+
+## Links
+
+- [Official website](https://dbxio.com?utm_source=coolify.io)
+- [Documentation](https://dbxio.com/en/docs/getting-started?utm_source=coolify.io)
+- [GitHub](https://github.com/t8y2/dbx?utm_source=coolify.io)
