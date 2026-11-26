@@ -246,6 +246,40 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 ---
 
 
+---
+
+## Keep the dashboard off the public internet
+
+When the tunnel is the only way in, the instance ports still answer on the server's public IP unless you bind them to localhost. Coolify reads an optional `/data/coolify/source/docker-compose.custom.yml` on top of its own compose file.
+
+That compose file already publishes some of these ports (for example `6001:6001`), and Docker Compose merges port lists, so a plain list collides and the container refuses to start. The `!override` tag replaces the published ports instead of merging them:
+
+```yaml title="/data/coolify/source/docker-compose.custom.yml"
+services:
+  coolify:
+    ports: !override
+      - "127.0.0.1:8000:8080"
+      - "127.0.0.1:6001:6001"
+      - "127.0.0.1:6002:6002"
+```
+
+Restart the instance so the override applies:
+
+```bash
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+```
+
+Then verify from outside the server:
+
+```bash
+curl -m 5 -o /dev/null -w '%{http_code}\n' http://<server-ip>:8000   # should fail or time out
+curl -m 5 -o /dev/null -w '%{http_code}\n' https://coolify.shadowarcanist.com   # should answer through the tunnel
+```
+
+<Callout type="warn" title="Also protect the dashboard">
+Binding the ports to localhost only removes direct access. Add a Cloudflare Access policy in front of the dashboard hostname as well, so the tunnel route itself asks for authentication.
+</Callout>
+
 ## Known issues and Solutions
 
 ### Realtime or terminal connections fail with localhost
