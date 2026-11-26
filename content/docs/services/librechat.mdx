@@ -17,7 +17,7 @@ LibreChat is a self-hosted, powerful, and privacy-focused chat UI for multiple A
 
 ## Update an existing deployment
 
-The Coolify v4.7.6 template pins a LibreChat development image built from a commit of 2 April 2026, which is newer than v0.8.4 and older than v0.8.5. Check your saved **Source Compose** and compare its image with the versions in [LibreChat's published security advisories](https://github.com/LibreChat-AI/LibreChat/security/advisories).
+The Coolify v4.7.9 template pins a LibreChat development image built from a commit of 2 April 2026, which is newer than v0.8.4 and older than v0.8.5. Check your saved **Source Compose** and compare its image with the versions in [LibreChat's published security advisories](https://github.com/LibreChat-AI/LibreChat/security/advisories).
 
 Back up MongoDB and review the [upstream upgrade instructions](https://github.com/LibreChat-AI/LibreChat/blob/v0.8.9/UPGRADING.md#tenant-index-migration-v087-and-earlier-databases), including the tenant-index migration when upgrading from v0.8.7 or earlier to v0.8.9. Set the intended reviewed image in **Source Compose**, then redeploy and verify sign-in and existing conversations. **Pull Latest Images & Restart** pulls the references already saved in the service. A commit-pinned image stays on that commit until you update its reference.
 
