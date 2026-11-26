@@ -107,6 +107,8 @@ Redeploying the same mutable tag pulls the image currently published under that 
 
 **Restart** also pulls the saved image reference again. If the application uses a mutable tag, a restart can deploy different image content even when only runtime configuration changed.
 
+When the pull fails, for example because the image was built or loaded with `docker load` on the server and is not in a registry, Coolify starts the image that is already on the server and writes a warning to the deployment log. Without a local image, the pull error stops the deployment.
+
 ## What Docker Image skips
 
 A Docker Image application does not use:
