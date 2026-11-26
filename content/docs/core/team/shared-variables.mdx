@@ -71,6 +71,8 @@ Select **Add variable**, then enter:
 
 Set **Value type** to **Multiline** when the value contains line breaks. Select **Add variable**.
 
+Coolify refuses a value with a NUL character, because a container cannot start with one.
+
 The new entry appears on the selected scope page.
 
 </Step>
@@ -123,6 +125,10 @@ Verify inside the workload or through its behavior that the environment variable
 
 </Step>
 </Steps>
+
+<Callout type="info" title="Upgrade from Coolify v4.7.6 or earlier">
+Since Coolify v4.7.7, a resource variable that was saved before Coolify escaped `.env` values exactly and that references a multiline shared variable gets a quoted line in the `.env` file, so Docker Compose reads the whole value. Before, Docker Compose read only the first line, and the lines after it could set other variables, for example a value `first` followed by a line `OTHER=x`. These lines no longer set other variables. Add such variables as separate variables before you upgrade.
+</Callout>
 
 ---
 
