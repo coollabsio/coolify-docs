@@ -23,7 +23,7 @@ Because traffic on the server was low, the Traefik container had a 512 MB memory
 
 ## Why NGINX
 
-ShadowArcanist first tested NGINX and Angie, an NGINX fork, on a separate server. NGINX used less memory and handled more requests. A later benchmark put NGINX, Traefik, and Caddy under the same load: 17 HTTPS hosts in front of one backend, on a test server with 2 vCPUs. The versions were NGINX 1.31.6 (`nginx:1.31-alpine`), Traefik 3.7.14 (`traefik:v3.7`, the version Coolify ships for new servers), and Caddy 2.11.7 (`caddy:2`).
+ShadowArcanist first tested NGINX and Angie, an NGINX fork, on a separate server. NGINX used less memory and handled more requests. A later benchmark put NGINX, Traefik, and Caddy under the same load: 17 HTTPS hosts in front of one backend, on a test server with 2 vCPUs. The versions were NGINX 1.31.6 (`nginx:1.31-alpine`), Traefik 3.7.14 (`traefik:v3.7`, the version Coolify shipped for new servers at the time), and Caddy 2.11.7 (`caddy:2`).
 
 | Measurement | NGINX | Traefik | Caddy |
 | :--- | :--- | :--- | :--- |
