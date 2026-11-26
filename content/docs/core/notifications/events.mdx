@@ -57,8 +57,10 @@ By default, **Image vulnerabilities** is on for email and off for the other chan
 | **Backup failure** | A scheduled database backup or storage backup fails, the local backup succeeds but its S3 upload fails, an enabled backup schedule has no recent run, or a storage backup recovery fails. |
 
 <Callout type="info" title="S3 upload warnings use Backup failure">
-When Coolify creates the local backup but cannot upload its S3 copy, it sends a warning through channels that have **Backup failure** selected. While the S3 upload keeps failing, Coolify sends this warning at most once a day.
+When Coolify creates the local backup but cannot upload its S3 copy, it sends a warning through channels that have **Backup failure** selected. While the S3 upload keeps failing, Coolify sends this warning at most once a day. For a storage backup, the notification says that the upload to the backup storage failed and that the local archive is kept.
 </Callout>
+
+Database backup notifications show what started the backup in **Trigger**: **Scheduled**, **Manual** (**Back up now**), or **Before Coolify update**. Webhooks get it in the `trigger` field.
 
 See [Repeated failures](#repeated-failures) for how often Coolify sends backup failures.
 
@@ -104,6 +106,8 @@ When a scheduled job keeps failing, Coolify does not send a notification for eac
 1. Coolify sends a notification for the first failure.
 2. While the job keeps failing, Coolify sends at most one failure notification a day.
 3. The first successful run after a failure notification sends one "works again" notification. It goes to the channels that have the failure event selected, for example **Backup failure**.
+
+A failure that Coolify does not send, because no enabled channel has its event selected, does not count toward this limit. After you turn on a channel or an event, the next failure sends a notification.
 
 Coolify never disables backups or Docker cleanup automatically, so they start again by themselves after an outage. Only scheduled tasks can be [disabled automatically](#scheduled-tasks).
 

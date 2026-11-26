@@ -146,6 +146,8 @@ Sent when Coolify stops an application after it reaches its automatic restart li
 
 ## Database backups
 
+`trigger` tells what started the backup: `scheduled`, `manual` (**Back up now**), or `before_update` (the backup before a Coolify update).
+
 <Tabs id="webhook-backup-events" items={['backup_success', 'backup_failed', 'backup_success_with_s3_warning']}>
 <Tab value="backup_success" icon={Database}>
 
@@ -160,6 +162,7 @@ Sent when a database backup completes successfully.
   "database_uuid": "...",
   "database_type": "...",
   "frequency": "...",
+  "trigger": "scheduled",
   "url": "..."
 }
 ```
@@ -178,6 +181,7 @@ Sent when a database backup fails.
   "database_uuid": "...",
   "database_type": "...",
   "frequency": "...",
+  "trigger": "scheduled",
   "error_output": "...",
   "url": "..."
 }
@@ -197,6 +201,7 @@ Sent when the local backup succeeds but uploading to S3 fails.
   "database_uuid": "...",
   "database_type": "...",
   "frequency": "...",
+  "trigger": "scheduled",
   "s3_error": "...",
   "s3_storage_url": "...",
   "url": "..."
@@ -209,6 +214,56 @@ Sent when the local backup succeeds but uploading to S3 fails.
 `s3_storage_url` is only present when the S3 storage URL is available.
 
 </Callout>
+
+</Tab>
+</Tabs>
+
+---
+
+## Storage backups
+
+<Tabs id="webhook-storage-backup-events" items={['volume_backup_success', 'volume_backup_failed']}>
+<Tab value="volume_backup_success" icon={HardDrive}>
+
+Sent when a [storage backup](/core/persistent-storage/storage-mounts/backups) creates its archive. A storage backup with a warning, or whose upload to the backup storage failed, uses the **Backup failure** selection instead of **Backup success**.
+
+```json
+{
+  "success": true,
+  "event": "volume_backup_success",
+  "message": "Storage backup successful",
+  "resource_name": "...",
+  "storage": "...",
+  "frequency": "...",
+  "warning": null,
+  "upload_failed": false,
+  "url": "..."
+}
+```
+
+<Callout type="info">
+
+`upload_failed` is `true` when the archive was created on the server but the upload to the backup storage failed. The local archive is kept, `message` is `Storage backup upload failed`, and `warning` contains the error. For another warning, `message` is `Storage backup succeeded with a warning`.
+
+</Callout>
+
+</Tab>
+<Tab value="volume_backup_failed" icon={Warning22}>
+
+Sent when a storage backup fails.
+
+```json
+{
+  "success": false,
+  "event": "volume_backup_failed",
+  "message": "Storage backup failed",
+  "resource_name": "...",
+  "storage": "...",
+  "frequency": "...",
+  "error_output": "...",
+  "url": "..."
+}
+```
 
 </Tab>
 </Tabs>
