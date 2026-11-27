@@ -10,7 +10,7 @@ The Coolify application source can be found at https://github.com/coollabsio/coo
 
 ## Branch Strategy
 
-- **main**: Production branch, deployed to https://coolify.io/docs/ by `.github/workflows/production-build.yml`
+- **main**: Production branch, deployed to https://coolify.io/docs/ by `.github/workflows/production-build.yml`. When a build or deploy fails, it alerts Discord through the `DISCORD_WEBHOOK_ALERT_MAINTAINERS` secret, mentioning the users in `DISCORD_USER_IDS` at the top of the workflow.
 - **next**: Development branch, deployed to https://next.coolify.io/docs/ by `.github/workflows/staging-build.yml`
 - Pull requests must target `next`, not `main`. `enforce-pr-standards.yml` retargets non-maintainer PRs to `next` automatically.
 - Weekly release cycle merges `next` into `main`.
