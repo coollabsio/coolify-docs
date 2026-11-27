@@ -2108,6 +2108,13 @@
     "disabled": true
   },
   {
+    "name": "Solidtime",
+    "slug": "solidtime",
+    "icon": "/docs/images/services/solidtime.svg",
+    "description": "Modern open-source time tracking for freelancers, agencies and teams.",
+    "category": "Productivity"
+  },
+  {
     "name": "SonarQube",
     "slug": "sonarqube",
     "icon": "/docs/images/services/sonarqube-logo.svg",
@@ -2275,6 +2282,13 @@
     "icon": "/docs/images/services/transmission-logo.svg",
     "description": "Fast, easy, and free BitTorrent client.",
     "category": "Media"
+  },
+  {
+    "name": "TREK",
+    "slug": "trek",
+    "icon": "/docs/images/services/trek-logo.svg",
+    "description": "Self-hosted, real-time collaborative travel planner.",
+    "category": "Productivity"
   },
   {
     "name": "Trigger",

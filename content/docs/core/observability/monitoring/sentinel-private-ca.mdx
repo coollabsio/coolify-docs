@@ -1,0 +1,129 @@
+---
+title: Sentinel with a Private CA
+description: Make Sentinel trust a private or internal certificate authority when your Coolify instance uses a certificate that it signs.
+---
+
+import { ArrowsRight, Warning22 } from 'reicon-react';
+
+# Sentinel with a Private CA
+
+Sentinel sends its updates to your Coolify instance over HTTPS. By default it trusts only the public certificate authorities (CAs) in its container image. If your Coolify instance uses a certificate from a private or internal CA, Sentinel cannot verify it, and every push fails.
+
+<CoolCallout icon={ArrowsRight} title="The short version">
+
+Put your CA certificates in `/data/coolify/sentinel/push-endpoint-ca.pem` on the server, then restart Sentinel. Sentinel trusts these CAs in addition to the public CAs.
+
+</CoolCallout>
+
+Use this page when:
+
+- Your Coolify instance is privately hosted, and an internal CA signs its certificate.
+- Your servers send outbound HTTPS through a TLS-inspecting proxy that signs connections with a company CA.
+
+---
+
+## Prerequisites
+
+- A Sentinel version that supports `PUSH_ENDPOINT_CA_PATH`. Older versions ignore the CA file.
+- Root access to the server that runs Sentinel.
+- The CA certificate, or the full chain of CA certificates, in PEM format. Do not use the server certificate of Coolify.
+
+---
+
+## Add the CA file
+
+<Steps>
+
+<Step>
+
+### Copy the CA file to the server
+
+Copy your CA certificates to the Sentinel directory on the server. The file name must be `push-endpoint-ca.pem`.
+
+```bash
+scp internal-root-ca.pem root@your-server:/data/coolify/sentinel/push-endpoint-ca.pem
+```
+
+The file can contain more than one certificate. Put each certificate in its own `-----BEGIN CERTIFICATE-----` block.
+
+</Step>
+
+<Step>
+
+### Restart Sentinel
+
+Open **Servers**, select the server, and open **Sentinel > Configuration**. Select **Restart** or **Sync**.
+
+When Coolify starts Sentinel, it finds the file and gives Sentinel the `PUSH_ENDPOINT_CA_PATH=/app/db/push-endpoint-ca.pem` environment variable. The `/data/coolify/sentinel` directory is mounted at `/app/db` in the container.
+
+</Step>
+
+<Step>
+
+### Verify the result
+
+Open **Sentinel > Logs**. At startup, Sentinel shows this line:
+
+```text
+trusting extra CA certificates for PUSH_ENDPOINT path=/app/db/push-endpoint-ca.pem count=1
+```
+
+After the first push interval, the server header must show **Sentinel In Sync**.
+
+</Step>
+
+</Steps>
+
+---
+
+## How it works
+
+- Sentinel adds the CAs from the file to the public CAs. It does not replace them, so a public certificate still verifies.
+- Sentinel uses the CAs only for HTTPS requests to the **Coolify URL**.
+- Without the file, Coolify does not set `PUSH_ENDPOINT_CA_PATH`, and Sentinel works as before.
+- Coolify Cloud does not need a CA file. Use one only if a TLS-inspecting proxy on your network signs the connections.
+
+To stop using the CA, delete the file and restart Sentinel.
+
+---
+
+## Troubleshooting
+
+<CoolCallout type="warning" icon={Warning22} title="A bad CA file stops Sentinel">
+
+If Sentinel cannot read the file, or the file contains no PEM certificate, Sentinel stops at startup. The logs name the file, for example:
+
+```text
+sentinel: PUSH_ENDPOINT_CA_PATH /app/db/push-endpoint-ca.pem: the file has no PEM certificate
+```
+
+Correct the file or delete it, then restart Sentinel.
+
+</CoolCallout>
+
+<Accordions type="multiple">
+
+<Accordion title="The logs show UnknownIssuer">
+
+Sentinel cannot verify the certificate of your Coolify instance. Do these checks:
+
+1. Make sure that the file is at `/data/coolify/sentinel/push-endpoint-ca.pem` and that you restarted Sentinel after you added it.
+2. Make sure that the file contains the CA that signed the Coolify certificate. If an intermediate CA signed it, include the root CA.
+3. Make sure that your Sentinel version supports `PUSH_ENDPOINT_CA_PATH`. If the startup logs do not show `trusting extra CA certificates`, update Sentinel.
+
+</Accordion>
+
+<Accordion title="The certificate does not match the Coolify URL">
+
+The certificate of your Coolify instance must contain the host name or IP address of the **Coolify URL** in its Subject Alternative Name. A trusted CA does not fix a name mismatch.
+
+</Accordion>
+
+</Accordions>
+
+---
+
+## Related pages
+
+- [Sentinel](/core/observability/monitoring/sentinel)
+- [Instance URL](/core/instance-management/instance-settings#url)

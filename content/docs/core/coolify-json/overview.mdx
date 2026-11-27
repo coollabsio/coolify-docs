@@ -1,0 +1,88 @@
+---
+title: coolify.json (Beta)
+description: Define the applications, databases, and services of an environment in a versioned coolify.json file in your git repository.
+---
+
+# coolify.json
+
+A `coolify.json` file in a git repository defines the resources of a project environment: applications, standalone databases, and services, with their variables, storages, file mounts, scheduled tasks, backups, tags, and settings. coolify.json is marked **Beta**. Coolify shows a flask icon next to the feature.
+
+<Callout type="warning" title="Beta feature">
+coolify.json is in beta. The file format, the settings, and the behavior can change in later versions. Before you link a production environment, try the file on a test environment and keep a [backup of your instance](/core/backup-and-recovery/instance-backup).
+</Callout>
+
+## Two ways to use the file
+
+Coolify can use a `coolify.json` file in two modes:
+
+| | Use coolify.json | Config as code |
+| :--- | :--- | :--- |
+| What it does | Creates the resources one time, with the settings of the file | Links the environment to the file on a branch, and keeps the environment in sync with the file |
+| After the resources exist | They are normal resources. You edit them in Coolify. Later changes of the file do not change them. | The file manages them. Each push to the branch plans the file and updates them. |
+| Edits in Coolify | Yes | Only for settings that the file does not manage, or while the sync is paused |
+| Who can use it | A user who can create resources in the environment | A team admin links the environment |
+| Where you start | The add-repository form, when the repository has a `coolify.json` (default choice) | The **Config as code** page of the environment, or the add-repository form |
+| API | Not available in v1 | [Available](/core/coolify-json/api-and-cli) |
+
+- Use **Use coolify.json** when a repository gives default settings (build pack, ports, health check, variables, a database) to everyone who deploys it. Refer to [Use coolify.json as a template](/core/coolify-json/use-as-template).
+- Use **Config as code** when you want the file in git to be the full truth for an environment, with reviews, history, and `git revert`. Refer to [Config as code](/core/coolify-json/config-as-code).
+
+## What the file contains
+
+A minimal file:
+
+```json title="coolify.json"
+{
+  "$schema": "https://cdn.coollabs.io/coolify/schemas/coolify.v1.json",
+  "version": 1,
+  "resources": {
+    "api": {
+      "type": "application",
+      "build": { "pack": "dockerfile" },
+      "ports": { "exposes": "3000" },
+      "env": {
+        "SESSION_SECRET": { "generate": "password", "length": 64 },
+        "DATABASE_URL": { "ref": "resource.db.internal_url" }
+      }
+    },
+    "db": { "type": "postgresql" }
+  },
+  "environments": {
+    "production": { "branch": "main" }
+  }
+}
+```
+
+- `resources` lists the resources by a stable key. A resource is an `application`, a `service`, or one of nine database types.
+- `environments` maps environment names to branches, with overrides for each environment. Config as code needs it. The template mode can work without it.
+- `moved`, `unmanage`, and `environments.<name>.import` rename keys, stop the management of a resource, and adopt existing resources.
+
+For each key, refer to the [file reference](/core/coolify-json/file-reference). For a complete file, refer to the [example file](/core/coolify-json/example).
+
+## What is not in the file
+
+The file never holds secret values, and it never creates infrastructure. It refers to objects that already exist in Coolify by their name:
+
+| Not in the file | How the file uses it |
+| :--- | :--- |
+| Secret values (passwords, API keys, tokens) | A variable is `required` (you set the value in Coolify), `generate` (Coolify generates it), or a `ref` to a shared variable or a secret manager. |
+| Servers and destinations | A resource can name a `server` and a `destination`. Without them, the resource runs on the server of the link. The file never creates or configures servers. |
+| Git sources (GitHub Apps, GitLab Apps, Gitea Apps) | `source.github_app`, `source.gitlab_app`, or `source.gitea_app` names an existing source. |
+| Private keys (deploy keys) | `source.deploy_key` names an existing private key. |
+| S3 storages | `backups[].s3_storage` names an existing S3 storage. |
+| Secret manager tokens | `secret_manager.token` names an existing token. |
+
+The export of an environment also has no secret values. In the export, a variable that does not come from the file becomes `required`, or a `ref` when its value points to a shared variable.
+
+## Limits of v1
+
+- **Change server does not move volume data.** When you change the server of a link, the resources start on the new server with empty volumes. The volumes and their data stay on the old server. Copy the data yourself.
+- **Names must match on every instance.** The file refers to GitHub Apps, GitLab Apps, Gitea Apps, deploy keys, servers, and S3 storages by name. To use the same file on another Coolify instance or team, give these objects the same names there. A name must select one object: when two objects of the team have the same name, the plan shows an error.
+
+## Next steps
+
+- [Use coolify.json as a template](/core/coolify-json/use-as-template)
+- [Config as code](/core/coolify-json/config-as-code)
+- [File reference](/core/coolify-json/file-reference)
+- [Example file](/core/coolify-json/example)
+- [API and CLI](/core/coolify-json/api-and-cli)
