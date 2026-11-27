@@ -21,12 +21,29 @@ We will publish a detailed guide for preparing applications for near-zero-downti
 
 ## How a rolling update works
 
-For an eligible application deployment, Coolify:
+<RollingUpdateScene />
 
-1. starts the replacement container without stopping the current container
-2. waits for the replacement container's health check to pass, when a health check is configured in Coolify or the image
-3. keeps the current container when the replacement becomes unhealthy
-4. stops and removes the current container after the replacement is considered ready
+For an eligible application deployment:
+
+1. Coolify starts the replacement container without stopping the current container.
+
+   <RollingUpdateStep state="start" />
+
+2. Coolify waits for the replacement container's health check to pass, if a health check is configured in Coolify or in the image.
+
+   <RollingUpdateStep state="health" />
+
+3. If the replacement becomes unhealthy, Coolify removes it and keeps the current container.
+
+   <RollingUpdateStep state="unhealthy" />
+
+4. Coolify waits for the **Rolling update drain time (seconds)**, so the proxy starts sending requests to the replacement container.
+
+   <RollingUpdateStep state="drain" />
+
+5. Coolify stops and removes the current container after the replacement is considered ready.
+
+   <RollingUpdateStep state="stop" />
 
 Without a health check, Coolify treats a successfully started container as ready. It cannot determine whether the application has finished initialization or can serve requests correctly before stopping the current container.
 
@@ -53,6 +70,8 @@ The default is 30 seconds. Coolify accepts values from 1 to 3600 seconds.
 
 Increasing the grace period gives the old container more time to finish in-flight work, but it does not add graceful-shutdown behavior to the application. The application itself must handle the termination signal and exit correctly.
 
+In the same section, **Rolling update drain time (seconds)** sets how long Coolify waits after the replacement container is healthy before it stops the old container. The proxy needs this time to start sending requests to the replacement. The default is 5 seconds, values from 0 to 300 are accepted, and 0 turns the wait off.
+
 ## Settings that prevent a rolling update
 
 The old and replacement containers must be able to run at the same time. Coolify stops the current container first when any of these conditions applies:
@@ -68,6 +87,8 @@ The old and replacement containers must be able to run at the same time. Coolify
 An optional generated **Container Name Prefix** retains a deployment-specific timestamp and does not disable rolling updates. See [Container naming](/applications/configuration/advanced#container-name-prefix).
 
 When Coolify detects one of these conditions, the deployment log explains why rolling updates are not supported. Stopping the current container before starting its replacement causes an interruption while the replacement starts.
+
+<RollingUpdateStep state="stop-first" />
 
 ## Docker Compose and Docker Swarm
 
