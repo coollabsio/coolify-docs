@@ -28,7 +28,7 @@ concurrency:
 env:
   # Discord users to mention when a merge needs a manual merge or the run fails.
   # Add one Discord user ID per line. The webhook URL is the repository secret
-  # DISCORD_MERGE_FORWARD_WEBHOOK; without it, no alert is sent.
+  # DISCORD_WEBHOOK_ALERT_MAINTAINERS; without it, no alert is sent.
   DISCORD_USER_IDS: >-
     181775064302223360
     589480400850780170
@@ -187,7 +187,7 @@ jobs:
         if: always()
         shell: bash
         env:
-          WEBHOOK: ${{ secrets.DISCORD_MERGE_FORWARD_WEBHOOK }}
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_ALERT_MAINTAINERS }}
           MERGE_OUTCOME: ${{ steps.merge.outcome }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
@@ -210,7 +210,7 @@ jobs:
             exit 0
           fi
           if [[ -z "${WEBHOOK:-}" ]]; then
-            echo "::notice::DISCORD_MERGE_FORWARD_WEBHOOK is not set, so no Discord alert was sent."
+            echo "::notice::DISCORD_WEBHOOK_ALERT_MAINTAINERS is not set, so no Discord alert was sent."
             exit 0
           fi
           mentions="$(for id in $DISCORD_USER_IDS; do printf '<@%s> ' "$id"; done)"

@@ -14,25 +14,31 @@ Coolify sends Discord notifications through an incoming webhook created for a Di
 
 ### Choose the destination
 
-Open the Discord server that should receive Coolify notifications. Create a text channel, such as `coolify-notifications`, or select an existing one.
+Open the Discord server that should receive Coolify notifications. Create a text channel, such as `alerts`, or select an existing one.
 
+<Callout type="info">
 You need permission to manage webhooks in that server.
+</Callout>
 
 </Step>
 <Step>
 
 ### Create the webhook
 
-1. Open **Server Settings > Integrations > Webhooks**.
-2. Select **New Webhook**.
-3. Give the webhook a recognizable name, such as `Coolify`.
-4. Select the text channel that should receive its messages.
-5. Select **Copy Webhook URL**.
+1. In the channel list, hover over the channel and select its settings icon.
+
+   <ZoomImage src="/docs/images/core/notifications/channels/discord/channel-settings.webp" alt="Settings icon next to the alerts channel in the Discord channel list" />
+
+2. Select **Integrations**, then **Create Webhook**. If the channel already has a webhook, open **Webhooks** and select **New Webhook**.
+
+   <ZoomImage src="/docs/images/core/notifications/channels/discord/create-webhook.webp" alt="Integrations page of the channel settings with Integrations and the Create Webhook button numbered 1 and 2" />
+
+3. Select **Copy Webhook URL**.
+
+   <ZoomImage src="/docs/images/core/notifications/channels/discord/copy-webhook-url.webp" alt="Copy Webhook URL button in the settings of a Discord webhook" />
 
 </Step>
 </Steps>
-
-See [Discord's webhook documentation](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) for provider-specific details.
 
 <Callout type="warning" title="Protect the webhook URL">
 Anyone with the URL can post to the Discord channel. Store it as a secret and replace the webhook if the URL is exposed.
@@ -42,14 +48,34 @@ Anyone with the URL can post to the Discord channel. Store it as a secret and re
 
 ## Configure Coolify
 
-1. Open **Notifications > Discord**.
-2. Paste the URL into **Webhook URL** and select **Save changes**.
-3. Select **Enable**.
-4. Optional: set **Critical event mention** to **Mention @here** to add `@here` to critical event notifications. Discord notifies only members who are online and can access the channel.
-5. Under **Notification events**, select the events to send to Discord.
-6. Select **Send test**.
+1. Select **Notifications** in the sidebar.
+
+   <ZoomImage src="/docs/images/core/notifications/channels/discord/open-notifications.webp" alt="Notifications in the Coolify sidebar" />
+
+2. Select **Discord**.
+
+   <ZoomImage src="/docs/images/core/notifications/channels/discord/open-channel.webp" alt="Discord in the Notifications menu of the sidebar" />
+
+3. Paste the URL into **Webhook URL** and select **Save changes**.
+4. Select **Enable**.
+
+   <ZoomImage src="/docs/images/core/notifications/channels/discord/webhook-url.webp" alt="Discord settings with the Webhook URL field, the Save changes button, and the Enable button numbered 1 to 3" />
+
+5. Choose an option under **Critical event mention**. **Mention @here** adds `@here` to critical event notifications, so Discord notifies members who are online and can access the channel. **Do not mention** sends them without a mention.
+
+   <ZoomImage src="/docs/images/core/notifications/channels/discord/critical-event-mention.webp" alt="Critical event mention field set to Mention @here in the Discord notification settings" />
+
+6. Under **Notification events**, select the events to send to Discord.
+
+   <ZoomImage src="/docs/images/core/notifications/channels/discord/notification-events.webp" alt="Notification events section of an enabled Discord channel, with selectors for deployments, resources, backups, scheduled tasks, and servers" />
+
+7. Select **Send test**.
+
+   <ZoomImage src="/docs/images/core/notifications/channels/discord/send-test.webp" alt="Send Test button next to Disable on an enabled Discord channel" />
 
 Confirm that the test appears in the selected Discord channel before selecting additional events.
+
+<ZoomImage src="/docs/images/core/notifications/channels/discord/test-notification.webp" alt="Coolify test notification titled Test Success in the alerts Discord channel" />
 
 ---
 
