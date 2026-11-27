@@ -1,0 +1,63 @@
+---
+title: Gotify
+description: Send Coolify push notifications through a self-hosted Gotify server.
+---
+
+# Gotify
+
+Coolify sends notifications to your own [Gotify](https://gotify.net/) server using a server URL and an application token created in that Gotify instance.
+
+## Create a Gotify application
+
+Before configuring Coolify, you need a running Gotify server and at least one client (the Gotify Android app or web UI) signed in to receive messages.
+
+<Steps>
+<Step>
+
+### Open the Apps page
+
+Sign in to your Gotify server's web UI and open the **Apps** tab.
+
+</Step>
+<Step>
+
+### Create an application
+
+1. Select **Create Application**.
+2. Enter a name, such as `Coolify`.
+3. Save the application and copy its **token**.
+
+The application token identifies Coolify as the sender. Gotify shows the token once; you can regenerate it later from the same page if needed.
+
+</Step>
+</Steps>
+
+<Callout type="warning" title="Protect the application token">
+Store the Gotify application token as a secret. If it is exposed, delete or regenerate the application in Gotify and update Coolify.
+</Callout>
+
+---
+
+## Configure Coolify
+
+1. Open **Notifications > Gotify**.
+2. Enter the **Server URL** (for example `https://gotify.example.com`, no trailing path) and the **Application Token**, then select **Save**.
+3. Turn on **Enabled**.
+4. Under **Notification Settings**, select the events to send through Gotify.
+5. Select **Send Test Notification**.
+
+Confirm that the test arrives on a client connected to your Gotify server before selecting more events.
+
+---
+
+## Troubleshoot Gotify delivery
+
+If the test does not arrive:
+
+1. Confirm that **Server URL** points to your Gotify server's base URL and is reachable from where Coolify runs (no firewall blocking outbound requests).
+2. Confirm that **Application Token** came from an application created in that same Gotify server, not a client/user token.
+3. Confirm that at least one client (app or browser) is signed in and connected to the Gotify server.
+4. Check the Gotify server's own logs for rejected or failed requests.
+5. If you regenerated the application token, save the new value in Coolify and test again.
+
+See [Notification events](/core/notifications/events) for the trigger behind each event setting.
