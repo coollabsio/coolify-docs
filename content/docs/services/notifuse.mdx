@@ -1,0 +1,67 @@
+---
+title: "Notifuse"
+description: "Self-hosted email marketing and automation platform with built-in web analytics."
+category: "Marketing"
+icon: "/docs/images/services/notifuse-logo.svg"
+---
+
+# Notifuse
+
+<ZoomImage src="/docs/images/services/notifuse-logo.svg" alt="Notifuse logo" />
+
+## What is Notifuse?
+
+Notifuse is a self-hosted email marketing and automation platform. You can use it to send newsletters, broadcasts, and transactional emails, and to build automated email workflows.
+
+Notifuse also includes cookieless web analytics. You can use one platform for your contacts, your campaigns, and your website traffic.
+
+<Callout type="info">
+Notifuse v40 and later use the Business Source License 1.1. Self-hosting is free, but some features need a license key from Notifuse. For example, you need a key to create more than three workspaces on one deployment. Read the [license](https://github.com/Notifuse/notifuse/blob/main/LICENSE) before you use Notifuse in production.
+</Callout>
+
+## Components
+
+The Coolify template starts these containers:
+
+- **notifuse**: The Notifuse dashboard and API (port 8080).
+- **postgres**: PostgreSQL 18. Notifuse creates a system database and one database for each workspace.
+
+## Before you deploy
+
+### Set the root email
+
+Set `NOTIFUSE_ROOT_EMAIL` to the email address of the root administrator. The deployment does not start without this value.
+
+<Callout type="warning">
+Until the setup wizard is complete, all users that can open your domain can see the wizard. The root email prevents other people from making themselves the administrator.
+</Callout>
+
+### Configure SMTP (optional)
+
+Notifuse sends sign-in codes and invitations by email. You can set the SMTP server in the setup wizard, or with these variables:
+
+| Variable | Description |
+| :--- | :--- |
+| `NOTIFUSE_SMTP_HOST` | SMTP server host name. |
+| `NOTIFUSE_SMTP_PORT` | SMTP server port. |
+| `NOTIFUSE_SMTP_USERNAME` | SMTP user name. |
+| `NOTIFUSE_SMTP_PASSWORD` | SMTP password. |
+| `NOTIFUSE_SMTP_FROM_EMAIL` | Sender email address. |
+| `NOTIFUSE_SMTP_FROM_NAME` | Sender name. |
+| `NOTIFUSE_SMTP_EHLO_HOSTNAME` | EHLO host name. If you do not set it, Notifuse uses the SMTP host. |
+
+If you set a variable, you cannot change that field in the setup wizard.
+
+## After you deploy
+
+1. Open the domain of the **notifuse** service.
+2. Complete the setup wizard.
+3. Sign in with the root email.
+
+Coolify generates the `SECRET_KEY` value. Notifuse uses this key to encrypt stored credentials. Do not change it after the first deployment. If you change it, all users are signed out and Notifuse cannot read the stored credentials.
+
+## Links
+
+- [The official website](https://www.notifuse.com?utm_source=coolify.io)
+- [Documentation](https://docs.notifuse.com?utm_source=coolify.io)
+- [GitHub](https://github.com/Notifuse/notifuse?utm_source=coolify.io)
