@@ -15,7 +15,7 @@ The Coolify application source can be found at https://github.com/coollabsio/coo
 - Pull requests must target `next`, not `main`. `enforce-pr-standards.yml` retargets non-maintainer PRs to `next` automatically.
 - Weekly release cycle merges `next` into `main`.
 - `release/vX.Y` branches (for example `release/v4.8`) hold docs for an upcoming Coolify release. Merge a release branch into `next` by hand when that release is ready.
-- `.github/workflows/merge-forward.yml` runs after every push to `main`. It merges `main` into each release branch and into `next`, and regenerates the service catalog in each merge. It never merges a release branch into `next`. On other conflicts it opens a pull request from a `chore/merge-<source>-into-<target>` branch; merge that pull request with a merge commit, not a squash merge. New conflict pull requests and failed runs are announced on Discord through the `DISCORD_MERGE_FORWARD_WEBHOOK` secret, mentioning the users in `DISCORD_USER_IDS` at the top of the workflow.
+- `.github/workflows/merge-forward.yml` runs after every push to `main`. It merges `main` into each release branch and into `next`, and regenerates the service catalog in each merge. It never merges a release branch into `next`. On other conflicts it opens a pull request from a `chore/merge-<source>-into-<target>` branch; merge that pull request with a merge commit, not a squash merge. New conflict pull requests and failed runs are announced on Discord through the `DISCORD_WEBHOOK_ALERT_MAINTAINERS` secret, mentioning the users in `DISCORD_USER_IDS` at the top of the workflow.
 
 ## Technology Stack
 
