@@ -936,3 +936,16 @@ figure.shiki.border {
     animation: none;
   }
 }
+
+/* Animated docs diagrams (src/components/docs/diagrams/): Coolify's status colors
+   (--color-success, --color-warning). */
+.cool-diagram {
+  --cd-success: oklch(60% 0.17 149.58);
+  --cd-warning: oklch(68.06% 0.1423 75.83);
+  --cd-error: #dc2626;
+}
+.dark .cool-diagram {
+  --cd-success: oklch(72.27% 0.192 149.58);
+  --cd-warning: oklch(88.13% 0.1507 91.7);
+  --cd-error: #ef4444;
+}
