@@ -21,6 +21,18 @@ New accounts follow the registration settings. Linked identities appear on **Pro
 
 When Coolify 2FA is enabled, OAuth sign-in also requires the Coolify authenticator or recovery code. Users without a password can enable 2FA from their profile. See [Two-factor authentication](/core/security/authentication/2fa).
 
+### Accounts created by a team invitation
+
+A team invitation creates an account with a temporary password. The first OAuth sign-in links the provider identity to such an account only while nobody has used it yet, and Coolify then removes the temporary password. When the account is already in use, the login page asks the user to sign in with the password or to reset it with the email link first.
+
+When email is not set up on the instance, an instance admin can allow the link from the Coolify server:
+
+```sh
+docker exec -it coolify php artisan user:allow-sso-link <email>
+```
+
+The command removes the password, passkeys, two-factor authentication, sessions, and API tokens of the account. The next OAuth or SSO sign-in with that email address then links the account. Run it only when you know that the owner of the email address asks for it.
+
 ## Choose an OAuth provider
 
 Each guide creates the external provider application, registers the exact Coolify callback URL, adds the provider credentials to Coolify, and verifies sign-in.

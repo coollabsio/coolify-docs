@@ -100,6 +100,15 @@ The issue is mostly due to Coolify re-apply its user' ownership & chmod to the f
 
 The solution here would be to make the files readable by everyone. Open a terminal on your server, go to `/data/coolify/services/<SERVICE ID>/` clickhouse and run the command `chmod o+r *`. This should allow Clickhouse to access the files as needed.
 
+## Upgrade to SigNoz v0.150
+
+New services use SigNoz v0.150.0. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+- SigNoz moves alert rules to `v2alpha1` automatically.
+- SigNoz writes logs in 2 formats. This needs more CPU, RAM, and disk space.
+
+See the [official upgrade guide](https://signoz.io/docs/operate/migration/upgrade-0-150/?utm_source=coolify.io).
+
 ## Links
 
 - [Official Documentation](https://signoz.io/docs/introduction/)

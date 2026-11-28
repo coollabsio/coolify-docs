@@ -36,6 +36,17 @@ Coolify prefixes the name with the resource UUID to prevent name collisions on t
 
 Verify the mount by letting the application write a test file under the destination path. Redeploy the resource again and confirm that the application can still read the file.
 
+## Change the volume name
+
+Changing the **Storage Name** of a volume mount on **Persistent Storage** does not rename or move the Docker volume. After the next restart or deployment, the resource uses a Docker volume with the new name. If that volume does not exist, Docker creates it empty. Your data stays in the old volume, and Coolify does not delete the old volume when you delete the resource.
+
+When you save a new name, the **Change the volume name?** dialog asks for confirmation. To keep your data:
+
+1. Stop the resource.
+2. Change the **Storage Name**, save it, and select **Change Volume Name** in the dialog.
+3. On the server, find both names with `docker volume ls`. Create the new volume with `docker volume create <new-volume-name>` if it does not exist, then copy the data from the old volume into it.
+4. Start the resource and confirm that the application can read its data.
+
 ## Use volume mounts with preview deployments
 
 Application preview deployments use separate storage by default. Coolify adds a `-pr-N` suffix to the volume name, where `N` is the pull request number.

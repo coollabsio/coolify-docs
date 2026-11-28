@@ -87,6 +87,14 @@ Rivet Engine supports multiple storage backends for actor state:
 - Memory (development/testing)
 - Custom storage adapters
 
+## Upgrade to Rivet Engine 3
+
+New services use Rivet Engine 3.1.1. An existing service keeps its image.
+
+Rivet 3 cannot read the data of Rivet 2. Do not change the image of an existing service. Move your actors from a running Rivet 2 cluster with `migrate_from_v2`.
+
+See the [official migration guide](https://rivet.dev/docs/migrating-from-v2/?utm_source=coolify.io).
+
 ## Links
 
 - [Official website ↗](https://www.rivet.dev/?utm_source=coolify.io)

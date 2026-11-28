@@ -23,6 +23,7 @@
     "import-upload",
     "list",
     "logs",
+    "metrics",
     "move",
     "restart",
     "run-storage-backup",

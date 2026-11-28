@@ -9,12 +9,12 @@ Deploy by tag when several applications and services should be started or redepl
 
 ## Before deploying
 
-Open **Tags** in the main sidebar and select the tag. Review every application and service shown under **Tag Details**.
+Open **Tags** in the main sidebar and select the tag. Review every application and service shown under **Resources**.
 
 If a resource does not belong in the deployment group, remove the tag from that resource before continuing.
 
 <Callout type="warn" title="The action affects every resource with the tag">
-**Redeploy All** starts work for the full group. Resources can be temporarily unavailable while their deployment or restart is in progress.
+**Redeploy all** starts work for the full group. Resources can be temporarily unavailable while their deployment or restart is in progress.
 </Callout>
 
 ---
@@ -33,14 +33,14 @@ Open **Tags** in the main sidebar, then select the tag you want to deploy.
 
 ### Review the group
 
-Check the applications and services listed under **Tag Details**. Select any resource card if you need to inspect its current configuration first.
+Check the applications and services listed under **Resources**. Select any resource card if you need to inspect its current configuration first.
 
 </Step>
 <Step>
 
 ### Start the deployment
 
-Click **Redeploy All**. Enter the tag name in the confirmation dialog, then click **Redeploy All** again.
+Click **Redeploy all**. Enter the tag name in the confirmation dialog, then click **Redeploy all** again.
 
 Coolify queues a deployment for each application and starts each service assigned to the tag.
 
@@ -49,7 +49,7 @@ Coolify queues a deployment for each application and starts each service assigne
 
 ### Verify the resources
 
-Watch **Deployments** on the tag page for queued and in-progress application deployments. Open each application deployment to inspect its logs.
+Watch **Active deployments** on the tag page for queued and in-progress application deployments. Open each application deployment to inspect its logs.
 
 For services, open the service page and confirm that its components are running.
 

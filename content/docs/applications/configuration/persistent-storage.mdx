@@ -74,6 +74,10 @@ Verify that the application can read and write the expected data before relying 
 
 For a Docker Compose application, the Compose file is the source of truth for volume and bind-mount definitions. Define or change the mount in the Compose file, then reload the Compose configuration. Coolify displays parsed mounts but does not provide the same mount editor for Compose services.
 
+The **Delete** action of a volume that the Compose file still defines is disabled. Remove the volume from the Compose file first, then delete its entry on **Persistent Storage**.
+
+Variables in the host path of a short-syntax volume use the values from **Environment Variables**. Read [Variables in host paths](/applications/builds/docker-compose#variables-in-host-paths), including how storage from before Coolify v4.7.7 keeps its data.
+
 ## Important boundaries
 
 - A mount does not recover data that was already written to a removed container.

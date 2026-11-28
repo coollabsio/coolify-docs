@@ -28,6 +28,13 @@
     "category": "Productivity"
   },
   {
+    "name": "Airbyte",
+    "slug": "airbyte",
+    "icon": "/docs/images/services/airbyte-logo.svg",
+    "description": "Open-source data movement for ELT pipelines and AI agents.",
+    "category": "Analytics"
+  },
+  {
     "name": "Alexandrie",
     "slug": "alexandrie",
     "icon": "/docs/images/services/alexandrie-logo.svg",
@@ -167,7 +174,8 @@
     "slug": "budge",
     "icon": "/docs/images/services/budge-logo.png",
     "description": "A budgeting personal finance app.",
-    "category": "Finance"
+    "category": "Finance",
+    "disabled": true
   },
   {
     "name": "Budibase",
@@ -259,7 +267,8 @@
     "slug": "chaskiq",
     "icon": "/docs/images/services/chaskiq-logo.png",
     "description": "Open source customer engagement platform.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
   },
   {
     "name": "Chatwoot",
@@ -295,6 +304,13 @@
     "icon": "/docs/images/services/classicpress-logo.svg",
     "description": "A business-focused CMS with a strong community.",
     "category": "CMS"
+  },
+  {
+    "name": "ClassroomIO",
+    "slug": "classroomio",
+    "icon": "/docs/images/services/classroomio-logo.svg",
+    "description": "Open-source LMS for courses, quizzes, and certificates.",
+    "category": "Education"
   },
   {
     "name": "Cloudbeaver",
@@ -415,8 +431,7 @@
     "slug": "dify",
     "icon": "/docs/images/services/dify.png",
     "description": "Open-source platform for building LLM applications with workflows, retrieval-augmented generation, and AI agents.",
-    "category": "AI",
-    "disabled": true
+    "category": "AI"
   },
   {
     "name": "Directus",
@@ -466,6 +481,13 @@
     "icon": "/docs/images/services/docuseal-logo.png",
     "description": "Open source DocuSign alternative.",
     "category": "Business"
+  },
+  {
+    "name": "Dograh",
+    "slug": "dograh",
+    "icon": "/docs/images/services/dograh-logo.png",
+    "description": "Open-source voice AI platform, an alternative to Vapi and Retell.",
+    "category": "AI"
   },
   {
     "name": "DokuWiki",
@@ -875,6 +897,13 @@
     "category": "Development"
   },
   {
+    "name": "Hi.Events",
+    "slug": "hi-events",
+    "icon": "/docs/images/services/hi-events-logo.svg",
+    "description": "Open-source event management and ticketing platform.",
+    "category": "Business"
+  },
+  {
     "name": "Hoarder",
     "slug": "hoarder",
     "icon": "/docs/images/services/hoarder-logo.png",
@@ -1259,6 +1288,13 @@
     "disabled": true
   },
   {
+    "name": "MCPHub",
+    "slug": "mcphub",
+    "icon": "/docs/images/services/mcphub-logo.svg",
+    "description": "Unified hub to manage and route many MCP servers.",
+    "category": "AI"
+  },
+  {
     "name": "Mealie",
     "slug": "mealie",
     "icon": "/docs/images/services/mealie-logo.png",
@@ -1352,11 +1388,19 @@
     "category": "Social Media"
   },
   {
+    "name": "Monica",
+    "slug": "monica",
+    "icon": "/docs/images/services/monica-logo.svg",
+    "description": "An open-source personal relationship manager.",
+    "category": "Productivity"
+  },
+  {
     "name": "Moodle",
     "slug": "moodle",
     "icon": "/docs/images/services/moodle-logo.png",
     "description": "Open-source learning platform.",
-    "category": "Education"
+    "category": "Education",
+    "disabled": true
   },
   {
     "name": "Mosquitto",
@@ -1461,7 +1505,8 @@
     "slug": "observium",
     "icon": "/docs/images/services/observium-logo.webp",
     "description": "Low-maintenance auto-discovering network monitoring platform.",
-    "category": "Monitoring"
+    "category": "Monitoring",
+    "disabled": true
   },
   {
     "name": "Obsidian",
@@ -1556,6 +1601,13 @@
     "category": "Analytics"
   },
   {
+    "name": "OpenSearch",
+    "slug": "opensearch",
+    "icon": "/docs/images/services/opensearch-logo.svg",
+    "description": "Open-source search and analytics engine.",
+    "category": "Search"
+  },
+  {
     "name": "OpenWA",
     "slug": "openwa",
     "icon": "/docs/images/services/openwa.png",
@@ -1574,7 +1626,15 @@
     "slug": "orangehrm",
     "icon": "/docs/images/services/orangehrm-logo.svg",
     "description": "Free HR management system for businesses.",
-    "category": "Business"
+    "category": "Business",
+    "disabled": true
+  },
+  {
+    "name": "Orbit",
+    "slug": "orbit",
+    "icon": "/docs/images/services/orbit-logo.svg",
+    "description": "Self-hosted workspace for teams with tasks, docs, chat, and an MCP server for AI clients.",
+    "category": "Productivity"
   },
   {
     "name": "Organizr",
@@ -1610,7 +1670,8 @@
     "slug": "owncloud",
     "icon": "/docs/images/services/owncloud-logo.svg",
     "description": "File synchronization and sharing platform.",
-    "category": "Storage"
+    "category": "Storage",
+    "disabled": true
   },
   {
     "name": "Pairdrop",
@@ -1996,6 +2057,13 @@
     "category": "Productivity"
   },
   {
+    "name": "Sim Studio",
+    "slug": "simstudio",
+    "icon": "/docs/images/services/simstudio-logo.svg",
+    "description": "Open source platform for building and running AI agents.",
+    "category": "AI"
+  },
+  {
     "name": "Siyuan",
     "slug": "siyuan",
     "icon": "/docs/images/services/siyuan.svg",
@@ -2014,7 +2082,8 @@
     "slug": "snapdrop",
     "icon": "/docs/images/services/snapdrop-logo.png",
     "description": "Local file sharing in your browser.",
-    "category": "File Sharing"
+    "category": "File Sharing",
+    "disabled": true
   },
   {
     "name": "Snipe-IT",
@@ -2042,7 +2111,8 @@
     "slug": "soketi-app-manager",
     "icon": "/docs/images/services/soketi-app-manager-logo.svg",
     "description": "Manage Soketi apps with application configuration and WebSocket server administration interface.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "SonarQube",
@@ -2114,6 +2184,13 @@
     "icon": "/docs/images/services/supabase-logo.svg",
     "description": "Open source Firebase alternative.",
     "category": "Development"
+  },
+  {
+    "name": "SuperPlane",
+    "slug": "superplane",
+    "icon": "/docs/images/services/superplane-logo.svg",
+    "description": "Open source factory for one-shot engineering.",
+    "category": "Automation"
   },
   {
     "name": "Superset",
@@ -2295,7 +2372,8 @@
     "slug": "vvveb",
     "icon": "/docs/images/services/vvveb-logo.png",
     "description": "Powerful website builder with drag and drop functionality.",
-    "category": "Development"
+    "category": "Development",
+    "disabled": true
   },
   {
     "name": "Wakapi",
@@ -2381,6 +2459,13 @@
     "icon": "/docs/images/services/yamtrack-logo.svg",
     "description": "Self-hosted music scrobble database.",
     "category": "Media"
+  },
+  {
+    "name": "Zammad",
+    "slug": "zammad",
+    "icon": "/docs/images/services/zammad-logo.svg",
+    "description": "Open-source helpdesk and customer support platform.",
+    "category": "Business"
   },
   {
     "name": "Zep",

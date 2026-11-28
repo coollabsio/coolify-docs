@@ -19,6 +19,20 @@ category: "Security"
 
 <ZoomImage src="/docs/images/services/cap-dashboard.png" alt="Cap logo" />
 
+## Upgrade to Cap 4
+
+New services use Cap 4.0.15. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+1. Back up Valkey.
+2. Rename `REDIS_URL` to `VALKEY_URL`. Cap 4 uses a new data volume.
+3. After the upgrade, log in again.
+4. Reset the secret of each site key. Until you do this, `/siteverify` returns 403.
+5. Replace your API keys.
+
+The old per-country analytics are lost.
+
+See the [official migration guide](https://capjs.js.org/guide/capd/migrate-v3-v4.html?utm_source=coolify.io).
+
 ## Links
 
 - [Official website](https://capjs.js.org/?utm_source=coolify.io)

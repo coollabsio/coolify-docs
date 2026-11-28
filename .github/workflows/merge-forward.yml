@@ -1,0 +1,221 @@
+name: Merge forward
+
+# Commits pushed directly to main must also reach next and the release branches, or the
+# branches drift apart. This merges main into each release/v* branch and into next.
+# Release branches hold docs for a future Coolify release, so they are never merged into
+# next automatically. Merge a release branch into next by hand when it is ready.
+# Based on the merge-forward workflow of coollabsio/coolify.
+#
+# - Skips a branch that already contains main.
+# - Regenerates the service catalog in every merge, so conflicts in the generated catalog
+#   files never block a merge.
+# - On any other conflict, pushes main to chore/merge-main-into-<target> and opens a pull
+#   request into the target for a manual merge. A branch that already has resolution
+#   commits of its own is left alone.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: merge-forward
+  cancel-in-progress: false
+
+env:
+  # Discord users to mention when a merge needs a manual merge or the run fails.
+  # Add one Discord user ID per line. The webhook URL is the repository secret
+  # DISCORD_WEBHOOK_ALERT_MAINTAINERS; without it, no alert is sent.
+  DISCORD_USER_IDS: >-
+    181775064302223360
+    589480400850780170
+
+jobs:
+  merge:
+    name: Merge forward
+    permissions:
+      contents: write # push the merges
+      pull-requests: write # open a pull request when a merge conflicts
+      actions: write # start the staging build after next changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Merge main into the release branches and next
+        id: merge
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh auth setup-git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
+
+          REMOTE="${REMOTE:-origin}"
+          OUTPUT="${GITHUB_OUTPUT:-/dev/null}"
+          GH="${GH:-gh}"
+          TEMP="${RUNNER_TEMP:-$(mktemp -d)}"
+          GENERATED=("content/docs/services/all.mdx" "src/generated/services.json")
+          failed=0
+
+          is_generated() {
+            local file
+            for file in "${GENERATED[@]}"; do
+              [[ "$1" == "$file" ]] && return 0
+            done
+            return 1
+          }
+
+          regenerate_catalog() {
+            if [[ -f scripts/generate-service-list.mjs && -f scripts/generate-services-page.mjs ]]; then
+              node scripts/generate-service-list.mjs > /dev/null
+              node scripts/generate-services-page.mjs > /dev/null
+              git add -- "${GENERATED[@]}"
+            fi
+          }
+
+          refresh() {
+            git fetch --quiet --prune "$REMOTE" "+refs/heads/*:refs/remotes/$REMOTE/*"
+          }
+
+          open_pull_request() {
+            local source="$1" target="$2" head="$3" title="$4" conflicts="$5" url
+            if git rev-parse --verify --quiet "$REMOTE/$head" > /dev/null &&
+              ! git merge-base --is-ancestor "$REMOTE/$head" "$REMOTE/$source"; then
+              echo "::notice::$head has commits of its own. $source follows once its pull request is merged."
+              return
+            fi
+            git push --quiet "$REMOTE" "$REMOTE/$source:refs/heads/$head"
+            url="$("$GH" pr list --head "$head" --base "$target" --state open --json url --jq '.[0].url // empty')"
+            if [[ -n "$url" ]]; then
+              "$GH" pr edit "$url" --title "$title"
+              return
+            fi
+            cat > "$TEMP/body.md" <<BODY
+          \`$source\` could not be merged into \`$target\` automatically. These files conflict:
+
+          $(sed 's/^/- `/; s/$/`/' <<< "$conflicts")
+
+          Resolve the conflicts on this branch, for example with **Resolve conflicts** or by merging \`$target\` into \`$head\` locally, then merge this pull request.
+
+          > [!IMPORTANT]
+          > Merge this pull request with a merge commit, not a squash merge, so the next merge forward does not conflict again.
+          BODY
+            url="$("$GH" pr create --base "$target" --head "$head" --title "$title" --body-file "$TEMP/body.md")"
+            echo "$url"
+            # Record the new pull request for the Discord alert. Pull requests that
+            # were open already are not alerted again.
+            printf '%s\t%s\t%s\t%s\n' "$source" "$target" "$url" "$(paste -sd, - <<< "$conflicts")" >> "$TEMP/new-conflict-prs.tsv"
+          }
+
+          merge() {
+            local source="$1" target="$2"
+            local head="chore/merge-${source//\//-}-into-${target//\//-}"
+            local title="chore: merge $source into $target"
+            local conflicts="" file
+
+            if ! git rev-parse --verify --quiet "$REMOTE/$target" > /dev/null; then
+              echo "$target does not exist."
+              return
+            fi
+            git switch --quiet --detach "$REMOTE/$target"
+            if git merge-base --is-ancestor "$REMOTE/$source" HEAD; then
+              echo "$target contains $source already."
+              return
+            fi
+
+            if ! git merge --quiet --no-ff --no-commit "$REMOTE/$source"; then
+              while IFS= read -r file; do
+                is_generated "$file" || conflicts+="$file"$'\n'
+              done < <(git diff --name-only --diff-filter=U)
+              conflicts="${conflicts%$'\n'}"
+              if [[ -n "$conflicts" ]]; then
+                git merge --abort
+                echo "$source and $target conflict in:"
+                echo "$conflicts"
+                open_pull_request "$source" "$target" "$head" "$title" "$conflicts"
+                return
+              fi
+            fi
+
+            regenerate_catalog
+            git commit --quiet -m "$title" -m "Automatic merge forward of $(git rev-parse --short "$REMOTE/$source")."
+            if ! git push --quiet "$REMOTE" "HEAD:refs/heads/$target"; then
+              echo "::warning::Could not push the merge of $source into $target, because $target changed. The next run merges it."
+              failed=1
+              refresh
+              return
+            fi
+            echo "Merged $source into $target."
+            [[ "$target" == next ]] && echo "next_updated=true" >> "$OUTPUT"
+            refresh
+          }
+
+          refresh
+          releases="$(git branch --remotes --list "$REMOTE/release/v*" --format='%(refname:lstrip=3)' | sort -V || true)"
+          for release in $releases; do
+            merge main "$release"
+          done
+          merge main next
+
+          exit "$failed"
+
+      # A push made with the GITHUB_TOKEN does not start other workflows, so start the
+      # staging build of next explicitly.
+      - name: Start the staging build
+        if: always() && steps.merge.outputs.next_updated == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run staging-build.yml --repo "$GITHUB_REPOSITORY" --ref next
+
+      # Alert on Discord when a new conflict pull request was opened or the run failed.
+      - name: Alert on Discord
+        if: always()
+        shell: bash
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_ALERT_MAINTAINERS }}
+          MERGE_OUTCOME: ${{ steps.merge.outcome }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          prs="${RUNNER_TEMP:-/tmp}/new-conflict-prs.tsv"
+          lines=()
+          if [[ -s "$prs" ]]; then
+            while IFS=$'\t' read -r source target url files; do
+              IFS=, read -ra list <<< "$files"
+              shown="$(printf '`%s`, ' "${list[@]:0:10}")"
+              shown="${shown%, }"
+              (( ${#list[@]} > 10 )) && shown+=" and $(( ${#list[@]} - 10 )) more"
+              lines+=("- \`$source\` into \`$target\` conflicts in $shown. Merge it by hand: $url")
+            done < "$prs"
+          fi
+          if [[ "$MERGE_OUTCOME" == failure ]]; then
+            lines+=("- The merge forward run failed: $RUN_URL")
+          fi
+          if (( ${#lines[@]} == 0 )); then
+            exit 0
+          fi
+          if [[ -z "${WEBHOOK:-}" ]]; then
+            echo "::notice::DISCORD_WEBHOOK_ALERT_MAINTAINERS is not set, so no Discord alert was sent."
+            exit 0
+          fi
+          mentions="$(for id in $DISCORD_USER_IDS; do printf '<@%s> ' "$id"; done)"
+          content="${mentions}Merge forward in coolify-docs needs attention:"$'\n'"$(printf '%s\n' "${lines[@]}")"
+          jq -n --arg content "${content:0:1990}" --arg ids "$DISCORD_USER_IDS" \
+            '{content: $content, allowed_mentions: {parse: [], users: ($ids | split(" ") | map(select(test("^[0-9]+$"))))}}' |
+            curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$WEBHOOK" > /dev/null
+          echo "Sent the Discord alert."

@@ -11,6 +11,12 @@ env:
   IMAGE_NAME: coollabsio/coolify-docs
   VITE_ANALYTICS_DOMAIN: coolify.io/docs
   VITE_SITE_URL: https://coolify.io/docs/
+  # Discord users to mention when the build fails. Keep this list in sync with
+  # merge-forward.yml. The webhook URL is the repository secret
+  # DISCORD_WEBHOOK_ALERT_MAINTAINERS; without it, no alert is sent.
+  DISCORD_USER_IDS: >-
+    181775064302223360
+    589480400850780170
 
 jobs:
   build-push:
@@ -84,4 +90,34 @@ jobs:
 
       - name: Deploy to Coolify
         run: |
-          curl --request POST '${{ secrets.COOLIFY_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
+          curl --fail --request POST '${{ secrets.COOLIFY_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
+
+  # Alert on Discord when building, publishing or deploying the docs fails.
+  alert:
+    name: Alert on Discord
+    runs-on: ubuntu-24.04
+    needs: [build-push, merge-manifest]
+    if: failure()
+    permissions: {}
+    steps:
+      - name: Alert on Discord
+        shell: bash
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_ALERT_MAINTAINERS }}
+          REF: ${{ github.ref_name }}
+          SHA: ${{ github.sha }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${WEBHOOK:-}" ]]; then
+            echo "::notice::DISCORD_WEBHOOK_ALERT_MAINTAINERS is not set, so no Discord alert was sent."
+            exit 0
+          fi
+          subject="${COMMIT_MESSAGE%%$'\n'*}"
+          mentions="$(for id in $DISCORD_USER_IDS; do printf '<@%s> ' "$id"; done)"
+          content="${mentions}The production build of coolify-docs failed on \`$REF\` at \`${SHA:0:7}\`${subject:+ ($subject)}: $RUN_URL"
+          jq -n --arg content "${content:0:1990}" --arg ids "$DISCORD_USER_IDS" \
+            '{content: $content, allowed_mentions: {parse: [], users: ($ids | split(" ") | map(select(test("^[0-9]+$"))))}}' |
+            curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$WEBHOOK" > /dev/null
+          echo "Sent the Discord alert."

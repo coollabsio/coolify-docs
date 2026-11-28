@@ -25,6 +25,15 @@ The default root email is `root@example.com`. Change `ZO_ROOT_USER_EMAIL` before
 
 Coolify generates the root password as `SERVICE_PASSWORD_OPENOBSERVE`. Find its generated value in the service environment variables.
 
+## Upgrade to OpenObserve v1
+
+New services use OpenObserve v1.1.2. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+- The root password must have an uppercase letter, a lowercase letter, a digit, and a symbol. If not, OpenObserve does not start. Change the password before the upgrade.
+- The RUM SDK globals change from `OO_` to `O2_`.
+
+See the [official release notes](https://github.com/openobserve/openobserve/releases?utm_source=coolify.io).
+
 ## Links
 
 - [Official website](https://openobserve.ai/)

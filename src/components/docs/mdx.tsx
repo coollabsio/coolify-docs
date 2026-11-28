@@ -37,6 +37,7 @@ import {
   CoolValueGrid,
 } from './cool-layout';
 import { Callout } from './callout';
+import { RollingUpdateScene, RollingUpdateStep } from './diagrams/rolling-update';
 import { ScreenshotTab, ScreenshotTabs } from './screenshot-tabs';
 import { Tab, Tabs } from './tabs';
 import { ZoomImage } from './zoom-image';
@@ -84,6 +85,8 @@ export function getMDXComponents(components?: MDXComponents) {
     Folder,
     MediaCard,
     MediaCardGroup,
+    RollingUpdateScene,
+    RollingUpdateStep,
     ScreenshotTab,
     ScreenshotTabs,
     ServicesList,

@@ -1,105 +1,53 @@
 # Sidebar Configuration
 
-How to add pages to the VitePress sidebar navigation.
+Fumadocs navigation is defined by `meta.json` files under `content/docs/`. Edit the metadata for the folder containing the page, rather than a central application config.
 
-## File Location
+## Add a Page
 
-```
-docs/.vitepress/config.mts
-```
+For `content/docs/knowledge-base/my-guide.mdx`, add `my-guide` to `content/docs/knowledge-base/meta.json` while preserving its existing entries:
 
-The sidebar configuration starts around **line 130**.
-
-## Structure
-
-```typescript
-sidebar: [
-  {
-    text: 'Section Name',
-    collapsed: true,  // Can be expanded/collapsed
-    items: [
-      { text: 'Page Title', link: '/section/page-slug' },
-      { text: 'Another Page', link: '/section/another-page' },
-    ]
-  },
-  // More sections...
-]
-```
-
-## Adding a Page
-
-1. Find the appropriate section in the sidebar array
-2. Add a new item to the `items` array
-3. Use the page's display title for `text`
-4. Use the relative path (without `.md`) for `link`
-
-### Example
-
-Adding a new guide to Knowledge Base:
-
-```typescript
+```json
 {
-  text: 'Knowledge Base',
-  collapsed: true,
-  items: [
-    { text: 'Existing Guide', link: '/knowledge-base/existing' },
-    { text: 'My New Guide', link: '/knowledge-base/docker/my-guide' },  // Added
+  "title": "Knowledge Base",
+  "root": true,
+  "pages": [
+    "---How-To Guides---",
+    "my-guide",
+    "other-guide"
   ]
 }
 ```
+
+Page entries are relative to the folder containing `meta.json`, with no leading slash or `.mdx` extension. The display title normally comes from the page's frontmatter. `---Heading---` creates a section separator.
 
 ## Nested Sections
 
-For subdirectories, you can create nested sections:
+For `content/docs/knowledge-base/docker/my-guide.mdx`:
 
-```typescript
+1. Add `docker` to the parent folder's `pages` array when it should appear as a nested folder.
+2. Create or update `content/docs/knowledge-base/docker/meta.json`:
+
+```json
 {
-  text: 'Knowledge Base',
-  collapsed: true,
-  items: [
-    {
-      text: 'Docker',
-      collapsed: true,
-      items: [
-        { text: 'Docker Basics', link: '/knowledge-base/docker/basics' },
-        { text: 'Docker Compose', link: '/knowledge-base/docker/compose' },
-      ]
-    },
-    {
-      text: 'Server',
-      collapsed: true,
-      items: [
-        { text: 'SSH Setup', link: '/knowledge-base/server/ssh' },
-      ]
-    }
-  ]
+  "title": "Docker",
+  "pages": ["index", "my-guide"]
 }
 ```
 
-## Link Format
+Use `index` only when that folder actually contains `index.mdx`. Do not add `root: true` to every nested folder; it is used for top-level navigation sections in this repository. Follow nearby metadata for collapsibility and ordering.
 
-- **Always** start with `/` (absolute from docs root)
-- **Never** include `.md` extension
-- **Never** include `/docs` prefix
+## Navigation Entries and Page Links
 
-| File Path | Sidebar Link |
-|-----------|--------------|
-| `docs/knowledge-base/guide.md` | `/knowledge-base/guide` |
-| `docs/troubleshoot/apps/error.md` | `/troubleshoot/apps/error` |
+| Source file | Local metadata entry | Internal Markdown link |
+|---|---|---|
+| `content/docs/knowledge-base/my-guide.mdx` | `my-guide` in `knowledge-base/meta.json` | `/knowledge-base/my-guide` |
+| `content/docs/troubleshoot/applications/my-error.mdx` | `my-error` in `troubleshoot/applications/meta.json` | `/troubleshoot/applications/my-error` |
+| `content/docs/start-with-self-hosted.mdx` | `start-with-self-hosted` in the root `meta.json` | `/start-with-self-hosted` |
 
-## When Sidebar Update Is Optional
+Some metadata uses nested entries such as `configuration/overview` or custom link labels such as `[Guidelines](/contribute/guidelines)`. Preserve the existing style rather than replacing a whole section with the minimal examples above.
 
-Some pages don't need sidebar entries:
+A page can stay outside an explicit navigation list when it is intentionally reached through cross-links. Individual one-click services are reached through the generated catalog, so they do not each need a sidebar entry.
 
-- Pages linked from other pages but not primary navigation
-- Supplementary content accessed via in-page links
-- Index pages that redirect
+## Verify
 
-## Verification
-
-After updating:
-
-1. Run `bun run dev`
-2. Check sidebar shows new page
-3. Click to verify link works
-4. Check page renders correctly
+Run `bun run dev`, open `http://localhost:3000/docs/`, and check the page title, ordering, section labels, nested navigation, and link destination. Add redirects when renaming an existing page; see [renaming-services](../renaming-services/SKILL.md) for the Nginx URL convention.

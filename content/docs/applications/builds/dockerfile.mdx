@@ -156,6 +156,8 @@ For Git-based Dockerfile applications, `SOURCE_COMMIT` is excluded from the buil
 
 Use **Build secrets > Docker BuildKit secrets** for sensitive build-time values when Docker BuildKit is available. Read [Environment variables](/applications/configuration/environment-variables#build-and-runtime-scope) before passing credentials to a build.
 
+For example, configure a build-only `NPM_TOKEN` and reference it from `.npmrc` as `${NPM_TOKEN}`. With BuildKit secrets enabled, Coolify makes the token available to the `RUN npm ci` instruction while it installs private packages. Keep the token out of command output and generated files.
+
 ## Image health checks
 
 A Dockerfile can define:

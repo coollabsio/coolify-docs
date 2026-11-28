@@ -1,4 +1,4 @@
-import { siteDefinition } from '../../config/site.shared';
+import { isIndexableDocsSite, siteDefinition, toCanonicalDocsUrl } from '../../config/site.shared';
 
 function trimTrailingSlash(value: string): string {
   return value.replace(/\/+$/, '');
@@ -31,6 +31,7 @@ const plausibleApiHost = trimTrailingSlash(
 export const site = {
   ...siteDefinition,
   siteUrl,
+  indexable: isIndexableDocsSite(siteUrl),
   docsUrl: `${siteUrl}${siteDefinition.docsBasePath}`,
   searchApi: `${siteDefinition.docsBasePath}/api/search`,
   llmsUrl: `${siteDefinition.docsBasePath}/llms.txt`,
@@ -44,4 +45,8 @@ export const site = {
 
 export function absoluteUrl(pathname: string): string {
   return new URL(pathname, `${site.siteUrl}/`).toString();
+}
+
+export function canonicalDocsUrl(pathname: string): string {
+  return toCanonicalDocsUrl(site.siteUrl, pathname);
 }

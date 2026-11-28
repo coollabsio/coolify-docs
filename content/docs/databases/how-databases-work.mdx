@@ -71,7 +71,7 @@ The database health check is a Docker health check, not a backup or a data-integ
 
 ## Backups are engine-specific
 
-Coolify runs database-aware scheduled backups for PostgreSQL, MySQL, MariaDB, MongoDB, and ClickHouse. Redis, Dragonfly, and KeyDB have persistent storage but do not expose the standalone database backup workflow.
+Coolify runs database-aware scheduled backups for PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, and SQLite. Dashboard restore is available for PostgreSQL, MySQL, MariaDB, MongoDB, and SQLite. ClickHouse backups are restored outside that import workflow. Redis, Dragonfly, and KeyDB have persistent storage but do not expose the scheduled backup or dashboard restore workflow.
 
 The backup destination can be local storage or an S3-compatible bucket. A backup is separate from the live database volume: it gives you a recovery artifact that can be stored away from the database server.
 

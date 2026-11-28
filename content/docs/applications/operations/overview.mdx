@@ -20,6 +20,7 @@ Start with the page that matches what you are trying to understand or change. De
 | **Backups** | Configure and inspect scheduled archives for eligible application volume and directory mounts. |
 | **Runtime Logs** | Read stdout and stderr from the application's current containers. |
 | **Terminal** | Open an interactive shell in a selected running container. |
+| **Files** | [Browse and manage files in a running container](/core/container-file-browser). Requires an Owner or Admin role; edits affect the container filesystem. |
 
 **Runtime Logs** can show containers across the application's functional deployment servers, including preview containers. **Terminal** appears only when terminal access is enabled, your team role can use it, and the application has an eligible running container. It is not available from an application deployed to Docker Swarm.
 
@@ -29,8 +30,8 @@ Start with the page that matches what you are trying to understand or change. De
 | :--- | :--- | :--- |
 | Deploy the application for the first time | **Deploy** | Starts the configured deployment flow. |
 | Apply source, image, build-time, or deployment changes | **Redeploy** | Runs the normal deployment flow again and uses a [rolling update](/applications/deployments/rolling-updates) when supported. |
-| Recreate the runtime without intentionally rebuilding | **Restart** | Runs the restart path through the deployment queue. A Docker Image application pulls its saved image reference again. |
-| Rebuild a Coolify-generated source image without build cache | **Force deploy (without cache)** | Starts a deployment with the generated build cache disabled. A custom Docker Compose build command controls its own cache behavior. |
+| Recreate the runtime without intentionally rebuilding | **Restart** | Runs the restart path through the deployment queue. It starts the existing image when no build setting changed; the dialog tells you when it must build and why. A Docker Image application pulls its saved image reference again. |
+| Rebuild the image without build cache | **Deploy (without cache)** or **Redeploy (without cache)** | Starts a deployment with the build cache disabled. For a custom Docker Compose build command, Coolify adds `--no-cache`. |
 | Take the application offline without deleting its configuration | **Stop** | Stops its containers and removes non-persistent container data. Persistent mounts and the Coolify resource remain. |
 
 Use **Restart** after a runtime-only change when a rebuild is unnecessary. Use **Redeploy** when source code, the selected image, build arguments, or build-time variables changed.
@@ -105,7 +106,7 @@ Keep at least one tested backup outside the deployment server. A local backup on
 
 Use **Scheduled Tasks** for commands that must run inside an application container on a schedule, such as a framework scheduler, queue maintenance, or cache cleanup.
 
-A disabled task does not start scheduled executions. An enabled execution fails when the application has no running container or the deployment server is not functional. Follow [Application scheduled tasks](/applications/operations/scheduled-tasks) to configure the command, frequency, timeout, and target container.
+A disabled task does not start scheduled executions. When the application has no running container, Coolify skips the run. An enabled execution fails when the deployment server is not functional. Follow [Application scheduled tasks](/applications/operations/scheduled-tasks) to configure the command, frequency, timeout, and target container.
 
 Use [Tags](/core/automation/tags/overview) to group related resources across projects and environments.
 
@@ -153,3 +154,7 @@ Use **Deploying… View log** to reopen a running deployment or startup log. Sel
 The container log viewer separates **Time**, **Type**, and **Message**. Expand a row to view pretty-printed JSON. If containers cannot be loaded, read the displayed error instead of treating it as proof that none are running.
 
 Viewing container logs requires permission to update the resource. API log requests require `read:sensitive` or `root`.
+
+## Show a maintenance page
+
+Open **Maintenance Mode** in the application settings sidebar, select **Enable maintenance**, then confirm. All domains of the application return a maintenance page with HTTP `503` while the containers keep running. The change applies without redeployment on Traefik and Caddy servers that are not part of a Docker Swarm. See [Maintenance and error pages](/core/networking/proxy/maintenance-and-error-pages).

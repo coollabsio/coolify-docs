@@ -34,6 +34,30 @@ For a server using Caddy, Coolify:
 
 The proxy imports `*.caddy` files from its dynamic directory. Coolify-generated files such as `Caddyfile`, `coolify.caddy`, and the default request handler are shown as read-only in the dashboard.
 
+Coolify writes the `Caddyfile` again each time the proxy starts. Do not edit it manually. When Caddy rejects a dynamic file that you save in the dashboard, Coolify keeps the previous version of the file.
+
+---
+
+## Global options and access logs
+
+Caddy reads [global options](https://caddyserver.com/docs/caddyfile/options) only from the first block of the Caddyfile. Dynamic files are imported after other blocks, so you cannot put global options in a dynamic file. Add them as labels of the proxy container instead:
+
+1. On the server, go to `Proxy` > `Configuration`.
+2. Add the global options as `caddy.*` labels to the `caddy` service. Each label is one option. Nested options use dots:
+
+   ```yaml
+   labels:
+     - coolify.managed=true
+     - coolify.proxy=true
+     - caddy.email=admin@example.com
+     - caddy.log.output=stdout
+     - caddy.log.format=console
+   ```
+
+3. Restart the proxy.
+
+The global `log` option configures the Caddy logs, but it does not turn on access logs. To log the requests of a resource, add a `log` directive to its site with a label on the resource, for example `caddy_0.log.output=stdout`. Then redeploy the resource.
+
 <Callout type="warning" title="Caddy and Traefik configuration are not interchangeable">
 Switching proxies replaces the proxy type and default configuration. Recreate custom routing in Caddy syntax and redeploy resources so their Caddy labels are applied.
 </Callout>

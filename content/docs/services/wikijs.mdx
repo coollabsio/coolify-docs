@@ -15,6 +15,24 @@ icon: "/docs/images/services/wikijs-logo.svg"
 
 The most powerful and extensible open source Wiki software.
 
+## Upgrade to Wiki.js 3
+
+New services use Wiki.js 3.4.0 with PostgreSQL 18. An existing service keeps its image.
+
+<Callout type="warning">
+
+You cannot upgrade Wiki.js 2 in place. Do not change the image of an existing service.
+
+</Callout>
+
+1. Update Wiki.js 2.x to 2.5.317.
+2. Export a `.wkbackup` file in **Administration > Utilities > Export for Wiki.js 3.x**.
+3. Create a new Wiki.js 3 service and import the file.
+4. Configure authentication, storage, mail, security settings, logo, and hostname again. The import does not include them.
+5. Edit the pages that use admonitions, diagrams, tabs, or inline math. Some Markdown needs manual changes.
+
+See the [official upgrade guide](https://docs.js.wiki/setup/upgrade?utm_source=coolify.io).
+
 ## Links
 
 - [Official Documentation](https://docs.requarks.io?utm_source=coolify.io)

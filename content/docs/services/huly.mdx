@@ -18,6 +18,42 @@ This template is currently disabled in Coolify’s one-click service catalog and
 
 </Callout>
 
+## Upgrade to Huly v7
+
+Migrating from Huly v6 to v7 moves the data from MongoDB to CockroachDB. Use a separate deployment from the [Huly self-hosting instructions](https://github.com/hcengineering/huly-selfhost#readme) while the Coolify template is disabled.
+
+<Callout type="warning">
+
+Do not upgrade from v6 to v7 directly.
+
+</Callout>
+
+Follow the [official v6-to-v7 migration procedure](https://github.com/hcengineering/huly-selfhost/blob/main/MIGRATION.md#v07204). For a v6 deployment created from the Coolify template:
+
+1. Back up v6 with `hardcoreeng/tool:v0.6.504`. On the server, run the backup container on the Service network, which is named after the Service UUID. Take `SERVICE_PASSWORD_SECRET`, `SERVICE_USER_MINIO`, and `SERVICE_PASSWORD_MINIO` from the Service's **Environment Variables**:
+
+   ```sh
+   docker run --rm -it \
+     --network SERVICE_UUID \
+     -e SERVER_SECRET="SERVICE_PASSWORD_SECRET" \
+     -e TRANSACTOR_URL="ws://transactor:3333" \
+     -e STORAGE_CONFIG="minio|minio?accessKey=SERVICE_USER_MINIO&secretKey=SERVICE_PASSWORD_MINIO" \
+     -e ACCOUNT_DB_URL="mongodb://mongodb:27017" \
+     -e ACCOUNTS_URL="http://account:3000" \
+     -e DB_URL="mongodb://mongodb:27017" \
+     -v /root/huly-backup:/backup \
+     hardcoreeng/tool:v0.6.504 \
+     -- bundle.js backup-all-to-dir /backup --internal true --blobLimit 4096
+   ```
+
+   Replace the uppercase placeholders with your values. Keep the backup directory on a path the v7 deployment can mount.
+
+2. Set up a separate, empty Huly v7 deployment backed by CockroachDB by following the [Huly self-hosting instructions](https://github.com/hcengineering/huly-selfhost#readme). Restoring into a deployment that already contains data can cause conflicts.
+
+3. Restore the backup with `hardcoreeng/tool:s0.7.251` and `bundle.js restore-from-v6-all /backup`, mounting the same backup directory. Use the restore command from the upstream procedure with the values of your v7 deployment.
+
+4. Check that users can sign in and that their workspaces and files are present before switching traffic. The restore does not change the v6 data and can be repeated. Keep the v6 deployment and the backup until you have verified the restore.
+
 ## Links
 
 - [Official website](https://huly.io/)

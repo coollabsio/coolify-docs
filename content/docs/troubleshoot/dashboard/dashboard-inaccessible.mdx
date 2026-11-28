@@ -34,6 +34,10 @@ First, ask yourself: **How are you trying to access the dashboard?**
   - If you see the login page, the dashboard is working fine without proxy (skip to [step 4](#addressing-proxy-related-issues)).
   - If you don't see the login page, the issue might be with your server or coolify docker containers.
 
+<Callout type="info" title="Sign in again on port 8000">
+When `SESSION_SECURE_COOKIE` is not set, plain HTTP on port `8000` uses its own session cookies, separate from the HTTPS cookies of your domain. Sign in on `http://<server-ip>:8000` even when you are signed in on the domain. If the login on port `8000` fails with `419 Page Expired`, check that `SESSION_SECURE_COOKIE` is not set to `true` in `/data/coolify/source/.env`. See [Session cookies on plain HTTP](/core/instance-management/environment-variables#session-cookies-on-plain-http).
+</Callout>
+
 </Step>
 <Step>
 

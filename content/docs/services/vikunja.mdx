@@ -30,6 +30,10 @@ Vikunja is available in two deployment configurations in Coolify:
   - PostgreSQL container
   - Automatic database configuration and health checks
 
+## Uploaded files
+
+New Vikunja services keep only the uploaded files in the volume, at `/app/vikunja/files`. In older services, the volume covered the application folder of the image, so an image update did not change Vikunja. Existing services keep their volume. Compare **Configuration > General > Edit Compose File** with the current template before you update the image, and back up the volume before you change its mount.
+
 ## Screenshots
 
 <ZoomImage src="https://vikunja.io/_astro/09-task-detail-dark.ppLbej6M_ZzaSch.avif" alt="Vikunja Preview" />

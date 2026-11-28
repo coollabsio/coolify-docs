@@ -10,10 +10,12 @@ The Coolify application source can be found at https://github.com/coollabsio/coo
 
 ## Branch Strategy
 
-- **main**: Production branch, deployed to https://coolify.io/docs/ by `.github/workflows/production-build.yml`
+- **main**: Production branch, deployed to https://coolify.io/docs/ by `.github/workflows/production-build.yml`. When a build or deploy fails, it alerts Discord through the `DISCORD_WEBHOOK_ALERT_MAINTAINERS` secret, mentioning the users in `DISCORD_USER_IDS` at the top of the workflow.
 - **next**: Development branch, deployed to https://next.coolify.io/docs/ by `.github/workflows/staging-build.yml`
 - Pull requests must target `next`, not `main`. `enforce-pr-standards.yml` retargets non-maintainer PRs to `next` automatically.
 - Weekly release cycle merges `next` into `main`.
+- `release/vX.Y` branches (for example `release/v4.8`) hold docs for an upcoming Coolify release. Merge a release branch into `next` by hand when that release is ready.
+- `.github/workflows/merge-forward.yml` runs after every push to `main`. It merges `main` into each release branch and into `next`, and regenerates the service catalog in each merge. It never merges a release branch into `next`. On other conflicts it opens a pull request from a `chore/merge-<source>-into-<target>` branch; merge that pull request with a merge commit, not a squash merge. New conflict pull requests and failed runs are announced on Discord through the `DISCORD_WEBHOOK_ALERT_MAINTAINERS` secret, mentioning the users in `DISCORD_USER_IDS` at the top of the workflow.
 
 ## Technology Stack
 
@@ -77,7 +79,6 @@ config/site.shared.ts       # Shared site metadata and docs base path
 config/openapi.json         # Coolify OpenAPI spec for the API reference
 scripts/                    # Generators, link checker, and postbuild script
 nginx/                      # Nginx config and redirects
-atlas.json                  # Atlas devkit config (bun run dev:atlas)
 ```
 
 `content/docs/` is the source of truth for documentation. Edit MDX files there directly.
@@ -114,8 +115,6 @@ Service frontmatter:
 ---
 title: "Buzz"
 description: "Short description shown in the service catalog."
-og:
-  description: "Longer description for social previews."
 category: "Messaging"
 icon: "/docs/images/services/buzz-logo.svg"
 # disabled: true   # hide from the catalog but keep the page
@@ -129,6 +128,8 @@ When adding, renaming, or disabling services, update:
 | `content/docs/services/{slug}.mdx` | Service documentation |
 | `public/images/services/` | Service logo and screenshots |
 | `nginx/redirects.conf` | Redirects for renamed or removed paths |
+
+The current SEO and generated social-image pipeline reads `title` and `description`. Existing nested `og` metadata and frontmatter `image` fields do not override it.
 
 Service filenames should use kebab-case lowercase and match the service slug. Use a category that already exists in `all.mdx` so the catalog doesn't get duplicate headings.
 

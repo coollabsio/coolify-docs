@@ -5,7 +5,7 @@ description: Permanently delete an application and choose which related Docker r
 
 # Delete an application
 
-Deleting an application removes it from Coolify, stops its production and preview containers, and removes its environment variables. The deletion cannot be undone.
+Deleting an application removes it from Coolify, cancels its queued and running deployments, stops its production and preview containers, and removes its environment variables. The deletion cannot be undone.
 
 Open the application, then select **Danger Zone**.
 
@@ -20,7 +20,7 @@ Open the application, then select **Danger Zone**.
 
 Application rollback images are not backups of persistent volumes. Verify a volume backup outside the affected volume before continuing.
 
-Deleting the application also deletes its scheduled volume-backup configuration and the backup archives created by those schedules from local and S3 storage. This happens regardless of which optional deletion actions you select.
+Deleting the application always deletes its scheduled volume-backup configuration. The backup archives created by those schedules stay on the server and on S3 unless you select the backup deletion action. Coolify no longer manages archives that stay, so you must delete them yourself.
 
 </Callout>
 
@@ -31,7 +31,7 @@ Deleting the application also deletes its scheduled volume-backup configuration 
 
 ### Review the deletion actions
 
-Select **Delete** and review the actions in the confirmation modal. Coolify selects all four optional actions by default:
+Select **Delete** and review the actions in the confirmation modal. Coolify selects the first four optional actions by default:
 
 | Action | Result |
 | :--- | :--- |
@@ -39,8 +39,11 @@ Select **Delete** and review the actions in the confirmation modal. Coolify sele
 | **Permanently delete all non-predefined networks associated with this resource.** | Deletes application networks that were not defined as shared networks. |
 | **Permanently delete all configuration files from the server.** | Deletes Coolify-generated configuration files for the application from its server. |
 | **Run Docker Cleanup (remove unused images and builder cache).** | Starts Docker cleanup on the application server after deletion. |
+| **Permanently delete all database and storage backups of this resource, on the server and on S3.** | Not selected by default. Deletes the backup archives of the application's storage backup schedules, locally and on S3. |
 
-The application record, environment variables, file-mount records, scheduled volume-backup configuration and archives, and application containers are removed even when optional actions are cleared.
+The application record, environment variables, file-mount records, scheduled volume-backup configuration, and application containers are removed even when optional actions are cleared. Coolify also cancels the deployments of the application and removes their build containers on the deployment and build servers.
+
+The configuration-file action also removes the folders of the application's preview deployments.
 
 </Step>
 <Step>

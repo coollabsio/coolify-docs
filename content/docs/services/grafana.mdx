@@ -30,6 +30,10 @@ Grafana is available in two deployment configurations in Coolify:
   - PostgreSQL 16 container
   - Automatic database configuration and health checks
 
+## Image
+
+New Grafana services use the `grafana/grafana` image, because `grafana/grafana-oss` gets no more updates. Existing services keep their current image. To move an existing service, back up its data, then change the image to `grafana/grafana` with a version tag in **Configuration > General > Edit Compose File** and redeploy.
+
 ## Features
 
 Grafana allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data-driven culture:

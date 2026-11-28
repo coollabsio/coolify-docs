@@ -72,9 +72,10 @@ Keep **Keep unused volumes**, **Keep unused networks**, and **Keep retained imag
 
 Use a manual cleanup to confirm the settings before relying on the schedule:
 
-1. Review the three advanced cleanup options.
-2. Select **Run cleanup** and review the confirmation, then select **Run Docker Cleanup**.
-3. Wait for the execution to finish.
+1. Wait for queued and running deployments that use this server, including deployments that use it as a build server. A manual cleanup can prune Docker and Railpack build caches during an active build and cause it to fail.
+2. Review the three advanced cleanup options.
+3. Select **Run cleanup** and review the confirmation, then select **Run Docker Cleanup**.
+4. Wait for the execution to finish.
 
 A manual cleanup does not wait for the schedule or disk threshold. If another cleanup is running, it waits for that execution instead of being dropped. Only one cleanup runs per server at a time.
 
@@ -83,7 +84,9 @@ A manual cleanup does not wait for the schedule or disk threshold. If another cl
 
 ### Review the result
 
-Open **Recent executions** and select the latest cleanup.
+Open **Recent executions** and select the latest cleanup. A scheduled cleanup can succeed while leaving build caches in place for a queued or running deployment. Other eligible cleanup continues, and the execution log explains why the cache prune was skipped.
+
+Coolify prunes the Railpack build cache only when the `coolify-railpack` builder exists on the server. On a server without Railpack deployments, the cleanup skips this step without an error.
 
 Confirm that:
 

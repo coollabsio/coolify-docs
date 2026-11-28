@@ -40,6 +40,19 @@ Perfect for receiving notifications from:
 
 <ZoomImage src="/docs/images/services/gotify-ui.webp" alt="Gotify-UI" />
 
+## Upgrade to Gotify 3
+
+New services use Gotify 3.1.1. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+Gotify 3 does not support `config.yml`.
+
+1. Convert your configuration with `gotify migrate-config`.
+2. Write list values as comma-separated values and map values as JSON.
+
+Gotify 3 shows new tokens only one time.
+
+See the [official migration guide](https://gotify.net/docs/migrate-to-3?utm_source=coolify.io).
+
 ## Links
 
 - [The official website](https://gotify.net/)

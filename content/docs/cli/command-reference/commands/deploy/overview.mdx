@@ -1,0 +1,35 @@
+---
+title: "Deploy"
+description: "Deploy a folder as a static site, or deploy resources and manage deployments"
+---
+
+# Deploy
+
+Deploy a folder as a static site, or deploy resources and manage deployments
+
+## Usage
+
+```sh
+coolify deploy [folder]
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--app` | `string` | No | — | Deploy to this static site application UUID instead of the linked one |
+| `--domain` | `string` | No | — | Domains of a new application, comma-separated (default: a generated domain) |
+| `--environment` | `string` | No | `production` | Environment name for a new application |
+| `--name` | `string` | No | — | Name of a new application (default: the folder name) |
+| `--no-link` | `boolean` | No | `false` | Do not write the link file .coolify.json |
+| `--project` | `string` | No | — | Project UUID for a new application (default: the only project) |
+| `--server` | `string` | No | — | Server UUID for a new application (default: the only usable server) |
+| `--spa` | `boolean` | No | `false` | Serve index.html for unknown paths of a new application (single-page app) |
+
+## Get current help
+
+```sh
+coolify deploy --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

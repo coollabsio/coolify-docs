@@ -159,15 +159,13 @@ The command should print `root` without asking for a password.
 
 Coolify stores application, database, service, proxy, and certificate files under `/data/coolify` on the server.
 
-Create the directory and give the non-root user ownership:
+On a fresh server, if `/data/coolify` does not exist, create it for the SSH user:
 
 ```sh
-mkdir -p /data/coolify
-chown -R cooluser:cooluser /data/coolify
-chmod -R o-rwx /data/coolify
+install -d -m 0750 -o cooluser -g cooluser /data/coolify
 ```
 
-The `cooluser` user can now manage files under `/data/coolify`. Coolify applies the same ownership pattern when it creates additional directories for a non-root server user.
+On an existing server, leave the ownership and permissions of `/data/coolify` and its contents in place. Containers can use host files there through bind mounts and rely on specific user IDs and permissions. Keep passwordless `sudo` available for Coolify operations. If an operation reports a permissions error, inspect the specific path before adjusting it.
 
 </Step>
 <Step>

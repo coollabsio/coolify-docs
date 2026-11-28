@@ -63,6 +63,20 @@ This demo is not affiliated with Coolify.
 </Callout>
 
 
+## Upgrade to Pocket ID v2
+
+New services use Pocket ID v2.19. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+This applies to both deployment variants.
+
+1. Set `ENCRYPTION_KEY`. The new template sets this value.
+2. Remove `KEYS_STORAGE`, `KEYS_PATH`, and `DB_PROVIDER`.
+3. Rename `LDAP_ATTRIBUTE_ADMIN_GROUP` to `LDAP_ADMIN_GROUP_NAME`.
+
+Users can have to log in again. Use only one Pocket ID instance for each database.
+
+See the [official migration guide](https://pocket-id.org/docs/setup/major-releases/migrate-v2?utm_source=coolify.io).
+
 ## Links
 
 - [Official Website](https://pocket-id.org?utm_source=coolify.io)

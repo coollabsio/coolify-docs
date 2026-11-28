@@ -15,6 +15,18 @@ icon: "/docs/images/services/redmine-logo.svg"
 
 Redmine is a flexible project management web application. Written using the Ruby on Rails framework, it is cross-platform and cross-database.
 
+## Upgrade to Redmine 7
+
+New services use Redmine 7. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+Redmine 7 uses Rails 8.1.
+
+- Compare the old configuration files in the `redmine-config` volume with the defaults of 7.0.
+- Old theme and plugin APIs are removed. Make sure that your themes and plugins support Redmine 7.
+- Sudo mode is on by default.
+
+See the [official changelog](https://www.redmine.org/projects/redmine/wiki/Changelog_7_0?utm_source=coolify.io).
+
 ## Links
 
 - [Official website](https://www.redmine.org/?utm_source=coolify.io)

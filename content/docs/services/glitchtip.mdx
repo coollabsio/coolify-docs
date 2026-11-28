@@ -13,6 +13,26 @@ icon: "/docs/images/services/glitchtip-logo.png"
 
 Track errors, uptime, and performance. An open source reimplementation of Sentry error tracking platform.
 
+## Upgrade to GlitchTip 7
+
+New services use GlitchTip 7.0. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+GlitchTip 7 runs in one process. The worker and migrate services are removed. It needs PostgreSQL 15 or later.
+
+1. Upgrade to the latest 6.x version first.
+2. Rename the legacy environment variables. GlitchTip 7 ignores the old names. For example, rename `GLITCHTIP_MAX_EVENT_LIFE_DAYS` to `GLITCHTIP_RETENTION_DAYS`.
+3. Change the image to GlitchTip 7 and remove the worker and migrate services.
+
+<Callout type="warning">
+
+If you keep an old name, GlitchTip resets the retention to the default and deletes old data.
+
+</Callout>
+
+The default of `TRUSTED_PROXIES` is now `private`.
+
+See the [official changelog](https://gitlab.com/glitchtip/glitchtip-backend/-/blob/master/CHANGELOG?utm_source=coolify.io).
+
 ## Links
 
 - [The official website](https://glitchtip.com/)

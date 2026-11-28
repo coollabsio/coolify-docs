@@ -158,6 +158,12 @@ Use an `https://` URL when you want the integrated proxy to configure TLS. Cooli
 
 An `http://` value creates an HTTP route. Other resource or proxy settings can still redirect that route to HTTPS.
 
+WebSocket connections use the same `http://` or `https://` domain. The proxy routes them without a `ws://` or `wss://` scheme.
+
+<Callout type="info" title="Upgrade from Coolify v4.7.6 or earlier">
+Older versions could save domains with `ws://` or `wss://`, which broke Docker Compose parsing and deployments. The upgrade to Coolify v4.7.7 rewrites these domains to `http://` and `https://`. The proxy still routes WebSocket connections over them.
+</Callout>
+
 <Callout type="warning" title="Certificate issuance needs a public route">
 The hostname must resolve through the resource server or a correctly configured CDN, ports `80` and `443` must reach the Coolify proxy, and the domain must be present in the resource configuration.
 </Callout>

@@ -58,6 +58,10 @@ Set:
 
 Coolify combines both values when locating the file.
 
+Coolify runs Docker Compose in the base directory, so relative paths in the file, such as `build.context: ..`, resolve from the base directory. When the Compose file is in a subdirectory, Coolify shows a warning. If the paths in the file are relative to the file itself, select **Use `<directory>` as base directory** to move the file's directory into **Base Directory**. For example, for `/docker/docker-compose.yml` with `context: ..`, set **Base Directory** to `/docker` and **Docker Compose Location** to `/docker-compose.yml`.
+
+When a build context points outside the repository, the deployment stops before the build. The deployment log shows the **Base Directory** and **Docker Compose Location** to set when the paths in the file are relative to the Compose file.
+
 <ZoomImage src="/docs/images/builds/packs/compose/5.webp" alt="Branch, Base Directory, and Docker Compose Location fields" />
 
 </Step>
@@ -151,6 +155,32 @@ Because this resource has no Git source, repository webhooks and pull-request pr
 
 For a Git-based Application, edit the Compose file in the repository and redeploy the selected commit. For **Docker Compose Empty**, use **Edit Compose File** in the Service configuration.
 
+When a service has no `restart` key, Coolify sets `restart: unless-stopped`. Docker Compose uses `no` as its default. For a container that must run one time and then stop, such as a migration or setup task, set `restart: "no"` on that service.
+
+### Include other Compose files
+
+A Git-based Docker Compose Application can use the top-level [`include`](https://docs.docker.com/reference/compose-file/include/) element to split the definition into several files:
+
+```yaml
+include:
+  - ./services/database.yaml
+  - path: ./services/api.yaml
+    project_directory: ./services
+
+services:
+  web:
+    image: nginx:alpine
+```
+
+When Coolify loads the Compose file, it reads the included files from the repository, merges them with `docker compose config`, and saves one Compose file. The parser, the validation, and the deployment use that merged file. **Docker Compose Content (raw)** shows it.
+
+- Nested includes, `path` lists, `project_directory`, and `env_file` work.
+- Relative paths in an included file, such as `build` contexts and bind mounts, point to the folder of that included file.
+- Every included file must be in the repository. Coolify rejects absolute paths, paths that go above the repository root, symlinks, variables in include paths, and remote includes from Git, HTTP, or OCI.
+- The deployment server needs Docker Compose 2.25 or later.
+
+Compose files without `include` are not changed.
+
 <span id="defining-environment-variables" />
 <span id="shared-environment-variables" />
 
@@ -242,6 +272,33 @@ services:
     volumes:
       - /data/${TENANT_NAME}:/app/data
 ```
+
+Read [Variables in host paths](#variables-in-host-paths) for how Coolify resolves such a path.
+
+### Env files from the repository
+
+A Git-based Docker Compose Application passes the `env_file` entries of its services to the containers:
+
+```yaml
+services:
+  api:
+    env_file:
+      - ./config/defaults.env
+```
+
+- A relative `env_file` path is read from the directory of the Compose file.
+- Coolify adds its own `.env` file after the env files of each service, so the variables of the resource override the values in them.
+- Coolify skips an `env_file` that is not a file in the repository, such as a gitignored `.env.local`, and writes a warning to the deployment log.
+
+### Variables that Coolify sets
+
+A reference to a variable that Coolify sets itself, such as `${COOLIFY_RESOURCE_UUID}`, `${COOLIFY_CONTAINER_NAME}`, `${COOLIFY_BRANCH}`, `${COOLIFY_URL}`, or `${COOLIFY_FQDN}`, does not create a resource variable. Docker Compose reads its value from the `.env` file of the deployment, also in fields such as a network `name:`.
+
+<Callout type="info" title="Remove an old COOLIFY_RESOURCE_UUID variable">
+
+Before Coolify v4.7.7, a reference to `COOLIFY_RESOURCE_UUID` could create a resource variable with an empty value or the network name. Delete such a `COOLIFY_RESOURCE_UUID` variable on the **Environment Variables** page, then redeploy.
+
+</Callout>
 
 ### Use a shared variable
 
@@ -384,7 +441,7 @@ Volumes marked `external: true` use their declared Docker names. Existing resour
 
 Relative bind sources resolve from the resource directory, including supported `../` sources. Storage paths are validated; managed file paths must remain within the resource directory. Preview deletion removes only networks and volumes Coolify created for that preview.
 
-Coolify also supports `is_directory: true` and `content:` extensions for repository-relative bind sources. Use these only when the deployment must create the directory or file.
+Coolify also supports `is_directory` and `content:` extensions for repository-relative bind sources. Use these only when the deployment must create the directory or file. A bind without these keys is a directory. With `is_directory: false` and no `content:`, Coolify creates an empty file. You can then add its content on the **Persistent Storage** page.
 
 <Callout type="warning" title="A file bind source must exist">
 
@@ -425,6 +482,29 @@ Read [Persistent storage](/core/persistent-storage/storage-mounts/overview) befo
 
 If a file bind mount fails with `not a directory: unknown`, inspect the source path on the deployment server. Confirm that it exists as a file rather than a directory, then redeploy the resource.
 
+### Variables in host paths
+
+The host path of a short-syntax volume can use variables, also in the middle of the path:
+
+```yaml
+services:
+  app:
+    volumes:
+      - ${DATA_DIR:-./data}/config:/config
+      - /srv/${TENANT_NAME}/uploads:/app/uploads
+```
+
+The host path uses the value of the variable from **Environment Variables**, or the default of `${VAR:-default}` when the variable has no value. A host path with a variable that has no value and no default stops the parse with an error that names the variable. Write the container path without variables.
+
+<Callout type="warning" title="Upgrade from Coolify v4.7.6 or earlier">
+
+Older versions ignored the variable values in a short-syntax host path. They used the default, or made a named Docker volume from a path such as `${DATA}/config:/config`. After the upgrade, Coolify keeps the data where it is and writes a warning to the deployment log:
+
+- A bind mount keeps its saved host path. Its **Persistent Storage** entry shows the path that the variable gives. Select **Use the variable path** to mount that path from the next deployment. Coolify does not copy the data.
+- A Docker volume stays in use while its entry exists in **Persistent Storage**. The entry shows the host path that the variable gives. To use that path, copy the data to it, delete the entry, and redeploy.
+
+</Callout>
+
 ## Health checks
 
 Define health checks in the image Dockerfile or Compose service. Git-based Docker Compose Applications do not use the standard Application **Healthcheck** page, and user-defined Services also use the checks from their Compose definition.
@@ -449,6 +529,8 @@ Use `exclude_from_hc: true` for a one-time service, such as a migration containe
 Coolify creates a resource-specific network for the Compose resource. Services in the definition can reach one another by service name and internal port.
 
 Under **Advanced > Docker compose > Predefined network**, choose **Connect to predefined network** only when the Compose services must communicate with resources on the selected Coolify destination. Names can be prefixed to prevent collisions, so verify the generated container or service name before using it as a hostname.
+
+On the predefined network, and on a network with `name:` or `external: true`, production and its previews share one network. There, a service name such as `db` resolves to the container of production, also from a preview. Use `${SERVICE_NAME_DB}` as the hostname to reach the service of the same deployment. Read [Docker Compose preview names](/applications/deployments/preview-deployments#docker-compose-preview-names).
 
 <ZoomImage src="/docs/images/builds/packs/compose/6.webp" alt="Connect To Predefined Network option for a Docker Compose application" />
 
@@ -490,6 +572,8 @@ Under **Advanced > Build**, set **Build arguments** to **Managed manually in Doc
 ## Application Compose commands
 
 For a Git-based Docker Compose Application, the **Custom Build Command** and **Custom Start Command** fields replace the normal Compose commands. Coolify injects the Compose file and environment-file flags unless the custom command supplies its own.
+
+For **Deploy (without cache)** and for **Advanced > Build > Build cache** set to **Rebuild from scratch every time**, Coolify adds `--no-cache` to the custom build command when the command does not have it.
 
 Keep paths relative to **Base Directory** and use the same Compose definition that Coolify parsed. Otherwise, generated domains, labels, and variables may not match the deployed services.
 

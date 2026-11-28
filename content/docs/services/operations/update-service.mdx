@@ -13,7 +13,7 @@ Updating can require more than changing an image tag. Review upstream release no
 
 <Callout type="warning" title="Test the update in a separate Service">
 
-Clone the Service or create another instance of the same one-click template, then test the target version there. Cloning copies configuration, not volume contents, bind-mounted files, database records, or external-service data. Restore representative data separately when the update includes a state migration.
+Clone the Service or create another instance of the same one-click template, then test the target version there. Cloning copies configuration. It copies the data of named volumes only when you select **Clone volume data**. It never copies bind-mounted files or external-service data. Use **Clone volume data** or restore representative data when the update includes a state migration.
 
 </Callout>
 
@@ -22,7 +22,7 @@ Clone the Service or create another instance of the same one-click template, the
 | Current configuration | Update path |
 | :--- | :--- |
 | Image uses a pinned version tag | Change the tag and any required Compose settings deliberately. |
-| Image uses a mutable tag such as `latest` | Use **Pull Latest Images & Restart** only when pulling the current image behind that tag is intentional. |
+| Image uses a mutable tag such as `latest` | Use **Pull latest and restart** only when pulling the current image behind that tag is intentional. |
 | New release changes services, variables, mounts, commands, or migrations | Compare the complete upstream or one-click template and merge every required change into **Source Compose**. |
 
 ## Prepare the update
@@ -58,7 +58,7 @@ Saving Compose reparses referenced environment variables. Review the resulting E
 
 ### Pull the saved tag again
 
-Select **Advanced > Pull Latest Images & Restart** to run a Compose pull for the image tags already stored in the Service, then recreate the stack.
+A Compose Service has a separate action to pull images. Its **Restart** does not pull. This differs from a standalone database such as [MySQL](/databases/mysql), whose **Restart** pulls the configured image before it stops the database. Select **Pull latest and restart** in the **Restart** menu to run a Compose pull for the image tags already stored in the Service, then recreate the stack.
 
 This action does not replace the saved Compose definition with a newer one-click template. It also does not add variables, components, mounts, commands, or migration steps introduced by the upstream release.
 

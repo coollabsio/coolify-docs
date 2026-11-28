@@ -1,6 +1,7 @@
 {
   "title": "How-Tos",
   "pages": [
+    "secure-your-server",
     "macos-colima",
     "webstudio-with-hetzner"
   ]

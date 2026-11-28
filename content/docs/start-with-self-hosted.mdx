@@ -1,6 +1,6 @@
 ---
 title: Start with Self-hosted
-description: Install and run self-hosted Coolify with a clear path for automated or manual setup.
+description: Install self-hosted Coolify on your own server with one command, or set it up manually. Server requirements, supported OS, Raspberry Pi and first login.
 ---
 
 import {
@@ -39,7 +39,7 @@ Self-hosting Coolify means you run the Coolify instance on infrastructure you co
 
 <CoolCallout icon={ArrowsRight} title="The short version">
 
-Coolify needs 2 CPU cores, 2 GB RAM, and 10 GB disk space to run. If your server meets this specification, you can install Coolify by using this install script:
+Coolify needs 2 CPU cores, 2 GB RAM, and 10 GB disk space to run. If your server meets this specification, run the install script in a root shell. If you signed in as a sudo-capable user, run `sudo -i` first:
 
 ```sh
 curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
@@ -124,9 +124,9 @@ You can even use our [referral link](https://coolify.io/hetzner) to support the 
 | Base | Distributions | Notes |
 | :--- | :--- | :--- |
 | Debian-based | Debian, Ubuntu | Ubuntu non-LTS: use Manual install |
-| Red Hat-based | CentOS, Fedora, Red Hat, AlmaLinux, Rocky, TencentOS, Asahi | Docker may need manual pre-install on some variants |
+| Red Hat-based | CentOS, Fedora, Red Hat, AlmaLinux, Rocky, Amazon Linux 2023, TencentOS, Asahi | Docker may need manual pre-install on some variants. Amazon Linux 2 is not supported |
 | SUSE-based | SLES, SUSE, openSUSE | Supported |
-| Arch-based | Arch Linux | Supported |
+| Arch-based | Arch Linux, and distributions with `arch` in `ID_LIKE` of `/etc/os-release`, such as Manjaro, EndeavourOS, CachyOS, or Garuda | Supported |
 | Alpine-based | Alpine Linux | Supported |
 | Raspberry Pi OS | Raspberry Pi OS (64-bit) | Use 64-bit image |
 
@@ -332,7 +332,7 @@ The resources you need depend on your projects. If you host multiple services or
 ---
 
 ### 1. Run the install script
-Open your terminal and SSH into your server as root or a user with sudo privileges, then run the command below:
+Connect to the server over SSH. If you signed in with a sudo-capable account, run `sudo -i` to enter a root shell. Run the following command as root:
 ```sh
 curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 ```
@@ -349,6 +349,17 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
   
   View the [Script's Source Code](https://github.com/coollabsio/coolify/blob/v4.x/scripts/install.sh)
   
+  </Accordion>
+  <Accordion title="Install a preview or nightly version">
+
+  Add `--preview` or `--nightly` to install the newest version of that channel. The installer also switches the [update channel](/core/instance-management/update#choose-an-update-channel) of the instance to that channel.
+
+  ```sh
+  curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash -s -- --nightly
+  ```
+
+  Preview versions are betas and release candidates. Nightly builds get less testing and can include breaking changes. Use them only on an instance that you can rebuild.
+
   </Accordion>
 </Accordions>
 
@@ -371,6 +382,8 @@ Open `http://192.168.1.69:8000` in your browser (replace `192.168.1.69` with you
 <Callout type="danger" title="Secure your admin account">
 
   **Create your admin account as soon as installation finishes. Anyone who reaches the registration page first can become the instance admin and gain root access to your server.**
+
+  On an instance with no accounts, Coolify opens a 10-minute window for creating the first administrator after startup. If **Setup window closed** appears and no account exists, run `docker restart coolify` on the server and reload the page after Coolify starts.
 </Callout>
 
 ---
@@ -507,11 +520,13 @@ sed -i "s|PUSHER_APP_SECRET=.*|PUSHER_APP_SECRET=$(openssl rand -hex 32)|g" /dat
 ---
 
 ### 6. Create Docker network
-Create the Docker network Coolify uses to connect its internal services:
+Create the Docker network Coolify uses to connect its internal services. Create it with IPv6 when Docker can allocate an IPv6 subnet, and without IPv6 otherwise:
 
 ```sh
-docker network create --attachable coolify
+docker network create --attachable --ipv6 coolify || docker network create --attachable coolify
 ```
+
+With IPv6 on the network, applications behind the proxy get the real address of IPv6 visitors instead of the Docker gateway address. See [Applications see the Docker gateway IP](/troubleshoot/applications/wrong-client-ip).
 
 ---
 
@@ -536,6 +551,8 @@ Open `http://192.168.1.69:8000` in your browser (replace `192.168.1.69` with you
 <Callout type="danger" title="Secure your admin account">
 
   **Create your admin account as soon as installation finishes. Anyone who reaches the registration page first can become the instance admin and gain root access to your server.**
+
+  On an instance with no accounts, Coolify opens a 10-minute window for creating the first administrator after startup. If **Setup window closed** appears and no account exists, run `docker restart coolify` on the server and reload the page after Coolify starts.
 </Callout>
 
 That's it!, you can start using Coolify.
@@ -802,9 +819,11 @@ Use this when you want to pre-create the root account during installation, so th
 
 | Variable | Required | Notes |
 | :--- | :--- | :--- |
-| `ROOT_USERNAME` | Yes | 3-255 characters. Allowed: letters, numbers, spaces, underscores, and hyphens. |
-| `ROOT_USER_EMAIL` | Yes | Must be a valid email format with a valid DNS record, up to 255 characters. |
-| `ROOT_USER_PASSWORD` | Yes | At least 8 characters with uppercase, lowercase, number, and special symbol. |
+| `ROOT_USERNAME` | No | 3-255 characters. Allowed: letters, numbers, spaces, underscores, and hyphens. Defaults to `Root User`. |
+| `ROOT_USER_EMAIL` | Yes | Must be a valid email format, up to 255 characters. The domain does not need a mail DNS record. |
+| `ROOT_USER_PASSWORD` | Yes | At least 8 characters with uppercase, lowercase, number, and special symbol. The password must not appear in a known data breach. |
+
+While `ROOT_USER_EMAIL` and `ROOT_USER_PASSWORD` are set, Coolify creates the root account only from these values, and registration in the browser stays closed. If a value is not valid, the installer shows why it could not create the root user, and the registration page tells you to run the installer again. A new run of the installer replaces the old `ROOT_USER_*` values in `/data/coolify/source/.env`.
 
 <Tabs items={['Automated', 'Manual']}>
 <Tab value="Automated" icon={Autobrightness2}>
@@ -838,10 +857,12 @@ nano /data/coolify/source/.env
 Add:
 
 ```sh
-ROOT_USERNAME=RootUser
-ROOT_USER_EMAIL=example@example.com
+ROOT_USERNAME='RootUser'
+ROOT_USER_EMAIL='example@example.com'
 ROOT_USER_PASSWORD='StrongPassword123!'
 ```
+
+Put each value in single quotes (use double quotes for a value that contains a single quote). If a value has a space and no quotes, Coolify cannot read the `.env` file and every page returns HTTP 500.
 
 Then run:
 
@@ -919,19 +940,19 @@ Use this when you want Coolify images pulled from a different registry source.
 
 | Variable | Default | Allowed values |
 | :--- | :--- | :--- |
-| `REGISTRY_URL` | `ghcr.io` | `ghcr.io`, `docker.io` |
+| `REGISTRY_URL` | `docker.io` | `docker.io`, `ghcr.io` |
 
 <Tabs items={['Automated', 'Manual']}>
 <Tab value="Automated" icon={Autobrightness2}>
 
 ```sh
-env REGISTRY_URL=docker.io bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
+env REGISTRY_URL=ghcr.io bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
 ```
 
 If you are not logged in as `root`:
 
 ```sh
-sudo -E env REGISTRY_URL=docker.io bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
+sudo -E env REGISTRY_URL=ghcr.io bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
 ```
 
 </Tab>
@@ -947,7 +968,7 @@ nano /data/coolify/source/.env
 Add:
 
 ```sh
-REGISTRY_URL=docker.io
+REGISTRY_URL=ghcr.io
 ```
 
 Then run:
@@ -961,7 +982,7 @@ docker compose --env-file /data/coolify/source/.env -f /data/coolify/source/dock
 
 <Callout type="tip" title="Tip">
 
-  The registry can be changed after installing Coolify by following the steps above.
+  The registry can be changed after installing Coolify by following the steps above, or with **Docker registry** in **Settings > Updates**.
 </Callout>
 
 </Tab>
@@ -1071,14 +1092,18 @@ See the Docker Compose documentation for the full list of available attributes: 
 
 The port number can be changed via the `APP_PORT` variable in Coolify's `.env` file (`/data/coolify/source/.env`). However, the override file lets you control *how* the port is bound — something `.env` cannot do.
 
-Bind the Coolify UI to localhost only, so it is only accessible through a reverse proxy:
+Bind the Coolify UI to localhost only, so it is only accessible through a reverse proxy or a tunnel. Coolify's own Compose file already publishes ports `8000`, `6001` (realtime), and `6002` (terminal). Docker Compose adds a plain `ports:` list to those ports instead of replacing them, so use `!override`:
 
 ```yaml
 services:
   coolify:
-    ports:
+    ports: !override
       - "127.0.0.1:8000:8080"
+      - "127.0.0.1:6001:6001"
+      - "127.0.0.1:6002:6002"
 ```
+
+`!override` replaces the ports with these exact values. If you changed `APP_PORT` or `REVERB_PORT` in `.env`, use those values as the host ports instead of `8000` and `6001`, and keep the container ports `8080` and `6001`. Run the validation command above and check that every published port of the `coolify` service has `host_ip: 127.0.0.1`.
 
 Or close the port entirely and rely on the Docker network (useful when the Coolify Proxy is enabled and configured for the Coolify Dashboard):
 

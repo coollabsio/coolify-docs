@@ -21,6 +21,16 @@ Swetrix is a privacy-friendly, cookieless and open-source web analytics alternat
 <ZoomImage src="/docs/images/services/swetrix-screenshot-4.webp" />
 <ZoomImage src="/docs/images/services/swetrix-screenshot-5.webp" />
 
+## Upgrade to Swetrix v5
+
+New services use Swetrix v5.5.4 with ClickHouse 26.8. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+1. Run the ClickHouse migration scripts from the release notes of v5.0.0, 5.1.0, 5.2.0, 5.3.0, 5.4.0, and 5.5.0.
+2. Update the tracking script on your websites. It uses a new URL.
+3. Update your API clients. The API is now at `<url>/backend`, through a new nginx proxy.
+
+See the [official release notes](https://github.com/Swetrix/swetrix/releases?utm_source=coolify.io).
+
 ## Links
 
 - [The official website](https://swetrix.com)

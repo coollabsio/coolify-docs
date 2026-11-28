@@ -7,6 +7,12 @@ category: "Business"
 icon: "/docs/images/services/glpi-logo.svg"
 ---
 
+<Callout type="info" title="PHP security update">
+
+This service's one-click templates have been re-enabled following the PHP security review. Updating Coolify does not update deployed service containers. For existing deployments, follow the [PHP security advisory](/knowledge-base/php-security-advisory-2026) and the service's upstream upgrade instructions to apply any required image updates.
+
+</Callout>
+
 # GLPI
 
 <ZoomImage src="/docs/images/services/glpi-logo.svg" alt="GLPI (Gestionnaire Libre de Parc Informatique)" />
@@ -26,6 +32,15 @@ After deploying the template, GLPI will automatically complete an installation p
    # password
    glpi
    ```
+
+## Upgrade to GLPI 12
+
+New services use GLPI 12. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+- After the upgrade, knowledge base categories are invisible until an administrator gives access to them again.
+- To get the client IP addresses behind a reverse proxy, set `GLPI_TRUSTED_REVERSE_PROXIES` in the GLPI configuration.
+
+See the [official release notes](https://github.com/glpi-project/glpi/releases/tag/12.0.0?utm_source=coolify.io).
 
 ## Links
 

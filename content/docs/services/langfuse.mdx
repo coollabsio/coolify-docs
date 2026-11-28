@@ -35,5 +35,16 @@ It accelerates the development workflow by providing tools for **observability**
 ## Get Started
 
 - Visit the [Langfuse docs](https://langfuse.com/docs) to get started.
-- 
 
+## Upgrade to Langfuse 4
+
+New services use Langfuse 4.80.0. An existing service keeps its image until you change it in **Configuration > General > Edit Compose File**.
+
+Langfuse 4 needs ClickHouse 25.12 or later, PostgreSQL 15 or later, and Redis 7 or later. It uses the `events_only` write mode by default. The Python SDK v2 and the JS SDK v3 do not work with Langfuse 4.
+
+1. Upgrade ClickHouse, PostgreSQL, and Redis to the minimum versions.
+2. Set `LANGFUSE_MIGRATION_V4_WRITE_MODE=dual` in the environment variables.
+3. Change the image to Langfuse 4, then do the 3-step migration of the official guide.
+4. Update your SDK clients.
+
+See the [official upgrade guide](https://langfuse.com/self-hosting/upgrade/upgrade-guides/upgrade-v3-to-v4?utm_source=coolify.io).

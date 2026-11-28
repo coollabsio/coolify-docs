@@ -80,6 +80,12 @@ The server that runs the build and the Coolify helper container must have the Do
 
 </Callout>
 
+## Bundled version and builder lifecycle
+
+Coolify v4.5 bundles Railpack `0.40.1` in its helper image. The deployment uses a matching Railpack frontend image, so keep the helper image current when updating Coolify. Custom helper images may bundle a different version.
+
+Coolify stops its Railpack BuildKit builder when no build is using it, releasing memory retained by the idle builder. The next Railpack build starts it again. An idle stopped builder is expected and does not mean the last deployment failed. Concurrent builds keep the builder running until they finish.
+
 ## Command overrides
 
 Coolify can pass install, build, and start command overrides to Railpack.

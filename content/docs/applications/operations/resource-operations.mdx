@@ -18,15 +18,15 @@ Neither action moves an application to another Coolify instance. Follow [Migrate
 
 A clone copies the application configuration into a new, stopped application. The source application continues running and is not changed.
 
-<Callout type="warning" title="Cloning does not copy stored application data">
+<Callout type="warning" title="Volume data is copied only on request">
 
-Coolify copies storage definitions, but it does not copy the files inside Docker volumes, bind mounts, or directories through this application workflow. Databases and other external state also remain separate.
+By default, Coolify copies storage definitions, but not the files inside them. Select **Clone volume data** to also copy the data of the named Docker volumes, also to another server. A running source is stopped while the data is copied and started again afterwards. Coolify does not copy bind mounts (host paths), databases outside the resource, or data in external services.
 
-Plan how to copy required state before deploying the clone.
+Plan how to copy the remaining state before you deploy the clone.
 
 </Callout>
 
-The cloned configuration includes application settings, environment variables, preview variables, storage definitions, scheduled tasks, tags, and preview records. Review every copied value before deployment, especially domains, secrets, server paths, and external dependency addresses.
+The cloned configuration includes application settings, environment variables, preview variables, storage definitions, scheduled tasks, and tags. Preview deployment records are not copied: the clone creates its own previews from new pull requests. Review every copied value before deployment, especially domains, secrets, server paths, and external dependency addresses.
 
 <Steps>
 <Step>
@@ -49,7 +49,7 @@ Open the application and select **Resource Operations**. Under **Clone to anothe
 
 ### Select the network destination
 
-Choose **Network destination** for the selected server, then select **Clone resource**.
+Choose **Network destination** for the selected server. To copy the data of the named volumes, select **Clone volume data**. Then select **Clone resource**.
 
 Coolify creates a stopped application in the current project and environment with a name beginning with `clone-of-`.
 
@@ -67,7 +67,7 @@ Before deploying, review:
 - scheduled tasks, so the clone does not run duplicate recurring work unexpectedly
 - database, cache, queue, storage, and callback addresses
 
-Copy or restore required persistent data separately. A bind-mount path copied from the source configuration must exist on the destination server with the expected files and permissions.
+Copy or restore persistent data that **Clone volume data** did not copy. A bind-mount path copied from the source configuration must exist on the destination server with the expected files and permissions.
 
 </Step>
 <Step>

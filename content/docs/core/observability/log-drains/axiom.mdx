@@ -128,7 +128,7 @@ For example, add this environment variable to the resource:
 COOLIFY_APP_NAME=web
 ```
 
-The built-in filter excludes log records whose message contains `127.0.0.1`. Local health-check requests may therefore be absent from the dataset.
+The built-in filter excludes log records whose message starts with `127.0.0.1` followed by a space, such as access log lines of local health-check requests. These requests are absent from the dataset. Other lines that mention `127.0.0.1` are forwarded.
 
 ---
 

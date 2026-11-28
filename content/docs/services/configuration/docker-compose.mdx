@@ -25,12 +25,30 @@ When troubleshooting, confirm the intended setting exists in the source definiti
 1. Open **Configuration > General > Edit Compose File**.
 2. Change **Source Compose**.
 3. Select **Validate** to check a Service created with **Docker Compose Empty**.
-4. Select **Save**.
+4. Select **Save changes**.
 5. Review the updated component cards, environment variables, storage, and **Deployable Compose**.
 6. Deploy or restart the Service.
 7. Follow the deployment output and verify every required component.
 
+**Save changes** checks the generated file with `docker compose config` on the server. When Docker Compose rejects the file, for example because a service is indented under another service, Coolify does not save it and shows `Docker Compose rejected the file, so Coolify did not save it.` with the error of Docker Compose. Coolify skips the check when the server is not reachable. The services API runs the same check for `docker_compose_raw`.
+
 Saving reparses the definition. Removing or renaming a Compose service changes how Coolify identifies its components, so back up its data and inspect storage names before the change.
+
+### Removed Compose services
+
+When you remove a Compose service from the definition, Coolify keeps its component (application or database):
+
+- Its card shows **Not in Compose file**, and it does not count in the Service status.
+- Coolify keeps its settings. When you add the Compose service back under the same name, Coolify uses these settings again.
+- To remove the component, delete it in its settings.
+
+A component that was removed before Coolify v4.7.0 gets this mark at the next deployment or save of the Service.
+
+### Duplicate components
+
+Coolify uses one component for each Compose service. Older versions could save a Compose service twice, as an application and as a database. The database then showed `Exited` while its container ran, or showed twice after an image change. Coolify uses the component that matches the image, or the one that you converted with **Convert to Database** or **Convert to Application**, and marks the other copy with **Not in Compose file**. Delete that copy, then redeploy the Service once to show the correct status.
+
+An image change does not replace an existing component. A database component keeps its settings and backups, also when its new image is not detected as a database.
 
 ## Environment references
 
@@ -179,4 +197,4 @@ Before updating:
 5. Save, review the deployable definition, and deploy during a maintenance window.
 6. Verify every component and application workflow.
 
-Use **Pull Latest Images & Restart** only when pulling the tags already stored in Compose is the intended update. A mutable tag such as `latest` can change without showing which version will run, so pin production images when the upstream project supports versioned tags.
+Use **Pull latest and restart** only when pulling the tags already stored in Compose is the intended update. A mutable tag such as `latest` can change without showing which version will run, so pin production images when the upstream project supports versioned tags.

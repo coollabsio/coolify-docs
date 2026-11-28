@@ -1,0 +1,38 @@
+---
+title: "Hostinger create"
+description: "Purchase a Hostinger VPS and add it as a server (paid)"
+---
+
+# Hostinger create
+
+Purchase a Hostinger VPS and add it as a server (paid)
+
+## Usage
+
+```sh
+coolify server hostinger create
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+| :--- | :--- | :---: | :--- | :--- |
+| `--cloud-token` | `string` | No | — | Cloud provider token UUID |
+| `--data-center-id` | `integer` | No | `0` | Hostinger data center ID |
+| `--enable-backups` | `boolean` | No | `false` | Enable weekly Hostinger backups (extra cost; off by default) |
+| `--force (-f)` | `boolean` | No | `false` | Skip the purchase confirmation prompt |
+| `--item-id` | `string` | No | — | Hostinger catalog price ID (plan + billing period, e.g. hostingercom-vps-kvm1-usd-1m) |
+| `--name` | `string` | No | — | Server name (auto-generated if omitted) |
+| `--post-install-script-id` | `integer` | No | `0` | Hostinger post-install script ID |
+| `--private-key` | `string` | No | — | Coolify private key UUID |
+| `--ssh-key-ids` | `intSlice` | No | — | Additional Hostinger SSH key IDs |
+| `--template-id` | `integer` | No | `0` | Hostinger OS template ID |
+| `--validate` | `boolean` | No | `false` | Validate after creation |
+
+## Get current help
+
+```sh
+coolify server hostinger create --help
+```
+
+The installed CLI help reflects the exact options available in your CLI version.

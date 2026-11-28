@@ -81,6 +81,19 @@ If you are already locked out:
 
 <ZoomImage src="/docs/images/services/stalwart-forwarded-header.webp" alt="Stalwart forwarded header setting" />
 
+## Upgrade to Stalwart v1
+
+New services use Stalwart v1.1.0. An existing service keeps its image.
+
+You cannot upgrade Stalwart in place.
+
+1. Update to 0.16.27.
+2. Copy the data with `stalwart-migrate`.
+
+Keep an HTTP listener on port 8080 for the proxy and the health check. The setup wizard on port 8080 has no brute-force protection, so complete it immediately.
+
+See the [official upgrade guide](https://stalw.art/docs/migration/upgrade-0-16/?utm_source=coolify.io).
+
 ## Links
 
 - [GitHub](https://github.com/stalwartlabs/stalwart?utm_source=coolify.io)

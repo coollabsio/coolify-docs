@@ -5,7 +5,7 @@ description: Protect Coolify applications with Caddy HTTP basic authentication.
 
 # Basic authentication
 
-HTTP basic authentication requires a username and password before Caddy forwards a request to an application. Coolify can generate the required Caddy label and bcrypt hash for standard applications.
+HTTP basic authentication requires a username and password before Caddy forwards a request to an application. Coolify can generate the required Caddy label and a bcrypt or supported Argon2id hash for standard applications.
 
 <Callout type="info" title="Use application authentication for sensitive systems">
 HTTP basic authentication protects a route with one shared credential. It does not replace application accounts, role-based access, multi-factor authentication, or single sign-on.
@@ -106,6 +106,23 @@ Do not place the plaintext password in the label. Caddy expects a supported pass
 
 </Tab>
 </Tabs>
+
+## Choose password hashing
+
+For a standard application, open **General > Security > Authentication**, enable **HTTP Basic Authentication**, and find **Password hashing**.
+
+| Setting | Default | Supported values |
+| :--- | :--- | :--- |
+| **Algorithm** | `bcrypt` | `bcrypt`, or `argon2id` with Caddy 2.11 or newer. |
+| **Cost** for bcrypt | `10` | `4` to `14`. |
+| **Memory** for Argon2id | `65536` KiB (64 MiB) | API range: `8192` to `262144` KiB. The dashboard offers presets. |
+| **Iterations** for Argon2id | `4` | `1` to `12`. |
+
+Argon2id is available only when Coolify detects a compatible Caddy proxy. Upgrade Caddy if the option is unavailable. When Coolify also generates Traefik labels, those labels use bcrypt even if Caddy uses Argon2id.
+
+Higher costs use more server CPU or memory when checking credentials. Change the settings deliberately, save, redeploy the application, and verify authentication and request performance. Compose applications and services still require manually configured authentication labels.
+
+The API fields are `http_basic_auth_hash_algorithm`, `http_basic_auth_bcrypt_cost`, `http_basic_auth_argon2id_memory_cost`, and `http_basic_auth_argon2id_time_cost`. Memory is expressed in KiB.
 
 ## Troubleshooting
 

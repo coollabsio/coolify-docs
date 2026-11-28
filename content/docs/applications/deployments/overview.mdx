@@ -27,12 +27,18 @@ Start a deployment manually, from a Git event, or through automation. Use **Depl
 | :--- | :--- |
 | **Deploy** | Start the first deployment of a configured application. |
 | **Redeploy** | Run the normal deployment flow again for an existing application. |
-| **Restart** | Recreate the runtime through the deployment queue. Source-based paths reuse an existing image when eligible and can build when required. Docker Image pulls the saved image reference again. |
-| **Force deploy (without cache)** | Disable cache for a Coolify-generated source build. A custom Docker Compose build command controls its own cache flags. |
+| **Restart** | Recreate the runtime through the deployment queue. Source-based paths start the existing image when no build setting changed, and build when a build setting changed or the image is no longer on the server. Docker Image pulls the saved image reference again. |
+| **Deploy (without cache)** or **Redeploy (without cache)** | Build without Docker build cache. For a custom Docker Compose build command, Coolify adds `--no-cache`. |
 | Git webhook | Deploy a new commit received from the connected repository. |
 | Deploy webhook or API | Start a deployment from an external CI system or automation. |
 
 A deployment request enters the queue. Coolify records whether it is queued, in progress, successful, failed, or cancelled.
+
+Before a restart, the **Restart** dialog tells you whether the restart builds a new image and which changed setting needs the build.
+
+When the worker that runs a deployment stops, for example because the Coolify host ran out of memory, Coolify fails the deployment after it has no log update for longer than the deployment timeout of the server plus 10 minutes. The next queued deployment then starts.
+
+Deleting an application cancels its queued and running deployments and removes their build containers on the deployment and build servers.
 
 ## Inspect deployment history
 

@@ -6,6 +6,7 @@
     "basic-auth",
     "tls-certificates",
     "custom-ssl-certs",
+    "certificate-resolver",
     "dashboard",
     "custom-middlewares",
     "dynamic-config",
